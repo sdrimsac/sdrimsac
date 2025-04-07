@@ -6,11 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\BankAccountRequest;
 use App\Http\Resources\Tenant\BankAccountCollection;
 use App\Http\Resources\Tenant\BankAccountResource;
+use App\Http\Resources\Tenant\FoodsShop;
+use App\Http\Resources\Tenant\FoodsShopCollection;
 use App\Models\Tenant\Bank;
 use App\Models\Tenant\BankAccount;
+use App\Models\Tenant\Box;
 use App\Models\Tenant\Catalogs\CurrencyType;
+use App\Models\Tenant\Item;
 use Exception;
 use Modules\Restaurant\Models\Food;
+use Modules\Restaurant\Models\Orden;
+use Illuminate\Http\Request;
+use LDAP\Result;
+use Modules\Restaurant\Models\OrdenItem;
 
 class FoodsController extends Controller
 {
@@ -18,39 +26,50 @@ class FoodsController extends Controller
     {
         return view('tenant.foods.index');
     }
-
-    public function records()
+    public function columns()
     {
-        // aqui de la tabla items jarra pack 
+        return [
+            'description' => 'Descripción',
+        ];
     }
 
-    public function create()
+
+    public function records(Request $request)
     {
-        return view('tenant.bank_accounts.index');
+        $records = $this->getRecords($request);
+        return new FoodsShopCollection($records->paginate(20));
+    }
+
+    public function getRecords(Request $request)
+    {
+        $food_id = $request->input('food_id');
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
+        $date = $request->input('date');
+        $records = OrdenItem::where('status_orden_id', '4'); 
+
+        if ($date_start && $date_end) {
+            $records->whereBetween('date', [$date_start, $date_end]);
+        } elseif ($date) {
+            $records->where('date', '=', $date);
+        }
+
+        if ($food_id) {
+            $records->where('food_id', '=', $food_id);
+        }
+
+        return $records->orderBy('date', 'desc');
     }
 
     public function tables()
     {
-        $banks = Bank::all();
-        $currency_types = CurrencyType::whereActive()->get();
+        $foods = Food::select('id', 'description')->get();
 
-        return compact('banks', 'currency_types');
+        return compact('foods');
     }
 
     public function store(BankAccountRequest $request)
     {
-        $id = $request->input('id');
-        $bank_account = BankAccount::firstOrNew(['id' => $id]);
-        $bank_account->fill($request->all());
-        $user_id = auth()->id();
-        $bank_account->user_id = $user_id;
-
-    
-        $bank_account->save();
-
-        return [
-            'success' => true,
-            'message' => ($id) ? 'Cuenta bancaria editada con éxito' : 'Cuenta bancaria registrada con éxito'
-        ];
+        
     }
 }

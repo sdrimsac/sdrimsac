@@ -1568,7 +1568,7 @@
                                         type="success"
                                         icon="el-icon-scissors"
                                         size="large"
-                                        @click="showSplitPayment = true"
+                                        @click="handleDividirPagos"
                                         class="w-100"
                                     >
                                         Dividir pago
@@ -2360,6 +2360,14 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth); // Limpiar el evento al destruir el componente
     },
     methods: {
+        handleDividirPagos() {
+            // Primero cambiamos al tipo de documento nota de venta
+            this.form.document_type_id = "80";
+            // Actualizamos las series
+            this.filterSeries();
+            // Mostramos el modal de dividir pagos
+            this.showSplitPayment = true;
+        },
         someItemAffected20() {
             if (!this.form.items) return false;
             return this.form.items.some(
@@ -2428,8 +2436,6 @@ export default {
                 this.inputDiscountAmount();
             }
         },
-
-        
 
         reCalculateTotal() {
             // ...existing code...
@@ -5052,7 +5058,7 @@ export default {
                         this.loading_submit = false;
                         this.button_payment = false;
                         this.$emit("update:is_payment", false);
-                        return; 
+                        return;
                     }
                     ordenId = responses.data.id;
                     if (responses.status != 200) {

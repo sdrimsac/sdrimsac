@@ -982,13 +982,13 @@
                         <span class="label" style="font-size: 1em; ">Productos Comprados</span>
                     </a>
                 </li>
-                {{-- <li>
+                <li>
                     <a class="{{ $path[0] === 'foods' ? 'active' : '' }}"
                         href="{{ route('tenant.foods.index') }}">
                         <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
                         <span class="label" style="font-size: 1em; ">Reporte Platos Vendidos</span>
                     </a>
-                </li> --}}
+                </li>
 
             </ul>
         </li>

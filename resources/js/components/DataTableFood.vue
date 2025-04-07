@@ -3,28 +3,7 @@
         <div class="row " v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'caja/cash-transfer/report'"
-                    >
-                        <label for="value">
-                            Caja principal
-                        </label>
-                        <el-select
-                            v-model="search.cash_id"
-                            @change="getRecords"
-                            placeholder="Seleccione la caja"
-                        >
-                            <el-option
-                                v-for="item in cashes"
-                                :key="item.id"
-                                :label="`${item.user_name}-${item.description}`"
-                                :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
                             Filtrar por:
                         </label>
@@ -40,52 +19,19 @@
                                 :label="label"
                             ></el-option>
                         </el-select>
-                    </div>
+                    </div> -->
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="value">
                             Buscar
                         </label>
-                        <template
-                            v-if="
-                                search.column == 'date_of_issue' ||
-                                    search.column == 'date_of_due' ||
-                                    search.column == 'date_of_payment' ||
-                                    search.column == 'delivery_date' ||
-                                    search.column == 'date'
-                            "
-                        >
-                            <template v-if="resource != 'caja/worker/expenses'">
-                                <el-date-picker
-                                    v-model="search.value"
-                                    type="date"
-                                    style="width: 100%;"
-                                    placeholder="Buscar"
-                                    value-format="yyyy-MM-dd"
-                                    @change="getRecords"
-                                >
-                                </el-date-picker>
-                            </template>
-                            <template v-else>
-                                <el-date-picker
-                                    v-model="search.value"
-                                    type="daterange"
-                                    range-separator="A"
-                                    start-placeholder="Desde"
-                                    value-format="yyyy-MM-dd"
-                                    end-placeholder="Hasta"
-                                    @change="getRecords"
-                                >
-                                </el-date-picker>
-                            </template>
-                        </template>
-                        <template v-else-if="search.column == 'district_id'">
-                            <el-select
-                                v-model="search.value"
-                                @change="getRecords"
-                                placeholder="Seleccione el Distrito"
-                            >
+                        <template>
+                            <el-select v-model="search.food_id" 
+                                placeholder="Buscar" 
+                                @change="getRecords" 
+                                clearable 
+                                filterable>
                                 <el-option
-                                    v-for="item in array_district"
+                                    v-for="item in foods"
                                     :key="item.id"
                                     :label="item.description"
                                     :value="item.id"
@@ -93,72 +39,50 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <template v-else-if="search.column == 'seller_id'">
-                            <el-select
-                                v-model="search.value"
-                                @change="getRecords"
-                                placeholder="Seleccione el vendedor"
-                            >
-                                <el-option
-                                    v-for="(item, idx) in sellers"
-                                    :key="idx"
-                                    :label="item.name"
-                                    :value="item.id"
-                                >
-                                </el-option>
-                            </el-select>
-                        </template>
-                        <template
-                            v-else-if="
-                                search.column == 'active' &&
-                                    resource == 'caja/workers-type'
-                            "
-                        >
-                            <el-select
-                                v-model="search.value"
-                                @change="getRecords"
-                                placeholder="Seleccione el estado"
-                            >
-                                <el-option
-                                    v-for="(item, idx) in [
-                                        { id: 1, description: 'Activado' },
-                                        { id: 0, description: 'Desactivado' }
-                                    ]"
-                                    :key="idx"
-                                    :label="item.description"
-                                    :value="item.id"
-                                >
-                                </el-option>
-                            </el-select>
-                        </template>
-                        <template v-else>
-                            <el-input
-                                placeholder="Buscar"
-                                v-model="search.value"
-                                style="width: 100%;"
-                                prefix-icon="el-icon-search"
-                                @input="getRecords"
-                            >
-                            </el-input>
-                        </template>
                     </div>
                     <div
-                        v-if="
-                            search.column == 'date_of_issue' ||
-                                search.column == 'date_of_due' ||
-                                search.column == 'date_of_payment' ||
-                                search.column == 'delivery_date' ||
-                                (search.column == 'date' &&
-                                    resource == 'purchases' &&
-                                    search.value)
-                        "
+                       
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                    >
+                        <label for="value">
+                            Desde
+                        </label>
+                        <el-date-picker
+                            v-model="search.date_start"
+                            type="date"
+                            style="width: 100%;"
+                            placeholder="Buscar"
+                            value-format="yyyy-MM-dd"
+                            @change="getRecords"
+                        >
+                        </el-date-picker>
+                    </div>
+                    <div
+                       
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
                     >
                         <label for="value">
                             Hasta
                         </label>
                         <el-date-picker
-                            v-model="search.end_date"
+                            v-model="search.date_end"
+                            type="date"
+                            style="width: 100%;"
+                            placeholder="Buscar"
+                            value-format="yyyy-MM-dd"
+                            @change="getRecords"
+                        >
+                        </el-date-picker>
+                    </div>
+                    <div
+                       
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                    >
+                        <label for="value">
+                            Dia
+                        </label>
+                        <el-date-picker
+                            v-model="search.date"
                             type="date"
                             style="width: 100%;"
                             placeholder="Buscar"
@@ -185,52 +109,6 @@
                                 :key="item.id"
                                 :label="item.description"
                                 :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'items'"
-                    >
-                        <label for="warehouse">
-                            Area de preparación
-                        </label>
-                        <el-select
-                            clearable
-                            filterable
-                            v-model="search.area_id"
-                            @change="getRecords"
-                            placeholder="Seleccione el Almacén"
-                        >
-                            <el-option
-                                v-for="item in areas"
-                                :key="item.id"
-                                :label="item.description"
-                                :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div
-                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'items'"
-                    >
-                        <label>Estados</label>
-                        <el-select
-                            v-model="search.active"
-                            @change="getRecords"
-                            clearable
-                            placeholder="Seleccione el estado"
-                        >
-                            <el-option
-                                v-for="(item, idx) in [
-                                    { id: 1, active: 'Habilitado' },
-                                    { id: 0, active: 'Inhabilitado' }
-                                ]"
-                                :key="idx"
-                                :label="item.active"
-                                :value="item.active"
                             >
                             </el-option>
                         </el-select>
@@ -301,19 +179,6 @@
                     </el-button
                     >
                 </el-tooltip>
-
-                <!-- <el-tooltip content="" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToWarehouses"
-                    >Productos en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip> -->
                 </div>
             </div>
             <div class="col-md-12">
@@ -386,10 +251,13 @@ export default {
         return {
             cashes: [],
             search: {
-                warehouse_id: 1,
                 column: null,
                 value: null,
-                active: null
+                date_start: null,
+                date_end: null,
+                date: null,
+                food_id: null,
+                
             },
             columns: [],
             records: [],
@@ -399,16 +267,11 @@ export default {
             warehouses: [],
             areas: [],
             loading: false,
+            foods: [],
         };
     },
     computed: {},
     created() {
-        //realiza una peticion get para obtener los datos de la tabla
-        /* if (this.resource == "items") {
-            this.$http.get("items/tables").then(response => {
-                this.configuration = response.data;
-            });
-        } */
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
@@ -426,7 +289,6 @@ export default {
         }
     },
     async mounted() {
-        let column_resource = this.resource; // _.split(this.resource, '/')
         await this.$http.get(`/${this.resource}/columns`).then(response => {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
@@ -434,6 +296,10 @@ export default {
         if (this.resource !== "caja/cash-transfer/report") {
             await this.getRecords();
         }
+
+        await this.$http.get(`/${this.resource}/tables`).then(response => {
+            this.foods = response.data.foods;  
+        });
     },
     methods: {
         clickAddProductsToPolitica() {
@@ -550,10 +416,10 @@ export default {
                 value: this.search.value,
                 column: this.search.column,
                 active: this.search.active,
-                cash_id: this.search.cash_id,
-                end_date: this.search.end_date,
-                warehouse_id: this.search.warehouse_id,
-                area_id: this.search.area_id
+                date_start: this.search.date_start,
+                date_end: this.search.date_end,
+                date: this.search.date,
+                food_id: this.search.food_id,
             });
         },
         changeClearInput() {

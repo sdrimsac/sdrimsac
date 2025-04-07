@@ -4241,22 +4241,39 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
 
                                                     <!-- Gestiones de Búsqueda -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestiones de  Busqueda
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestiones
+                                                                        de
+                                                                        Busqueda
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
+                                                            <div
+                                                                class="card-body"
+                                                            >
+                                                                <div
+                                                                    class="row"
+                                                                >
                                                                     <!-- Barcode en Caja -->
                                                                     <div
                                                                         class="col-md-3 mt-4"
@@ -4616,24 +4633,40 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
 
-                                                    
                                                     <!-- Gestiones de Lista o Venta Directa -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestiones de Lista o
-                                                                        Venta Directa
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestiones
+                                                                        de Lista
+                                                                        o Venta
+                                                                        Directa
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
+                                                            <div
+                                                                class="card-body"
+                                                            >
+                                                                <div
+                                                                    class="row"
+                                                                >
                                                                     <!-- Editar Cantidad en Caja -->
                                                                     <div
                                                                         class="col-md-3 mt-4"
@@ -4913,1939 +4946,1990 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
 
                                                     <!-- Sección Gestión de Caja -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestión de Caja
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestión
+                                                                        de Caja
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                            <!-- Orden de items -->
                                                             <div
-                                                                class="col-md-3 mt-4"
+                                                                class="card-body"
                                                             >
                                                                 <div
-                                                                    class="card h-100"
+                                                                    class="row"
                                                                 >
+                                                                    <!-- Orden de items -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.order_desc_items
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-sort-numeric-up tab-icon"
-                                                                                ></i>
-                                                                                Orden
-                                                                                de
-                                                                                items
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Desactivado coloca el item nuevo arriba"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.order_desc_items
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Orden de items',
-                                                                                        form.order_desc_items,
-                                                                                        'order_desc_items',
-                                                                                        'sortNumericUpIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.order_desc_items
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-sort-numeric-up tab-icon"
+                                                                                        ></i>
+                                                                                        Orden
+                                                                                        de
+                                                                                        items
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Desactivado coloca el item nuevo arriba"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.order_desc_items
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Orden de items',
+                                                                                                form.order_desc_items,
+                                                                                                'order_desc_items',
+                                                                                                'sortNumericUpIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Multiples Caja (Usuario Cajero) -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Multiples Caja (Usuario Cajero) -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.multiple_boxes
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-cash-register fa-lg"
-                                                                                ></i>
-                                                                                Multiples
-                                                                                Cajas
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Multiples Cajas, para usuario CAJERO"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.multiple_boxes
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Multiples Cajas',
-                                                                                        form.multiple_boxes,
-                                                                                        'multiple_boxes',
-                                                                                        'cashRegisterIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.multiple_boxes
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-cash-register fa-lg"
+                                                                                        ></i>
+                                                                                        Multiples
+                                                                                        Cajas
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Multiples Cajas, para usuario CAJERO"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.multiple_boxes
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Multiples Cajas',
+                                                                                                form.multiple_boxes,
+                                                                                                'multiple_boxes',
+                                                                                                'cashRegisterIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Usuarios con series independientes -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Usuarios con series independientes -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.user_series_independientes_caja
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-user-cog tab-icon"
-                                                                                ></i>
-                                                                                Series
-                                                                                Independientes
-                                                                                <el-tooltip
-                                                                                    content="Permite asignar una serie a un usuario"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.user_series_independientes_caja
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Usuarios con series independientes',
-                                                                                        form.user_series_independientes_caja,
-                                                                                        'user_series_independientes_caja',
-                                                                                        'userCogIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.user_series_independientes_caja
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-user-cog tab-icon"
+                                                                                        ></i>
+                                                                                        Series
+                                                                                        Independientes
+                                                                                        <el-tooltip
+                                                                                            content="Permite asignar una serie a un usuario"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.user_series_independientes_caja
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Usuarios con series independientes',
+                                                                                                form.user_series_independientes_caja,
+                                                                                                'user_series_independientes_caja',
+                                                                                                'userCogIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Venta Rapida (Modulo Caja) -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Venta Rapida (Modulo Caja) -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.sales_quick
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-bolt fa-lg"
-                                                                                ></i>
-                                                                                Venta
-                                                                                Rápida
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Venta Rápida módulo de CAJA (Activar en Establecimientos)"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.sales_quick
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Venta Rápida',
-                                                                                        form.sales_quick,
-                                                                                        'sales_quick',
-                                                                                        'boltIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.sales_quick
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-bolt fa-lg"
+                                                                                        ></i>
+                                                                                        Venta
+                                                                                        Rápida
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Venta Rápida módulo de CAJA (Activar en Establecimientos)"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.sales_quick
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Venta Rápida',
+                                                                                                form.sales_quick,
+                                                                                                'sales_quick',
+                                                                                                'boltIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Vendedores en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Vendedores en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.seller_caja
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-user-tie fa-lg"
-                                                                                ></i>
-                                                                                Vendedores
-                                                                                en
-                                                                                Caja
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Activa selección de Vendedores en CAJA"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.seller_caja
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Vendedores en Caja',
-                                                                                        form.seller_caja,
-                                                                                        'seller_caja',
-                                                                                        'userTieIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.seller_caja
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-user-tie fa-lg"
+                                                                                        ></i>
+                                                                                        Vendedores
+                                                                                        en
+                                                                                        Caja
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Activa selección de Vendedores en CAJA"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.seller_caja
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Vendedores en Caja',
+                                                                                                form.seller_caja,
+                                                                                                'seller_caja',
+                                                                                                'userTieIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar gastos / ingresos en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar gastos / ingresos en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.show_expenses_incomes_caja
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-eye fa-lg"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Gastos
-                                                                                e
-                                                                                Ingresos
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Mostrar Modal de Gastos e Ingresos en CAJA"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.show_expenses_incomes_caja
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Gastos e Ingresos',
-                                                                                        form.show_expenses_incomes_caja,
-                                                                                        'show_expenses_incomes_caja',
-                                                                                        'eyeIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.show_expenses_incomes_caja
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-eye fa-lg"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Gastos
+                                                                                        e
+                                                                                        Ingresos
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Mostrar Modal de Gastos e Ingresos en CAJA"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.show_expenses_incomes_caja
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Gastos e Ingresos',
+                                                                                                form.show_expenses_incomes_caja,
+                                                                                                'show_expenses_incomes_caja',
+                                                                                                'eyeIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Todos los productos - caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Todos los productos - caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.all_items_pos
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-list fa-lg"
-                                                                                ></i>
-                                                                                Todos
-                                                                                los
-                                                                                productos
-                                                                                -
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.all_items_pos
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Todos los productos - caja',
-                                                                                        form.all_items_pos,
-                                                                                        'all_items_pos',
-                                                                                        'listIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Mostrar lista o tarjeta de productos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.list_or_card
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-th-list fa-lg"
-                                                                                ></i>
-                                                                                Lista/Tarjeta
-                                                                                productos
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la opción en caja de usar Lista o Tarjeta de productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.list_or_card
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar lista o tarjeta de productos',
-                                                                                        form.list_or_card,
-                                                                                        'list_or_card',
-                                                                                        'thListIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.list_or_card
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .list_or_card[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.all_items_pos
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-list fa-lg"
+                                                                                        ></i>
+                                                                                        Todos
+                                                                                        los
+                                                                                        productos
+                                                                                        -
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.all_items_pos
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Todos los productos - caja',
+                                                                                                form.all_items_pos,
+                                                                                                'all_items_pos',
+                                                                                                'listIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Lote en lista de productos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar lista o tarjeta de productos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.lotgroup_list_or_card
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-boxes fa-lg"
-                                                                                ></i>
-                                                                                Lote
-                                                                                en
-                                                                                Lista
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la visualización de lotes de productos en la lista"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.lotgroup_list_or_card
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Lote en lista de productos',
-                                                                                        form.lotgroup_list_or_card,
-                                                                                        'lotgroup_list_or_card',
-                                                                                        'boxesIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.lotgroup_list_or_card
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .lotgroup_list_or_card[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.list_or_card
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-th-list fa-lg"
+                                                                                        ></i>
+                                                                                        Lista/Tarjeta
+                                                                                        productos
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la opción en caja de usar Lista o Tarjeta de productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.list_or_card
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar lista o tarjeta de productos',
+                                                                                                form.list_or_card,
+                                                                                                'list_or_card',
+                                                                                                'thListIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.list_or_card
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .list_or_card[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Una caja por establecimiento -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Lote en lista de productos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.only_cash_by_establishment
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-store-alt fa-lg"
-                                                                                ></i>
-                                                                                Una
-                                                                                caja
-                                                                                por
-                                                                                establecimiento
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Solo se podrá tener una caja activa por establecimiento"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.only_cash_by_establishment
-                                                                                "
-                                                                                active-text="SI"
-                                                                                inactive-text="NO"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Una caja por establecimiento',
-                                                                                        form.only_cash_by_establishment,
-                                                                                        'only_cash_by_establishment',
-                                                                                        'storeAltIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.lotgroup_list_or_card
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-boxes fa-lg"
+                                                                                        ></i>
+                                                                                        Lote
+                                                                                        en
+                                                                                        Lista
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización de lotes de productos en la lista"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.lotgroup_list_or_card
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Lote en lista de productos',
+                                                                                                form.lotgroup_list_or_card,
+                                                                                                'lotgroup_list_or_card',
+                                                                                                'boxesIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.lotgroup_list_or_card
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .lotgroup_list_or_card[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Usuarios excluidos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Una caja por establecimiento -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: user_excluded_id
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-user-lock fa-lg"
-                                                                                ></i>
-                                                                                Usuarios
-                                                                                excluidos
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Usuarios que podrán abrir caja en el establecimiento aunque ya exista una caja abierta"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-select
-                                                                                v-model="
-                                                                                    user_excluded_id
-                                                                                "
-                                                                                placeholder="Seleccione"
-                                                                                filterable
-                                                                                clearable
-                                                                                style="width: 100%"
-                                                                                @change="
-                                                                                    addUserExcluded
-                                                                                "
-                                                                            >
-                                                                                <el-option
-                                                                                    v-for="user in users"
-                                                                                    :key="
-                                                                                        user.id
-                                                                                    "
-                                                                                    :label="
-                                                                                        user.name
-                                                                                    "
-                                                                                    :value="
-                                                                                        user.id
-                                                                                    "
-                                                                                ></el-option>
-                                                                            </el-select>
-                                                                            <br />
-                                                                            <el-tag
-                                                                                class="m-1"
-                                                                                v-for="user in users_excluded"
-                                                                                :key="
-                                                                                    user.id
-                                                                                "
-                                                                                closable
-                                                                                @close="
-                                                                                    removeUserExcluded(
-                                                                                        user.id
-                                                                                    )
-                                                                                "
-                                                                            >
-                                                                                {{
-                                                                                    user.name
-                                                                                }}
-                                                                            </el-tag>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.only_cash_by_establishment
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-store-alt fa-lg"
+                                                                                        ></i>
+                                                                                        Una
+                                                                                        caja
+                                                                                        por
+                                                                                        establecimiento
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Solo se podrá tener una caja activa por establecimiento"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.only_cash_by_establishment
+                                                                                        "
+                                                                                        active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Una caja por establecimiento',
+                                                                                                form.only_cash_by_establishment,
+                                                                                                'only_cash_by_establishment',
+                                                                                                'storeAltIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Ver venta diaria -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Usuarios excluidos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.view_daily_cash
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-chart-line tab-icon"
-                                                                                ></i>
-                                                                                Ver
-                                                                                venta
-                                                                                diaria
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.view_daily_cash
-                                                                                "
-                                                                                active-text="SI"
-                                                                                inactive-text="NO"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Ver venta diaria',
-                                                                                        form.view_daily_cash,
-                                                                                        'view_daily_cash',
-                                                                                        'chartLineIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Ver venta diaria con pin -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.view_daily_cash_pin
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-lock tab-icon"
-                                                                                ></i>
-                                                                                Venta
-                                                                                Diaria
-                                                                                PIN
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Visualiza venta diaria con PIN de Administrador"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.view_daily_cash_pin
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Ver venta diaria con pin',
-                                                                                        form.view_daily_cash_pin,
-                                                                                        'view_daily_cash_pin',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: user_excluded_id
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-user-lock fa-lg"
+                                                                                        ></i>
+                                                                                        Usuarios
+                                                                                        excluidos
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Usuarios que podrán abrir caja en el establecimiento aunque ya exista una caja abierta"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-select
+                                                                                        v-model="
+                                                                                            user_excluded_id
+                                                                                        "
+                                                                                        placeholder="Seleccione"
+                                                                                        filterable
+                                                                                        clearable
+                                                                                        style="width: 100%"
+                                                                                        @change="
+                                                                                            addUserExcluded
+                                                                                        "
+                                                                                    >
+                                                                                        <el-option
+                                                                                            v-for="user in users"
+                                                                                            :key="
+                                                                                                user.id
+                                                                                            "
+                                                                                            :label="
+                                                                                                user.name
+                                                                                            "
+                                                                                            :value="
+                                                                                                user.id
+                                                                                            "
+                                                                                        ></el-option>
+                                                                                    </el-select>
+                                                                                    <br />
+                                                                                    <el-tag
+                                                                                        class="m-1"
+                                                                                        v-for="user in users_excluded"
+                                                                                        :key="
+                                                                                            user.id
+                                                                                        "
+                                                                                        closable
+                                                                                        @close="
+                                                                                            removeUserExcluded(
+                                                                                                user.id
+                                                                                            )
+                                                                                        "
+                                                                                    >
+                                                                                        {{
+                                                                                            user.name
+                                                                                        }}
+                                                                                    </el-tag>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Historial Compra/Venta Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Ver venta diaria -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.compra_venta
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Historial
-                                                                                Compra/Venta
-                                                                                Caja
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Historial de compra y venta en caja en Productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.compra_venta
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    () =>
-                                                                                        submit(
-                                                                                            'Activar historial compra venta',
-                                                                                            form.compra_venta,
-                                                                                            'view_daily_cash_pin',
-                                                                                            'lockIcon'
-                                                                                        )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.view_daily_cash
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-chart-line tab-icon"
+                                                                                        ></i>
+                                                                                        Ver
+                                                                                        venta
+                                                                                        diaria
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.view_daily_cash
+                                                                                        "
+                                                                                        active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Ver venta diaria',
+                                                                                                form.view_daily_cash,
+                                                                                                'view_daily_cash',
+                                                                                                'chartLineIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Habilitar Aparcado de Productos en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Ver venta diaria con pin -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.aparcado
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Aparcado
-                                                                                en
-                                                                                Caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.aparcado
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Aparcado en Caja',
-                                                                                        form.aparcado,
-                                                                                        'aparcado',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Oferta de Venta en Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.sale_offert
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
-                                                                            >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Ofertas
-                                                                                de
-                                                                                venta
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la opción de ofertas de venta en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.sale_offert
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Ofertas de venta',
-                                                                                        form.sale_offert,
-                                                                                        'sale_offert',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.view_daily_cash_pin
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-lock tab-icon"
+                                                                                        ></i>
+                                                                                        Venta
+                                                                                        Diaria
+                                                                                        PIN
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Visualiza venta diaria con PIN de Administrador"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.view_daily_cash_pin
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Ver venta diaria con pin',
+                                                                                                form.view_daily_cash_pin,
+                                                                                                'view_daily_cash_pin',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Cantidades Total De Productos En caja POS -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Historial Compra/Venta Caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.edit_count_products
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Cantidades
-                                                                                Total
-                                                                                De
-                                                                                Productos
-                                                                                En
-                                                                                caja
-                                                                                POS
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la visualización de las cantidades totales de productos en el módulo de caja POS"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.edit_count_products
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Cantidades Total De Productos En caja POS',
-                                                                                        form.edit_count_products,
-                                                                                        'digital_notifications',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.compra_venta
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Historial
+                                                                                        Compra/Venta
+                                                                                        Caja
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Historial de compra y venta en caja en Productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.compra_venta
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            () =>
+                                                                                                submit(
+                                                                                                    'Activar historial compra venta',
+                                                                                                    form.compra_venta,
+                                                                                                    'view_daily_cash_pin',
+                                                                                                    'lockIcon'
+                                                                                                )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Cantidades Total De Productos En caja POS -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Habilitar Aparcado de Productos en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.change_unit_type_pos
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Cantidades
-                                                                                Total
-                                                                                De
-                                                                                Productos
-                                                                                En
-                                                                                caja
-                                                                                POS
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la visualización de las cantidades totales de productos en el módulo de caja POS"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Cambiar politica de precio en la lista de productos',
-                                                                                        form.change_unit_type_pos,
-                                                                                        'change_unit_type_pos',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                                v-model="
-                                                                                    form.change_unit_type_pos
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.aparcado
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Aparcado
+                                                                                        en
+                                                                                        Caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.aparcado
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Aparcado en Caja',
+                                                                                                form.aparcado,
+                                                                                                'aparcado',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Solo Documentos de Usuario Emitido -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                                v-if="canSee"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Oferta de Venta en Caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.documents_user
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Solo
-                                                                                Documentos
-                                                                                de
-                                                                                Usuario
-                                                                                Emitido
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.documents_user
-                                                                                "
-                                                                                active-text="SI"
-                                                                                inactive-text="NO"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    () =>
-                                                                                        submit(
-                                                                                            'Mostrar documentos Emitidos solo por el Usuario Autenticado',
-                                                                                            form.documents_user,
-                                                                                            'lockIcon'
-                                                                                        )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Ocultar Historia Reporte de Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                                v-if="canSee"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.kitchen_mozo
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-file-alt tab-icon fa-lg"
-                                                                                ></i>
-                                                                                Ocultar
-                                                                                Historia
-                                                                                Reporte
-                                                                                de
-                                                                                Caja
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Oculta el historial del reporte de caja mientras la caja está abierta"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.kitchen_mozo
-                                                                                "
-                                                                                active-text="SI"
-                                                                                inactive-text="NO"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    () =>
-                                                                                        submit(
-                                                                                            'Ocultar Reporte de caja mientras la caja esta abierta',
-                                                                                            form.kitchen_mozo,
-                                                                                            'fileAltIcon'
-                                                                                        )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.sale_offert
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Ofertas
+                                                                                        de
+                                                                                        venta
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la opción de ofertas de venta en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.sale_offert
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Ofertas de venta',
+                                                                                                form.sale_offert,
+                                                                                                'sale_offert',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Distribuidora V2 -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Cantidades Total De Productos En caja POS -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.consolidated_quotation_details
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Distribuidora
-                                                                                v2
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.consolidated_quotation_details
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    () =>
-                                                                                        submit(
-                                                                                            'Detalles en distribuidora',
-                                                                                            form.consolidated_quotation_details,
-                                                                                            'consolidated_quotations',
-                                                                                            'lockIcon'
-                                                                                        )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.edit_count_products
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Cantidades
+                                                                                        Total
+                                                                                        De
+                                                                                        Productos
+                                                                                        En
+                                                                                        caja
+                                                                                        POS
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización de las cantidades totales de productos en el módulo de caja POS"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.edit_count_products
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Cantidades Total De Productos En caja POS',
+                                                                                                form.edit_count_products,
+                                                                                                'digital_notifications',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Mostrar Cantidades Total De Productos En caja POS -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.change_unit_type_pos
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Cantidades
+                                                                                        Total
+                                                                                        De
+                                                                                        Productos
+                                                                                        En
+                                                                                        caja
+                                                                                        POS
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización de las cantidades totales de productos en el módulo de caja POS"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Cambiar politica de precio en la lista de productos',
+                                                                                                form.change_unit_type_pos,
+                                                                                                'change_unit_type_pos',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                        v-model="
+                                                                                            form.change_unit_type_pos
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Mostrar Solo Documentos de Usuario Emitido -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                        v-if="
+                                                                            canSee
+                                                                        "
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.documents_user
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Solo
+                                                                                        Documentos
+                                                                                        de
+                                                                                        Usuario
+                                                                                        Emitido
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.documents_user
+                                                                                        "
+                                                                                        active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            () =>
+                                                                                                submit(
+                                                                                                    'Mostrar documentos Emitidos solo por el Usuario Autenticado',
+                                                                                                    form.documents_user,
+                                                                                                    'lockIcon'
+                                                                                                )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Ocultar Historia Reporte de Caja -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                        v-if="
+                                                                            canSee
+                                                                        "
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.kitchen_mozo
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-file-alt tab-icon fa-lg"
+                                                                                        ></i>
+                                                                                        Ocultar
+                                                                                        Historia
+                                                                                        Reporte
+                                                                                        de
+                                                                                        Caja
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Oculta el historial del reporte de caja mientras la caja está abierta"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.kitchen_mozo
+                                                                                        "
+                                                                                        active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            () =>
+                                                                                                submit(
+                                                                                                    'Ocultar Reporte de caja mientras la caja esta abierta',
+                                                                                                    form.kitchen_mozo,
+                                                                                                    'fileAltIcon'
+                                                                                                )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Distribuidora V2 -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.consolidated_quotation_details
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Distribuidora
+                                                                                        v2
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.consolidated_quotation_details
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            () =>
+                                                                                                submit(
+                                                                                                    'Detalles en distribuidora',
+                                                                                                    form.consolidated_quotation_details,
+                                                                                                    'consolidated_quotations',
+                                                                                                    'lockIcon'
+                                                                                                )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                            </div>
-                                                        </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
-
-                                                    
 
                                                     <!-- Gestión Políticas de Precio -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestión Políticas de
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestión
+                                                                        Políticas
+                                                                        de
                                                                         Precio
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                            <!-- Agregar directamente la primera política de precio a la lista de productos -->
                                                             <div
-                                                                class="col-md-3 mt-4"
+                                                                class="card-body"
                                                             >
                                                                 <div
-                                                                    class="card h-100"
+                                                                    class="row"
                                                                 >
+                                                                    <!-- Agregar directamente la primera política de precio a la lista de productos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.direct_unit_type
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-plus-circle"
-                                                                                ></i>
-                                                                                Agregar
-                                                                                PPP
-                                                                                directo
-                                                                                a
-                                                                                Lista
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la opción de agregar automáticamente la primera política de precio a la lista de productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Agregar directamente la primera política de precio a la lista de productos',
-                                                                                        form.direct_unit_type,
-                                                                                        'direct_unit_type',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                                v-model="
-                                                                                    form.direct_unit_type
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.direct_unit_type
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-plus-circle"
+                                                                                        ></i>
+                                                                                        Agregar
+                                                                                        PPP
+                                                                                        directo
+                                                                                        a
+                                                                                        Lista
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la opción de agregar automáticamente la primera política de precio a la lista de productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Agregar directamente la primera política de precio a la lista de productos',
+                                                                                                form.direct_unit_type,
+                                                                                                'direct_unit_type',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                        v-model="
+                                                                                            form.direct_unit_type
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Editar Precio del select de la Politica de Precio -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Editar Precio del select de la Politica de Precio -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.edit_price
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-edit"
-                                                                                ></i>
-                                                                                Editar
-                                                                                Precio
-                                                                                del
-                                                                                select
-                                                                                de
-                                                                                la
-                                                                                PPP
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Permite editar el precio directamente desde el select de la política de precio"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.edit_price
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'editar precio de la politica del select',
-                                                                                        form.edit_price,
-                                                                                        'direct_unit_type',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.edit_price
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-edit"
+                                                                                        ></i>
+                                                                                        Editar
+                                                                                        Precio
+                                                                                        del
+                                                                                        select
+                                                                                        de
+                                                                                        la
+                                                                                        PPP
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Permite editar el precio directamente desde el select de la política de precio"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.edit_price
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'editar precio de la politica del select',
+                                                                                                form.edit_price,
+                                                                                                'direct_unit_type',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Precios por Políticas de Precio -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Precios por Políticas de Precio -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.price_item_unit_type
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-tags"
-                                                                                ></i>
-                                                                                Precios
-                                                                                por
-                                                                                Política
-                                                                                de
-                                                                                Precio
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la visualización de precios por políticas de precio en la lista de productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.price_item_unit_type
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'mostrar precios por política de precio',
-                                                                                        form.price_item_unit_type,
-                                                                                        'price_item_unit_type',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.price_item_unit_type
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-tags"
+                                                                                        ></i>
+                                                                                        Precios
+                                                                                        por
+                                                                                        Política
+                                                                                        de
+                                                                                        Precio
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización de precios por políticas de precio en la lista de productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.price_item_unit_type
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'mostrar precios por política de precio',
+                                                                                                form.price_item_unit_type,
+                                                                                                'price_item_unit_type',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Seleccionar política de precio al usar código de barras -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Seleccionar política de precio al usar código de barras -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.unit_type_select_barcode
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-barcode"
-                                                                                ></i>
-                                                                                Política
-                                                                                de
-                                                                                precio
-                                                                                en
-                                                                                BarCode
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Permite seleccionar una política de precio al escanear un código de barras"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.unit_type_select_barcode
-                                                                                "
-                                                                                active-text="SI"
-                                                                                inactive-text="NO"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Seleccionar política de precio al usar código de barras',
-                                                                                        form.unit_type_select_barcode,
-                                                                                        'unit_type_select_barcode',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.unit_type_select_barcode
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-barcode"
+                                                                                        ></i>
+                                                                                        Política
+                                                                                        de
+                                                                                        precio
+                                                                                        en
+                                                                                        BarCode
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Permite seleccionar una política de precio al escanear un código de barras"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.unit_type_select_barcode
+                                                                                        "
+                                                                                        active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Seleccionar política de precio al usar código de barras',
+                                                                                                form.unit_type_select_barcode,
+                                                                                                'unit_type_select_barcode',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Editar Política De Precio en Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Editar Política De Precio en Caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.editar_precio_politica
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Editar
-                                                                                Política
-                                                                                de
-                                                                                Precio
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.editar_precio_politica
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Editar Politica de Precios En Caja',
-                                                                                        form.editar_precio_politica,
-                                                                                        'view_daily_cash_pin',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.editar_precio_politica
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Editar
+                                                                                        Política
+                                                                                        de
+                                                                                        Precio
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.editar_precio_politica
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Editar Politica de Precios En Caja',
+                                                                                                form.editar_precio_politica,
+                                                                                                'view_daily_cash_pin',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Política de precio en lista de productos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Política de precio en lista de productos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.listprice_list_or_card
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-tag fa-lg"
-                                                                                ></i>
-                                                                                Política
-                                                                                en
-                                                                                Lista
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Política de precio en lista de productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.listprice_list_or_card
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Política de precio en lista de productos',
-                                                                                        form.listprice_list_or_card,
-                                                                                        'listprice_list_or_card',
-                                                                                        'tagIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.listprice_list_or_card
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .listprice_list_or_card[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.listprice_list_or_card
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-tag fa-lg"
+                                                                                        ></i>
+                                                                                        Política
+                                                                                        en
+                                                                                        Lista
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Política de precio en lista de productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.listprice_list_or_card
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Política de precio en lista de productos',
+                                                                                                form.listprice_list_or_card,
+                                                                                                'listprice_list_or_card',
+                                                                                                'tagIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.listprice_list_or_card
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .listprice_list_or_card[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Precios por Rango de Cantidad -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Precios por Rango de Cantidad -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.quantity_prices
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="el-icon-s-grid icon-tab"
-                                                                                ></i>
-                                                                                Precios
-                                                                                Rango/cantidad
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Habilita la visualización de precios por rango de cantidad en la lista de productos"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.quantity_prices
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Precios por rango de cantidad',
-                                                                                        form.quantity_prices,
-                                                                                        'quantity_prices',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.quantity_prices
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Precios
+                                                                                        Rango/cantidad
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización de precios por rango de cantidad en la lista de productos"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.quantity_prices
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Precios por rango de cantidad',
+                                                                                                form.quantity_prices,
+                                                                                                'quantity_prices',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                            </div>
-                                                        </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
 
-                                                    
-                                                     <!--  Gestion de WhatsApp-->
-                                                     <div class="col-md-12 mt-4">
+                                                    <!--  Gestion de WhatsApp-->
+                                                    <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestión de WhatsApp
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestión
+                                                                        de
+                                                                        WhatsApp
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                            <!-- Enviar whatsapp por pagos YAPE/PLIN -->
                                                             <div
-                                                                class="col-md-3 mt-4"
+                                                                class="card-body"
                                                             >
                                                                 <div
-                                                                    class="card h-100"
+                                                                    class="row"
                                                                 >
+                                                                    <!-- Enviar whatsapp por pagos YAPE/PLIN -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.send_whatsapp_digital_pay
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-mobile-alt fa-lg"
-                                                                                ></i>
-                                                                                WhatsApp
-                                                                                x
-                                                                                pagos
-                                                                                YAPE/PLIN
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Enviar notificaciones por WhatsApp para pagos realizados con YAPE/PLIN"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.send_whatsapp_digital_pay
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Enviar whatsapp por pagos YAPE/PLIN',
-                                                                                        form.send_whatsapp_digital_pay,
-                                                                                        'send_whatsapp_digital_pay',
-                                                                                        'mobileAltIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.send_whatsapp_digital_pay
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .send_whatsapp_digital_pay[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.send_whatsapp_digital_pay
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-mobile-alt fa-lg"
+                                                                                        ></i>
+                                                                                        WhatsApp
+                                                                                        x
+                                                                                        pagos
+                                                                                        YAPE/PLIN
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Enviar notificaciones por WhatsApp para pagos realizados con YAPE/PLIN"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.send_whatsapp_digital_pay
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Enviar whatsapp por pagos YAPE/PLIN',
+                                                                                                form.send_whatsapp_digital_pay,
+                                                                                                'send_whatsapp_digital_pay',
+                                                                                                'mobileAltIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.send_whatsapp_digital_pay
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .send_whatsapp_digital_pay[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Usar número personal (whatsapp) -->
-                                                            <!-- <div class="col-md-2 mt-4">
+                                                                    <!-- Usar número personal (whatsapp) -->
+                                                                    <!-- <div class="col-md-2 mt-4">
                                                                     <div class="form-group">
                                                                     <label class="control-label w-100">
                                                                         <i class="fas fa-phone tab-icon"></i>
@@ -6862,305 +6946,223 @@
                                                                     </div>
                                                                 </div> -->
 
-                                                            <!-- Enviar whatsapp al ver venta diaria -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Enviar whatsapp al ver venta diaria -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.send_whatsapp_daily_cash
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-paper-plane tab-icon"
-                                                                                ></i>
-                                                                                Enviar
-                                                                                whatsapp
-                                                                                al
-                                                                                ver
-                                                                                venta
-                                                                                diaria
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Enviar notificaciones por WhatsApp al visualizar la venta diaria"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.send_whatsapp_daily_cash
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Enviar whatsapp al ver venta diaria',
-                                                                                        form.send_whatsapp_daily_cash,
-                                                                                        'send_whatsapp_daily_cash',
-                                                                                        'paperPlaneIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.send_whatsapp_daily_cash
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .send_whatsapp_daily_cash[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.send_whatsapp_daily_cash
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-paper-plane tab-icon"
+                                                                                        ></i>
+                                                                                        Enviar
+                                                                                        whatsapp
+                                                                                        al
+                                                                                        ver
+                                                                                        venta
+                                                                                        diaria
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Enviar notificaciones por WhatsApp al visualizar la venta diaria"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.send_whatsapp_daily_cash
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Enviar whatsapp al ver venta diaria',
+                                                                                                form.send_whatsapp_daily_cash,
+                                                                                                'send_whatsapp_daily_cash',
+                                                                                                'paperPlaneIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.send_whatsapp_daily_cash
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .send_whatsapp_daily_cash[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Enviar XML por whatsapp -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Enviar XML por whatsapp -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.xml_whatsapp
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-file-export tab-icon"
-                                                                                ></i>
-                                                                                Enviar
-                                                                                XML
-                                                                                por
-                                                                                whatsapp
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Enviar XML por WhatsApp"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.xml_whatsapp
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Enviar XML por whatsapp',
-                                                                                        form.xml_whatsapp,
-                                                                                        'xml_whatsapp',
-                                                                                        'fileExportIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                            <small
-                                                                                class="text-danger"
-                                                                                v-if="
-                                                                                    errors.xml_whatsapp
-                                                                                "
-                                                                                v-text="
-                                                                                    errors
-                                                                                        .xml_whatsapp[0]
-                                                                                "
-                                                                            ></small>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.xml_whatsapp
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-file-export tab-icon"
+                                                                                        ></i>
+                                                                                        Enviar
+                                                                                        XML
+                                                                                        por
+                                                                                        whatsapp
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Enviar XML por WhatsApp"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.xml_whatsapp
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Enviar XML por whatsapp',
+                                                                                                form.xml_whatsapp,
+                                                                                                'xml_whatsapp',
+                                                                                                'fileExportIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                    <small
+                                                                                        class="text-danger"
+                                                                                        v-if="
+                                                                                            errors.xml_whatsapp
+                                                                                        "
+                                                                                        v-text="
+                                                                                            errors
+                                                                                                .xml_whatsapp[0]
+                                                                                        "
+                                                                                    ></small>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Habilitar Numero de Whatsapp por establecimiento -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Habilitar Numero de Whatsapp por establecimiento -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                                :style="{
-                                                                                    color: form.configuration_establishments_numbers
-                                                                                        ? '#28a745'
-                                                                                        : '#6c757d'
-                                                                                }"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-bell tab-icon"
-                                                                                ></i>
-                                                                                Notificaciones
-                                                                                x
-                                                                                Establecimiento
-                                                                                <el-tooltip
-                                                                                    content="Números de Notificaciones por establecimiento"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.configuration_establishments_numbers
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Números de Notificaciones por establecimiento',
-                                                                                        form.configuration_establishments_numbers,
-                                                                                        'configuration_establishments_numbers',
-                                                                                        'fileIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.configuration_establishments_numbers
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-bell tab-icon"
+                                                                                        ></i>
+                                                                                        Notificaciones
+                                                                                        x
+                                                                                        Establecimiento
+                                                                                        <el-tooltip
+                                                                                            content="Números de Notificaciones por establecimiento"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.configuration_establishments_numbers
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Números de Notificaciones por establecimiento',
+                                                                                                form.configuration_establishments_numbers,
+                                                                                                'configuration_establishments_numbers',
+                                                                                                'fileIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Números de whatsapp para enviar actividad -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                                v-if="
-                                                                    !form.configuration_establishments_numbers
-                                                                "
-                                                            >
-                                                                <div
-                                                                    class="form-group"
-                                                                >
-                                                                    <label
-                                                                        class="control-label w-100"
-                                                                    >
-                                                                        <i
-                                                                            class="fas fa-phone tab-icon"
-                                                                        ></i>
-                                                                        Números
-                                                                        de
-                                                                        whatsapp
-                                                                        para
-                                                                        enviar
-                                                                        actividad
-                                                                        <a
-                                                                            href="#"
-                                                                            @click.prevent="
-                                                                                addNumberWhatsapp
-                                                                            "
-                                                                            >[Agregar
-                                                                            +]</a
-                                                                        >
-                                                                    </label>
-                                                                    <el-input
-                                                                        :disabled="
-                                                                            true
+                                                                    <!-- Números de whatsapp para enviar actividad -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                        v-if="
+                                                                            !form.configuration_establishments_numbers
                                                                         "
-                                                                        :value="
-                                                                            999999999
-                                                                        "
-                                                                    ></el-input>
-                                                                    <small>
-                                                                        <el-tag
-                                                                            class="mt-1"
-                                                                            v-for="(number,
-                                                                            idx) in numbers"
-                                                                            :key="
-                                                                                idx
-                                                                            "
-                                                                            closable
-                                                                            @close="
-                                                                                removeNumberWhatsapp(
-                                                                                    idx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <template
-                                                                                v-if="
-                                                                                    number.description
-                                                                                "
-                                                                            >
-                                                                                {{
-                                                                                    number.number
-                                                                                }}
-                                                                                -
-                                                                                {{
-                                                                                    number.description
-                                                                                }}
-                                                                            </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
-                                                                                {{
-                                                                                    number.number
-                                                                                }}
-                                                                            </template>
-                                                                        </el-tag>
-                                                                    </small>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Configurar Números de Whatsapp -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="form-group"
                                                                         >
                                                                             <label
                                                                                 class="control-label w-100"
@@ -7168,1304 +7170,1429 @@
                                                                                 <i
                                                                                     class="fas fa-phone tab-icon"
                                                                                 ></i>
-                                                                                Configurar
-                                                                                números
+                                                                                Números
+                                                                                de
+                                                                                whatsapp
+                                                                                para
+                                                                                enviar
+                                                                                actividad
+                                                                                <a
+                                                                                    href="#"
+                                                                                    @click.prevent="
+                                                                                        addNumberWhatsapp
+                                                                                    "
+                                                                                    >[Agregar
+                                                                                    +]</a
+                                                                                >
                                                                             </label>
-                                                                            <el-button
-                                                                                class="btn-agregar btn-agregar:hover"
-                                                                                type="primary"
-                                                                                @click="
-                                                                                    configureNumbers
+                                                                            <el-input
+                                                                                :disabled="
+                                                                                    true
                                                                                 "
-                                                                            >
-                                                                                Configurar
-                                                                            </el-button>
+                                                                                :value="
+                                                                                    999999999
+                                                                                "
+                                                                            ></el-input>
+                                                                            <small>
+                                                                                <el-tag
+                                                                                    class="mt-1"
+                                                                                    v-for="(number,
+                                                                                    idx) in numbers"
+                                                                                    :key="
+                                                                                        idx
+                                                                                    "
+                                                                                    closable
+                                                                                    @close="
+                                                                                        removeNumberWhatsapp(
+                                                                                            idx
+                                                                                        )
+                                                                                    "
+                                                                                >
+                                                                                    <template
+                                                                                        v-if="
+                                                                                            number.description
+                                                                                        "
+                                                                                    >
+                                                                                        {{
+                                                                                            number.number
+                                                                                        }}
+                                                                                        -
+                                                                                        {{
+                                                                                            number.description
+                                                                                        }}
+                                                                                    </template>
+                                                                                    <template
+                                                                                        v-else
+                                                                                    >
+                                                                                        {{
+                                                                                            number.number
+                                                                                        }}
+                                                                                    </template>
+                                                                                </el-tag>
+                                                                            </small>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Whatsapp en Reimpresión de Documentos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Configurar Números de Whatsapp -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-mobile-alt fa-lg"
-                                                                                ></i>
-                                                                                Whatsapp
-                                                                                en
-                                                                                Reimpresión
-                                                                                de
-                                                                                Documentos
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.reprint_whatsapp
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Whatsapp en Reimpresión de Documentos',
-                                                                                        form.reprint_whatsapp,
-                                                                                        'reprint_whatsapp',
-                                                                                        'mobileAltIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-phone tab-icon"
+                                                                                        ></i>
+                                                                                        Configurar
+                                                                                        números
+                                                                                    </label>
+                                                                                    <el-button
+                                                                                        class="btn-agregar btn-agregar:hover"
+                                                                                        type="primary"
+                                                                                        @click="
+                                                                                            configureNumbers
+                                                                                        "
+                                                                                    >
+                                                                                        Configurar
+                                                                                    </el-button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Whatsapp en Reimpresión de Documentos -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-mobile-alt fa-lg"
+                                                                                        ></i>
+                                                                                        Whatsapp
+                                                                                        en
+                                                                                        Reimpresión
+                                                                                        de
+                                                                                        Documentos
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.reprint_whatsapp
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Whatsapp en Reimpresión de Documentos',
+                                                                                                form.reprint_whatsapp,
+                                                                                                'reprint_whatsapp',
+                                                                                                'mobileAltIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                            </div>
-                                                        </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
-
-                                                    
 
                                                     <!-- Sección Gestión de Productos -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestión de Productos
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestión
+                                                                        de
+                                                                        Productos
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                            <!-- Crear Productos en caja -->
                                                             <div
-                                                                class="col-md-3 mt-4"
+                                                                class="card-body"
                                                             >
                                                                 <div
-                                                                    class="card h-100"
+                                                                    class="row"
                                                                 >
+                                                                    <!-- Crear Productos en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-box fa-lg"
-                                                                                ></i>
-                                                                                Crear
-                                                                                Productos
-                                                                                en
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.product_cash
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Crear Productos en caja',
-                                                                                        form.product_cash,
-                                                                                        'product_cash',
-                                                                                        'boxIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Editar Producto en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-pencil-ruler fa-lg"
-                                                                                ></i>
-                                                                                Editar
-                                                                                Producto
-                                                                                en
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.edit_product_pos
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Editar Producto en caja',
-                                                                                        form.edit_product_pos,
-                                                                                        'edit_product_pos',
-                                                                                        'pencilRulerIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Mostrar descripción Completa del producto en Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-align-left fa-lg"
-                                                                                ></i>
-                                                                                Descripción
-                                                                                Full
-                                                                                del
-                                                                                producto
-                                                                                en
-                                                                                Caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.trunc_txt
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar descripción Completa del producto en Caja',
-                                                                                        form.trunc_txt,
-                                                                                        'trunc_txt',
-                                                                                        'alignLeftIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Mostrar Stock de Productos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-eye fa-lg"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Stock
-                                                                                de
-                                                                                Productos
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.show_stock_cash
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Stock de Productos',
-                                                                                        form.show_stock_cash,
-                                                                                        'show_stock_cash',
-                                                                                        'eyeIcon'
-                                                                                    );
-                                                                                    stock_control();
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Mostrar productos por vencer en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-hourglass-half fa-lg"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                productos
-                                                                                por
-                                                                                vencer
-                                                                                en
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.items_due_caja
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar productos por vencer en caja',
-                                                                                        form.items_due_caja,
-                                                                                        'items_due_caja',
-                                                                                        'hourglassHalfIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Mostrar Nombre secundario - Código externo -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-tags tab-icon"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Nombre
-                                                                                secundario
-                                                                                -
-                                                                                Código
-                                                                                externo
-                                                                                <el-tooltip
-                                                                                    content="Mostrar Nombre secundario - Código externo en el formulario de productos"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.show_second_name_external_code
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Nombre secundario - Código externo',
-                                                                                        form.show_second_name_external_code,
-                                                                                        'show_second_name_external_code',
-                                                                                        'tagsIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-box fa-lg"
+                                                                                        ></i>
+                                                                                        Crear
+                                                                                        Productos
+                                                                                        en
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.product_cash
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Crear Productos en caja',
+                                                                                                form.product_cash,
+                                                                                                'product_cash',
+                                                                                                'boxIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Recibir Productos (traslado) -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Editar Producto en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-dolly fa-lg"
-                                                                                ></i>
-                                                                                Recibir
-                                                                                Productos
-                                                                                (traslado)
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Recibir Productos por TRASLADO DE MERCADERÍA en CAJA"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.receive_merchandise
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Recibir Productos (traslado)',
-                                                                                        form.receive_merchandise,
-                                                                                        'receive_merchandise',
-                                                                                        'dollyIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-pencil-ruler fa-lg"
+                                                                                        ></i>
+                                                                                        Editar
+                                                                                        Producto
+                                                                                        en
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.edit_product_pos
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Editar Producto en caja',
+                                                                                                form.edit_product_pos,
+                                                                                                'edit_product_pos',
+                                                                                                'pencilRulerIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Bloquear stock inicial -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar descripción Completa del producto en Caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-lock fa-lg"
-                                                                                ></i>
-                                                                                Bloquear
-                                                                                stock
-                                                                                inicial
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.init_stock
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Bloquear stock inicial',
-                                                                                        form.init_stock,
-                                                                                        'init_stock',
-                                                                                        'lockIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Permitir Ajuste de Stock -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-tools fa-lg"
-                                                                                ></i>
-                                                                                Permitir
-                                                                                Ajuste
-                                                                                de
-                                                                                Stock
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.item_adjustment
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Permitir Ajuste de Stock',
-                                                                                        form.item_adjustment,
-                                                                                        'item_adjustment',
-                                                                                        'toolsIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Vender con stock -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-boxes tab-icon"
-                                                                                ></i>
-                                                                                Vender
-                                                                                con
-                                                                                stock
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.sales_stock
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Vender con stock',
-                                                                                        form.sales_stock,
-                                                                                        'sales_stock',
-                                                                                        'boxesIcon'
-                                                                                    );
-                                                                                    stock_control();
-                                                                                "
-                                                                            ></el-switch>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Observación al hacer ajuste de stock -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
-                                                                    <div
-                                                                        class="card-body d-flex flex-column"
-                                                                    >
-                                                                        <div
-                                                                            class="form-group text-left flex-grow-1"
-                                                                        >
-                                                                            <label
-                                                                                class="control-label w-100"
-                                                                            >
-                                                                                <i
-                                                                                    class="fas fa-edit tab-icon"
-                                                                                ></i>
-                                                                                Observación
-                                                                                al
-                                                                                hacer
-                                                                                ajuste
-                                                                                de
-                                                                                stock
-                                                                                <el-tooltip
-                                                                                    content="Obligar a dar razón del traslado"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.observation_translate
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Observación al hacer ajuste de stock',
-                                                                                        form.observation_translate,
-                                                                                        'observation_translate',
-                                                                                        'editIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-align-left fa-lg"
+                                                                                        ></i>
+                                                                                        Descripción
+                                                                                        Full
+                                                                                        del
+                                                                                        producto
+                                                                                        en
+                                                                                        Caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.trunc_txt
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar descripción Completa del producto en Caja',
+                                                                                                form.trunc_txt,
+                                                                                                'trunc_txt',
+                                                                                                'alignLeftIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Crear Productos Compuestos en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Stock de Productos -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-cubes fa-lg"
-                                                                                ></i>
-                                                                                Crear
-                                                                                Productos
-                                                                                Compuestos
-                                                                                en
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.item_set_caja
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Crear Productos Compuestos en caja',
-                                                                                        form.item_set_caja,
-                                                                                        'item_set_caja',
-                                                                                        'cubesIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-eye fa-lg"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Stock
+                                                                                        de
+                                                                                        Productos
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.show_stock_cash
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Stock de Productos',
+                                                                                                form.show_stock_cash,
+                                                                                                'show_stock_cash',
+                                                                                                'eyeIcon'
+                                                                                            );
+                                                                                            stock_control();
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Editar Productos Compuestos en caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar productos por vencer en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-box-open fa-lg"
-                                                                                ></i>
-                                                                                Editar
-                                                                                Productos
-                                                                                Compuestos
-                                                                                en
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.item_set_quantity_pos
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Editar Productos Compuestos en caja',
-                                                                                        form.item_set_quantity_pos,
-                                                                                        'item_set_quantity_pos',
-                                                                                        'boxOpenIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-hourglass-half fa-lg"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        productos
+                                                                                        por
+                                                                                        vencer
+                                                                                        en
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.items_due_caja
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar productos por vencer en caja',
+                                                                                                form.items_due_caja,
+                                                                                                'items_due_caja',
+                                                                                                'hourglassHalfIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Imagenes de Productos en Cotización -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Nombre secundario - Código externo -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-image fa-lg"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Imagenes
-                                                                                de
-                                                                                Productos
-                                                                                en
-                                                                                Cotización
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.image_quotation
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Imagenes de Productos en Cotización',
-                                                                                        form.image_quotation,
-                                                                                        'image_quotation',
-                                                                                        'imageIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-tags tab-icon"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Nombre
+                                                                                        secundario
+                                                                                        -
+                                                                                        Código
+                                                                                        externo
+                                                                                        <el-tooltip
+                                                                                            content="Mostrar Nombre secundario - Código externo en el formulario de productos"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.show_second_name_external_code
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Nombre secundario - Código externo',
+                                                                                                form.show_second_name_external_code,
+                                                                                                'show_second_name_external_code',
+                                                                                                'tagsIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Ordenar Productos por Descripción en Caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Recibir Productos (traslado) -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-sort-alpha-down fa-lg"
-                                                                                ></i>
-                                                                                Ordenar
-                                                                                Productos
-                                                                                por
-                                                                                Descripción
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.ord_dscp
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Ordenar Productos por Descripción en Caja',
-                                                                                        form.ord_dscp,
-                                                                                        'ord_dscp',
-                                                                                        'sortAlphaDownIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-dolly fa-lg"
+                                                                                        ></i>
+                                                                                        Recibir
+                                                                                        Productos
+                                                                                        (traslado)
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Recibir Productos por TRASLADO DE MERCADERÍA en CAJA"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.receive_merchandise
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Recibir Productos (traslado)',
+                                                                                                form.receive_merchandise,
+                                                                                                'receive_merchandise',
+                                                                                                'dollyIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Stock Almacénes -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Bloquear stock inicial -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-warehouse fa-lg"
-                                                                                ></i>
-                                                                                Mostrar
-                                                                                Stock
-                                                                                Almacénes
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.show_stock_establishment_box
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Mostrar Stock Almacénes',
-                                                                                        form.show_stock_establishment_box,
-                                                                                        'show_stock_establishment_box',
-                                                                                        'warehouseIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-lock fa-lg"
+                                                                                        ></i>
+                                                                                        Bloquear
+                                                                                        stock
+                                                                                        inicial
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.init_stock
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Bloquear stock inicial',
+                                                                                                form.init_stock,
+                                                                                                'init_stock',
+                                                                                                'lockIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Traslados directos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Permitir Ajuste de Stock -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-exchange-alt fa-lg"
-                                                                                ></i>
-                                                                                Traslados
-                                                                                directos
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.translate_direct
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Traslados directos',
-                                                                                        form.translate_direct,
-                                                                                        'translate_direct',
-                                                                                        'exchangeAltIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-tools fa-lg"
+                                                                                        ></i>
+                                                                                        Permitir
+                                                                                        Ajuste
+                                                                                        de
+                                                                                        Stock
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.item_adjustment
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Permitir Ajuste de Stock',
+                                                                                                form.item_adjustment,
+                                                                                                'item_adjustment',
+                                                                                                'toolsIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Tratamiento comercial Categoría -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Vender con stock -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-handshake fa-lg"
-                                                                                ></i>
-                                                                                Tratamiento
-                                                                                comercial
-                                                                                Categoría
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.commercial_treatments
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Tratamiento comercial Categoría',
-                                                                                        form.commercial_treatments,
-                                                                                        'commercial_treatments',
-                                                                                        'handshakeIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-boxes tab-icon"
+                                                                                        ></i>
+                                                                                        Vender
+                                                                                        con
+                                                                                        stock
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.sales_stock
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Vender con stock',
+                                                                                                form.sales_stock,
+                                                                                                'sales_stock',
+                                                                                                'boxesIcon'
+                                                                                            );
+                                                                                            stock_control();
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Tratamiento comercial Producto -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Observación al hacer ajuste de stock -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-handshake fa-lg"
-                                                                                ></i>
-                                                                                Tratamiento
-                                                                                comercial
-                                                                                Producto
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.commercial_treatment_items
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Tratamiento comercial Producto',
-                                                                                        form.commercial_treatment_items,
-                                                                                        'commercial_treatment_items',
-                                                                                        'handshakeIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-edit tab-icon"
+                                                                                        ></i>
+                                                                                        Observación
+                                                                                        al
+                                                                                        hacer
+                                                                                        ajuste
+                                                                                        de
+                                                                                        stock
+                                                                                        <el-tooltip
+                                                                                            content="Obligar a dar razón del traslado"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.observation_translate
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Observación al hacer ajuste de stock',
+                                                                                                form.observation_translate,
+                                                                                                'observation_translate',
+                                                                                                'editIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Servicio en todos los establecimientos -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Crear Productos Compuestos en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-warehouse fa-lg"
-                                                                                ></i>
-                                                                                Servicio
-                                                                                en
-                                                                                todos
-                                                                                los
-                                                                                establecimientos
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.create_service_all_warehouse
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Servicio en todos los establecimientos',
-                                                                                        form.create_service_all_warehouse,
-                                                                                        'create_service_all_warehouse',
-                                                                                        'warehouseIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-cubes fa-lg"
+                                                                                        ></i>
+                                                                                        Crear
+                                                                                        Productos
+                                                                                        Compuestos
+                                                                                        en
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.item_set_caja
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Crear Productos Compuestos en caja',
+                                                                                                form.item_set_caja,
+                                                                                                'item_set_caja',
+                                                                                                'cubesIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Caja principal automatica -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Editar Productos Compuestos en caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-cash-register fa-lg"
-                                                                                ></i>
-                                                                                Caja
-                                                                                principal
-                                                                                automática
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.automatic_principal_cash
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Caja principal automática',
-                                                                                        form.automatic_principal_cash,
-                                                                                        'automatic_principal_cash',
-                                                                                        'cashRegisterIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-box-open fa-lg"
+                                                                                        ></i>
+                                                                                        Editar
+                                                                                        Productos
+                                                                                        Compuestos
+                                                                                        en
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.item_set_quantity_pos
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Editar Productos Compuestos en caja',
+                                                                                                form.item_set_quantity_pos,
+                                                                                                'item_set_quantity_pos',
+                                                                                                'boxOpenIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Billetes/Monedas a recibir caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Imagenes de Productos en Cotización -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-coins fa-lg"
-                                                                                ></i>
-                                                                                Billetes/Monedas
-                                                                                a
-                                                                                recibir
-                                                                                caja
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.show_coins_to_receive
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Billetes/Monedas a recibir caja',
-                                                                                        form.show_coins_to_receive,
-                                                                                        'show_coins_to_receive',
-                                                                                        'coinsIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-image fa-lg"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Imagenes
+                                                                                        de
+                                                                                        Productos
+                                                                                        en
+                                                                                        Cotización
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.image_quotation
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Imagenes de Productos en Cotización',
+                                                                                                form.image_quotation,
+                                                                                                'image_quotation',
+                                                                                                'imageIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Codigo Orginal para Producto -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Ordenar Productos por Descripción en Caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-id-card fa-lg"
-                                                                                ></i>
-                                                                                Codigo
-                                                                                Orginal
-                                                                                para
-                                                                                Producto
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.origin
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Codigo Original',
-                                                                                        form.origin,
-                                                                                        'origin',
-                                                                                        'idCardIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-sort-alpha-down fa-lg"
+                                                                                        ></i>
+                                                                                        Ordenar
+                                                                                        Productos
+                                                                                        por
+                                                                                        Descripción
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.ord_dscp
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Ordenar Productos por Descripción en Caja',
+                                                                                                form.ord_dscp,
+                                                                                                'ord_dscp',
+                                                                                                'sortAlphaDownIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-3 mt-4">
-                                                                <div class="card h-100">
-                                                                    <div class="card-body d-flex flex-column">
-                                                                        <div class="form-group text-left flex-grow-1">
-                                                                            <label class="control-label w-100">
-                                                                                <i class="fas fa-id-card fa-lg"></i>
-                                                                                Imagen de Producto visualizar en caja
-                                                                                <el-tooltip content="Activar estav opcion para que puedan visualizar la imagen del producto en la caja en modal">
-                                                                                    <i class="fa fa-info-circle"></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="form.zones_workers"
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="'#28a745'"
-                                                                                :inactive-color="'#6c757d'"
-                                                                                @change="submit(
-                                                                                    'Codigo Original',
-                                                                                    form.zones_workers,
-                                                                                    'origin',
-                                                                                    'idCardIcon'
-                                                                                )"
-                                                                            ></el-switch>
+
+                                                                    <!-- Mostrar Stock Almacénes -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-warehouse fa-lg"
+                                                                                        ></i>
+                                                                                        Mostrar
+                                                                                        Stock
+                                                                                        Almacénes
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.show_stock_establishment_box
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Mostrar Stock Almacénes',
+                                                                                                form.show_stock_establishment_box,
+                                                                                                'show_stock_establishment_box',
+                                                                                                'warehouseIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
+                                                                    <!-- Traslados directos -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-exchange-alt fa-lg"
+                                                                                        ></i>
+                                                                                        Traslados
+                                                                                        directos
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.translate_direct
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Traslados directos',
+                                                                                                form.translate_direct,
+                                                                                                'translate_direct',
+                                                                                                'exchangeAltIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
-                                                            <!-- <div
+                                                                    <!-- Tratamiento comercial Categoría -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-handshake fa-lg"
+                                                                                        ></i>
+                                                                                        Tratamiento
+                                                                                        comercial
+                                                                                        Categoría
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.commercial_treatments
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Tratamiento comercial Categoría',
+                                                                                                form.commercial_treatments,
+                                                                                                'commercial_treatments',
+                                                                                                'handshakeIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Tratamiento comercial Producto -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-handshake fa-lg"
+                                                                                        ></i>
+                                                                                        Tratamiento
+                                                                                        comercial
+                                                                                        Producto
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.commercial_treatment_items
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Tratamiento comercial Producto',
+                                                                                                form.commercial_treatment_items,
+                                                                                                'commercial_treatment_items',
+                                                                                                'handshakeIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Servicio en todos los establecimientos -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-warehouse fa-lg"
+                                                                                        ></i>
+                                                                                        Servicio
+                                                                                        en
+                                                                                        todos
+                                                                                        los
+                                                                                        establecimientos
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.create_service_all_warehouse
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Servicio en todos los establecimientos',
+                                                                                                form.create_service_all_warehouse,
+                                                                                                'create_service_all_warehouse',
+                                                                                                'warehouseIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Caja principal automatica -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-cash-register fa-lg"
+                                                                                        ></i>
+                                                                                        Caja
+                                                                                        principal
+                                                                                        automática
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.automatic_principal_cash
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Caja principal automática',
+                                                                                                form.automatic_principal_cash,
+                                                                                                'automatic_principal_cash',
+                                                                                                'cashRegisterIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Billetes/Monedas a recibir caja -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-coins fa-lg"
+                                                                                        ></i>
+                                                                                        Billetes/Monedas
+                                                                                        a
+                                                                                        recibir
+                                                                                        caja
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.show_coins_to_receive
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Billetes/Monedas a recibir caja',
+                                                                                                form.show_coins_to_receive,
+                                                                                                'show_coins_to_receive',
+                                                                                                'coinsIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Codigo Orginal para Producto -->
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-id-card fa-lg"
+                                                                                        ></i>
+                                                                                        Codigo
+                                                                                        Orginal
+                                                                                        para
+                                                                                        Producto
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.origin
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Codigo Original',
+                                                                                                form.origin,
+                                                                                                'origin',
+                                                                                                'idCardIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-id-card fa-lg"
+                                                                                        ></i>
+                                                                                        Imagen
+                                                                                        de
+                                                                                        Producto
+                                                                                        visualizar
+                                                                                        en
+                                                                                        caja
+                                                                                        <el-tooltip
+                                                                                            content="Activar estav opcion para que puedan visualizar la imagen del producto en la caja en modal"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.zones_workers
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Codigo Original',
+                                                                                                form.zones_workers,
+                                                                                                'origin',
+                                                                                                'idCardIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- <div
                                                                 class="col-md-2 mt-4"
                                                             >
                                                                 <div
@@ -8507,678 +8634,692 @@
                                                                     ></el-switch>
                                                                 </div>
                                                             </div> -->
-                                                        </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
-                                              
+
                                                     <!-- Sección Gestión de Pagos -->
                                                     <div class="col-md-12 mt-4">
                                                         <div class="card h-100">
-                                                            <div class="card mb-0">
-                                                                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                                        Gestión de Pagos
+                                                            <div
+                                                                class="card mb-0"
+                                                            >
+                                                                <div
+                                                                    class="card-header bg-primary d-flex align-items-center"
+                                                                    style="padding: 15px;"
+                                                                >
+                                                                    <h4
+                                                                        class="my-0 text-white d-flex align-items-center"
+                                                                        style="font-size: 1.5rem; font-weight: bold;"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-alt"
+                                                                            style="font-size: 2rem; margin-right: 0.5rem;"
+                                                                        ></i>
+                                                                        Gestión
+                                                                        de Pagos
                                                                     </h4>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                            <!-- Mostrar culqui en Métodos de Pago caja -->
                                                             <div
-                                                                class="col-md-3 mt-4"
+                                                                class="card-body"
                                                             >
                                                                 <div
-                                                                    class="card h-100"
+                                                                    class="row"
                                                                 >
+                                                                    <!-- Mostrar culqui en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/CulquiIcon.png"
-                                                                                    alt="Culqui Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Culqui
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.culqi
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Culqui',
-                                                                                        form.culqi,
-                                                                                        '/images/CulquiIcon.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/CulquiIcon.png"
+                                                                                            alt="Culqui Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Culqui
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.culqi
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Culqui',
+                                                                                                form.culqi,
+                                                                                                '/images/CulquiIcon.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar yape en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar yape en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/yape-logo-3E473EE7E5-seeklogo.com.png"
-                                                                                    alt="Yape Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Yape
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.yape
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Yape',
-                                                                                        form.yape,
-                                                                                        '/images/yape-logo-3E473EE7E5-seeklogo.com.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/yape-logo-3E473EE7E5-seeklogo.com.png"
+                                                                                            alt="Yape Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Yape
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.yape
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Yape',
+                                                                                                form.yape,
+                                                                                                '/images/yape-logo-3E473EE7E5-seeklogo.com.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar izipay en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar izipay en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonIzipay.png"
-                                                                                    alt="Izipay Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Izipay
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.izipay
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Izipay',
-                                                                                        form.izipay,
-                                                                                        '/images/botonIzipay.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonIzipay.png"
+                                                                                            alt="Izipay Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Izipay
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.izipay
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Izipay',
+                                                                                                form.izipay,
+                                                                                                '/images/botonIzipay.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar openpay en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar openpay en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonOpenpay.png"
-                                                                                    alt="Openpay Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Openpay
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.openpay
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Openpay',
-                                                                                        form.openpay,
-                                                                                        '/images/botonOpenpay.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonOpenpay.png"
+                                                                                            alt="Openpay Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Openpay
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.openpay
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Openpay',
+                                                                                                form.openpay,
+                                                                                                '/images/botonOpenpay.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar nubiz en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar nubiz en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonNiubiz.png"
-                                                                                    alt="Niubiz Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Nubiz
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.nubiz
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Nubiz',
-                                                                                        form.nubiz,
-                                                                                        '/images/botonNiubiz.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonNiubiz.png"
+                                                                                            alt="Niubiz Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Nubiz
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.nubiz
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Nubiz',
+                                                                                                form.nubiz,
+                                                                                                '/images/botonNiubiz.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar plin en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar plin en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/plin-logo-0C4106153C-seeklogo.com.png"
-                                                                                    alt="Plin Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Plin
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.plin
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Plin',
-                                                                                        form.plin,
-                                                                                        '/images/plin-logo-0C4106153C-seeklogo.com.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/plin-logo-0C4106153C-seeklogo.com.png"
+                                                                                            alt="Plin Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Plin
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.plin
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Plin',
+                                                                                                form.plin,
+                                                                                                '/images/plin-logo-0C4106153C-seeklogo.com.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Rappi en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Rappi en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonRappi.png"
-                                                                                    alt="Rappi Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Rappi
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.rappi
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Rappi',
-                                                                                        form.rappi,
-                                                                                        '/images/botonRappi.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonRappi.png"
+                                                                                            alt="Rappi Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Rappi
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.rappi
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Rappi',
+                                                                                                form.rappi,
+                                                                                                '/images/botonRappi.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Pedidos-Ya en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Pedidos-Ya en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonPedidosYa.png"
-                                                                                    alt="Pedidos-Ya Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Pedidos-Ya
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.pedidosya
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Pedidos-Ya',
-                                                                                        form.pedidosya,
-                                                                                        '/images/botonPedidosYa.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonPedidosYa.png"
+                                                                                            alt="Pedidos-Ya Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Pedidos-Ya
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.pedidosya
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Pedidos-Ya',
+                                                                                                form.pedidosya,
+                                                                                                '/images/botonPedidosYa.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Mostrar Didi-Foods en Métodos de Pago caja -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Mostrar Didi-Foods en Métodos de Pago caja -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <img
-                                                                                    src="/images/botonDidi.png"
-                                                                                    alt="Didi-Foods Logo"
-                                                                                    class="payment-logo"
-                                                                                />
-                                                                                Didi-Foods
-                                                                                <el-tooltip
-                                                                                    class="item"
-                                                                                    effect="dark"
-                                                                                    content="Método de pago en caja"
-                                                                                    placement="top-start"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.didi
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Didi-Foods',
-                                                                                        form.didi,
-                                                                                        '/images/botonDidi.png',
-                                                                                        'walletIcon',
-                                                                                        true
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <img
+                                                                                            src="/images/botonDidi.png"
+                                                                                            alt="Didi-Foods Logo"
+                                                                                            class="payment-logo"
+                                                                                        />
+                                                                                        Didi-Foods
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Método de pago en caja"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.didi
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Didi-Foods',
+                                                                                                form.didi,
+                                                                                                '/images/botonDidi.png',
+                                                                                                'walletIcon',
+                                                                                                true
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Requerir número de operación (YAPE/PLIN/TARJETAS) -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Requerir número de operación (YAPE/PLIN/TARJETAS) -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-receipt tab-icon"
-                                                                                ></i>
-                                                                                Solicitar
-                                                                                Número
-                                                                                de
-                                                                                Operación
-                                                                                <el-tooltip
-                                                                                    content="YAPE/PLIN/TARJETAS, Obligatorio para emitir comprobante de pago"
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
                                                                                 >
-                                                                                    <i
-                                                                                        class="fa fa-info-circle"
-                                                                                    ></i>
-                                                                                </el-tooltip>
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.require_code
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Requerir número de operación (YAPE/PLIN/TARJETAS)',
-                                                                                        form.require_code,
-                                                                                        'require_code',
-                                                                                        'receiptIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-receipt tab-icon"
+                                                                                        ></i>
+                                                                                        Solicitar
+                                                                                        Número
+                                                                                        de
+                                                                                        Operación
+                                                                                        <el-tooltip
+                                                                                            content="YAPE/PLIN/TARJETAS, Obligatorio para emitir comprobante de pago"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.require_code
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Requerir número de operación (YAPE/PLIN/TARJETAS)',
+                                                                                                form.require_code,
+                                                                                                'require_code',
+                                                                                                'receiptIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <!-- Cargo por pago con tarjeta -->
-                                                            <div
-                                                                class="col-md-3 mt-4"
-                                                            >
-                                                                <div
-                                                                    class="card h-100"
-                                                                >
+                                                                    <!-- Cargo por pago con tarjeta -->
                                                                     <div
-                                                                        class="card-body d-flex flex-column"
+                                                                        class="col-md-3 mt-4"
                                                                     >
                                                                         <div
-                                                                            class="form-group text-left flex-grow-1"
+                                                                            class="card h-100"
                                                                         >
-                                                                            <label
-                                                                                class="control-label w-100"
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
                                                                             >
-                                                                                <i
-                                                                                    class="fas fa-credit-card tab-icon"
-                                                                                ></i>
-                                                                                Cargo
-                                                                                por
-                                                                                pago
-                                                                                con
-                                                                                tarjeta
-                                                                            </label>
-                                                                            <el-switch
-                                                                                v-model="
-                                                                                    form.credit_mode
-                                                                                "
-                                                                                active-text="Si"
-                                                                                inactive-text="No"
-                                                                                :active-color="
-                                                                                    '#28a745'
-                                                                                "
-                                                                                :inactive-color="
-                                                                                    '#6c757d'
-                                                                                "
-                                                                                @change="
-                                                                                    submit(
-                                                                                        'Cargo por pago con tarjeta',
-                                                                                        form.credit_mode,
-                                                                                        'credit_mode',
-                                                                                        'creditCardIcon'
-                                                                                    )
-                                                                                "
-                                                                            ></el-switch>
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-credit-card tab-icon"
+                                                                                        ></i>
+                                                                                        Cargo
+                                                                                        por
+                                                                                        pago
+                                                                                        con
+                                                                                        tarjeta
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.credit_mode
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'Cargo por pago con tarjeta',
+                                                                                                form.credit_mode,
+                                                                                                'credit_mode',
+                                                                                                'creditCardIcon'
+                                                                                            )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                            </div>
-                                                        </div>
-                                                        <br>
+                                                        <br />
                                                     </div>
-
-                                                   
                                                 </div>
                                             </div>
                                         </template>
@@ -9203,9 +9344,18 @@
                                         <div class="col-md-12 mt-4">
                                             <div class="card h-100">
                                                 <div class="card mb-0">
-                                                    <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                        <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                            <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                                                    <div
+                                                        class="card-header bg-primary d-flex align-items-center"
+                                                        style="padding: 15px;"
+                                                    >
+                                                        <h4
+                                                            class="my-0 text-white d-flex align-items-center"
+                                                            style="font-size: 1.5rem; font-weight: bold;"
+                                                        >
+                                                            <i
+                                                                class="fas fa-file-alt"
+                                                                style="font-size: 2rem; margin-right: 0.5rem;"
+                                                            ></i>
                                                             Tratamiento Especial
                                                         </h4>
                                                     </div>
@@ -9213,8 +9363,12 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <!-- Impresoras Nuevas -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9234,7 +9388,8 @@
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
                                                                             Impresoras
-                                                                            Modernas A4
+                                                                            Modernas
+                                                                            A4
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9263,8 +9418,12 @@
                                                         </div>
 
                                                         <!-- Orientación A5 -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9283,7 +9442,8 @@
                                                                                 ref="a5OrientationIcon"
                                                                                 class="fas fa-arrows-alt-h tab-icon fa-lg"
                                                                             ></i>
-                                                                            Orientación A5
+                                                                            Orientación
+                                                                            A5
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9312,8 +9472,12 @@
                                                         </div>
 
                                                         <!-- Imprimir gastos/ingresos -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9332,7 +9496,9 @@
                                                                                 ref="balanceScaleIcon"
                                                                                 class="fas fa-balance-scale tab-icon fa-lg"
                                                                             ></i>
-                                                                            Imprimir Gastos/Ingresos Caja
+                                                                            Imprimir
+                                                                            Gastos/Ingresos
+                                                                            Caja
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9361,8 +9527,12 @@
                                                         </div>
 
                                                         <!-- Reimpresión de documentos - Caja -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9381,7 +9551,8 @@
                                                                                 ref="printDocumentCashIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
-                                                                            Reimpresión CPE
+                                                                            Reimpresión
+                                                                            CPE
                                                                             Caja
                                                                         </label>
                                                                         <el-switch
@@ -9411,8 +9582,12 @@
                                                         </div>
 
                                                         <!-- Impresión en áreas diferentes -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9431,7 +9606,9 @@
                                                                                 ref="printDirectJustDifferentAreasIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
-                                                                            Impresión Áreas Distintas 
+                                                                            Impresión
+                                                                            Áreas
+                                                                            Distintas
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9460,8 +9637,12 @@
                                                         </div>
 
                                                         <!-- Impresión Directa -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9480,7 +9661,9 @@
                                                                                 ref="printDirectIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
-                                                                            Impresión Directa QZ
+                                                                            Impresión
+                                                                            Directa
+                                                                            QZ
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9509,8 +9692,12 @@
                                                         </div>
 
                                                         <!-- Impresión directa vendedor Cotización - Caja -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9529,14 +9716,17 @@
                                                                                 ref="sellerQuotationCashIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
-                                                                            IMP-Directa Vendedor
+                                                                            IMP-Directa
+                                                                            Vendedor
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
                                                                                 content="Impresión directa del vendedor para cotización en caja"
                                                                                 placement="top-start"
                                                                             >
-                                                                                <i class="fa fa-info-circle"></i>
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
                                                                             </el-tooltip>
                                                                         </label>
                                                                         <el-switch
@@ -9566,8 +9756,12 @@
                                                         </div>
 
                                                         <!-- Guardar decisión de Impresión -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9586,14 +9780,18 @@
                                                                                 ref="saveIcon"
                                                                                 class="fas fa-save tab-icon fa-lg"
                                                                             ></i>
-                                                                            Guardar Decisión Impresión
+                                                                            Guardar
+                                                                            Decisión
+                                                                            Impresión
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
                                                                                 content="Guardar la decisión de Impresión en caja Payment"
                                                                                 placement="top-start"
                                                                             >
-                                                                                <i class="fa fa-info-circle"></i>
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
                                                                             </el-tooltip>
                                                                         </label>
                                                                         <el-switch
@@ -9623,8 +9821,12 @@
                                                         </div>
 
                                                         <!-- Imprimir comanda en caja desde mozo (manual) -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9643,14 +9845,18 @@
                                                                                 ref="printPosWorkerIcon"
                                                                                 class="fas fa-ticket-alt tab-icon fa-lg"
                                                                             ></i>
-                                                                            Reimprimir Comanda (Mozo) 
+                                                                            Reimprimir
+                                                                            Comanda
+                                                                            (Mozo)
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
                                                                                 content="Reimprimir Comanda de forma manual en Área desde el Módulo de Mozo"
                                                                                 placement="top-start"
                                                                             >
-                                                                                <i class="fa fa-info-circle"></i>
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
                                                                             </el-tooltip>
                                                                         </label>
                                                                         <el-switch
@@ -9678,30 +9884,41 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br>
+                                            <br />
                                         </div>
-
 
                                         <div class="col-md-12 mt-4">
                                             <div class="card h-100">
                                                 <div class="card mb-0">
-                                                    <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                                                        <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                                                            <i class="fas fa-file-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                            Configuración de Documentos CPE
+                                                    <div
+                                                        class="card-header bg-primary d-flex align-items-center"
+                                                        style="padding: 15px;"
+                                                    >
+                                                        <h4
+                                                            class="my-0 text-white d-flex align-items-center"
+                                                            style="font-size: 1.5rem; font-weight: bold;"
+                                                        >
+                                                            <i
+                                                                class="fas fa-file-alt"
+                                                                style="font-size: 2rem; margin-right: 0.5rem;"
+                                                            ></i>
+                                                            Configuración de
+                                                            Documentos CPE
                                                         </h4>
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <!-- Mostrat Álias en Documentos -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9720,7 +9937,8 @@
                                                                                 ref="aliasPdfIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"
                                                                             ></i>
-                                                                            Alias en
+                                                                            Alias
+                                                                            en
                                                                             documentos
                                                                             <el-tooltip
                                                                                 class="item"
@@ -9760,8 +9978,12 @@
                                                         </div>
 
                                                         <!-- Mostrar logo en documentos -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9780,7 +10002,9 @@
                                                                                 ref="showLogoInDocumentsIcon"
                                                                                 class="fas fa-image tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar logo en
+                                                                            Mostrar
+                                                                            logo
+                                                                            en
                                                                             documentos
                                                                         </label>
                                                                         <el-switch
@@ -9810,8 +10034,12 @@
                                                         </div>
 
                                                         <!-- Mostrar código interno Documentos -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9830,8 +10058,10 @@
                                                                                 ref="barcodeIcon"
                                                                                 class="fas fa-barcode tab-icon fa-lg"
                                                                             ></i>
-                                                                            Imprimir código
-                                                                            interno (ticket)
+                                                                            Imprimir
+                                                                            código
+                                                                            interno
+                                                                            (ticket)
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
@@ -9870,8 +10100,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Correo en CPE -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9890,7 +10124,10 @@
                                                                                 ref="correoRedSaludTicketIcon"
                                                                                 class="fas fa-envelope tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar Email en CPE
+                                                                            Mostrar
+                                                                            Email
+                                                                            en
+                                                                            CPE
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9919,8 +10156,12 @@
                                                         </div>
 
                                                         <!-- Mostrar política precios CPE -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9939,8 +10180,10 @@
                                                                                 ref="showUnitTypesTicketIcon"
                                                                                 class="fas fa-ticket-alt tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar Política
-                                                                            Precios CPE
+                                                                            Mostrar
+                                                                            Política
+                                                                            Precios
+                                                                            CPE
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -9969,8 +10212,12 @@
                                                         </div>
 
                                                         <!-- Ocutar Nombre Comercial CPE -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -9989,8 +10236,10 @@
                                                                                 ref="comercialNameIcon"
                                                                                 class="fas fa-ticket-alt tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar Nombre
-                                                                            Comercial CPE
+                                                                            Mostrar
+                                                                            Nombre
+                                                                            Comercial
+                                                                            CPE
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -10019,8 +10268,12 @@
                                                         </div>
 
                                                         <!-- Mostrar  referencia en ticket -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10040,7 +10293,8 @@
                                                                                 class="fas fa-receipt tab-icon fa-lg"
                                                                             ></i>
                                                                             Imprimir
-                                                                            referencia en
+                                                                            referencia
+                                                                            en
                                                                             ticket
                                                                         </label>
                                                                         <el-switch
@@ -10070,8 +10324,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Nombre Secundario de producto en pdf -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10090,9 +10348,13 @@
                                                                                 ref="warehousesProductIcon"
                                                                                 class="el-icon-s-grid tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar Nombre
-                                                                            Secundario de
-                                                                            producto en pdf
+                                                                            Mostrar
+                                                                            Nombre
+                                                                            Secundario
+                                                                            de
+                                                                            producto
+                                                                            en
+                                                                            pdf
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -10121,8 +10383,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Codigo De Origen en ticket de pdf -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10141,9 +10407,14 @@
                                                                                 ref="pdfOriginIcon"
                                                                                 class="el-icon-s-grid tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar Codigo
-                                                                            De Origen en
-                                                                            ticket de pdf
+                                                                            Mostrar
+                                                                            Codigo
+                                                                            De
+                                                                            Origen
+                                                                            en
+                                                                            ticket
+                                                                            de
+                                                                            pdf
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -10172,8 +10443,12 @@
                                                         </div>
 
                                                         <!-- Mostrar política de precio - Cotización -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10193,8 +10468,10 @@
                                                                                 class="fas fa-tags tab-icon fa-lg"
                                                                             ></i>
                                                                             Imprimir
-                                                                            política de
-                                                                            precio -
+                                                                            política
+                                                                            de
+                                                                            precio
+                                                                            -
                                                                             Cotización
                                                                         </label>
                                                                         <el-switch
@@ -10224,8 +10501,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Número de whatsapp en ticket -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10244,8 +10525,11 @@
                                                                                 ref="phoneIcon"
                                                                                 class="fas fa-phone-alt tab-icon fa-lg"
                                                                             ></i>
-                                                                            Imprimir número
-                                                                            de whatsapp en
+                                                                            Imprimir
+                                                                            número
+                                                                            de
+                                                                            whatsapp
+                                                                            en
                                                                             ticket
                                                                         </label>
                                                                         <el-switch
@@ -10275,8 +10559,12 @@
                                                         </div>
 
                                                         <!-- Mostrar productos vendidos en reporte ticket -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10297,8 +10585,10 @@
                                                                             ></i>
                                                                             Imprimir
                                                                             productos
-                                                                            vendidos en
-                                                                            reporte ticket
+                                                                            vendidos
+                                                                            en
+                                                                            reporte
+                                                                            ticket
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -10327,8 +10617,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Codigo Origen en el CPE -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10347,14 +10641,20 @@
                                                                                 ref="warehousePdfItemIcon"
                                                                                 class="fas fa-list tab-icon fa-lg"
                                                                             ></i>
-                                                                            Mostrar COD Origen en CPE
+                                                                            Mostrar
+                                                                            COD
+                                                                            Origen
+                                                                            en
+                                                                            CPE
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
                                                                                 content="Mostrar el Código Origen del item en el CPE"
                                                                                 placement="top-start"
                                                                             >
-                                                                                <i class="fa fa-info-circle"></i>
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
                                                                             </el-tooltip>
                                                                         </label>
                                                                         <el-switch
@@ -10384,8 +10684,12 @@
                                                         </div>
 
                                                         <!-- Mostrar el saldo pendiente de pago en  el pdf - Notas de venta credito -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10404,15 +10708,20 @@
                                                                                 ref="creditNvShowPendingIcon"
                                                                                 class="fas fa-list tab-icon fa-lg"
                                                                             ></i>
-                                                                           Mostrar Saldo Crédito/NV CPE
-                                                                        <el-tooltip
-                                                                            class="item"
-                                                                            effect="dark"
-                                                                            content="Imprimir el saldo pendiente de pago en el pdf - Notas de venta crédito"
-                                                                            placement="top-start"
-                                                                        >
-                                                                            <i class="fa fa-info-circle"></i>
-                                                                        </el-tooltip>
+                                                                            Mostrar
+                                                                            Saldo
+                                                                            Crédito/NV
+                                                                            CPE
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="Imprimir el saldo pendiente de pago en el pdf - Notas de venta crédito"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
                                                                         </label>
                                                                         <el-switch
                                                                             v-model="
@@ -10441,8 +10750,12 @@
                                                         </div>
 
                                                         <!-- Mostrar Texto pie de página -->
-                                                        <div class="col-md-3 mb-4">
-                                                            <div class="card h-100">
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
                                                                 <div
                                                                     class="card-body d-flex flex-column"
                                                                 >
@@ -10461,8 +10774,11 @@
                                                                                 ref="footerTextIcon"
                                                                                 class="fas fa-quote-right tab-icon fa-lg"
                                                                             ></i>
-                                                                            Imprimir Texto
-                                                                            pie de página
+                                                                            Imprimir
+                                                                            Texto
+                                                                            pie
+                                                                            de
+                                                                            página
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
@@ -10491,22 +10807,13 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br>
+                                            <br />
                                         </div>
 
-
-                                        <div class="row">
-                                            
-
-
-
-                                            
-                                        </div>
+                                        <div class="row"></div>
                                     </el-tab-pane>
 
                                     <!-- Panel de módulos -->
@@ -14577,143 +14884,172 @@
                                                                         ></el-switch>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-2 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
-                                                            >
-                                                                <i
-                                                                    class="fas fa-print fa-lg"
-                                                                    style="margin-right: 10px;"
-                                                                ></i>
-                                                                MOSTRAR NOMBRE EN COMANDA Y PRECUENTA
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.nane_comand
-                                                                "
-                                                                active-text="Si"
-                                                                inactive-text="No"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    submit(
-                                                                        'Buscar en caja',
-                                                                        form.name_comand,
-                                                                        'search_new',
-                                                                        'printIcon'
-                                                                    )
-                                                                "
-                                                            ></el-switch>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-2 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
                                                             >
-                                                                <i
-                                                                    class="fas fa-print fa-lg"
-                                                                    style="margin-right: 10px;"
-                                                                ></i>
-                                                                Ocultar reimpresion de comanda caja y mozo
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.re_printer
-                                                                "
-                                                                active-text="Si"
-                                                                inactive-text="No"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    submit(
-                                                                        'Buscar en caja',
-                                                                        form.re_printer,
-                                                                        'search_new',
-                                                                        'printIcon'
-                                                                    )
-                                                                "
-                                                            ></el-switch>
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-print fa-lg"
+                                                                        style="margin-right: 10px;"
+                                                                    ></i>
+                                                                    MOSTRAR
+                                                                    NOMBRE EN
+                                                                    COMANDA Y
+                                                                    PRECUENTA
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.nane_comand
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'Buscar en caja',
+                                                                            form.name_comand,
+                                                                            'search_new',
+                                                                            'printIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-2 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
                                                             >
-                                                                <i
-                                                                    class="fas fa-print fa-lg"
-                                                                    style="margin-right: 10px;"
-                                                                ></i>
-                                                                Ocultar la opcion de cambiar mesa en caja
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.edit_mesa
-                                                                "
-                                                                active-text="Si"
-                                                                inactive-text="No"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    submit(
-                                                                        'Buscar en caja',
-                                                                        form.edit_mesa,
-                                                                        'search_new',
-                                                                        'printIcon'
-                                                                    )
-                                                                "
-                                                            ></el-switch>
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-print fa-lg"
+                                                                        style="margin-right: 10px;"
+                                                                    ></i>
+                                                                    Ocultar
+                                                                    reimpresion
+                                                                    de comanda
+                                                                    caja y mozo
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.re_printer
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'Buscar en caja',
+                                                                            form.re_printer,
+                                                                            'search_new',
+                                                                            'printIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-2 mt-4">
-                                                        <div class="form-group">
-                                                            <label
-                                                                class="control-label w-100"
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
                                                             >
-                                                                <i
-                                                                    class="fas fa-print fa-lg"
-                                                                    style="margin-right: 10px;"
-                                                                ></i>
-                                                                Imprimir comanda anulado en las areas de preparacion
-                                                            </label>
-                                                            <el-switch
-                                                                v-model="
-                                                                    form.image_comand
-                                                                "
-                                                                active-text="Si"
-                                                                inactive-text="No"
-                                                                :active-color="
-                                                                    '#28a745'
-                                                                "
-                                                                :inactive-color="
-                                                                    '#6c757d'
-                                                                "
-                                                                @change="
-                                                                    submit(
-                                                                        'imprimir comanda anulado',
-                                                                        form.image_comand,
-                                                                        'search_new',
-                                                                        'printIcon'
-                                                                    )
-                                                                "
-                                                            ></el-switch>
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-print fa-lg"
+                                                                        style="margin-right: 10px;"
+                                                                    ></i>
+                                                                    Ocultar la
+                                                                    opcion de
+                                                                    cambiar mesa
+                                                                    en caja
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.edit_mesa
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'Buscar en caja',
+                                                                            form.edit_mesa,
+                                                                            'search_new',
+                                                                            'printIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-print fa-lg"
+                                                                        style="margin-right: 10px;"
+                                                                    ></i>
+                                                                    Imprimir
+                                                                    comanda
+                                                                    anulado en
+                                                                    las areas de
+                                                                    preparacion
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.image_comand
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'imprimir comanda anulado',
+                                                                            form.image_comand,
+                                                                            'search_new',
+                                                                            'printIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
