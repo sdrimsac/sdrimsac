@@ -1664,6 +1664,7 @@
 
         <template>
             <payment-form
+                :currentAppointment="currentAppointment"
                 :user="user"
                 :currencyIdChoice.sync="currencyIdChoice"
                 @clearVariation="clearVariation"

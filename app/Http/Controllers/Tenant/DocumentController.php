@@ -131,6 +131,9 @@ use App\Services\SunatService;
 use App\Traits\CheckTotalTrait;
 use App\Traits\CheckDuplicateTrait;
 use GuzzleHttp\Psr7\UploadedFile;
+use Modules\Restaurant\Models\AppointmentComment;
+use Modules\Restaurant\Models\AppointmentDocument;
+use Modules\Restaurant\Models\UserScheduleAppointment;
 
 class DocumentController extends Controller
 {
@@ -1873,7 +1876,21 @@ class DocumentController extends Controller
             }
             $establishment = Establishment::where('id', $document->establishment_id)->first();
 
-
+            if($request->currentAppointment){
+                $currentAppointment = $request->currentAppointment;
+                $id = $currentAppointment['id'];
+                $user_appointment = UserScheduleAppointment::find($id);
+                $user_appointment->status = "completed";
+                $user_appointment->save();
+                AppointmentDocument::create([
+                    'user_schedule_appointments' => $id,
+                    'document_id' => $document->id,
+                ]);
+                AppointmentComment::create([
+                    'user_schedule_appointments' => $id,
+                    'uuid' => Str::uuid()->toString(),
+                ]);
+            }
 
             // Call saveItemWarranty to check and save item warranties
             $this->saveItemWarranty($document, $request->items);

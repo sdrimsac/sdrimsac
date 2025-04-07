@@ -1964,6 +1964,7 @@ export default {
     },
 
     props: [
+        "currentAppointment",
         "user",
         "currencyIdChoice",
         "promotions_document",
@@ -4969,6 +4970,12 @@ export default {
             if (this.quotationId) {
                 form.quotation_id = this.quotationId;
             }
+            if (this.currentAppointment) {
+                form.currentAppointment = this.currentAppointment;
+            }
+            // console.log("el form", form);
+            // return;
+
             this.loading_submit = true;
             this.button_payment = true;
 
@@ -5249,11 +5256,14 @@ export default {
                 let {
                     data: { message }
                 } = response;
-
+                this.loading_submit = false;
+                this.button_payment = false;
+                this.loading = false;
                 this.$toast.error(message || "Ocurrió un error");
             } finally {
                 /* this.loading_submit = false;
                 this.loading = false; */
+                this.loading_submit = false;
                 this.button_payment = false;
             }
         },

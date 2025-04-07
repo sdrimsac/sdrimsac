@@ -107,6 +107,9 @@ use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
 use App\Traits\CheckTotalTrait;
 use App\Traits\CheckDuplicateTrait;
+use Modules\Restaurant\Models\AppointmentComment;
+use Modules\Restaurant\Models\AppointmentDocument;
+use Modules\Restaurant\Models\UserScheduleAppointment;
 
 class SaleNoteController extends Controller
 {
@@ -2096,6 +2099,21 @@ class SaleNoteController extends Controller
 
             if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
+            }
+            if($request->currentAppointment){
+                $currentAppointment = $request->currentAppointment;
+                $id = $currentAppointment['id'];
+                $user_appointment = UserScheduleAppointment::find($id);
+                $user_appointment->status = "completed";
+                $user_appointment->save();
+                AppointmentDocument::create([
+                    'user_schedule_appointments' => $id,
+                    'sale_note_id' => $this->sale_note->id,
+                ]);
+                AppointmentComment::create([
+                    'user_schedule_appointments' => $id,
+                    'uuid' => Str::uuid()->toString(),
+                ]);
             }
             $this->dumpWithTime("saveItemWarranty");
             $this->saveItemWarranty($this->sale_note, $request->items);

@@ -177,7 +177,7 @@
                                                         >
                                                             <i class="fas fa-play"></i>
                                                         </button>
-                                                        <el-tooltip content="Añadir producto a la cita" placement="top">
+                                                        <el-tooltip content="Añadir producto a la cita/Terminar cita" placement="top">
                                                             <button 
                                                             class="btn btn-sm btn-info" 
                                                             title="Marcar como en progreso"
