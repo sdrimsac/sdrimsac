@@ -1,3 +1,4 @@
+{{-- MENU LOGISTICO --}}
 @php
     $path = explode('/', request()->path());
     $path[1] = array_key_exists(1, $path) > 0 ? $path[1] : '';
@@ -125,11 +126,12 @@
                                 <span style="font-size: 1em;">Bancos</span>
                             </a>
                         </li>
+                        <li>
+                            <hr style="border: 1px solid #021427;">
+                        </li>
                     @endif
 
-                    <li>
-                        <hr style="border: 1px solid #021427;">
-                    </li>
+                   
                     {{-- Productos en Logística y Colegio --}}
                     @if ($config->college && !$roleService->isLogistic())
                         <li>
@@ -309,7 +311,10 @@
                                     <span class="label" style="font-size: 1em; ">Transformación de
                                         Productos</span>
                                 </a>
+                            </li>
+                          
                         @endif
+                       
                     @endif
                     <li>
                         <hr style="border: 1px solid #021427;">
@@ -325,11 +330,12 @@
                                     Remisión</span>
                             </a>
                         </li>
+                        <li>
+                            <hr style="border: 1px solid #021427;">
+                        </li>
                     @endif
 
-                    <li>
-                        <hr style="border: 1px solid #021427;">
-                    </li>
+                   
 
                     {{-- Traslados --}}
                     @if ($user->type == 'superadmin' || $config->receive_merchandise)
@@ -356,11 +362,14 @@
                     </li> --}}
 
                     @if (!$roleService->isArca())
+                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica &&  $config->warranty_product &&$has_series && $config->series_enabled && $config->lots_enabled && $config->color_size_enabled) 
                         <li>
                             <hr style="border: 1px solid #021427;">
                             <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES
                                 ESPECIALES</span>
                         </li>
+                        @endif
+                        
                         {{-- Productos con Garantía --}}
                         @if ($config->warranty_product)
                             <li>
@@ -408,6 +417,10 @@
                         {{-- Promociones por puntos y por precios --}}
                         @if ($user->type == 'superadmin' || $config->is_promotion_document || $config->promotions_by_points)
                             <li>
+                                <hr style="border: 1px solid #021427;">
+                                <span class="label" style="font-size: 1em;  font-weight: bold;">PROMOCIONES</span>
+                            </li>
+                            <li>
                                 <a href="{{ route('tenant.promotions_document.index') }}">
                                     <i class="icofont-sale-discount"
                                         style="font-size: 1.5em;  margin-right: 10px;"></i>
@@ -422,11 +435,12 @@
                             </li>
                         @endif
 
+                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica && $config->catalog)
                         <li>
                             <hr style="border: 1px solid #021427;">
                             <span class="label" style="font-size: 1em;  font-weight: bold;">COMPLEMENTOS</span>
                         </li>
-
+                        @endif
 
 
 
@@ -744,6 +758,7 @@
             <ul id="reporte" class="collapse ">
 
                 {{-- <ul id="contabilidad" class="collapse "> --}}
+                @if ($user->type == 'superadmin' ||  !$roleService->isLogistic())
                 <li>
                     <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
                         href="{{ route('tenant.account_exports') }}">
@@ -752,9 +767,10 @@
                         <span style="font-size: 1em; ">Reporte Contable</span>
                     </a>
                 </li>
+                @endif
                 {{-- </ul> --}}
                 {{-- Reporte de Métodos de Pago --}}
-                @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago && $noIsArcaProduct))
+                @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago && $noIsArcaProduct) && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                             href="{{ route('reports.methods.index') }}">
@@ -806,8 +822,6 @@
                         </a>
                     </li>
                 @endif
-
-
 
                 {{-- Reporte de Créditos --}}
                 @if ($user->type == 'superadmin' || ($config->credits && !$roleService->isLogistic()))
@@ -873,7 +887,7 @@
                 @endif
 
                 {{-- Reporte Stock Valorizado de Productos --}}
-                @if ($config->stock_valorizado)
+                 @if ($user->type == 'superadmin' || ($config->house && !$roleService->isLogistic()) && $config->stock_valorizado)
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                             href="{{ route('reports.valued.index') }}">
@@ -887,8 +901,8 @@
                     <li>
                         <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
                             href="{{ route('reports.products-clients.index') }}">
-                            <i class="icofont-box" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; ">R. productos</span>
+                            <i class="icofont-users" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span class="label" style="font-size: 1em; ">Reporte de Productos x Clientes</span>
                         </a>
                     </li>
                 @endif
@@ -906,7 +920,7 @@
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                             href="{{ route('reports.inventory.index') }}">
                             <i class="icofont-box" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; ">Stock Producto</span>
+                            <span class="label" style="font-size: 1em; ">Stock de Producto</span>
                         </a>
                     </li>
                 @endif
@@ -957,7 +971,7 @@
                         style="font-size: 1em;  text-align: center; font-weight: bold;">Comprobantes</span>
                 </li>
 
-                @if ($user->type == 'superadmin' || $config->productos_vendidos)
+                @if ($user->type == 'superadmin' || $config->productos_vendidos && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                             href="{{ route('tenant.ventas.index') }}">
@@ -966,7 +980,7 @@
                         </a>
                     </li>
                 @endif
-                @if ($user->type == 'superadmin' || $config->sale_note_venta)
+                @if ($user->type == 'superadmin' || $config->sale_note_venta && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
                             href="{{ route('tenant.notaventa.index') }}">

@@ -6,16 +6,18 @@
         @close="close"  
         @open="create" 
         class="dialog-import" 
-        width="45%">
+        width="35%">
         <template #title>
             {{ titleDialog }}
         </template>
                 
         <form autocomplete="off" @submit.prevent="submit">
+            <br />
             <div class="form-body">
                 <div class="row">
-                    <div class="col-md-12 mt-4">
-                        <div class="form-group text-stat" :class="{'has-danger': errors.file}">
+                    <div class="col-md-6">
+                        
+                            <div class="form-group text-stat" :class="{'has-danger': errors.file}">
                             <el-upload
                                     ref="upload"
                                     :headers="headers"
@@ -27,15 +29,33 @@
                                     :on-error="errorUpload"
                                     :limit="1"
                                     :on-success="successUpload">
-                                <el-button slot="trigger" type="primary">Seleccione un archivo (xlsx)</el-button>
+                                <template #trigger>
+                                    <el-button 
+                                        type="primary" 
+                                        icon="el-icon-upload" 
+                                        style="font-size: 16px; border-radius: 8px; padding: 10px 24px;">
+                                        Cargar un archivo (xlsx)
+                                    </el-button>
+                                </template>
                             </el-upload>
                             <small class="form-control-feedback" v-if="errors.file" v-text="errors.file[0]"></small>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <a href="/formats/persons.xlsx" target="_new">Descargar formato (Excel)</a>
-                        <i class="fas fa-file-excel fa-2x" style="color: green;"></i>
+                    <div class="col-md-6 d-flex justify-content-end">
+                        <div class="form-group text-right">
+                            <a href="/formats/persons.xlsx" target="_new">Descargar formato (Excel)</a>
+                            <i class="fas fa-file-excel fa-2x" style="color: green;"></i>
+                        </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mt-4">
+                        
+                        <div class="col-md-6">
+                            
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">

@@ -2,7 +2,7 @@
     <el-dialog
         :title="titleDialog"
         :visible="showDialog"
-        width="80%"
+        width="50%"
         @close="close"
         @open="create"
         append-to-body

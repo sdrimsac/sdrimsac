@@ -79,8 +79,8 @@ class JustAdmin
             "report_product_client",
             "reports/stockmin",
             "reports/kardex",
-            "documents_ventas",
-            "nota_venta",
+            // "documents_ventas",
+            // "nota_venta",
             "productos",
             "receta"
         ];

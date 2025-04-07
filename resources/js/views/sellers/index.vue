@@ -1,25 +1,7 @@
 <!-- Listado de Vendedores -->
 <template>
   <div>
-    <!-- <div class="container-fluid p-l-0 p-r-0">
-      <div class="page-header">
-        <div class="row">
-          <div class="col-sm-6">
-            <h6>
-              <span>Lista de vendedores</span>
-            </h6>
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a href="/dashboard">Dashboard</a>
-              </li>
-              <li class="breadcrumb-item active">
-                <span class="text-muted">Vendedores</span>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div> -->
+    
     <div class="container-fluid p-l-0 p-r-0">
       <div class="card">
         <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
@@ -29,11 +11,24 @@
           </h4>
         </div>
         <div class="data-table-visible-columns">
-          <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+
+          <el-button
+              type="button"
+              class="btn_buscar"
+              style="margin-right: 5px;"
+              href="javascript:void(0)" @click.prevent="clickCreate()"
+          >
+                <i
+                  class="fas fa-plus-circle fa-lg icon-style"
+                ></i>
+              Nuevo
+          </el-button>
+
+          <!-- <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
             <i class="fas fa-user-tie fa-lg"></i>
             <i class="fa fa-plus"></i>
             <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
-          </el-button>
+          </el-button> -->
         </div>
         <div class="card-body">
           <br />

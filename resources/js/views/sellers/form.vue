@@ -9,69 +9,160 @@
               :close-on-click-modal="false"
     >
   
-      <form autocomplete="off" @submit.prevent="submit">
-          <div class="row">
-              <div class="col-md-4">
-                  <div class="form-group" :class="{ 'has-danger': errors.document_type_id }">
-                      <label for="document_type">
-                          <i class="far fa-id-card"></i> Documento de identidad
-                      </label>
-                      <el-select v-model="form.document_type_id" :disabled="loading_submit">
-                          <el-option v-for="(item,idx) in document_types" :key="idx" :label="item.description" :value="item.id"></el-option>
-                      </el-select>
-                      <small class="form-control-feedback" v-if="errors.document_type_id" v-text="errors.document_type_id[0]"></small>
-                  </div>
-              </div>
-              <div class="col-md-4">
-                  <div class="form-group" :class="{ 'has-danger': errors.document }">
-                      <label for="document_number">
-                          <i class="fas fa-list-ol"></i> Número de documento de identidad
-                      </label>
-                      <el-input v-model="form.document" placeholder="Documento" :disabled="loading_submit" minlength="8" maxlength="20" show-word-limit @input="validateNumbers('document')">
-                          <el-button v-if="form.document_type_id == 1 || form.document_type_id == 4" @click="searchDocument" slot="prepend" icon="el-icon-search"></el-button>
-                      </el-input>
-                      <small class="form-control-feedback" v-if="errors.document" v-text="errors.document[0]"></small>
-                  </div>
-              </div>
-              <div class="col-md-4">
-                  <div class="form-group" :class="{ 'has-danger': errors.establishment_id }">
-                      <label for="establishment_id">
-                          <i class="fas fa-store"></i> Establecimiento
-                      </label>
-                      <el-select v-model="form.establishment_id" placeholder="Establecimiento" :disabled="loading_submit">
-                          <el-option v-for="item in establishments" :key="item.id" :label="item.description" :value="item.id"></el-option>
-                      </el-select>
-                      <small class="form-control-feedback" v-if="errors.establishment_id" v-text="errors.establishment_id[0]"></small>
-                  </div>
-              </div>
-              <div class="col-md-8">
-                  <div class="form-group" :class="{ 'has-danger': errors.name }">
-                      <label for="name">
-                          <i class="fas fa-tag"></i> Nombre
-                      </label>
-                      <el-input v-model="form.name" placeholder="Nombre" :disabled="loading_submit" @input="convertToUppercase('name')"></el-input>
-                      <small class="form-control-feedback" v-if="errors.name" v-text="errors.name[0]"></small>
-                  </div>
-              </div>
-              <div class="col-md-4">
-                  <div class="form-group" :class="{ 'has-danger': errors.telephone }">
-                      <label>Telefono</label>
-                      <el-input v-model="form.telephone" placeholder="Telefono" :disabled="loading_submit" maxlength="9" show-word-limit @input="validateNumbers('telephone')"></el-input>
-                      <small class="form-control-feedback" v-if="errors.telephone" v-text="errors.telephone[0]"></small>
-                  </div>
-              </div>
+    <form autocomplete="off" @submit.prevent="submit">
+        <div class="row mb-3">
+          <!-- Tipo de Documento -->
+          <div class="col-md-4">
+            <div class="form-group" :class="{ 'has-danger': errors.document_type_id }">
+            <label for="document_type">
+              <i class="far fa-id-card"></i> Tipo de Documento
+              <el-tooltip content="Campo Obligatorio" placement="top">
+                <i class="fas fa-exclamation-circle text-danger"></i>
+              </el-tooltip>
+            </label>
+            <el-select v-model="form.document_type_id" :disabled="loading_submit">
+              <el-option 
+                v-for="(item, idx) in document_types" 
+                :key="idx" 
+                :label="item.description" 
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <small 
+              class="form-control-feedback" 
+              v-if="errors.document_type_id" 
+              v-text="errors.document_type_id[0]">
+            </small>
+            </div>
           </div>
-          <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-            <!-- Botón Cancelar -->
-            <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
-                <span>Cancelar</span>
-            </el-button>
-            <!-- Botón Guardar -->
-            <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
-                <span>Guardar</span>
-            </el-button>
+
+          <!-- Número de DNI/CE -->
+          <div class="col-md-4">
+            <div class="form-group" :class="{ 'has-danger': errors.document }">
+            <label for="document_number">
+              <i class="fas fa-list-ol"></i> Número de DNI/CE
+              <el-tooltip content="Campo Obligatorio" placement="top">
+                <i class="fas fa-exclamation-circle text-danger"></i>
+              </el-tooltip>
+            </label>
+            <el-input 
+              v-model="form.document" 
+              placeholder="Documento" 
+              :disabled="loading_submit" 
+              minlength="8" 
+              maxlength="8" 
+              show-word-limit 
+              @input="validateNumbers('document')">
+              <el-button 
+                v-if="form.document_type_id == 1 || form.document_type_id == 4" 
+                @click="searchDocument" 
+                slot="prepend" 
+                icon="el-icon-search">
+              </el-button>
+            </el-input>
+            <small 
+              class="form-control-feedback" 
+              v-if="errors.document" 
+              v-text="errors.document[0]">
+            </small>
+            </div>
+          </div>
+
+          <!-- Establecimiento -->
+          <div class="col-md-4">
+            <div class="form-group" :class="{ 'has-danger': errors.establishment_id }">
+            <label for="establishment_id">
+              <i class="fas fa-store"></i> Establecimiento
+              <el-tooltip content="Campo Obligatorio" placement="top">
+                <i class="fas fa-exclamation-circle text-danger"></i>
+              </el-tooltip>
+            </label>
+            <el-select 
+              v-model="form.establishment_id" 
+              placeholder="Establecimiento" 
+              :disabled="loading_submit">
+              <el-option 
+                v-for="item in establishments" 
+                :key="item.id" 
+                :label="item.description" 
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <small 
+              class="form-control-feedback" 
+              v-if="errors.establishment_id" 
+              v-text="errors.establishment_id[0]">
+            </small>
+            </div>
+          </div>
         </div>
-      </form>
+
+        <div class="row mb-3">
+          <!-- Nombre -->
+          <div class="col-md-8">
+            <div class="form-group" :class="{ 'has-danger': errors.name }">
+            <label for="name">
+              <i class="fas fa-tag"></i> Nombre
+              <el-tooltip content="Campo Obligatorio" placement="top">
+                <i class="fas fa-exclamation-circle text-danger"></i>
+              </el-tooltip>
+            </label>
+            <el-input 
+              v-model="form.name" 
+              placeholder="Nombre" 
+              :disabled="loading_submit" 
+              @input="convertToUppercase('name')">
+            </el-input>
+            <small 
+              class="form-control-feedback" 
+              v-if="errors.name" 
+              v-text="errors.name[0]">
+            </small>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="col-md-4">
+            <div class="form-group" :class="{ 'has-danger': errors.telephone }">
+            <label>Teléfono</label>
+            <el-input 
+              v-model="form.telephone" 
+              placeholder="Teléfono" 
+              :disabled="loading_submit" 
+              maxlength="9" 
+              show-word-limit 
+              @input="validateNumbers('telephone')">
+            </el-input>
+            <small 
+              class="form-control-feedback" 
+              v-if="errors.telephone" 
+              v-text="errors.telephone[0]">
+            </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+          <!-- Botón Cancelar -->
+          <el-button 
+            class="btn-cancel btn-cancel:hover" 
+            icon="fas fa-times fa-lg" 
+            @click.prevent="close()">
+            <span>Cancelar</span>
+          </el-button>
+          <!-- Botón Guardar -->
+          <el-button 
+            class="btn-save btn-save:hover" 
+            icon="fas fa-save fa-lg" 
+            type="primary" 
+            native-type="submit" 
+            :loading="loading_submit" 
+            @click.prevent="convertToUppercase('name'); submit()">
+            <span>Guardar</span>
+          </el-button>
+        </div>
+    </form>
   </el-dialog>
 </template>
 

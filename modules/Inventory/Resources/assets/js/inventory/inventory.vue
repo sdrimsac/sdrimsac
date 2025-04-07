@@ -1,46 +1,41 @@
 <template>
 <div>
     <div class="container-fluid p-l-0 p-r-0">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h6>
-                        <span>{{ title }}</span>
-                    </h6>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <span class="text-muted">{{ title }}</span>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid p-l-0 p-r-0">
         <div class="card mb-0">
-            <div class="card-header bg-primary">
-                <h4 class="my-0 text-white">
-                    <i class="fas fa-clipboard-list"></i>
-                    <i class="fas fa-truck-loading"></i>
-                    Listado de {{ title }}
-                </h4>
-            </div>
-            <div
-            v-if="typeUser == 'superadmin'"
-             class="data-table-visible-columns">
-                <el-button type="primary" @click="openModal">
+            
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="fas fa-truck-loading" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                        Stock de Productos
+                        <!-- Listado de {{ title }} -->
+                    </h4>
+                </div>
+
+            
+            <div v-if="typeUser == 'superadmin'" class="data-table-visible-columns d-flex align-items-center" style="gap: 1rem; padding-left: 1rem;">
+                <el-button type="primary" 
+                           @click="openModal"
+                           class="btn_buscar">
                     <i class="fas fa-box fa-lg"></i>
-                    Regularizar Stock de Productos
+                    <span>Regularizar Stock</span>
+                    <el-tooltip content="Todos los productos que tienen STOCK negativo los pone en CERO" placement="top">
+                        <i class="fas fa-info-circle"></i>
+                    </el-tooltip>
                 </el-button>
 
-                <el-button type="primary" @click="resetKardex">
-                    <i class="fas fa-trash fa-lg"></i>
-                    Regularización de kardex
+                <el-button type="primary" 
+                           class="btn_buscar"
+                           @click="resetKardex"
+                           style="margin-right: 1rem;">
+                    <i class="fas fa-undo-alt fa-lg"></i>
+                    <span>Resetear Kardex</span>
+                    <el-tooltip content="Resetea todo el historial del Kardex, dejando el stock como primer ingreso inicial" placement="top">
+                        <i class="fas fa-info-circle"></i>
+                    </el-tooltip>
+                    
                 </el-button>
             </div>
+
             <div class="card-body" v-loading="loading">
                 <data-table :resource="resource" ref="dataTable">
                     <tr slot="heading" class="bg-primary">
@@ -48,46 +43,44 @@
                         <th class="text-white text-left">Producto</th>
                         <th class="text-white text-left">Almacén</th>
                         <th class="text-white text-center">Stock</th>
-                        <th class="text-white text-center"
-                        v-if="configuration.kardex_regularizate"
-                        >Stock real</th>
+                        <th class="text-white text-center" v-if="configuration.kardex_regularizate">Stock Real</th>
                     </tr>
                     <tr slot-scope="{ index, row }">
                         <td class="text-center">{{ index }}</td>
                         <td class="text-left">
                             {{ row.item_fulldescription }}
                             <template v-if="row.series_enabled && row.series.length">
-                                <table class="table table-responsive table-striped">
+                                <table class="table table-bordered mt-2" style="width: auto; table-layout: fixed;">
                                     <thead>
-                                        <tr class="bg-primary">
-                                            <th class="text-white">SERIE</th>
-                                            <th class="text-white">FECHA</th>
+                                        <tr class="bg-secondary">
+                                            <th class="text-white" style="width: 20ch;">Serie</th>
+                                            <th class="text-white" style="width: 11ch;">Fecha</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(serie, idx) in row.series" :key="idx">
-                                            <td>{{ serie.series }}</td>
-                                            <td>{{ serie.date }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ serie.series }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ serie.date }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </template>
                             <template v-if="row.has_color_size && row.color_size.length">
-                                <table class="table table-responsive table-striped">
+                                <table class="table table-striped table-bordered mt-2" style="table-layout: fixed; width: auto;">
                                     <thead>
-                                        <tr class="bg-primary">
-                                            <th class="text-white">COLOR</th>
-                                            <th class="text-white">TALLA</th>
-                                            <th class="text-white">PRECIO</th>
-                                            <th class="text-white">STOCK</th>
+                                        <tr class="bg-secondary">
+                                            <th class="text-white" style="width: 20ch;">Color</th>
+                                            <th class="text-white" style="width: 6ch;">Talla</th>
+                                            <th class="text-white" style="width: 6ch;">Precio</th>
+                                            <th class="text-white" style="width: 6ch;">Stock</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(color_size, idx) in row.color_size" :key="idx">
-                                            <td>{{ color_size.color }}</td>
-                                            <td>{{ color_size.size }}</td>
-                                            <td>{{ color_size.price }}</td>
-                                            <td>{{ color_size.stock }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ color_size.color }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ color_size.size }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ color_size.price }}</td>
+                                            <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ color_size.stock }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -95,12 +88,29 @@
                         </td>
                         <td class="text-left">{{ row.warehouse_description }}</td>
                         <td class="text-center">{{ parseFloat(row.stock).toFixed(2) }}</td>
-                        <td class="text-center"
-                        v-if="configuration.kardex_regularizate"
-                        >
-                            <div class="flex">
-                                <el-input :disabled="row.series_enabled || row.has_color_size" size="mini" class="w-50" type="number" v-model="row.realStock" :min="1" :precision="2" @keypress="onlyAllowNumbers" controls-position="right">
-                                    <el-button :disabled="row.series_enabled || row.has_color_size" @click="clickSetStockReal(row.item_id, row.realStock, row.stock, row.warehouse_id)" slot="append" icon="el-icon-top-right"></el-button>
+                        <td class="text-center" v-if="configuration.kardex_regularizate">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <el-input 
+                                    :disabled="row.series_enabled || row.has_color_size" 
+                                    size="mini" 
+                                    class="w-50" 
+                                    type="number" 
+                                    v-model="row.realStock" 
+                                    :min="1" 
+                                    :precision="3" 
+                                    @keypress="onlyAllowNumbers" 
+                                    controls-position="right"
+                                    style="font-size: 1.1rem; padding: 10px 15px;">
+                                    <el-button 
+                                        :disabled="row.series_enabled || row.has_color_size" 
+                                        @click="clickSetStockReal(row.item_id, row.realStock, row.stock, row.warehouse_id)" 
+                                        slot="append" 
+                                        
+                                        style="background-color: #006400; color: white; font-size: 1rem; padding: 5px 10px;">
+                                        <el-tooltip content="Actualizar Stock Real en el Kardex" placement="top">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </el-tooltip>
+                                    </el-button>
                                 </el-input>
                             </div>
                         </td>

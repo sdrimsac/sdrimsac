@@ -2,77 +2,58 @@
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Cotizaciones</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Cotizaciones</span>
-                            </li>
-                        </ol>
-                    </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <template v-if="cashId">
-                            <a
-                                :href="`/${resource}/create`"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            >
-                                <i class="icofont-plus-circle"></i>
-                                <span>Nuevo</span>
-                            </a>
-                        </template>
-                        <template v-else>
-                            <a
-                                :href="`/report_closed_cash`"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            >
-                                <i class="icofont-plus-circle"></i>
-                                <span>Abrir caja</span>
-                            </a>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white">
-                        <i class="fas fa-file-alt"></i>
-                        Cotizaciones</h4>
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4
+                        class="my-0 text-white d-flex align-items-center"
+                        style="font-size: 1.5rem; font-weight: bold;"
+                    >
+                        <i
+                            class="fas fa-file-alt"
+                            style="font-size: 2rem; margin-right: 0.5rem;"
+                        ></i>
+                        Cotizaciones
+                    </h4>
                 </div>
+                
 
                 <div class="data-table-visible-columns">
-                    <a  :href="`/${resource}/create`"
-                        class="btn btn-outline-white btn-icon btn-icon-start w-100 w-md-auto">
-                        <i class="fas fa-file-alt fa-lg"></i>
+                    <a
+                        :href="`/${resource}/create`"
+                        class="btn_buscar"
+                    >
                         <i class="fa fa-plus"></i>
                         <span>Nuevo</span>
                     </a>
                 </div>
+
                 <div class="card-body">
-                    <data-table :resource="resource"
-                    :sellers="sellers"
-                    >
+                    <data-table :resource="resource" :sellers="sellers">
                         <tr slot="heading" class="bg-primary">
                             <th class="text-white">#</th>
                             <th class="text-white text-end">Acciones</th>
-                            <th class="text-white text-center">Fecha Emisión</th>
-                            <th class="text-white text-center" v-if="columns.delivery_date.visible">  Fecha Entrega</th>
+                            <th class="text-white text-center">
+                                Fecha Emisión
+                            </th>
+                            <th
+                                class="text-white text-center"
+                                v-if="columns.delivery_date.visible"
+                            >
+                                Fecha Entrega
+                            </th>
                             <th class="text-white">Vendedor</th>
                             <th class="text-white">Cliente</th>
-                            <th class="text-white">Estado</th>
+                            
                             <th class="text-white">Cotización</th>
-                            <th class="text-white">Comprobantes</th>
+                            <th class="text-white">CPE</th>
                             <th class="text-white">Nota de venta</th>
-                            <th class="text-white">Oportunidad Venta</th>
-                            <th class="text-white" v-if="columns.contract.visible">Contrato</th>
+                            <!-- <th class="text-white">Oportunidad Venta</th> -->
+                            <th
+                                class="text-white"
+                                v-if="columns.contract.visible"
+                            >
+                                Contrato
+                            </th>
                             <!-- <th>Estado</th> -->
                             <th class="text-white text-center">Moneda</th>
                             <th
@@ -99,10 +80,10 @@
                             >
                                 T.Exonerado
                             </th>
-                            <th class="text-end text-white">T.Gravado</th>
-                            <th class="text-end text-white">T.Igv</th>
+                            <!-- <th class="text-end text-white">T.Gravado</th> -->
+                            <th class="text-end text-white">IGV</th>
                             <th class="text-end text-white">Total</th>
-                            <th class="text-center text-white">PDF</th>
+                            <th class="text-end text-white"></th>
                         </tr>
 
                         <tr></tr>
@@ -114,78 +95,138 @@
                         >
                             <td>{{ index }}</td>
 
+                            <!-- Acciones -->
                             <td class="text-end">
-                                <div class="d-flex flex-wrap">
+                                <div class="dropdown">
                                     <button
-                                        v-if="
-                                            row.state_type_id != '11' &&
-                                                row.btn_generate &&
-                                                (typeUser == 'admin' ||
-                                                    typeUser == 'superadmin') &&
-                                                soapCompany != '03'
-                                        "
+                                        class="btn btn-sm btn-primary dropdown-toggle"
                                         type="button"
-                                        class="m-1 btn waves-effect waves-light btn-sm btn-info"
-                                        @click.prevent="clickOptions(row.id)"
+                                        id="dropdownMenuButton"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
                                     >
-                                        Generar comprobante
+                                        Acciones
                                     </button>
-
-                                    <a
-                                        v-if="
-                                            row.documents.length == 0 &&
-                                                row.state_type_id != '11'
-                                        "
-                                        :href="`/${resource}/edit/${row.id}`"
-                                        type="button"
-                                        class="m-1 btn waves-effect waves-light  btn-sm btn-info"
-                                        >Editar</a
+                                    <ul
+                                        class="dropdown-menu"
+                                        aria-labelledby="dropdownMenuButton"
+                                        style="background-color: #e0e0e0; padding: 0 10px;"
                                     >
-                                    <button
-                                        v-if="
-                                            row.documents.length == 0 &&
-                                                row.state_type_id != '11'
-                                        "
-                                        type="button"
-                                        class="m-1 btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickAnulate(row.id)"
-                                    >
-                                        Anular
-                                    </button>
-                                    <button
-                                        @click="duplicate(row.id)"
-                                        type="button"
-                                        class="m-1 btn waves-effect waves-light btn-sm btn-info"
-                                    >
-                                        Duplicar
-                                    </button>
-                                    <a
-                                        v-if="
-                                            row.btn_generate_cnt &&
-                                                row.state_type_id != '11'
-                                        "
-                                        :href="
-                                            `/contracts/generate-quotation/${row.id}`
-                                        "
-                                        class="m-1 btn waves-effect waves-light btn-sm btn-primary m-1__2"
-                                        >Generar contrato</a
-                                    >
+                                        <li>
+                                            <button
+                                                v-if="
+                                                    row.state_type_id != '11' &&
+                                                        row.btn_generate &&
+                                                        (typeUser == 'admin' ||
+                                                            typeUser == 'superadmin') &&
+                                                        soapCompany != '03'
+                                                "
+                                                type="button"
+                                                class="dropdown-item btn btn-success text-start"
+                                                style="margin-bottom: 10px; background-color: #28a745; color: white;"
+                                                @click.prevent="clickOptions(row.id)"
+                                            >
+                                                <i class="fa fa-file-alt me-2"></i>
+                                                Generar CPE
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a
+                                                v-if="
+                                                    row.documents.length == 0 &&
+                                                        row.state_type_id != '11'
+                                                "
+                                                :href="`/${resource}/edit/${row.id}`"
+                                                class="dropdown-item btn btn-primary text-start"
+                                                style="margin-bottom: 10px; background-color: #007bff; color: white;"
+                                            >
+                                                <i class="fa fa-edit me-2"></i>
+                                                Modificar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button
+                                                v-if="
+                                                    row.documents.length == 0 &&
+                                                        row.state_type_id != '11'
+                                                "
+                                                type="button"
+                                                class="dropdown-item btn btn-danger text-start"
+                                                style="margin-bottom: 10px; background-color: #dc3545; color: white;"
+                                                @click.prevent="clickAnulate(row.id)"
+                                            >
+                                                <i class="fa fa-ban me-2"></i>
+                                                Anular
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                @click="duplicate(row.id)"
+                                                type="button"
+                                                class="dropdown-item btn btn-warning text-start"
+                                                style="margin-bottom: 10px; background-color: #ffc107; color: black;"
+                                            >
+                                                <i class="fa fa-copy me-2"></i>
+                                                Duplicar
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <a
+                                                v-if="
+                                                    row.btn_generate_cnt &&
+                                                        row.state_type_id != '11'
+                                                "
+                                                :href="
+                                                    `/contracts/generate-quotation/${row.id}`
+                                                "
+                                                class="dropdown-item btn btn-info text-start"
+                                                style="margin-bottom: 10px; background-color: #17a2b8; color: white;"
+                                            >
+                                                <i class="fa fa-file-contract me-2"></i>
+                                                Generar contrato
+                                            </a>
+                                        </li>
+                                    
+                                        <li>
+                                            <button
+                                                class="dropdown-item btn btn-info text-start"
+                                                style="margin-bottom: 10px; background-color: #17a2b8; color: white;"
+                                                @click.prevent="clickOptionsPdf(row.id)"
+                                            >
+                                                <i class="fa fa-print me-2"></i>
+                                                Imprimir
+                                            </button>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                             <td class="text-center">{{ row.date_of_issue }}</td>
+
+                            
+
                             <td
                                 class="text-center"
                                 v-if="columns.delivery_date.visible"
                             >
                                 {{ row.delivery_date }}
                             </td>
-                            <td>{{ row.user_name }}</td>
+
+                            <td>
+                                <template v-if="row.user_name.includes(' - ')">
+                                    <div v-for="(part, index) in row.user_name.split(' - ')" :key="index">
+                                        {{ part }}
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    {{ row.user_name }}
+                                </template>
+                            </td>
                             <td>
                                 {{ row.customer_name }}<br /><small
                                     v-text="row.customer_number"
                                 ></small>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <template v-if="row.state_type_id == '11'">
                                     {{ row.state_type_description }}
                                 </template>
@@ -203,8 +244,8 @@
                                         ></el-option>
                                     </el-select>
                                 </template>
-                            </td>
-                            <td>{{ row.identifier }}</td>
+                            </td> -->
+                            <td><span style="color: blue; font-weight: bold;">{{ row.identifier }}</span></td>
                             <td>
                                 <template
                                     v-for="(document, i) in row.documents"
@@ -213,6 +254,7 @@
                                         ::key="i"
                                         v-text="document.number_full"
                                         class="d-block"
+                                        style="color: darkgreen; font-weight: bold;"
                                     ></label>
                                 </template>
                             </td>
@@ -224,11 +266,15 @@
                                         ::key="i"
                                         v-text="sale_note.identifier"
                                         class="d-block"
+                                        style="color: #ffc107; font-weight: bold;"
                                     ></label>
                                 </template>
                             </td>
-                            <td>
-                                <!-- {{ row.sale_opportunity_number_full }} -->
+
+                            <!-- Oportunidad de Venta -->
+                              <!-- {{ row.sale_opportunity_number_full }} -->
+                            <!-- <td>
+                               
 
                                 <el-popover
                                     placement="right"
@@ -298,7 +344,8 @@
                                         <i class="fa fa-eye"></i
                                     ></el-button>
                                 </el-popover>
-                            </td>
+                            </td> -->
+                            
                             <!-- <td>{{ row.state_type_description }}</td> -->
                             <td v-if="columns.contract.visible">
                                 {{ row.contract_number_full }}
@@ -330,18 +377,10 @@
                             >
                                 {{ row.total_exonerated }}
                             </td>
-                            <td class="text-end">{{ row.total_taxed }}</td>
+                            <!-- <td class="text-end">{{ row.total_taxed }}</td> -->
                             <td class="text-end">{{ row.total_igv }}</td>
                             <td class="text-end">{{ row.total }}</td>
-                            <td class="text-end">
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-xs btn-info"
-                                    @click.prevent="clickOptionsPdf(row.id)"
-                                >
-                                    PDF
-                                </button>
-                            </td>
+                            <td class="text-end"></td>
                         </tr>
                     </data-table>
                 </div>
@@ -416,7 +455,7 @@ export default {
     },
     async created() {
         await this.filter();
-        if(this.$cashId){
+        if (this.$cashId) {
             this.cashId = this.$cashId;
         }
     },

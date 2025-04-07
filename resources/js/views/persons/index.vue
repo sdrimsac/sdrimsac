@@ -1,4 +1,4 @@
-<!-- Módulo de Clientes 
+<!-- Módulo de Clientes Admin
     Módulo de Proveedores -->
 <template>
 <div>
@@ -11,24 +11,27 @@
                 </h4>
             </div>
 
-            <div class="data-table-visible-columns">
-                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
-                    <i class="fas fa-users"></i>
-                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+            <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3" style="margin-left: 1rem;">
+                <el-button class="btn_buscar me-2" 
+                           href="javascript:void(0)" @click.prevent="clickCreate()">
+                    <i class="fas fa-plus"></i>
+                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
                 </el-button>
-                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickZones()">
+
+                <el-button class="btn_buscar me-2" href="javascript:void(0)" @click.prevent="clickZones()">
                     <i class="icofont-location-pin"></i>
-                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Zona</span>
+                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Zona</span>
                 </el-button>
-                <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickImport()">
+
+                <el-button class="btn_buscar" href="javascript:void(0)" @click.prevent="clickImport()">
                     <i class="fa fa-upload"></i>
-                    <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Importar</span>
+                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Importar</span>
                 </el-button>
             </div>
             <div class="card-body">
 
                 <data-table :resource="resource + `/${this.type}`" :type-user="typeUser">
-                    <tr slot="heading" class="bg-primary">
+                    <tr slot="heading" class="bg-primary" style="border-radius: 12px;">
                         <th class="text-white">#</th>
                         <th class="text-white">Nombre</th>
                         <th class="text-white text-center">Creado por Usuario</th>
@@ -62,29 +65,71 @@
                         <td class="text-end">
 
                             <!-- **** -->
-                            <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                            <button 
+                                class="btn p-0" 
+                                type="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-haspopup="true" 
+                                aria-expanded="false" 
+                                style="font-size: 1.25rem; padding: 0.75rem 1.5rem;"
+                            >
+                                <span 
+                                    class="btn btn-primary dropdown-toggle" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    data-bs-delay="0" 
+                                    title="" 
+                                    data-bs-original-title="Item Count" 
+                                    aria-label="Item Count" 
+                                    style="font-size: 1.25rem;"
+                                >
+                                    Acciones
+                                </span>
                             </button>
 
-                            <div class="dropdown-menu dropdown-menu-end" style="">
+                            <div class="dropdown-menu dropdown-menu-end">
                                 <template v-if="row.enabled">
-                                    <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)">
-                                        <i class="fa fa-edit"></i> Editar
+                                    <a 
+                                        type="button" 
+                                        class="dropdown-item text-secondary" 
+                                        @click.prevent="clickCreate(row.id)" 
+                                        style="color: #6c757d; font-size: 1.1rem;"
+                                    >
+                                        <i class="fa fa-edit" style="font-size: 1.3rem;"></i> Editar
                                     </a>
                                 </template>
 
                                 <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">
-                                    <a type="button" class="dropdown-item text-danger" @click.prevent="
-                                            clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
+                                    <a 
+                                        type="button" 
+                                        class="dropdown-item text-danger" 
+                                        @click.prevent="clickDelete(row.id)" 
+                                        style="color: #dc3545; font-size: 1.1rem;"
+                                    >
+                                        <i class="fa fa-trash" style="font-size: 1.3rem;"></i> Eliminar
                                     </a>
                                 </template>
 
-                                <a type="button" class="dropdown-item text-warning" @click.prevent="clickDisable(row.id)" v-if="row.active">
-                                    Inhabilitar
+                                
+                                <!-- <a 
+                                    type="button" 
+                                    class="dropdown-item text-warning" 
+                                    @click.prevent="clickDisable(row.id)" 
+                                    v-if="row.active" 
+                                    style="color: #ffc107; font-size: 1.1rem;"
+                                >
+                                    <i class="fa fa-ban" style="font-size: 1.3rem;"></i> Inhabilitar
                                 </a>
-                                <a type="button" class="dropdown-item text-success" @click.prevent="clickEnable(row.id)" v-else>
-                                    Habilitar
-                                </a>
+                                
+                                <a 
+                                    type="button" 
+                                    class="dropdown-item text-success" 
+                                    @click.prevent="clickEnable(row.id)" 
+                                    v-else 
+                                    style="color: #28a745; font-size: 1.1rem;"
+                                >
+                                    <i class="fa fa-check" style="font-size: 1.3rem;"></i> Habilitar
+                                </a> -->
                             </div>
 
                             <!-- **** -->

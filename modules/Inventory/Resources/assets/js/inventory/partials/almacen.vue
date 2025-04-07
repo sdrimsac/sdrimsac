@@ -1,3 +1,4 @@
+<!-- Regularizar Stock de Productos por Almacén -->
 <template>
 <el-dialog 
     :title="titleDialog" width="40%" 
@@ -7,22 +8,39 @@
     append-to-body :show-close="false">
     <div class="form-body">
         <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 ">
+            <div class="col-md-12 col-lg-12 col-xl-12">
                 <div class="card-body">
                     <div class="form-group">
-                        <label class="control-label fw-bold"> Seleccione Almacen</label>
-                        <el-select v-model="selectedWarehouse_id">
-                            <el-option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id"
-                            :label="warehouse.description"
-                            >
-                            </el-option>
+                        <label class="control-label fw-bold">Seleccione Almacén</label>
+                        <el-select 
+                            v-model="selectedWarehouse_id" 
+                            placeholder="Seleccione un almacén" 
+                            class="w-100"
+                        >
+                            <el-option 
+                                v-for="warehouse in warehouses" 
+                                :key="warehouse.id" 
+                                :value="warehouse.id" 
+                                :label="warehouse.description"
+                            />
                         </el-select>
                     </div>
-                    <span slot="footer" class="dialog-footer">
-                        <el-button icon="fas fa-times" @click="close"> Cancelar</el-button>
-                        <el-button type="primary" @click="regularizarStock">Regularizar Stock</el-button>
-                        <br>
-                    </span>
+                    <div class="dialog-footer d-flex justify-content-end mt-3">
+                        <el-button 
+                            icon="fas fa-times fa-lg" 
+                            @click="close" 
+                            class="btn-cancel btn-cancel:hover mr-2"
+                        >
+                            Cancelar
+                        </el-button>
+                        <el-button 
+                            type="primary"
+                            class="btn-save btn-save:hover"
+                            @click="regularizarStock"
+                        >
+                            <i class="fas fa-sync-alt fa-lg"></i> Regularizar Stock
+                        </el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,7 +53,7 @@ export default {
     props: ['showDialog', 'warehouses'],
     data() {
         return {
-            titleDialog: 'Regularizar stock de productos',
+            titleDialog: 'Regularizar Stock de Productos por Almacén',
             selectedWarehouse_id: null
         };
     },

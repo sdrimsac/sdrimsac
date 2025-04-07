@@ -1,12 +1,33 @@
 <!-- Listado de Zona de Clientes  -->
 <template>
-    <el-dialog @open="open" @close="close" :visible="showDialog" append-to-body title="Zonas de cliente" v-loading="loading" width="50%">
-        <div class="d-flex justify-content-end mb-3" style="margin-top: 20px;">
-            <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
-                <i class="icofont-plus-circle"></i>
-                <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
-            </el-button>
-        </div>
+    <el-dialog 
+        @open="open" 
+        @close="close"
+        :visible="showDialog" 
+        append-to-body 
+        title="Zonas de cliente" 
+        v-loading="loading" 
+        width="40%" 
+        :close-on-click-modal="false" 
+        :show-close="false"
+    >
+        <template #title>
+            <div class="d-flex justify-content-between align-items-center">
+                <span>Zonas de cliente</span>
+                
+            </div>
+            <div class="d-flex justify-content-end">
+                <el-button class="btn_buscar me-2" 
+                           href="javascript:void(0)" 
+                           @click.prevent="clickCreate()">
+                    <i class="fas fa-plus"></i>
+                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+                </el-button>
+            </div>
+
+
+        </template>
+        <br />
         <div class="row" v-if="zones.length != 0">
             <table class="table table-responsive table-striped">
                 <thead>
@@ -22,31 +43,55 @@
                         <td>{{ idx + 1 }}</td>
                         <td>{{ zone.description }}</td>
                         <td class="text-center">
-                            <button class="btn" :style="{ color: 'white', backgroundColor: zone.active ? 'green' : 'red', fontWeight: 'bold', width: '110px' }">
-                                {{ zone.active ? 'Activo' : 'Suspendido' }}
-                            </button>
+                            <span 
+                                :style="{ color: zone.active ? 'green' : 'red', fontWeight: 'bold', textTransform: 'uppercase' }"
+                            >
+                                {{ zone.active ? 'ACTIVO' : 'SUSPENDIDO' }}
+                            </span>
                         </td>
                         <td class="text-end">
-                            <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                            <button 
+                                class="btn p-0" 
+                                type="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-haspopup="true" 
+                                aria-expanded="false"
+                            >
+                                <span 
+                                    class="btn btn-primary dropdown-toggle" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    data-bs-delay="0" 
+                                    title="" 
+                                    data-bs-original-title="Item Count" 
+                                    aria-label="Item Count"
+                                >
+                                    Acciones
+                                </span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a type="button" class="dropdown-item text-secondary" @click.prevent="clickEdit(zone)">
+                                <a 
+                                    type="button" 
+                                    class="dropdown-item text-secondary" 
+                                    @click.prevent="clickEdit(zone)"
+                                >
                                     <i class="fa fa-edit"></i> Editar
                                 </a>
-                                <a type="button" class="dropdown-item text-danger" @click.prevent="clickDelete(zone)">
+                                <a 
+                                    type="button" 
+                                    class="dropdown-item text-danger" 
+                                    @click.prevent="clickDelete(zone)"
+                                >
                                     <i class="fa fa-trash"></i> Eliminar
-                                </a>
-                                <a type="button" :class="`text-secondary dropdown-item ${ zone.active ? 'btn-danger' : 'btn-success'}`" @click.prevent="clickActive(zone)">
-                                    <i class="fas fa-toggle-off"></i>
-                                    {{ zone.active ? "Desactivar" : "Activar" }}
                                 </a>
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
         </div>
+
         <div v-else>
             <div class="row">
                 <div class="col-12">
@@ -56,7 +101,23 @@
                 </div>
             </div>
         </div>
-        <el-dialog width="600px" :visible.sync="showCreateForm" append-to-body @close="showCreateForm = false" :title="form.id ? 'Editar Zona' : 'Crear Zona'">
+        <template #footer>
+            <div class="d-flex justify-content-end">
+            <el-button @click="close" 
+            class="btn-cancel btn-cancel:hover"
+            icon="fas fa-times fa-lg">
+                Cerrar
+            </el-button>
+            </div>
+        </template>
+
+        <el-dialog 
+            width="600px" 
+            :visible.sync="showCreateForm" 
+            append-to-body 
+            @close="showCreateForm = false" 
+            :title="form.id ? 'Editar Zona' : 'Crear Zona'"
+        >
             <div class="row m-2">
                 <div class="col-12">
                     <label class="control-label">
@@ -64,10 +125,21 @@
                     </label>
                     <el-input v-model="form.description"></el-input>
                 </div>
-                <div style="margin-top:5px" class="d-flex justify-content-center">
-                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                        <!-- Botón Guardar -->
-                        <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" @click.prevent="submit" native-type="submit" :loading="loading_submit">
+                <div 
+                    style="margin-top:5px" 
+                    class="d-flex justify-content-center"
+                >
+                    <div 
+                        class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                    >
+                        <el-button 
+                            class="btn-save btn-save:hover" 
+                            icon="fas fa-save fa-lg" 
+                            type="primary" 
+                            @click.prevent="submit" 
+                            native-type="submit" 
+                            :loading="loading_submit"
+                        >
                             <i class="fas fa-plus-circle"></i>
                             <span> {{ form.id ? "Actualizar" : "Crear" }} </span>
                         </el-button>
