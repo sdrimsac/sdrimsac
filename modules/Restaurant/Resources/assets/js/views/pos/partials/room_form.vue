@@ -522,7 +522,6 @@
             type="customers"
             :input_person="input_person"
             :external="true"
-            :recordId="form.customer_id"
         >
         </person-form>
     </el-dialog>
