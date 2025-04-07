@@ -838,14 +838,14 @@
                     <strong>ORDEN NRO. {{ $orden }}</strong>
                 </td>
             </tr>
-            @if ($area_desc)
+            {{-- @if ($area_desc)
                 <tr>
                     <td colspan="4" class="header_title0 text-center  under_line"
                         style="font-size: 18px !important;" valign="top">
                         <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                     </td>
                 </tr>
-            @endif
+            @endif --}}
 
             <tr>
                 <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
@@ -901,10 +901,10 @@
                     </td>
                 @else
                     <!-- Comanda view with wider product column -->
-                    <td width="90%" colspan="3" class="encabezado text-center"
+                    {{-- <td width="90%" colspan="3" class="encabezado text-center"
                         style="font-size: 18px !important;">
                         <strong>PRODUCTO</strong>
-                    </td>
+                    </td> --}}
                 @endif
             </tr>
 
@@ -922,7 +922,7 @@
                             @else
                                 <!-- Comanda view layout -->
                             <td width="90%" colspan="3" class="celda_left header_title2 border-bottom"
-                                style="font-size: 18px !important;">
+                                style="font-size: 24px !important;">
                         @endif
                         <strong>
                             {{ strtoupper($row->desc_unit) }}
