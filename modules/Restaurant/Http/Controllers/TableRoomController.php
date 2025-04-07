@@ -53,7 +53,8 @@ use App\Models\Tenant\HotelRentWhatsapp;
 class TableRoomController extends Controller
 {
 
-    public function desoccupyRent(Request $request){
+    public function desoccupyRent(Request $request)
+    {
         $id = $request->input('id');
         $hotel_rent = HotelRent::find($id);
         $hotel_rent->payment_status = "canceled";
@@ -149,7 +150,7 @@ class TableRoomController extends Controller
 
                 ]);
             }
-            
+
             $guesses = $request->input('guesses');
             foreach ($guesses as $guess) {
                 HotelRentItemPerson::create([
@@ -1336,9 +1337,7 @@ class TableRoomController extends Controller
             'data' => $tables
         ];
     }
-    public function tablesCloseToLeave()
-    {
-    }
+    public function tablesCloseToLeave() {}
     public function tablesToLeave()
     {
         $configuration = Configuration::first();
@@ -1395,7 +1394,7 @@ class TableRoomController extends Controller
             $tables = $tables->transform(function ($table) {
                 $hotel_rent_item = HotelRentItem::where('table_id', $table->id)
                     ->where('active', true)
-                ->latest()->first();
+                    ->latest()->first();
                 if ($hotel_rent_item) {
                     $table->hotel_rent_id = $hotel_rent_item->hotel_rent_id;
                     $payments = $hotel_rent_item->payments
@@ -1405,7 +1404,6 @@ class TableRoomController extends Controller
                         $due_date = $payments->first()->date_end;
                         $table->due_date = $due_date;
                     }
-
                 }
                 return $table;
             });
@@ -1528,7 +1526,6 @@ class TableRoomController extends Controller
     }
     public function setGuess(Request $request)
     {
-        //     'supplier' => PersonInput::set($inputs['supplier_id']),
         try {
             DB::connection('tenant')->beginTransaction();
             $user_id = auth()->id();
@@ -1634,7 +1631,7 @@ class TableRoomController extends Controller
                         'date_of_issue' => date('Y-m-d'),
                         'item_id' => $insumo->item_id,
                         'warehouse_id' => $warehouse_id,
-                        'quantity' => $quantity_insumo,
+                        'quantity' => -$quantity_insumo,
                         'type' => 'output',
                         'description' => 'Salida por habitación',
                         'inventory_kardexable_id' => $hotel_rent_item->id,
@@ -1719,7 +1716,7 @@ class TableRoomController extends Controller
         $code = Str::random(10);
         return $code;
     }
-    public function cancelRoom($id)
+    /* public function cancelRoom($id)
     {
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent = $hotel_rent_item->hotel_rent;
@@ -1744,7 +1741,73 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación cancelada'
         ];
+    } */
+
+    public function cancelRoom($id)
+    {
+        $hotel_rent_item = HotelRentItem::find($id);
+        $hotel_rent = $hotel_rent_item->hotel_rent;
+
+        $hotel_rent_item->was_cancel = true;
+        $hotel_rent_item->save();
+
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 1;
+        $table->sendMessageDesocupied("cancelada");
+        $table->save();
+
+        $items = $hotel_rent->items;
+        $cancel = true;
+
+        foreach ($items as $item) {
+            if ($item->was_cancel == false) {
+                $cancel = false;
+            }
+        }
+
+        if ($cancel) {
+            $hotel_rent->was_cancel = true;
+            $hotel_rent->save();
+        }
+
+        $insumos = DB::connection('tenant')
+            ->table('insumos_hotel_items')
+            ->where('hotel_rent_item_id', $hotel_rent_item->id)
+            ->get();
+
+        $establishment = Establishment::find(auth()->user()->establishment_id);
+        $warehouse_id = Warehouse::where('establishment_id', $establishment->id)->first()->id;
+
+        foreach ($insumos as $insumo) {
+
+            $item_warehouse = ItemWarehouse::where('item_id', $insumo->insumos_hotel_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
+
+            if ($item_warehouse) {
+                $item_warehouse->stock += $insumo->quantity; 
+                $item_warehouse->save();
+            }
+
+            InventoryKardex::create([
+                'date_of_issue' => date('Y-m-d'),
+                'item_id' => $insumo->insumos_hotel_id,
+                'quantity' => $insumo->quantity,
+                'warehouse_id' => $warehouse_id,
+                'type' => 'input',
+                'description' => 'Entrada por cancelación de habitación',
+                'inventory_kardexable_id' => $hotel_rent_item->id,
+                'inventory_kardexable_type' => 'App\Models\Tenant\HotelRentItem',
+                'user_id' => auth()->user()->id,
+            ]);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Habitación cancelada y stock de insumos devuelto'
+        ];
     }
+
     public function storeType(Request $request, $type)
     {
         $model = null;
@@ -1897,9 +1960,7 @@ class TableRoomController extends Controller
             'phone' => $row->telephone,
         ];
     }
-    function transformHotelRentItem($item)
-    {
-    }
+    function transformHotelRentItem($item) {}
     public function set_reserve_date(Request $request)
     {
         $id = $request->input('id');
@@ -2360,7 +2421,7 @@ class TableRoomController extends Controller
     {
         try {
             $messages = HotelRentWhatsapp::getFormattedMessages();
-            
+
             return [
                 'success' => true,
                 'messages' => $messages
@@ -2382,7 +2443,7 @@ class TableRoomController extends Controller
     //         $data = $request->all();
     //         $type = $data['type']; // 'before_due' o 'after_due'
     //         $order = $data['message_order'];
-            
+
     //         HotelRentWhatsapp::saveMessage($data, $type, $order);
 
     //         return [
@@ -2405,7 +2466,7 @@ class TableRoomController extends Controller
     {
         try {
             $message = HotelRentWhatsapp::find($id);
-            
+
             if (!$message) {
                 throw new \Exception('Mensaje no encontrado');
             }
@@ -2417,7 +2478,6 @@ class TableRoomController extends Controller
                 'success' => true,
                 'message' => 'Estado actualizado correctamente'
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -2432,14 +2492,14 @@ class TableRoomController extends Controller
             $file = $request->file('file');
             $temp_name = uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(storage_path('app/public/temp'), $temp_name);
-            
+
             return [
                 'success' => true,
                 'temp_name' => $temp_name,
                 'temp_url' => '/storage/temp/' . $temp_name
             ];
         }
-        
+
         return [
             'success' => false,
             'message' => 'No se encontró ningún archivo'
@@ -2455,7 +2515,7 @@ class TableRoomController extends Controller
                 $message->image_path = null;
                 $message->save();
             }
-            
+
             return [
                 'success' => true,
                 'message' => 'Imagen eliminada correctamente'
@@ -2473,7 +2533,7 @@ class TableRoomController extends Controller
         try {
             $data = $request->all();
             $image_path = null;
-            
+
             if ($request->has('temp_name')) {
                 $temp_path = storage_path('app/public/temp/' . $data['temp_name']);
                 if (file_exists($temp_path)) {
@@ -2483,14 +2543,14 @@ class TableRoomController extends Controller
                     $image_path = $new_path;
                 }
             }
-            
+
             $message = HotelRentWhatsapp::saveMessage($data, $data['type'], $data['message_order']);
-            
+
             if ($image_path) {
                 $message->image_path = $image_path;
                 $message->save();
             }
-            
+
             return [
                 'success' => true,
                 'message' => 'Mensaje guardado correctamente',

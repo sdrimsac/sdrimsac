@@ -284,6 +284,16 @@
         /* margin-top: 50px; */
     }
 
+    .menaje img {
+        transform: rotate(0deg);
+        max-width: 70%;
+        max-height: 70%;
+    }
+    .comanda img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
     #register {
         position: relative;
         z-index: 1;
@@ -301,12 +311,17 @@
         {{-- Content for imprimir_comanda_cocina --}}
         @if (isset($es_anulacion) && $es_anulacion === true)
             <div class="watermark">
-            <img src="{{ asset('status_images/anulado.png') }}" alt="Anulado" />
+                <img src="{{ asset('status_images/anulado.png') }}" alt="Anulado" />
             </div>
         @endif
         @if (isset($es_anulacion_item) && $es_anulacion_item === true)
             <div class="watermark">
-            <img src="{{ asset('status_images/anulado.png') }}" alt="Anulado" />
+                <img src="{{ asset('status_images/anulado.png') }}" alt="Anulado" />
+            </div>
+        @endif
+        @if (isset($area_desc) && strtoupper($area_desc) === 'MENAJE')
+            <div class="menaje">
+            <img src="{{ asset('status_images/menaje.png') }}" alt="menaje" />
             </div>
         @endif
         <div id="register">
@@ -367,7 +382,7 @@
                     </tr>
                 @endif
                 @if (!$to_kitchen)
-                    @if ($configuration->nane_comand)
+                    @if ($configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
                         <tr>
                             <td colspan="4" class="header_title text-center encabezado" valign="top">
                                 <strong>COMANDA</strong>
@@ -392,7 +407,7 @@
                             <strong>ORDEN NRO. {{ $orden }}</strong>
                         </td>
                     </tr>
-                    @if ($area_desc)
+                    @if ($area_desc && strtoupper($area_desc) !== 'MENAJE')
                         <tr>
                             <td colspan="4" class="header_title0 text-center under_line" valign="top">
                                 <strong>AREA: {{ strtoupper($area_desc) }} </strong>
