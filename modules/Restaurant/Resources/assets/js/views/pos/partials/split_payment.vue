@@ -61,7 +61,9 @@
                         </div>
                         <div class="col-10">
                             <label for="new_customer_id">
-                                <a href="#" @click.prevent="openDialogNewPerson(idx)"
+                                <a
+                                    href="#"
+                                    @click.prevent="openDialogNewPerson(idx)"
                                     >[+ Nuevo]</a
                                 >
                             </label>
@@ -257,9 +259,7 @@ export default {
         "form",
         "series"
     ],
-    created() {
-    
-    },
+    created() {},
     data() {
         return {
             showDialogNewPerson: false,
@@ -358,7 +358,7 @@ export default {
 
     methods: {
         reloadDataCustomers(customer_id) {
-            this.loading    = true;
+            this.loading = true;
             this.$http
                 .get(`/documents/search/customer/${customer_id}`)
                 .then(response => {
@@ -366,18 +366,21 @@ export default {
                     this.persons[
                         this.current_index_person
                     ].customer_id = customer_id;
-                }).catch(error => {
+                })
+                .catch(error => {
                     console.log(error);
-                }).finally(() => {
+                })
+                .finally(() => {
                     this.loading = false;
                 });
         },
         openDialogNewPerson(idx) {
             this.current_index_person = idx;
             let ref = `customer_${idx}`;
-            console.log("🚀 ~ openDialogNewPerson ~ ref:", ref)
+            console.log("🚀 ~ openDialogNewPerson ~ ref:", ref);
             console.log(this.$refs[ref]);
-            let vv = this.$refs[ref][0].$el.getElementsByTagName("input")[0].value;
+            let vv = this.$refs[ref][0].$el.getElementsByTagName("input")[0]
+                .value;
             this.showDialogNewPerson = true;
             console.log("🚀 ~ openDialogNewPerson ~ vv:", vv);
         },
@@ -431,6 +434,19 @@ export default {
             // Ensure sale notes are marked as paid
             if (form.document_type_id === "80") {
                 newForm.credit = false;
+                newForm.paid = 1;
+                newForm.payment_condition_id = "01";
+                newForm.prefix = "NV";
+
+                if (!newForm.payments) {
+                    newForm.payments = [
+                        {
+                            payment_method_type_id: "01",
+                            date_of_payment: newForm.date_of_issue,
+                            payment: newForm.total
+                        }
+                    ];
+                }
             }
             const response = await this.$http.post(`/${resource}`, newForm);
             this.loading = false;
@@ -900,7 +916,10 @@ export default {
             });
         },
         open() {
-            console.log("🚀 ~ created ~ this.orden_items ver que llega:", this.printerOn);
+            console.log(
+                "🚀 ~ created ~ this.orden_items ver que llega:",
+                this.printerOn
+            );
             this.formOrigin = JSON.parse(JSON.stringify(this.form));
             let { items } = this.orden_items;
             this.quantity = items.reduce((a, b) => a + Number(b.quantity), 0);
