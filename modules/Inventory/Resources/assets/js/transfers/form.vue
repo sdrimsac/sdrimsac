@@ -50,6 +50,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-actions text-end pt-2 pb-2">
             <el-button @click.prevent="close()">Cancelar</el-button>
             <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>

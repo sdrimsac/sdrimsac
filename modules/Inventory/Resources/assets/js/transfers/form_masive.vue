@@ -1,11 +1,15 @@
+<!-- Modulo de nuevo traslado masivo -->
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
-        <div class="card-header bg-primary">
-            <h4 class="my-0 text-white">
-                <i class="fa fa-dolly fa-lg"></i>
-                Nuevo Traslado {{ isDirect ? " (Traslado directo)" : "" }}
+
+        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+            <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                <i class="fa fa-dolly fa-lg" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                Nuevo Traslado de Productos entre Alamacenes {{ isDirect ? " (Traslado directo)" : "" }}
             </h4>
         </div>
+
+
         <div class="tab-content p-3">
             <form
                 v-loading="loading_item"
@@ -13,101 +17,114 @@
                 @submit.prevent="submit"
             >
                 <div class="form-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">
-                                    <i class="fas fa-warehouse"></i>
-                                    <i class="fa fa-map-marker fa-lg"></i>
-                                    Almacén Inicial
-                                </label>
-                                <el-select
-                                    v-model="form.warehouse_id"
-                                    @change="changeWarehouseInit"
-                                >
-                                    <el-option
-                                        v-for="option in warehouses"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.description"
-                                    ></el-option>
-                                </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.warehouse_id"
-                                    v-text="errors.warehouse_id[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div
-                                class="form-group"
-                                :class="{
-                                    'has-danger':
-                                        errors.warehouse_destination_id
-                                }"
-                            >
-                                <label class="control-label">
-                                    <i class="fas fa-warehouse"></i>
-                                    <i class="fa fa-flag-checkered fa-lg"></i>
-                                    Almacén Final
-                                </label>
-                                <el-select
-                                    v-model="form.warehouse_destination_id"
-                                >
-                                    <el-option
-                                        :disabled="
-                                            option.id == form.warehouse_id
-                                        "
-                                        v-for="option in warehouses"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.description"
-                                    ></el-option>
-                                </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.warehouse_destination_id"
-                                    v-text="errors.warehouse_destination_id[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.description }"
-                            >
-                                <label class="control-label"
-                                    >Motivo de Traslado</label
-                                >
-                                <el-input
-                                    type="textarea"
-                                    :rows="3"
-                                    v-model="form.description"
-                                >
-                                    <i
-                                        slot="prefix"
-                                        class="el-icon-edit-outline"
-                                    ></i>
-                                </el-input>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.description"
-                                    v-text="errors.description[0]"
-                                ></small>
+                    <!-- Datos principales del traslado -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <i class="fa fa-map-marker fa-lg"></i>
+                                            Almacén Inicial
+                                            <el-tooltip content="Campo Obligatorio" effect="dark" placement="top" popper-class="tooltip-error">
+                                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-select
+                                            v-model="form.warehouse_id"
+                                            @change="changeWarehouseInit"
+                                        >
+                                            <el-option
+                                                v-for="option in warehouses"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                            ></el-option>
+                                        </el-select>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.warehouse_id"
+                                            v-text="errors.warehouse_id[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger': errors.warehouse_destination_id
+                                        }"
+                                    >
+                                        <label class="control-label">
+                                            <i class="fa fa-flag-checkered fa-lg"></i>
+                                            Almacén Final
+                                            <el-tooltip content="Campo Obligatorio" effect="dark" placement="top" popper-class="tooltip-error">
+                                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-select
+                                            v-model="form.warehouse_destination_id"
+                                        >
+                                            <el-option
+                                                v-for="option in warehouses"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="option.description"
+                                                :disabled="option.id == form.warehouse_id"
+                                            ></el-option>
+                                        </el-select>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.warehouse_destination_id"
+                                            v-text="errors.warehouse_destination_id[0]"
+                                        ></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div
+                                        class="form-group"
+                                        :class="{ 'has-danger': errors.description }"
+                                    >
+                                        <label class="control-label">
+                                            <i class="fa fa-pencil-alt fa-lg"></i>
+                                            Motivo de Traslado
+                                            <el-tooltip content="Campo Obligatorio" effect="dark" placement="top" popper-class="tooltip-error">
+                                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            type="textarea"
+                                            :rows="3"
+                                            v-model="form.description"
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i>
+                                        </el-input>
+                                        <small
+                                            class="form-control-feedback"
+                                            v-if="errors.description"
+                                            v-text="errors.description[0]"
+                                        ></small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <br />
 
                     <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="my-0 text-white">Tratamiento de Productos</h5>
+                        </div>
                         <div clas="card-body">
                             <div class="p-5 conteiner">
                                 <div class="row">
                                     <div class="col-12 col-lg-12 col-xl-2">
                                         <div class="form-group">
                                             <label class="control-label"
-                                                >Buscar por</label
+                                                >Filtrar Busqueda por</label
                                             >
                                             <el-select v-model="searchType">
                                                 <el-option
@@ -128,7 +145,7 @@
                                     <div class="col-12 col-lg-12 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label"
-                                                >Producto</label
+                                                >Seleccione el Producto a Trasladar</label
                                             >
                                             <!-- <el-input v-model="form.item_description" :readonly="true"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
                                             <el-select
@@ -196,7 +213,7 @@
                                     <div class="col-12 col-lg-12 col-xl-2">
                                         <div class="form-group">
                                             <label class="control-label">
-                                                Cantidad Actual
+                                                Stock Actual
                                                 <template
                                                     v-if="
                                                         currentItem &&
@@ -275,110 +292,132 @@
                                             </el-input>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-lg-12 col-xl-2">
-                                        <div class="form-group">
-                                            <el-button
-                                                :disabled="
-                                                    form_add.item_id == null
-                                                "
-                                                style="margin-top:10%;"
-                                                @click.prevent="clickAddItem"
-                                                type="primary"
-                                                icon="fas fa-plus"
-                                                >Agregar Producto</el-button
-                                            >
-                                        </div>
+                                    <div class="col-12 col-lg-12 col-xl-2 d-flex justify-content-end">
+                                        <el-button  class="btn_buscar me-2" 
+                                                    @click.prevent="clickAddItem">
+                                            <i class="fas fa-plus"></i>
+                                            <span style="color: #fff; font-size: 1rem; font-weight: bold;">
+                                                Agregar</span>
+                                        </el-button>
                                     </div>
+                                    
+
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <br />
+                    
                     <div class="row">
                         <div class="col-12 col-lg-12 col-xl-12">
-                            <table class="table table-striped" width="100%">
-                                <thead>
-                                    <tr
-                                        width="100%"
-                                        slot="heading"
-                                        class="bg-primary"
-                                    >
-                                        <th class="text-white">#</th>
-                                        <th class="text-white">Producto</th>
-                                        <th class="text-white">Cantidad</th>
-                                        <th class="text-white">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(row, index) in form.items"
-                                        :key="index"
-                                        width="100%"
-                                    >
-                                        <td>{{ index + 1 }}</td>
-                                        <td>
-                                            {{ row.description }}
-                                            <template
-                                                v-if="
-                                                    row.color_size &&
-                                                        row.color_size.length >
-                                                            0
-                                                "
-                                            >
-                                                <br />
-                                                <el-tag
-                                                    v-for="(tag,
-                                                    index) in row.color_size"
-                                                    :key="index"
-                                                    >Color :
-                                                    {{ tag.color }} Talla :
-                                                    {{ tag.size }} Cantidad:
-                                                    {{
-                                                        tag.selectedQuantity
-                                                    }}</el-tag
-                                                >
-                                            </template>
-                                        </td>
-                                        <td>
-                                            <template v-if="row.max_quantity">
-                                                {{ row.max_quantity.input }}
-                                                <el-tooltip
-                                                    :content="
-                                                        `Cantidad real ${row.quantity}`
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </template>
-                                            <template v-else>{{
-                                                row.quantity
-                                            }}</template>
-                                        </td>
-                                        <td
-                                            class="series-table-actions text-center"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-danger"
-                                                @click.prevent="
-                                                    clickCancel(index)
-                                                "
-                                            >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            
                         </div>
                     </div>
                 </div>
-                <div
+                <div class="row">
+                        <div class="col-12 col-lg-12 col-xl-7" style="width: 60%;">
+                            <div class="card">
+                                <div>
+                                    <table class="table table-striped" width="100%">
+                                        <thead>
+                                            <tr class="bg-primary">
+                                                <th class="text-white">#</th>
+                                                <th class="text-white">Producto</th>
+                                                <th class="text-white">Cantidad</th>
+                                                <th class="text-white text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(row, index) in form.items" :key="index">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>
+                                                    {{ row.description }}
+                                                    <template v-if="row.color_size && row.color_size.length > 0">
+                                                        <br />
+                                                        <el-tag
+                                                            v-for="(tag, index) in row.color_size"
+                                                            :key="index"
+                                                        >
+                                                            Color: {{ tag.color }} Talla: {{ tag.size }} Cantidad: {{ tag.selectedQuantity }}
+                                                        </el-tag>
+                                                    </template>
+                                                </td>
+                                                <td>
+                                                    <template v-if="row.max_quantity">
+                                                        {{ row.max_quantity.input }}
+                                                        <el-tooltip :content="`Cantidad real ${row.quantity}`">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </el-tooltip>
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ row.quantity }}
+                                                    </template>
+                                                </td>
+                                                <td class="series-table-actions text-center">
+                                                    <button
+                                                        type="button"
+                                                        class="btn waves-effect waves-light btn-sm btn-danger"
+                                                        @click.prevent="clickCancel(index)"
+                                                    >
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12 col-xl-5" style="width: 40%;">
+                            <div class="card">
+                                <div class="card-body d-flex align-items-center gap-3">
+                                    <el-checkbox v-model="isDisabled">inhabilitar</el-checkbox>
+                                    <span>
+                                        <i class="fa fa-print fa-lg"></i>
+                                        Impresora:
+                                    </span>
+                                    <el-select
+                                        v-model="form.printer"
+                                        :disabled="isDisabled"
+                                        style="flex: 1;"
+                                    >
+                                        <el-option
+                                            v-for="establishment in establishments"
+                                            :key="establishment.id"
+                                            :value="establishment.id"
+                                            :label="`${establishment.description} - ${establishment.printer}`"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                            <!-- Cancelar -->
+                            <el-button
+                                class="btn-cancel btn-cancel:hover"
+                                icon="fas fa-times fa-lg"
+                                @click.prevent="close()"
+                            >
+                                <span>Cancelar</span>
+                            </el-button>
+
+                            <el-button
+                                class="btn-save btn-save:hover"
+                                icon="fas fa-save fa-lg"
+                                type="primary"
+                                native-type="submit"
+                                :loading="loading_submit"
+                            >
+                                <span>Guardar</span>
+                            </el-button>
+                        </div>
+
+                        </div>
+                    </div>
+                <!-- <div
                     class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2"
-                >
+                 >
                     <el-checkbox v-model="isDisabled">inhabilitar</el-checkbox>
                     <div class="col-md-4" style="margin-right:10px;">
                         <span>
@@ -412,7 +451,12 @@
                         :loading="loading_submit"
                         >Guardar</el-button
                     >
-                </div>
+                </div> -->
+                <footer class="card-footer ">
+                    <p class="mb-0">
+                        
+                    </p>
+                </footer>
             </form>
         </div>
 
