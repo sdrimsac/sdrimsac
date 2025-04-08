@@ -390,6 +390,8 @@
                             ></el-button>
                         </div>
                     </div>
+                    <div class="row mt-2">
+                    </div>
                     <el-divider
                         v-if="room.services.length > 0"
                         content-position="left"

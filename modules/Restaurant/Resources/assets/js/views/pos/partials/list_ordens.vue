@@ -3596,7 +3596,7 @@ export default {
                                 customer_id,
                                 promotion_sale: true,
                                 caja: true,
-                                auto_charge: true,
+                                printerOn: false,
                             });
                             // this.$emit('update:localOrden',items)
                         }

@@ -2354,18 +2354,33 @@ export default {
     // mounted() {},
     mounted() {
         this.updateDialogWidth();
-        window.addEventListener("resize", this.updateDialogWidth); // Escuchar el cambio de tamaño
+        window.addEventListener("resize", this.updateDialogWidth);
+        //para autocobrar
+        /* this.$on("auto-payment", form => {
+            this.sendPayment(null, this.form);
+        }); */
+
+        /* this.$on("auto-payment", form => {
+            this.sendPayment(null, form);
+        }); */
+
+        this.$on("auto-payment", async form => {
+            if (this.printerOn === 1 || this.printerOn === true) {
+                
+                this.printerOn = 0;
+                await this.updateConfigutation();
+            }
+
+            this.sendPayment(null, form);
+        });
     },
     beforeDestroy() {
-        window.removeEventListener("resize", this.updateDialogWidth); // Limpiar el evento al destruir el componente
+        window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
         handleDividirPagos() {
-            // Primero cambiamos al tipo de documento nota de venta
             this.form.document_type_id = "80";
-            // Actualizamos las series
             this.filterSeries();
-            // Mostramos el modal de dividir pagos
             this.showSplitPayment = true;
         },
         someItemAffected20() {
@@ -4627,9 +4642,6 @@ export default {
             return newBoxes;
         },
         async sendPayment($event, form = null) {
-            /* this.loading = true;
-            this.loading_submit = true;
-            this.button_payment = true; */
             let pass = true;
 
             if (
@@ -5033,7 +5045,7 @@ export default {
                             : false;
                     printOrdenHotel = resultado;
                 }
-
+                /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined ||
@@ -5042,6 +5054,8 @@ export default {
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel
+                  
+                
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",

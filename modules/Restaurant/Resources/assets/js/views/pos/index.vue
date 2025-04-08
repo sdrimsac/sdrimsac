@@ -122,7 +122,6 @@
                                                 N° {{ orden.id }}
                                             </button>
                                         </template>
-                                        
                                     </template>
                                     <template
                                         v-if="
@@ -294,7 +293,10 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">
+                                        <div
+                                            class="col-12 col-lg-4 p-2"
+                                            v-if="configuration.search_new"
+                                        >
                                             <h2
                                                 class="font-weight-bold custom-text-size"
                                             >
@@ -1739,6 +1741,7 @@
                 :customer_variation="customer_variation"
                 :affectation_igv_types="affectation_igv_types"
                 @reloadItems="getFoods"
+                ref="paymentComponent"
             ></payment-form>
         </template>
         <template v-if="configuration.college">
@@ -3080,7 +3083,7 @@ export default {
                     title: ["Reporte", "Diario Crédito"],
                     icon: "el-icon-connection",
                     visible: this.configuration.sale_note_credit_confirm
-                },
+                }
                 /* {
                     id: 35,
                     title: ["Stock Minimo"],
@@ -3863,6 +3866,7 @@ export default {
                 this.form.vacate = false;
                 this.form.credit_line = form.credit_line;
                 this.form.promotion_sale = form.promotion_sale;
+                this.form.printerOn = form.printerOn;
                 this.form.hotel_rent_item_service_id =
                     form.hotel_rent_item_service_id;
                 this.form.is_list_credit = form.is_list_credit;
@@ -3871,6 +3875,7 @@ export default {
                 this.form.is_advance = form.is_advance;
                 this.form.hotel_rent_id = form.hotel_rent_id;
                 this.form.hotel_customer_number = form.customer_number;
+
                 //this.form.caja = true;
             }
             let { items } = form;
@@ -3973,6 +3978,18 @@ export default {
 
                 /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;
+
+                if (this.form.is_room && this.form.promotion_sale) {
+                    await this.$nextTick();
+
+                    setTimeout(() => {
+                        if (this.$refs.paymentComponent) {
+                            this.$refs.paymentComponent.$emit("auto-payment");
+                        } else {
+                            console.warn("Componente de pago no encontrado");
+                        }
+                    }, 500);
+                }
             }
         },
         formatVariation(i) {
