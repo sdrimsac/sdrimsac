@@ -6,13 +6,14 @@ use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use Illuminate\Support\Carbon;
 use App\Models\Tenant\Purchase;
+use App\Models\Tenant\SaleNotePromotion;
 use Illuminate\Support\Facades\DB;
 use Modules\Inventory\Models\Warehouse;
 use Modules\Inventory\Models\Devolution;
 use Modules\Inventory\Models\InventoryKardex;
 use Modules\Inventory\Models\InventoryTransaction;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
+use Modules\Restaurant\Models\HotelRentItemServices;
 
 class ReportKardexCollection extends ResourceCollection
 {
@@ -111,6 +112,35 @@ class ReportKardexCollection extends ResourceCollection
 
             case $models[2]:
                 // Nota de venta
+                $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $row->inventory_kardexable_id)->first();
+                $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $row->inventory_kardexable_id)->first();
+                $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $row->inventory_kardexable_id)->first();
+                $type_transaction = "Nota de venta";
+                $name = '';
+
+               /*  $sale_note_promotion = SaleNotePromotion::find($id); // o lo que uses */
+
+                if ($sale_note_promotion) {
+                    $item_service = HotelRentItemServices::find($sale_note_promotion->hotel_rent_item_service_id);
+
+                    if ($item_service) {
+                        $hotel_rent_item = HotelRentItem::find($item_service->hotel_rent_item_id);
+
+                        if ($hotel_rent_item) {
+                            $name = $hotel_rent_item->getName();
+                            $type_transaction = "Nota de venta - Promoción hotel " . $name;
+                        } else {
+                            $type_transaction = "Nota de venta - Promoción hotel (item no encontrado)";
+                        }
+                    } else {
+                        $type_transaction = "Nota de venta - Promoción hotel (servicio no encontrado)";
+                    }
+                }
+
+                if ($row->quantity > 0) {
+                    $type_transaction .= ' Anulado interno';
+                }
+
                 return [
                     'user_name' => isset($row->user_id) ? $row->user->name : '',
                     'id' => $row->id,
@@ -118,7 +148,7 @@ class ReportKardexCollection extends ResourceCollection
                     'internal_id' => $row->item->internal_id,
                     'unit_type_id' => $row->item->unit_type_id,
                     'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                    'type_transaction' => "Nota de venta" . ($row->quantity > 0 ? ' Anulado interno':''),
+                    'type_transaction' => $type_transaction,
                     'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? \Carbon\Carbon::parse($row->inventory_kardexable->date_of_issue)->format('d/m/Y') : '',
                     'view' => true,
                     'asiento' => "V-1",
@@ -127,14 +157,12 @@ class ReportKardexCollection extends ResourceCollection
                     'document_type_id' => optional($row->inventory_kardexable)->document_type_id,
                     'operacion_efectuada' => 2,
                     'asiento' => "V-1",
-                    // 'number' => optional($row->inventory_kardexable)->prefix.'-'.optional($row->inventory_kardexable)->id,
                     'input' => ($row->quantity > 0) ?  $row->quantity : "-",
                     'output' => ($row->quantity < 0) ?  $row->quantity : "-",
                     'balance' => self::$balance += $row->quantity,
                     'sale_note_asoc' => '-',
                     'order_note_asoc' => '-',
                     'doc_asoc' => '-'
-
                 ];
 
             case $models[3]: {
@@ -143,19 +171,19 @@ class ReportKardexCollection extends ResourceCollection
                     $output = '';
                     $detail = '';
                     $type_transaction = '';
-                    if($row->inventory_kardexable){
+                    if ($row->inventory_kardexable) {
                         $detail = $row->inventory_kardexable->detail;
                         $type_transaction = $row->inventory_kardexable->description;
                         if (!$row->inventory_kardexable->type) {
                             $transaction = InventoryTransaction::findOrFail($row->inventory_kardexable->inventory_transaction_id);
                         }
-    
+
                         if ($row->inventory_kardexable->type != null) {
                             $input = ($row->inventory_kardexable->type == 1) ? $row->quantity : "-";
                         } else {
                             $input = ($transaction->type == 'input') ? $row->quantity : "-";
                         }
-    
+
                         if ($row->inventory_kardexable->type != null) {
                             $output = ($row->inventory_kardexable->type == 2 || $row->inventory_kardexable->type == 3) ? $row->quantity : "-";
                         } else {
@@ -187,7 +215,7 @@ class ReportKardexCollection extends ResourceCollection
                         'order_note_asoc' => '-',
                         'doc_asoc' => '-'
                     ];
-                    if($row->inventory_kardexable){
+                    if ($row->inventory_kardexable) {
                         if ($row->inventory_kardexable->warehouse_destination_id === $user->establishment_id) {
                             $return['input'] = $output;
                             $return['output'] = $input;
@@ -255,86 +283,85 @@ class ReportKardexCollection extends ResourceCollection
                     'sale_note_asoc' => '-',
                     'order_note_asoc' => '-',
                     'doc_asoc' => '-',
-                    'view' => true  
+                    'view' => true
 
                 ];
-                case $models[7]:
-                    $id = optional($row->inventory_kardexable)->id;
-                    $name = "";
-                    if($id){
-                        $hotel_item_rent = HotelRentItem::find($id);
-                        $name = $hotel_item_rent->getName();
+            case $models[7]:
+                $id = optional($row->inventory_kardexable)->id;
+                $name = "";
+                if ($id) {
+                    $hotel_item_rent = HotelRentItem::find($id);
+                    $name = $hotel_item_rent->getName();
+                }
+                return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
+                    'id' => $row->id,
+                    'item_name' => $row->item->description,
+                    'internal_id' => $row->item->internal_id,
+                    'unit_type_id' => $row->item->unit_type_id,
+                    'date_time' => $row->created_at->format('Y-m-d H:i:s'),
+                    'type_transaction' => "Por alquiler de habitación " . $name,
+                    'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue->format('Y-m-d') : '',
+                    'anumber' => optional($row->inventory_kardexable)->id,
+                    'input' => ($row->quantity > 0) ?  $row->quantity : "-",
+                    'output' => ($row->quantity < 0) ?  $row->quantity : "-",
+                    'balance' => self::$balance += $row->quantity,
+                    'sale_note_asoc' => '-',
+                    'order_note_asoc' => '-',
+                    'doc_asoc' => '-',
+                    'view' => true
 
-                    }
-                    return [
-                        'user_name' => isset($row->user_id) ? $row->user->name : '',
-                        'id' => $row->id,
-                        'item_name' => $row->item->description,
-                        'internal_id' => $row->item->internal_id,
-                        'unit_type_id' => $row->item->unit_type_id,
-                        'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                        'type_transaction' => "Por alquiler de habitación ".$name,
-                        'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue->format('Y-m-d') : '',
-                        'anumber' => optional($row->inventory_kardexable)->id,
-                        'input' => ($row->quantity > 0) ?  $row->quantity : "-",
-                        'output' => ($row->quantity < 0) ?  $row->quantity : "-",
-                        'balance' => self::$balance += $row->quantity,
-                        'sale_note_asoc' => '-',
-                        'order_note_asoc' => '-',
-                        'doc_asoc' => '-',
-                        'view' => true  
-    
-                    ];
-                    case $models[8]:
-                        $id = optional($row->inventory_kardexable)->id;
-                      
-                        return [
-                            'user_name' => isset($row->user_id) ? $row->user->name : '',
-                            'id' => $row->id,
-                            'item_name' => $row->item->description,
-                            'internal_id' => $row->item->internal_id,
-                            'unit_type_id' => $row->item->unit_type_id,
-                            'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                            'type_transaction' => ($row->quantity < 0) ? "Usado para transformación" : "Ingreso por transformación",
-                            'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue : '',
-                            'anumber' => optional($row->inventory_kardexable)->id,
-                            'input' => ($row->quantity > 0) ?  $row->quantity : "-",
-                            'output' => ($row->quantity < 0) ?  $row->quantity : "-",
-                            'balance' => self::$balance += $row->quantity,
-                            'sale_note_asoc' => '-',
-                            'order_note_asoc' => '-',
-                            'doc_asoc' => '-',
-                            'view' => true  
-        
-                        ];
-                        case $models[9]:
-                            $id = optional($row->inventory_kardexable)->id;
-                           $type_transaction = "";
-                           if($row->is_import_excel == 1){
-                            $type_transaction = "Importación";
-                           }else{
-                            $type_transaction = ($row->quantity < 0) ? "Usado para fabricación" : "Ingreso por fabricación";
-                           }
-                            return [
-                                'user_name' => isset($row->user_id) ? $row->user->name : '',
-                                'id' => $row->id,
-                                'item_name' => $row->item->description,
-                                'internal_id' => $row->item->internal_id,
-                                'unit_type_id' => $row->item->unit_type_id,
-                                'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                                // 'type_transaction' => ($row->is_import_excel == 1 ? 'Importación' : ($row->quantity < 0) )? "Salida" : "Ingreso",
-                                'type_transaction' => $type_transaction,
-                                'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue : '',
-                                'anumber' => optional($row->inventory_kardexable)->id,
-                                'input' => ($row->quantity > 0) ?  $row->quantity : "-",
-                                'output' => ($row->quantity < 0) ?  $row->quantity : "-",
-                                'balance' => self::$balance += $row->quantity,
-                                'sale_note_asoc' => '-',
-                                'order_note_asoc' => '-',
-                                'doc_asoc' => '-',
-                                'view' => true  
-            
-                            ];
+                ];
+            case $models[8]:
+                $id = optional($row->inventory_kardexable)->id;
+
+                return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
+                    'id' => $row->id,
+                    'item_name' => $row->item->description,
+                    'internal_id' => $row->item->internal_id,
+                    'unit_type_id' => $row->item->unit_type_id,
+                    'date_time' => $row->created_at->format('Y-m-d H:i:s'),
+                    'type_transaction' => ($row->quantity < 0) ? "Usado para transformación" : "Ingreso por transformación",
+                    'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue : '',
+                    'anumber' => optional($row->inventory_kardexable)->id,
+                    'input' => ($row->quantity > 0) ?  $row->quantity : "-",
+                    'output' => ($row->quantity < 0) ?  $row->quantity : "-",
+                    'balance' => self::$balance += $row->quantity,
+                    'sale_note_asoc' => '-',
+                    'order_note_asoc' => '-',
+                    'doc_asoc' => '-',
+                    'view' => true
+
+                ];
+            case $models[9]:
+                $id = optional($row->inventory_kardexable)->id;
+                $type_transaction = "";
+                if ($row->is_import_excel == 1) {
+                    $type_transaction = "Importación";
+                } else {
+                    $type_transaction = ($row->quantity < 0) ? "Usado para fabricación" : "Ingreso por fabricación";
+                }
+                return [
+                    'user_name' => isset($row->user_id) ? $row->user->name : '',
+                    'id' => $row->id,
+                    'item_name' => $row->item->description,
+                    'internal_id' => $row->item->internal_id,
+                    'unit_type_id' => $row->item->unit_type_id,
+                    'date_time' => $row->created_at->format('Y-m-d H:i:s'),
+                    // 'type_transaction' => ($row->is_import_excel == 1 ? 'Importación' : ($row->quantity < 0) )? "Salida" : "Ingreso",
+                    'type_transaction' => $type_transaction,
+                    'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue : '',
+                    'anumber' => optional($row->inventory_kardexable)->id,
+                    'input' => ($row->quantity > 0) ?  $row->quantity : "-",
+                    'output' => ($row->quantity < 0) ?  $row->quantity : "-",
+                    'balance' => self::$balance += $row->quantity,
+                    'sale_note_asoc' => '-',
+                    'order_note_asoc' => '-',
+                    'doc_asoc' => '-',
+                    'view' => true
+
+                ];
         }
     }
 
@@ -343,11 +370,10 @@ class ReportKardexCollection extends ResourceCollection
 
         if ($request->page >= 2) {
 
-            $establish=$request->establish;
-            if($establish == null){
+            $establish = $request->establish;
+            if ($establish == null) {
                 $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
-
-            }else{
+            } else {
                 $warehouse = Warehouse::find($establish);
             }
 
@@ -432,11 +458,10 @@ class ReportKardexCollection extends ResourceCollection
 
             if ($request->date_start && $request->date_end) {
 
-                $establish=$request->establish;
-                if($establish == null){
+                $establish = $request->establish;
+                if ($establish == null) {
                     $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
-    
-                }else{
+                } else {
                     $warehouse = Warehouse::find($establish);
                 }
                 // $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();

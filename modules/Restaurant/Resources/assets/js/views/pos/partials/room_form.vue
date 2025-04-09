@@ -147,20 +147,6 @@
                             ></el-checkbox>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4">
-                        <label for="name">Tipo de Alquiler</label>
-                        <el-select
-                            v-model="room.table_type_id"
-                            @change="filterTable_types(room.table_type_id, idx)"
-                        >
-                            <el-option
-                                v-for="option in table_types"
-                                :key="option.id"
-                                :label="option.name"
-                                :value="option.id"
-                            ></el-option>
-                        </el-select>
-                    </div> -->
                     <div class="col-md-4">
                         <label for="name">Tipo de Alquiler</label>
                         <el-select
@@ -390,8 +376,7 @@
                             ></el-button>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                    </div>
+                    <div class="row mt-2"></div>
                     <el-divider
                         v-if="room.services.length > 0"
                         content-position="left"
@@ -528,7 +513,6 @@
         </person-form>
     </el-dialog>
 </template>
-
 <script>
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
@@ -543,6 +527,43 @@ export default {
     ],
     components: {
         PersonForm
+    },
+    /* watch: {
+        table_types: {
+            immediate: true,
+            handler(newTypes) {
+                if (
+                    this.rooms.length > 0 &&
+                    this.table &&
+                    newTypes.length > 0
+                ) {
+                    this.rooms.forEach(room => {
+                        if (!room.table_type_id) {
+                            room.table_type_id = this.table.table_type_id;
+                        }
+                    });
+                }
+            }
+        }
+    }, */
+    watch: {
+        table_types: {
+            immediate: true,
+            deep: true,
+            handler(newTypes) {
+                if (
+                    this.rooms.length > 0 &&
+                    this.table &&
+                    newTypes.length > 0
+                ) {
+                    this.rooms.forEach(room => {
+                        if (!room.table_type_id) {
+                            room.table_type_id = this.table.table_type_id;
+                        }
+                    });
+                }
+            }
+        }
     },
 
     created() {
@@ -700,17 +721,14 @@ export default {
             this.calculateTotal();
         },
         filterTable_types(table_type_id, idx) {
-            // Filtrar las tablas considerando tanto el tipo de alquiler como el piso seleccionado
             const room = this.rooms[idx];
             this.tables = this.all_tables.filter(t => {
-                // Si hay un piso seleccionado, filtrar por ambos criterios
                 if (room.floor_id) {
                     return (
                         t.table_type_id == table_type_id &&
                         t.floor_id == room.floor_id
                     );
                 }
-                // Si no hay piso seleccionado, filtrar solo por tipo de alquiler
                 return t.table_type_id == table_type_id;
             });
             room.table_id = null;
@@ -842,7 +860,7 @@ export default {
             }
             return false;
         },
-        addRoom({ tower_id, floor_id, table_id }) {
+        addRoom({ tower_id, floor_id, table_id, table_type_id }) {
             let room = {
                 discount_instead_services: false,
                 insumos: 1,
@@ -858,6 +876,7 @@ export default {
                 floor_id,
                 table_id,
                 quantity_persons: 1,
+                table_type_id,
                 duration: 1,
                 checkin_date: new Date(),
                 checkin_time: new Date(),
@@ -1051,8 +1070,8 @@ export default {
                 this.addRoom({
                     table_id: this.table.id,
                     floor_id: this.table.floor_id,
-                    tower_id: this.table.floor.tower_id
-                    /* table_type_id: this.table.table_type_id */
+                    tower_id: this.table.floor.tower_id,
+                    table_type_id: this.table.table_type_id
                 });
 
                 if (this.isReserve) {
@@ -1104,16 +1123,57 @@ export default {
         },
         defaultTable(table) {
             let {
-                /* table_type_id, */
+                table_type_id,
                 floor_id,
                 floor: { tower_id }
             } = table;
             this.towers = this.all_towers;
             this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
             this.tables = this.all_tables.filter(t => t.floor_id == floor_id);
+
+            const typeExists = this.table_types.some(
+                t => t.id === table_type_id
+            );
+
+            /* const typeExists = this.table_types.some(
+                t => t.id === table_type_id
+            ); */
+
+            if (!typeExists) {
+                console.warn(
+                    "El tipo de alquiler no existe en la lista disponible"
+                );
+                // Si no existe, buscamos el tipo en all_tables
+                const tableFound = this.all_tables.find(t => t.id === table.id);
+                if (tableFound) {
+                    table_type_id = tableFound.table_type_id;
+                }
+            }
+
+            /* if (!typeExists) {
+                console.warn(
+                    "El tipo de alquiler no existe en la lista disponible"
+                );
+            } */
             /* this.table_types = this.all_tables.filter(
                 t => t.table_type_id == table_type_id
             ); */
+            //this.table_types = this.table_types;
+
+            let room = {
+                table_id: table.id,
+                floor_id: floor_id,
+                tower_id: tower_id,
+                table_type_id: table_type_id
+                /* table_type_id: typeExists ? table_type_id : null */
+            };
+            this.$nextTick(() => {
+                this.addRoom(room);
+
+                if (this.rooms.length > 0) {
+                    this.$set(this.rooms[0], "table_type_id", table_type_id);
+                }
+            });
         },
         close() {
             this.$emit("update:showDialog", false);
