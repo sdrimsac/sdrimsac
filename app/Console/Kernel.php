@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
         //$schedule->command('send:dispatchesTicket')->everyFiveMinutes(2);
         $schedule->command('tenancy:run send:dispatches')->dailyAt('09:00');
         $schedule->command('tenancy:run check:dispatches')->dailyAt('09:15');
-        $schedule->command('tenancy:run send:dispatches')->dailyAt('14:00');
+        $schedule->command('tenancy:run send:dispatches')->dailyAt('12:20');
         $schedule->command('tenancy:run check:dispatches')->dailyAt('14:15');
         $schedule->command('tenancy:run send:dispatches')->dailyAt('18:00');
         $schedule->command('tenancy:run check:dispatches')->dailyAt('18:15');
