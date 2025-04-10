@@ -47,7 +47,6 @@ class SendDispatch extends Command
      */
     public function handle()
     {
-        
         Auth::login(User::firstOrFail());
 
         if (Configuration::firstOrFail()->cron) {
@@ -62,7 +61,7 @@ class SendDispatch extends Command
                 ->where([
                     'soap_type_id' => Company::firstOrFail()->active()->soap_type_id,
                     'state_type_id' => '01'])
-                ->whereDate('date_of_issue', '>=', now()->subDays(2))
+                ->whereDate('date_of_issue', '>=', now()->subDays(1))
                 ->get();
             $curl = curl_init();
             foreach ($documents as $document) {

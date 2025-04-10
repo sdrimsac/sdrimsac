@@ -38,7 +38,7 @@ class Functions
         $person = Person::updateOrCreate([
             'type' => $type,
             'identity_document_type_id' => $inputs['identity_document_type_id'],
-            'number' => $inputs['number'],|
+            'number' => $inputs['number'],
         ], [
             'name' => $inputs['name'],
             'trade_name' => $inputs['trade_name'],
