@@ -7,6 +7,8 @@ use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\DispatchRequest;
 use App\Http\Resources\Tenant\DispatchCollection;
+use App\Jobs\DispatchSendSunatJob;
+use App\Jobs\DispatchSendSunatJobProccess;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Catalogs\TransferReasonType;
@@ -231,7 +233,7 @@ class DispatchController extends Controller
                 'categoriaMadera' => isset($item->item->categoriaMadera) ? $item->item->categoriaMadera : null,
                 'quantity' => $item->quantity,
                 'description' => $item->item->description,
-                'unit_type_id' =>isset($item->item->categoriaMadera) ? 'NIU' : $item->item->unit_type_id , 
+                'unit_type_id' => isset($item->item->categoriaMadera) ? 'NIU' : $item->item->unit_type_id,
                 'name_product_pdf' => $name_product_pdf
             ];
         }
@@ -419,36 +421,24 @@ class DispatchController extends Controller
                 $facturalo->save($request->all());
                 $document = $facturalo->getDocument();
 
-
                 $data = (new ServiceDispatchController())->getData($document->id);
                 $facturalo->setXmlUnsigned((new ServiceDispatchController())->createXmlUnsigned($data));
                 $facturalo->signXmlUnsigned();
-                //                $facturalo->createXmlUnsigned();
-                //                $facturalo->signXmlUnsigned();
                 $facturalo->createPdf();
-                //                if($configuration->isAutoSendDispatchsToSunat()) {
-                //                     $facturalo->senderXmlSignedBill();
-                //                }
                 return $facturalo;
             });
 
             $document = $fact->getDocument();
-            //            if ($company->soap_type_id === '02') {
-            //                $res = ((new ServiceDispatchController())->send($document->external_id));
-            //            }
-            // $response = $fact->getResponse();
         } else {
             /** @var Facturalo $fact */
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
                 $facturalo->createPdf();
-
                 return $facturalo;
             });
 
             $document = $fact->getDocument();
-            // $response = $fact->getResponse();
         }
 
         if (!empty($document->reference_document_id) && $configuration->getUpdateDocumentOnDispaches()) {
@@ -460,12 +450,14 @@ class DispatchController extends Controller
 
         $message = "Se creo la guía de remisión {$document->series}-{$document->number}";
 
+        dispatch(new DispatchSendSunatJobProccess($document->external_id))->delay(now()->addMinute());
+
         return [
             'success' => true,
             'message' => $message,
             'data' => [
                 'id' => $document->id,
-                'send_sunat' => $configuration->auto_send_dispatchs_to_sunat
+                'send_sunat' => $configuration->auto_send_dispatchs_to_sunat,
             ],
         ];
     }
@@ -851,8 +843,15 @@ class DispatchController extends Controller
     public function dispatchesByClient($clientId)
     {
         $records = Dispatch::without([
-            'user', 'soap_type', 'state_type', 'document_type', 'unit_type', 'transport_mode_type',
-            'transfer_reason_type', 'items', 'reference_document'
+            'user',
+            'soap_type',
+            'state_type',
+            'document_type',
+            'unit_type',
+            'transport_mode_type',
+            'transfer_reason_type',
+            'items',
+            'reference_document'
         ])
             ->select('series', 'number', 'id', 'date_of_issue', 'soap_shipping_response')
             ->where('customer_id', $clientId)
