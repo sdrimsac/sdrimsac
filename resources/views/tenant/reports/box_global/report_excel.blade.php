@@ -60,7 +60,7 @@ for ($i = 0; $i < count($columns); $i++) { $total +=calculateSum($cash, $columns
         <table>
             <tr>
                 <td class="text-end" colspan="6" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 15px; font-weight: bold;">
-                    <h3>Reporte global</h3>
+                    <h3>Reporte global De Caja</h3>
                 </td>
             </tr>
             <tr>
@@ -162,7 +162,7 @@ for ($i = 0; $i < count($columns); $i++) { $total +=calculateSum($cash, $columns
             <tr>
                 <td colspan="2" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">
                     <strong>
-                        TOTAL VENTA DEL DIA
+                        TOTAL VENTA ACUMULADA
                     </strong>
                 </td>
                 <td class="text-end" style="border: 2px solid black; text-align: center; ">

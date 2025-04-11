@@ -22,6 +22,34 @@
                                     clearable
                                 ></el-date-picker>
                             </div>
+                            <div class="col-md-3">
+                                <label class="control-label w-100"
+                                    >Fecha Inicio</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="form.date_start"
+                                    type="date"
+                                    @change="changeDisabledDates"
+                                    value-format="yyyy-MM-dd"
+                                    format="dd/MM/yyyy"
+                                    clearable
+                                ></el-date-picker>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label w-100"
+                                    >Fecha final</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="form.date_end"
+                                    type="date"
+                                    @change="changeDisabledDates"
+                                    value-format="yyyy-MM-dd"
+                                    format="dd/MM/yyyy"
+                                    clearable
+                                ></el-date-picker>
+                            </div>
                         </template>
                         <div
                             class="col-lg-7 col-md-7 col-md-7 col-sm-12"
@@ -160,7 +188,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        TOTAL VENTAL DEL DÍA
+                                        TOTAL VENTAL ACUMULADA
                                     </td>
                                     <td class="text-end">
                                         {{
@@ -173,7 +201,7 @@
                                                 .toFixed(2)
                                         }}
                                     </td>
-                                    <td :colspan="totals.length-1"></td>
+                                    <td :colspan="totals.length - 1"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -242,7 +270,6 @@ export default {
     },
     methods: {
         calculateSumEstablishment(item) {
-      
             let { records } = item;
             return records.reduce((sum, item) => {
                 return sum + parseFloat(item.amount);
@@ -284,12 +311,20 @@ export default {
             this.form = {
                 id: null,
                 user_id: null,
-                date_open: moment().format("YYYY-MM-DD"),
+                date_open: null,
                 type: "pdf",
                 type_box: null,
-                period: "month",
+                period: "date",
                 date_start: null,
-                date_end: moment().format("YYYY-MM-DD"),
+                //date_end: moment().format("YYYY-MM-DD"),
+                /* month_start: moment().format("YYYY-MM"),
+                month_end: moment().format("YYYY-MM"),
+                date_start: moment().format("YYYY-MM-DD"),
+                date_end: moment().format("YYYY-MM-DD"), */
+
+                date_start: null,
+                date_end: null,
+                date_closed: null,
                 month_start: moment().format("YYYY-MM"),
                 month_end: moment().format("YYYY-MM")
             };
@@ -338,7 +373,10 @@ export default {
                         }, 0);
                         this.totals.push(total);
                     }
-                        console.log("🚀 ~ file: global.vue:340 ~ getRecords ~ this.totals:", this.totals)
+                    console.log(
+                        "🚀 ~ file: global.vue:340 ~ getRecords ~ this.totals:",
+                        this.totals
+                    );
                 })
 
                 .finally(() => {
@@ -375,10 +413,41 @@ export default {
             });
         },
         changeDisabledDates() {
-            if (this.form.date_end < this.form.date_start) {
+            /* if (this.form.date_end < this.form.date_start) {
+                this.form.date_end = this.form.date_start;
+
+                this.form.created_at = this.form.created_at;
+                this.form.updated_at = this.form.updated_at;
+
+            } */
+            if (!this.form.date_start || !this.form.date_end) return;
+
+            // Convertir fechas a objetos moment para comparación
+            const startDate = moment(this.form.date_start);
+            const endDate = moment(this.form.date_end);
+
+            if (this.form.date_start && !this.form.date_end) {
+                this.form.date_end = this.form.date_start;
+                return;
+            }
+
+            if (!this.form.date_start && this.form.date_end) {
+                this.form.date_start = this.form.date_end;
+                return;
+            }
+
+            // Validar el rango de fechas
+            if (endDate.isBefore(startDate)) {
                 this.form.date_end = this.form.date_start;
             }
-            // this.loadAll();
+
+            // Actualizar fecha de cierre si existe
+            if (this.form.date_closed) {
+                const closedDate = moment(this.form.date_closed);
+                if (closedDate.isBefore(endDate)) {
+                    this.form.date_closed = this.form.date_end;
+                }
+            }
         },
         changeDisabledMonths() {
             if (this.form.month_end < this.form.month_start) {
@@ -421,7 +490,7 @@ export default {
             });
             //expensesbox/reports_pd
             let ruta = `/reports/boxes/global/export?${query}`;
-         
+
             let link = `${ruta}`;
             window.open(`${link}`, "_blank");
         },

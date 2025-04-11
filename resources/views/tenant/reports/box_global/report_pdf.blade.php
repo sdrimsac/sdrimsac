@@ -279,7 +279,7 @@
                 <tr>
                     <td colspan="2">
                         <strong>
-                            TOTAL VENTA DEL DIA
+                            TOTAL VENTA ACUMULADA
                         </strong>
                     </td>
                     <td class="text-end">

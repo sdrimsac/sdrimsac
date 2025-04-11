@@ -1486,9 +1486,8 @@ class ItemController extends Controller
                 $has_stock = collect($request['item_warehouses'])->some(function($w) {
                     return $w['stock'] != null && $w['stock'] > 0;
                 });
-
+            
                 if ($has_stock) {
-                    // Solo limpiar y crear nuevos registros si hay algún stock mayor a 0
                     ItemWarehouse::where('item_id', $item->id)->delete();
                     
                     $processedWarehouses = [];
@@ -1497,77 +1496,50 @@ class ItemController extends Controller
                             // Asegurar que stock sea 0 si es null
                             $stock = $w["stock"] ?? 0;
                             
-                            // Verificar si ya existe un registro de kardex inicial para este item y almacén
-                            $existingKardex = InventoryKardex::where('item_id', $item->id)
-                                ->where('warehouse_id', $w["warehouse_id"])
-                                ->where('inventory_kardexable_type', 'Modules\Inventory\Models\Inventory')
-                                ->exists();
-
+                            // Crear registro de almacén
                             $item_warehouse = ItemWarehouse::create([
                                 'warehouse_id' => $w["warehouse_id"],
                                 'item_id' => $item->id,
                                 'stock' => $stock
                             ]);
-
-                            // Solo crear registros relacionados si:
-                            // 1. Es nuevo item
-                            // 2. Tiene stock positivo
-                            // 3. No existe kardex previo para este almacén
-                            if (!$id && $stock > 0 && !$existingKardex) {
+            
+                            // Solo crear registros relacionados si es nuevo item y tiene stock positivo
+                            if (!$id && $stock > 0) {
+                                // Crear registro de inventario
                                 $inventory = Inventory::create([
                                     'type' => 1,
                                     'description' => 'Stock Inicial',
                                     'item_id' => $item->id,
-                                    'warehouse_id' => $w["warehouse_id"], 
-                                    'quantity' => $stock,
+                                    'warehouse_id' => $w["warehouse_id"],
+                                    'quantity' => $stock, // Usar el stock específico del almacén
                                     'date_of_issue' => date('Y-m-d')
                                 ]);
-
-                                // Solo crear kardex si hay stock positivo
-                                if ($stock > 0) {
-                                    Kardex::create([
-                                        'type' => null,
-                                        'date_of_issue' => date('Y-m-d'),
-                                        'item_id' => $item->id,
-                                        'quantity' => $stock
-                                    ]);
-
-                                    InventoryKardex::create([
-                                        'date_of_issue' => date('Y-m-d'),
-                                        'item_id' => $item->id,
-                                        'warehouse_id' => $w["warehouse_id"],
-                                        'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
-                                        'inventory_kardexable_id' => $inventory->id,
-                                        'quantity' => $stock,
-                                        'created_at' => now(),
-                                        'updated_at' => now(),
-                                        'user_id' => auth()->id()
-                                    ]);
-                                }
+            
+                                // Crear registros de kardex solo para este almacén específico
+                                Kardex::create([
+                                    'type' => null,
+                                    'date_of_issue' => date('Y-m-d'),
+                                    'item_id' => $item->id,
+                                    'quantity' => $stock, // Usar el stock específico del almacén
+                                ]);
+            
+                                InventoryKardex::create([
+                                    'date_of_issue' => date('Y-m-d'),
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $w["warehouse_id"],
+                                    'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                                    'inventory_kardexable_id' => $inventory->id,
+                                    'quantity' => $stock, // Usar el stock específico del almacén
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                    'user_id' => auth()->id()
+                                ]);
                             }
                             
                             $processedWarehouses[] = $w["warehouse_id"];
                         }
                     }
-                } else {
-                    // Si no hay stock o es null, asegurarse que exista registro en almacén 1
-                    $exists = ItemWarehouse::where('item_id', $item->id)
-                        ->where('warehouse_id', 1)
-                        ->exists();
-
-                    if (!$exists) {
-                        ItemWarehouse::create([
-                            'warehouse_id' => 1,
-                            'item_id' => $item->id,
-                            'stock' => 0
-                        ]);
-                    }
                 }
-
-                // Actualizar stock total
-                $total_stock = ItemWarehouse::where('item_id', $item->id)->sum('stock');
-                $item->stock = $total_stock;
-                $item->save();
             } else {
                 // Si no se especificó ningún almacén, crear registro por defecto en almacén 1
                 $exists = ItemWarehouse::where('item_id', $item->id)

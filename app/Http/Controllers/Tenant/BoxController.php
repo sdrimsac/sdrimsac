@@ -230,105 +230,105 @@ class BoxController extends Controller
         $cash = Cash::where('date_closed', $date_close)->where('user_id', $user_id)->get()->last();
 
         $data1 = Box::where('type', '1')
-        ->where('method', 'Efectivo')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Efectivo')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data2 = Box::where('type', '2')
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('expenses', 1)->where('state', 0)
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('expenses', 1)->where('state', 0)
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data3 = Box::where('type', '1')
-        ->where('method', 'Transferencia')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Transferencia')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data4 = Box::where('type', '1')
-        ->where('method', 'Deposito Bancario')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Deposito Bancario')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data5 = Box::where('type', '1')
-        ->where('method', 'Tarjeta')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Tarjeta')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data6 = Box::where('type', '1')
-        ->where('method', 'Yape')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Yape')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data7 = Box::where('type', '1')
-        ->where('method', 'PLIN')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'PLIN')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data8 = Box::where('type', '1')
-        ->where('method', 'CULQUI')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'CULQUI')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data9 = Box::where('type', '1')
-        ->where('method', 'BBVA')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'BBVA')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data10 = Box::where('type', '1')
-        ->where('method', 'BCP')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'BCP')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data11 = Box::where('type', '1')
-        ->where('method', 'BCO NACION')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'BCO NACION')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $data12 = Box::where('type', '1')
-        ->where('method', 'Scotiabank')
-        ->where('expenses', 0)
-        ->where('incomes', 0)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Scotiabank')
+            ->where('expenses', 0)
+            ->where('incomes', 0)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
         $dataingresos_all = Box::where('type', '1')
-        ->where('method', 'Efectivo')
-        ->where('incomes', 1)
-        ->where('state', 0)
-        ->whereBetween('date', [$d_start, $d_end])
-        ->where('user_id', $user_id)
-        ->OrderBy('date', 'asc');
+            ->where('method', 'Efectivo')
+            ->where('incomes', 1)
+            ->where('state', 0)
+            ->whereBetween('date', [$d_start, $d_end])
+            ->where('user_id', $user_id)
+            ->OrderBy('date', 'asc');
 
         $row_ingresos = $data1->get();
 
@@ -710,7 +710,9 @@ class BoxController extends Controller
     public function global_records(Request $request)
     {
         $date_open = $request['date_open'];
-        $all_data = $this->global_get_records($date_open);
+        $date_start = $request['date_start'];
+        $date_end = $request['date_end'];
+        $all_data = $this->global_get_records($date_open, $date_start, $date_end);
         $records = $all_data['records'];
         $columns = $all_data['columns'];
         return [
@@ -781,12 +783,14 @@ class BoxController extends Controller
 
         $type = $request->type;
         $date_open = $request->date_open;
-        $all_info = $this->global_get_records($date_open);
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $all_info = $this->global_get_records($date_open, $date_start, $date_end);
         $records = $all_info['records'];
         $columns = $all_info['columns'];
         $company = Company::first();
         if ($type == 'pdf') {
-            $pdf = PDF::loadView('tenant.reports.box_global.report_pdf', compact("records", "company", "date_open", "columns"))->setPaper('a4', 'landscape');
+            $pdf = PDF::loadView('tenant.reports.box_global.report_pdf', compact("records", "company", "date_open", "date_start", "date_end", "columns"))->setPaper('a4', 'landscape');
             return $pdf->stream('Reporte_global_caja_' . date('YmdHis') . '.pdf');
         } else {
 
@@ -823,7 +827,7 @@ class BoxController extends Controller
             'data' => $all
         ];
     }
-    function global_get_records($date_open)
+    /* function global_get_records($date_open, $created_at, $updated_at)
     {
         $establishments = Establishment::select(['id', 'description'])->get();
         $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
@@ -934,11 +938,129 @@ class BoxController extends Controller
             $columns = array_values($columns);
         }
         return ["records" => $records_by_establishment, "columns" => $columns];
+    } */
+
+    function global_get_records($date_open = null, $date_start = null, $date_end = null)
+    {
+        $establishments = Establishment::select(['id', 'description'])->get();
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        $columns = [];
+        $diff_payments = [];
+        $records_by_establishment = [];
+
+        foreach ($establishments as $establishment) {
+            $users_id = User::where('establishment_id', $establishment->id)->pluck('id');
+
+            $cash_query = Cash::select(['id', 'user_id', 'turn_id'])
+                /* ->where('date_opening', $date_open) */
+                ->whereIn('user_id', $users_id);
+
+            /* if ($date_start && $date_end) {
+                    $cash_query->whereBetween('date_opening', [$date_start, $date_end]);
+                } */
+            if ($date_open) {
+                $cash_query->where('date_opening', $date_open);
+            } elseif ($date_start && $date_end) {
+                $cash_query->where(function ($query) use ($date_start, $date_end) {
+                    $query->whereBetween('date_opening', [$date_start, $date_end])
+                        ->orWhereBetween('date_closed', [$date_start, $date_end]);
+                });
+            }
+
+            $cashes_establishment = $cash_query->with('turn')->get()->map(function ($row) use ($payments, &$diff_payments) {
+                $allMethods = $row->boxes->pluck('method')->unique();
+                $records = [];
+
+                foreach ($payments as $value) {
+                    if ($value != "Efectivo") {
+                        $record = $row->boxes->where('method', $value)->sum('amount');
+                        $records[] = [
+                            'method' => $value,
+                            'amount' => $record
+                        ];
+                    } else {
+                        $total = 0;
+                        $row->boxes->where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)
+                            ->each(function ($box) use (&$total) {
+                                if ($box->sale_note_id) {
+                                    $sale_note = $box->salenote;
+                                    if ($sale_note->total > $box->amount) {
+                                        $total += $box->amount;
+                                    } else {
+                                        $total += $sale_note->total;
+                                    }
+                                }
+                                if ($box->document_id) {
+                                    $document = $box->document;
+                                    if ($document->total > $box->amount) {
+                                        $total += $box->amount;
+                                    } else {
+                                        $total += $document->total;
+                                    }
+                                }
+                            });
+
+                        $records[] = [
+                            'method' => $value,
+                            'amount' => $total
+                        ];
+                    }
+                }
+
+                $diff = $allMethods->diff($payments)->values()->all();
+                if (count($diff) > 0) {
+                    $diff_payments = array_merge($diff_payments, $diff);
+                }
+
+                foreach ($diff as $value) {
+                    $record = $row->boxes->where('method', $value)->sum('amount');
+                    $records[] = [
+                        'method' => $value,
+                        'amount' => $record
+                    ];
+                }
+
+                return [
+                    'id' => $row->id,
+                    'turn' => optional($row->turn)->turn_desc ?? "MAÑANA",
+                    'turn_id' => optional($row->turn)->id ?? 1,
+                    'records' => $records
+                ];
+            });
+
+            $records_by_establishment[] = [
+                'cash' => $cashes_establishment,
+                'establishment_id' => $establishment->id,
+                'establishment_description' => $establishment->description,
+            ];
+        }
+
+        $first_element = $payments[0];
+        $rest_elements = array_slice($payments, 1);
+        $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
+
+        $to_check = ["TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        foreach ($records_by_establishment as $value) {
+            foreach ($value['cash'] as $cash_entry) {
+                foreach ($to_check as $method) {
+                    $record = collect($cash_entry['records'])->where('method', $method)->first();
+                    if ($record && $record['amount'] > 0) {
+                        $to_check = array_diff($to_check, [$method]);
+                    }
+                }
+            }
+        }
+
+        if (count($to_check) > 0) {
+            $columns = array_diff($columns, $to_check);
+            $columns = array_values($columns);
+        }
+
+        return ["records" => $records_by_establishment, "columns" => $columns];
     }
 
-    public function global_tables(Request $request)
-    {
-    }
+
+    public function global_tables(Request $request) {}
     public function global_index(Request $request)
     {
         return view('tenant.boxes.reports.global');

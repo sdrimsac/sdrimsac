@@ -220,7 +220,7 @@
 
                                                                 <!-- Entorno Créditos en Nota -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -544,7 +544,7 @@
 
                                                                 <!-- Entorno Boticas & Hospital -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -598,7 +598,7 @@
 
                                                                 <!-- Entorno Billar -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -652,7 +652,7 @@
 
                                                                 <!-- Entorno Maderera -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -706,7 +706,7 @@
 
                                                                 <!-- Entorno Mecánica y Repuesto -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -762,7 +762,7 @@
 
                                                                 <!-- Entorno Odontología -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -816,7 +816,7 @@
 
                                                                 <!-- Entorno Alquiler de Habitaciones -->
                                                                 <div
-                                                                    class="col-md-3 mb-4"
+                                                                    class="col-md-3 mb-4" v-if="canSee"
                                                                 >
                                                                     <div
                                                                         class="card h-100"
