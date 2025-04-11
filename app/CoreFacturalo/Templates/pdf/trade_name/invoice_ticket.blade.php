@@ -286,18 +286,24 @@
             </td>
         </tr>
         @isset($invoice->date_of_due)
+            @if($document->payment_condition_id != '01')
             <tr>
-                <td>
-                    <p class="desc">F. Vencimiento:</p>
-                </td>
-                <td>
-                    @php
-                        $date_of_due = $invoice->date_of_due;
-                        $date_of_due = Carbon\Carbon::parse($date_of_due)->format('Y-m-d');
-                    @endphp
-                    <p class="desc">{{ $date_of_due }}</p>
-                </td>
+            <td>
+            <p class="desc">F. Vencimiento:</p>
+            </td>
+            <td>
+            @php
+                if(count($document->fee) > 0) {
+                $date_of_due = $document->fee[0]->date;
+                } else {
+                $date_of_due = $invoice->date_of_due;
+                }
+                $date_of_due = Carbon\Carbon::parse($date_of_due)->format('Y-m-d');
+            @endphp
+            <p class="desc">{{ $date_of_due }}</p>
+            </td>
             </tr>
+            @endif
         @endisset
 
         <tr>

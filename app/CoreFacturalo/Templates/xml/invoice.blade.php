@@ -45,7 +45,9 @@
     <cbc:ID>{{ $document->series }}-{{ $document->number }}</cbc:ID>
     <cbc:IssueDate>{{ $document->date_of_issue }}</cbc:IssueDate>
     <cbc:IssueTime>{{ $document->time_of_issue }}</cbc:IssueTime>
-    @if ($invoice->date_of_due)
+    @if($document->payment_condition_id === '02' && count($document->fee) > 0)
+        <cbc:DueDate>{{ $document->fee[0]->date->format('Y-m-d') }}</cbc:DueDate>
+    @elseif($invoice->date_of_due)
         <cbc:DueDate>{{ $invoice->date_of_due->format('Y-m-d') }}</cbc:DueDate>
     @endif
     <cbc:InvoiceTypeCode listID="{{ $invoice->operation_type_id }}">{{ $document->document_type_id }}</cbc:InvoiceTypeCode>
