@@ -76,12 +76,12 @@ class DispatchSendSunatJobProccess implements ShouldQueue
             }
 
             // Esperar y luego consultar estado del ticket
-            sleep(30);
+            /* sleep(30); */
             $response = $controller->statusTicket($updated_document->ticket);
 
             // Si falla, volver a intentar
             if (!$response['success']) {
-                sleep(30);
+                /* sleep(30); */
                 $response = $controller->statusTicket($updated_document->ticket);
             }
 
