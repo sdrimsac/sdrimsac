@@ -55,7 +55,7 @@ class DispatchSendSunatJobProccess implements ShouldQueue
         }
     } */
 
-    public function handle()
+    /* public function handle()
     {
         $document = Dispatch::where('external_id', $this->external_id)->first();
         if (!$document) return;
@@ -76,12 +76,10 @@ class DispatchSendSunatJobProccess implements ShouldQueue
             }
 
             // Esperar y luego consultar estado del ticket
-            /* sleep(30); */
             $response = $controller->statusTicket($updated_document->ticket);
 
             // Si falla, volver a intentar
             if (!$response['success']) {
-                /* sleep(30); */
                 $response = $controller->statusTicket($updated_document->ticket);
             }
 
@@ -89,7 +87,42 @@ class DispatchSendSunatJobProccess implements ShouldQueue
         } else {
             Log::error('Error al enviar a SUNAT: ' . json_encode($send_response));
         }
+    } */
+
+    public function handle()
+    {
+        $document = Dispatch::where('external_id', $this->external_id)->first();
+        if (!$document) return;
+
+        $controller = new ServiceDispatchController();
+
+        // Enviar documento a SUNAT
+        $send_response = $controller->send($document->external_id);
+        Log::info('Resultado de send(): ' . json_encode($send_response));
+
+        if ($send_response['success']) {
+            // Reconsultar el ticket desde la base de datos
+            $updated_document = Dispatch::find($document->id);
+            $ticket = $updated_document->ticket;
+
+            if (!$ticket) {
+                Log::warning('No se encontró el ticket después del envío.');
+                return;
+            }
+
+            // Esperar y luego consultar estado del ticket
+            sleep(30);
+            $response = $controller->statusTicket($ticket); // Aquí va el ticket
+            if (!$response['success']) {
+                sleep(30);
+                $response = $controller->statusTicket($ticket);
+            }
+
+            Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
+        }
     }
+
+
 
 
 
