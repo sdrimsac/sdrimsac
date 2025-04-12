@@ -92,7 +92,10 @@ class DispatchSendSunatJobProccess implements ShouldQueue
     public function handle()
     {
         $document = Dispatch::where('external_id', $this->external_id)->first();
-        if (!$document) return;
+        if (!$document) {
+            Log::warning("No se encontró el documento con external_id: {$this->external_id}");
+            return;
+        }
 
         $controller = new ServiceDispatchController();
 
@@ -101,30 +104,29 @@ class DispatchSendSunatJobProccess implements ShouldQueue
         Log::info('Resultado de send(): ' . json_encode($send_response));
 
         if ($send_response['success']) {
-            // Reconsultar el ticket desde la base de datos
+            // El envío fue exitoso, ahora consultar el estado del ticket
             $updated_document = Dispatch::find($document->id);
             $ticket = $updated_document->ticket;
 
             if (!$ticket) {
-                Log::warning('No se encontró el ticket después del envío.');
+                Log::warning('No se encontró el ticket después del envío para external_id: ' . $this->external_id);
                 return;
             }
 
-            // Esperar y luego consultar estado del ticket
-            sleep(30);
-            $response = $controller->statusTicket($ticket); // Aquí va el ticket
-            if (!$response['success']) {
-                sleep(30);
-                $response = $controller->statusTicket($ticket);
-            }
+            // Consultar el estado del ticket usando el external_id
+            $response = $controller->statusTicket($updated_document->external_id);
 
-            Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
+            if ($response['success']) {
+                // Si la respuesta es exitosa, puedes hacer algo más si es necesario
+                Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
+            } else {
+                // Si la respuesta no es exitosa, manejar el error
+                Log::warning('Error al consultar el estado del ticket: ' . json_encode($response));
+            }
+        } else {
+            Log::warning('El envío a SUNAT falló para external_id: ' . $this->external_id);
         }
     }
-
-
-
-
 
     /**
      * The job failed to process.
