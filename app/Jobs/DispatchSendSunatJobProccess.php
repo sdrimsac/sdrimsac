@@ -21,29 +21,27 @@ use Modules\ApiPeruDev\Http\Controllers\ServiceDispatchController;
 
 class DispatchSendSunatJobProccess implements ShouldQueue
 {
-    //use  Dispatchable, InteractsWithQueue, Queueable, SerializesModels, JobReportTrait;
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    
-    
+
+
     protected $external_id;
 
-    public function __construct( $external_id = null)
+    public function __construct($external_id = null)
     {
-        
+
         $this->external_id = $external_id;
     }
 
 
-    public function handle()
+    /* public function handle()
     {
-        
-        $document = Dispatch::find($this->external_id);
+        $document = Dispatch::where('external_id', $this->external_id)->first();
         if (!$document) return;
 
         $controller = new ServiceDispatchController();
         $ticket = $controller->send($document->external_id);
-        /* dump($ticket); */
+        dump($ticket);
 
         if ($ticket['success']) {
             sleep(30);
@@ -54,6 +52,42 @@ class DispatchSendSunatJobProccess implements ShouldQueue
                 $response = $controller->statusTicket($document->external_id);
             }
             Log::info('Response Mensaje exitoso: ' . json_encode($response));
+        }
+    } */
+
+    public function handle()
+    {
+        $document = Dispatch::where('external_id', $this->external_id)->first();
+        if (!$document) return;
+
+        $controller = new ServiceDispatchController();
+
+        // Enviar a SUNAT
+        $send_response = $controller->send($document->external_id);
+        Log::info('Resultado de send(): ' . json_encode($send_response));
+
+        if ($send_response['success']) {
+            // ⚠️ Volver a consultar el ticket desde la BD (porque el método no lo retorna directamente)
+            $updated_document = Dispatch::find($document->id);
+
+            if (!$updated_document->ticket) {
+                Log::warning('No se encontró el ticket después del envío.');
+                return;
+            }
+
+            // Esperar y luego consultar estado del ticket
+            sleep(30);
+            $response = $controller->statusTicket($updated_document->ticket);
+
+            // Si falla, volver a intentar
+            if (!$response['success']) {
+                sleep(30);
+                $response = $controller->statusTicket($updated_document->ticket);
+            }
+
+            Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
+        } else {
+            Log::error('Error al enviar a SUNAT: ' . json_encode($send_response));
         }
     }
 

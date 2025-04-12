@@ -450,7 +450,8 @@ class DispatchController extends Controller
 
         $message = "Se creo la guía de remisión {$document->series}-{$document->number}";
 
-        dispatch(new DispatchSendSunatJobProccess($document->external_id))->delay(now()->addMinute());
+        /* dispatch(new DispatchSendSunatJobProccess($document->external_id))->delay(now()->addMinute(1)); */
+        dispatch(new DispatchSendSunatJobProccess($document->external_id));
 
         return [
             'success' => true,

@@ -75,14 +75,14 @@ class PrintEventJob implements ShouldBroadcast
         $menaje_area = Area::where('description', 'MENAJE')->first();
 
         if ($menaje_area && $area_id == $menaje_area->id) {
-            Log::info("El área es MENAJE. No se modificará el area_id.", [
+            /* Log::info("El área es MENAJE. No se modificará el area_id.", [
                 'area_id' => $area_id,
                 'menaje_area_id' => $menaje_area->id
-            ]);
+            ]); */
         } else {
             if ($id_by_area && $company->number != '10484420331') {
                 $area_id = $id_by_area;
-                Log::info("Se reasigna el area_id porque no es MENAJE", ['area_id' => $area_id]);
+                /* Log::info("Se reasigna el area_id porque no es MENAJE", ['area_id' => $area_id]); */
             }
         }
 
