@@ -68,19 +68,19 @@ class DispatchSendSunatJobProccess implements ShouldQueue
 
         if ($send_response['success']) {
             // ⚠️ Volver a consultar el ticket desde la BD (porque el método no lo retorna directamente)
-            $updated_document = Dispatch::find($document->id);
+            $updated_document = Dispatch::where('external_id', $this->external_id)->first();
 
-            if (!$updated_document->ticket) {
+            if (!$updated_document->external_id) {
                 Log::warning('No se encontró el ticket después del envío.');
                 return;
             }
 
             // Esperar y luego consultar estado del ticket
-            $response = $controller->statusTicket($updated_document->ticket);
+            $response = $controller->statusTicket($updated_document->external_id);
 
             // Si falla, volver a intentar
             if (!$response['success']) {
-                $response = $controller->statusTicket($updated_document->ticket);
+                $response = $controller->statusTicket($updated_document->external_id);
             }
 
             Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
@@ -92,39 +92,34 @@ class DispatchSendSunatJobProccess implements ShouldQueue
     public function handle()
     {
         $document = Dispatch::where('external_id', $this->external_id)->first();
-        if (!$document) {
-            Log::warning("No se encontró el documento con external_id: {$this->external_id}");
-            return;
-        }
+        if (!$document) return;
 
         $controller = new ServiceDispatchController();
 
-        // Enviar documento a SUNAT
+        // Enviar a SUNAT
         $send_response = $controller->send($document->external_id);
         Log::info('Resultado de send(): ' . json_encode($send_response));
 
         if ($send_response['success']) {
-            // El envío fue exitoso, ahora consultar el estado del ticket
-            $updated_document = Dispatch::find($document->id);
-            $ticket = $updated_document->ticket;
+            // Reconsultar el documento actualizado (con ticket)
+            $updated_document = Dispatch::where('external_id', $this->external_id)->first();
 
-            if (!$ticket) {
-                Log::warning('No se encontró el ticket después del envío para external_id: ' . $this->external_id);
+            if (!$updated_document->external_id) {
+                Log::warning('No se encontró el ticket después del envío.');
                 return;
             }
 
-            // Consultar el estado del ticket usando el external_id
+            // Consultar estado del ticket usando el external_id
             $response = $controller->statusTicket($updated_document->external_id);
 
-            if ($response['success']) {
-                // Si la respuesta es exitosa, puedes hacer algo más si es necesario
-                Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
-            } else {
-                // Si la respuesta no es exitosa, manejar el error
-                Log::warning('Error al consultar el estado del ticket: ' . json_encode($response));
+            // Si falla, reintentar una vez más
+            if (!$response['success']) {
+                $response = $controller->statusTicket($updated_document->external_id);
             }
+
+            Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
         } else {
-            Log::warning('El envío a SUNAT falló para external_id: ' . $this->external_id);
+            Log::error('Error al enviar a SUNAT: ' . json_encode($send_response));
         }
     }
 
