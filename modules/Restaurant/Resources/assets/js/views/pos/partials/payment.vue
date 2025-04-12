@@ -2219,7 +2219,10 @@ export default {
             hasExceedBank: false,
             bank_accounts: [],
             pointsMessage: "",
-            ventalista: 0
+            ventalista: 0,
+            time: null,
+            typing: false,
+            typingDelay: 1000
         };
     },
     computed: {
@@ -2366,7 +2369,6 @@ export default {
 
         this.$on("auto-payment", async form => {
             if (this.printerOn === 1 || this.printerOn === true) {
-                
                 this.printerOn = 0;
                 await this.updateConfigutation();
             }
@@ -3112,7 +3114,7 @@ export default {
             this.customers = persons.filter(n => n.number != "88888888");
             this.updateAllCustomers(this.customers);
         },
-        async keyupCustomer(e) {
+        /* async keyupCustomer(e) {
             //buscar
             if (this.time) {
                 clearTimeout(this.time);
@@ -3136,7 +3138,41 @@ export default {
                 this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
             }, 1000);
+        }, */
+
+        async keyupCustomer(e) {
+            if (this.time) {
+                clearTimeout(this.time);
+            }
+
+            this.typing = true;
+
+            this.time = setTimeout(async () => {
+                // ya pasó el tiempo sin escribir, asumimos que terminó
+                this.typing = false;
+
+                const inputEl = this.$refs.select_person.$el.getElementsByTagName(
+                    "input"
+                )[0];
+                this.input_person.number = inputEl.value;
+
+                if (!this.input_person.number) {
+                    return; // No hagas nada si aún está vacío
+                }
+
+                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                if (this.configuration.college) {
+                    url += `&parents=${this.notRegister ? 0 : 1}`;
+                }
+
+                const response = await this.$http(url);
+                const { persons } = response.data;
+
+                this.customers = persons.filter(n => n.number != "88888888");
+                this.updateAllCustomers(this.customers);
+            }, this.typingDelay);
         },
+
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
@@ -5054,8 +5090,6 @@ export default {
                     !this.conf.pos_quick_sale &&
                     !this.ordens_all_table &&
                     printOrdenHotel
-                  
-                
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",
