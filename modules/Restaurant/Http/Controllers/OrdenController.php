@@ -1173,21 +1173,17 @@ class OrdenController extends Controller
                     $area_found = Area::find($area_id);
 
                     if ($area_found->printer || $area_found->search_print == 1) {
-                        // Si el área es Cocina, se envía a Cocina y también a Caja
+                        // Si el área es Cocina, se envía a Cocina y también en el area menaje
                         if ($area_found->description == 'COCINA') {
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $this->getMenaje(), $filtered, null, null, null, $user_id, url('')));
+                            $menaje_id = $this->getMenaje();
 
-                            // Aquí duplicamos la orden para el área "MENAJE"
-                            // Encontramos el área de "MENAJE"
-                            /* $menaje_area = Area::where('description', 'MENAJE')->first();
-                            if ($menaje_area) {
-                                // Si el área "MENAJE" existe, enviar la orden a MENAJE
-                                dispatch(new PrintOrderJob($orden->id, "0", true, $menaje_area->id, $orden_items_ids_for_kitchen, null, null, null, $user_id, url('')));
-                            } else {
-                               
-                                Log::info("Área 'MENAJE' no encontrada para la orden ID: {$orden->id}");
-                            } */
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+
+                            if ($menaje_id != null || $area_found->search_print == 1) {   
+                                $area_id = $menaje_id;
+                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            }
+
                         } else {
                             // Imprimir en el área actual
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
@@ -1215,6 +1211,7 @@ class OrdenController extends Controller
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
+                dump("hola");
                 dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
 
                 // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
@@ -1325,21 +1322,42 @@ class OrdenController extends Controller
     function getMenaje()
     {
         $establishment_id = auth()->user()->establishment_id;
-        $user_box = User::whereHas('area', function ($query) {
-            $query->where('description', 'like', '%MENAJ%');
-        })->where('establishment_id', $establishment_id)->first();
-        if ($user_box) {
-            $area_box = $user_box->area;
-            return $area_box->id;
-        }
-        $area_box = Area::where('description', 'like', '%MENAJ%')->first();
 
-        if ($area_box != null) {
-            return $area_box->id;
+        $area = Area::where('description', 'like', '%MENAJE%')
+            ->where('establishment_id', $establishment_id)
+            ->first();
+        if ($area) {
+            return $area->id;
         }
-        return null;
+
+        $defaultArea = Area::where('description', 'like', '%MENAJE%')
+            ->where('establishment_id', $establishment_id)
+            ->where('id', 2)
+            ->first();
+
+        if ($defaultArea) {
+            return $defaultArea->id;
+        }
+
+        $newArea = Area::create([
+            'description' => 'MENAJE',
+            'active' => true,
+            'establishment_id' => $establishment_id
+        ]);
+
+        return $newArea->id;
     }
     function isArea($name, $area_id)
+    {
+        $area = Area::find($area_id);
+        if ($area) {
+            $desc = strtoupper($area->description);
+            $name = strtoupper($name);
+            return str_contains($desc, $name);
+        }
+        return false;
+    }
+    function isAreaMenaj($name, $area_id)
     {
         $area = Area::find($area_id);
         if ($area) {

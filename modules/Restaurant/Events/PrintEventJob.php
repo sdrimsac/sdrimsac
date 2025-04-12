@@ -30,9 +30,10 @@ class PrintEventJob implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $user_id = null,$url_base = null)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $user_id = null, $url_base = null)
     {
-        if($url_base == null){
+
+        if ($url_base == null) {
             $url_base = url('');
         }
         $configuration = Configuration::first();
@@ -41,7 +42,7 @@ class PrintEventJob implements ShouldBroadcast
         $user_establishment_id_printer = $current_user->establishment_id;
         $zone_id = $area_id;
         if ($zone_id) {
-            $id_by_zone = Area::getZoneEstablishmentJob($zone_id,$user_id);
+            $id_by_zone = Area::getZoneEstablishmentJob($zone_id, $user_id);
             if ($id_by_zone) {
                 $zone_id = $id_by_zone;
                 if ($company->number == '10484420331') {
@@ -54,13 +55,35 @@ class PrintEventJob implements ShouldBroadcast
             Log::info('area_id:' . $area_id);
         }
 
-        $establishment = Establishment::findOrFail($current_user->establishment_id);
+        /* $establishment = Establishment::findOrFail($current_user->establishment_id);
         $id_by_area = Area::getAreaEstablishmentJob($area_id,$user_id);
+        $menaje_area = Area::where('description', 'MENAJE')->first();
+        if (!($menaje_area && $area_id == $menaje_area->id)) {
+            if ($id_by_area && $company->number != '10484420331') {
+                $area_id = $id_by_area;
+            }
+        }
         if ($id_by_area && $company->number != '10484420331') {
             $area_id = $id_by_area;
-        }
-        if ($company->number == '10484420331') {
-            Log::info('area_id_2:' . $area_id);
+        } */
+       
+        //para que se imprima en el area de menaje
+
+        $establishment = Establishment::findOrFail($current_user->establishment_id);
+        $id_by_area = Area::getAreaEstablishmentJob($area_id, $user_id);
+
+        $menaje_area = Area::where('description', 'MENAJE')->first();
+
+        if ($menaje_area && $area_id == $menaje_area->id) {
+            Log::info("El área es MENAJE. No se modificará el area_id.", [
+                'area_id' => $area_id,
+                'menaje_area_id' => $menaje_area->id
+            ]);
+        } else {
+            if ($id_by_area && $company->number != '10484420331') {
+                $area_id = $id_by_area;
+                Log::info("Se reasigna el area_id porque no es MENAJE", ['area_id' => $area_id]);
+            }
         }
 
         $area_found = Area::find($area_id);
@@ -69,7 +92,6 @@ class PrintEventJob implements ShouldBroadcast
                 $user_establishment_id_printer = $area_found->establishment_id;
             }
         }
-        // }
 
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
@@ -101,6 +123,7 @@ class PrintEventJob implements ShouldBroadcast
             $isArca = $user->isWorkerType('arca');
             if ($current_user->type == 'admin' || $current_user->type == 'superadmin' || $isArca) {
                 $area = Area::where('description', 'like', '%caja%')->first();
+
                 $area_printer = Area::findOrFail($area->id);
             } else {
                 $area_printer = Area::findOrFail($current_user->area_id);
@@ -150,21 +173,21 @@ class PrintEventJob implements ShouldBroadcast
             case "01":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = $url_base . "/print/document/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     sleep(15);
                 }
                 break;
             case "03":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = $url_base . "/print/document/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     // sleep(15);
                 }
                 break;
             case "80":
                 $doc = SaleNote::where('id', $id)->first();
                 $documentLink = $url_base . "/sale-notes/print/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     // sleep(15);
                 }
                 break;
@@ -232,7 +255,7 @@ class PrintEventJob implements ShouldBroadcast
 
         // Log::info(json_encode($this->data));
     }
-    
+
     /**
      * Get the channels the event should broadcast on.
      *
