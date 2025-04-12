@@ -46,7 +46,7 @@ class Orden extends ModelTenant
             $request = Request::capture();
             $description = "Orden creado: Solicitado";
             RegisterMovementTrait::registerCreate(
-               $orden,
+                $orden,
                 $request,
                 $description,
                 $orden->toArray()
@@ -59,7 +59,7 @@ class Orden extends ModelTenant
             $newStatus = $original_orden->status_orden->description;
             $description = "Orden: $newStatus";
             RegisterMovementTrait::registerUpdate(
-               $orden,
+                $orden,
                 $request,
                 $description,
                 $orden->toArray()
@@ -77,7 +77,7 @@ class Orden extends ModelTenant
                 $data['sale_note_id'] = $orden->sale_note_id;
                 $data['to_carry'] = $orden->to_carry;
                 RegisterMovementTrait::registerDelete(
-                   $orden,
+                    $orden,
                     $request,
                     $description,
                     $data
@@ -93,22 +93,25 @@ class Orden extends ModelTenant
         }); */
     }
 
-    public function getDocument(){
-        if($this->document_id){
-        $external_id =$this->document->external_id;
-        return url('/print/document/'.$external_id.'/ticket');
+    public function getDocument()
+    {
+        if ($this->document_id) {
+            $external_id = $this->document->external_id;
+            return url('/print/document/' . $external_id . '/ticket');
         }
-        if($this->sale_note_id){
-        $external_id =$this->salenote->external_id;
-        return url('/sale-notes/print/'.$external_id.'/ticket');
+        if ($this->sale_note_id) {
+            $external_id = $this->salenote->external_id;
+            return url('/sale-notes/print/' . $external_id . '/ticket');
         }
         return null;
     }
-    public function credit_list(){
+    public function credit_list()
+    {
         return $this->hasMany(CreditList::class);
     }
-    public function hasDocument(){
-        if($this->document_id || $this->sale_note_id){
+    public function hasDocument()
+    {
+        if ($this->document_id || $this->sale_note_id) {
             return true;
         }
         return false;
@@ -118,15 +121,16 @@ class Orden extends ModelTenant
     * @param $reason = string
     */
 
-    public function info_to_message($items = [],$reason){
+    public function info_to_message($items = [], $reason)
+    {
         $message = "";
-        $message .= "📝 *ORDEN N° ".$this->id." ELIMINADA* \n";
-        $message .= "Motivo: *".$reason."*\n";
-        $message .= "👤 Usuario: *".auth()->user()->name."*\n";
-        if(count($items) > 0){
+        $message .= "📝 *ORDEN N° " . $this->id . " ELIMINADA* \n";
+        $message .= "Motivo: *" . $reason . "*\n";
+        $message .= "👤 Usuario: *" . auth()->user()->name . "*\n";
+        if (count($items) > 0) {
             $message .= "*ITEMS ELIMINADOS:* \n";
             foreach ($items as $item) {
-                $message .= "📌*".$item."* \n";
+                $message .= "📌*" . $item . "* \n";
             }
         }
         return $message;
@@ -152,7 +156,8 @@ class Orden extends ModelTenant
     {
         return $this->belongsTo(SaleNote::class, 'sale_note_id', 'id');
     }
-    public function table(){
+    public function table()
+    {
         return $this->belongsTo(Table::class);
     }
     public function mesa()
@@ -163,8 +168,18 @@ class Orden extends ModelTenant
     {
         return $this->belongsTo(Mozo::class, 'mozo_id');
     }
+    /* public function orden_items_delete()
+    {
+        return $this->hasMany(OrdenDelete::class, 'orden_id', 'id');
+    } */
 
-    public function getTotal(){
+    public function orden_delete()
+    {
+        return $this->hasOne(OrdenDelete::class, 'orden_id');
+    }
+
+    public function getTotal()
+    {
         $total = 0;
         foreach ($this->orden_items as $item) {
             $total += $item->quantity * $item->price;

@@ -175,6 +175,10 @@ class OrdenItem extends ModelTenant
     {
         return $this->belongsTo(Orden::class, 'orden_id');
     }
+    public function ordens_delete()
+    {
+        return $this->hasMany(OrdenDelete::class, 'orden_item_id', 'id');
+    }
 
     public function area()
     {

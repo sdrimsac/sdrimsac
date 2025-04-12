@@ -2019,10 +2019,9 @@ class CashController extends Controller
 
         $cajaOpen = DB::connection('tenant')->table('cash')
             ->where('user_id', '=', $userid)
-            ->where('state', '=', 1) // 1 indica que la caja esta en estatus abierta
+            ->where('state', '=', 1)
             ->first();
         $cajaOpen = is_null($cajaOpen);
-        //false = no pintar  y true = Pintar boton de crear nueva caja
 
 
         return view('restaurant::cash.index', compact('userid', 'cajaOpen'));
@@ -2059,13 +2058,13 @@ class CashController extends Controller
 
         return new CashCollection($records->paginate(20));
     }
-    public function records(Request $request)
+    public function records(Request $request) 
     {
         ini_set('memory_limit', '3500M');
         ini_set('max_execution_time', 3000);
 
         $fromAdmin = $request->input('fromAdmin');
-        $is_principal = $request->input('is_principal');
+        $is_principal = $request->input('is_principal'); 
         $from_cash = $request->input('from_cash');
         $records = Cash::query();
 
@@ -2076,15 +2075,39 @@ class CashController extends Controller
         $records->whereTypeUser($fromAdmin);
         $records->where('active', 0);
         $records->orderBy('date_opening', 'desc')
-            ->orderBy('time_opening', 'desc');
-
-        // if ($from_cash) {
-        //     $records = $records->limit(10)->get();
-        //     return new CashCollection($records);
-        // }
+                ->orderBy('time_opening', 'desc');
 
         return new CashCollection($records->paginate(20));
     }
+
+    /* private function recalculateStock($cash_id)
+    {
+        $cash = Cash::findOrFail($cash_id);
+        
+        $cash_user = User::find($cash->user_id);
+
+        $establishment_id = $cash_user->establishment_id;
+
+        $products = Item::where('init_report', true)->get();
+
+        foreach ($products as $product) {
+            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $product->id)
+                ->where('warehouse_id', $establishment_id)
+                ->select('stock')
+                ->first();
+
+            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+            DB::connection('tenant')->table('cash_init_stock')
+                ->where('cash_id', $cash_id)
+                ->where('item_id', $product->id)
+                ->update([
+                    'initial_stock' => $current_stock,
+                    'updated_at' => now(),
+                ]);
+        }
+    } */
 
     public function getFinalBalance($id)
     {
@@ -2306,7 +2329,7 @@ class CashController extends Controller
         //</Preparamos la cadena de texto que guardanermos en el parametro 'reference_number) >
 
         $cash->save();
-        $this->inserStock($cash->id);
+        $this->insertStock($cash->id);
         // aqui llamo a una funcion de otro controlador para registrar el stock del producto 
         // $this->registerStock($request->input('id'), $request->input('beginning_balance'));
         //crea un mensaje con el nombre del usuario y el monto con el cual está abriendo caja
@@ -2346,14 +2369,21 @@ class CashController extends Controller
             'date_opening' => 'Fecha de apertura',
         ];
     }
-    private function inserStock($cash_id)
+    private function insertStock($cash_id)
     {
+        $cash = Cash::findOrFail($cash_id);
+        
+        $cash_user = User::find($cash->user_id);
+
+        $establishment_id = $cash_user->establishment_id;
+
         $products = Item::where('init_report', true)->get();
 
         foreach ($products as $product) {
-
+            
             $item_warehouse = DB::connection('tenant')->table('item_warehouse')
                 ->where('item_id', $product->id)
+                ->where('warehouse_id', $establishment_id)
                 ->select('stock')
                 ->first();
 
@@ -2362,7 +2392,9 @@ class CashController extends Controller
             DB::connection('tenant')->table('cash_init_stock')->insert([
                 'cash_id' => $cash_id,
                 'item_id' => $product->id,
-                'initial_stock' => $current_stock,
+                'initial_stock' => $current_stock, 
+                'user_id' => $cash_user->id,
+                'warehouse_id' => $establishment_id,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

@@ -1341,6 +1341,7 @@ class OrdenController extends Controller
 
         $newArea = Area::create([
             'description' => 'MENAJE',
+            'copies' => 0,
             'active' => true,
             'establishment_id' => $establishment_id
         ]);

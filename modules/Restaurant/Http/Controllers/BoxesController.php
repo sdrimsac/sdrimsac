@@ -1340,79 +1340,128 @@ class BoxesController extends Controller
     function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
-        $product = Item::where('init_report', true)->get();
+        $start = Carbon::parse($cash->date_opening)->startOfDay();
+        $end = $cash->date_closed ? Carbon::parse($cash->date_closed)->endOfDay() : now();
+
+        $products = Item::where('init_report', true)->get();
 
         $report_init = [];
+        $user_id = $cash->user_id;
 
-        foreach ($product as $item) {
+        foreach ($products as $item) {
             $init_stock = DB::connection('tenant')->table('cash_init_stock')
                 ->where('cash_id', $cash_id)
                 ->where('item_id', $item->id)
+                ->where('initial_stock', '!=', 0)
                 ->first();
 
-            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+            // Obtener almacenes donde el producto tuvo movimientos
+            $warehouse_ids = DB::connection('tenant')->table('inventory_kardex')
                 ->where('item_id', $item->id)
-                ->select('stock')
-                ->first();
+                ->where('user_id', $user_id)
+                ->whereBetween('created_at', [$start, $end])
+                ->distinct()
+                ->pluck('warehouse_id');
 
-            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+            // Obtener cantidad vendida desde documentos
+            $document_items = DB::connection('tenant')
+                ->table('document_items')
+                ->join('documents', 'documents.id', '=', 'document_items.document_id')
+                ->where('documents.cash_id', $cash_id)
+                ->where('documents.state_type_id', '!=', '11')
+                ->where('document_items.item_id', $item->id)
+                ->sum('document_items.quantity');
 
-            if ($init_stock) {
-                $document_items = DB::connection('tenant')
-                    ->table('document_items')
-                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
-                    ->where('documents.cash_id', $cash_id)
-                    ->where('document_items.item_id', $item->id)
-                    ->where('documents.state_type_id', '!=', '11')
-                    ->sum('document_items.quantity');
+            // Obtener cantidad vendida desde notas de venta
+            $sale_note_items = DB::connection('tenant')
+                ->table('sale_note_items')
+                ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
+                ->where('sale_notes.cash_id', $cash_id)
+                ->where('sale_notes.state_type_id', '!=', '11')
+                ->where('sale_note_items.item_id', $item->id)
+                ->sum('sale_note_items.quantity');
 
-                $sale_note_items = DB::connection('tenant')
-                    ->table('sale_note_items')
-                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
-                    ->where('sale_notes.cash_id', $cash_id)
-                    ->where('sale_note_items.item_id', $item->id)
-                    ->where('sale_notes.state_type_id', '!=', '11')
-                    ->sum('sale_note_items.quantity');
+            $sold_quantity = $document_items + $sale_note_items;
 
-                $sold_quantity = $document_items + $sale_note_items;
-                $sold_quantity = is_numeric($sold_quantity) ? (float)$sold_quantity : 0.000;
-                $initial_stock = $init_stock->initial_stock;
-                $initial_stock = is_numeric($initial_stock) ? (float)$initial_stock : 0.000;
-                $theoretical_stock = $initial_stock - $sold_quantity;
-                $current_stock = is_numeric($current_stock) ? (float)$current_stock : 0.000;
-                $difference = abs($current_stock - $theoretical_stock);
+            foreach ($warehouse_ids as $warehouse_id) {
+                $stock_actual = DB::connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $item->id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->value('stock');
 
-                // Verificar si el producto es un POLLO o POLLO INSUMO
-                //$isChicken = stripos($item->description, 'POLLO') !== false;
+                $ingresos = DB::connection('tenant')->table('inventory_kardex')
+                    ->where('item_id', $item->id)
+                    ->where('quantity', '>', 0)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->whereBetween('created_at', [$start, $end])
+                    ->sum('quantity');
+
+                $initial_stock = isset($init_stock->initial_stock) ? (float)$init_stock->initial_stock : 0.000;
+                $theoretical_stock = $initial_stock + $ingresos - $sold_quantity;
+                $difference = abs($stock_actual - $theoretical_stock);
+
+                $compras_estimadas = $stock_actual - $initial_stock + $sold_quantity;
+
+                // Formato especial según tipo de producto
                 $isChicken = (preg_match('/\bPOLLO\b/', strtoupper($item->description)) === 1)
                     && (stripos($item->description, 'POLLO INSUMO') === false);
                 $isChickenInsumo = stripos($item->unit_type_id, 'KG') !== false;
 
-                // Ajustar la representación del stock según el tipo de producto
                 if ($isChicken) {
-                    $formatted_initial_stock = $this->formatInitial($init_stock->initial_stock);
-                    /* $formatted_sold_quantity = $this->formatChickenStock($sold_quantity); */
-                    $formatted_actual_stock = $this->formatChickenStock($current_stock);
+                    $formatted_initial_stock = $this->formatInitial($initial_stock);
+                    $formatted_current_stock = $this->formatChickenStock($stock_actual);
                     $formatted_difference = $this->formatDifference($difference);
+                    $formatted_compras_estimadas = $this->formatChickenStock($compras_estimadas);
+                    $formatted_compras_efectivas = $this->formatChickenStock($ingresos);
                 } elseif ($isChickenInsumo) {
-                    $formatted_initial_stock = number_format($init_stock->initial_stock * 1000, 0) . " gr.";
-                    /* $formatted_sold_quantity = number_format($sold_quantity * 1000, 0) . " g"; */
-                    $formatted_actual_stock = number_format($current_stock * 1000, 0) . " gr.";
+                    $formatted_initial_stock = number_format($initial_stock * 1000, 0) . " gr.";
+                    $formatted_current_stock = number_format($stock_actual * 1000, 0) . " gr.";
                     $formatted_difference = number_format($difference * 1000, 0) . " gr.";
+                    $formatted_compras_estimadas = number_format($compras_estimadas * 1000, 0) . " gr.";
+                    $formatted_compras_efectivas = number_format($ingresos * 1000, 0) . " gr.";
                 } else {
-                    $formatted_initial_stock = number_format($init_stock->initial_stock, 3);
-                    /* $formatted_sold_quantity = number_format($sold_quantity, 3); */
-                    $formatted_actual_stock = number_format($current_stock, 3);
+                    $formatted_initial_stock = number_format($initial_stock, 3);
+                    $formatted_current_stock = number_format($stock_actual, 3);
                     $formatted_difference = number_format($difference, 3);
+                    $formatted_compras_estimadas = number_format($compras_estimadas, 3);
+                    $formatted_compras_efectivas = number_format($ingresos, 3);
+                }
+
+                // Detalle de cantidad vendida formateado
+                $detalle_vendido = null;
+                if (stripos($item->description, 'POLLO') !== false) {
+                    if (stripos($item->description, 'POLLO INSUMO') !== false) {
+                        $detalle_vendido = ($sold_quantity * 1000) . ' gr';
+                    } else {
+                        switch (true) {
+                            case $sold_quantity == 1:
+                                $detalle_vendido = '1 Pollo';
+                                break;
+                            case $sold_quantity == 0.500:
+                                $detalle_vendido = '1/2 Pollo';
+                                break;
+                            case $sold_quantity == 0.250:
+                                $detalle_vendido = '1/4 Pollo';
+                                break;
+                            case $sold_quantity == 0.125:
+                                $detalle_vendido = '1/8 Pollo';
+                                break;
+                            default:
+                                $detalle_vendido = $sold_quantity . ' Pollo(s)';
+                        }
+                    }
                 }
 
                 $report_init[] = [
                     'item_id' => $item->id,
                     'name' => $item->description,
+                    'warehouse_id' => $warehouse_id,
                     'initial_stock' => $formatted_initial_stock,
-                    /* 'sold_quantity' => $formatted_sold_quantity, */
-                    'actual_stock' => $formatted_actual_stock,
+                    'actual_stock' => $formatted_current_stock,
                     'difference' => $formatted_difference,
+                    'sold_quantity' => $detalle_vendido ?? $sold_quantity,
+                    'compras_estimadas' => $formatted_compras_estimadas,
+                    'compras_efectivas' => $formatted_compras_efectivas,
                     'opening_date' => $cash->date_opening,
                     'closing_date' => $cash->date_closed
                 ];
@@ -1424,6 +1473,7 @@ class BoxesController extends Controller
             'product' => $report_init
         ];
     }
+
     function formatInitial($stock)
     {
         $wholeChickens = floor($stock);
@@ -1523,59 +1573,6 @@ class BoxesController extends Controller
         return implode(' | ', $result);
     }
 
-    /* function get_ordens_anulate($cash_id)
-    {
-        $cash = Cash::find($cash_id);
-        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
-        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
-
-        $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
-        $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
-
-        $query = Orden::with('orden_items.food', 'orden_items.user')
-            ->where('status_orden_id', 5)
-            ->whereDate('created_at', '>=', $date_opening)
-            ->whereTime('created_at', '>=', $time_opening);
-
-        if ($date_closed && $time_closed) {
-            $query->whereDate('created_at', '<=', $date_closed)
-                ->whereTime('created_at', '<=', $time_closed);
-        }
-
-        $cancelled_orders = $query->get()->map(function ($order) {
-            $items = $order->orden_items->map(function ($item) {
-                return [
-                    'quantity' => $item->quantity,
-                    'product' => $item->food->description ?? 'Sin descripción',
-                    'price' => $item->price,
-                    'user' => $item->user->name ?? 'Usuario desconocido'
-                ];
-            });
-
-            $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
-            $total_quantity = $items->sum('quantity');
-
-            return [
-                'order_number' => $order->id,
-                'date' => $order->created_at->format('Y-m-d'),
-                'time' => $order->created_at->format('H:i:s'),
-                'items' => $items,
-                'total_amount' => $total_amount,
-                'reason' => $order->reason ?? 'No especificado',
-                'total_items' => $total_quantity
-            ];
-        });
-
-        return [
-            'cash_id' => $cash_id,
-            'date_opening' => $date_opening,
-            'time_opening' => $time_opening,
-            'date_closed' => $date_closed,
-            'time_closed' => $time_closed,
-            'cancelled_orders' => $cancelled_orders
-        ];
-    } */
-
     function get_orden_item_anulate($cash_id)
     {
         $cash = Cash::find($cash_id);
@@ -1585,10 +1582,9 @@ class BoxesController extends Controller
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
 
-        // Ajustamos la consulta para que traiga todas las órdenes anuladas de todas las áreas
         $query = Orden::with(['orden_items' => function ($q) {
-            $q->where('status_orden_id', 5);  // Filtrar solo los orden_items con status_orden_id == 5
-        }, 'orden_items.food', 'orden_items.user'])
+            $q->where('status_orden_id', 5);
+        }, 'orden_items.food', 'orden_items.user', 'orden_items.ordens_delete'])
             ->whereDate('created_at', '>=', $date_opening)
             ->whereTime('created_at', '>=', $time_opening);
 
@@ -1597,22 +1593,24 @@ class BoxesController extends Controller
                 ->whereTime('created_at', '<=', $time_closed);
         }
 
-        // Obtén todas las órdenes anuladas sin importar el área
         $cancelado_orders = $query->get()->map(function ($order) {
-            // Verificar si al menos un orden_item tiene status_orden_id == 5
             $items = $order->orden_items->map(function ($item) {
                 return [
                     'quantity' => $item->quantity,
                     'product' => $item->food->description ?? 'Sin descripción',
                     'price' => $item->price,
-                    'user' => $item->user->name ?? 'Usuario desconocido'
+                    'user' => $item->user->name ?? 'Usuario desconocido',
+                    'reason' => optional($item->ordens_delete->first())->reason,
                 ];
             });
 
-            // Si algún item tiene status_orden_id == 5, la orden debe marcarse como anulada
-            $is_anulated = $order->orden_items->contains(function ($item) {
+            $all_items_canceled = $order->orden_items->every(function ($item) {
                 return $item->status_orden_id == 5;
             });
+
+            $reason = $all_items_canceled && $order->status_orden_id == 5
+                ? ($order->reason ?? 'No especificado')
+                : ($items->firstWhere('reason', '!=', null)['reason'] ?? 'No especificado');
 
             $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
             $total_quantity = $items->sum('quantity');
@@ -1623,9 +1621,9 @@ class BoxesController extends Controller
                 'time' => $order->created_at->format('H:i:s'),
                 'items' => $items,
                 'total_amount' => $total_amount,
-                'reason' => $order->reason ?? 'No especificado',
+                'reason' => $reason,
                 'total_items' => $total_quantity,
-                'is_anulated' => $is_anulated  // Agregamos el estado de si la orden está anulada
+                'is_anulated' => $all_items_canceled
             ];
         });
 
@@ -1638,8 +1636,6 @@ class BoxesController extends Controller
             'cancelado_orders' => $cancelado_orders
         ];
     }
-
-
 
     public function save_info_pharmacy(Request $request, $cash_id)
     {
@@ -2719,6 +2715,9 @@ class BoxesController extends Controller
         ini_set('max_execution_time', '30000');
 
         $cash_id = $request->cash_id;
+        /* if ($cash_id) {
+            $this->recalculateStock($cash_id);
+        } */
         $configuration = Configuration::first();
         $socket_channel = $configuration->socket_channel;
         $cash = Cash::find($cash_id);
@@ -3271,6 +3270,35 @@ class BoxesController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
+
+    /* private function recalculateStock($cash_id)
+    {
+        $cash = Cash::findOrFail($cash_id);
+        
+        $cash_user = User::find($cash->user_id);
+
+        $establishment_id = $cash_user->establishment_id;
+
+        $products = Item::where('init_report', true)->get();
+
+        foreach ($products as $product) {
+            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $product->id)
+                ->where('warehouse_id', $establishment_id)
+                ->select('stock')
+                ->first();
+
+            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
+
+            DB::connection('tenant')->table('cash_init_stock')
+                ->where('cash_id', $cash_id)
+                ->where('item_id', $product->id)
+                ->update([
+                    'initial_stock' => $current_stock,
+                    'updated_at' => now(),
+                ]);
+        }
+    } */
     function get_detraction_payments($cash_id)
     {
 

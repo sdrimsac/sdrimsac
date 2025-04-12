@@ -14675,15 +14675,11 @@
                                                                                 ref="canopyKitchenIcon"
                                                                                 class="fas fa-print fa-lg"
                                                                             ></i>
-                                                                            Comanda
-                                                                            de
-                                                                            Cocina
-                                                                            en
-                                                                            Caja
+                                                                            Habilitar Area Menaje
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
-                                                                                content="Habilitar Comanda de Cocina en Caja"
+                                                                                content="Habilitar esta opcion para usar el area menaje tener en cuenta que al habilitar el boton y realizar un pedido se creara el area de menaje y solo se debe asignar el nombre de la impresora"
                                                                                 placement="top-start"
                                                                             >
                                                                                 <i
