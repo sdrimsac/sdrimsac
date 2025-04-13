@@ -1,3 +1,4 @@
+<!-- Traslado de Productos -->
 <template>
 <div>
     <div class="container-fluid p-l-0 p-r-0">
@@ -6,7 +7,7 @@
             <div class="col-sm-6">
                 <h6><span>{{ title }}</span></h6>
                 <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/dashboard">Dashboarddsdsds</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                     <li class="breadcrumb-item active"><span class="text-muted">{{ title }}</span></li>
                 </ol>
             </div>

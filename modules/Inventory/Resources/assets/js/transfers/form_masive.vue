@@ -147,7 +147,7 @@
                                             <label class="control-label"
                                                 >Seleccione el Producto a Trasladar</label
                                             >
-                                            <!-- <el-input v-model="form.item_description" :readonly="true"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
+                                            
                                             <el-select
                                                 :disabled="!form.warehouse_id"
                                                 @change="changeItem"
@@ -171,16 +171,16 @@
                                             <a
                                                 v-if="
                                                     form_add.item_id &&
-                                                        form_add.series_enabled
+                                                    form_add.series_enabled
                                                 "
                                                 href="#"
                                                 class="text-center font-weight-bold text-info"
                                                 @click.prevent="
                                                     clickLotcodeOutput
                                                 "
-                                                >[&#10004; Seleccionar
-                                                series]</a
                                             >
+                                                [&#10004; Seleccionar series]
+                                            </a>
                                             <a
                                                 v-if="
                                                     form_add.item_id &&
@@ -204,7 +204,7 @@
                                                 @click.prevent="
                                                     clickColorcodeOutput
                                                 "
-                                                >[&#10004; Seleccionar Talla
+                                                >[&#10004; Seleccionar Talla &
                                                 Color]</a
                                             >
                                         </div>
@@ -300,22 +300,14 @@
                                                 Agregar</span>
                                         </el-button>
                                     </div>
-                                    
-
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <br />
                     
-                    <div class="row">
-                        <div class="col-12 col-lg-12 col-xl-12">
-                            
-                        </div>
-                    </div>
                 </div>
+                <!-- Tabla de productos a trasladar -->
                 <div class="row">
                         <div class="col-12 col-lg-12 col-xl-7" style="width: 60%;">
                             <div class="card">
@@ -414,49 +406,7 @@
                         </div>
 
                         </div>
-                    </div>
-                <!-- <div
-                    class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2"
-                 >
-                    <el-checkbox v-model="isDisabled">inhabilitar</el-checkbox>
-                    <div class="col-md-4" style="margin-right:10px;">
-                        <span>
-                            <i class="fa fa-print fa-lg"></i>
-                            Impresora:
-                        </span>
-                        <br />
-                        <el-select
-                            v-model="form.printer"
-                            :disabled="isDisabled"
-                        >
-                            <el-option
-                                v-for="establishment in establishments"
-                                :key="establishment.id"
-                                :value="establishment.id"
-                                :label="
-                                    `${establishment.description} - ${establishment.printer}`
-                                "
-                            ></el-option>
-                        </el-select>
-                    </div>
-                    <el-button
-                        icon="fas fa-times fa-lg"
-                        @click.prevent="close()"
-                        >Cancelar</el-button
-                    >
-                    <el-button
-                        icon="fas fa-save fa-lg"
-                        type="primary"
-                        native-type="submit"
-                        :loading="loading_submit"
-                        >Guardar</el-button
-                    >
-                </div> -->
-                <footer class="card-footer ">
-                    <p class="mb-0">
-                        
-                    </p>
-                </footer>
+                </div>
             </form>
         </div>
 

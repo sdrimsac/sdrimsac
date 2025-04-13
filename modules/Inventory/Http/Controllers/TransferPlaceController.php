@@ -112,10 +112,6 @@ class TransferPlaceController extends Controller
         return $record;
     }
 
-
-
-
-
     public function destroy($id)
     {
 

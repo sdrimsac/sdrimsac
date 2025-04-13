@@ -39,6 +39,27 @@ class TransferController extends Controller
         return view('inventory::transfers_place.index');
     }
 
+    public function lotsRecords(Request $request)
+    {
+        $search = $request->search;
+        $series = $search;
+
+        if ($series) {
+            $record = ItemLot::where('series', $series)->first();
+
+            if ($record) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $record,
+                ]);
+            }
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró la serie especificada.',
+        ]);
+    }
+
     public function create()
     {
         $establishment_id = auth()->user()->establishment_id;

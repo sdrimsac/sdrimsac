@@ -1,12 +1,14 @@
+<!-- Apertura de Caja en Módulo de Ventas -->
 <template>
   <el-dialog
-    :title="titleDialog"
+    :title="titleDialog"   
     :visible="showDialog"
     @close="close"
     @open="create"
     :data-keyboard="false"
     :closeOnPressEscape="dontClose"
     :closeOnClickModal="dontClose"
+    width="35%"
   >
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
@@ -109,10 +111,30 @@
           </div>
         </div>
       </div>
-      <div class="form-actions text-end pt-2 pb-2">
+      <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <!-- Cancelar -->
+                <el-button
+                    class="btn-cancel btn-cancel:hover"
+                    icon="fas fa-times fa-lg"
+                    @click.prevent="close()"
+                >
+                    <span>Cancelar</span>
+                </el-button>
+
+                <el-button
+                    class="btn-save btn-save:hover"
+                    icon="fas fa-save fa-lg"
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                >
+                    <span>Guardar</span>
+                </el-button>
+            </div>
+      <!-- <div class="form-actions text-end pt-2 pb-2">
         <el-button @click.prevent="close()">Cancelar</el-button>
         <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
-      </div>
+      </div> -->
     </form>
   </el-dialog>
 </template>

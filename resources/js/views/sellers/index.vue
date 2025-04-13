@@ -23,12 +23,6 @@
                 ></i>
               Nuevo
           </el-button>
-
-          <!-- <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
-            <i class="fas fa-user-tie fa-lg"></i>
-            <i class="fa fa-plus"></i>
-            <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
-          </el-button> -->
         </div>
         <div class="card-body">
           <br />

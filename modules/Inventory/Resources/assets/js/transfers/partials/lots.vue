@@ -1,48 +1,68 @@
 <template>
     <el-dialog
         :title="titleDialog"
-        width="40%"
-        :visible="showDialog"
+        width="35%"
+        :visible.sync="showDialog"
         @open="create"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         append-to-body
-        :show-close="false"
+        :show-close="true"
     >
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <label class="d-flex align-items-center">
+                    <i class="fas fa-barcode" style="margin-right: 5px;"></i> Buscar
+                </label>
+                <el-input
+                    v-model="series"
+                    @change="getSeries"
+                    placeholder="Buscar por serie o lote"
+                    clearable
+                    size="small"
+                    style="width: 300px;"
+                ></el-input>
+            </div>
+        </div>
+        <br />
         <div class="form-body">
             <div class="row">
                 <div class="col-lg-12 col-md-12 table-responsive">
                     <table width="100%" class="table">
                         <thead>
-                            <tr width="100%">
-                                <th class="text-center">Seleccionar</th>
-                                <th>Cod. Lote</th>
-                                <th>Serie</th>
-                                <th>Fecha</th>
+                            <tr :style="{ backgroundColor: '#001f3f', color: 'white', fontWeight: 'bold', borderRadius: '5px' }">
+                                <th class="text-center text-white">Seleccionar</th>
+                                <th class="text-center text-white">Cod. Lote</th>
+                                <th class="text-center text-white">Serie</th>
+                                <th class="text-center text-white">Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr
-                                v-for="(row, index) in lots"
-                                :key="index"
-                                width="100%"
-                            >
-                                <!-- <td>{{index}}</td> -->
+                            <tr v-for="(row, index) in lots" :key="index">
                                 <td class="text-center">
                                     <el-checkbox
+                                        ref="checkboxes"
+                                        :ref="'checkbox-' + index"
                                         v-model="row.has_sale"
                                     ></el-checkbox>
                                 </td>
-                                <td>
-                                    {{ row.lot_code }}
+                                <td class="text-center">
+                                    <span
+                                        :style="{
+                                            color: row.lot_code
+                                                ? 'blue'
+                                                : 'rgba(0, 0, 0, 0.5)'
+                                        }"
+                                    >
+                                        {{ row.lot_code || "Item sin Lote" }}
+                                    </span>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {{ row.series }}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {{ row.date }}
                                 </td>
-                                <br />
                             </tr>
                         </tbody>
                     </table>
@@ -50,9 +70,22 @@
             </div>
         </div>
 
-        <div class="form-actions text-end pt-2 pb-2">
-            <el-button @click.prevent="close()">Cerrar</el-button>
-            <!-- <el-button type="primary" @click="submit" >Guardar</el-button> -->
+        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+
+            <el-button
+                class="btn-save btn-save:hover"
+                icon="fas fa-save fa-lg"
+                type="primary"
+                native-type="submit"
+                @click.prevent="close"
+                :loading="loading_submit"
+            >
+                <span>Cargar Series
+                    <el-tooltip content="Carga las SERIES chekeadas a la lista de Traslados" placement="top">
+                        <i class="fas fa-info-circle" style="color: red;"></i>
+                    </el-tooltip>
+                </span>
+            </el-button>
         </div>
     </el-dialog>
 </template>
@@ -62,13 +95,30 @@ export default {
     props: ["showDialog", "lots"],
     data() {
         return {
-            titleDialog: "Series",
+            titleDialog: "Seleccionar Series a trasladar",
             loading: false,
             errors: {},
-            form: {}
+            form: {},
+            series: "",
+            loading_submit: false,
+            localLots: []
         };
     },
-    async created() {},
+    async created() {
+        console.log("created ver como llega", this.lots);
+    },
+    watch: {
+        lots: {
+            immediate: true,
+            handler(newLots) {
+                if (newLots) {
+                    this.localLots = JSON.parse(JSON.stringify(newLots));
+                } else {
+                    this.localLots = [];
+                }
+            }
+        }
+    },
     methods: {
         create() {},
         async submit() {
@@ -82,9 +132,60 @@ export default {
             this.$emit("update:showDialog", false);
             this.$emit("addRowOutputLot", this.lots);
         },
-        async clickCancelSubmit() {
-            // this.$emit('addRowLot', []);
-            // await this.$emit('update:showDialog', false)
+        async clickCancelSubmit() {},
+
+        async getSeries() {
+            if (this.seriesTimer) {
+                clearTimeout(this.seriesTimer);
+            }
+            this.seriesTimer = setTimeout(async () => {
+                this.loading = true;
+                try {
+                    const response = await this.$http.get("lots_records", {
+                        params: { search: this.series }
+                    });
+
+                    const lotData = Array.isArray(response.data.data)
+                        ? response.data.data
+                        : [response.data.data];
+
+                    //his.localLots = lotData;
+                    this.localLots = lotData;
+
+                    const matchedLotIndex = this.localLots.find(
+                        lot => lot.series === this.series
+                    );
+                    if (matchedLotIndex !== -1) {
+                        // Marcar el checkbox correspondiente
+                        this.localLots[matchedLotIndex].has_sale = true;
+
+                        this.$nextTick(() => {
+                            // Acceder al checkbox correspondiente usando el índice
+                            const checkboxRef = this.$refs[
+                                `checkbox-${matchedLotIndex}`
+                            ];
+                            if (checkboxRef) {
+                                checkboxRef.$emit("input", true); // Emitir evento de entrada
+                            }
+                        });
+
+                        this.$toast.success(
+                            `Serie ${this.series} seleccionada automáticamente.`
+                        );
+                    } else {
+                        this.$toast.error(
+                            `La serie ${this.series} no se encontró en los lotes.`
+                        );
+                    }
+                } catch (error) {
+                    console.error(error);
+                    this.$toast.error(
+                        "Ocurrió un error al buscar la serie. Intente nuevamente."
+                    );
+                } finally {
+                    this.loading = false;
+                }
+            }, 100); // Delay de 100ms
         }
     }
 };

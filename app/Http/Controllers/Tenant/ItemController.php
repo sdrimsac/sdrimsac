@@ -151,6 +151,8 @@ class ItemController extends Controller
         ];
     }
 
+    
+
     public function updatePriceUnitType(Request $request)
     {
         $price = $request->sale_unit_price;

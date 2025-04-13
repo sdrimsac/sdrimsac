@@ -1,7 +1,6 @@
 <!-- Listado de Traslados Adminsitrador -->
 <template>
     <div>
-        
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">

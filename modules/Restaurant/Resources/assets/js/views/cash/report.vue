@@ -1,9 +1,10 @@
+<!-- Reporte de Gananciás -->
 <template>
   <div>
     <div class="container-fluid p-l-0 p-r-0">
       <div class="page-header">
         <div class="row">
-          <div class="col-sm-6">
+          <!-- <div class="col-sm-6">
             <h6>
               <span>Reporte de ganancias</span>
             </h6>
@@ -15,21 +16,56 @@
                 <span class="text-muted">Ganancias</span>
               </li>
             </ol>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
     <div class="container-fluid p-l-0 p-r-0">
       <div class="card mb-0">
-        <div class="card-header bg-primary">
-          <h6 class="my-0 text-white">Ganancias</h6>
+        
+        <div class="card mb-0">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                  <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="fa fa-chart-line" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                      Ganancias
+                  </h4>
+              </div>
         </div>
-        <div class="card-body">
-          <div class="col-md-12 col-lg-12 col-xl-12">
+        <div class="data-table-visible-columns" v-if="records.length > 0">
+          <el-button
+              type="button"
+              class="btn_buscar"
+              style="margin-right: 5px;"
+              href="javascript:void(0)" @click.prevent="clickCreate()"
+          >
+                <i
+                  class="fas fa-plus-circle fa-lg icon-style"
+                ></i>
+              Nuevo
+          </el-button>
+            <el-button class="submit btn_buscar" type="danger" @click.prevent="clickDownload('pdf')">
+                <i class="fa fa-file-pdf"></i>
+                PDF
+                </el-button>
+                <el-button class="submit btn_buscar" type="success" style="background-color: #28a745; border-color: #28a745;" @click.prevent="clickDownload('excel')">
+                <i class="fa fa-file-excel"></i>
+                EXCEL
+                </el-button>
+                <el-button class="submit btn_buscar" type="success" @click.prevent="openWhastappForm()">
+                <i class="icofont-brand-whatsapp"></i>
+                WHATSAPP
+                </el-button>
+
+          </div>
+        
+        <div class="card" style="margin: 10px;">
+          <div class="card-body">
+            <h5 class="card-title">Filtros</h5>
+            <div class="col-md-12 col-lg-12 col-xl-12">
             <div class="row mt-2">
               <div class="col-md-3">
                 <div class="form-group">
-                  <label class="control-label">Almacen</label>
+                  <label class="control-label">Almacén</label>
                   <el-select v-model="form.establishment_id" clearable filterable>
                     <el-option
                       v-for="option in warehouses"
@@ -42,7 +78,7 @@
               </div>
               <div class="col-md-3">
                 <div class="form-group">
-                  <label class="control-label">Categoria</label>
+                  <label class="control-label">Categoría</label>
                   <el-select v-model="form.categoria_id" clearable filterable>
                     <el-option
                       v-for="option in categories"
@@ -145,6 +181,11 @@
               </div>
             </div>
           </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          
           <div class="col-md-12">
             <div class="table-responsive">
               <table class="table">
