@@ -1211,7 +1211,6 @@ class OrdenController extends Controller
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
-                dump("hola");
                 dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
 
                 // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
