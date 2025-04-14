@@ -91,6 +91,34 @@
           </div>
           <div class="col-lg-2 col-md-2 pb-2">
             <div class="form-group">
+              <label class="control-label w-100">Fecha Inicio</label>
+
+              <el-date-picker
+                v-model="search.date_start"
+                type="date"
+                style="width: 100%;"
+                placeholder="Buscar por dia"
+                value-format="yyyy-MM-dd"
+                @change="changeClearInput('date_of_issue')"
+              ></el-date-picker>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 pb-2">
+            <div class="form-group">
+              <label class="control-label w-100">Fecha Final</label>
+
+              <el-date-picker
+                v-model="search.date_end"
+                type="date"
+                style="width: 100%;"
+                placeholder="Buscar por dia"
+                value-format="yyyy-MM-dd"
+                @change="changeClearInput('date_of_issue')"
+              ></el-date-picker>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 pb-2">
+            <div class="form-group">
               <label class="control-label w-100">Estado</label>
               <el-select 
                 v-model="search.active" 
@@ -163,19 +191,6 @@ export default {
       default: true,
       required: false
     }
-    /* typeUser: {
-      type: String,
-      default: "admin"
-    }, */
-    /* sellers: {
-      type: Array,
-      default: () => []
-    }, */
-    /* fromAdmin: {
-      type: Boolean,
-      default: false,
-      required: false
-    } */
   },
   data() {
     return {
@@ -183,6 +198,8 @@ export default {
         column: null,
         value: null,
         date_of_issue: null,
+        date_start: null,
+        date_end: null,
         active: 1
       },
       columns: [],

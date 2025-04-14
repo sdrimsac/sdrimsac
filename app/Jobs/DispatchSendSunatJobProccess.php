@@ -96,12 +96,11 @@ class DispatchSendSunatJobProccess implements ShouldQueue
 
         $controller = new ServiceDispatchController();
 
-        // Enviar a SUNAT
         $send_response = $controller->send($document->external_id);
         Log::info('Resultado de send(): ' . json_encode($send_response));
 
         if ($send_response['success']) {
-            // Reconsultar el documento actualizado (con ticket)
+
             $updated_document = Dispatch::where('external_id', $this->external_id)->first();
 
             if (!$updated_document->external_id) {
@@ -109,10 +108,8 @@ class DispatchSendSunatJobProccess implements ShouldQueue
                 return;
             }
 
-            // Consultar estado del ticket usando el external_id
             $response = $controller->statusTicket($updated_document->external_id);
 
-            // Si falla, reintentar una vez más
             if (!$response['success']) {
                 $response = $controller->statusTicket($updated_document->external_id);
             }

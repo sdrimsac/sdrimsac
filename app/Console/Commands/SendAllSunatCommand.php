@@ -42,6 +42,8 @@ class SendAllSunatCommand extends Command
      *
      * @return mixed
      */
+
+     // consulta en sunat los estados de los documentos 
     public function handle() {
         if (Configuration::firstOrFail()->cron) {
 

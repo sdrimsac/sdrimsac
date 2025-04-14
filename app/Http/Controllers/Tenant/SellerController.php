@@ -41,6 +41,8 @@ class SellerController extends Controller
         $date_of_issue = $request->input('date_of_issue');
         $month_start = $request->input('month_start');
         $active = $request->input('active', 1);
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
 
         $query = Seller::query()
             ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start) {

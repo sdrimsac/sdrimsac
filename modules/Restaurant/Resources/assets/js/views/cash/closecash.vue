@@ -90,7 +90,7 @@
                 <br />
                 <!-- Cuerpor del conteo de dinero -->
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card">
                             <!-- Encabezado de Billetes -->
                             <div
@@ -141,7 +141,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
                                         <tr>
                                             <td class="text-center">
                                                 <h3>10</h3>
@@ -285,7 +284,9 @@
                                         <!-- Solo un espacio hacia abajo -->
                                         <tr>
                                             <td class="text-center">
-                                                <h3 style="visibility: hidden;">200</h3>
+                                                <h3 style="visibility: hidden;">
+                                                    200
+                                                </h3>
                                             </td>
                                             <td>
                                                 <el-input
@@ -357,10 +358,9 @@
                             </div>
                         </div>
                     </div>
-                     <!-- Encabezado de Monedas -->
-                    <div class="col-md-4">
+                    <!-- Encabezado de Monedas -->
+                    <div class="col-md-6">
                         <div class="card">
-                           
                             <div
                                 class="card-header d-flex justify-content-between align-items-center"
                                 style="background-color: #073f68; color: white; padding: 5px;"
@@ -416,9 +416,7 @@
                                             >
                                                 <h3>0.10</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['0.1']"
@@ -454,9 +452,7 @@
                                             >
                                                 <h3>0.20</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['0.2']"
@@ -491,9 +487,7 @@
                                             >
                                                 <h3>0.50</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['0.5']"
@@ -528,9 +522,7 @@
                                             >
                                                 <h3>1.00</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['1']"
@@ -565,9 +557,7 @@
                                             >
                                                 <h3>2.00</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['2']"
@@ -602,9 +592,7 @@
                                             >
                                                 <h3>5.00</h3>
                                             </td>
-                                            <td
-                                                style="width: 6ch;"
-                                            >
+                                            <td style="width: 6ch;">
                                                 <el-input
                                                     placeholder="0"
                                                     v-model="count['5']"
@@ -651,131 +639,144 @@
                         </div>
                     </div>
                     <!-- Resumen de dinero -->
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
                                 <div class="col-md-12 text-center">
-                        <div class="col-md-12">
-                            <label class="w-100">
-                                Total Efectivo Contado
-                            </label>
-                            <el-input
-                                :value="final_balance.toFixed(2)"
-                                readonly
-                            >
-                            </el-input>
-                        </div>
-                        <div
-                            v-if="
-                                configuration.view_daily_cash ||
-                                    configuration.view_daily_cash_pin
-                            "
-                            class="col-md-12"
-                        >
-                            <label class="w-100">
-                                Diferencia del Conteo de Dinero
-                            </label>
-                            <template v-if="configuration.view_daily_cash_pin">
-                                <el-input
-                                    :value="returnTextObfuscated('123456')"
-                                    readonly
-                                >
-                                </el-input>
-                            </template>
-                            <template v-else>
-                                <el-input
-                                    :class="
-                                        `${
-                                            difference < 0
-                                                ? 'text-danger-difference'
-                                                : ''
-                                        }`
-                                    "
-                                    :value="difference"
-                                    readonly
-                                >
-                                </el-input>
-                            </template>
-                        </div>
-                     
-                        <br />
-                        <tfoot>
-                            <tr v-if="configuration.health_network">
-                                <div class="card">
-                                    <div class="card-header" style="background-color: #073f68; color: white;">
-                                        <h6 class="card-title mb-0" style="color: white; font-weight: bold;">Serie de Billetes</h6>
+                                    <div class="col-md-12">
+                                        <label class="w-100">
+                                            Total Efectivo Contado
+                                        </label>
+                                        <el-input
+                                            :value="final_balance.toFixed(2)"
+                                            readonly
+                                        >
+                                        </el-input>
                                     </div>
-                                    <div class="card-body">
-                                        <td colspan="4">
-                                            <el-button
-                                                type="primary"
-                                                style="border-radius: 5px; padding: 10px 20px; margin-right: 5px; font-size: 1em;"
-                                                icon="el-icon-document"
-                                                @click="showSeriesBills"
+                                    <div
+                                        v-if="
+                                            configuration.view_daily_cash ||
+                                                configuration.view_daily_cash_pin
+                                        "
+                                        class="col-md-12"
+                                    >
+                                        <label class="w-100">
+                                            Diferencia del Conteo de Dinero
+                                        </label>
+                                        <template
+                                            v-if="
+                                                configuration.view_daily_cash_pin
+                                            "
+                                        >
+                                            <el-input
+                                                :value="
+                                                    returnTextObfuscated(
+                                                        '123456'
+                                                    )
+                                                "
+                                                readonly
                                             >
-                                                Ingresar 
-                                            </el-button>
-                                            <el-button
-                                                style="border-radius: 5px; padding: 10px 20px; background-color: #28a745; color: white; font-size: 1em;"
-                                                icon="el-icon-folder-opened"
-                                                @click.prevent="$refs.file.click()"
+                                            </el-input>
+                                        </template>
+                                        <template v-else>
+                                            <el-input
+                                                :class="
+                                                    `${
+                                                        difference < 0
+                                                            ? 'text-danger-difference'
+                                                            : ''
+                                                    }`
+                                                "
+                                                :value="difference"
+                                                readonly
                                             >
-                                                Subir Excel
-                                            </el-button>
-                                            <input
-                                                type="file"
-                                                @change="uploadExcelBillsSeries"
-                                                style="visibility:hidden;"
-                                                ref="file"
-                                                accept=".xlsx,.xls"
-                                            />
-                                        </td>
+                                            </el-input>
+                                        </template>
                                     </div>
+
+                                    <br />
+                                    <tfoot>
+                                        <tr v-if="configuration.health_network">
+                                            <div class="card">
+                                                <div
+                                                    class="card-header"
+                                                    style="background-color: #073f68; color: white;"
+                                                >
+                                                    <h6
+                                                        class="card-title mb-0"
+                                                        style="color: white; font-weight: bold;"
+                                                    >
+                                                        Serie de Billetes
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <td colspan="4">
+                                                        <el-button
+                                                            type="primary"
+                                                            style="border-radius: 5px; padding: 10px 20px; margin-right: 5px; font-size: 1em;"
+                                                            icon="el-icon-document"
+                                                            @click="
+                                                                showSeriesBills
+                                                            "
+                                                        >
+                                                            Ingresar
+                                                        </el-button>
+                                                        <el-button
+                                                            style="border-radius: 5px; padding: 10px 20px; background-color: #28a745; color: white; font-size: 1em;"
+                                                            icon="el-icon-folder-opened"
+                                                            @click.prevent="
+                                                                $refs.file.click()
+                                                            "
+                                                        >
+                                                            Subir Excel
+                                                        </el-button>
+                                                        <input
+                                                            type="file"
+                                                            @change="
+                                                                uploadExcelBillsSeries
+                                                            "
+                                                            style="visibility:hidden;"
+                                                            ref="file"
+                                                            accept=".xlsx,.xls"
+                                                        />
+                                                    </td>
+                                                </div>
+                                            </div>
+                                        </tr>
+                                    </tfoot>
+                                    <!-- <div class="col-md-12 text-center">
+                                        <div class="row"></div>
+                                    </div> -->
                                 </div>
-                            </tr>
-                        </tfoot>
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <div class="col-md-12 text-center">
-                            <div class="row">
-                                <div
-                                    class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-                                >
-                                    <!-- <span slot="footer" class="dialog-footer"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="margin-top: 20px;">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-end" style="flex-wrap: wrap; gap: 10px;">
                                     <el-button
                                         @click="closeDialog()"
-                                        class="btn-cancel btn-cancel:hover"
-                                        style="font-size: 0.9em; padding: 5px 10px;"
+                                        class="btn-cancel"
+                                        style="font-size: 0.9em; min-width: fit-content;"
                                     >
-                                        <i
-                                            class="el-icon-close"
-                                            style="font-size: 1.5em;"
-                                        ></i>
+                                        <i class="el-icon-close" style="margin-right: 5px;"></i>
                                         Cancelar
                                     </el-button>
                                     <el-button
                                         type="primary"
                                         @click="clickCloseCash"
-                                        class="btn-agregar btn-agregar:hover"
-                                        style="font-size: 0.9em; padding: 5px 10px;"
+                                        class="btn-agregar"
+                                        style="font-size: 0.9em; min-width: fit-content;"
                                     >
-                                        <i
-                                            class="el-icon-s-finance"
-                                            style="font-size: 1.5em;"
-                                        ></i>
+                                        <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
                                         Cerrar Caja
                                     </el-button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                
             </el-dialog>
         </div>
         <series-bills-dialog

@@ -44,6 +44,8 @@ class SummaryQueryCommand extends Command
      *
      * @return mixed
      */
+
+     // envia los resumenes a sunat en estado 03
     public function handle() {
         $this->info('The command was started');
 

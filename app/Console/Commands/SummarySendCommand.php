@@ -45,6 +45,8 @@ class SummarySendCommand extends Command
      *
      * @return mixed
      */
+
+     // para generar resumenes de documentos y enviarlo a sunat 
     public function handle() {
         $this->info('The command was started');
         
