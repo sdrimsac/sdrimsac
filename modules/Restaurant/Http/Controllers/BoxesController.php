@@ -1368,6 +1368,7 @@ class BoxesController extends Controller
                 ->table('document_items')
                 ->join('documents', 'documents.id', '=', 'document_items.document_id')
                 ->where('documents.cash_id', $cash_id)
+                ->whereBetween('documents.created_at', [$start, $end])
                 ->where('documents.state_type_id', '!=', '11')
                 ->where('document_items.item_id', $item->id)
                 ->sum('document_items.quantity');
@@ -1377,6 +1378,7 @@ class BoxesController extends Controller
                 ->table('sale_note_items')
                 ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
                 ->where('sale_notes.cash_id', $cash_id)
+                ->whereBetween('documents.created_at', [$start, $end])
                 ->where('sale_notes.state_type_id', '!=', '11')
                 ->where('sale_note_items.item_id', $item->id)
                 ->sum('sale_note_items.quantity');
