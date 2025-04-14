@@ -203,7 +203,7 @@ class DocumentController extends Controller
 
         ];
     }
-    
+
     public function storeClient(Request $request)
     {
         try {
@@ -259,7 +259,6 @@ class DocumentController extends Controller
             Storage::delete('public/txt/' . $namefile);
 
             return $result;
-            
         } catch (\Exception $e) {
             // Asegurar que se elimine el archivo temporal si existe
             if (isset($namefile)) {
@@ -383,7 +382,7 @@ class DocumentController extends Controller
         Storage::put('temp_data.txt', $txtContent);
 
         $cookieString = $cookies;
-        
+
         $response = Http::withoutVerifying()->withHeaders([
             'Cookie' => $cookieString
         ])->attach(
@@ -401,7 +400,7 @@ class DocumentController extends Controller
         $cookies = $this->loginSunat();
         $cookiesToSendTxt = $this->getCoockiesTxt($cookies);
         $response =  $this->sendTxt($cookiesToSendTxt);
-     
+
         return [
             'success' => true,
             'message' => 'Se consultó los documentos'
@@ -419,7 +418,7 @@ class DocumentController extends Controller
 
 
         $cookies = $response->headers()['Set-Cookie'] ?? [];
- 
+
         $cookieString = '';
 
         foreach ($cookies as $cookie) {
@@ -936,7 +935,7 @@ class DocumentController extends Controller
                     }
                     $sales->state_type_id = $state_type;
                     $sales->save();
-                    
+
                     try {
                         // Call processTxt method
                         $processTxtResponse = $this->processTxt();
@@ -952,12 +951,11 @@ class DocumentController extends Controller
                             "message" => "Ocurrió un problema al enviar el archivo TXT"
                         ];
                     }
-                    
+
                     return [
                         "success" => true,
                         "message" => $this->document_state[$data["comprobante_estado_codigo"]]
                     ];
-                    
                 } else {
                     return [
                         "success" => false,
@@ -1724,7 +1722,7 @@ class DocumentController extends Controller
             // }
             // event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
             dispatch(new PrintOrderJob($document->id, $document->document_type_id, $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
-           
+
 
             if ($request->orden_id != null) {
                 $Orden = Orden::FindOrFail($request->orden_id);
@@ -1732,14 +1730,19 @@ class DocumentController extends Controller
                 $Orden->status_orden_id = 4;
                 $Orden->customer_id = $document->customer_id;
                 $Orden->save();
-                $document_orden = Document::FindOrFail($document->id);;
+                $document_orden = Document::FindOrFail($document->id);
                 $document_orden->orden_id = $request->orden_id;
                 $document_orden->save();
                 $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                 foreach ($orden_items as $orden_item) {
-                    $orden_item->status_orden_id = 4;
+                    /* $orden_item->status_orden_id = 4;
                     $orden_item->save();
-                    event(new OrdenReadyEvent($orden_item->id));
+                    event(new OrdenReadyEvent($orden_item->id)); */
+                    if ($orden_item->status_orden_id != 5) {
+                        $orden_item->status_orden_id = 4;
+                        $orden_item->save();
+                        event(new OrdenReadyEvent($orden_item->id));
+                    }
                 }
             }
             if ($request->orden_ids) {
@@ -1752,8 +1755,14 @@ class DocumentController extends Controller
                     $Orden->save();
                     $orden_items = OrdenItem::where('orden_id', $id)->get();
                     foreach ($orden_items as $orden_item) {
-                        $orden_item->status_orden_id = 4;
-                        $orden_item->save();
+                        /* $orden_item->status_orden_id = 4;
+                        $orden_item->save(); */
+
+                        if ($orden_item->status_orden_id != 5) {
+                            $orden_item->status_orden_id = 4;
+                            $orden_item->save();
+                            /* event(new OrdenReadyEvent($orden_item->id)); */
+                        }
                     }
                 }
             }
@@ -1859,7 +1868,7 @@ class DocumentController extends Controller
             }
             $establishment = Establishment::where('id', $document->establishment_id)->first();
 
-            if($request->currentAppointment){
+            if ($request->currentAppointment) {
                 $currentAppointment = $request->currentAppointment;
                 $id = $currentAppointment['id'];
                 $user_appointment = UserScheduleAppointment::find($id);
@@ -2997,10 +3006,10 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
-                
+
                 // Show warning message if document was created from sale note
                 $from_sale_note = false;
-                if($record->sale_note_id) {
+                if ($record->sale_note_id) {
                     $from_sale_note = true;
                 }
 
@@ -3012,11 +3021,11 @@ class DocumentController extends Controller
                 $date_now->setTime(0, 0, 0);
                 $two_days_ago = $date_now->copy()->subDays(2);
                 $same_date = $issued_date >= $two_days_ago && $issued_date <= $date_now;
-                
+
                 if ($issued_date > $date_now) {
                     $same_date = true;
                 }
-                
+
                 if ($same_date) {
                     $this->deleteAllPayments($record->payments);
                     $record->state_type_id = "11";
@@ -3026,7 +3035,7 @@ class DocumentController extends Controller
                     $desc = "App\Models\Tenant\Document";
                     $record->internal_voided = true;
                     $record->save();
-                    
+
                     if ($orden_id) {
                         $orden = Orden::find($orden_id);
 
@@ -3036,7 +3045,7 @@ class DocumentController extends Controller
                             $orden->save();
                         }
                     }
-                    
+
                     $configuration = Configuration::first();
                     if ($configuration->college) {
                         $payments = CollegePayment::where('document_id', $document_id)->get();
@@ -3057,7 +3066,7 @@ class DocumentController extends Controller
                     }
 
                     $message = 'Documento anulado con éxito';
-                    if($from_sale_note) {
+                    if ($from_sale_note) {
                         $message .= '. Nota: Este documento fue creado a partir de una nota de venta el cual para no afecta stock para que afecte el stock debe anular el documento original.';
                     }
 
@@ -3068,7 +3077,7 @@ class DocumentController extends Controller
                     ];
                 }
                 return [
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now,
                     'from_sale_note' => false
                 ];
@@ -3079,11 +3088,10 @@ class DocumentController extends Controller
                 'message' => $deleted['message'],
                 'from_sale_note' => $deleted['from_sale_note'] ?? false
             ];
-
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return ($e->getCode() == '23000') ? 
-                ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] : 
+            return ($e->getCode() == '23000') ?
+                ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] :
                 ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el Documento'];
         }
     }

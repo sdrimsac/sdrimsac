@@ -1467,6 +1467,7 @@ class SaleNoteController extends Controller
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
                 if ($request->orden_id) {
+                
                     Orden::where('id', $request->orden_id)
                         ->update([
                             'sale_note_id' => $this->sale_note->id,
@@ -1475,6 +1476,7 @@ class SaleNoteController extends Controller
                         ]);
 
                     OrdenItem::where('orden_id', $request->orden_id)
+                        ->where('status_orden_id', '!=', 5)
                         ->update(['status_orden_id' => 4]);
 
                     $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();

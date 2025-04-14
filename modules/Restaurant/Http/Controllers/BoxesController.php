@@ -1393,6 +1393,7 @@ class BoxesController extends Controller
                     ->where('item_id', $item->id)
                     ->where('quantity', '>', 0)
                     ->where('warehouse_id', $warehouse_id)
+                    ->where('user_id', $user_id)
                     ->whereBetween('created_at', [$start, $end])
                     ->sum('quantity');
 
