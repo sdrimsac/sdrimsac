@@ -1368,7 +1368,7 @@ class BoxesController extends Controller
                 ->table('document_items')
                 ->join('documents', 'documents.id', '=', 'document_items.document_id')
                 ->where('documents.cash_id', $cash_id)
-                ->whereBetween('sale_notes.created_at', [$start, $end])
+                ->whereBetween('documents.created_at', [$start, $end])
                 ->where('documents.state_type_id', '!=', '11')
                 ->where('document_items.item_id', $item->id)
                 ->sum('document_items.quantity');
