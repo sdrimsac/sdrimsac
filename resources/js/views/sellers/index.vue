@@ -37,6 +37,8 @@
               <th class="text-white">Total Ventas B. & F.</th>
               <th class="text-white">Total Ventas Nota V.</th>
               <th class="text-white">Total ventas</th>
+              <th class="text-white">Comision %</th>
+              <th class="text-white">Comision Ganado Segun %</th>
               <th class="text-white">Productos Vendidos</th>
               <th class="text-white text-end">Acciones</th>
             </tr>
@@ -51,6 +53,8 @@
               <td>{{ row.documents_total }}</td>
               <td>{{ row.sale_notes_total }}</td>
               <td>{{ Number(row.total_sales).toFixed(2)  }}</td>
+              <td>{{ Number(row.commission_percentage).toFixed(2)  }} %</td>
+              <td>{{ Number(row.commission_earned).toFixed(2)  }}</td>
               <td>
                 <el-button type="info" @click="getProd(row.id)">ver</el-button>
               </td>

@@ -16,6 +16,7 @@ class Seller extends ModelTenant
         'document',
         'telephone',
         'active',
+        'commission_percentage',
     ];
 
     public function establishment()

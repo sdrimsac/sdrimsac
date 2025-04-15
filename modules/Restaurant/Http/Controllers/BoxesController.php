@@ -1337,146 +1337,6 @@ class BoxesController extends Controller
         return $all;
     }
 
-    /* function get_stock_report($cash_id)
-    {
-        $cash = Cash::find($cash_id);
-        $start = Carbon::parse($cash->date_opening)->startOfDay();
-        $end = $cash->date_closed ? Carbon::parse($cash->date_closed)->endOfDay() : now();
-
-        $products = Item::select(['id', 'description', 'warehouse_id'])
-            ->where('init_report', true)
-            ->get();
-
-        $report_init = [];
-        $user_id = $cash->user_id;
-
-        foreach ($products as $item) {
-            $init_stock = DB::connection('tenant')->table('cash_init_stock')
-                ->where('cash_id', $cash_id)
-                ->where('item_id', $item->id)
-                ->where('initial_stock', '!=', 0)
-                ->where('user_id', $user_id)
-                ->where('warehouse_id', $item->warehouse_id)
-                ->first();
-
-            // Obtener almacenes donde el producto tuvo movimientos
-            $warehouse_ids = DB::connection('tenant')->table('inventory_kardex')
-                ->where('item_id', $item->id)
-                ->where('user_id', $user_id)
-                ->whereBetween('created_at', [$start, $end])
-                ->distinct()
-                ->pluck('warehouse_id');
-
-            // Obtener cantidad vendida desde documentos
-            $document_items = DB::connection('tenant')
-                ->table('document_items')
-                ->join('documents', 'documents.id', '=', 'document_items.document_id')
-                ->where('documents.cash_id', $cash_id)
-                ->where('documents.state_type_id', '!=', '11')
-                ->where('document_items.item_id', $item->id)
-                ->sum('document_items.quantity');
-
-            // Obtener cantidad vendida desde notas de venta
-            $sale_note_items = DB::connection('tenant')
-                ->table('sale_note_items')
-                ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
-                ->where('sale_notes.cash_id', $cash_id)
-                ->where('sale_notes.state_type_id', '!=', '11')
-                ->where('sale_note_items.item_id', $item->id)
-                ->sum('sale_note_items.quantity');
-
-            dump($document_items);
-            dump($sale_note_items);
-
-            $sold_quantity = $document_items + $sale_note_items;
-
-            foreach ($warehouse_ids as $warehouse_id) {
-                $stock_actual = DB::connection('tenant')->table('item_warehouse')
-                    ->where('item_id', $item->id)
-                    ->where('warehouse_id', $warehouse_id)
-                    ->value('stock');
-
-                
-
-                $document_items = DB::connection('tenant')
-                    ->table('document_items')
-                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
-                    ->where('documents.cash_id', $cash_id)
-                    ->where('documents.state_type_id', '!=', '11')
-                    ->where('document_items.item_id', $item->id)
-                    ->sum('document_items.quantity');
-
-                $sale_note_items = DB::connection('tenant')
-                    ->table('sale_note_items')
-                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
-                    ->where('sale_notes.cash_id', $cash_id)
-                    ->where('sale_notes.state_type_id', '!=', '11')
-                    ->where('sale_note_items.item_id', $item->id)
-                    ->sum('sale_note_items.quantity');
-
-                dump($sale_note_items);
-                $sold_quantity = $document_items + $sale_note_items;
-                
-
-                $initial_stock = isset($init_stock->initial_stock) ? (float)$init_stock->initial_stock : 0.000;
-
-                // Calcular ventas totales (documentos + notas de venta)
-                //$sold_quantity = $document_items + $sale_note_items;
-
-                // Stock teórico después de ventas
-                //$theoretical_stock = $initial_stock - $sold_quantity;
-
-                $ingresos = $stock_actual - $initial_stock + $sold_quantity;
-
-                // Si ingresos es negativo, puede ser un error o salida no registrada
-                if ($ingresos < 0) {
-                    $difference = abs($ingresos);
-                    $ingresos = 0;
-                } else {
-                    $difference = 0;
-                }
-
-                $isChicken = (preg_match('/\bPOLLO\b/', strtoupper($item->description)) === 1)
-                    && (stripos($item->description, 'POLLO INSUMO') === false);
-                $isChickenInsumo = stripos($item->unit_type_id, 'KG') !== false;
-
-                if ($isChicken) {
-                    $formatted_initial_stock = $this->formatInitial($initial_stock);
-                    $formatted_current_stock = $this->formatChickenStock($stock_actual);
-                    $formatted_difference = $this->formatDifference($difference);
-                    $formatted_purchases = $this->purchasesBox($ingresos);
-                } elseif ($isChickenInsumo) {
-                    $formatted_initial_stock = number_format($initial_stock * 1000, 0) . " gr.";
-                    $formatted_current_stock = number_format($stock_actual * 1000, 0) . " gr.";
-                    $formatted_difference = number_format($difference * 1000, 0) . " gr.";
-                    $formatted_purchases = number_format($ingresos * 1000, 0) . " gr.";
-                } else {
-                    $formatted_initial_stock = number_format($initial_stock, 3);
-                    $formatted_current_stock = number_format($stock_actual, 3);
-                    $formatted_difference = number_format($difference, 3);
-                    $formatted_purchases = number_format($ingresos, 3);
-                }
-
-                $report_init[] = [
-                    'item_id' => $item->id,
-                    'name' => $item->description,
-                    'warehouse_id' => $warehouse_id,
-                    'initial_stock' => $formatted_initial_stock,
-                    'actual_stock' => $formatted_current_stock,
-                    'difference' => $formatted_difference,
-                    'ingresos' => $formatted_purchases ? $formatted_purchases : 0,
-                    'opening_date' => $cash->date_opening,
-                    'closing_date' => $cash->date_closed
-                ];
-            }
-        }
-
-        return [
-            'cash_id' => $cash_id,
-            'product' => $report_init
-        ];
-    } */
-
     function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
@@ -1493,7 +1353,6 @@ class BoxesController extends Controller
 
         foreach ($products as $item) {
 
-            /*  dump($item->description); */
             $init_stock = DB::connection('tenant')->table('cash_init_stock')
                 ->where('cash_id', $cash_id)
                 ->where('item_id', $item->id)
@@ -1559,15 +1418,6 @@ class BoxesController extends Controller
             if ($consumo_recetas_sale_note) {
                 $sold_quantity += $consumo_recetas_sale_note;
             }
-
-            /* if ($consumo_recetas_document) {
-                $consumo_recetas = $consumo_recetas_document;
-                $sold_quantity += $consumo_recetas;
-            }
-            if ($consumo_recetas_sale_note) {
-                $consumo_recetas = $consumo_recetas_sale_note;
-                $sold_quantity += $consumo_recetas;
-            } */
 
             foreach ($warehouse_ids as $warehouse_id) {
                 $stock_actual = DB::connection('tenant')->table('item_warehouse')

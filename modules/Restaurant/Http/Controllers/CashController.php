@@ -689,7 +689,7 @@ class CashController extends Controller
         }
     }
 
-    public function report_cash(Request $request)
+    /* public function report_cash(Request $request)
     {
         ini_set('max_execution_time', "3000");
         ini_set('memory_limit', '2048M');
@@ -703,7 +703,7 @@ class CashController extends Controller
         $total = 0;
 
         //total venta -> jalar documentos
-        $recordsDocument =  Document::whereNotIn('state_type_id', ['09', '11']);
+        $recordsDocument =  Document::whereNotIn('state_type_id', ['09', '11'],);
         if ($date_start) {
             if ($date_end) {
                 $recordsDocument = $recordsDocument->whereBetween('date_of_issue', [$date_start, $date_end]);
@@ -877,7 +877,7 @@ class CashController extends Controller
                                     ];
                                 }
                                 $items[$d_it->item_id]["count"] +=   $quantity;
-                                /* $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity; */
+                                //$items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
                                 $items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
 
@@ -909,7 +909,7 @@ class CashController extends Controller
                 }
             }
         });
-        $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11);
+        $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11,);
         if ($date_start) {
             if ($date_end) {
                 $recordsSaleNote = $recordsSaleNote->whereBetween('date_of_issue', [$date_start, $date_end]);
@@ -990,8 +990,8 @@ class CashController extends Controller
                                     }
                                 }
                             }
-                            /* $total += $d_it->total_value;
-                            $total_items += $d_it->total_value; */
+                            //$total += $d_it->total_value;
+                            //$total_items += $d_it->total_value;
 
                             $total += $d_it->total;
                             $total_items += $d_it->total;
@@ -1016,13 +1016,13 @@ class CashController extends Controller
                                 }
                                 $items[$d_it->item_id]["count"] +=  $quantity;
                                 $items[$d_it->item_id]["total"] += $d_it->unit_price * $d_it->quantity;
-                                /* $items[$d_it->item_id]["total"] += $d_it->total_value; */
+                                //$items[$d_it->item_id]["total"] += $d_it->total_value;
                             } else {
                                 $items[$d_it->item_id] = [
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    /* "total" => $d_it->total_value, */
+                                    //"total" => $d_it->total_value,
                                     "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
@@ -1105,7 +1105,7 @@ class CashController extends Controller
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    /* "total" => $d_it->total_value, */
+                                    //"total" => $d_it->total_value,
                                     "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
@@ -1133,6 +1133,158 @@ class CashController extends Controller
             'total',
             'items'
         );
+    } */
+
+    public function report_cash(Request $request)
+    {
+        ini_set('max_execution_time', "3000");
+        ini_set('memory_limit', '2048M');
+
+        $establishment_id = $request->establishment_id;
+        $date_start = $request->date_start ? Carbon::parse($request->date_start)->format("Y-m-d") : null;
+        $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("Y-m-d") : null;
+
+        $sales_data = [];
+        $total_utility = 0;
+        $total_net_utility = 0;
+
+        $documents = Document::whereNotIn('state_type_id', ['09', '11'])
+            ->when($date_start, function ($query) use ($date_start, $date_end) {
+                if ($date_end) {
+                    return $query->whereBetween('date_of_issue', [$date_start, $date_end]);
+                }
+                return $query->whereDate('date_of_issue', $date_start);
+            })
+            ->when($establishment_id, function ($query) use ($establishment_id) {
+                return $query->where('establishment_id', $establishment_id);
+            })
+            ->orderBy('series')
+            ->orderBy('number')
+            ->get();
+
+        // Procesar documentos
+        foreach ($documents as $document) {
+            $items_data = [];
+            $document_total_utility = 0;
+            $document_total_net_utility = 0;
+
+            foreach ($document->items as $item) {
+                $unit_price = $item->unit_price;
+                $quantity = $item->quantity;
+                $purchase_unit_price = $item->relation_item->purchase_unit_price ?? 0;
+
+                if ($item->affectation_igv_type_id == '10') {
+                    $unit_price = $unit_price / 1.18;
+                    $purchase_unit_price = $purchase_unit_price / 1.18;
+                }
+
+                $total_purchase = $purchase_unit_price * $quantity;
+                $total_sale = $unit_price * $quantity;
+                $utility = $total_sale - $total_purchase;
+
+                $net_utility = $utility;
+                if ($item->affectation_igv_type_id == '10') {
+                    $net_utility = $utility / 1.18;
+                }
+
+                $items_data[] = [
+                    'description' => $item->item->description,
+                    'quantity' => $quantity,
+                    'unit_type' => $item->item->unit_type_id,
+                    'purchase_unit_price' => number_format($purchase_unit_price, 2),
+                    'total_purchase' => number_format($total_purchase, 2),
+                    'unit_price' => number_format($unit_price, 2),
+                    'total_sale' => number_format($total_sale, 2),
+                    'utility' => number_format($utility, 2),
+                    'net_utility' => number_format($net_utility, 2)
+                ];
+
+                $document_total_utility += $utility;
+                $document_total_net_utility += $net_utility;
+            }
+
+            $sales_data[] = [
+                'document_type' => $document->document_type->description,
+                'series_number' => $document->series . '-' . $document->number,
+                'customer' => $document->customer->name,
+                //'date' => $document->date_of_issue->format('d/m/Y'),
+                'date' => \Carbon\Carbon::parse($document->date_of_issue)->format('d/m/Y'),
+                'items' => $items_data,
+                'total_utility' => number_format($document_total_utility, 2),
+                'total_net_utility' => number_format($document_total_net_utility, 2)
+            ];
+
+            $total_utility += $document_total_utility;
+            $total_net_utility += $document_total_net_utility;
+        }
+
+        // Procesar notas de venta de manera similar
+        $sale_notes = SaleNote::where('state_type_id', '<>', '11')
+            ->when($date_start, function ($query) use ($date_start, $date_end) {
+                if ($date_end) {
+                    return $query->whereBetween('date_of_issue', [$date_start, $date_end]);
+                }
+                return $query->whereDate('date_of_issue', $date_start);
+            })
+            ->when($establishment_id, function ($query) use ($establishment_id) {
+                return $query->where('establishment_id', $establishment_id);
+            })
+            ->orderBy('series')
+            ->orderBy('number')
+            ->get();
+
+        foreach ($sale_notes as $sale_note) {
+            $items_data = [];
+            $document_total_utility = 0;
+            $document_total_net_utility = 0;
+
+            foreach ($sale_note->items as $item) {
+                $unit_price = $item->unit_price;
+                $quantity = $item->quantity;
+                $purchase_unit_price = $item->relation_item->purchase_unit_price ?? 0;
+
+                $total_purchase = $purchase_unit_price * $quantity;
+                $total_sale = $unit_price * $quantity;
+                $utility = $total_sale - $total_purchase;
+                $net_utility = $utility;
+
+                $items_data[] = [
+                    'description' => $item->item->description,
+                    'quantity' => $quantity,
+                    'unit_type' => $item->item->unit_type_id,
+                    'purchase_unit_price' => number_format($purchase_unit_price, 2),
+                    'total_purchase' => number_format($total_purchase, 2),
+                    'unit_price' => number_format($unit_price, 2),
+                    'total_sale' => number_format($total_sale, 2),
+                    'utility' => number_format($utility, 2),
+                    'net_utility' => number_format($net_utility, 2)
+                ];
+
+                $document_total_utility += $utility;
+                $document_total_net_utility += $net_utility;
+            }
+
+            $sales_data[] = [
+                'document_type' => 'NOTA DE VENTA',
+                'series_number' => $sale_note->series . '-' . $sale_note->number,
+                'customer' => $sale_note->customer->name,
+                //'date' => $sale_note->date_of_issue->format('d/m/Y'),
+                'date' => \Carbon\Carbon::parse($sale_note->date_of_issue)->format('d/m/Y'),
+                'items' => $items_data,
+                'total_utility' => number_format($document_total_utility, 2),
+                'total_net_utility' => number_format($document_total_net_utility, 2)
+            ];
+
+            $total_utility += $document_total_utility;
+            $total_net_utility += $document_total_net_utility;
+        }
+
+        return [
+            'sales_data' => $sales_data,
+            'total_utility' => number_format($total_utility, 2),
+            'total_net_utility' => number_format($total_net_utility, 2)
+        ];
+        return    ($records->paginate(config('tenant.items_per_page')));
     }
 
     public function incomes_expenses(Request $request)
@@ -2058,13 +2210,13 @@ class CashController extends Controller
 
         return new CashCollection($records->paginate(20));
     }
-    public function records(Request $request) 
+    public function records(Request $request)
     {
         ini_set('memory_limit', '3500M');
         ini_set('max_execution_time', 3000);
 
         $fromAdmin = $request->input('fromAdmin');
-        $is_principal = $request->input('is_principal'); 
+        $is_principal = $request->input('is_principal');
         $from_cash = $request->input('from_cash');
         $records = Cash::query();
 
@@ -2075,39 +2227,10 @@ class CashController extends Controller
         $records->whereTypeUser($fromAdmin);
         $records->where('active', 0);
         $records->orderBy('date_opening', 'desc')
-                ->orderBy('time_opening', 'desc');
+            ->orderBy('time_opening', 'desc');
 
         return new CashCollection($records->paginate(20));
     }
-
-    /* private function recalculateStock($cash_id)
-    {
-        $cash = Cash::findOrFail($cash_id);
-        
-        $cash_user = User::find($cash->user_id);
-
-        $establishment_id = $cash_user->establishment_id;
-
-        $products = Item::where('init_report', true)->get();
-
-        foreach ($products as $product) {
-            $item_warehouse = DB::connection('tenant')->table('item_warehouse')
-                ->where('item_id', $product->id)
-                ->where('warehouse_id', $establishment_id)
-                ->select('stock')
-                ->first();
-
-            $current_stock = $item_warehouse ? $item_warehouse->stock : 0;
-
-            DB::connection('tenant')->table('cash_init_stock')
-                ->where('cash_id', $cash_id)
-                ->where('item_id', $product->id)
-                ->update([
-                    'initial_stock' => $current_stock,
-                    'updated_at' => now(),
-                ]);
-        }
-    } */
 
     public function getFinalBalance($id)
     {
@@ -2372,7 +2495,7 @@ class CashController extends Controller
     private function insertStock($cash_id)
     {
         $cash = Cash::findOrFail($cash_id);
-        
+
         $cash_user = User::find($cash->user_id);
 
         $establishment_id = $cash_user->establishment_id;
@@ -2380,7 +2503,7 @@ class CashController extends Controller
         $products = Item::where('init_report', true)->get();
 
         foreach ($products as $product) {
-            
+
             $item_warehouse = DB::connection('tenant')->table('item_warehouse')
                 ->where('item_id', $product->id)
                 ->where('warehouse_id', $establishment_id)
@@ -2392,7 +2515,7 @@ class CashController extends Controller
             DB::connection('tenant')->table('cash_init_stock')->insert([
                 'cash_id' => $cash_id,
                 'item_id' => $product->id,
-                'initial_stock' => $current_stock, 
+                'initial_stock' => $current_stock,
                 'user_id' => $cash_user->id,
                 'warehouse_id' => $establishment_id,
                 'created_at' => now(),

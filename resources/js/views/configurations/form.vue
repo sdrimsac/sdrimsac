@@ -706,7 +706,7 @@
 
                                                                 <!-- Entorno Mecánica y Repuesto -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
                                                                 >
                                                                     <div
                                                                         class="card h-100"

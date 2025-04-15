@@ -15,7 +15,13 @@ class SellerCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function($row, $key) {
+        return $this->collection->transform(function ($row, $key) {
+
+            $documents_total = $row->documents_total ?? 0;
+            $sale_notes_total = $row->sale_notes_total ?? 0;
+            $total_sales = $documents_total + $sale_notes_total;
+            $commission_percentage = $row->commission_percentage;
+            $commission_earned = round($total_sales * ($commission_percentage / 100), 2);
             return [
                 'id' => $row->id,
                 'name' => $row->name,
@@ -23,6 +29,8 @@ class SellerCollection extends ResourceCollection
                 'telephone' => $row->telephone,
                 'establishment_description' => optional($row->establishment)->description ?? '-',
                 'active' => (bool) $row->active,
+                'commission_percentage' => $row->commission_percentage,
+                'commission_earned' => $commission_earned,
                 'documents_total' => $row->documents_total ?? 0,
                 'sale_notes_total' => $row->sale_notes_total ?? 0,
                 'total_sales' => ($row->documents_total ?? 0) + ($row->sale_notes_total ?? 0),
@@ -35,9 +43,9 @@ class SellerCollection extends ResourceCollection
                         'item_id' => $item->item_id,
                         'item' => $item->item,
                         'item' => $item->item->description,
-                        'quantity' => $item->quantity,         
-                        'unit_price' => $item->unit_price,     
-                        'total_price' => $item->quantity * $item->unit_price, 
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total_price' => $item->quantity * $item->unit_price,
                     ];
                 }),
                 'salesItems' => $row->salesItems->map(function ($item) {
@@ -48,7 +56,7 @@ class SellerCollection extends ResourceCollection
                         'quantity' => $item->quantity,
                         'unit_price' => $item->unit_price,
                         'total_price' => $item->quantity * $item->unit_price,
-                        
+
                     ];
                 })
             ];

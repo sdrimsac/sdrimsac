@@ -21,6 +21,7 @@ class SellerResource extends JsonResource
             'telephone' => $this->telephone,
             'establishment_id' => $this->establishment_id,
             'document_type_id' => $this->document_type_id,
+            'commission_percentage' => $this->commission_percentage,
             // 'establishment_description' => optional($this->establishment)->description ?? '-',
             'active' => (bool) $this->active,
             
