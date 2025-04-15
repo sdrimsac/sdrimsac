@@ -1337,13 +1337,15 @@ class BoxesController extends Controller
         return $all;
     }
 
-    function get_stock_report($cash_id)
+    /* function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
         $start = Carbon::parse($cash->date_opening)->startOfDay();
         $end = $cash->date_closed ? Carbon::parse($cash->date_closed)->endOfDay() : now();
 
-        $products = Item::where('init_report', true)->get();
+        $products = Item::select(['id', 'description', 'warehouse_id'])
+            ->where('init_report', true)
+            ->get();
 
         $report_init = [];
         $user_id = $cash->user_id;
@@ -1353,6 +1355,8 @@ class BoxesController extends Controller
                 ->where('cash_id', $cash_id)
                 ->where('item_id', $item->id)
                 ->where('initial_stock', '!=', 0)
+                ->where('user_id', $user_id)
+                ->where('warehouse_id', $item->warehouse_id)
                 ->first();
 
             // Obtener almacenes donde el producto tuvo movimientos
@@ -1368,7 +1372,6 @@ class BoxesController extends Controller
                 ->table('document_items')
                 ->join('documents', 'documents.id', '=', 'document_items.document_id')
                 ->where('documents.cash_id', $cash_id)
-                ->whereBetween('documents.created_at', [$start, $end])
                 ->where('documents.state_type_id', '!=', '11')
                 ->where('document_items.item_id', $item->id)
                 ->sum('document_items.quantity');
@@ -1378,12 +1381,193 @@ class BoxesController extends Controller
                 ->table('sale_note_items')
                 ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
                 ->where('sale_notes.cash_id', $cash_id)
-                ->whereBetween('sale_notes.created_at', [$start, $end])
                 ->where('sale_notes.state_type_id', '!=', '11')
                 ->where('sale_note_items.item_id', $item->id)
                 ->sum('sale_note_items.quantity');
 
+            dump($document_items);
+            dump($sale_note_items);
+
             $sold_quantity = $document_items + $sale_note_items;
+
+            foreach ($warehouse_ids as $warehouse_id) {
+                $stock_actual = DB::connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $item->id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->value('stock');
+
+                
+
+                $document_items = DB::connection('tenant')
+                    ->table('document_items')
+                    ->join('documents', 'documents.id', '=', 'document_items.document_id')
+                    ->where('documents.cash_id', $cash_id)
+                    ->where('documents.state_type_id', '!=', '11')
+                    ->where('document_items.item_id', $item->id)
+                    ->sum('document_items.quantity');
+
+                $sale_note_items = DB::connection('tenant')
+                    ->table('sale_note_items')
+                    ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
+                    ->where('sale_notes.cash_id', $cash_id)
+                    ->where('sale_notes.state_type_id', '!=', '11')
+                    ->where('sale_note_items.item_id', $item->id)
+                    ->sum('sale_note_items.quantity');
+
+                dump($sale_note_items);
+                $sold_quantity = $document_items + $sale_note_items;
+                
+
+                $initial_stock = isset($init_stock->initial_stock) ? (float)$init_stock->initial_stock : 0.000;
+
+                // Calcular ventas totales (documentos + notas de venta)
+                //$sold_quantity = $document_items + $sale_note_items;
+
+                // Stock teórico después de ventas
+                //$theoretical_stock = $initial_stock - $sold_quantity;
+
+                $ingresos = $stock_actual - $initial_stock + $sold_quantity;
+
+                // Si ingresos es negativo, puede ser un error o salida no registrada
+                if ($ingresos < 0) {
+                    $difference = abs($ingresos);
+                    $ingresos = 0;
+                } else {
+                    $difference = 0;
+                }
+
+                $isChicken = (preg_match('/\bPOLLO\b/', strtoupper($item->description)) === 1)
+                    && (stripos($item->description, 'POLLO INSUMO') === false);
+                $isChickenInsumo = stripos($item->unit_type_id, 'KG') !== false;
+
+                if ($isChicken) {
+                    $formatted_initial_stock = $this->formatInitial($initial_stock);
+                    $formatted_current_stock = $this->formatChickenStock($stock_actual);
+                    $formatted_difference = $this->formatDifference($difference);
+                    $formatted_purchases = $this->purchasesBox($ingresos);
+                } elseif ($isChickenInsumo) {
+                    $formatted_initial_stock = number_format($initial_stock * 1000, 0) . " gr.";
+                    $formatted_current_stock = number_format($stock_actual * 1000, 0) . " gr.";
+                    $formatted_difference = number_format($difference * 1000, 0) . " gr.";
+                    $formatted_purchases = number_format($ingresos * 1000, 0) . " gr.";
+                } else {
+                    $formatted_initial_stock = number_format($initial_stock, 3);
+                    $formatted_current_stock = number_format($stock_actual, 3);
+                    $formatted_difference = number_format($difference, 3);
+                    $formatted_purchases = number_format($ingresos, 3);
+                }
+
+                $report_init[] = [
+                    'item_id' => $item->id,
+                    'name' => $item->description,
+                    'warehouse_id' => $warehouse_id,
+                    'initial_stock' => $formatted_initial_stock,
+                    'actual_stock' => $formatted_current_stock,
+                    'difference' => $formatted_difference,
+                    'ingresos' => $formatted_purchases ? $formatted_purchases : 0,
+                    'opening_date' => $cash->date_opening,
+                    'closing_date' => $cash->date_closed
+                ];
+            }
+        }
+
+        return [
+            'cash_id' => $cash_id,
+            'product' => $report_init
+        ];
+    } */
+
+    function get_stock_report($cash_id)
+    {
+        $cash = Cash::find($cash_id);
+        $start = Carbon::parse($cash->date_opening)->startOfDay();
+        $end = $cash->date_closed ? Carbon::parse($cash->date_closed)->endOfDay() : now();
+
+        $products = Item::where('init_report', true)->get();
+
+        $report_init = [];
+        $user_id = $cash->user_id;
+        $user = User::find($user_id);
+        $establishment_id = $user->establishment_id;
+
+
+        foreach ($products as $item) {
+
+            /*  dump($item->description); */
+            $init_stock = DB::connection('tenant')->table('cash_init_stock')
+                ->where('cash_id', $cash_id)
+                ->where('item_id', $item->id)
+                ->where('initial_stock', '!=', 0)
+                ->first();
+
+            $warehouse_ids = DB::connection('tenant')->table('inventory_kardex')
+                ->where('item_id', $item->id)
+                ->where('user_id', $user_id)
+                ->whereBetween('created_at', [$start, $end])
+                ->distinct()
+                ->pluck('warehouse_id');
+
+            $document_items = DB::connection('tenant')
+                ->table('document_items')
+                ->join('documents', 'documents.id', '=', 'document_items.document_id')
+                ->where('documents.cash_id', $cash_id)
+                ->where('documents.state_type_id', '!=', '11')
+                ->where('documents.establishment_id')
+                ->where('documents.user_id', $user_id)
+                ->where('document_items.item_id', $item->id)
+                ->sum('document_items.quantity');
+
+            $sale_note_items = DB::connection('tenant')
+                ->table('sale_note_items')
+                ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
+                ->where('sale_notes.cash_id', $cash_id)
+                ->where('sale_notes.establishment_id')
+                ->where('sale_notes.user_id', $user_id)
+                ->where('sale_notes.state_type_id', '!=', '11')
+                ->where('sale_note_items.item_id', $item->id)
+                ->sum('sale_note_items.quantity');
+
+            $consumo_recetas_document = DB::connection('tenant')
+                ->table('document_items as sni')
+                ->join('documents as sn', 'sn.id', '=', 'sni.document_id')
+                ->join('item_sets as isets', 'sni.item_id', '=', 'isets.item_id')
+                ->where('sn.cash_id', $cash_id)
+                ->where('sn.establishment_id', $establishment_id)
+                ->where('sn.user_id', $user_id)
+                ->where('sn.state_type_id', '!=', '11')
+                ->where('isets.individual_item_id', $item->id)
+                ->selectRaw('SUM(sni.quantity * isets.quantity) as total')
+                ->value('total');
+
+            $consumo_recetas_sale_note = DB::connection('tenant')
+                ->table('sale_note_items as sni')
+                ->join('sale_notes as sn', 'sn.id', '=', 'sni.sale_note_id')
+                ->join('item_sets as isets', 'sni.item_id', '=', 'isets.item_id')
+                ->where('sn.cash_id', $cash_id)
+                ->where('sn.establishment_id', $establishment_id)
+                ->where('sn.user_id', $user_id)
+                ->where('sn.state_type_id', '!=', '11')
+                ->where('isets.individual_item_id', $item->id)
+                ->selectRaw('SUM(sni.quantity * isets.quantity) as total')
+                ->value('total');
+
+            $sold_quantity = $document_items + $sale_note_items;
+
+            if ($consumo_recetas_document) {
+                $sold_quantity += $consumo_recetas_document;
+            }
+            if ($consumo_recetas_sale_note) {
+                $sold_quantity += $consumo_recetas_sale_note;
+            }
+
+            /* if ($consumo_recetas_document) {
+                $consumo_recetas = $consumo_recetas_document;
+                $sold_quantity += $consumo_recetas;
+            }
+            if ($consumo_recetas_sale_note) {
+                $consumo_recetas = $consumo_recetas_sale_note;
+                $sold_quantity += $consumo_recetas;
+            } */
 
             foreach ($warehouse_ids as $warehouse_id) {
                 $stock_actual = DB::connection('tenant')->table('item_warehouse')
@@ -1405,7 +1589,6 @@ class BoxesController extends Controller
 
                 $compras_estimadas = $stock_actual - $initial_stock + $sold_quantity;
 
-                // Formato especial según tipo de producto
                 $isChicken = (preg_match('/\bPOLLO\b/', strtoupper($item->description)) === 1)
                     && (stripos($item->description, 'POLLO INSUMO') === false);
                 $isChickenInsumo = stripos($item->unit_type_id, 'KG') !== false;
@@ -1413,24 +1596,23 @@ class BoxesController extends Controller
                 if ($isChicken) {
                     $formatted_initial_stock = $this->formatInitial($initial_stock);
                     $formatted_current_stock = $this->formatChickenStock($stock_actual);
-                    $formatted_difference = $this->formatDifference($difference);
+                    $formatted_difference = $this->formatDifference($sold_quantity);
                     $formatted_compras_estimadas = $this->formatChickenStock($compras_estimadas);
                     $formatted_compras_efectivas = $this->formatChickenStock($ingresos);
                 } elseif ($isChickenInsumo) {
                     $formatted_initial_stock = number_format($initial_stock * 1000, 0) . " gr.";
                     $formatted_current_stock = number_format($stock_actual * 1000, 0) . " gr.";
-                    $formatted_difference = number_format($difference * 1000, 0) . " gr.";
+                    $formatted_difference = number_format($sold_quantity * 1000, 0) . " gr.";
                     $formatted_compras_estimadas = number_format($compras_estimadas * 1000, 0) . " gr.";
                     $formatted_compras_efectivas = number_format($ingresos * 1000, 0) . " gr.";
                 } else {
                     $formatted_initial_stock = number_format($initial_stock, 3);
                     $formatted_current_stock = number_format($stock_actual, 3);
-                    $formatted_difference = number_format($difference, 3);
+                    $formatted_difference = number_format($sold_quantity, 3);
                     $formatted_compras_estimadas = number_format($compras_estimadas, 3);
                     $formatted_compras_efectivas = number_format($ingresos, 3);
                 }
 
-                // Detalle de cantidad vendida formateado
                 $detalle_vendido = null;
                 if (stripos($item->description, 'POLLO') !== false) {
                     if (stripos($item->description, 'POLLO INSUMO') !== false) {
@@ -1469,6 +1651,7 @@ class BoxesController extends Controller
                     'closing_date' => $cash->date_closed
                 ];
             }
+            dump($report_init);
         }
 
         return [
@@ -1547,6 +1730,74 @@ class BoxesController extends Controller
     {
         $wholeChickens = floor($difference);
         $remaining = $difference - $wholeChickens;
+
+        $fractions = [
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $label => $value) {
+            if ($remaining >= $value) {
+                $fractionText[] = $label;
+                $remaining -= $value;
+            }
+        }
+
+        $result = [];
+
+        if ($wholeChickens > 0) {
+            $result[] = $wholeChickens . ' ' . ($wholeChickens > 1 ? '' : '');
+        }
+
+        if (!empty($fractionText)) {
+            $result[] = implode(' | ', $fractionText) . ' ';
+        }
+
+        return implode(' | ', $result);
+    }
+
+    /* function formatDifference($difference)
+    {
+        $difference = round($difference, 3);
+
+        $wholeChickens = floor($difference);
+        $remaining = $difference - $wholeChickens;
+
+        $fractions = [
+            '1/2' => 0.500,
+            '1/4' => 0.250,
+            '1/8' => 0.125,
+        ];
+
+        $fractionText = [];
+
+        foreach ($fractions as $label => $value) {
+            if (abs($remaining - $value) < 0.01) {
+                $fractionText[] = $label;
+                break;
+            }
+        }
+
+        $result = [];
+
+        if ($wholeChickens > 0) {
+            $result[] = $wholeChickens;
+        }
+
+        if (!empty($fractionText)) {
+            $result[] = implode(' | ', $fractionText);
+        }
+
+        return implode(' | ', $result) ?: '0';
+    } */
+    function purchasesBox($ingresos)
+    {
+
+        $wholeChickens = floor($ingresos);
+        $remaining = $ingresos - $wholeChickens;
 
         $fractions = [
             '1/2' => 0.500,

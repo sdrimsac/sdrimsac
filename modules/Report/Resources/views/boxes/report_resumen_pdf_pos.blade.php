@@ -1869,7 +1869,7 @@
                                     {{ $product['initial_stock'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['compras_efectivas'] ?? 'N/A' }}
+                                    {{ $product['compras_estimadas'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right" style="color: red;">
                                     {{ $product['difference'] ?? 'N/A' }}
