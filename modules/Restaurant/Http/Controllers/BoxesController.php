@@ -1651,7 +1651,6 @@ class BoxesController extends Controller
                     'closing_date' => $cash->date_closed
                 ];
             }
-            dump($report_init);
         }
 
         return [
