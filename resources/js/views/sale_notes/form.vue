@@ -443,35 +443,43 @@
                                                     </div>
                                                 </div>
                                                 <div
-                                class="col-lg-2"
-                                v-if="promotionDocument && hasPromotionText"
-                            >
-                                <br />
-                                <el-checkbox
-                                    @change="receivePromotion"
-                                    v-model="form.receive_promotion"
-                                >
-                                </el-checkbox>
-                                Aplicar promoción |
-                                {{ hasPromotionText }}
-                            </div>
-                            <br />
-                            <div
-                                class="col-md-2 form-group text-center"
-                                v-if="
-                                    promotionByPoints &&
-                                        hasPromotionText &&
-                                        listPromotionItems.length > 0
-                                "
-                            >
-                                <el-button
-                                    @click="Promotion()"
-                                    type="primary"
-                                    size="small"
-                                >
-                                    Promocion
-                                </el-button>
-                            </div>
+                                                    class="col-lg-2"
+                                                    v-if="
+                                                        promotionDocument &&
+                                                            hasPromotionText
+                                                    "
+                                                >
+                                                    <br />
+                                                    <el-checkbox
+                                                        @change="
+                                                            receivePromotion
+                                                        "
+                                                        v-model="
+                                                            form.receive_promotion
+                                                        "
+                                                    >
+                                                    </el-checkbox>
+                                                    Aplicar promoción |
+                                                    {{ hasPromotionText }}
+                                                </div>
+                                                <br />
+                                                <div
+                                                    class="col-md-2 form-group text-center"
+                                                    v-if="
+                                                        promotionByPoints &&
+                                                            hasPromotionText &&
+                                                            listPromotionItems.length >
+                                                                0
+                                                    "
+                                                >
+                                                    <el-button
+                                                        @click="Promotion()"
+                                                        type="primary"
+                                                        size="small"
+                                                    >
+                                                        Promocion
+                                                    </el-button>
+                                                </div>
                                                 <!-- Descuento Global                                             -->
                                                 <div class="col-lg-2 col-md-2">
                                                     <div class="form-group">
@@ -1175,8 +1183,31 @@
                                                             </small>
                                                         </template>
                                                         <div>
-                                                        <strong>Establecimiento: {{ row.item.warehouses.find(item => item.checked).warehouse_description }}</strong>
-                                                    </div>
+                                                            <!-- <strong
+                                                                >Establecimiento:
+                                                                {{
+                                                                    row.item.warehouses.find(
+                                                                        item =>
+                                                                            item.checked
+                                                                    )
+                                                                        .warehouse_description
+                                                                }}</strong
+                                                            > -->
+                                                            <strong
+                                                                v-if="
+                                                                    getWarehouseDescription(
+                                                                        row
+                                                                    )
+                                                                "
+                                                            >
+                                                                Establecimiento:
+                                                                {{
+                                                                    getWarehouseDescription(
+                                                                        row
+                                                                    )
+                                                                }}
+                                                            </strong>
+                                                        </div>
                                                     </td>
                                                     <td class="text-center">
                                                         {{
@@ -1566,6 +1597,16 @@ export default {
         await this.calculateTotal();
     },
     methods: {
+        getWarehouseDescription(row) {
+            if (!row.item?.warehouses?.length) {
+                return null;
+            }
+
+            const checkedWarehouse = row.item.warehouses.find(
+                item => item.checked
+            );
+            return checkedWarehouse?.warehouse_description || "No especificado";
+        },
         changeCustomer() {
             this.hasPromotionText = null;
             this.listPromotionItems = [];

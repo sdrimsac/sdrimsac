@@ -25,7 +25,6 @@ class HistorialItemController extends Controller
     }
     public function record($historialId)
     {
-        // Obtiene todos los items relacionados con el historial_id proporcionado
         $items = HistorialItem::where('historial_id', $historialId)->with('item')->get();
 
         return response()->json($items);
@@ -44,36 +43,4 @@ class HistorialItemController extends Controller
 
         return response()->json(['message' => 'Producto eliminado correctamente']);
     }
-
-
-
-    /* public function store(HistorialItemRequest $request)
-    {
-        $id = $request->input('id');
-        $bank = HistorialItem::firstOrNew(['id' => $id]);
-        $bank->fill($request->all());
-        $bank->save();
-
-        return [
-            'success' => true,
-            'message' => ($id) ? 'Mecanico editado con éxito' : 'Mecanico registrado con éxito'
-        ];
-    } */
-
-    /* public function destroy($id)
-    {
-        try {
-
-            $bank = HistorialItem::findOrFail($id);
-            $bank->delete();
-
-            return [
-                'success' => true,
-                'message' => 'Mecanico eliminado con éxito'
-            ];
-        } catch (Exception $e) {
-
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Mecanico esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar Mecanico'];
-        }
-    } */
 }

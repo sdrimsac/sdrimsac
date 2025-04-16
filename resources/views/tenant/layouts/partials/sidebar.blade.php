@@ -131,7 +131,7 @@
                         </li>
                     @endif
 
-                   
+
                     {{-- Productos en Logística y Colegio --}}
                     @if ($config->college && !$roleService->isLogistic())
                         <li>
@@ -312,9 +312,8 @@
                                         Productos</span>
                                 </a>
                             </li>
-                          
                         @endif
-                       
+
                     @endif
                     <li>
                         <hr style="border: 1px solid #021427;">
@@ -335,7 +334,7 @@
                         </li>
                     @endif
 
-                   
+
 
                     {{-- Traslados --}}
                     @if ($user->type == 'superadmin' || $config->receive_merchandise)
@@ -362,14 +361,21 @@
                     </li> --}}
 
                     @if (!$roleService->isArca())
-                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica &&  $config->warranty_product &&$has_series && $config->series_enabled && $config->lots_enabled && $config->color_size_enabled) 
-                        <li>
-                            <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES
-                                ESPECIALES</span>
-                        </li>
+                        @if (
+                            $user->type == 'superadmin' ||
+                                ($config->ver_etiqueta_logistica &&
+                                    $config->warranty_product &&
+                                    $has_series &&
+                                    $config->series_enabled &&
+                                    $config->lots_enabled &&
+                                    $config->color_size_enabled))
+                            <li>
+                                <hr style="border: 1px solid #021427;">
+                                <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES
+                                    ESPECIALES</span>
+                            </li>
                         @endif
-                        
+
                         {{-- Productos con Garantía --}}
                         @if ($config->warranty_product)
                             <li>
@@ -435,11 +441,11 @@
                             </li>
                         @endif
 
-                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica && $config->catalog)
-                        <li>
-                            <hr style="border: 1px solid #021427;">
-                            <span class="label" style="font-size: 1em;  font-weight: bold;">COMPLEMENTOS</span>
-                        </li>
+                        @if ($user->type == 'superadmin' || ($config->ver_etiqueta_logistica && $config->catalog))
+                            <li>
+                                <hr style="border: 1px solid #021427;">
+                                <span class="label" style="font-size: 1em;  font-weight: bold;">COMPLEMENTOS</span>
+                            </li>
                         @endif
 
 
@@ -758,19 +764,19 @@
             <ul id="reporte" class="collapse ">
 
                 {{-- <ul id="contabilidad" class="collapse "> --}}
-                @if ($user->type == 'superadmin' ||  !$roleService->isLogistic())
-                <li>
-                    <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
-                        href="{{ route('tenant.account_exports') }}">
-                        <i class="icofont-file-excel"
-                            style="font-size: 1.5em; color: #108514; margin-right: 10px;"></i>
-                        <span style="font-size: 1em; ">Reporte Contable</span>
-                    </a>
-                </li>
+                @if ($user->type == 'superadmin' || !$roleService->isLogistic())
+                    <li>
+                        <a class="{{ $path[0] === 'account' && $path[1] === 'format' ? 'active' : '' }}"
+                            href="{{ route('tenant.account_exports') }}">
+                            <i class="icofont-file-excel"
+                                style="font-size: 1.5em; color: #108514; margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Reporte Contable</span>
+                        </a>
+                    </li>
                 @endif
                 {{-- </ul> --}}
                 {{-- Reporte de Métodos de Pago --}}
-                @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago && $noIsArcaProduct) && !$roleService->isLogistic())
+                @if ($user->type == 'superadmin' || ($config->reporte_metodos_pago && $noIsArcaProduct && !$roleService->isLogistic()))
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'methods' ? 'active' : '' }}"
                             href="{{ route('reports.methods.index') }}">
@@ -886,8 +892,16 @@
                     @endif
                 @endif
 
+                <li>
+                    <a class="{{ $path[0] === 'report_cash_document' ? 'active' : '' }}"
+                        href="{{ route('reports.cash.report_exportable') }}">
+                        <i class="icofont-chart-line" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span class="label" style="font-size: 1em; ">Reporte de Ganancias Exportable</span>
+                    </a>
+                </li>
+
                 {{-- Reporte Stock Valorizado de Productos --}}
-                 @if ($user->type == 'superadmin' || ($config->house && !$roleService->isLogistic()) && $config->stock_valorizado)
+                @if ($user->type == 'superadmin' || ($config->house && !$roleService->isLogistic() && $config->stock_valorizado))
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                             href="{{ route('reports.valued.index') }}">
@@ -971,7 +985,7 @@
                         style="font-size: 1em;  text-align: center; font-weight: bold;">Comprobantes</span>
                 </li>
 
-                @if ($user->type == 'superadmin' || $config->productos_vendidos && !$roleService->isLogistic())
+                @if ($user->type == 'superadmin' || ($config->productos_vendidos && !$roleService->isLogistic()))
                     <li>
                         <a class="{{ $path[0] === 'documents_ventas' ? 'active' : '' }}"
                             href="{{ route('tenant.ventas.index') }}">
@@ -980,7 +994,7 @@
                         </a>
                     </li>
                 @endif
-                @if ($user->type == 'superadmin' || $config->sale_note_venta && !$roleService->isLogistic())
+                @if ($user->type == 'superadmin' || ($config->sale_note_venta && !$roleService->isLogistic()))
                     <li>
                         <a class="{{ $path[0] === 'notaventa' ? 'active' : '' }}"
                             href="{{ route('tenant.notaventa.index') }}">

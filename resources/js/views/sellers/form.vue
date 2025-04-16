@@ -205,7 +205,7 @@
                             :disabled="loading_submit"
                             maxlength="4"
                             show-word-limit
-                            @input="validateNumbers('commission_percentage')"
+                            
                         >
                         </el-input>
                         <small

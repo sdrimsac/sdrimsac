@@ -824,6 +824,10 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/cash/report.vue"
             ),
+        "cash-report_exportable": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/cash/report_exportable.vue"
+            ),
         "toll-index": () => import("../../resources/js/views/toll/index.vue"),
 
         "college-persons": () =>

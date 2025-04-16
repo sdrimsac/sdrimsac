@@ -58,12 +58,16 @@ use Barryvdh\Debugbar\Twig\Extension\Dump;
 use GuzzleHttp\Psr7\Response;
 use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
+use Illuminate\Support\Facades\Cache;
 use Modules\Restaurant\Models\Turns;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Item\Models\CategoryItem;
 use Modules\Report\Exports\GainReportExport;
+use Modules\Report\Exports\GananciaReportExport;
+use Modules\Restaurant\Events\GenerateExcelReportJob;
 use Modules\Restaurant\Http\Resources\CashIncomePrincipalCollection;
+use Modules\Restaurant\Http\Resources\ReportCollection;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\BoxesDetail;
 use Mpdf\Mpdf;
@@ -212,6 +216,11 @@ class CashController extends Controller
         // route('reports.cash.index')
     }
     //index_report_closed_cash
+
+    public function index_report_cash_exportable()
+    {
+        return view('restaurant::cash.report_exportable');
+    }
 
     public function incomes_expenses_delete($id, $type)
     {
@@ -509,18 +518,18 @@ class CashController extends Controller
                                 }
                             }
                         }
-                        /* $total += $d_it->total_value;
-                        $total_items += $d_it->total_value; */
+                        //$total += $d_it->total_value;
+                        //$total_items += $d_it->total_value;
 
                         $total += $d_it->total;
                         $total_items += $d_it->total;
 
-                        /* $price = $d_it->unit_price;
-                        if ($d_it->affectation_igv_type_id == '10') {
-                            $price = number_format($price/1.18,2,'.','');
-                            
-                            
-                        } */
+                        //$price = $d_it->unit_price;
+                        //if ($d_it->affectation_igv_type_id == '10') {
+                        //    $price = number_format($price/1.18,2,'.','');
+                        //    
+                        //    
+                        //}
                         if (array_key_exists($d_it->item_id, $items)) {
 
                             $price = $d_it->unit_price;
@@ -599,15 +608,15 @@ class CashController extends Controller
                                     }
                                 }
                             }
-                            /* $total += $d_it->total;
-                            $total_items += $d_it->total; */
+                            //$total += $d_it->total;
+                            //$total_items += $d_it->total;
 
                             $total += $d_it->total;
                             $total_items += $d_it->total;
-                            /* $price = $d_it->unit_price;
-                            if ($d_it->affectation_igv_type_id == '10') {
-                                $price = number_format($price/1.18,2,'.','');
-                            } */
+                            //$price = $d_it->unit_price;
+                            //if ($d_it->affectation_igv_type_id == '10') {
+                            //    $price = number_format($price/1.18,2,'.','');
+                            //}
                             if (array_key_exists($d_it->item_id, $items)) {
 
                                 $price = $d_it->unit_price;
@@ -631,7 +640,7 @@ class CashController extends Controller
                                     "description" => $d_it->item->description,
                                     "count" =>  $quantity,
                                     "purchase_unit_price" => $purchase_unit_price,
-                                    /* "total" => $d_it->total_value, */
+                                    //"total" => $d_it->total_value,
                                     "total" => $d_it->total,
                                     "factor" => $factor,
                                     "unit_type" => $unit_type,
@@ -688,8 +697,77 @@ class CashController extends Controller
                 ->download('ReporteGanan.' . Carbon::now() . '.xlsx');
         }
     }
+    public function report_cash_export_document($type, Request $request)
+    {
 
-    /* public function report_cash(Request $request)
+        $filename = 'Reporte_Ganancia_' . date('YmdHis') . '.xlsx';
+        $params = [
+            'type' => $type,
+            'company' => Company::active(),
+            'establishment' => Establishment::find($request->establishment_id),
+            'date_start' => $request->date_start ? Carbon::parse($request->date_start)->format("Y-m-d") : null,
+            'date_end' => $request->date_end ? Carbon::parse($request->date_end)->format("Y-m-d") : null,
+            'establishment_id' => $request->establishment_id,
+            'item_id' => $request->item_id,
+            'categoria_id' => $request->categoria_id,
+            'filename' => $filename
+        ];
+
+        dispatch(new GenerateExcelReportJob($params, auth()->id()));
+
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'message' => 'El reporte ya fue generado y se encuentra en proceso de descarga',
+        ];
+    }
+    public function checkReportStatus()
+    {
+        $cached = Cache::get('excel_report_' . auth()->id());
+
+        if (!$cached) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Reporte en proceso'
+            ]);
+        }
+
+        // Obtener el tenant actual
+        $website = app(Environment::class)->tenant();
+        $tenant_uuid = $website->uuid;
+
+        // Construir la ruta completa incluyendo el tenant
+        $full_path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$cached['filename']}";
+
+        if (!Storage::exists($full_path)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Archivo no encontrado'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'download_url' => route('cash.download.report', [
+                'filename' => $cached['filename']
+            ]),
+            'message' => 'Reporte listo para descargar'
+        ]);
+    }
+    public function downloadReport($filename)
+    {
+
+        $website = app(Environment::class)->tenant();
+        $tenant_uuid = $website->uuid;
+
+        $full_path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$filename}";
+
+        return Storage::download($full_path, $filename);
+    }
+
+
+    //para el reporte de ganancia por items
+    public function report_cash(Request $request)
     {
         ini_set('max_execution_time', "3000");
         ini_set('memory_limit', '2048M');
@@ -1133,158 +1211,6 @@ class CashController extends Controller
             'total',
             'items'
         );
-    } */
-
-    public function report_cash(Request $request)
-    {
-        ini_set('max_execution_time', "3000");
-        ini_set('memory_limit', '2048M');
-
-        $establishment_id = $request->establishment_id;
-        $date_start = $request->date_start ? Carbon::parse($request->date_start)->format("Y-m-d") : null;
-        $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("Y-m-d") : null;
-
-        $sales_data = [];
-        $total_utility = 0;
-        $total_net_utility = 0;
-
-        $documents = Document::whereNotIn('state_type_id', ['09', '11'])
-            ->when($date_start, function ($query) use ($date_start, $date_end) {
-                if ($date_end) {
-                    return $query->whereBetween('date_of_issue', [$date_start, $date_end]);
-                }
-                return $query->whereDate('date_of_issue', $date_start);
-            })
-            ->when($establishment_id, function ($query) use ($establishment_id) {
-                return $query->where('establishment_id', $establishment_id);
-            })
-            ->orderBy('series')
-            ->orderBy('number')
-            ->get();
-
-        // Procesar documentos
-        foreach ($documents as $document) {
-            $items_data = [];
-            $document_total_utility = 0;
-            $document_total_net_utility = 0;
-
-            foreach ($document->items as $item) {
-                $unit_price = $item->unit_price;
-                $quantity = $item->quantity;
-                $purchase_unit_price = $item->relation_item->purchase_unit_price ?? 0;
-
-                if ($item->affectation_igv_type_id == '10') {
-                    $unit_price = $unit_price / 1.18;
-                    $purchase_unit_price = $purchase_unit_price / 1.18;
-                }
-
-                $total_purchase = $purchase_unit_price * $quantity;
-                $total_sale = $unit_price * $quantity;
-                $utility = $total_sale - $total_purchase;
-
-                $net_utility = $utility;
-                if ($item->affectation_igv_type_id == '10') {
-                    $net_utility = $utility / 1.18;
-                }
-
-                $items_data[] = [
-                    'description' => $item->item->description,
-                    'quantity' => $quantity,
-                    'unit_type' => $item->item->unit_type_id,
-                    'purchase_unit_price' => number_format($purchase_unit_price, 2),
-                    'total_purchase' => number_format($total_purchase, 2),
-                    'unit_price' => number_format($unit_price, 2),
-                    'total_sale' => number_format($total_sale, 2),
-                    'utility' => number_format($utility, 2),
-                    'net_utility' => number_format($net_utility, 2)
-                ];
-
-                $document_total_utility += $utility;
-                $document_total_net_utility += $net_utility;
-            }
-
-            $sales_data[] = [
-                'document_type' => $document->document_type->description,
-                'series_number' => $document->series . '-' . $document->number,
-                'customer' => $document->customer->name,
-                //'date' => $document->date_of_issue->format('d/m/Y'),
-                'date' => \Carbon\Carbon::parse($document->date_of_issue)->format('d/m/Y'),
-                'items' => $items_data,
-                'total_utility' => number_format($document_total_utility, 2),
-                'total_net_utility' => number_format($document_total_net_utility, 2)
-            ];
-
-            $total_utility += $document_total_utility;
-            $total_net_utility += $document_total_net_utility;
-        }
-
-        // Procesar notas de venta de manera similar
-        $sale_notes = SaleNote::where('state_type_id', '<>', '11')
-            ->when($date_start, function ($query) use ($date_start, $date_end) {
-                if ($date_end) {
-                    return $query->whereBetween('date_of_issue', [$date_start, $date_end]);
-                }
-                return $query->whereDate('date_of_issue', $date_start);
-            })
-            ->when($establishment_id, function ($query) use ($establishment_id) {
-                return $query->where('establishment_id', $establishment_id);
-            })
-            ->orderBy('series')
-            ->orderBy('number')
-            ->get();
-
-        foreach ($sale_notes as $sale_note) {
-            $items_data = [];
-            $document_total_utility = 0;
-            $document_total_net_utility = 0;
-
-            foreach ($sale_note->items as $item) {
-                $unit_price = $item->unit_price;
-                $quantity = $item->quantity;
-                $purchase_unit_price = $item->relation_item->purchase_unit_price ?? 0;
-
-                $total_purchase = $purchase_unit_price * $quantity;
-                $total_sale = $unit_price * $quantity;
-                $utility = $total_sale - $total_purchase;
-                $net_utility = $utility;
-
-                $items_data[] = [
-                    'description' => $item->item->description,
-                    'quantity' => $quantity,
-                    'unit_type' => $item->item->unit_type_id,
-                    'purchase_unit_price' => number_format($purchase_unit_price, 2),
-                    'total_purchase' => number_format($total_purchase, 2),
-                    'unit_price' => number_format($unit_price, 2),
-                    'total_sale' => number_format($total_sale, 2),
-                    'utility' => number_format($utility, 2),
-                    'net_utility' => number_format($net_utility, 2)
-                ];
-
-                $document_total_utility += $utility;
-                $document_total_net_utility += $net_utility;
-            }
-
-            $sales_data[] = [
-                'document_type' => 'NOTA DE VENTA',
-                'series_number' => $sale_note->series . '-' . $sale_note->number,
-                'customer' => $sale_note->customer->name,
-                //'date' => $sale_note->date_of_issue->format('d/m/Y'),
-                'date' => \Carbon\Carbon::parse($sale_note->date_of_issue)->format('d/m/Y'),
-                'items' => $items_data,
-                'total_utility' => number_format($document_total_utility, 2),
-                'total_net_utility' => number_format($document_total_net_utility, 2)
-            ];
-
-            $total_utility += $document_total_utility;
-            $total_net_utility += $document_total_net_utility;
-        }
-
-        return [
-            'sales_data' => $sales_data,
-            'total_utility' => number_format($total_utility, 2),
-            'total_net_utility' => number_format($total_net_utility, 2)
-        ];
-        return    ($records->paginate(config('tenant.items_per_page')));
     }
 
     public function incomes_expenses(Request $request)

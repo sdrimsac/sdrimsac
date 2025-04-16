@@ -10,6 +10,14 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class GainReportExport implements FromView, ShouldAutoSize
 {
     use Exportable;
+    protected $items;
+    protected $company;
+    protected $establishment;
+    protected $date_start;
+    protected $date_end;
+    protected $is_service;
+    protected $total;
+    
 
     public function items($items)
     {

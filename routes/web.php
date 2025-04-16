@@ -53,6 +53,12 @@ if ($hostname) {
             Route::post('efectivo', [App\Http\Controllers\Tenant\SearchController::class, 'efectivo']);
             Route::get('transfers/print_places/{code?}', [TransferPlaceController::class, 'print_transfer']);
             Route::get('report_cash/report/{type}', [CashController::class, 'report_cash_export']);
+
+            //para el excel con datos
+            Route::get('report_cash/report_document/{type}', [CashController::class, 'report_cash_export_document']);
+            Route::get('report_cash/check-report-status',  [CashController::class, 'checkReportStatus']);
+            //Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
+            Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
             /* para reporte de madera  */
             Route::get('/madera', [MaderaController::class, 'index_madera'])->name('tenant.madera.index');
             Route::get('/report-madera', [MaderaController::class, 'report_madera'])->name('report_madera');
@@ -213,6 +219,16 @@ if ($hostname) {
                 Route::get('report_product_client/records', [ItemController::class, 'items_by_clients']);
 
                 Route::get('report_cash', [CashController::class, 'index_report_cash'])->name('reports.cash.index');
+                Route::get('report_closed_cash', [CashController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
+                Route::get('report_cash/records', [CashController::class, 'report_cash']);
+                Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
+
+                Route::get(' minimoget_stock_file/{id}', [CashController::class, 'get_stock_file']);
+
+
+                // para el exportable
+
+                Route::get('index_report_cash_exportable', [CashController::class, 'index_report_cash_exportable'])->name('reports.cash.report_exportable');
                 Route::get('report_closed_cash', [CashController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
                 Route::get('report_cash/records', [CashController::class, 'report_cash']);
                 Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
@@ -518,22 +534,22 @@ if ($hostname) {
                 Route::get('items/export/barcode/print', [App\Http\Controllers\Tenant\ItemController::class, 'printBarCode'])->name('tenant.items.export.barcode.print')->middleware('just.admin');
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
                 Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
-        
+
 
                 // rutas para crear catalogos 
                 Route::prefix('catalog')
-                ->group(function () {
-                    Route::get('', [App\Http\Controllers\Tenant\ItemController::class, 'index_catalog'])->name('tenant.catalog.index')->middleware(['just.admin']);
-                    Route::get('records', [App\Http\Controllers\Tenant\ItemController::class, 'recordsCatalog']);
-                    Route::get('tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
-                    /* Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']); */
-                    Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']);
-                    Route::get('getRecordsInfo', [App\Http\Controllers\Tenant\ItemController::class, 'getRecordsInfo']);
-                    /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
-                    /* Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']); */
-                    Route::post('upload', [App\Http\Controllers\Tenant\CatalogoController::class, 'uploadImage']);
-                    Route::get('images', [App\Http\Controllers\Tenant\CatalogoController::class, 'getImages']);
-                });
+                    ->group(function () {
+                        Route::get('', [App\Http\Controllers\Tenant\ItemController::class, 'index_catalog'])->name('tenant.catalog.index')->middleware(['just.admin']);
+                        Route::get('records', [App\Http\Controllers\Tenant\ItemController::class, 'recordsCatalog']);
+                        Route::get('tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
+                        /* Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']); */
+                        Route::post('storeCatalog', [App\Http\Controllers\Tenant\ItemController::class, 'storeCatalog']);
+                        Route::get('getRecordsInfo', [App\Http\Controllers\Tenant\ItemController::class, 'getRecordsInfo']);
+                        /* Route::get('search/customers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchCustomers']); */
+                        /* Route::get('search/supliers', [App\Http\Controllers\Tenant\ItemController::class, 'searchSupliers']); */
+                        Route::post('upload', [App\Http\Controllers\Tenant\CatalogoController::class, 'uploadImage']);
+                        Route::get('images', [App\Http\Controllers\Tenant\CatalogoController::class, 'getImages']);
+                    });
 
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);
@@ -1374,4 +1390,3 @@ if ($hostname) {
 
 // Dentro del grupo de rutas existente
 Route::post('quotations/consolidateds/anular-document', [App\Http\Controllers\Tenant\QuotationController::class, 'anularDocument']);
-

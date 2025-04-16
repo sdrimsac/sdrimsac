@@ -2,6 +2,25 @@
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
+            <div class="page-header">
+                <div class="row">
+                    <!-- <div class="col-sm-6">
+              <h6>
+                <span>Reporte de ganancias</span>
+              </h6>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a href="/dashboard">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                  <span class="text-muted">Ganancias</span>
+                </li>
+              </ol>
+            </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card mb-0">
                     <div
@@ -232,122 +251,230 @@
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover w-100">
+                            <table class="table">
                                 <thead>
-                                    <tr>
+                                    <tr slot="heading">
                                         <th>#</th>
-                                        <th>Tipo Doc.</th>
-                                        <th>Serie Numero</th>
                                         <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Unidad Medida</th>
-                                        <th>Precio Compra</th>
-                                        <th>Precio Total</th>
-                                        <th>Precio Venta</th>
-                                        <th>Precio total</th>
-                                        <th>Utilidad Bruta</th>
-                                        <th>Utilidad Neta</th>
-                                        <th></th>
+                                        <th>Cant. Und</th>
+                                        <th v-if="!isService">
+                                            P.C.
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Precio de compra"
+                                                placement="top-end"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </th>
+                                        <th v-if="!isService">
+                                            Total C.
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Total precio compra"
+                                                placement="top-end"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </th>
+                                        <th>Total V.</th>
+                                        <th v-if="!isService">Utilidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="(doc, index) in records">
-                                        <template
-                                            v-for="(item,
-                                            itemIndex) in doc.items"
-                                        >
-                                            <tr :key="`${index}-${itemIndex}`">
-                                                
-                                                <td>{{ index + 1 }}</td>
-                                                <td>{{ doc.document_type }}</td>
-                                                <td>{{ doc.series_number }}</td>
-                                                <td>{{ item.description }}</td>
-                                                <td>{{ item.quantity }}</td>
-                                                <td>{{ item.unit_type }}</td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.purchase_unit_price
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.total_purchase
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.unit_price
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.total_sale
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.utility
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td>
-                                                    {{
-                                                        formatCurrency(
-                                                            item.net_utility
-                                                        )
-                                                    }}
-                                                </td>
-                                            </tr>
-                                        </template>
-                                        <!-- Document totals row -->
-                                        <tr
-                                            :key="`${index}-total`"
-                                            class="bg-light font-weight-bold"
-                                        >
-                                            <td colspan="5">
-                                                Totales del documento
-                                            </td>
-                                            <td colspan="5"></td>
-                                            <td>
-                                                {{
-                                                    formatCurrency(
-                                                        calculateTotalSale(
-                                                            doc.items
-                                                        )
-                                                    )
-                                                }}
-                                            </td>
-                                            <td>
-                                                {{
-                                                    formatCurrency(
-                                                        doc.total_utility
-                                                    )
-                                                }}
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                                <tfoot>
-                                    <tr class="font-weight-bold">
-                                        <td colspan="7">TOTALES GENERALES</td>
+                                    <tr
+                                        v-for="(row, index) in records"
+                                        :key="index"
+                                    >
+                                        <td>{{ index + 1 }}</td>
                                         <td>
-                                            {{ formatCurrency(totalGeneral) }}
+                                            {{ row.description }}
+                                            <template v-if="row.unique"
+                                                >(x{{
+                                                    Number(row.factor)
+                                                }})</template
+                                            >
+
+                                            <template v-if="row.formatedPrices">
+                                                <div class="col-12">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Cant.</th>
+                                                                <!-- <th>Total por Medida</th> -->
+                                                                <th>
+                                                                    Precio Unit.
+                                                                </th>
+                                                                <th>Venta</th>
+                                                                <!-- <th v-if="!isService">Uti.</th> -->
+                                                            </tr>
+                                                        </thead>
+                                                        <tr
+                                                            v-for="(prices,
+                                                            idx) in row.formatedPrices"
+                                                            :key="idx"
+                                                        >
+                                                            <td>
+                                                                <small>
+                                                                    <template
+                                                                        v-if="
+                                                                            prices.unit_type_name
+                                                                        "
+                                                                    >
+                                                                        {{
+                                                                            Number(
+                                                                                prices.count
+                                                                            )
+                                                                        }}
+                                                                        (
+                                                                        {{
+                                                                            prices.unit_type_name
+                                                                        }}
+                                                                        )
+                                                                    </template>
+                                                                    <template
+                                                                        v-else
+                                                                    >
+                                                                        {{
+                                                                            Number(
+                                                                                prices.count
+                                                                            )
+                                                                        }}
+                                                                    </template>
+                                                                </small>
+                                                            </td>
+                                                            <!-- <td>
+                                  <span
+                                        v-if="prices.selectedAncho && prices.selectedGrosor && prices.selectedLargo"
+                                      > {{ prices.selectedAncho }} x {{ prices.selectedGrosor }} x {{ prices.selectedLargo }}</span>-
+                                       {{ Number(prices.fot).toFixed(2)}}</td> -->
+                                                            <td>
+                                                                <small>
+                                                                    {{
+                                                                        Number(
+                                                                            prices.price
+                                                                        ).toLocaleString(
+                                                                            "es-PE",
+                                                                            {
+                                                                                style:
+                                                                                    "currency",
+                                                                                currency:
+                                                                                    "PEN"
+                                                                            }
+                                                                        )
+                                                                    }}
+                                                                </small>
+                                                            </td>
+
+                                                            <td>
+                                                                <small>
+                                                                    {{
+                                                                        Number(
+                                                                            prices.price *
+                                                                                prices.count
+                                                                        ).toLocaleString(
+                                                                            "es-PE",
+                                                                            {
+                                                                                style:
+                                                                                    "currency",
+                                                                                currency:
+                                                                                    "PEN"
+                                                                            }
+                                                                        )
+                                                                    }}
+                                                                </small>
+                                                            </td>
+
+                                                            <!-- <td v-if="!isService">
+                                  <small>
+                                    {{
+                                    Number(
+                                    prices.gain
+                                    ).toLocaleString(
+                                    "es-PE",
+                                    {
+                                    style:
+                                    "currency",
+                                    currency:
+                                    "PEN"
+                                    }
+                                    )
+                                    }}
+                                  </small>
+                                </td> -->
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </template>
                                         </td>
-                                        <td>{{ formatCurrency(totalGain) }}</td>
-                                        
+                                        <td>
+                                            <template
+                                                v-if="row.max_quantity_item"
+                                                >{{ formatUnit(row) }}</template
+                                            >
+                                            <template v-else>
+                                                {{ Number(row.count) }}
+                                                <template
+                                                    v-if="row.unit_item"
+                                                    >{{
+                                                        row.unit_item
+                                                    }}</template
+                                                >
+                                            </template>
+                                        </td>
+                                        <td v-if="!isService">
+                                            {{
+                                                Number(
+                                                    row.purchase_unit_price
+                                                ).toLocaleString("es-PE", {
+                                                    style: "currency",
+                                                    currency: "PEN"
+                                                })
+                                            }}
+                                        </td>
+                                        <td v-if="!isService">
+                                            <!-- <template v-if="row.finalPrice"> -->
+                                            {{
+                                                Number(
+                                                    row.totalPurchase
+                                                ).toLocaleString("es-PE", {
+                                                    style: "currency",
+                                                    currency: "PEN"
+                                                })
+                                            }}
+                                            <!-- </template> -->
+                                        </td>
+                                        <td>
+                                            {{
+                                                Number(
+                                                    row.total
+                                                ).toLocaleString("es-PE", {
+                                                    style: "currency",
+                                                    currency: "PEN"
+                                                })
+                                            }}
+                                        </td>
+                                        <td v-if="!isService">
+                                            {{
+                                                Number(row.gain).toLocaleString(
+                                                    "es-PE",
+                                                    {
+                                                        style: "currency",
+                                                        currency: "PEN"
+                                                    }
+                                                )
+                                            }}
+                                        </td>
                                     </tr>
-                                </tfoot>
+                                </tbody>
                             </table>
+                            <div></div>
                         </div>
                     </div>
                 </div>
@@ -399,9 +526,7 @@ export default {
             loading_search: false,
             timer: null,
             isService: false,
-            items: [],
-            doc: [],
-            showDetails: false
+            items: []
         };
     },
     async created() {
@@ -483,48 +608,86 @@ export default {
             });
         },
 
-        formatCurrency(value) {
-            return Number(value).toLocaleString("es-PE", {
-                style: "currency",
-                currency: "PEN"
-            });
-        },
-
-        calculateTotalSale(items) {
-            return items.reduce(
-                (sum, item) => sum + Number(item.total_sale),
-                0
-            );
-        },
-
-        toggleDetails(index) {
-            this.$set(
-                this.records[index],
-                "showDetails",
-                !this.records[index].showDetails
-            );
-        },
-
         async getRecords() {
-            this.loading_submit = true;
-            try {
-                const response = await this.$http.get(
-                    `/${this.resource}/records?${this.getQueryParameters()}`
-                );
-
-                this.records = response.data.sales_data;
-                this.totalGeneral = this.records.reduce(
-                    (sum, doc) => sum + this.calculateTotalSale(doc.items),
-                    0
-                );
-                console.log(this.records);
-                this.totalGain = Number(response.data.total_utility);
-            } catch (error) {
-                console.error(error);
-                this.$toast.error("Error al cargar los registros");
-            } finally {
-                this.loading_submit = false;
+            let item = this.items.find(i => i.id == this.form.item_id);
+            if (item) {
+                this.isService = item.unit_type_description == "Servicio";
             }
+            this.totalGain = 0;
+            const response = await this.$http.get(
+                `/${this.resource}/records?${this.getQueryParameters()}`
+            );
+
+            let items = response.data.items;
+            this.totalGeneral = response.data.total;
+            this.records = Object.keys(items).map(key => items[key]);
+
+            this.records = this.records.sort((a, b) => b.count - a.count);
+            this.records = this.records.map(r => {
+                let formatedPrices = [];
+                Object.entries(r.prices).forEach(rr => {
+                    let [
+                        price,
+                        {
+                            count,
+                            factor,
+                            unit_type_name,
+                            unit_type,
+                            unit_item,
+                            max_quantity_item,
+                            selectedAncho,
+                            selectedLargo,
+                            selectedGrosor
+                        }
+                    ] = rr;
+                    let gain = 0;
+                    let fot = null;
+                    if (selectedAncho) {
+                        fot =
+                            (selectedAncho * selectedGrosor * selectedLargo) /
+                            12;
+                    }
+                    let purchase =
+                        Number(count) *
+                        (factor ? Number(factor) : 1) *
+                        Number(r.purchase_unit_price);
+                    gain = Number(price) * Number(count) - purchase;
+
+                    formatedPrices.push({
+                        gain,
+                        unit_type_name,
+                        unit_item,
+                        max_quantity_item,
+                        factor,
+                        price,
+                        count,
+                        unit_type,
+                        fot,
+                        selectedAncho,
+                        selectedGrosor,
+                        selectedLargo
+                    });
+                });
+                r.formatedPrices = formatedPrices;
+
+                let purchase = 0;
+
+                purchase = Number(r.count) * Number(r.purchase_unit_price);
+                r.totalPurchase = purchase;
+                let gain = 0;
+
+                gain = Number(r.total) - purchase;
+                r.gain = gain;
+                this.totalGain += gain;
+                return r;
+            });
+
+            // this.pagination = response.data.meta;
+            // this.pagination.per_page = parseInt(
+            //     response.data.meta.per_page
+            // );
+            this.loading_submit = false;
+            // this.initTotals()
         },
         async getRecordsByFilter() {
             if (this.form.date_end) {
