@@ -420,7 +420,7 @@
                     </tr>
                     @if ($area_desc && strtoupper($area_desc) !== 'MENAJE')
                         <tr>
-                            <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                            <td colspan="4" class="header_title0 text-center under_line" valign="top" style="font-size: 20px !important;">
                                 <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                             </td>
                         </tr>
