@@ -109,7 +109,7 @@
                                 </template>
                             </div>
                         </el-tab-pane>
-                         
+
                         <el-tab-pane v-if="!isArca" name="entorno">
                             <template #label>
                                 <div class="tab-label">
@@ -220,7 +220,10 @@
 
                                                                 <!-- Entorno Créditos en Nota -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -544,7 +547,10 @@
 
                                                                 <!-- Entorno Boticas & Hospital -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -598,7 +604,10 @@
 
                                                                 <!-- Entorno Billar -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -652,7 +661,10 @@
 
                                                                 <!-- Entorno Maderera -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -762,7 +774,10 @@
 
                                                                 <!-- Entorno Odontología -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -816,7 +831,10 @@
 
                                                                 <!-- Entorno Alquiler de Habitaciones -->
                                                                 <div
-                                                                    class="col-md-3 mb-4" v-if="canSee"
+                                                                    class="col-md-3 mb-4"
+                                                                    v-if="
+                                                                        canSee
+                                                                    "
                                                                 >
                                                                     <div
                                                                         class="card h-100"
@@ -3610,31 +3628,54 @@
                                                                     </div>
 
                                                                     <!-- Mostrar Opcion de Poder regularizar stock de productos  -->
-                                                                    <div class="col-md-3 mt-4">
-                                                                        <div class="card h-100">
-                                                                            <div class="card-body d-flex flex-column">
-                                                                                <div class="form-group text-left flex-grow-1">
-                                                                                    <label class="control-label w-100">
-                                                                                        <i class="fas fa-id-card fa-lg"></i>
-                                                                                        Regularizar Stock Productos 
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fas fa-id-card fa-lg"
+                                                                                        ></i>
+                                                                                        Regularizar
+                                                                                        Stock
+                                                                                        Productos
                                                                                     </label>
                                                                                     <el-switch
-                                                                                        v-model="form.kardex_regularizate"
+                                                                                        v-model="
+                                                                                            form.kardex_regularizate
+                                                                                        "
                                                                                         active-text="Si"
                                                                                         inactive-text="No"
-                                                                                        :active-color="'#28a745'"
-                                                                                        :inactive-color="'#6c757d'"
-                                                                                        @change="submit(
-                                                                                            'regularizacion stock de productos',
-                                                                                            form.kardex_regularizate,
-                                                                                            'user_edit',
-                                                                                            'idCardIcon'
-                                                                                        )"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            submit(
+                                                                                                'regularizacion stock de productos',
+                                                                                                form.kardex_regularizate,
+                                                                                                'user_edit',
+                                                                                                'idCardIcon'
+                                                                                            )
+                                                                                        "
                                                                                     ></el-switch>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>                                                               </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -13948,6 +13989,82 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mt-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.variation_hotel
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="variationIcon"
+                                                                                class="fas fa-boxes tab-icon"
+                                                                            ></i>
+                                                                            Mostrar reporte de yape y Enviar al Wasap
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="al activar este boton en historial se visualizara la opcion de ver el reporte de yapes por cada caja asi como tambien al cerrar la caja se enviara el pdf al wasap del dueño del negocio"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-select
+                                                                            :disabled="
+                                                                                !form.variation_hotel
+                                                                            "
+                                                                            ref="producto"
+                                                                            v-model="
+                                                                                form.item_variation_id
+                                                                            "
+                                                                            @change="
+                                                                                changeItem
+                                                                            "
+                                                                            filterable
+                                                                            remote
+                                                                            placeholder="Buscar..."
+                                                                            popper-class="el-select-items"
+                                                                            :remote-method="
+                                                                                searchRemoteItems
+                                                                            "
+                                                                            :loading="
+                                                                                loading_search
+                                                                            "
+                                                                        >
+                                                                            <el-option
+                                                                                v-for="option in items"
+                                                                                :key="
+                                                                                    option.id
+                                                                                "
+                                                                                :value="
+                                                                                    option.id
+                                                                                "
+                                                                                :label="
+                                                                                    option.full_description ||
+                                                                                        option.description
+                                                                                "
+                                                                            ></el-option>
+                                                                        </el-select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <!-- <div class="col-md-2 mt-4">
                                                         <div class="form-group">
                                                             <label
@@ -14675,7 +14792,9 @@
                                                                                 ref="canopyKitchenIcon"
                                                                                 class="fas fa-print fa-lg"
                                                                             ></i>
-                                                                            Habilitar Area Menaje
+                                                                            Habilitar
+                                                                            Area
+                                                                            Menaje
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"

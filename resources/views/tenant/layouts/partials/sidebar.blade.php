@@ -220,6 +220,20 @@
                                     transacciones - Inventario</span>
                             </a>
                         </li>
+                        <li>
+                            <a class="{{ $path[0] === 'transport' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.transport.index') }}">
+                                <i class="fa fa-solid fa-ruler" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Transporte Vehiculos</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'driver' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.driver.index') }}">
+                                <i class="fa fa-solid fa-ruler" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Conductores</span>
+                            </a>
+                        </li>
                     @endif
 
 

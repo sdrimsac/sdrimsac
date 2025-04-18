@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'yape_report',
         'image_comand',
         'edit_mesa',
         're_printer',
@@ -315,6 +316,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'yape_report' => 'boolean',
         'image_comand' => 'boolean',
         'edit_mesa' => 'boolean',
         're_printer' => 'boolean',
@@ -573,6 +575,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'yape_report' => (bool) $this->yape_report,
             'image_comand' => (bool) $this->image_comand,
             'edit_mesa' => (bool)$this->edit_mesa,
             're_printer' => (bool)$this->re_printer,

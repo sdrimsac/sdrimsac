@@ -33,62 +33,6 @@ class DispatchSendSunatJobProccess implements ShouldQueue
         $this->external_id = $external_id;
     }
 
-
-    /* public function handle()
-    {
-        $document = Dispatch::where('external_id', $this->external_id)->first();
-        if (!$document) return;
-
-        $controller = new ServiceDispatchController();
-        $ticket = $controller->send($document->external_id);
-        dump($ticket);
-
-        if ($ticket['success']) {
-            sleep(30);
-            $response = $controller->statusTicket($document->external_id);
-
-            if (!$response['success']) {
-                sleep(30);
-                $response = $controller->statusTicket($document->external_id);
-            }
-            Log::info('Response Mensaje exitoso: ' . json_encode($response));
-        }
-    } */
-
-    /* public function handle()
-    {
-        $document = Dispatch::where('external_id', $this->external_id)->first();
-        if (!$document) return;
-
-        $controller = new ServiceDispatchController();
-
-        // Enviar a SUNAT
-        $send_response = $controller->send($document->external_id);
-        Log::info('Resultado de send(): ' . json_encode($send_response));
-
-        if ($send_response['success']) {
-            // ⚠️ Volver a consultar el ticket desde la BD (porque el método no lo retorna directamente)
-            $updated_document = Dispatch::where('external_id', $this->external_id)->first();
-
-            if (!$updated_document->external_id) {
-                Log::warning('No se encontró el ticket después del envío.');
-                return;
-            }
-
-            // Esperar y luego consultar estado del ticket
-            $response = $controller->statusTicket($updated_document->external_id);
-
-            // Si falla, volver a intentar
-            if (!$response['success']) {
-                $response = $controller->statusTicket($updated_document->external_id);
-            }
-
-            Log::info('Respuesta de SUNAT (statusTicket): ' . json_encode($response));
-        } else {
-            Log::error('Error al enviar a SUNAT: ' . json_encode($send_response));
-        }
-    } */
-
     public function handle()
     {
         $document = Dispatch::where('external_id', $this->external_id)->first();

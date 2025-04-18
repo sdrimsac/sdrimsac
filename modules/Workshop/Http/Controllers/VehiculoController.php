@@ -179,77 +179,6 @@ class VehiculoController extends Controller
         return $record;
     }
 
-    /* public function record_payment($id)
-    {
-        $record = Vehiculo::find($id);
-        $customer_id = $record->customer_id;
-        $historial = Historial::where('vehiculo_id', $id)->where('estado', 0)->first();
-
-        if (!$historial) {
-            return response()->json([
-                'error' => 'No se encontró un historial activo para este vehículo.'
-            ], 404);
-        }
-
-        $items = $historial->historialItem->transform(function ($row) {
-            $item = $row->item->replicate();
-            $item->quantity = $row->cantidad;
-            $item->item_id = $row->item_id;
-            $item->sale_unit_price = $row->price;
-            return $item;
-        });
-
-        if ($items->isEmpty()) {
-            return response()->json([
-                'error' => 'No hay items en el historial para este vehículo, por favor no sigas el proceso.'
-            ], 400);
-        }
-
-        $service_item = Item::where('description', 'SERVICIO')->first();
-        $services = DB::connection('tenant')->table('historial_service_details as hsd')
-            ->join('services_details as sd', 'hsd.services_detail_id', '=', 'sd.id')
-            ->where('hsd.historial_id', $historial->id)
-            ->get()
-            ->map(function ($row) use ($service_item) {
-
-                if ($service_item) {
-                    $cloned_service_item = $service_item->replicate();
-
-
-                    $cloned_service_item->quantity = 1;
-                    $cloned_service_item->sale_unit_price = $row->price_unit;
-                    $cloned_service_item->description = $row->name;
-                    $cloned_service_item->price = $row->price_unit;
-                    $cloned_service_item->currency_type_id = 'PEN';
-                    $cloned_service_item->unit_type_id = 'ZZ';
-                    $cloned_service_item->item_id = $service_item->id;
-
-                    return $cloned_service_item;
-                }
-                return null;
-            });
-
-        $services = $services->filter()->values();
-
-        if ($services->isEmpty()) {
-            return response()->json([
-                'error' => 'No hay servicios relacionados con este historial.'
-            ], 400);
-        }
-
-        $items_with_services = $items->toArray();
-
-        foreach ($services as $service) {
-            $items_with_services[] = $service;
-        }
-
-        return [
-            'customer_id' => $customer_id,
-            'establishment_id' => $historial->establishment_id,
-            'items' => $items_with_services
-        ];
-    } */
-
     public function record_payment($id)
     {
         $record = Vehiculo::find($id);
@@ -434,10 +363,6 @@ class VehiculoController extends Controller
 
         $this->createPdfHistorial($historial, "a4", $historial->filename, $services);
 
-        /* $this->vehiculo = $vehicle;
-        $this->setFilename();
-        $this->createPdf($this->vehiculo, "a4", $this->vehiculo->filename); */
-
         return [
             'success' => true,
             'message' => ($id) ? 'Vehículo editado con éxito' : 'Vehículo registrado con éxito'
@@ -511,9 +436,25 @@ class VehiculoController extends Controller
                 ->select('sd.name', 'sd.price_unit');
             $services = $query->get();
 
-            $this->setFilenameHistorial($historial, $services);
+            $query = DB::connection('tenant')->table(historialItem::class . ' as hi')
+                ->join('items as i', 'hi.item_id', '=', 'i.id')
+                ->where('hi.historial_id', $historial_id)
+                ->select('i.description', 'hi.cantidad', 'hi.price');
+            $items = $query->get()->map(function ($row) {
+                $item = Item::find($row->item_id);
+                return [
+                    'description' => $row->description,
+                    'quantity' => $row->cantidad,
+                    'price' => $row->price,
+                    'item_id' => $item->id,
+                    'sale_unit_price' => $row->price,
+                ];
+            });
+            $historial->items = $items;
 
-            $this->createPdfHistorial($historial, "a4", $historial->filename, $services);
+            $this->setFilenameHistorial($historial, $services, $items);
+
+            $this->createPdfHistorial($historial, "a4", $historial->filename, $services, $items);
 
             return [
                 'success' => true,
@@ -629,16 +570,16 @@ class VehiculoController extends Controller
 
         return $pdf->stream("formato_vehiculo_{$id}_{$timestamp}.pdf");
     }
-    public function createPdfHistorial($historial = null, $format_pdf = null, $filename = null, $services = null)
+    public function createPdfHistorial($historial = null, $format_pdf = null, $filename = null, $services = null, $items = null)
     {
         ini_set("pcre.backtrack_limit", "5000000");
         $template = new Template();
         $pdf = new Mpdf();
 
         $historial->services = $services;
+        $historial->items = $items;
 
         $document = $historial;
-        /* $document = $services; */
         $company = ($this->company != null) ? $this->company : Company::active();
         $filename = ($filename != null) ? $filename : $historial->filename;
 
@@ -720,9 +661,9 @@ class VehiculoController extends Controller
     {
         $this->uploadStorage($filename, $file_content, $file_type);
     }
-    private function reloadPDF($vehiculo, $format, $filename, $services)
+    private function reloadPDF($vehiculo, $format, $filename, $services, $items)
     {
-        $this->createPdfHistorial($vehiculo, $format, $filename, $services);
+        $this->createPdfHistorial($vehiculo, $format, $filename, $services, $items);
     }
     public function toPrint($id, $format)
     {
@@ -739,7 +680,23 @@ class VehiculoController extends Controller
             ->select('sd.name', 'sd.price_unit')
             ->get();
 
-        $this->reloadPDF($historial, $format, $historial->filename, $services);
+        $items = DB::connection('tenant')->table('historial_item' . ' as hi')
+            ->join('items as i', 'hi.item_id', '=', 'i.id')
+            ->where('hi.historial_id', $historial->id)
+            ->select('i.description', 'hi.cantidad', 'hi.price', 'hi.item_id', 'hi.historial_id')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'description' => $row->description,
+                    'quantity' => $row->cantidad,
+                    'price' => $row->price,
+                    'item_id' => $row->item_id,
+                    'sale_unit_price' => $row->price,
+                    'historial_id' => $row->historial_id
+                ];
+            });
+
+        $this->reloadPDF($historial, $format, $historial->filename, $services, $items);
         $temp = tempnam(sys_get_temp_dir(), 'vehiculo');
 
         file_put_contents($temp, $this->getStorage($historial->filename, 'vehiculo '));

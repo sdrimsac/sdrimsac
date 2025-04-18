@@ -1,0 +1,127 @@
+<template>
+    <div class="card card-collapsed">
+        <div class="card-header bg-primary">
+            <h4 class="my-0 text-white">
+                <i class="fas fa-sitemap"></i>
+                Conductores
+            </h4>
+        </div>
+        <div class="data-table-visible-columns">
+            <el-button type="primary" class="" @click.prevent="clickCreate()">
+                <i class="fas fa-sitemap fa-lg"></i>
+                <i class="fa fa-plus"></i>
+                Nuevo Conductor
+            </el-button>
+        </div>
+        <div class="card-body">
+            <data-table :resource="resource">
+                <tr slot="heading" class="bg-primary">
+                    <th class="text-white">#</th>
+                    <th class="text-white">Documento</th>
+                    <th class="text-white">Numero de Documento</th>
+                    <th class="text-white">Nombre</th>
+                    <th class="text-white text-center">Licencia de Conducir</th>
+                    <th class="text-white text-center">Telefono</th>
+                    <th class="text-white text-end">Acciones</th>
+                </tr>
+
+                <tr slot-scope="{ index, row }">
+                    <td>{{ index }}</td>
+                    <td>{{ row.identity_document_type_id }}</td>
+                    <td>{{ row.number }}</td>
+                    <td>{{ row.name }}</td>
+                    <td class="text-center">{{ row.license }}</td>
+                    <td class="text-center">{{ row.telephone }}</td>
+                    <td class="text-right">
+                        <button
+                            class="btn p-0"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <span
+                                class="btn btn-primary dropdown-toggle"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-delay="0"
+                                title=""
+                                data-bs-original-title="Item Count"
+                                aria-label="Item Count"
+                                >Acciones</span
+                            >
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" style="">
+                            <a
+                                type="button"
+                                class="dropdown-item text-secondary"
+                                @click.prevent="clickCreate(row.id)"
+                            >
+                                <i class="fa fa-edit"></i> Editar
+                            </a>
+                            <a
+                                type="button"
+                                class="dropdown-item text-danger"
+                                @click.prevent="clickDelete(row.id)"
+                            >
+                                <i class="fa fa-trash"></i>
+                                Eliminar
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </data-table>
+        </div>
+        <driver-form
+            :showDialog.sync="showDialog"
+            :recordId="recordId"
+            :document_types="document_types"
+        ></driver-form>
+    </div>
+</template>
+
+<script>
+import DriverForm from "./form.vue";
+import DataTable from "../../components/DataTable.vue";
+import { deletable } from "../../mixins/deletable";
+export default {
+    mixins: [deletable],
+    components: {
+        DataTable,
+        DriverForm
+    },
+    data() {
+        return {
+            title: null,
+            showDialog: false,
+            resource: "drivers",
+            recordId: null,
+            document_types: [],
+        };
+    },
+    created() {
+        this.getTables();
+    },
+
+    methods: {
+        async getTables() {
+            const response = await this.$http(`${this.resource}/tables`);
+            console.log(response);
+            const { document_types } = response.data;
+            /* this.establishments = establishments; */
+            this.document_types = document_types;
+            // this.establishments = response.data.data.establishments;
+        },
+        clickCreate(recordId = null) {
+            this.recordId = recordId;
+            this.showDialog = true;
+        },
+        clickDelete(id) {
+            this.destroy(`/${this.resource}/${id}`).then(() =>
+                this.$eventHub.$emit("reloadData")
+            );
+        },
+        
+    }
+};
+</script>

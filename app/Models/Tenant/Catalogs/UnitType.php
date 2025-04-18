@@ -2,7 +2,7 @@
 
 namespace App\Models\Tenant\Catalogs;
 
-
+use App\Models\Tenant\ItemUnitType;
 use Illuminate\Database\Eloquent\Builder;
 
 class UnitType extends ModelCatalog

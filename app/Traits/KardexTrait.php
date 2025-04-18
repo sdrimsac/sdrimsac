@@ -13,7 +13,6 @@ trait KardexTrait
     public function saveKardex($type, $item_id, $id, $quantity, $relation, $afectar_stock = 'Si')
     
     {
-        /* dump($afectar_stock); */
         if ($afectar_stock == 'Si') {
             $kardex = Kardex::create([
                 'type' => $type,
@@ -30,7 +29,6 @@ trait KardexTrait
 
     public function updateStock($item_id, $quantity, $is_sale, $afectar_stock = 'Si')
     {
-        /* dump($afectar_stock); */
         if ($afectar_stock == 'Si') {
             $item = Item::find($item_id);
             $item->stock = ($is_sale) ? $item->stock - $quantity : $item->stock + $quantity;

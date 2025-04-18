@@ -557,6 +557,8 @@ const app = new Vue({
         "tenant-banks-index": () => import("./views/banks/index.vue"),
 
         "tenant-unit_types-index": () => import("./views/unit_types/index.vue"),
+        "tenant-driver-index": () => import("./views/driver/index.vue"),
+        "tenant-transport-index": () => import("./views/transport/index.vue"),
         "tenant-warranty-index": () => import("./views/warranty/index.vue"),
 
         "tenant-establishments-index": () =>

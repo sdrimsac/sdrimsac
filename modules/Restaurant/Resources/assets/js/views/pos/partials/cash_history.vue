@@ -149,6 +149,21 @@
                                 ></el-button>
                             </el-tooltip>
                             <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Reporte de los yapes realziados en la caja"
+                                placement="top"
+                            >
+                                <el-button
+                                    v-if="configuration.yape_report"
+                                    :style="{ backgroundColor: '#7C4DFF', borderColor: '#7C4DFF', color: 'white' }"
+                                    
+                                    @click="openYape(box)"
+                                >
+                                <i class="fas fa-file-download"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
                                 v-if="box.tab_single"
                                 class="item"
                                 effect="dark"
@@ -227,7 +242,7 @@ import queryString from "query-string";
 import CashModal from "./cash_modal.vue";
 export default {
     components: { CashModal },
-    props: ["showHistoryCash", "cash_id", "area_id", "sender","configuration"],
+    props: ["showHistoryCash", "cash_id", "area_id", "sender", "configuration"],
     data() {
         return {
             boxes: [],
@@ -290,7 +305,6 @@ export default {
             if (box.has_ticket) {
                 this.showFrame = true;
                 this.currentUrlBox = box.path_ticket_url;
-        
             } else {
                 this.generateReports(box.id, idx);
             }
@@ -299,7 +313,7 @@ export default {
             if (box.has_ticket_usd) {
                 this.showFrame = true;
                 this.currentUrlBox = box.path_ticket_url_usd;
-            }else{
+            } else {
                 this.generateReports(box.id, idx);
             }
         },
@@ -319,18 +333,17 @@ export default {
         generateReports(id, idx) {
             this.loading = true;
             this.boxes[idx].is_loading_report = true;
-            this.$http(`/caja/worker/cash/generate_reports/${id}`).then(
-                response => {
+            this.$http(`/caja/worker/cash/generate_reports/${id}`)
+                .then(response => {
                     if (response.status == 200) {
                         this.$toast.success(
                             "Se están generando los reportes, espere un momento por favor"
                         );
-                    
                     }
-                }
-            ).finally(() => {
-                this.loading = false;
-            });
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         openSaludSingle(id) {
             window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
@@ -377,6 +390,15 @@ export default {
             if (cash.has_a4) {
                 window.open(
                     `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
+                );
+            } else {
+                this.generateReports(cash.id, idx);
+            }
+        },
+        openYape(cash, idx) {
+            if (cash.has_a4) {
+                window.open(
+                    `/caja/report-boxes/reports_resumen_yape?cash_id=${cash.id}`
                 );
             } else {
                 this.generateReports(cash.id, idx);

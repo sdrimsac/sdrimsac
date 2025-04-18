@@ -36,6 +36,7 @@ use App\Jobs\CashReportProccess;
 use App\Jobs\CashReportSmallProccess;
 use App\Jobs\WhatsappSendCashReportProccess;
 use App\Jobs\WhatsappSendCashReportStockProccess;
+use App\Jobs\WhatsappSendCashYapeReportProccess;
 use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\CashIncomePrincipal;
@@ -2523,7 +2524,6 @@ class CashController extends Controller
     public function close(Request $request)
     {
 
-
         $id = $request->id;
         $final_balance = $request->final_balance;
         $configuration = Configuration::first();
@@ -2611,6 +2611,11 @@ class CashController extends Controller
         $cash->is_loading_report = true;
         $cash->save();
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
+        if ($configuration->yape_report){
+            WhatsappSendCashYapeReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
+
+        }
+        
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
         $configuration = Configuration::first();
         WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id, $fqdn);

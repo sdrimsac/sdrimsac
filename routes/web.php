@@ -768,6 +768,25 @@ if ($hostname) {
                 Route::post('unit_types', [App\Http\Controllers\Tenant\UnitTypeController::class, 'store']);
                 Route::delete('unit_types/{id}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'destroy']);
 
+                // para el driver 
+                Route::get('drivers', [App\Http\Controllers\Tenant\DriverController::class, 'index'])->name('tenant.driver.index')->middleware('just.admin');
+                Route::get('drivers/records', [App\Http\Controllers\Tenant\DriverController::class, 'records']);
+                Route::get('drivers/columns', [App\Http\Controllers\Tenant\DriverController::class, 'columns']);
+                Route::get('drivers/tables', [App\Http\Controllers\Tenant\DriverController::class, 'tables']);
+                Route::get('drivers/record/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'record']);
+                Route::post('drivers', [App\Http\Controllers\Tenant\DriverController::class, 'store']);
+                Route::delete('drivers/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'destroy']);
+                
+
+                // para el transporte
+                Route::get('transport', [App\Http\Controllers\Tenant\TransportController::class, 'index'])->name('tenant.transport.index')->middleware('just.admin');
+                Route::get('transport/records', [App\Http\Controllers\Tenant\TransportController::class, 'records']);
+                Route::get('transport/columns', [App\Http\Controllers\Tenant\TransportController::class, 'columns']);
+                Route::get('transport/record/{id}', [App\Http\Controllers\Tenant\TransportController::class, 'record']);
+                Route::post('transport', [App\Http\Controllers\Tenant\TransportController::class, 'store']);
+                Route::delete('transport/{id}', [App\Http\Controllers\Tenant\TransportController::class, 'destroy']);
+                Route::get('transport/vehicles/{number}', [App\Http\Controllers\Tenant\TransportController::class, 'vehicles']);
+
                 //Detractions
                 Route::get('detraction_types/records', [App\Http\Controllers\Tenant\DetractionTypeController::class, 'records']);
                 Route::get('detraction_types/tables', [App\Http\Controllers\Tenant\DetractionTypeController::class, 'tables']);

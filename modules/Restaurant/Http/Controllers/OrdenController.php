@@ -157,7 +157,6 @@ class OrdenController extends Controller
         $zone_name = $request->zone_name ?? null;
         $es_anulacion = $request->cancelled ?? false;
         $es_anulacion_item = $request->cancel_orden_item;
-        /* dump($es_anulacion_item); */
         $to_kitchen = false;
         if ($precuenta) {
             $to_kitchen = true;

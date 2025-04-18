@@ -1,8 +1,8 @@
 @php
     $establishment = $document->establishment;
     $customer = $document->vehiculo ? $document->vehiculo->customer : null;
-    /* $services = $document->vehiculo->services; */
-    $services = $document->services;
+    $services = $document->services ?? collect([]);
+    $items = $document->items ?? collect([]);
     $tittle = str_pad($document->id, 8, '0', STR_PAD_LEFT);
 @endphp
 <html>
@@ -111,17 +111,9 @@
         <tr>
             <td>{{ $document->observacion }}</td>
         </tr>
-        {{-- <tr>
-            <td><b> Estado:</b> {{ $document->state }} </td>
-        </tr> --}}
-        {{-- <tr>
-            <td><b>Motivo:</b> {{ $document->reason }} </td>
-        </tr> --}}
-        {{-- @if ($document->activities) --}}
-            <tr>
-                <td><b>Actividades realizadas:</b> {{ $document->motive }} </td>
-            </tr>
-        {{-- @endif --}}
+        <tr>
+            <td><b>Actividades realizadas:</b> {{ $document->motive }} </td>
+        </tr>
         <tr>
             <td><b>Marca:</b> {{ $document->vehiculo->marca }} </td>
         </tr>
@@ -148,7 +140,12 @@
         </thead>
         <tbody>
             @php
+                $total = 0;
                 $serviceQuantities = [];
+
+                $services = $services ?? collect([]);
+                $items = $items ?? collect([]);
+
                 foreach ($services as $s) {
                     if (isset($serviceQuantities[$s->name])) {
                         $serviceQuantities[$s->name]++;
@@ -157,17 +154,44 @@
                     }
                 }
             @endphp
-            @foreach ($services as $service)
+            @if ($services->count() > 0)
+                @foreach ($services as $service)
+                    <tr>
+                        <td class="text-center align-top">
+                            {{ $serviceQuantities[$service->name] }}
+                        </td>
+                        <td class="text-center align-top">{{ $service->name }}</td>
+                        <td class="text-right align-top">{{ number_format($service->price_unit, 2) }}</td>
+                        <td class="text-right align-top">
+                            {{ number_format($service->price_unit * $serviceQuantities[$service->name], 2) }}</td>
+                    </tr>
+                    @php
+                        $total += $service->price_unit * $serviceQuantities[$service->name];
+                    @endphp
+                @endforeach
+            @endif
+
+            @if ($items->count() > 0)
+                @foreach ($items as $item)
+                    <tr>
+                        <td class="text-center align-top">{{ number_format($item['quantity'], 2) }}</td>
+                        <td class="text-center align-top">{{ $item['description'] }}</td>
+                        <td class="text-right align-top">{{ number_format($item['sale_unit_price'], 2) }}</td>
+                        <td class="text-right align-top">
+                            {{ number_format($item['sale_unit_price'] * $item['quantity'], 2) }}
+                        </td>
+                    </tr>
+                    @php
+                        $total += floatval($item['sale_unit_price']) * floatval($item['quantity']);
+                    @endphp
+                @endforeach
+            @endif
+
+            @if ($services->count() === 0 && $items->count() === 0)
                 <tr>
-                    {{-- <td class="text-center align-top">1</td> --}}
-                    <td class="text-center align-top">
-                        {{ $serviceQuantities[$service->name] }}
-                    </td>
-                    <td class="text-center align-top">{{ $service->name }}</td>
-                    <td class="text-right align-top">{{ number_format($service->price_unit, 2) }}</td>
-                    <td class="text-right align-top">{{ number_format($service->price_unit, 2) }}</td>
+                    <td colspan="4" class="text-center">No hay servicios o items registrados</td>
                 </tr>
-            @endforeach
+            @endif
             <tr>
                 <td colspan="7" class="border-bottom"></td>
             </tr>
@@ -187,17 +211,7 @@
                 {{ number_format($total, 2) }}
             </td>
         </tr>
-        {{-- <tr>
-            <td colspan="4" class="text-right font-bold">PAGO ADELANTADO: </td>
-            <td class="text-right font-bold">{{ number_format($document->prepayment, 2) }}</td>
-        </tr>
-        <tr>
-            <td colspan="4" class="text-right font-bold">SALDO A PAGAR: </td>
-            <td class="text-right font-bold">{{ number_format($document->cost - $document->prepayment, 2) }}</td>
-        </tr> --}}
     </table>
-    {{-- MITAD --}}
-
 </body>
 
 </html>

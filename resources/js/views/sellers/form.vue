@@ -385,7 +385,7 @@ export default {
                     timer: 2000,
                     showConfirmButton: false
                 });
-                this.form[field] = value.replace(/[^0-9]/g, ""); // Reemplazar caracteres no válidos
+                this.form[field] = value.replace(/[^0-9]/g, "");
             }
         },
         convertToUppercase(field) {
