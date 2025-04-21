@@ -2832,7 +2832,7 @@ class BoxesController extends Controller
             return response()->file($path);
         }
 
-        $yape_boxes = Box::with(['document.customer', 'saleNote.customer'])
+        $yape_boxes = Box::with(['document.person', 'saleNote.person'])
             ->select('id', 'document_id', 'sale_note_id', 'date', 'amount')
             ->where('cash_id', $cash_id)
             ->where('method', 'Yape')
