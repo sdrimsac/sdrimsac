@@ -3,76 +3,76 @@
         @close="close"
         @open="open"
         :visible="showPendingOrdens"
-        title="Ordenes pendientes"
+        title="Ordenes Pendientes"
+        width="80%"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
     >
-        <div v-loading="loading" class="card">
-            <div class="d-flex">
-                <div class="col-4 m-3">
-                    <el-input
-                        @input="searchOrden"
-                        v-model="form.value"
-                        placeholder="N° orden"
-                    >
-                    </el-input>
-                </div>
-                <div class="col-2">
-                    <br>
-                    <el-checkbox v-model="form.cash" @change="getRecords">
-                         Venta directa
-                    </el-checkbox>
-                </div>
+
+    <div class="card mb-3 p-3">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-2">
+                <label for="order-number">Ingresar el número de orden</label>
+                <el-input
+                    id="order-number"
+                    @input="searchOrden"
+                    v-model="form.value"
+                    placeholder="N° orden"
+                >
+                </el-input>
             </div>
-            <div class="m-1"></div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Mesa</th>
-                        <th>Orden #</th>
-                        <th>Estado</th>
-                        <th>Referencia</th>
-                        <th>Cantidad</th>
-                        <th>Fecha</th>
-                        <th></th>
+            <div class="col-md-6 mb-2">
+                <el-checkbox v-model="form.cash" @change="getRecords">
+                    Filtrar Ventas Directas (sin mesa)
+                </el-checkbox>
+            </div>
+        </div>
+    </div>
+        <div v-loading="loading" class="card">
+            
+        </div>
+            
+            <table 
+                class="table table-hover table-striped table-bordered table-responsive"
+                style="width: 100%; white-space: nowrap; font-size: 14px;"
+            >
+                <thead class="thead-dark">
+                    <tr class="bg-primary text-center">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Mesa</th>
+                        <th class="text-white">Orden #</th>
+                        <th class="text-white">Estado</th>
+                        <th class="text-white">Referencia de la atención</th>
+                        <th class="text-white">Cant.</th>
+                        <th class="text-white">Fecha</th>
+                        <th class="text-white">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(ord, idx) in ordens" :key="idx">
-                        <td>
-                            {{ idx + 1 }}
-                        </td>
-                        <td>
-                            {{ ord.table }}
-                        </td>
-                        <td>
-                            {{ ord.id }}
-                        </td>
+                        <td class="text-center">{{ idx + 1 }}</td>
+                        <td class="text-center">{{ ord.table }}</td>
+                        <td class="text-center">{{ ord.id }}</td>
                         <td>
                             <span
                                 :class="{
-                                    'text-success':
-                                        ord.status_id == 3 ||
-                                        ord.status_id == 4,
+                                    'text-success': ord.status_id == 3 || ord.status_id == 4,
                                     'text-warning': ord.status_id == 2,
-                                    'text-danger': ord.status == 5,
-                                    'text-info': ord.status == 1
+                                    'text-danger': ord.status_id == 5,
+                                    'text-info': ord.status_id == 1
                                 }"
                             >
                                 {{ ord.status }}
                             </span>
                         </td>
-                        <td>
-                            {{ ord.ref || "-" }}
-                        </td>
-                        <td>{{ ord.orden_items.length }}</td>
+                        <td>{{ ord.ref || "-" }}</td>
+                        <td class="text-center">{{ ord.orden_items.length }}</td>
                         <td>
                             {{ ord.date }}
                             <br />
-                            <small>
-                                {{ ord.time }}
-                            </small>
+                            <small>{{ ord.time }}</small>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <el-tooltip
                                 v-if="ord.credit_list_id"
                                 content="Imprimir a cuenta"
@@ -84,12 +84,17 @@
                                     @click="printCreditList(ord.credit_list_id)"
                                 ></el-button>
                             </el-tooltip>
-                            <el-button
+                            <el-tooltip
                                 v-if="configuration.re_printer"
-                                type="primary"
-                                icon="el-icon-printer"
-                                @click="printTicket(ord.id)"
-                            ></el-button>
+                                content="Imprimir ticket"
+                                placement="top"
+                            >
+                                <el-button
+                                    type="primary"
+                                    icon="el-icon-printer"
+                                    @click="printTicket(ord.id)"
+                                ></el-button>
+                            </el-tooltip>
                             <el-tooltip content="Ver detalle" placement="top">
                                 <el-button
                                     type="warning"

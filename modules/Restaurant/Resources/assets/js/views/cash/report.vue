@@ -1,25 +1,6 @@
-<!-- Reporte de Gananciás -->
+<!-- Reporte de Ganancias Administrador-->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <!-- <div class="col-sm-6">
-              <h6>
-                <span>Reporte de ganancias</span>
-              </h6>
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                  <a href="/dashboard">Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active">
-                  <span class="text-muted">Ganancias</span>
-                </li>
-              </ol>
-            </div> -->
-                </div>
-            </div>
-        </div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card mb-0">
@@ -40,211 +21,157 @@
                     </div>
                 </div>
                 <div
-                    class="data-table-visible-columns"
+                    class="data-table-visible-columns d-flex align-items-center"
                     v-if="records.length > 0"
                 >
                     <el-button
-                        type="button"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate()"
-                    >
-                        <i class="fas fa-plus-circle fa-lg icon-style"></i>
-                        Nuevo
-                    </el-button>
-                    <el-button
-                        class="submit btn_buscar"
+                        class="submit btn_pdf"
                         type="danger"
                         @click.prevent="clickDownload('pdf')"
                     >
-                        <i class="fa fa-file-pdf"></i>
-                        PDF
+                        <i class="fa fa-file-pdf"></i> PDF
                     </el-button>
                     <el-button
-                        class="submit btn_buscar"
+                        class="submit btn_excel"
                         type="success"
                         style="background-color: #28a745; border-color: #28a745;"
                         @click.prevent="clickDownload('excel')"
                     >
-                        <i class="fa fa-file-excel"></i>
-                        EXCEL
+                        <i class="fa fa-file-excel"></i> EXCEL
                     </el-button>
                     <el-button
-                        class="submit btn_buscar"
+                        class="submit btn_whatsapp"
                         type="success"
                         @click.prevent="openWhastappForm()"
                     >
-                        <i class="icofont-brand-whatsapp"></i>
-                        WHATSAPP
+                        <i class="icofont-brand-whatsapp"></i> WHATSAPP
                     </el-button>
                 </div>
 
                 <div class="card" style="margin: 10px;">
                     <div class="card-body">
                         <h5 class="card-title">Filtros</h5>
-                        <div class="col-md-12 col-lg-12 col-xl-12">
-                            <div class="row mt-2">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Almacén</label
-                                        >
-                                        <el-select
-                                            v-model="form.establishment_id"
-                                            clearable
-                                            filterable
-                                        >
-                                            <el-option
-                                                v-for="option in warehouses"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
+                        <div class="row">
+                            <div class="col-11">
+                                <div class="d-flex flex-wrap align-items-center">
+                                  <div class="form-group col-2" style="margin-right: 10px;">
+                                  <label class="control-label">Almacén</label>
+                                  <el-select
+                                  v-model="form.establishment_id"
+                                  clearable
+                                  filterable
+                                  >
+                                  <el-option
+                                  v-for="option in warehouses"
+                                  :key="option.id"
+                                  :value="option.id"
+                                  :label="option.description"
+                                  ></el-option>
+                                  </el-select>
+                                  </div>
+                                  <div class="form-group col-2" style="margin-right: 10px;">
+                                  <label class="control-label">Categoría</label>
+                                  <el-select
+                                  v-model="form.categoria_id"
+                                  clearable
+                                  filterable
+                                  >
+                                  <el-option
+                                  v-for="option in categories"
+                                  :key="option.id"
+                                  :value="option.id"
+                                  :label="option.name"
+                                  ></el-option>
+                                  </el-select>
+                                  </div>
+                                  <div class="form-group col-3" style="margin-right: 10px;">
+                                  <label class="control-label">Producto</label>
+                                  <el-select
+                                  class="w-100"
+                                  v-model="form.item_id"
+                                  filterable
+                                  remote
+                                  popper-class="el-select-customers"
+                                  clearable
+                                  placeholder="Nombre o código interno"
+                                  :remote-method="searchRemoteItems"
+                                  :loading="loading_search_item"
+                                  >
+                                  <el-option
+                                  v-for="option in items"
+                                  :key="option.id"
+                                  :value="option.id"
+                                  :label="option.description"
+                                  ></el-option>
+                                  </el-select>
+                                  </div>
+                                  <div class="form-group col-2" style="margin-right: 10px;">
+                                  <label class="control-label">Fecha Inicio</label>
+                                  <el-date-picker
+                                  style="width:100%;"
+                                  v-model="form.date_start"
+                                  value-format="yyyy-MM-dd"
+                                  @change="checkDate"
+                                  ></el-date-picker>
+                                  </div>
+                                  <div class="form-group col-2" style="margin-right: 10px;">
+                                  <label class="control-label">Fecha Final</label>
+                                  <el-date-picker
+                                  style="width:100%;"
+                                  v-model="form.date_end"
+                                  value-format="yyyy-MM-dd"
+                                  @change="checkDate"
+                                  ></el-date-picker>
+                                  </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Categoría</label
-                                        >
-                                        <el-select
-                                            v-model="form.categoria_id"
-                                            clearable
-                                            filterable
-                                        >
-                                            <el-option
-                                                v-for="option in categories"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.name"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Producto</label
-                                        >
-                                        <el-select
-                                            class="w-100"
-                                            v-model="form.item_id"
-                                            filterable
-                                            remote
-                                            popper-class="el-select-customers"
-                                            clearable
-                                            placeholder="Nombre o código interno"
-                                            :remote-method="searchRemoteItems"
-                                            :loading="loading_search_item"
-                                        >
-                                            <el-option
-                                                v-for="option in items"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Fecha Inicio</label
-                                        >
-                                        <el-date-picker
-                                            style="width:100%;"
-                                            v-model="form.date_start"
-                                            value-format="yyyy-MM-dd"
-                                            @change="checkDate"
-                                        ></el-date-picker>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Fecha Final</label
-                                        >
-                                        <el-date-picker
-                                            style="width:100%;"
-                                            v-model="form.date_end"
-                                            value-format="yyyy-MM-dd"
-                                            @change="checkDate"
-                                        ></el-date-picker>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="col-lg-8 col-md-8 col-md-8 col-sm-12 d-flex align-items-end"
-                                >
-                                    <el-button
-                                        class="submit"
-                                        type="primary"
-                                        @click.prevent="getRecordsByFilter"
-                                        :loading="loading_submit"
-                                        icon="el-icon-search"
-                                        >Buscar</el-button
-                                    >
-                                    <template v-if="records.length > 0">
-                                        <el-button
-                                            class="submit"
-                                            type="danger"
-                                            @click.prevent="
-                                                clickDownload('pdf')
-                                            "
-                                        >
-                                            <i class="fa fa-file-pdf"></i>
-                                            PDF
-                                        </el-button>
-                                        <el-button
-                                            class="submit"
-                                            type="success"
-                                            @click.prevent="
-                                                clickDownload('excel')
-                                            "
-                                        >
-                                            <i class="fa fa-file-excel"></i>
-                                            EXCEL
-                                        </el-button>
-                                        <el-button
-                                            class="submit"
-                                            type="success"
-                                            @click.prevent="openWhastappForm()"
-                                        >
-                                            <i
-                                                class="icofont-brand-whatsapp"
-                                            ></i>
-                                            WHATSAPP
-                                        </el-button>
-                                        <span style="margin-left:15px;">
-                                            <strong>TOTAL VENTA:</strong>
-                                            {{
-                                                totalGeneral.toLocaleString(
-                                                    "es-PE",
-                                                    {
-                                                        style: "currency",
-                                                        currency: "PEN"
-                                                    }
-                                                )
-                                            }}
-                                        </span>
-                                        <span style="margin-left:15px;">
-                                            <strong>TOTAL GANANCIA:</strong>
-                                            {{
-                                                totalGain.toLocaleString(
-                                                    "es-PE",
-                                                    {
-                                                        style: "currency",
-                                                        currency: "PEN"
-                                                    }
-                                                )
-                                            }}
-                                        </span>
-                                    </template>
-                                </div>
+                              </div>
+                            <div class="col-1">
+                            <!-- Contenido para la columna del 10% -->
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                              <el-button
+                                  class="submit btn_buscar"
+                                  type="primary"
+                                  @click.prevent="getRecordsByFilter"
+                                  :loading="loading_submit"
+                                  icon="el-icon-search"
+                                  >Buscar
+                              </el-button>
                             </div>
+                          </div>
                         </div>
+
+                        <div class="row justify-content-end">
+                          <div class="col-auto">
+                          <template v-if="records.length > 0">
+                            <span style="margin-left:15px; font-size: 1.2rem; color: darkgreen; font-weight: bold;">
+                            <strong>Total Ventas:</strong>
+                            {{
+                              totalGeneral.toLocaleString(
+                              "es-PE",
+                              {
+                                style: "currency",
+                                currency: "PEN"
+                              }
+                              )
+                            }}
+                            </span>
+                            <span style="margin-left:15px; font-size: 1.2rem; color: blue; font-weight: bold;">
+                            <strong>Total Ganancia:</strong>
+                            {{
+                              totalGain.toLocaleString(
+                              "es-PE",
+                              {
+                                style: "currency",
+                                currency: "PEN"
+                              }
+                              )
+                            }}
+                            </span>
+                          </template>
+                          </div>
+                        </div>
+
+                        
                     </div>
                 </div>
 
@@ -253,38 +180,38 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <tr slot="heading">
-                                        <th>#</th>
-                                        <th>Producto</th>
-                                        <th>Cant. Und</th>
-                                        <th v-if="!isService">
-                                            P.C.
-                                            <el-tooltip
-                                                class="item"
-                                                effect="dark"
-                                                content="Precio de compra"
-                                                placement="top-end"
-                                            >
-                                                <i
-                                                    class="fa fa-info-circle"
-                                                ></i>
-                                            </el-tooltip>
-                                        </th>
-                                        <th v-if="!isService">
-                                            Total C.
-                                            <el-tooltip
-                                                class="item"
-                                                effect="dark"
-                                                content="Total precio compra"
-                                                placement="top-end"
-                                            >
-                                                <i
-                                                    class="fa fa-info-circle"
-                                                ></i>
-                                            </el-tooltip>
-                                        </th>
-                                        <th>Total V.</th>
-                                        <th v-if="!isService">Utilidad</th>
+                                    <tr slot="heading" style="background-color: #073f68; color: white;">
+                                      <th class="text text-white">#</th>
+                                      <th class="text text-white">Producto</th>
+                                      <th class="text text-white">Cant. Und</th>
+                                      <th  class="text text-white" v-if="!isService">
+                                        Precio Compra
+                                        <el-tooltip
+                                          class="item"
+                                          effect="dark"
+                                          content="Precio de compra"
+                                          placement="top-end"
+                                        >
+                                          <i
+                                            class="fa fa-info-circle"
+                                          ></i>
+                                        </el-tooltip>
+                                      </th>
+                                      <th  class="text text-white" v-if="!isService">
+                                        Total Compra
+                                        <el-tooltip
+                                          class="item"
+                                          effect="dark"
+                                          content="Total precio compra"
+                                          placement="top-end"
+                                        >
+                                          <i
+                                            class="fa fa-info-circle"
+                                          ></i>
+                                        </el-tooltip>
+                                      </th>
+                                      <th  class="text text-white">Total Venta</th>
+                                      <th  class="text text-white" v-if="!isService">Utilidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -294,7 +221,9 @@
                                     >
                                         <td>{{ index + 1 }}</td>
                                         <td>
-                                            {{ row.description }}
+                                            <span style="font-weight: bold; font-size: 1.2rem;">
+                                              {{ row.description }}
+                                            </span>
                                             <template v-if="row.unique"
                                                 >(x{{
                                                     Number(row.factor)
@@ -303,112 +232,60 @@
 
                                             <template v-if="row.formatedPrices">
                                                 <div class="col-12">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Cant.</th>
-                                                                <!-- <th>Total por Medida</th> -->
-                                                                <th>
-                                                                    Precio Unit.
-                                                                </th>
-                                                                <th>Venta</th>
-                                                                <!-- <th v-if="!isService">Uti.</th> -->
-                                                            </tr>
-                                                        </thead>
-                                                        <tr
-                                                            v-for="(prices,
-                                                            idx) in row.formatedPrices"
-                                                            :key="idx"
-                                                        >
-                                                            <td>
-                                                                <small>
-                                                                    <template
-                                                                        v-if="
-                                                                            prices.unit_type_name
-                                                                        "
-                                                                    >
-                                                                        {{
-                                                                            Number(
-                                                                                prices.count
-                                                                            )
-                                                                        }}
-                                                                        (
-                                                                        {{
-                                                                            prices.unit_type_name
-                                                                        }}
-                                                                        )
-                                                                    </template>
-                                                                    <template
-                                                                        v-else
-                                                                    >
-                                                                        {{
-                                                                            Number(
-                                                                                prices.count
-                                                                            )
-                                                                        }}
-                                                                    </template>
-                                                                </small>
-                                                            </td>
-                                                            <!-- <td>
-                                  <span
-                                        v-if="prices.selectedAncho && prices.selectedGrosor && prices.selectedLargo"
-                                      > {{ prices.selectedAncho }} x {{ prices.selectedGrosor }} x {{ prices.selectedLargo }}</span>-
-                                       {{ Number(prices.fot).toFixed(2)}}</td> -->
-                                                            <td>
-                                                                <small>
-                                                                    {{
-                                                                        Number(
-                                                                            prices.price
-                                                                        ).toLocaleString(
-                                                                            "es-PE",
-                                                                            {
-                                                                                style:
-                                                                                    "currency",
-                                                                                currency:
-                                                                                    "PEN"
-                                                                            }
-                                                                        )
-                                                                    }}
-                                                                </small>
-                                                            </td>
-
-                                                            <td>
-                                                                <small>
-                                                                    {{
-                                                                        Number(
-                                                                            prices.price *
-                                                                                prices.count
-                                                                        ).toLocaleString(
-                                                                            "es-PE",
-                                                                            {
-                                                                                style:
-                                                                                    "currency",
-                                                                                currency:
-                                                                                    "PEN"
-                                                                            }
-                                                                        )
-                                                                    }}
-                                                                </small>
-                                                            </td>
-
-                                                            <!-- <td v-if="!isService">
-                                  <small>
-                                    {{
-                                    Number(
-                                    prices.gain
-                                    ).toLocaleString(
-                                    "es-PE",
-                                    {
-                                    style:
-                                    "currency",
-                                    currency:
-                                    "PEN"
-                                    }
-                                    )
-                                    }}
-                                  </small>
-                                </td> -->
+                                                    <table class="table table-bordered table-hover table-striped">
+                                                      <thead style="background-color: #0a5a8a;">
+                                                        <tr>
+                                                        <th style="color: white; text-align: center;">Cantidad</th>
+                                                        <th style="color: white; text-align: center;">Precio Unitario</th>
+                                                        <th style="color: white; text-align: center;">Total Venta</th>
                                                         </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr
+                                                          v-for="(prices, idx) in row.formatedPrices"
+                                                          :key="idx"
+                                                        >
+                                                          <td style="text-align: center; vertical-align: middle;">
+                                                            <small>
+                                                              <template v-if="prices.unit_type_name">
+                                                                {{
+                                                                  Number(prices.count)
+                                                                }}
+                                                                ({{ prices.unit_type_name }})
+                                                              </template>
+                                                              <template v-else>
+                                                                {{ Number(prices.count) }}
+                                                              </template>
+                                                            </small>
+                                                          </td>
+                                                          <td style="text-align: center; vertical-align: middle;">
+                                                            <small>
+                                                              {{
+                                                                Number(prices.price).toLocaleString(
+                                                                  "es-PE",
+                                                                  {
+                                                                    style: "currency",
+                                                                    currency: "PEN"
+                                                                  }
+                                                                )
+                                                              }}
+                                                            </small>
+                                                          </td>
+                                                          <td style="text-align: center; vertical-align: middle;">
+                                                            <small>
+                                                              {{
+                                                                Number(prices.price * prices.count).toLocaleString(
+                                                                  "es-PE",
+                                                                  {
+                                                                    style: "currency",
+                                                                    currency: "PEN"
+                                                                  }
+                                                                )
+                                                              }}
+                                                            </small>
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
                                                     </table>
                                                 </div>
                                             </template>

@@ -1,15 +1,16 @@
+<!-- Crear Guia de Remisión  en Caja  -->
 <template>
     <el-dialog
         :visible="showDialog"
         @close="close"
-        title="Crear guia de remision"
+        title="Crear Guía de Remisión"
         @open="open"
-        width="80%"
+        width="70%"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         append-to-body
-    >
-    <br>
+        >
+        
         <dispatch-create
                 :parentId="parentId"
                 :parentTable="parentTable"

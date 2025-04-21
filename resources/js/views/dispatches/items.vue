@@ -1,3 +1,4 @@
+<!-- Agregar producto a la lista de productos de un despacho -->
 <template>
     <el-dialog
         :title="titleDialog"
@@ -16,11 +17,11 @@
                     >
                         <label class="control-label">
                             Producto
-                            <a
+                            <!-- <a
                                 href="#"
                                 @click.prevent="showDialogNewItem = true"
                                 >[+ Nuevo]</a
-                            >
+                            > -->
                         </label>
                         <el-select
                             v-model="form.item"
@@ -58,6 +59,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-6">
                     <div
                         class="form-group"
@@ -84,6 +86,8 @@
                         ></small>
                     </div>
                 </div>
+
+                <!-- Agregar Lote de producto -->
                 <template v-if="item">
                     <div
                         class="col-12 mt-2"
@@ -100,15 +104,29 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button icon="fas fa-times fa-lg" @click.prevent="close"
-                >Cerrar</el-button
-            >
-            <el-button
-                icon="fas fa-plus-circle fa-lg"
-                type="primary"
-                @click="clickAddItem"
-                >Agregar</el-button
-            >
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <!-- Cancelar -->
+                <el-button
+                    class="btn-cancel btn-cancel:hover"
+                    icon="fas fa-times fa-lg"
+                    @click.prevent="close"
+                >
+                    <span>Cancelar</span>
+                </el-button>
+
+                <el-button
+                    class="btn-save btn-save:hover"
+                    icon="fas fa-plus-circle fa-lg"
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                    @click="clickAddItem"
+                >
+                    <span>Guardar</span>
+                </el-button>
+            </div>
+
+            
         </span>
 
         <item-form

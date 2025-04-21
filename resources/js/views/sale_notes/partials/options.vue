@@ -6,7 +6,7 @@
             @open="create"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
-            :show-close="false"
+            :show-close="true"
         >
             <template v-if="configuration.print_direct == false">
                 <div class="row">

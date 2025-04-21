@@ -2,10 +2,13 @@
   <el-dialog
     append-to-body
     v-loading="loading"
-    title="Enviar documento"
-    width="30%"
+    title="Enviar CPE"
+    width="40%"
     :visible="showDialog"
     @open="open"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="true"
   >
     <template v-slot:title>
       <div class="d-flex align-items-center">
@@ -15,34 +18,55 @@
     </template>
     <div class>
       <div class="row d-flex align-items-center">
-        <div class="col-8">
-          <br />
-          <el-input
+        
+        <div class="col-6">
+        
+            <el-input
             v-model="number"
             placeholder="Ingresar número de WhatsApp"
-            type="number"
+            type="text"
             maxlength="9"
             @input="onNumberInput"
-          ></el-input>
+            ></el-input>
         </div>
-        <div class="col-4">
+        <div class="col-6">
           <el-checkbox
             :disabled="
-                            documentTypeId == '80' || documentTypeId == 'COT'
-                        "
+                documentTypeId == '80' || documentTypeId == 'COT'
+            "
             v-model="withXml"
+            style="color: #073f68;"
           >Adjuntar XML</el-checkbox>
         </div>
       </div>
-      <div class="d-flex justify-content-end p-2">
-        <el-button @click="close">
-          <i class="fas fa-times fa-lg"></i>
-          Cerrar
-        </el-button>
+
+      <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+          <!-- Cancelar -->
+          <el-button
+              class="btn-cancel btn-cancel:hover"
+              icon="fas fa-times fa-lg"
+              @click="close"
+          >
+              <span>Cancelar</span>
+          </el-button>
+
+          <el-button
+              class="btn-save btn-save:hover"
+              icon="fas fa-paper-plane fa-lg"
+              type="primary"
+              native-type="submit"
+              :loading="loading_submit"
+              @click="sendFiles"
+          >
+              Enviar
+          </el-button>
+      </div>
+      <!-- <div class="d-flex justify-content-end p-2">
+        <
         <el-button @click="sendFiles" type="primary">
           <i class="fas fa-save fa-lg"></i> Enviar
         </el-button>
-      </div>
+      </div> -->
     </div>
   </el-dialog>
 </template>

@@ -4,79 +4,164 @@
     append-to-body
     @close="close"
     @open="open"
-    width="80%"
+    width="85%"
     v-loading="loading"
-    title="Comprobantes Boletas y Facturas"
+    title="Comprobantes"
+    :close-on-click-modal="false"
+    :show-close="false"
   >
-    <div class>
+    <div class="data-table-visible-columns">
+      <div class="d-flex align-items-center">
+        <el-button
+            v-if="activeName == 'saleNotes'"
+            type="button"
+            class="btn_buscar"
+            style="margin-right: 5px; font-size: 12px; padding: 5px 10px;"
+            href="javascript:void(0)"
+            @click.prevent="onOpenModalGenerateCPE"
+        >
+            <i
+              class="fas fa-exchange-alt fa-sm icon-style"
+              title="Convertir documentos"
+            ></i>
+            CPE -A->> NV
+        </el-button>
+        
+        <el-button
+          v-if="config.health_network && establishment.is_product"
+          type="button"
+          class="btn_buscar"
+          style="margin-right: 5px;"
+          href="javascript:void(0)"
+          @click.prevent="clickDocumentSalud()"
+        >
+          <i class="icofont-plus-circle"></i>
+          Documentos Farmacia
+        </el-button>
+
+        <el-button
+          type="danger"
+          icon="el-icon-close"
+          circle
+          style="margin-left: auto; color: white; background-color: red; border-color: red;"
+          @click="close"
+        ></el-button>
+        
+      </div>
+    </div>
+
       <div class>
-        <br />
-        <div class="d-flex">
-          <div class="col-3 p-1 col-md-3">
-            <el-select v-model="typeSearch">
-              <el-option value="document" label="N° documento"></el-option>
-              <el-option value="client" label="Cliente"></el-option>
-              <el-option value="date" label="Fecha"></el-option>
+        <div class="row mb-3" style="margin-top: 0; margin-bottom: 0;">
+          <!-- Left Column (70%) -->
+          <div class="col-12 col-md-7 d-flex align-items-stretch">
+            <div class="card p-3 w-100">
+              <div class="row">
+          <div class="col-12 col-md-4 mb-2 mb-md-0">
+            <label for="typeSearch">Filtro</label>
+            <el-select id="typeSearch" v-model="typeSearch" class="w-100">
+              <el-option value="document" label="N° Documento (CPE)"></el-option>
+              <el-option value="client" label="Nombre de Cliente/Empresa"></el-option>
+              <el-option value="date" label="Fecha de Emisión CPE"></el-option>
             </el-select>
           </div>
-          <div class="col-3 p-1 col-md-3">
-            <el-input @input="getRecordsInput" v-if="typeSearch != 'date'" v-model="value"></el-input>
+
+          <div class="col-12 col-md-8">
+            <label for="argumentInput" class="form-label fw-bold">
+              Argumento <span class="text-muted">(DNI/RUC - Fecha - Cliente)</span>
+            </label>
+            <el-input
+              id="argumentInput"
+              v-if="typeSearch != 'date'"
+              v-model="value"
+              @input="getRecordsInput"
+              placeholder="Ingrese el argumento"
+              class="text-muted w-100"
+              clearable
+            ></el-input>
             <el-date-picker
-              value-format="yyyy-MM-dd"
-              @change="getRecordsInput"
               v-else
               v-model="value"
+              @change="getRecordsInput"
+              value-format="yyyy-MM-dd"
+              placeholder="Seleccione una fecha"
+              class="w-100"
+              clearable
             ></el-date-picker>
           </div>
-          <div class="col-3 p-1 col-md-3 text-center" v-if="activeName == 'documents'">
-            <el-checkbox v-model="remain" @change="getRecordsInput">Saldos</el-checkbox>
+              </div>
+            </div>
           </div>
-          <div class="col-3 p-1 col-md-3">
-            <span class="p-1">
-              Ultimo documento emitido:
-              {{
-              lastDocument
-              ? lastDocument.numberPrint
-              : "No se encontró"
-              }}
-            </span>
-            <el-button
-              class="btn btn-primary"
-              @click="
-                            printData(
-                                lastDocument.external_id,
-                                lastDocument.document_type_id
-                            )
-                        "
-            >
-              <i class="fas fa-print"></i>
-            </el-button>
-          </div>
+
+          <!-- Right Column (30%) -->
+            <div class="col-12 col-md-5 d-flex align-items-stretch">
+              <div class="card p-3 w-100">
+                <div class="row">
+                  <!-- Saldos Pendientes -->
+                  <div class="col-4">
+                  <div>
+                    <div class="col-12">
+                    <div class="text-center" v-if="activeName == 'documents'">
+                      <el-checkbox 
+                      v-model="remain" 
+                      @change="getRecordsInput" 
+                      :style="{ color: remain ? '#ffbf00 !important' : '' }"
+                      >
+                      Saldos
+                      <i 
+                        class="fas fa-exclamation-circle" 
+                        style="color: red;" 
+                        title="Saldos pendientes de cobro"
+                      ></i>
+                      </el-checkbox>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  <!-- Ultimo CPE Emitido -->
+                  <div class="col-5 d-flex justify-content-end">
+                  <div class="col-12 d-flex justify-content-end">
+                    <div class="d-flex flex-column align-items-end">
+                    <span class="p-1 text-truncate w-100 text-end">
+                      {{
+                      lastDocument
+                      ? lastDocument.numberPrint
+                      : "No se encontró"
+                      }}
+                      <i 
+                        class="fas fa-info-circle" 
+                        style="color: #007bff;" 
+                        title="Último Comprobante Emitido para este USUARIO/CAJERO"
+                      ></i>
+                    </span>
+                    </div>
+                  </div>
+                  </div>
+
+                  <!-- Boton de Imprimir -->
+                  <div class="col-3 d-flex justify-content-center">
+                  <div class="col-12 text-center">
+                    <el-button
+                    type="primary"
+                    @click="
+                      printData(
+                      lastDocument.external_id,
+                      lastDocument.document_type_id
+                      )
+                    "
+                    >
+                    <i class="fas fa-print"></i>
+                    </el-button>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
-        <div class="mt-1 d-flex align-items-center justify-content-between">
-          <div v-if="config.health_network && establishment.is_product">
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-              @click.prevent="clickDocumentSalud()"
-            >
-              <i class="icofont-plus-circle"></i>
-              <span>Documentos farmacia</span>
-            </button>
-          </div>
-          <div>
-            <button
-              v-if="activeName == 'saleNotes'"
-              @click.prevent="onOpenModalGenerateCPE"
-              type="button"
-              class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-            >
-              <span>Generar comprobante desde múltiples Notas</span>
-            </button>
-          </div>
-        </div>
-        <div>
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+
+        
+            <el-tabs v-model="activeName" @tab-click="handleClick" style="padding-bottom: 0;">
+            <!-- Notas de Venta -->
             <el-tab-pane label="Notas de venta" name="saleNotes" class="fw-bold dark-label">
               <document-print-detail
                 :configuration="config"
@@ -90,11 +175,8 @@
                 :establishment.sync="establishment"
               ></document-print-detail>
             </el-tab-pane>
-            <el-tab-pane
-              v-if="company.soap_type_id != '03'"
-              label="Facturas - Boletas"
-              name="documents"
-            >
+            <!-- Boletas Facturas -->
+            <el-tab-pane v-if="company.soap_type_id != '03'" label="Facturas - Boletas: CPE" name="documents">
               <document-print-detail
                 :configuration="config"
                 :sender="sender"
@@ -107,6 +189,7 @@
                 :establishment.sync="establishment"
               ></document-print-detail>
             </el-tab-pane>
+            <!-- Cotizaciones -->
             <el-tab-pane v-if="config.quotation" label="Cotizaciones" name="quotations">
               <document-print-detail
                 @sendOrdens="sendOrdens"
@@ -125,7 +208,7 @@
             </el-tab-pane>
             <iframe ref="pdfFrame" style="display: none;"></iframe>
           </el-tabs>
-        </div>
+        
         <modal-generate-cpe
           :show.sync="showModalGenerateCPE"
           @sendItems="sendItems"
@@ -133,7 +216,7 @@
         ></modal-generate-cpe>
         <document-salud-modal :showDialog.sync="showDialogDocumentSalud"></document-salud-modal>
       </div>
-    </div>
+  
   </el-dialog>
 </template>
 <style>

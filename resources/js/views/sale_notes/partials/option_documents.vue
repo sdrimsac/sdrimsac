@@ -1,223 +1,298 @@
+<!-- Generar un CPE a partir de Una Nota de Venta en CAJA -->
 <template>
     <div>
         <el-dialog
             :title="titleDialog"
             :visible="showDialog"
             @open="create"
-            width="50%"
+            width="80%"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             @close="clickClose"
-            :show-close="false"
+            :show-close="true"
             append-to-body
-        >
+            >   
             <div class="row" v-loading="loading_documents">
-                <div class="col-lg-8">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.document_type_id }"
-                    >
-                        <label class="control-label">Tipo comprobante</label>
-                        <el-select
-                            v-model="document.document_type_id"
-                            @change="changeDocumentType"
-                            popper-class="el-select-document_type"
-                            dusk="document_type_id"
-                            class="border-left rounded-left border-info"
-                        >
-                            <el-option
-                                v-for="option in document_types"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
-                        </el-select>
-                        <small
-                            class="text-danger"
-                            v-if="errors.document_type_id"
-                            v-text="errors.document_type_id[0]"
-                        ></small>
-                        <!-- <el-checkbox  v-model="generate_dispatch">Generar Guía Remisión</el-checkbox> -->
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.series_id }"
-                    >
-                        <label class="control-label">Serie</label>
-                        <el-select v-model="document.series_id">
-                            <el-option
-                                v-for="option in series"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.number"
-                            ></el-option>
-                        </el-select>
-                        <small
-                            class="text-danger"
-                            v-if="errors.series_id"
-                            v-text="errors.series_id[0]"
-                        ></small>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.document_type_id }"
-                    >
-                        <label class="control-label"
-                            >Cliente
-                            <a
-                                href="#"
-                                class="text-primary"
-                                @click.prevent="showDialogNewPerson = true"
-                                >[+ Nuevo]</a
-                            >
-                        </label>
-                        <el-select
-                            ref="cliente"
-                            v-model="document.customer_id"
-                            filterable
-                            remote
-                            class="border-left rounded-left border-info"
-                            popper-class="el-select-customers"
-                            dusk="customer_id"
-                            placeholder="Escriba el nombre o número de documento del cliente"
-                            :remote-method="searchRemoteCustomers"
-                            @keyup.enter.native="keyupCustomer"
-                            :loading="loading_search"
-                        >
-                            <el-option
-                                v-for="option in customers"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.name"
-                            ></el-option>
-                        </el-select>
-
-                        <small
-                            class="text-danger"
-                            v-if="errors.document_type_id"
-                            v-text="errors.document_type_id[0]"
-                        ></small>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.operation_type_id }"
-                    >
-                        <label class="control-label">Tipo Operación </label>
-                        <el-select
-                            v-model="document.operation_type_id"
-                            @change="changeOperationType"
-                        >
-                            <el-option
-                                v-for="option in operation_types"
-                                :key="option.id"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
-                        </el-select>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.operation_type_id"
-                            v-text="errors.operation_type_id[0]"
-                        ></small>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.operation_type_id }"
-                    >
-                        <label class="control-label">Fecha </label>
-                        <el-input
-                            v-model="document.date_of_issue"
-                            @change="changeOperationType"
-                            type="date"
-                        >
-                        </el-input>
-                    </div>
-                </div>
-                <div class="col-lg-12" v-if="document.items.length > 0">
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <h6>Detalle</h6>
-                            <div class="table-responsive">
-                                <table class="table" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Cantidad</th>
-                                            <th>producto</th>
-                                            <th>Precio</th>
-                                            <th>Importe</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(row,
-                                            index) in document.items"
-                                            :key="index"
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Cliente -->
+                                    <div class="col-lg-12">
+                                        <div
+                                            class="form-group"
+                                            :class="{ 'has-danger': errors.document_type_id }"
                                         >
-                                            <td>
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-sm btn-danger"
-                                                    @click.prevent="
-                                                        clickRemoveItem(index)
-                                                    "
+                                            <label class="control-label"
+                                                ><i class="el-icon-user"></i> Cliente/Empresa
+                                                <a
+                                                    href="#"
+                                                    class="text-primary"
+                                                    @click.prevent="showDialogNewPerson = true"
+                                                    >[+ Nuevo]</a
                                                 >
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </td>
-                                            <td>{{ row.quantity }}</td>
-                                            <td>
-                                                {{ row.item.description }}
-                                                <br /><small>{{
-                                                    row.affectation_igv_type
-                                                        .description
-                                                }}</small>
-                                            </td>
-                                            <td class="text-center">
-                                                {{ row.item.sale_unit_price }}
-                                            </td>
-                                            <td class="text-end">
-                                                {{
-                                                    (
-                                                        row.quantity *
-                                                        row.item.sale_unit_price
-                                                    ).toFixed(2)
-                                                }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <tr></tr>
-                                </table>
+                                            </label>
+                                            <el-select
+                                                ref="cliente"
+                                                v-model="document.customer_id"
+                                                filterable
+                                                remote
+                                                class="border-left rounded-left border-info"
+                                                popper-class="el-select-customers"
+                                                dusk="customer_id"
+                                                placeholder="Escriba el nombre o número de documento del cliente"
+                                                :remote-method="searchRemoteCustomers"
+                                                @keyup.enter.native="keyupCustomer"
+                                                :loading="loading_search"
+                                            >
+                                                <el-option
+                                                    v-for="option in customers"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="option.name"
+                                                ></el-option>
+                                            </el-select>
+
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.document_type_id"
+                                                v-text="errors.document_type_id[0]"
+                                            ></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label">
+                                                            <i class="el-icon-document"></i> Observaciones
+                                                        </label>
+                                                        <el-input
+                                                            type="textarea"
+                                                            :autosize="{ minRows: 2, maxRows: 2 }"
+                                                            v-model="document.additional_information"
+                                                        >
+                                                            <i slot="prefix" class="el-icon-edit-outline"></i>
+                                                        </el-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <!-- Tipode de Operacion -->
+                                                <div class="col-lg-12">
+                                                    <div
+                                                        class="form-group"
+                                                        :class="{ 'has-danger': errors.operation_type_id }"
+                                                    >
+                                                        <label class="control-label">Tipo Operación </label>
+                                                        <el-select
+                                                            v-model="document.operation_type_id"
+                                                            @change="changeOperationType"
+                                                        >
+                                                            <el-option
+                                                                v-for="option in operation_types"
+                                                                :key="option.id"
+                                                                :value="option.id"
+                                                                :label="option.description"
+                                                            ></el-option>
+                                                        </el-select>
+                                                        <small
+                                                            class="form-control-feedback"
+                                                            v-if="errors.operation_type_id"
+                                                            v-text="errors.operation_type_id[0]"
+                                                        ></small>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Tipo de Comprobante -->
+                                    <div class="col-lg-12">
+                                        <div
+                                            class="form-group"
+                                            :class="{ 'has-danger': errors.document_type_id }"
+                                            >
+                                            <label class="control-label">Tipo de Comprobante</label>
+                                            <el-select
+                                                v-model="document.document_type_id"
+                                                @change="changeDocumentType"
+                                                popper-class="el-select-document_type"
+                                                dusk="document_type_id"
+                                                class="border-left rounded-left border-info"
+                                            >
+                                                <el-option
+                                                    v-for="option in document_types"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="option.description"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.document_type_id"
+                                                v-text="errors.document_type_id[0]"
+                                            ></small>
+                                            <el-checkbox  v-model="generate_dispatch">Generar Guía Remisión</el-checkbox>
+                                        </div>
+                                    </div>
+                                    <!-- serie del CPE  y Fecha de Emisión-->
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div
+                                                    class="form-group"
+                                                    :class="{ 'has-danger': errors.series_id }"
+                                                >
+                                                    <label class="control-label">Serie</label>
+                                                    <el-select v-model="document.series_id">
+                                                        <el-option
+                                                            v-for="option in series"
+                                                            :key="option.id"
+                                                            :value="option.id"
+                                                            :label="option.number"
+                                                        ></el-option>
+                                                    </el-select>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="errors.series_id"
+                                                        v-text="errors.series_id[0]"
+                                                    ></small>
+                                                </div>
+                                            </div>
+
+                                            <!-- Fecha de Emisión -->
+                                            <div class="col-lg-6">
+                                                <div
+                                                    class="form-group"
+                                                    :class="{ 'has-danger': errors.operation_type_id }"
+                                                >
+                                                    <label class="control-label">Fecha </label>
+                                                    <el-input
+                                                        v-model="document.date_of_issue"
+                                                        type="date"
+                                                        disabled
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12">
-                    <div class="form-group">
-                        <label class="control-label">Observaciones</label>
-                        <el-input
-                            type="textarea"
-                            autosize
-                            v-model="document.additional_information"
-                        >
-                            <i slot="prefix" class="el-icon-edit-outline"></i
-                        ></el-input>
+
+                <div class="col-lg-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="text-success font-weight-bold mb-0">Detalle</h6>
+                                <el-button
+                                    class="submit"
+                                    type="success"
+                                    size="large"
+                                    @click="submit"
+                                    :loading="loading_submit"
+                                    v-if="flag_generate"
+                                    style="border-radius: 8px;"
+                                >
+                                    <i class="el-icon-document"></i> Generar CPE
+                                </el-button>
+                            </div>
+                            <div class="col-lg-12" v-if="document.items.length > 0">
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table" width="100%">
+                                                <thead style="background-color: #073f68; color: white;">
+                                                    <tr>
+                                                        <th class="text-white">#</th>
+                                                        <th class="text-white">Cantidad</th>
+                                                        <th class="text-white">Producto</th>
+                                                        <th class="text-white">Precio</th>
+                                                        <th class="text-white">Importe</th>
+                                                        <th class="text-white">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr
+                                                        v-for="(row, index) in document.items"
+                                                        :key="index"
+                                                    >
+                                                        <td>{{ index + 1 }}</td>
+                                                        
+                                                        <td>{{ row.quantity }}</td>
+                                                        <td>
+                                                            {{ row.item.description }}
+                                                            <br /><small>{{
+                                                                row.affectation_igv_type
+                                                                    .description
+                                                            }}</small>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ parseFloat(row.item.sale_unit_price).toFixed(2) }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{
+                                                                
+                                                                    row.quantity *
+                                                                    row.item.sale_unit_price
+                                                                
+                                                            }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-sm btn-danger"
+                                                                @click.prevent="
+                                                                    clickRemoveItem(index)
+                                                                "
+                                                            >
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tr></tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <h5 class="text-success font-weight-bold">
+                                            Total Importe: S/ {{
+                                                document.items.reduce((total, row) => {
+                                                    return total + (row.quantity * row.item.sale_unit_price);
+                                                }, 0).toFixed(2)
+                                            }}
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
-                <div class="col-lg-8 mt-3">
+                
+                <!-- <div class="col-lg-8 mt-3">
                     <div
                         class="form-group"
                         :class="{ 'has-danger': errors.dipatch_id }"
                     >
-                        <!-- <label class="control-label">Tipo comprobante</label> -->
+                        
                         <el-checkbox v-model="generate_dispatch"
                             >Generar Guía Remisión</el-checkbox
                         >
@@ -241,9 +316,9 @@
                             v-text="errors.dipatch_id[0]"
                         ></small>
                     </div>
-                </div>
+                </div> -->
             </div>
-            <div style="text-align: right;">
+            <!-- <div style="text-align: right;">
                 <el-button @click="clickClose" size="large" type="danger"
                     >Cancelar</el-button
                 >
@@ -257,8 +332,8 @@
                     style="border-radius: 8px;"
                     >Generar</el-button
                 >
-            </div>
-            <br>
+            </div> -->
+            
             <document-options
                 :showDialog.sync="showDialogDocumentOptions"
                 :recordId="documentNewId"
@@ -769,7 +844,7 @@ export default {
                     this.validateIdentityDocumentType();
                     this.assignDocument();
                     this.titleDialog =
-                        "Nota de venta registrada: " + this.form.identifier;
+                        "Nota de Venta Registrada:   " + this.form.identifier;
                     this.searchRemoteCustomers(
                         response.data.data.sale_note.customer.name
                     );

@@ -1,9 +1,14 @@
+<!-- Padre de Caja  -->
 <template>
     <div
         style="position: relative"
         v-loading.fullscreen="loading"
         element-loading-text="Espere..."
     >
+    <!-- <div class="container-fluid">
+        <div class="card-body bg-primary rounded">
+        </div>
+    </div> -->
         <div class="row" v-if="limitAmount">
             <div class="col-12">
                 <div :class="`alert alert-${limitAmount.color}`">

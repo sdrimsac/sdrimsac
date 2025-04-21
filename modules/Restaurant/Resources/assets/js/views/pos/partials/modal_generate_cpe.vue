@@ -2,150 +2,164 @@
     <div>
         <el-dialog
             append-to-body
-            title="Generar comprobante desde múltiples notas"
+            title="Generar CPE desde Múltiples Notas de Venta"
             :visible="show"
             @open="onOpened"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             @close="onClose"
+            width="80%"
         >
-            <div class="row mt-2">
-                <!-- <div class="col-2">
-                    <el-select
-                        v-model="filter.type"
-                        @click="onFetchClients"
-                        :disabled="loading"
-                    >
-                        <el-option
-                            key="document"
-                            value="document"
-                            label="# de documento"
-                        ></el-option>
-                        <el-option
-                            key="name"
-                            value="name"
-                            label="Nombres"
-                        ></el-option>
-                    </el-select>
-                </div> -->
-                <div  class="col-3 form-group">
-                    <el-select
-                        v-model="form.client_id"
-                        filterable
-                        remote
-                        reserve-keyword
-                        placeholder="Nombre del cliente"
-                        :remote-method="onFindClients"
-                        :loading="loading"
-                    >
-                        <el-option
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <div class="form-group mr-3" style="flex: 3; margin-right: 15px;">
+                        Cliente/Empresa
+                        <el-select
+                            v-model="form.client_id"
+                            filterable
+                            remote
+                            reserve-keyword
+                            placeholder="Ingreser el nombre del cliente"
+                            @focus="onFetchClients"
+                            @clear="onFetchClients"
+                            :remote-method="onFindClients"
+                            :loading="loading"
+                        >
+                            <el-option
                             v-for="item in clients"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id"
-                        >
-                        </el-option>
-                    </el-select>
-                </div>
-                <div  class="col-2 form-group">
-
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="form-group mr-3" style="flex: 2; margin-right: 15px;">
+                        # Nota de Venta
                         <el-input
-                            placeholder="N° de nota"
+                            
                             v-model="form.number"
                             :disabled="loading"
                         ></el-input>
-                </div>
-                <div class="col-3 form-group">
-                    <el-date-picker
-                        v-model="form.date_of_issue"
-                        type="date"
-                        style="width: 100%"
-                        placeholder="Inicio Fecha de emisión"
-                        value-format="yyyy-MM-dd"
-                    >
-                    </el-date-picker>
-                </div>
-                <div class="col-3 form-group">
-                    <el-date-picker
-                        v-model="form.date_of_due"
-                        type="date"
-                        style="width: 100%"
-                        placeholder="Final Fecha de emisión"
-                        value-format="yyyy-MM-dd"
-                    >
-                    </el-date-picker>
-                </div>
-                <div class="col-2 form-group">
-                    <el-button
-                        class="btn-block"
-                        @click="onFindNotes"
-                        type="primary"
-                    >
-                        <i class="fa fa-search"></i>
-                    </el-button>
+                    </div>
+                    <div class="form-group mr-3" style="flex: 2; margin-right: 15px;">
+                        Fecha Inicio
+                        <el-date-picker
+                            v-model="form.date_of_issue"
+                            type="date"
+                            style="width: 100%"
+                            
+                            value-format="yyyy-MM-dd"
+                        ></el-date-picker>
+                    </div>
+                    <div class="form-group mr-3" style="flex: 2; margin-right: 15px;">
+                        Fecha Final
+                        <el-date-picker
+                            v-model="form.date_of_due"
+                            type="date"
+                            style="width: 100%"
+                            
+                            value-format="yyyy-MM-dd"
+                        ></el-date-picker>
+                    </div>
+                    <div class="form-group">
+                        <el-button
+                            @click="onFindNotes"
+                            class="btn btn-buscar"
+                            type="primary"
+                        >
+                            <i class="fa fa-search"></i>
+                        </el-button>
+                    </div>
                 </div>
             </div>
-            <div class="table-responsive pt-5" v-if="notes">
-                <span
-                    >Seleccione una o más notas de venta para poder
-                    continuar</span
-                >
+        </div>
+        <br />
+            
+        <div class="card">
+            <div v-if="!notes.length" class="card-header">
                 <div
-                    v-if="errors.notes_id"
-                    class="alert alert-warning"
-                    role="alert"
+                    style="text-align: center; font-size: 18px; font-weight: bold; color: #ffbf00; animation: blink 1s step-start infinite;"
                 >
-                    {{ errors.notes_id[0] }}
-                </div>
-                <table class="table table-hover table-stripe">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Nota</th>
-                            <th>Fecha de emisión</th>
-                            <th>Monto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="dis in notes" :key="dis.id">
-                            <td>
-                                <el-switch
-                                    v-model="dis.selected"
-                                    @change="onFillSelectedNotes"
-                                ></el-switch>
-                            </td>
-                            <td>
-                                <span>{{ dis.series }}</span
-                                >-
-                                <span>{{ dis.number }}</span>
-                            </td>
-                            <td>{{ dis.date_of_issue }}</td>
-                            <td>{{ dis.total }}</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td>Total</td>
-                            <td>{{ this.sum_total }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="text-center">
-                    <el-button
-                        v-if="form.selecteds.length > 0"
-                        type="primary"
-                        :disabled="loading"
-                        @click="onFetchNoteItems"
-                        >Generar CPE</el-button
-                    >
-                    <el-button :disabled="loading" @click="onClose"
-                        >Cerrar</el-button
-                    >
+                    Seleccione una o más notas de venta para poder continuar
                 </div>
             </div>
+            <div class="card-body">
+                <div class="table-responsive" v-if="notes">
+                    <div
+                        v-if="errors.notes_id"
+                        class="alert alert-warning"
+                        role="alert"
+                        style="margin-top: 10px; margin-bottom: 10px;"
+                    >
+                        {{ errors.notes_id[0] }}
+                    </div>
+
+                    <table
+                        class="table table-hover table-striped table-bordered table-responsive"
+                        style="width: 100%; white-space: nowrap; font-size: 14px;"
+                    >
+                        <thead>
+                            <tr class="bg-primary text-center">
+                                <th class="text-white"></th>
+                                <th class="text-white">Nota</th>
+                                <th class="text-white">Fecha de emisión</th>
+                                <th class="text-white">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="dis in notes" :key="dis.id">
+                                <td>
+                                    <el-switch
+                                        v-model="dis.selected"
+                                        @change="onFillSelectedNotes"
+                                    ></el-switch>
+                                </td>
+                                <td>
+                                    <span>{{ dis.series }}</span>-
+                                    <span>{{ dis.number }}</span>
+                                </td>
+                                <td>{{ dis.date_of_issue }}</td>
+                                <td>{{ dis.total }}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Total</td>
+                                <td>{{ this.sum_total }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center">
+                        <el-button
+                            v-if="form.selecteds.length > 0"
+                            type="primary"
+                            :disabled="loading"
+                            @click="onFetchNoteItems"
+                        >
+                            Generar CPE
+                        </el-button>
+                        <el-button :disabled="loading" @click="onClose">
+                            Cerrar
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+            
         </el-dialog>
     </div>
 </template>
+
+<style>
+@keyframes blink {
+50% {
+    opacity: 0;
+}
+}
+</style>
 
 <script>
 import moment from "moment";
@@ -276,25 +290,32 @@ export default {
             this.loading = true;
             const params = this.form;
             this.$http
-                .get(`/sale-notes/list-by-client`, { params })
-                .then(response => {
-                    /* this.sum_total = response.data.sum_total; */
-                    this.notes = response.data.data.map(d => {
-                        d.selected = false;
-                        d.date_of_issue = moment(d.date_of_issue).format(
-                            "YYYY-MM-DD"
-                        );
-                        d.items = d.items.map(item => {
-                            return {
-                                id: item.id,
-                                item_id: item.item_id
-                            };
-                        });
-
-                        return d;
+            .get(`/sale-notes/list-by-client`, { params })
+            .then(response => {
+                if (response.data.data.length === 0) {
+                this.$swal.fire({
+                    icon: "warning",
+                    title: "Sin coincidencias",
+                    text: "No se encontraron coincidencias para los criterios de búsqueda.",
+                });
+                } else {
+                this.notes = response.data.data.map(d => {
+                    d.selected = false;
+                    d.date_of_issue = moment(d.date_of_issue).format(
+                    "YYYY-MM-DD"
+                    );
+                    d.items = d.items.map(item => {
+                    return {
+                        id: item.id,
+                        item_id: item.item_id
+                    };
                     });
-                })
-                .finally(() => (this.loading = false));
+
+                    return d;
+                });
+                }
+            })
+            .finally(() => (this.loading = false));
         },
         onFindClients(query) {
             this.filter.name = query;

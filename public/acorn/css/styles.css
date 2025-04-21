@@ -11282,7 +11282,7 @@ main > .container-xl {
 
 html[data-placement='horizontal'] main {
   padding-left: var(--main-spacing-horizontal);
-  padding-top: calc(var(--nav-size-slim) + calc(var(--main-spacing-horizontal) / 2)); 
+  padding-top: calc(var(--nav-size-slim) + calc(var(--main-spacing-horizontal) / 6)); 
 }
 
 html[data-placement='vertical'][data-dimension='mobile'] main {
@@ -13515,7 +13515,52 @@ h5 {
   cursor: not-allowed;
 }
 
+/* Estilos generales para los botones */
+.btn_generar {
+  background-color: #40e0d0 !important; /* Turquesa como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 0.625rem !important; /* Tamaño de la fuente reducido a la mitad */
+  font-weight: bold !important;
+  padding: 5px 10px !important; /* Ajuste en el padding reducido a la mitad */
+  border-radius: 6px !important; /* Bordes redondeados */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.375rem !important; /* Espacio entre ícono y texto reducido a la mitad */
+  width: auto !important; /* Asegura que el botón se ajuste */
+  height: 22.5px !important; /* Altura del botón reducida a la mitad */
+}
 
+/* Hover para los botones */
+.btn_generar:hover {
+  background: linear-gradient(135deg, rgba(64, 224, 208, 0.85), rgba(32, 178, 170, 0.85)) !important; /* Gradiente con turquesa */
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+}
+
+/* Estilo para el ícono dentro del botón */
+.btn_generar i {
+  color: white !important; /* Cambiar color del ícono a blanco */
+  font-size: 0.75rem !important; /* Ajustar el tamaño del ícono reducido a la mitad */
+}
+
+/* Botón en estado activo */
+.btn_generar:active {
+  transform: scale(1); /* Tamaño normal cuando se hace clic */
+  box-shadow: 0 1px 2.5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Botón deshabilitado */
+.btn_generar[disabled] {
+  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
 
 /* Estilos generales para los botones */
 .btn_buscar {
@@ -13563,8 +13608,6 @@ h5 {
   margin: 10px !important; /* Margen para separar de otros elementos */
 }
 
-
-
 /* Botón en estado activo */
 .btn_buscar:active {
   transform: scale(1); /* Tamaño normal cuando se hace clic */
@@ -13577,9 +13620,6 @@ h5 {
   color: #ffe400; /* Color llamativo para el ícono */
   transition: transform 0.3s ease, color 0.3s ease; /* Transición de movimiento y color */
 }
-
-
-
 
 /* Hover para el ícono */
 .btn_buscar:hover .icon-style {
@@ -13603,7 +13643,146 @@ h5 {
   cursor: not-allowed;
 }
 
+/* Estilos generales para los botones  PDF*/
+.btn_pdf {
+  background-color: #dc3545 !important; /* Rojo como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important; /* Tamaño de la fuente más uniforme */
+  font-weight: bold !important;
+  padding: 10px 20px !important; /* Ajuste en el padding para reducir el tamaño */
+  border-radius: 12px !important; /* Bordes redondeados */
+  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.75rem !important; /* Espacio entre ícono y texto */
+  width: auto !important; /* Asegura que el botón se ajuste */
+  height: 45px !important; /* Ajusta la altura del botón para que sea más pequeño */
+}
 
+/* Hover para los botones */
+.btn_pdf:hover {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.85), rgba(255, 99, 132, 0.85)) !important; /* Gradiente con rojo */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+}
+
+/* Estilo para el ícono dentro del botón */
+.btn_pdf i {
+  color: white !important; /* Cambiar color del ícono a blanco */
+  font-size: 1.5rem !important; /* Ajustar el tamaño del ícono */
+}
+
+/* Botón en estado activo */
+.btn_pdf:active {
+  transform: scale(1); /* Tamaño normal cuando se hace clic */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Botón deshabilitado */
+.btn_pdf[disabled] {
+  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Estilos generales para los botones */
+.btn_excel {
+  background-color: #006400 !important; /* Verde oscuro como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important; /* Tamaño de la fuente más uniforme */
+  font-weight: bold !important;
+  padding: 10px 20px !important; /* Ajuste en el padding para reducir el tamaño */
+  border-radius: 12px !important; /* Bordes redondeados */
+  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.75rem !important; /* Espacio entre ícono y texto */
+  width: auto !important; /* Asegura que el botón se ajuste */
+  height: 45px !important; /* Ajusta la altura del botón para que sea más pequeño */
+}
+
+/* Hover para los botones */
+.btn_excel:hover {
+  background: linear-gradient(135deg, rgba(0, 100, 0, 0.85), rgba(34, 139, 34, 0.85)) !important; /* Gradiente con verde oscuro */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+}
+
+/* Estilo para el ícono dentro del botón */
+.btn_excel i {
+  color: white !important; /* Cambiar color del ícono a blanco */
+  font-size: 1.5rem !important; /* Ajustar el tamaño del ícono */
+}
+
+/* Botón en estado activo */
+.btn_excel:active {
+  transform: scale(1); /* Tamaño normal cuando se hace clic */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Botón deshabilitado */
+.btn_excel[disabled] {
+  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Estilos generales para los botones de WhatsApp */
+.btn_whatsapp {
+  background-color: #25d366 !important; /* Verde WhatsApp */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important; /* Tamaño de la fuente */
+  font-weight: bold !important;
+  padding: 10px 20px !important; /* Espaciado interno */
+  border-radius: 12px !important; /* Bordes redondeados */
+  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra ligera */
+  transition: all 0.3s ease !important; /* Transición suave */
+  display: flex !important;
+  align-items: center !important; /* Centra verticalmente contenido */
+  justify-content: center !important; /* Centra horizontalmente contenido */
+  gap: 0.75rem !important; /* Espacio entre ícono y texto */
+  width: auto !important; /* Ajusta el ancho */
+  height: 45px !important; /* Altura del botón */
+}
+
+/* Hover para los botones */
+.btn_whatsapp:hover {
+  background: linear-gradient(135deg, rgba(36, 211, 102, 0.85), rgba(0, 128, 0, 0.85)) !important; /* Gradiente verde */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
+  transform: scale(1.05) !important; /* Efecto de agrandamiento */
+  border-color: rgba(255, 255, 255, 0.5) !important; /* Borde más visible */
+}
+
+/* Estilo para el ícono dentro del botón */
+.btn_whatsapp i {
+  color: white !important; /* Ícono blanco */
+  font-size: 1.5rem !important; /* Tamaño del ícono */
+}
+
+/* Botón en estado activo */
+.btn_whatsapp:active {
+  transform: scale(1); /* Tamaño normal al hacer clic */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+}
+
+/* Botón deshabilitado */
+.btn_whatsapp[disabled] {
+  background: #b3b3b3 !important; /* Gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
 
 
 /* Títulos de los inputs en negrita */
@@ -13754,3 +13933,4 @@ h5 {
   color:#000 !important;
   font-weight: bold !important;
 }
+

@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group" :class="{'has-danger': errors.description}">
-                            <label class="control-label">Descripción del motivo de anulación</label>
+                            <label class="control-label">Descripción del motivo de Anulación</label>
                             <el-input v-model="form.documents[0].description"  dusk="description"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                             <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
                         </div>

@@ -3,16 +3,26 @@
         @close="close"
         @open="open"
         append-to-body
-        width="40%"
-        title="Enviar reporte por whatsapp"
+        width="30%"
+        title="Enviar Reporte de Ganacias por WhatsApp"
         :visible="showWhatsappForm"
     >
         <div class="p-3" v-loading="loading" element-loading-text="Enviando..">
-            <label for="">Número</label>
-            <el-input v-model="number" style="width:100%"></el-input>
-            <div class="d-flex justify-content-end p-1">
-                <!-- <el-button @click="sendWhatsapp">Enviar</el-button> -->
-                <el-button @click="send">Enviar</el-button>
+            <div class="d-flex">
+            <div class="flex-grow-1 me-2" style="flex: 0 0 70%;">
+                <label for="" style="font-size: 1.2em;">Número de WhatsApp</label>
+                <el-input v-model="number" style="width:100%"></el-input>
+            </div>
+            <div class="d-flex align-items-end" style="flex: 0 0 30%;">
+                <el-button  @click="send" 
+                            style="width: 100%;"
+                            class="submit btn_whatsapp" 
+                            type="success"
+                    >
+                            <i class="icofont-brand-whatsapp"></i> 
+                            Enviar
+                </el-button>
+            </div>
             </div>
         </div>
     </el-dialog>
