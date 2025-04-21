@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <el-tabs v-model="activeTab" type="card">
+                <el-tabs v-model="activeTab" type="card" v-if="currentUser.id">
                     <el-tab-pane label="Horarios" name="schedules">
                         <schedule-list 
                             :user-id="currentUser.id"
@@ -117,9 +117,11 @@ export default {
     },
     methods: {
         async getCurrentUser() {
+            console.log('getCurrentUser');
             try {
                 const response = await this.$http.get('/caja/estilista/current-user');
                 this.currentUser = response.data;
+                console.log('currentUser', this.currentUser);
                 this.loadUserData();
             } catch (error) {
                 console.error('Error al obtener usuario actual:', error);

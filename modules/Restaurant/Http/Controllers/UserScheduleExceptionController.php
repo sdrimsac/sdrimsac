@@ -18,7 +18,7 @@ class UserScheduleExceptionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:tenant.users,id',
             'exception_date' => 'required|date',
             'is_working_day' => 'boolean',
             'start_time' => 'nullable|required_if:is_working_day,true|date_format:H:i',

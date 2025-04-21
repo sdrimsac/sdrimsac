@@ -79,6 +79,11 @@ Route::prefix('caja')->group(function () {
 
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
+
+    Route::prefix('estilista')->group(function () {
+        Route::get('appointment-comment/{uuid}', [UserScheduleAppointmentController::class, 'appointmentCommentIndex'])->name('estilista.appointment-comment');
+        Route::post('appointment-comment', [UserScheduleAppointmentController::class, 'appointmentCommentStore'])->name('estilista.appointment-comment.store');
+    });
     Route::middleware(['auth', 'locked.tenant'])->group(function () {
 
         Route::get('logoutget', 'RestaurantController@logout');

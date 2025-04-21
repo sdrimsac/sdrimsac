@@ -687,6 +687,11 @@ const app = new Vue({
                         "../../modules/Restaurant/Resources/assets/js/views/estilista/index.vue"
                     ),
 
+        "index-appointment-comment": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/estilista/index_appointment_comment.vue"
+            ),
+
 
         "tenant-series-configurations-index": () =>
             import(

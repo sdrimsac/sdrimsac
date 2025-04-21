@@ -9,12 +9,53 @@ use Modules\Restaurant\Models\UserScheduleAppointment;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Person;
 use Carbon\Carbon;
+use Modules\Restaurant\Models\AppointmentComment;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 
 class UserScheduleAppointmentController extends Controller
 {
+
+    public function appointmentCommentStore(Request $request)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+            'qualification' => 'required|integer|min:1|max:5'
+        ]);
+        $uuid = $request->uuid;
+        $appointment_comment = AppointmentComment::where('uuid', $uuid)->update([
+            'comment' => $request->comment,
+            'qualification' => $request->qualification,
+            'completed' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comentario creado con éxito',
+            'data' => $appointment_comment
+        ]);
+    }
+
+    public function appointmentCommentIndex($uuid)
+    {
+        $appointment_comment = AppointmentComment::where('uuid', $uuid)->first();
+        $user_schedule_appointment = UserScheduleAppointment::find($appointment_comment->user_schedule_appointments);
+        $user_name = $user_schedule_appointment->user->name;
+        $service_name = $user_schedule_appointment->service->description;
+        $appointment_date = $user_schedule_appointment->appointment_date->format('d/m/Y');
+        $appointment = [
+            'user_name' => $user_name,
+            'service_name' => $service_name,
+            'appointment_comment' => $appointment_comment,
+            'appointment_date' => $appointment_date,
+            'completed' => $appointment_comment->completed,
+            'uuid' => $uuid
+        ];
+
+        return view('restaurant::estilista.index_appointment_comment', compact('appointment'));
+    }
+
     public function index()
     {
         $users = User::where('has_schedule', true)->get();
