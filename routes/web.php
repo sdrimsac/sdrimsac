@@ -1110,6 +1110,7 @@ if ($hostname) {
                 Route::post('receta/upload', [App\Http\Controllers\Tenant\RecetaController::class, 'upload']);
                 Route::post('receta/visible_store', [App\Http\Controllers\Tenant\RecetaController::class, 'visibleStore']);
                 Route::get('receta/item/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'item_tables']);
+                Route::get('receta/receta-warehouse/{item}', [App\Http\Controllers\Tenant\RecetaController::class, 'Warehouses']);
 
                 //para el reporte de los platos vendidos
                 Route::get('foods', [App\Http\Controllers\Tenant\FoodsController::class, 'index'])->name('tenant.foods.index')->middleware('just.admin');

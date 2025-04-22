@@ -16,7 +16,6 @@
                             </li>
                         </ol>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -24,14 +23,20 @@
             <div class="card-header bg-primary">
                 <h4 class="my-0 text-white">
                     <i class="fas fa-boxes"></i>
-                    Listado De Platos Con Receta</h4>
+                    Listado De Platos Con Receta
+                </h4>
             </div>
             <div class="data-table-visible-columns">
-                            <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickCreate()">
-                                <i class="fas fa-plus-circle"></i>
-                                Nuevo
-                            </el-button>
-                    </div> 
+                <el-button
+                    type="primary"
+                    class=""
+                    href="javascript:void(0)"
+                    @click.prevent="clickCreate()"
+                >
+                    <i class="fas fa-plus-circle"></i>
+                    Nuevo
+                </el-button>
+            </div>
             <div class="card-body">
                 <data-table ref="datatable" :resource="resource">
                     <tr slot="heading" class="bg-primary">
@@ -42,7 +47,9 @@
                         <th class="text-white">Descripción</th>
                         <!-- <th class="text-white">Cód. SUNAT</th> -->
                         <!-- <th  class="text-left">Stock</th> -->
-                        <th class="text-white text-right">P.Unitario (Venta)</th>
+                        <th class="text-white text-right">
+                            P.Unitario (Venta)
+                        </th>
                         <th class="text-white text-center">Tiene Igv</th>
                         <th class="text-white text-right">Acciones</th>
                     </tr>
@@ -66,35 +73,60 @@
                             {{ row.has_igv_description }}
                         </td>
                         <td class="text-right">
-                            <template v-if=" typeUser === 'admin' || typeUser === 'superadmin'">
-                                <button class="btn p-0" 
-                                        type="button" 
-                                        data-bs-toggle="dropdown" 
-                                        aria-haspopup="true" 
-                                        aria-expanded="false">
-                                    <span   class="btn btn-primary dropdown-toggle" 
-                                            data-bs-toggle="tooltip" 
-                                            data-bs-placement="top"    
-                                            data-bs-delay="0" title="" 
-                                            data-bs-original-title="Item Count" 
-                                            aria-label="Item Count">Acciones
+                            <template
+                                v-if="
+                                    typeUser === 'admin' ||
+                                        typeUser === 'superadmin'
+                                "
+                            >
+                                <button
+                                    class="btn p-0"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <span
+                                        class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-delay="0"
+                                        title=""
+                                        data-bs-original-title="Item Count"
+                                        aria-label="Item Count"
+                                        >Acciones
                                     </span>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-end" style="">
-                                    <a  type="button" 
-                                        class="dropdown-item text-secondary" 
-                                        @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit"></i>
-                                         Editar
+                                <div
+                                    class="dropdown-menu dropdown-menu-end"
+                                    style=""
+                                >
+                                    <a
+                                        type="button"
+                                        class="dropdown-item text-secondary"
+                                        @click.prevent="clickCreate(row.id)"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                        Editar
                                     </a>
 
-                                    <a  type="button" 
-                                        class="dropdown-item text-danger" 
-                                        @click.prevent="clickDelete(row.id)"> <i class="fa fa-trash"></i> 
-                                         Eliminar
+                                    <a
+                                        type="button"
+                                        class="dropdown-item text-danger"
+                                        @click.prevent="clickDelete(row.id)"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                        Eliminar
                                     </a>
-                             
+                                    <a
+                                        type="button"
+                                        class="dropdown-item text-success"
+                                        @click.prevent="clickWarehouse(row.id)"
+                                    >
+                                        <!-- <i class="fa fa-trash"></i> -->
+                                        Receta en Todo los Almacenes
+                                    </a>
                                 </div>
-                               
                             </template>
                         </td>
                     </tr>
@@ -150,9 +182,7 @@ export default {
             warehousesDetail: []
         };
     },
-    created() {
-     
-    },
+    created() {},
     methods: {
         clickImportSetIndividual() {
             this.showImportSetIndividualDialog = true;
@@ -172,6 +202,28 @@ export default {
             this.destroy(`/${this.resource}/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")
             );
+        },
+        clickWarehouse(id) {
+            this.$http
+                .get(`/${this.resource}/receta-warehouse/${id}`)
+                .then(response => {
+                    if (response.status == 200) {
+                        this.$eventHub.$emit("reloadData");
+                        this.$notify({
+                            group: "foo",
+                            title: "Receta",
+                            text: response.data.message,
+                            type: "success"
+                        });
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Receta",
+                            text: response.data.message,
+                            type: "error"
+                        });
+                    }
+                });
         }
     }
 };

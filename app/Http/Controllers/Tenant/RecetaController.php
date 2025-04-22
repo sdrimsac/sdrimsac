@@ -62,24 +62,23 @@ class RecetaController extends Controller
     {
         return view('tenant.items.form');
     }
-    function create_internal_id(){
+    function create_internal_id()
+    {
         //buscar en items los que tengan la propiedad is_set en 1 y que su internal id empiece con pack#### osea pack seguido de 4 numeros
         $item = Item::where('is_set', 1)
-        ->where('internal_id', 'regexp', '^PLAT[0-9]{4}')
-        ->orderBy('id', 'desc')
-        ->first();
-        ;
-        if($item == null){
+            ->where('internal_id', 'regexp', '^PLAT[0-9]{4}')
+            ->orderBy('id', 'desc')
+            ->first();;
+        if ($item == null) {
             return "PLAT0001";
-        }else{
+        } else {
             $internal_id = $item->internal_id;
             $internal_id = substr($internal_id, 4);
             $internal_id = intval($internal_id);
             $internal_id++;
             $internal_id = str_pad($internal_id, 4, "0", STR_PAD_LEFT);
-            return "PLAT".$internal_id;
+            return "PLAT" . $internal_id;
         }
-    
     }
     public function tables()
     {
@@ -119,7 +118,16 @@ class RecetaController extends Controller
         return compact(
             'internal_id',
             'affectation_igv_type_id',
-            'warehouses','unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
+            'warehouses',
+            'unit_types',
+            'currency_types',
+            'attribute_types',
+            'areas',
+            'categories',
+            'system_isc_types',
+            'affectation_igv_types',
+            'individual_items'
+        );
     }
 
     public function record($id)
@@ -132,42 +140,40 @@ class RecetaController extends Controller
     {
         $warehouse_id = $request->warehouse_id;
         $input = $request->input;
-        
+
         $individual_items = Item::whereTypeUser()->whereNotIsSet()->whereIsActive();
-        if($input){
-            $individual_items = $individual_items->where(function($query) use($input){
+        if ($input) {
+            $individual_items = $individual_items->where(function ($query) use ($input) {
                 $query->where('description', 'like', "%{$input}%")
-                ->orWhere('internal_id', 'like', "%{$input}%");
+                    ->orWhere('internal_id', 'like', "%{$input}%");
             });
         }
-        if($warehouse_id){
-            $individual_items = $individual_items->whereHas('warehouses', function($query) use($warehouse_id){
+        if ($warehouse_id) {
+            $individual_items = $individual_items->whereHas('warehouses', function ($query) use ($warehouse_id) {
                 $query->where('warehouse_id', $warehouse_id);
             });
         }
         $individual_items =  $individual_items->get()
-        ->take(20)
-        ->transform(function ($row) {
-            $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
-            $unit_type_description = $row->unit_type->description;
-            return [
-                'id' => $row->id,
-                'full_description' => $full_description,
-                'internal_id' => $row->internal_id,
-                'description' => $row->description,
-                'sale_unit_price' => $row->sale_unit_price,
-                'unit_type_description' => $unit_type_description,
-            ];
-        });
+            ->take(20)
+            ->transform(function ($row) {
+                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
+                $unit_type_description = $row->unit_type->description;
+                return [
+                    'id' => $row->id,
+                    'full_description' => $full_description,
+                    'internal_id' => $row->internal_id,
+                    'description' => $row->description,
+                    'sale_unit_price' => $row->sale_unit_price,
+                    'unit_type_description' => $unit_type_description,
+                ];
+            });
 
         return compact('individual_items');
     }
 
     public function store(ItemRequest $request)
     {
-
         $id = $request->input('id');
-        //    dd($request->all());
         $record = DB::connection('tenant')->transaction(function () use ($request, $id) {
 
             $item = Item::firstOrNew(['id' => $id]);
@@ -175,7 +181,6 @@ class RecetaController extends Controller
             $item->fill($request->all());
 
             $temp_path = $request->input('temp_path');
-            $id = $request->input('id');
             $food = Food::firstOrNew(['item_id' => $id]);
             $food->fill($request->all());
             $food->price = $request->sale_unit_price;
@@ -183,7 +188,6 @@ class RecetaController extends Controller
             $food->code = $request->internal_id;
 
             if ($temp_path) {
-
                 $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR;
                 $file_name_old = $request->input('image');
                 $file_name_old_array = explode('.', $file_name_old);
@@ -198,13 +202,48 @@ class RecetaController extends Controller
                 $food->image = 'imagen-no-disponible.jpg';
             }
 
-
             $item->save();
-            $item_id =  $item->id;
+            $item_id = $item->id;
+
             if ($item_id != 0) {
                 $food->item_id = $item_id;
             }
             $food->save();
+
+            if ($request->has('warehouse_prices')) {
+                foreach ($request->warehouse_prices as $warehouse_price) {
+                    $exists = DB::connection('tenant')
+                        ->table('item_warehouse_prices')
+                        ->where('item_id', $item_id)
+                        ->where('warehouse_id', $warehouse_price['warehouse_id'])
+                        ->exists();
+
+                    if ($exists) {
+                        DB::connection('tenant')
+                            ->table('item_warehouse_prices')
+                            ->where('item_id', $item_id)
+                            ->where('warehouse_id', $warehouse_price['warehouse_id'])
+                            ->update(['price' => $warehouse_price['price']]);
+                    } else {
+                        DB::connection('tenant')
+                            ->table('item_warehouse_prices')
+                            ->insert([
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_price['warehouse_id'],
+                                'price' => $warehouse_price['price']
+                            ]);
+                    }
+
+                    ItemWarehouse::firstOrCreate(
+                        [
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_price['warehouse_id']
+                        ],
+                        ['stock' => 0]
+                    );
+                }
+            }
+
             $item->sets()->delete();
             foreach ($request->individual_items as $row) {
                 $item->sets()->create([
@@ -222,6 +261,53 @@ class RecetaController extends Controller
             'success' => true,
             'message' => ($id) ? 'Producto compuesto editado con éxito' : 'Producto compuesto registrado con éxito',
             'id' => $record->id
+        ];
+    }
+
+    public function Warehouses($id)
+    {
+        $item = Item::findOrFail($id);
+        $warehouses = Warehouse::all();
+
+        if ($warehouses->count() > 0) {
+            foreach ($warehouses as $warehouse) {
+                // Check both tables for existing records
+                $exists_warehouse = ItemWarehouse::where('item_id', $id)
+                    ->where('warehouse_id', $warehouse->id)
+                    ->exists();
+
+                $exists_price = DB::connection('tenant')
+                    ->table('item_warehouse_prices')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse->id)
+                    ->exists();
+
+                // Create records if they don't exist in either table
+                if (!$exists_warehouse) {
+                    ItemWarehouse::create([
+                        'item_id' => $id,
+                        'warehouse_id' => $warehouse->id,
+                        'stock' => 0,
+                    ]);
+                }
+
+                if (!$exists_price) {
+                    DB::connection('tenant')->table('item_warehouse_prices')->insert([
+                        'item_id' => $id,
+                        'warehouse_id' => $warehouse->id,
+                        'price' => $item->sale_unit_price,
+                    ]);
+                }
+            }
+        }
+        $item_warehouse = ItemWarehouse::where('item_id', $id)->get();
+        $item_warehouse->each(function ($row) use ($warehouses) {
+            $row->warehouse = $warehouses->where('id', $row->warehouse_id)->first();
+        });
+
+        return [
+            'success' => true,
+            'data' => $item_warehouse
         ];
     }
 
@@ -280,14 +366,14 @@ class RecetaController extends Controller
         ];
     }
 
-    public function set_item_check_stock($id,$quantity = 1)
+    public function set_item_check_stock($id, $quantity = 1)
     {
 
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $item_set = ItemSet::where('item_id', $id)->get();
         $message = "";
         $no_stock = false;
-        $item_set->each(function ($row) use (&$message,&$no_stock,$quantity,$establishment) {
+        $item_set->each(function ($row) use (&$message, &$no_stock, $quantity, $establishment) {
             $item = Item::find($row->individual_item_id);
             $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)->where('warehouse_id', $establishment->id)->first();
             $stock = $item_warehouse->stock;
@@ -295,7 +381,7 @@ class RecetaController extends Controller
             if ($stock < $stock_indivual) {
                 $no_stock = true;
                 $difference = $stock_indivual -  $stock;
-                $message .= "El producto " . $item->description . " no tiene stock, tiene ".$stock." y falta ".$difference."\n";
+                $message .= "El producto " . $item->description . " no tiene stock, tiene " . $stock . " y falta " . $difference . "\n";
             }
         });
         if ($no_stock) {

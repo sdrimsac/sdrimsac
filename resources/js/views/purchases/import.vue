@@ -50,6 +50,10 @@
                         <!-- Agrega más campos según sea necesario -->
                         <el-table :data="previewData.items" style="width: 100%">
                             <el-table-column
+                                prop="item.internal_id"
+                                label="internal_id"
+                            ></el-table-column>
+                            <el-table-column
                                 prop="item.description"
                                 label="Descripción"
                             ></el-table-column>
@@ -263,10 +267,10 @@ export default {
             this.form.series = ID[0];
             this.form.number = ID[1];
 
-            this.form.supplier_ruc =
+            /* this.form.supplier_ruc =
                 Invoice["cac:AccountingCustomerParty"]["cac:Party"][
                     "cac:PartyIdentification"
-                ]["cbc:ID"]["_text"];
+                ]["cbc:ID"]["_text"]; */
 
             await this.setFormItems(Invoice["cac:InvoiceLine"]);
 
@@ -281,11 +285,17 @@ export default {
             this.form.total_value = this.form.total_taxed;
         },
 
-        async setFormItems(items) {
+        /* async setFormItems(items) {
+
             const self = this;
 
             if (Array.isArray(items)) {
                 items.forEach(element => {
+                    let internal_id =
+                        element?.["cac:Item"]?.[
+                            "cac:SellersItemIdentification"
+                        ]?.["cbc:ID"]?._text || 0;
+
                     let code =
                         element?.["cac:Item"]?.[
                             "cac:CommodityClassification"
@@ -378,6 +388,91 @@ export default {
                 formItem.item.presentation = {};
                 formItem.affectation_igv_type = affectation_igv_code;
 
+                let row = calculateRowItem(formItem, "PEN", 3.393);
+                row.warehouse_id = 1;
+                row.warehouse_description = "Almacén Oficina Principal";
+
+                self.form.items.push(row);
+            }
+        }, */
+
+        async setFormItems(items) {
+            const self = this;
+
+            if (Array.isArray(items)) {
+                items.forEach(element => {
+                    let formItem = self.initFormItem();
+
+                    // Extraer datos directamente del XML
+                    const internal_id =
+                        element?.["cac:Item"]?.[
+                            "cac:SellersItemIdentification"
+                        ]?.["cbc:ID"]?._text || 0;
+                    const description =
+                        element?.["cac:Item"]?.["cbc:Description"]?._cdata ||
+                        "";
+                        const quantity =
+                        element?.["cac:InvoiceLine"]?.["cbc:InvoicedQuantity"]?._text ||
+                        "";
+
+                    const unit_price =
+                        element?.["cac:PricingReference"]?.[
+                            "cac:AlternativeConditionPrice"
+                        ]?.["cbc:PriceAmount"]?._text || 0;
+                    const affectation_igv_code =
+                        element?.["cac:TaxTotal"]?.["cac:TaxSubtotal"]?.[
+                            "cac:TaxCategory"
+                        ]?.["cbc:TaxExemptionReasonCode"]?._text;
+
+                    // Asignar los datos extraídos al formItem
+                    formItem.item = {
+                        internal_id: internal_id,
+                        description: description,
+                        quantity: quantity,
+                        unit_price: unit_price,
+                        presentation: {}
+                    };
+                    formItem.unit_price = unit_price;
+                    formItem.affectation_igv_type = affectation_igv_code;
+
+                    // Calcular el row y agregarlo al formulario
+                    let row = calculateRowItem(formItem, "PEN", 3.393);
+                    row.warehouse_id = 1;
+                    row.warehouse_description = "Almacén Oficina Principal";
+
+                    self.form.items.push(row);
+                });
+            } else {
+                let formItem = self.initFormItem();
+
+                // Extraer datos directamente del XML
+                const internal_id =
+                    items?.["cac:Item"]?.["cac:SellersItemIdentification"]?.["cbc:ID"]?._text || 0;
+                const description =
+                    items?.["cac:Item"]?.["cbc:Description"]?._cdata || "";
+                    const quantity =
+                    items?.["cac:InvoiceLine"]?.["cbc:InvoicedQuantity"]?._text || "";
+                const unit_price =
+                    items?.["cac:PricingReference"]?.[
+                        "cac:AlternativeConditionPrice"
+                    ]?.["cbc:PriceAmount"]?._text || 0;
+                const affectation_igv_code =
+                    items?.["cac:TaxTotal"]?.["cac:TaxSubtotal"]?.[
+                        "cac:TaxCategory"
+                    ]?.["cbc:TaxExemptionReasonCode"]?._text;
+
+                // Asignar los datos extraídos al formItem
+                formItem.item = {
+                    internal_id: internal_id,
+                    description: description,
+                    quantity: quantity,
+                    unit_price: unit_price,
+                    presentation: {}
+                };
+                formItem.unit_price = unit_price;
+                formItem.affectation_igv_type = affectation_igv_code;
+
+                // Calcular el row y agregarlo al formulario
                 let row = calculateRowItem(formItem, "PEN", 3.393);
                 row.warehouse_id = 1;
                 row.warehouse_description = "Almacén Oficina Principal";

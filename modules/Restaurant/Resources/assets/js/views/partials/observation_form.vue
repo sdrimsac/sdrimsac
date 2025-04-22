@@ -37,9 +37,10 @@
                     class="input-new-tag"
                     @input="search"
                     v-model="newTag"
-                    
                     placeholder="Nueva obs.."
                     size="medium"
+                    maxlength="50"
+
                 >
                 </el-input>
                 <el-button
@@ -139,6 +140,9 @@ export default {
             this.tags = this.observations
                 .filter(o => o.description.includes(input.toUpperCase()) && o.active)
                 .slice(0, 10);
+            if (input.length > 50){
+                this.newTag = input.slice(0, 50);
+            }
         },
         addObservation() {
             this.$emit("addObservation", this.observation);

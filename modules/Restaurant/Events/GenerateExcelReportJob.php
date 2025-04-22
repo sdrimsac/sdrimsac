@@ -148,7 +148,6 @@ class GenerateExcelReportJob implements ShouldQueue
                 'utility' => number_format($utility, 2),
                 'net_utility' => number_format($net_utility, 2)
             ];
-            dump($items_data);
 
             $document_total_utility += $utility;
             $document_total_net_utility += $net_utility;
@@ -163,7 +162,6 @@ class GenerateExcelReportJob implements ShouldQueue
             'total_utility' => number_format($document_total_utility, 2),
             'total_net_utility' => number_format($document_total_net_utility, 2)
         ];
-        dump($sales_data);
 
         $total_utility += $document_total_utility;
         $total_net_utility += $document_total_net_utility;
@@ -211,7 +209,6 @@ class GenerateExcelReportJob implements ShouldQueue
             'total_utility' => number_format($document_total_utility, 2),
             'total_net_utility' => number_format($document_total_net_utility, 2)
         ];
-        dump($sales_data);
 
         $total_utility += $document_total_utility;
         $total_net_utility += $document_total_net_utility;
