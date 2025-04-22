@@ -50,7 +50,11 @@
                     <div v-if="previewData">
                         <p>
                             <strong>series:</strong>
-                            {{ previewData.series }}-{{ previewData.number }}
+                            {{ previewData.series }}
+                        </p>
+                        <p>
+                            <strong>numero:</strong>
+                            {{ previewData.number }}
                         </p>
                         <p>
                             <strong>Fecha de Emisión:</strong>

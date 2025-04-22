@@ -415,12 +415,6 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-8 mt-4">
-                        <div class="form-group">
-                            <el-checkbox v-model="form.has_client" @change="changeHasClient">¿Desea agregar el cliente para esta
-                                compra?</el-checkbox>
-                        </div>
-            </div>-->
                         <div class="row align-items-center mb-4">
                             <!-- Checkbox para agregar pagos -->
                             <div class="col-md-4">

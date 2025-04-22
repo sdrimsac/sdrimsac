@@ -3182,7 +3182,7 @@ export default {
 
             // Ajustar el tiempo de espera dinámicamente según el tipo de documento
             const isRUC = this.form.identity_document_type_id === "6"; // Suponiendo que "6" es el ID para RUC
-            const delay = isRUC ? 2000 : this.typingDelay; // 2 segundos para RUC, tiempo normal para otros
+            const delay = isRUC ? 1500 : this.typingDelay; // 2 segundos para RUC, tiempo normal para otros
 
             this.time = setTimeout(async () => {
                 // Ya pasó el tiempo sin escribir, asumimos que terminó
