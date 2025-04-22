@@ -146,9 +146,7 @@
                                                 <td>{{ color_size.color }}</td>
                                                 <td>{{ color_size.size }}</td>
                                                 <td>{{ color_size.price }}</td>
-                                                <!-- <td>
-                                                {{ color_size.stock }}
-                        </td>-->
+                                                
                                             </tr>
                                         </tbody>
                                     </table>
@@ -176,16 +174,19 @@
                                 }}</span
                               >
                             </td>
-                            <!-- <td>
-                <el-button type="primary" round>
-                  <i class="fa fa-print"></i>
-                </el-button>
-              </td>-->
+                            
                             <td class="text-center">
                               <button
                                 @click="clickPrint(row.id)"
                                 type="button"
                                 class="btn btn-sm btn-primary"
+                              >
+                                <i class="fa fa-print"></i>
+                              </button>
+                              <button
+                                @click="RePrint(row.id)"
+                                type="button"
+                                class="btn btn-sm btn-danger"
                               >
                                 <i class="fa fa-print"></i>
                               </button>
@@ -251,6 +252,13 @@
             :showDialog.sync="showDialogRemove"
             :recordId="recordId"
         ></inventories-remove>
+        <form-pdf
+            :showDialog.sync="showDialogRePrint"
+            :recordId="recordId"
+            :type.sync="typeTransaction" 
+            :configuration="configuration">
+        </form-pdf>
+
     </div>
 </template>
 
@@ -267,19 +275,24 @@ import InventoriesForm from "../../../../modules/Inventory/Resources/assets/js/i
 import InventoriesFormOutput from "../../../../modules/Inventory/Resources/assets/js/inventory/form_output.vue";
 import InventoriesMove from "../../../../modules/Inventory/Resources/assets/js/inventory/move.vue";
 import InventoriesRemove from "../../../../modules/Inventory/Resources/assets/js/inventory/remove.vue";
+import FormPdf from "./form_pdf.vue";
+
 import Swal from "sweetalert2";
 export default {
-    props: [],
+    props: [
+    ],
     components: {
         DataTable,
         InventoriesForm,
         InventoriesMove,
         InventoriesRemove,
         InventoriesFormOutput,
-        Swal
+        Swal,
+        FormPdf
     },
     data() {
         return {
+            showDialogRePrint: false,
             title: null,
             showDialog: false,
             showDialogMove: false,
@@ -294,7 +307,9 @@ export default {
             area_id: null,
             establishment_id: null,
             areas: [],
-            establishment: []
+            establishment: [],
+            printer_id: null,
+            configuration: []
         };
     },
     created() {
@@ -331,6 +346,10 @@ export default {
         /* console.log("dsadasd2"); */
     },
     methods: {
+        RePrint(id){
+            this.recordId = id;
+            this.showDialogRePrint = true;
+        },
         onlyAllowNumbers(event) {
             const charCode = event.which ? event.which : event.keyCode;
             if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -367,6 +386,7 @@ export default {
                 // this.tables = response.data;
                 let { data } = response;
                 this.establishment = data.establishment;
+                this.configuration = data.configuration;
                 console.log(
                     "🚀 ~ file: index.vue:144 ~ this.$http.get ~ this.$areaPrinter:",
                     this.$establishmentPrinter

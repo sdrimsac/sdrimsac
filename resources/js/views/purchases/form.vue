@@ -16,6 +16,19 @@
                 Nueva Compra
             </h4>
         </div>
+        <div class="data-table-visible-columns">
+            <el-button
+                class="btn_titulos_modal"
+                href="javascript:void(0)"
+                @click.prevent="clickImport()"
+            >
+                <i class="fa fa-upload"></i>
+                <span
+                    style="color: #000; font-size: 1.25rem; font-weight: bold;"
+                    >Importar</span
+                >
+            </el-button>
+        </div>
         <div class="tab-content p-3">
             <form autocomplete="off" @submit.prevent="submit">
                 <div class="form-body">
@@ -390,6 +403,7 @@
                                 <el-switch
                                     active-text="Si"
                                     v-model="form.includes"
+                                    :disabled="form.items.length === 0"
                                     inactive-text="No"
                                     @change="incluye_igv()"
                                 ></el-switch>
@@ -1047,6 +1061,8 @@
             :ordenInBox.sync="ordenInBox"
         ></pull-apart>
 
+        <purchase-import :showDialog.sync="showImportDialog"></purchase-import>
+
         <!-- <aparcado :showDialog.sync="showAparcado"></aparcado> -->
 
         <el-dialog
@@ -1275,6 +1291,7 @@ import _ from "lodash";
 import PersonForm from "../persons/form.vue";
 import PurchaseOptions from "./partials/options.vue";
 import PullApart from "./parked.vue";
+import PurchaseImport from "./import.vue";
 import { functions, exchangeRate } from "../../mixins/functions";
 import { calculateRowItem } from "../../helpers/functions";
 
@@ -1285,11 +1302,13 @@ export default {
         PersonForm,
         PurchaseOptions,
         CardPerdido,
-        PullApart
+        PullApart,
+        PurchaseImport
     },
     mixins: [functions, exchangeRate],
     data() {
         return {
+            showImportDialog: false,
             listApart: false,
             loading_submit: false,
             listApart: false,
@@ -1409,6 +1428,9 @@ export default {
         this.percentage_igv = response.data;
     },
     methods: {
+        clickImport() {
+            this.showImportDialog = true;
+        },
         calculateItem(index, quantity, unit_price) {
             this.form.items[index].quantity = quantity;
             let total_venta = _.round(
@@ -1631,10 +1653,11 @@ export default {
             for (let i = 0; i < items.length; i++) {
                 let item = items[i];
                 if (item.real_quantity > 0) {
-                    if(item.max_quantity && item.max_quantity_description){
-                        item.quantity = Number(item.max_quantity) * Number(item.quantity);
+                    if (item.max_quantity && item.max_quantity_description) {
+                        item.quantity =
+                            Number(item.max_quantity) * Number(item.quantity);
                         item.item.max_quantity = item.max_quantity;
-                    }else{
+                    } else {
                         item.quantity = item.real_quantity;
                     }
                 }

@@ -67,6 +67,8 @@ if ($hostname) {
             Route::get('get_stock_file/{id}', [MaderaController::class, 'get_stock_file']);
             Route::get('report_madera/report/{type}', [MaderaController::class, 'report_cash_export']);
 
+            Route::get('foods/exportExcel', [App\Http\Controllers\Tenant\FoodsController::class, 'exportExcel']);
+
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'downloadExternal'])->name('tenant.download.external_id');
             Route::get('print/{model}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'toPrint']);
             Route::get('quotations/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\QuotationController::class, 'toPrint']);
@@ -569,6 +571,9 @@ if ($hostname) {
                 Route::get('customers/generate_number', [PersonController::class, 'generateNumber']);
                 Route::delete('persons/{person}', [App\Http\Controllers\Tenant\PersonController::class, 'destroy']);
                 Route::post('persons/import', [App\Http\Controllers\Tenant\PersonController::class, 'import']);
+
+                Route::get('/persons/suplier/{number}', [App\Http\Controllers\Tenant\PersonController::class, 'check']);
+                /* Route::post('/persons', [PersonController::class, 'storeFromXml']); */
                 //imagen en los clientes
                 Route::post('persons/uploads', [PersonController::class, 'upload']);
                 Route::get('persons/images/{persons}', [PersonController::class, 'images']);
@@ -776,7 +781,7 @@ if ($hostname) {
                 Route::get('drivers/record/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'record']);
                 Route::post('drivers', [App\Http\Controllers\Tenant\DriverController::class, 'store']);
                 Route::delete('drivers/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'destroy']);
-                
+
 
                 // para el transporte
                 Route::get('transport', [App\Http\Controllers\Tenant\TransportController::class, 'index'])->name('tenant.transport.index')->middleware('just.admin');
@@ -827,6 +832,7 @@ if ($hostname) {
                     Route::get('/columns', [App\Http\Controllers\Tenant\ProductosController::class, 'columns']);
                     Route::get('/tables', [App\Http\Controllers\Tenant\ProductosController::class, 'tables']);
                     /* Route::get('/tables1', [App\Http\Controllers\Tenant\ProductosController::class, 'tables1']); */
+                    Route::get('/recordPdf/{type}', [App\Http\Controllers\Tenant\ProductosController::class, 'recordPdf']);
                     Route::post('/move', [App\Http\Controllers\Tenant\ProductosController::class, 'move']);
                     Route::post('/remove', [App\Http\Controllers\Tenant\ProductosController::class, 'remove']);
                     Route::get('/excel', [App\Http\Controllers\Tenant\ProductosController::class, 'excel'])->name('tenant.productos.report_excel');

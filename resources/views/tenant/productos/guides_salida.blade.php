@@ -7,22 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia de Ingreso Y Salida de Productos</title>
 </head>
-<?php
-function format_serie($id)
-{
-    if (10 > $id) {
-        return '000' . $id;
+@if (!function_exists('format_serie'))
+    <?php
+    function format_serie($id)
+    {
+        if ($id < 10) {
+            return '000' . $id;
+        }
+        if ($id < 100) {
+            return '00' . $id;
+        }
+        if ($id < 1000) {
+            return '0' . $id;
+        }
+        return $id;
     }
-    if (100 > $id) {
-        return '00' . $id;
-    }
-    if (100 > $id) {
-        return '0' . $id;
-    }
-
-    return '000' . $id;
-}
-?>
+    ?>
+@endif
 <style>
     html {
         font-family: sans-serif;
@@ -243,6 +244,10 @@ function format_serie($id)
     .cell_number {
         width: 10% !important;
         /* border: 0.1px solid #ccc; */
+    }
+    body {
+        width: 80mm;
+        margin: 0 auto;
     }
 
     .header_title2 {

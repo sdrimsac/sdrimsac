@@ -61,7 +61,7 @@ class ItemCollection extends ResourceCollection
             }
             return [
                 //row es una instancia de Item
-
+                'commission' => $row->commission,
                 'last_register' => $this->get_last_document($row),
                 'init_report' => $row->init_report,
                 'has_warranty' => $row->has_warranty,

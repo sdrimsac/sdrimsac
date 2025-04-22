@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Tenant;
+
 use Illuminate\Support\Str;
 
 use Exception;
@@ -58,6 +59,24 @@ class PersonController extends Controller
         }
 
         return response()->json(['number' => $new_code]);
+    }
+    public function check($number)
+    {
+        $person = Person::where('number', $number)
+                       ->where('type', 'suppliers')
+                       ->first();
+                       
+        if ($person) {
+            return response()->json([
+                'success' => true,
+                'data' => $person,
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró ningún proveedor con el número proporcionado.',
+        ], 404);
     }
     public function index($type)
     {
@@ -203,7 +222,7 @@ class PersonController extends Controller
 
         $records = Person::where('type', $type);
         if (!$user || $user->type !== 'superadmin') {
-            
+
             $records = $records->whereNotIn('name', ['CLIENTES VARIOS', 'CLIENTES VARIOS-MODIFICADO']);
         }
 
@@ -291,85 +310,85 @@ class PersonController extends Controller
         return $record;
     }
 
-    function isClientesVarios($person){
+    function isClientesVarios($person)
+    {
         $name = $person->name;
         $number = $person->number;
 
         return (str_contains(strtolower($name), 'clientes varios') || $number == '99999999');
-
     }
 
     public function store(PersonRequest $request)
     {
-        try{
-        if ($request->state) {
-            if ($request->state != "ACTIVO") {
-                return [
-                    'success' => false,
-                    'message' => 'El estado del contribuyente no es activo, no puede registrarlo',
-                ];
+        try {
+            if ($request->state) {
+                if ($request->state != "ACTIVO") {
+                    return [
+                        'success' => false,
+                        'message' => 'El estado del contribuyente no es activo, no puede registrarlo',
+                    ];
+                }
             }
-        }
-        $id = $request->input('id');
-        $person = Person::firstOrNew(['id' => $id]);
-        if($id){
-            $is_clientes_varios = $this->isClientesVarios($person);
-            if($is_clientes_varios){
-                return [
-                    'success' => false,
-                    'message' => 'El cliente no puede ser editado',
-                ];
+            $id = $request->input('id');
+            $person = Person::firstOrNew(['id' => $id]);
+            if ($id) {
+                $is_clientes_varios = $this->isClientesVarios($person);
+                if ($is_clientes_varios) {
+                    return [
+                        'success' => false,
+                        'message' => 'El cliente no puede ser editado',
+                    ];
+                }
             }
-        }
-        $person->fill($request->all());
-        $user_id = auth()->id();
-        $person->user_id = $user_id;
+            $person->fill($request->all());
+            $user_id = auth()->id();
+            $person->user_id = $user_id;
 
-        $person->save();
-        $temp_path = $request->input('temp_path');
-        UnitTypePerson::where('customer_id', $person->id)->delete();
-        $item_unit_types = $request->input('item_unit_types');
-        if ($request->input('item_unit_types')) {
-            foreach ($item_unit_types as $row) {
-                $person->item_unit_types()->create(['description' => $row]);
+            $person->save();
+            $temp_path = $request->input('temp_path');
+            UnitTypePerson::where('customer_id', $person->id)->delete();
+            $item_unit_types = $request->input('item_unit_types');
+            if ($request->input('item_unit_types')) {
+                foreach ($item_unit_types as $row) {
+                    $person->item_unit_types()->create(['description' => $row]);
+                }
             }
-        }
 
-        $person->addresses()->delete();
-        $addresses = $request->input('addresses');
-        if ($request->input('addresses')) {
-            foreach ($addresses as $row) {
-                $person->addresses()->updateOrCreate(['id' => $row['id']], $row);
+            $person->addresses()->delete();
+            $addresses = $request->input('addresses');
+            if ($request->input('addresses')) {
+                foreach ($addresses as $row) {
+                    $person->addresses()->updateOrCreate(['id' => $row['id']], $row);
+                }
             }
-        }
-    
+
 
             if ($temp_path) {
                 $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
-                
+
                 // Check if directory exists and create it if not
                 if (!Storage::exists($directory)) {
-                Storage::makeDirectory($directory);
+                    Storage::makeDirectory($directory);
                 }
-    
+
                 $file_name_old = $request->input('image');
                 $extension = 'jpg';
-                
+
                 if ($file_name_old) {
-                $file_name_old_array = explode('.', $file_name_old);
-                $extension = end($file_name_old_array) ?: 'jpg';
+                    $file_name_old_array = explode('.', $file_name_old);
+                    $extension = end($file_name_old_array) ?: 'jpg';
                 }
                 // Log::info($temp_path);
                 if (file_exists($temp_path)) {
-                    
+
                     // Asegurar permisos de lectura para el archivo temporal
                     chmod($temp_path, 0644);
-                    
+
                     if (is_readable($temp_path)) {
                         $file_content = file_get_contents($temp_path);
                         $datenow = date('YmdHis');
                         $file_name = Str::slug($person->name) . '-' . $datenow . '.' . $extension;
-    
+
                         if ($file_content !== false) {
                             Storage::put($directory . $file_name, $file_content);
                         } else {
@@ -382,60 +401,59 @@ class PersonController extends Controller
                     throw new \Exception('Archivo temporal no existe' . $temp_path);
                 }
                 $person->image = $file_name;
-    
             } elseif (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
                 $person->image = Person::DEFAULT_USER_IMAGE;
             }
-    
+
             // Guardar imagen adicional 1
             if ($request->input('temp_path_extra1')) {
                 $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
-                
+
                 if (!Storage::exists($directory)) {
                     Storage::makeDirectory($directory);
                 }
-    
+
                 $temp_path = $request->input('temp_path_extra1');
                 // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
-            
-                
+
+
                 if (file_exists($temp_path)) {
                     $file_content = file_get_contents($temp_path);
                     $datenow = date('YmdHis');
                     $file_name = Str::slug($person->name) . '-extra1-' . $datenow . '.' . $extension;
-                    
+
                     Storage::put($directory . $file_name, $file_content);
                     $person->image_extra1 = $file_name;
                 } else {
                     throw new Exception('No se puede encontrar el archivo temporal');
                 }
             }
-    
+
             // Guardar imagen adicional 2
             if ($request->input('temp_path_extra2')) {
                 $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'persons' . DIRECTORY_SEPARATOR;
-                
+
                 if (!Storage::exists($directory)) {
                     Storage::makeDirectory($directory);
                 }
-    
+
                 $file_name_old = $request->input('image_extra2');
                 $extension = 'jpg';
-                
+
                 if ($file_name_old) {
                     $file_name_old_array = explode('.', $file_name_old);
                     $extension = end($file_name_old_array) ?: 'jpg';
                 }
-                
+
                 $temp_path = $request->input('temp_path_extra2');
                 // Verificar si existe el archivo (insensible a mayúsculas/minúsculas)
-        
-                
+
+
                 if (file_exists($temp_path)) {
                     $file_content = file_get_contents($temp_path);
                     $datenow = date('YmdHis');
                     $file_name = Str::slug($person->name) . '-extra2-' . $datenow . '.' . $extension;
-                    
+
                     Storage::put($directory . $file_name, $file_content);
                     $person->image_extra2 = $file_name;
                 } else {

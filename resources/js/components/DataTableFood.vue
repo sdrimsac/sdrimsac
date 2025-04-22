@@ -3,23 +3,6 @@
         <div class="row " v-loading="loading">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <label style="width:100%">
-                            Filtrar por:
-                        </label>
-                        <el-select
-                            v-model="search.column"
-                            placeholder="Select"
-                            @change="changeClearInput"
-                        >
-                            <el-option
-                                v-for="(label, key) in columns"
-                                :key="key"
-                                :value="key"
-                                :label="label"
-                            ></el-option>
-                        </el-select>
-                    </div> -->
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="value">
                             Buscar
@@ -123,15 +106,6 @@
                 "
                 class="row"
             >
-                <div v-if="resource == 'caja/worker/expenses'" class="col-md-3">
-                    <el-button
-                        class="submit"
-                        type="danger"
-                        icon="el-icon-tickets"
-                        @click.prevent="clickDownload('pdf')"
-                        >Exportar PDF</el-button
-                    >
-                </div>
                 <div
                     class="col-md-6 d-flex"
                     v-if="resource !== 'caja/cash-transfer'"
@@ -145,40 +119,7 @@
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button
                     >
-                    <el-button
-                        class="submit"
-                        type="success"
-                        v-if="search.warehouse_id && typeUser == 'superadmin'"
-                        icon="el-icon-tickets"
-                        @click.prevent="clickDownloadForImport('excel')"
-                        >Exportar Excel - Formato de importacion</el-button
-                    >
-                <el-tooltip content="Agregar productos a los almacenes faltantes" placement="top">
 
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToWarehouses"
-                    >Productos en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip>
-
-
-                <el-tooltip content="Agregar las politicas en todo los almacenes" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToPolitica"
-                    >Politicas en todos los almacenes
-                    </el-button
-                    >
-                </el-tooltip>
                 </div>
             </div>
             <div class="col-md-12">
@@ -353,10 +294,11 @@ export default {
                 });
         },
         clickDownload(type) {
-            this.$emit("clickReport", this.search, type);
-        },
-        clickDownloadForImport() {
-            this.$emit("clickReportForImport", this.search);
+
+            window.open(
+                `/${this.resource}/exportExcel?${this.getQueryParameters()}&type=${type}`,
+                "_blank"
+            );
         },
 
         customIndex(index) {

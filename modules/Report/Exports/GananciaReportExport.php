@@ -130,9 +130,9 @@ class GananciaReportExport implements FromCollection, WithHeadings, ShouldAutoSi
                     'purchase_unit_price' => $item['purchase_unit_price'] ?? 0,
                     'total_purchase' => $item['total_purchase'] ?? 0,
                     'unit_price' => $item['unit_price'] ?? 0,
-                    'total_sale' => number_format((float)($item['total_sale'] ?? 0), 2),
-                    'utility' => number_format((float)($item['utility'] ?? 0), 2),
-                    'net_utility' => number_format((float)($item['net_utility'] ?? 0), 2),
+                    'total_sale' => $item['total_sale'] ?? 0,
+                    'utility' => $item['utility'] ?? 0,
+                    'net_utility' =>$item['net_utility'] ?? 0,
                 ]);
             }
         }

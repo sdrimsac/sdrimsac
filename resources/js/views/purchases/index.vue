@@ -789,9 +789,9 @@ export default {
             this.showFacturarDialog = true;
             this.data = row;
         },
-        clickImport() {
+        /* clickImport() {
             this.showImportDialog = true;
-        }
+        } */
     }
 };
 </script>

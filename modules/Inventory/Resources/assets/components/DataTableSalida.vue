@@ -200,8 +200,6 @@ export default {
             items: [],
             inventory_transactions: [],
             inventories: [],
-            form: {},
-            areas: []
         };
     },
     computed: {},

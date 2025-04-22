@@ -10,11 +10,13 @@ class FoodsShopCollection extends ResourceCollection
     {
         return $this->collection->map(function ($item) {
             return [
-                'id' => $item->id,
-                'description' => optional($item->food)->description,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
-                'total' => $item->quantity * $item->price,
+                'id' => $item->food_id,
+                'description' => $item->description,
+                'quantity' => (float) $item->quantity,
+                'price' => (float) $item->price,
+                'total' => (float) $item->total,
+                'commission' => (float) $item->commission,
+                'commission_total' => (float) $item->commission_total,
             ];
         });
     }

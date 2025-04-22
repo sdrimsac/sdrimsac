@@ -994,6 +994,24 @@
                                         </el-input>
                                     </div>
                                 </div>
+                                <div
+                                    class="col-12 col-lg-6 col-xl-3 px-2"
+                                   
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="control-label d-flex align-items-center"
+                                        >
+                                            <i class="fa fa-box fa-lg me-2"></i>
+                                            Comision por producto
+                                        </label>
+                                        <el-input
+                                            v-model="form.commission"
+                                            class="uniform-input"
+                                        >
+                                        </el-input>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -3305,6 +3323,7 @@ export default {
                 origin: null,
                 month_day: null,
                 init_report: 0,
+                commission: 0,
                 warehouse_prices: [],
                 item_warehouses: []
             };

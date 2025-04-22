@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Exports\ProductosExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\ProductosCollection;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Inventory;
@@ -18,8 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Inventory\Models\Category;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Str;
 use Exception;
-
+use Illuminate\Support\Facades\Storage;
 
 class ProductosController extends Controller
 {
@@ -44,6 +46,7 @@ class ProductosController extends Controller
             'warehouses' => Warehouse::all(),
             'categories' => Category::all(),
             'inventories' => Inventory::whereNotNull('created_at')->get(),
+            'configuration' => Configuration::first(),
         ]);
     }
 
@@ -262,6 +265,58 @@ class ProductosController extends Controller
             'ReporteTransac_' . Carbon::now()->format('Ymd_His') . '.xlsx'
         );
     }
+
+    public function recordPdf($type, Request $request)
+    {
+        $transfer = Inventory::find($type);
+        $company = Company::first();
+        $warehouse_id = $transfer->warehouse_id;
+        $establishment_id = Warehouse::find($warehouse_id)->establishment_id; 
+        $establishment = Establishment::find($establishment_id);
+        $printer = $establishment->printer;
+
+        Storage::makeDirectory('public/pdfs');
+
+        // Generate unique filenames based on inventory ID
+        $filename80 = 'pdfs/pdf_80mm_' . $type . '.pdf';
+        $filenameA4 = 'pdfs/pdf_a4_' . $type . '.pdf';
+
+        // Calculate height for 80mm receipt
+        $height = 8 * 30;
+        if ($transfer->count() == 1) {
+            $height = $height + $transfer->count() * 50;
+        } else {
+            $height = $height + ($transfer->count() * 30);
+        }
+
+        // Check if files don't exist before generating
+        if (!Storage::disk('public')->exists($filename80)) {
+            PDF::loadView('tenant.productos.guides_salida', [
+                'transfer' => $transfer,
+                'company' => $company,
+                'establishment' => $establishment
+            ])
+            ->setPaper(array(0, 0, 249.45, $height)) // Set 80mm width (249.45 points = 80mm)
+            ->save(storage_path('app/public/' . $filename80));
+        }
+
+        if (!Storage::disk('public')->exists($filenameA4)) {
+            PDF::loadView('tenant.productos.guides_salida_a4', [
+                'transfer' => $transfer,
+                'company' => $company,
+                'establishment' => $establishment
+            ])->save(storage_path('app/public/' . $filenameA4));
+        }
+
+        return response()->json([
+            'pdf_80mm_url' => asset('storage/' . $filename80),
+            'pdf_a4_url' => asset('storage/' . $filenameA4),
+            'printer' => $printer,
+            'success' => true
+        ]);
+    }
+
+
     public function printTransfer($type)
     {
         $transfer = Inventory::find($type);

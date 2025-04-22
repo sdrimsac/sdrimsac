@@ -30,10 +30,12 @@
                 <data-table ref="datatable" :resource="resource">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
-                        <th class="text-white">Cantidad</th>
                         <th class="text-white">Descripción</th>
+                        <th class="text-white">Cantidad</th>
                         <th class="text-white">precio</th>
                         <th class="text-white">Total</th>
+                        <th class="text-white">Comision</th>
+                        <th class="text-white">Total Comision</th>
                     </tr>
 
                     <tr></tr>
@@ -43,6 +45,10 @@
                         <td>{{ Number(row.quantity).toFixed(2) }}</td>
                         <td>{{ Number(row.price).toFixed(2) }}</td>
                         <td>{{ Number(row.total).toFixed(2) }}</td>
+                        <td>{{ Number(row.commission).toFixed(2) }}</td>
+                        <td>{{ Number(row.commission_total).toFixed(2) }}</td>
+
+                        
                     </tr>
                 </data-table>
             </div>

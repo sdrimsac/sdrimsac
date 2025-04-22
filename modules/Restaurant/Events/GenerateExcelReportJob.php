@@ -117,14 +117,15 @@ class GenerateExcelReportJob implements ShouldQueue
         $document_total_net_utility = 0;
 
         foreach ($document->items as $item) {
+            
             $unit_price = $item->unit_price;
             $quantity = $item->quantity;
             $purchase_unit_price = $item->relation_item->purchase_unit_price ?? 0;
 
-            if ($item->affectation_igv_type_id == '10') {
+            /* if ($item->affectation_igv_type_id == '10') {
                 $unit_price = $unit_price / 1.18;
                 $purchase_unit_price = $purchase_unit_price / 1.18;
-            }
+            } */
 
             $total_purchase = $purchase_unit_price * $quantity;
             $total_sale = $unit_price * $quantity;
@@ -133,6 +134,7 @@ class GenerateExcelReportJob implements ShouldQueue
             $net_utility = $utility;
             if ($item->affectation_igv_type_id == '10') {
                 $net_utility = $utility / 1.18;
+                /* $purchase_unit_price = $purchase_unit_price / 1.18; */
             }
 
             $items_data[] = [
@@ -141,11 +143,12 @@ class GenerateExcelReportJob implements ShouldQueue
                 'unit_type' => $item->item->unit_type_id,
                 'purchase_unit_price' => number_format($purchase_unit_price, 2),
                 'total_purchase' => number_format($total_purchase, 2),
-                'unit_price' => number_format($unit_price, 2),
+                'unit_price' => number_format($item->unit_price, 2),
                 'total_sale' => number_format($total_sale, 2),
                 'utility' => number_format($utility, 2),
                 'net_utility' => number_format($net_utility, 2)
             ];
+            dump($items_data);
 
             $document_total_utility += $utility;
             $document_total_net_utility += $net_utility;
@@ -160,6 +163,7 @@ class GenerateExcelReportJob implements ShouldQueue
             'total_utility' => number_format($document_total_utility, 2),
             'total_net_utility' => number_format($document_total_net_utility, 2)
         ];
+        dump($sales_data);
 
         $total_utility += $document_total_utility;
         $total_net_utility += $document_total_net_utility;
@@ -207,6 +211,7 @@ class GenerateExcelReportJob implements ShouldQueue
             'total_utility' => number_format($document_total_utility, 2),
             'total_net_utility' => number_format($document_total_net_utility, 2)
         ];
+        dump($sales_data);
 
         $total_utility += $document_total_utility;
         $total_net_utility += $document_total_net_utility;

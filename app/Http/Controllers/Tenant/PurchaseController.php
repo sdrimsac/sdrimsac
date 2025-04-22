@@ -383,7 +383,7 @@ class PurchaseController extends Controller
         $suppliers = $this->table('suppliers');
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $currency_types = CurrencyType::whereActive()->get();
-        $document_types_invoice = DocumentType::whereIn('id', ['01', '03', 'GU75', 'NE76'])->get();
+        $document_types_invoice = DocumentType::whereIn('id', ['01', '03', 'GU75', 'NE76', '90'])->get();
         $discount_types = ChargeDiscountType::whereType('discount')->whereLevel('item')->get();
         $charge_types = ChargeDiscountType::whereType('charge')->whereLevel('item')->get();
         $company = Company::active();
