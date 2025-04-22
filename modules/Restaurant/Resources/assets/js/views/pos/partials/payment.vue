@@ -3140,7 +3140,7 @@ export default {
             }, 1000);
         }, */
 
-        async keyupCustomer(e) {
+        /* async keyupCustomer(e) {
             if (this.time) {
                 clearTimeout(this.time);
             }
@@ -3171,8 +3171,44 @@ export default {
                 this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
             }, this.typingDelay);
-        },
+        }, */
 
+        async keyupCustomer(e) {
+            if (this.time) {
+                clearTimeout(this.time);
+            }
+
+            this.typing = true;
+
+            // Ajustar el tiempo de espera dinámicamente según el tipo de documento
+            const isRUC = this.form.identity_document_type_id === "6"; // Suponiendo que "6" es el ID para RUC
+            const delay = isRUC ? 2000 : this.typingDelay; // 2 segundos para RUC, tiempo normal para otros
+
+            this.time = setTimeout(async () => {
+                // Ya pasó el tiempo sin escribir, asumimos que terminó
+                this.typing = false;
+
+                const inputEl = this.$refs.select_person.$el.getElementsByTagName(
+                    "input"
+                )[0];
+                this.input_person.number = inputEl.value;
+
+                if (!this.input_person.number) {
+                    return; // No hagas nada si aún está vacío
+                }
+
+                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                if (this.configuration.college) {
+                    url += `&parents=${this.notRegister ? 0 : 1}`;
+                }
+
+                const response = await this.$http(url);
+                const { persons } = response.data;
+
+                this.customers = persons.filter(n => n.number != "88888888");
+                this.updateAllCustomers(this.customers);
+            }, delay);
+        },
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];

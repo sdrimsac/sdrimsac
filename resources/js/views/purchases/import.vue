@@ -37,10 +37,20 @@
                     </div>
                 </div>
                 <div>
+                    <div v-if="form.supplier_name && form.supplier_number">
+                        <p>
+                            <strong>Nombre del Proveedor:</strong>
+                            {{ form.supplier_name }}
+                        </p>
+                        <p>
+                            <strong>Número del Proveedor:</strong>
+                            {{ form.supplier_number }}
+                        </p>
+                    </div>
                     <div v-if="previewData">
                         <p>
-                            <strong>Proveedor:</strong>
-                            {{ previewData.supplier_id }}
+                            <strong>series:</strong>
+                            {{ previewData.series }}-{{ previewData.number }}
                         </p>
                         <p>
                             <strong>Fecha de Emisión:</strong>
@@ -58,15 +68,15 @@
                                 label="Descripción"
                             ></el-table-column>
                             <el-table-column
-                                prop="quantity"
+                                prop="item.quantity"
                                 label="Cantidad"
                             ></el-table-column>
                             <el-table-column
-                                prop="unit_price"
+                                prop="item.unit_price"
                                 label="Precio Unitario"
                             ></el-table-column>
                             <el-table-column
-                                prop="total"
+                                prop="item.total"
                                 label="Total"
                             ></el-table-column>
                         </el-table>
@@ -172,7 +182,6 @@ export default {
                         Invoice["cac:AccountingSupplierParty"]["cac:Party"][
                             "cac:PartyName"
                         ]?.["cbc:Name"]?.["_text"] || "",
-
                     name:
                         Invoice["cac:AccountingSupplierParty"]["cac:Party"][
                             "cac:PartyLegalEntity"
@@ -220,31 +229,34 @@ export default {
                     type: "suppliers"
                 };
 
-                let exists = true;
-
                 try {
-                    const { data } = await this.$http.get(
+                    // Realizar la solicitud y obtener el estado HTTP
+                    const response = await this.$http.get(
                         `/persons/suplier/${supplierData.number}`
                     );
-                    console.log("Respuesta del proveedor:", data);
 
-                    exists = data?.exists === true;
+                    if (response.status === 200) {
+                        // Proveedor ya registrado
+                        const { data } = response;
+                        this.form.supplier_name =
+                            data.name || supplierData.name;
+                        this.form.supplier_number =
+                            data.number || supplierData.number;
+                    }
                 } catch (error) {
                     if (error.response && error.response.status === 404) {
-                        exists = false;
+                        // Proveedor no registrado, registrar automáticamente
+                        await this.$http.post("/persons", supplierData);
+                        this.$message.success(
+                            "Proveedor registrado automáticamente."
+                        );
+
+                        this.form.supplier_name = supplierData.name;
+                        this.form.supplier_number = supplierData.number;
                     } else {
-                        throw error;
+                        throw error; // Otros errores
                     }
                 }
-
-                if (!exists) {
-                    await this.$http.post("/persons", supplierData);
-                    this.$message.success(
-                        "Proveedor registrado automáticamente."
-                    );
-                }
-
-                this.form = { ...this.form, ...supplierData };
             } catch (error) {
                 console.error(
                     "Error al registrar proveedor automáticamente:",
@@ -255,7 +267,6 @@ export default {
                 );
             }
         },
-
         async setdataForm() {
             let Invoice = this.formXmlJson.Invoice;
             this.form.date_of_due = Invoice["cbc:DueDate"]["_text"];
@@ -403,8 +414,15 @@ export default {
                 items.forEach(element => {
                     let formItem = self.initFormItem();
 
+                    /* console.log("Quantity:", element?.["cbc:InvoicedQuantity"]);
+                    console.log(
+                        "Unit Price:",
+                        element?.["cac:Price"]?.["cbc:PriceAmount"]
+                    );
+                    console.log("Total:", element?.["cbc:LineExtensionAmount"]); */
+
                     // Extraer datos directamente del XML
-                    const internal_id =
+                    /* const internal_id =
                         element?.["cac:Item"]?.[
                             "cac:SellersItemIdentification"
                         ]?.["cbc:ID"]?._text || 0;
@@ -422,6 +440,24 @@ export default {
                     const affectation_igv_code =
                         element?.["cac:TaxTotal"]?.["cac:TaxSubtotal"]?.[
                             "cac:TaxCategory"
+                        ]?.["cbc:TaxExemptionReasonCode"]?._text; */
+
+                    const internal_id =
+                        element?.["cac:Item"]?.[
+                            "cac:SellersItemIdentification"
+                        ]?.["cbc:ID"]?._text || 0;
+                    const description =
+                        element?.["cac:Item"]?.["cbc:Description"]?._cdata ||
+                        "";
+                    const quantity =
+                        element?.["cbc:InvoicedQuantity"]?._text || "";
+                    const unit_price =
+                        element?.["cac:Price"]?.["cbc:PriceAmount"]?._text || 0;
+                    const total =
+                        element?.["cbc:LineExtensionAmount"]?._text || "";
+                    const affectation_igv_code =
+                        element?.["cac:TaxTotal"]?.["cac:TaxSubtotal"]?.[
+                            "cac:TaxCategory"
                         ]?.["cbc:TaxExemptionReasonCode"]?._text;
 
                     // Asignar los datos extraídos al formItem
@@ -430,6 +466,7 @@ export default {
                         description: description,
                         quantity: quantity,
                         unit_price: unit_price,
+                        total: total,
                         presentation: {}
                     };
                     formItem.unit_price = unit_price;
@@ -445,17 +482,28 @@ export default {
             } else {
                 let formItem = self.initFormItem();
 
+                /* console.log("Quantity:", items?.["cbc:InvoicedQuantity"]);
+                console.log(
+                    "Unit Price:",
+                    items?.["cac:Price"]?.["cbc:PriceAmount"]
+                );
+                console.log("Total:", items?.["cbc:LineExtensionAmount"]); */
+
                 // Extraer datos directamente del XML
                 const internal_id =
-                    items?.["cac:Item"]?.["cac:SellersItemIdentification"]?.["cbc:ID"]?._text || 0;
+                    items?.["cac:Item"]?.["cac:SellersItemIdentification"]?.[
+                        "cbc:ID"
+                    ]?._text || 0;
                 const description =
                     items?.["cac:Item"]?.["cbc:Description"]?._cdata || "";
-                    const quantity =
-                    items?.["cac:InvoiceLine"]?.["cbc:InvoicedQuantity"]?._text || "";
-                const unit_price =
+                const quantity = items?.["cbc:InvoicedQuantity"]?._text || "";
+                /* const unit_price =
                     items?.["cac:PricingReference"]?.[
                         "cac:AlternativeConditionPrice"
-                    ]?.["cbc:PriceAmount"]?._text || 0;
+                    ]?.["cbc:PriceAmount"]?._text || 0; */
+                const unit_price =
+                    items?.["cac:Price"]?.["cbc:PriceAmount"]?._text || "";
+                const total = items?.["cbc:LineExtensionAmount"]?._text || "";
                 const affectation_igv_code =
                     items?.["cac:TaxTotal"]?.["cac:TaxSubtotal"]?.[
                         "cac:TaxCategory"
@@ -467,6 +515,7 @@ export default {
                     description: description,
                     quantity: quantity,
                     unit_price: unit_price,
+                    total: total,
                     presentation: {}
                 };
                 formItem.unit_price = unit_price;
@@ -540,7 +589,9 @@ export default {
                 charges: [],
                 discounts: [],
                 attributes: [],
-                guides: []
+                guides: [],
+                supplier_name: null,
+                supplier_number: null
             };
 
             //this.initInputPerson();
