@@ -10,10 +10,9 @@
         top="7vh"
         class="rounded-dialog"
     >
-    <form autocomplete="off" @submit.prevent="submit">
-        <el-tabs v-model="activeTab">
-            <el-tab-pane label="General" name="general">
-                
+        <form autocomplete="off" @submit.prevent="submit">
+            <el-tabs v-model="activeTab">
+                <el-tab-pane label="General" name="general">
                     <div class="form-body">
                         <br />
                         <div class="row">
@@ -216,7 +215,7 @@
                                         </el-tooltip>
                                     </label>
                                     <el-select
-                                        :disabled="establishment_id != null"
+                                        :disabled="allEstablishment"
                                         v-model="form.warehouse_id"
                                         filterable
                                     >
@@ -233,6 +232,11 @@
                                         v-text="errors.warehouse_id[0]"
                                     ></small>
                                 </div>
+                                <small v-if="!recordId">
+                                    <el-checkbox v-model="allEstablishment">
+                                        Todos los almacenes</el-checkbox
+                                    >
+                                </small>
                             </div>
                             <!-- Unidad de Medida -->
                             <div class="col-md-3">
@@ -369,6 +373,31 @@
                                         class="form-control-feedback"
                                         v-if="errors.sale_unit_price"
                                         v-text="errors.sale_unit_price[0]"
+                                    ></small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.commission
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Comision para el receta
+                                        <span class="text-danger"
+                                            >*</span
+                                        ></label
+                                    >
+                                    <el-input
+                                        v-model="form.commission"
+                                        dusk="commission" 
+                                    ></el-input>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.commission"
+                                        v-text="errors.commission[0]"
                                     ></small>
                                 </div>
                             </div>
@@ -520,51 +549,50 @@
                     </div>
 
                     <br />
-                
-            </el-tab-pane>
-            <el-tab-pane label="Almacenes" name="almacenes">
-                <div class="form-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <el-table
-                                :data="warehousePrices"
-                                style="width: 100%"
-                            >
-                                <el-table-column
-                                    prop="warehouse"
-                                    label="Almacén"
-                                    width="300"
-                                ></el-table-column>
-                                <el-table-column label="Precio">
-                                    <template #default="scope">
-                                        <el-input
-                                            v-model="scope.row.price"
-                                            placeholder="Precio"
-                                            @input=""
-                                        ></el-input>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="Almacenes" name="almacenes">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <el-table
+                                    :data="warehousePrices"
+                                    style="width: 100%"
+                                >
+                                    <el-table-column
+                                        prop="warehouse"
+                                        label="Almacén"
+                                        width="300"
+                                    ></el-table-column>
+                                    <el-table-column label="Precio">
+                                        <template #default="scope">
+                                            <el-input
+                                                v-model="scope.row.price"
+                                                placeholder="Precio"
+                                                @input=""
+                                            ></el-input>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
-        <div class="form-actions text-right pt-2">
-            <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
-                Cancelar
-            </el-button>
+                </el-tab-pane>
+            </el-tabs>
+            <div class="form-actions text-right pt-2">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
+                    Cancelar
+                </el-button>
 
-            <el-button
-                icon="fas fa-save fa-lg"
-                type="primary"
-                native-type="submit"
-                :loading="loading_submit"
-            >
-                Guardar
-            </el-button>
-        </div>
-    </form>
+                <el-button
+                    icon="fas fa-save fa-lg"
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                >
+                    Guardar
+                </el-button>
+            </div>
+        </form>
     </el-dialog>
 </template>
 
@@ -586,6 +614,7 @@ export default {
 
     data() {
         return {
+            allEstablishment: false,
             warehousePrices: [],
             activeTab: "general",
             showDialogAddItem: false,
@@ -697,6 +726,7 @@ export default {
                 unit_type_id: "NIU",
                 currency_type_id: "PEN",
                 sale_unit_price: 0,
+                commission: 0,
                 purchase_unit_price: 0,
                 has_isc: false,
                 system_isc_type_id: null,
@@ -938,6 +968,8 @@ export default {
                 return this.$toast.error("Debe seleccionar una categoría");
             if (this.form.individual_items.length < 1)
                 return this.$toast.error("Al menos debe elegir 2 productos");
+
+            this.form.all_establishment = this.allEstablishment;
 
             this.form.warehouse_prices = this.warehousePrices;
 

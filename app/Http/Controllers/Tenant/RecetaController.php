@@ -30,6 +30,10 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\ItemWarehousePrice;
+use App\Models\Tenant\Kardex;
+use Modules\Inventory\Models\Inventory;
+use Modules\Inventory\Models\InventoryKardex;
 use PSpell\Config;
 
 class RecetaController extends Controller
@@ -173,8 +177,10 @@ class RecetaController extends Controller
 
     public function store(ItemRequest $request)
     {
+
+        $all_establishment = $request->all_establishment;
         $id = $request->input('id');
-        $record = DB::connection('tenant')->transaction(function () use ($request, $id) {
+        $record = DB::connection('tenant')->transaction(function () use ($request, $id, $all_establishment) {
 
             $item = Item::firstOrNew(['id' => $id]);
             $item->item_type_id = '01';
@@ -241,6 +247,77 @@ class RecetaController extends Controller
                         ],
                         ['stock' => 0]
                     );
+                }
+            }
+
+            if ($all_establishment) {
+                $warehouses = Warehouse::all()->pluck('id');
+                $stock = $item->stock;
+                $new_qty = count($warehouses) * $item->stock;
+                $id = $item->id;
+                foreach ($warehouses as $wh) {
+
+                    $exist = ItemWarehousePrice::where('warehouse_id', $wh)->where('item_id', $id)->first();
+                    if (!isset($exist)) {
+                        ItemWarehousePrice::create([
+                            'warehouse_id' => $wh,
+                            'price' => $item->sale_unit_price,
+                            'item_id' => $item->id,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                        ]);
+                    }
+
+                    $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
+
+                    if (!isset($exist)) {
+                        ItemWarehouse::create([
+                            'warehouse_id' => $wh,
+                            'stock' => $stock,
+                            'item_id' => $item->id,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                        ]);
+
+
+                        /* $inventory = Inventory::create([
+                            'type' => 1,
+                            'description' => 'Stock Inicial',
+                            'item_id' => $item->id,
+                            'warehouse_id' => $wh,
+                            'quantity' => $stock,
+                            'date_of_issue' => date('Y-m-d')
+                        ]); */
+
+                        /* Kardex::create([
+                            'type' => null,
+                            'date_of_issue' => date('Y-m-d'),
+                            'item_id' => $item->id,
+                            'quantity' => $stock,
+                        ]); */
+
+                        /* InventoryKardex::create([
+                            'date_of_issue' => date('Y-m-d '),
+                            'item_id' => $item->id,
+                            'warehouse_id' => $wh,
+                            'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                            'inventory_kardexable_id' => $inventory->id,
+                            'quantity' => $stock,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                            'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
+
+                        ]); */
+                    }
+                }
+                $item->stock = $new_qty;
+                $item->save();
+            } else {
+                $warehouse_id = $request->warehouse_id;
+                if ($item->unit_type_id == 'ZZ' && $warehouse_id) {
+                    $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item->id, 'warehouse_id' => $warehouse_id]);
+                    $item_warehouse->stock = $item->stock;
+                    $item_warehouse->save();
                 }
             }
 

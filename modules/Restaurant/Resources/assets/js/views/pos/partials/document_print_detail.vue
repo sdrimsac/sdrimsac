@@ -217,9 +217,17 @@
 
                                     <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
                                     <template v-if="type !== 'quotations'">
-                                        <el-tooltip content="Enviar por WhatsApp" placement="top">
+                                        <el-tooltip
+                                            content="Enviar por WhatsApp"
+                                            placement="top"
+                                        >
                                             <el-button
-                                                v-if="data.state_type_id != '11' && data.state_type_id != '13'"
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13'
+                                                "
                                                 size="mini"
                                                 type="success"
                                                 class="me-1"
@@ -229,25 +237,47 @@
                                                 <i class="fab fa-whatsapp"></i>
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip content="Imprimir" placement="top">
+                                        <el-tooltip
+                                            content="Imprimir"
+                                            placement="top"
+                                        >
                                             <el-button
-                                                v-if="data.state_type_id != '11' && data.state_type_id != '13' && configuration.print_document_cash"
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13' &&
+                                                        configuration.print_document_cash
+                                                "
                                                 size="mini"
                                                 type="primary"
                                                 class="me-1"
                                                 circle
-                                                @click="print(data.external_id, data.document_type_id)"
+                                                @click="
+                                                    print(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip content="Previsualizar PDF" placement="top">
+                                        <el-tooltip
+                                            content="Previsualizar PDF"
+                                            placement="top"
+                                        >
                                             <el-button
                                                 size="mini"
                                                 type="danger"
                                                 circle
                                                 style="border: 2px solid white;"
-                                                @click="previsualitation(data.external_id, data.document_type_id)"
+                                                @click="
+                                                    previsualitation(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
                                             >
                                                 <i class="far fa-file-pdf"></i>
                                             </el-button>
@@ -259,7 +289,11 @@
 
                         <!-- Menu Notas de Venta -->
                         <td
-                            v-if="type == 'saleNotes' && type != 'documents' && type != 'quotations'"
+                            v-if="
+                                type == 'saleNotes' &&
+                                    type != 'documents' &&
+                                    type != 'quotations'
+                            "
                             :class="{
                                 'text-white':
                                     data.state_type_id == '11' ||
@@ -285,11 +319,12 @@
                                     style="background-color: #6c757d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
                                 >
                                     <!-- Anular Internamente -->
+                                    <template v-if="configuration.caja_actions">
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="
-                                            data.state_type_id != '11' &&
+                                                data.state_type_id != '11' &&
                                                 data.state_type_id != '13'
                                         "
                                         @click="clickVoidedNote(data)"
@@ -300,7 +335,7 @@
                                         ></i>
                                         <span>Anular </span>
                                     </el-button>
-
+                                    </template>
                                     <!-- Generar CPE (boletas facturas) -->
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
@@ -353,9 +388,17 @@
                                     </el-button>
                                     <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
                                     <template v-if="type !== 'quotations'">
-                                        <el-tooltip content="Enviar por WhatsApp" placement="top">
+                                        <el-tooltip
+                                            content="Enviar por WhatsApp"
+                                            placement="top"
+                                        >
                                             <el-button
-                                                v-if="data.state_type_id != '11' && data.state_type_id != '13'"
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13'
+                                                "
                                                 size="mini"
                                                 type="success"
                                                 class="me-1"
@@ -365,25 +408,47 @@
                                                 <i class="fab fa-whatsapp"></i>
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip content="Imprimir" placement="top">
+                                        <el-tooltip
+                                            content="Imprimir"
+                                            placement="top"
+                                        >
                                             <el-button
-                                                v-if="data.state_type_id != '11' && data.state_type_id != '13' && configuration.print_document_cash"
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13' &&
+                                                        configuration.print_document_cash
+                                                "
                                                 size="mini"
                                                 type="primary"
                                                 class="me-1"
                                                 circle
-                                                @click="print(data.external_id, data.document_type_id)"
+                                                @click="
+                                                    print(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip content="Previsualizar PDF" placement="top">
+                                        <el-tooltip
+                                            content="Previsualizar PDF"
+                                            placement="top"
+                                        >
                                             <el-button
                                                 size="mini"
                                                 type="danger"
                                                 circle
                                                 style="border: 2px solid white;"
-                                                @click="previsualitation(data.external_id, data.document_type_id)"
+                                                @click="
+                                                    previsualitation(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
                                             >
                                                 <i class="far fa-file-pdf"></i>
                                             </el-button>
@@ -394,13 +459,18 @@
                         </td>
 
                         <!-- Menu Cotizaciones -->
-                        <td v-if="type === 'quotations' && type !== 'saleNotes' && type !== 'documents'">
+                        <td
+                            v-if="
+                                type === 'quotations' &&
+                                    type !== 'saleNotes' &&
+                                    type !== 'documents'
+                            "
+                        >
                             <template v-if="type == 'quotations'">
                                 <div class="dropdown-as-select d-inline-block">
                                     <!-- Si esta Anulado  muestra este boton de Previsualizar -->
                                     <el-button
                                         v-if="data.state_type_id === '11'"
-                                        
                                         type="text"
                                         style="border: 2px solid white; color: black; padding: 5px; margin: 5px auto; border-radius: 5px; transition: all 0.3s ease;"
                                         @click="
@@ -415,7 +485,7 @@
                                             style="color: white;"
                                         ></i>
                                     </el-button>
-                                    
+
                                     <!-- Acciones de Cotización -->
                                     <button
                                         v-if="data.state_type_id != '11'"
@@ -427,17 +497,19 @@
                                     >
                                         <i class="fas fa-list"></i>
                                     </button>
-                                    <div class="dropdown-menu p-1"
-                                         style="background-color: #6c757d; 
+                                    <div
+                                        class="dropdown-menu p-1"
+                                        style="background-color: #6c757d; 
                                          border-radius: 8px; 
                                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
-                                        >
-
+                                    >
                                         <!-- Generar CPE a partir de una Cotización -->
                                         <el-button
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #6f42c1; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            @click="clickOptionsQuotation(data.id)"
+                                            @click="
+                                                clickOptionsQuotation(data.id)
+                                            "
                                         >
                                             <i
                                                 class="el-icon-document me-2"
@@ -445,7 +517,7 @@
                                             ></i>
                                             <span>Generar CPE</span>
                                         </el-button>
-                                        
+
                                         <!-- Editar -->
                                         <el-button
                                             class="dropdown-item d-flex align-items-center"
@@ -468,7 +540,6 @@
                                         <el-button
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            
                                             @click="
                                                 clickAnulateQuotation(data.id)
                                             "
@@ -481,43 +552,70 @@
                                         </el-button>
 
                                         <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
-                                        <template >
+                                        <template>
                                             <!-- Envia Cotización por WhatsApp -->
-                                            <el-tooltip content="Enviar por WhatsApp" placement="top">
+                                            <el-tooltip
+                                                content="Enviar por WhatsApp"
+                                                placement="top"
+                                            >
                                                 <el-button
                                                     size="mini"
                                                     type="success"
                                                     class="me-1"
                                                     circle
-                                                    @click="clickOpenWhatsapp(data)"
+                                                    @click="
+                                                        clickOpenWhatsapp(data)
+                                                    "
                                                 >
-                                                    <i class="fab fa-whatsapp"></i>
+                                                    <i
+                                                        class="fab fa-whatsapp"
+                                                    ></i>
                                                 </el-button>
                                             </el-tooltip>
 
                                             <!-- Imprimir Cotizacion -->
-                                            <el-tooltip content="Imprimir" placement="top">
+                                            <el-tooltip
+                                                content="Imprimir"
+                                                placement="top"
+                                            >
                                                 <el-button
-                                                    v-if="configuration.print_document_cash"
+                                                    v-if="
+                                                        configuration.print_document_cash
+                                                    "
                                                     size="mini"
                                                     type="primary"
                                                     class="me-1"
                                                     circle
-                                                    @click="print(data.external_id, data.document_type_id)"
+                                                    @click="
+                                                        print(
+                                                            data.external_id,
+                                                            data.document_type_id
+                                                        )
+                                                    "
                                                 >
                                                     <i class="fas fa-print"></i>
                                                 </el-button>
                                             </el-tooltip>
                                             <!-- Previsualizar cotización -->
-                                            <el-tooltip content="Previsualizar PDF" placement="top">
+                                            <el-tooltip
+                                                content="Previsualizar PDF"
+                                                placement="top"
+                                            >
                                                 <el-button
                                                     size="mini"
                                                     type="danger"
                                                     circle
                                                     style="border: 2px solid white;"
-                                                    @click="previsualitation(data.external_id, data.document_type_id)"
-                                                    >
-                                                    <i class="far fa-file-pdf"></i>
+                                                    @click="
+                                                        previsualitation(
+                                                            data.external_id,
+                                                            data.document_type_id
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="far fa-file-pdf"
+                                                    ></i>
                                                 </el-button>
                                             </el-tooltip>
                                         </template>
@@ -572,10 +670,10 @@
                         <!-- Vendedor  solo en cotizaciones-->
                         <td v-if="type == 'quotations'" class="text-start">
                             <template v-if="data.user_name.includes(' - ')">
-                                {{ data.user_name.split(' - ')[1] }}
+                                {{ data.user_name.split(" - ")[1] }}
                                 <br />
                                 <small class="text-muted">
-                                    {{ data.user_name.split(' - ')[0] }}
+                                    {{ data.user_name.split(" - ")[0] }}
                                 </small>
                             </template>
                             <template v-else>
@@ -583,7 +681,6 @@
                             </template>
                         </td>
 
-                        
                         <td v-if="type == 'quotations'">
                             <template v-if="data.documents.length > 0">{{
                                 data.documents[0].number_full
