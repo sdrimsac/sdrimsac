@@ -49,6 +49,9 @@ class ReportValuedKardexController extends Controller
     
     public function getRecords($request){
 
+        ini_set('memory_limit', '10500M');
+        ini_set('max_execution_time', '30000');
+
         $data_of_period = $this->getDataOfPeriod($request);
 
         $params = (object)[
