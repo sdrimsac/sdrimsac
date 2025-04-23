@@ -910,7 +910,7 @@ export default {
             showDialogPayments: false,
             showNoteModal: false,
             showDialogReasonToAvoid: false,
-            reasonToAvoid: null
+            reasonToAvoid: null,
         };
     },
 

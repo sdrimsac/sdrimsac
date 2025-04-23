@@ -269,7 +269,7 @@ export default {
       },
       lastDocument: null,
       activeName: "documents",
-      showModalGenerateCPE: false
+      showModalGenerateCPE: false,
     };
   },
   methods: {

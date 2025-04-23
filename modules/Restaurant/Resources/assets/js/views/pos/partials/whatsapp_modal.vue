@@ -85,7 +85,8 @@ export default {
     return {
       number: null,
       withXml: false,
-      loading: false
+      loading: false,
+      loading_submit: false,
     };
   },
   methods: {

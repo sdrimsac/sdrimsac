@@ -135,9 +135,7 @@
                                 label="Alquiler mensual"
                             ></el-checkbox>
                         </div>
-                        <div
-                            class="col-3"
-                        >
+                        <div class="col-3">
                             <el-checkbox
                                 v-if="!isReserve"
                                 @change="verifyIsReserve(room)"
@@ -344,6 +342,37 @@
                         </div>
                     </div>
                     <div class="row mt-2"></div>
+                    <!-- <el-divider
+                        v-if="room.services.length > 0"
+                        content-position="left"
+                        >Promociones
+
+                        <el-checkbox
+                            @change="discountService(room)"
+                            v-model="room.discount_instead_services"
+                            label="Cambiar por descuento"
+                        ></el-checkbox>
+                    </el-divider>
+                    <div v-if="room.services.length > 0" class="row">
+                        <div
+                            class="col-md-3"
+                            v-for="(service, sidx) in room.services"
+                            :key="`_sidx${sidx}`"
+                        >
+                            <label for="total_room" class="w-100"
+                                >{{ service.name }}
+                            </label>
+                            <el-input-number
+                                :min="0"
+                                :max="2"
+                                :disabled="room.discount_instead_services"
+                                @input="updateServices"
+                                v-model="service.quantity"
+                            >
+                            </el-input-number>
+                        </div>
+                    </div> -->
+
                     <el-divider
                         v-if="room.services.length > 0"
                         content-position="left"
@@ -548,7 +577,7 @@ export default {
             // this.calculateTotal();
         },
         discountService(room) {
-            i;
+            
             let { discount_instead_services } = room;
             if (discount_instead_services) {
                 room.services = room.services.map(s => {
