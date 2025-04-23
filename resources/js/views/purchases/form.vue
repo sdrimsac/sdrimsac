@@ -817,10 +817,43 @@
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
                                                 {{ row.total_discount }}
+
+                                                <!-- <el-input-number
+                                                    :disabled="
+                                                        row.lots.length > 0 ||
+                                                            row.color_size
+                                                                .length > 0
+                                                    "
+                                                    :min="0.0"
+                                                    v-model="row.total_discount"
+                                                    @change="
+                                                        calculateItem(
+                                                            index,
+                                                            row.quantity,
+                                                            row.unit_price
+                                                        )
+                                                    "
+                                                ></el-input-number> -->
                                             </td>
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
                                                 {{ row.total_charge }}
+                                                <!-- <el-input-number
+                                                    :disabled="
+                                                        row.lots.length > 0 ||
+                                                            row.color_size
+                                                                .length > 0
+                                                    "
+                                                    :min="0.0"
+                                                    v-model="row.total_charge"
+                                                    @change="
+                                                        calculateItem(
+                                                            index,
+                                                            row.quantity,
+                                                            row.total_charge
+                                                        )
+                                                    "
+                                                ></el-input-number> -->
                                             </td>
 
                                             <td class="text-end">
@@ -1055,7 +1088,10 @@
             :ordenInBox.sync="ordenInBox"
         ></pull-apart>
 
-        <purchase-import :showDialog.sync="showImportDialog"></purchase-import>
+        <purchase-import
+            :showDialog.sync="showImportDialog"
+            @import-data="handleImportData"
+        ></purchase-import>
 
         <!-- <aparcado :showDialog.sync="showAparcado"></aparcado> -->
 
@@ -1422,11 +1458,60 @@ export default {
         this.percentage_igv = response.data;
     },
     methods: {
+        /* handleImportData(data) {
+            console.log("Datos importados recibidos:", data);
+        }, */
+
+        /* handleImportData(data) {
+            console.log("Datos importados recibidos:", data);
+
+            // Asignar los datos importados al formulario
+            this.form.series = data.series || ""; // Serie
+            this.form.number = data.number || ""; // Número
+            this.form.date_of_issue = data.date_of_issue || "";
+            this.form.total = data.total || 0; 
+            this.form.supplier_name = data.supplier_name || "";
+            this.form.supplier_number = data.supplier_number || ""; 
+            this.form.items = data.items || []; // Items
+
+            // Si necesitas asignar el proveedor al select
+            const supplier = this.all_suppliers.find(
+                supplier => supplier.number === data.supplier_number
+            );
+            if (supplier) {
+                this.form.supplier_id = supplier.id;
+            }
+        }, */
+
+        handleImportData(data) {
+            console.log("Datos importados recibidos:", data);
+
+            // Asegúrate de que los datos sean válidos antes de asignarlos
+            this.form.series = data.series || "";
+            this.form.number = data.number || "";
+            this.form.date_of_issue = data.date_of_issue || "";
+            this.form.total = data.total || 0;
+            this.form.supplier_name = data.supplier_name || "";
+            this.form.supplier_number = data.supplier_number || "";
+            this.form.items = Array.isArray(data.items) ? data.items : []; // Asegúrate de que sea un array
+        },
+
         clickImport() {
             this.showImportDialog = true;
         },
         calculateItem(index, quantity, unit_price) {
-            this.form.items[index].quantity = quantity;
+            /* this.form.items[index].quantity = quantity; */
+
+            const item = this.form.items[index];
+
+            item.quantity = quantity;
+
+            const discount = parseFloat(item.total_discount || 0);
+            const charge = parseFloat(item.total_charge || 0);
+
+            let total_base = quantity * unit_price;
+            total_base = total_base - discount + charge;
+
             let total_venta = _.round(
                 Math.round(parseFloat(quantity) * parseFloat(unit_price) * 10) /
                     10,

@@ -64,7 +64,6 @@ class ComisionReportExport implements FromCollection, WithHeadings, ShouldAutoSi
     public function date_end($date_end)
     {
         $this->date_end = $date_end;
-        dump($this->date_end);
 
         return $this;
     }
@@ -72,7 +71,6 @@ class ComisionReportExport implements FromCollection, WithHeadings, ShouldAutoSi
     public function date_start($date_start)
     {
         $this->date_start = $date_start;
-        dump($this->date_start);
 
         return $this;
     }

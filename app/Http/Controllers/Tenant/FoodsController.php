@@ -108,9 +108,9 @@ class FoodsController extends Controller
             ->company($company)
             ->records($records)
             ->date_start($date_start)
+            ->date_end($date_end)
             ->date($date)
             ->food_id($food_id)
-            ->date_end($date_end)
             ->download('Reporte_productos_comision' . Carbon::now() . '.xlsx');
 
 

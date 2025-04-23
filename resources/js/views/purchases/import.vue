@@ -6,6 +6,7 @@
         @open="create"
         class="dialog-import"
         :close-on-click-modal="false"
+        width="60%"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -94,6 +95,14 @@
                 <el-button
                     icon="fas fa-sync-alt fa-lg"
                     type="primary"
+                    @click="emitDataToParent"
+                   
+                >
+                    pasar los datos</el-button
+                >
+                <el-button
+                    icon="fas fa-sync-alt fa-lg"
+                    type="primary"
                     native-type="submit"
                     :loading="loading_submit"
                 >
@@ -142,6 +151,19 @@ export default {
         this.initForm();
     },
     methods: {
+        emitDataToParent() {
+            const dataToSend = {
+                supplier_name: this.form.supplier_name,
+                supplier_number: this.form.supplier_number,
+                series: this.previewData.series,
+                number: this.previewData.number,
+                date_of_issue: this.previewData.date_of_issue,
+                total: this.previewData.total,
+                items: this.previewData.items
+            };
+
+            this.$emit("import-data", dataToSend);
+        },
         getText(value) {
             if (typeof value === "string") return value.trim();
             if (typeof value === "object" && value !== null) {
