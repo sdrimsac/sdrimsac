@@ -397,7 +397,7 @@ class WorkerController extends Controller
         else {
             $pin =  $this->newPin();
             $user->pin = $pin;
-            $user->type = 'seller';
+            $user->type = 'seller' ;
             $user->fill($request->all());
             // $user->establishment_id = auth()->user()->establishment_id;
         }

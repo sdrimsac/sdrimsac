@@ -3,6 +3,7 @@
     <el-dialog
         :visible="is_payment"
         @open="date_of_issue"
+        @close="unlockButton"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :modal-append-to-body="true"
@@ -1581,8 +1582,8 @@
                                 >
                                     <button
                                         class="btn btn-primary w-100 me-2"
-                                        @click="sendPayment"
-                                        :disabled="button_payment"
+                                        @click="handleOneClick"
+                                        :disabled="isLocked"
                                     >
                                         <i class="fas fa-money-bill-alt"></i>
                                         PAGAR
@@ -2045,6 +2046,7 @@ export default {
     },
     data() {
         return {
+            isLocked: false,
             all_series: [],
             listPromotionItems: [],
             promotionItems: [],
@@ -2358,14 +2360,6 @@ export default {
     mounted() {
         this.updateDialogWidth();
         window.addEventListener("resize", this.updateDialogWidth);
-        //para autocobrar
-        /* this.$on("auto-payment", form => {
-            this.sendPayment(null, this.form);
-        }); */
-
-        /* this.$on("auto-payment", form => {
-            this.sendPayment(null, form);
-        }); */
 
         this.$on("auto-payment", async form => {
             if (this.printerOn === 1 || this.printerOn === true) {
@@ -2380,6 +2374,23 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
+        /* handleOneClick(event) {
+            event.target.disabled = true;
+            this.sendPayment();
+        }, */
+
+        async handleOneClick() {
+            if (this.isLocked) return;
+
+            this.isLocked = true;
+
+            try {
+                await this.sendPayment();
+            } catch (error) {
+                console.error("Error en el pago:", error);
+            }
+        },
+
         handleDividirPagos() {
             this.form.document_type_id = "80";
             this.filterSeries();
@@ -3147,9 +3158,8 @@ export default {
 
             this.typing = true;
 
-            // Ajustar el tiempo de espera dinámicamente según el tipo de documento
-            const isRUC = this.form.identity_document_type_id === "6"; // Suponiendo que "6" es el ID para RUC
-            const delay = isRUC ? 1000 : this.typingDelay; // 2 segundos para RUC, tiempo normal para otros
+            const isRUC = this.form.identity_document_type_id === "6";
+            const delay = isRUC ? 1000 : this.typingDelay;
 
             this.time = setTimeout(async () => {
                 // Ya pasó el tiempo sin escribir, asumimos que terminó
@@ -4682,7 +4692,6 @@ export default {
         },
         async sendPayment($event, form = null) {
             let pass = true;
-
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
                 (this.form.observation == "" &&
@@ -5108,6 +5117,7 @@ export default {
                         this.ordenLoading = false;
                         this.loading_submit = false;
                         this.button_payment = false;
+                        this.isLocked = false;
                         this.$emit("update:is_payment", false);
                         return;
                     }
@@ -5120,7 +5130,6 @@ export default {
                 if (this.ordens_all_table) {
                     form.all_ordens = true;
                 }
-                // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
                 if (this.sumCoins.length > 0) {
                     form.sumCoins = this.sumCoins;
                 }
@@ -5346,7 +5355,11 @@ export default {
                 /* this.loading_submit = false;
                 this.loading = false; */
                 this.button_payment = false;
+                /* this.isLocked = false; */
             }
+        },
+        unlockButton() {
+            this.isLocked = false;
         },
         async clickPrintPos(printerName, formatoPdf, userId = null) {
             try {
@@ -5723,8 +5736,8 @@ export default {
             } catch (error) {
                 this.$toast.error("Ocurrió un error");
             } finally {
-                this.showDialogPromotionBox = false; // Close the modal
-                loading.close(); // Stop the loading spinner
+                this.showDialogPromotionBox = false;
+                loading.close();
             }
         }
     }

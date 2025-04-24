@@ -101,6 +101,36 @@
                         </div>
                     </div>
 
+                    <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.worker_type_id }"
+                        >
+                            <label for="type">
+                                <i class="fas fa-toolbox"></i> Tipo usuario
+                            </label>
+                            <el-select
+                                v-model="form.worker_type_id"
+                                id="worker_type"
+                                placeholder="Seleccione el tipo de trabajador"
+                                :class="{ 'is-invalid': errors.worker_type_id }"
+                            >
+                                <el-option
+                                    v-for="(data, index) in workersType"
+                                    :key="index"
+                                    :value="data.id"
+                                    :label="data.description"
+                                ></el-option>
+                            </el-select>
+                            <small
+                                class="form-control-feedback text-danger"
+                                v-if="errors.worker_type_id"
+                            >
+                                Ingreso Obligatorio
+                            </small>
+                        </div>
+                    </div>
+
                     <!-- Área de Trabajo -->
                     <div class="col-md-4">
                         <div

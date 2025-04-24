@@ -45,6 +45,14 @@
                     <el-button
                         v-if="resource == 'caja/rooms' && !isRenta"
                         class="custom-button"
+                        @click="clickConfigurations"
+                    >
+                        <i class="fas fa-boxes"></i>
+                        <span>Configuracion</span>
+                    </el-button>
+                    <el-button
+                        v-if="resource == 'caja/rooms' && !isRenta"
+                        class="custom-button"
                         @click.prevent="clickSeeInsumos"
                     >
                         <i class="fas fa-boxes"></i>
@@ -376,6 +384,7 @@
 
                 <penalities :showDialog.sync="showPenalities"></penalities>
                 <whatsapp-rent :showDialog.sync="showWhatsapp"></whatsapp-rent>
+                <config-hotels :showDialog.sync="showConfigurations"></config-hotels>
             </div>
         </div>
     </div>
@@ -421,6 +430,7 @@ import ItemsTables from "./items_tables.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
+import ConfigHotels from "./config.vue";
 export default {
     props: ["type", "title", "configurations"],
     mixins: [deletable],
@@ -433,10 +443,12 @@ export default {
         Insumos,
         Penalities,
         WhatsappRent,
-        ItemsTables
+        ItemsTables,
+        ConfigHotels
     },
     data() {
         return {
+            showConfigurations: false,
             showWhatsapp: false,
             showInsumos: false,
             showItems: false,
@@ -486,6 +498,10 @@ export default {
         }
     },
     methods: {
+        clickConfigurations(){
+            this.showConfigurations = true;
+
+        },
         clickSeeWhatsapp() {
             this.showWhatsapp = true;
         },

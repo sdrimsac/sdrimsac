@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Modules\Inventory\Models\Warehouse;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use Modules\Inventory\Exports\KardexExport;
 use Modules\Inventory\Models\ItemWarehouse;
 use Modules\Inventory\Exports\KardexExport2;
@@ -84,14 +85,65 @@ class ReportKardexController extends Controller
     }
 
 
-    public function records(Request $request, $note = true)
+    /* public function records(Request $request, $note = true)
     {
+
+        $item_id =  $request->item_id;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $warehouse_id = $request->warehouse_id;
+
+        $records = DB::connection('tenant')->select('CALL get_inventory_kardex_filtered(?, ?, ?, ?)', [
+            $item_id,
+            $start_date,
+            $end_date,
+            $warehouse_id
+        ]);
+
+        return response()->json($records);
         $stablecimiento = $request->id_establecimiento;
 
         $records = $this->getRecords($request->all(), $note);
 
 
-        return new ReportKardexCollection($records->paginate(config('tenant.items_per_page')));
+        return new ReportKardexCollection($records->paginate(config('tenant.items_per_page')))
+    } */
+
+    public function records(Request $request)
+    {
+        // Set warehouse_id from establish parameter
+        $warehouse_id = $request->establish;
+
+        try {
+            // Parámetros para el stored procedure
+            $params = [
+                $request->item_id,
+                $warehouse_id, // Using establish value here
+                $request->date_start,
+                $request->date_end,
+                $request->input('page', 1),
+                $request->input('per_page', 20)
+            ];
+
+            // Ejecutar stored procedure
+            $records = DB::connection('tenant')
+                ->select('CALL GenerateKardexReport(?, ?, ?, ?, ?, ?)', $params);
+
+            return response()->json([
+                'success' => true,
+                'data' => $records,
+                'pagination' => [
+                    'current_page' => $request->input('page', 1),
+                    'per_page' => $request->input('per_page', 20)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el reporte',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function records_lots()
@@ -133,13 +185,13 @@ class ReportKardexController extends Controller
 
             if ($note == false) {
 
-                $data = InventoryKardex::with(['inventory_kardexable','user'])
+                $data = InventoryKardex::with(['inventory_kardexable', 'user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
                     ->orderBy('item_id')->orderBy('created_at');
             } else {
-                $data = InventoryKardex::with(['inventory_kardexable','user'])
+                $data = InventoryKardex::with(['inventory_kardexable', 'user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->whereBetween('date_of_issue', [$date_start, $date_end])
                     ->orderBy('item_id')->orderBy('created_at');
@@ -147,13 +199,13 @@ class ReportKardexController extends Controller
         } else {
             if ($note == false) {
 
-                $data = InventoryKardex::with(['inventory_kardexable','user'])
+                $data = InventoryKardex::with(['inventory_kardexable', 'user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->where('inventory_kardexable_type', "!=", "App\Models\SaleNote")
                     ->orderBy('item_id')->orderBy('created_at'); // Ensure created_at is ordered in descending order
             } else {
 
-                $data = InventoryKardex::with(['inventory_kardexable','user'])
+                $data = InventoryKardex::with(['inventory_kardexable', 'user'])
                     ->where([['warehouse_id', $warehouse]])
                     ->orderBy('item_id')->orderBy('created_at'); // Ensure created_at is ordered in descending order
             }

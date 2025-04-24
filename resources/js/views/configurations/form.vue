@@ -17241,17 +17241,14 @@ export default {
         ) {
             this.promotionsSetUp(optionName);
             const action = isActive ? "ACTIVADO" : "DESACTIVADO";
-            const backgroundColor = "#f8f9fa"; // Fondo blanco o gris claro
-            const actionColor = isActive ? "#28a745" : "#dc3545"; // Verde para activado, rojo para desactivado
+            const backgroundColor = "#f8f9fa";
+            const actionColor = isActive ? "#28a745" : "#dc3545";
 
             let iconHtml = "";
 
             if (isImage && iconOrImgSrc) {
-                // Si se trata de una imagen y se ha proporcionado un src válido, se muestra sin el borde redondeado
                 iconHtml = `<img src="${iconOrImgSrc}" alt="${optionName} Logo" class="payment-logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 10px; border-radius: 0;" />`;
             }
-
-            /* console.log('Enviando datos a la API:', this.form, `/${this.resource}`); */
 
             this.loading_submit = true;
 
@@ -17262,10 +17259,9 @@ export default {
                 );
 
                 if (response.data.success) {
-                    // Mostrar un SweetAlert centrado cuando la operación es exitosa
                     Swal.fire({
-                        position: "center", // Centrado en la pantalla
-                        icon: isActive ? "success" : "error", // Icono de éxito o error dependiendo del estado
+                        position: "center",
+                        icon: isActive ? "success" : "error", 
                         title: optionName
                             ? optionName.toUpperCase()
                             : "ACTUALIZADO",

@@ -1432,15 +1432,16 @@
                     </a>
                 </li>
                 {{-- @if ($config->download_all_files) --}}
-                <li>
-                    <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                        href="{{ route('tenant.download_files.index') }}">
-                        <i class="icofont-download" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                        <span style="font-size: 1em; ">Descargar Archivos CPE</span>
-                    </a>
-                </li>
-                {{-- @endif --}}
                 @if (!$roleService->isArca())
+                    <li>
+                        <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                            href="{{ route('tenant.download_files.index') }}">
+                            <i class="icofont-download" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                            <span style="font-size: 1em; ">Descargar Archivos CPE</span>
+                        </a>
+                    </li>
+                    {{-- @endif --}}
+
                     <li>
                         <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
                             href="{{ route('tenant.tasks.index') }}">
