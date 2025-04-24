@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-footer="true">
 
-<head>
+<{{-- v --}}head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>
@@ -56,6 +56,7 @@
 
 <body>
     <div id="root">
+        {{-- Principal Barra de Caja --}}
         <div id="nav" class="nav-container d-flex">
             <div class="nav-content d-flex justify-content-between">
                 <!-- Logo Start -->
@@ -85,10 +86,12 @@
 
                 <!-- User Menu Start -->
                 <div class="user-container d-flex" style="max-width: 350px ;max-height: 120px;">
-                    <div class="text-center date-time-container" style="color: var(--light-text); line-height: 1;">
+                    {{-- llama a la fecha y hora --}}
+                    {{-- <div class="text-center date-time-container" style="color: var(--light-text); line-height: 1;">
                         <span id="current-date"></span><br>
                         <span id="current-time"></span>
-                    </div>
+                    </div> --}}
+                    {{-- La imagen del Usuario --}}
                     <div class="name user-image-container">
                         @php
                             $config = DB::connection('tenant')->table('configurations')->first();
@@ -123,53 +126,99 @@
                                  loading="lazy">
                         @endif
                     </div>
+
                     <span></span>
-                    <div class="name" style="color: var(--light-text); line-height: 1;">
-                        {{ $vc_user->name }} <br>
+
+                    {{-- Nombre del usuario  y Tipo--}}
+                    
+                    <div class="" style="color: var(--light-text); line-height: 1; width: auto; max-width: 300px; overflow-wrap: break-word;">
+                        @if (strpos($vc_user->name, ' - ') !== false)
+                            @php
+                                $nameParts = explode(' - ', $vc_user->name);
+                            @endphp
+                            <span style="font-weight: bold; font-size: 1.2rem; margin-top:5px">{{ $nameParts[0] }}</span><br>
+                            <span>{{ $nameParts[1] }}</span>
+                        @else
+                            {{ $vc_user->name }}
+                        @endif
+                        <br>
 
                         @if ($vc_company->soap_type_id == '01')
-                            <span style="margin-top:10px !important;font-weight: 900;">DEMO</span>
+                            {{-- <span style="margin-top:10px !important;font-weight: 900;">DEMO</span> --}}
+                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                                src="{{ asset('acorn/img/profile/demo.png') }}" />
                         @elseif($vc_company->soap_type_id == '02')
-                            <span
-                                style="margin-top:10px !important;color: #28a745 !important;font-weight: 900;">PRODUCCIÓN</span>
+                        <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                                src="{{ asset('acorn/img/profile/produccion.png') }}" />
+                            {{-- <span style="margin-top:10px !important;color: #28a745 !important;font-weight: 900;">PRODUCCIÓN</span> --}}
                         @else
-                            <span style="margin-top:10px !important;">INTERNO</span>
+                            {{-- <span style="margin-top:10px !important;">INTERNO</span> --}}
+                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                                src="{{ asset('acorn/img/profile/interno.png') }}" />
                         @endif
                     </div>
-                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <img style="width:90%;height:90%" class="profile" alt="profile"
-                            src="{{ asset('acorn/img/profile/store.png') }}" />
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end user-menu wide">
-                        <div class="row  ms-0 me-0">
-                            <div class="col-12 pe-1 ps-1">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
-                                            <span class="align-middle">Cerrar Sesión</span>
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                    @if ($config->user_edit)
-                                        <li>
-                                            <a href="#" data-bs-toggle="modal"
-                                                data-bs-target="#changePasswordModal">
-                                                <i data-cs-icon="key" class="me-2" data-cs-size="17"></i>
-                                                <span class="align-middle">Cambiar contraseña</span>
-                                            </a>
-                                        </li>
-                                    @endif
-                                </ul>
+
+                    {{-- Logo del Distribuidor 700 x 300 --}}
+                    <div style="width: 100%; max-width: 200px; margin: auto;">
+                            {{-- Imagen del Logo sdrimsac --}}
+                            <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" style="width: 100px; height: auto;">
+                            <img style="width: 150%; height: 100%;" class="profile" alt="profile"
+                                src="{{ asset('acorn/img/profile/store.png') }}" />
+                            </a>
+                            {{-- Menu de usuario Logout y cambio de contraseña  --}}
+                            <div class="dropdown-menu dropdown-menu-end user-menu p-2" style="background-color: #444a50; margin: 0; width: auto; min-width: fit-content;">
+                                <div class="row ms-0 me-0">
+                                    <div class="col-12 pe-1 ps-1">
+                                        <ul class="list-unstyled mb-0">
+                                            @if ($config->user_edit)
+                                                <li class="mb-2">
+                                                    <a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#changePasswordModal"
+                                                        class="btn btn-info align-items-center text-white"
+                                                        style="background-color: #22d7c5; border-color: #109184; padding: 5px 8px; border-radius: 5px;">
+                                                        <i class="fas fa-key me-2"></i>
+                                                        <span class="">Cambiar PIN</span>
+                                                    </a>
+                                                </li>
+                                            @endif
+
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                                    class="btn btn-danger align-items-center text-white"
+                                                    style="background-color: #dc3545; border-color: #dc3545; padding: 5px 8px; border-radius: 5px;">
+                                                    <i class="fas fa-sign-out-alt me-2"></i>
+                                                    <span class="">Cerrar Sesión</span>
+                                                </a>
+                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                    style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+
                     </div>
+                    
+
+                    
+                    <script>
+                        function resizeElement() {
+                            const newWidth = prompt("Enter new width (e.g., 100px, 50%):", "100px");
+                            const newHeight = prompt("Enter new height (e.g., 100px, 50%):", "100px");
+
+                            if (newWidth && newHeight) {
+                                document.getElementById('resizeButton').style.width = newWidth;
+                                document.getElementById('resizeButton').style.height = newHeight;
+                            }
+                        }
+                    </script>
+                    
                 </div>
+
                 {{-- modal para cambiar la contraseñpa del usario caja  --}}
                 @auth
                     <div class="modal fade" id="changePasswordModal" tabindex="-1"
@@ -178,10 +227,10 @@
                             <div class="modal-content">
                                 <form id="changePasswordForm" action="{{ route('update_code') }}" method="POST">
                                     @csrf
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar PIN</h5>
+                                    <div class="modal-header" style="background-color: #003366; ">
+                                        <h5 class="modal-title" id="changePasswordModalLabel" style="color: white;">Cambiar PIN</h5>
                                         <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                            aria-label="Close" style="filter: invert(1);"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="input-group">
@@ -210,24 +259,24 @@
 
                 <!-- Icons Menu Start -->
                 {{-- <ul class="list-unstyled list-inline text-center menu-icons">
-             <li class="list-inline-item">
-              <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
-                <i data-cs-icon="search" data-cs-size="18"></i>
-              </a>
-            </li> 
-            <li class="list-inline-item">
-              <a href="#" id="pinButton" class="pin-button">
-                <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
-                <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#" id="colorButton">
-                <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
-                <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
-              </a>
-            </li>
-          </ul> --}}
+                    <li class="list-inline-item">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
+                            <i data-cs-icon="search" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" id="pinButton" class="pin-button">
+                            <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
+                            <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" id="colorButton">
+                            <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
+                            <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                </ul> --}}
                 <!-- Icons Menu End -->
 
                 <!-- Menu Start -->
@@ -274,21 +323,44 @@
                     </div>
                     <!-- Menu Button End -->
                 </div>
-                <div>
-                    <h1>q21342</h1>
-                </div>
+               
                 <!-- Mobile Buttons End -->
             </div>
-            <div class="nav-shadow"></div>
         </div>
+        <div></div>
+        {{-- Nuevo Card --}}
+        {{-- <div    class="card" 
+            style="background-color: rgb(13, 13, 128); 
+            color: white; 
+            padding: 30px; 
+            margin: 20px; 
+            border-radius: 10px; 
+            position: relative; 
+           
+            top: 30px;  
+           
+            z-index: 100; 
+            
+            ">
+          
+           
+                    <div class="text-end date-time-container" style="color: var(--light-text); line-height: 1; position: absolute; bottom: 10px; right: 10px;">
+                        <span id="current-day"></span> 
+                        <span id="current-date"></span> 
+                        <span id="current-month"></span> 
+                        <span id="current-year"></span>
+                        <span id="current-time"></span>
+                    </div>
+        </div>  --}}
 
         <main>
-            <div id="main">
+            <div id="main" >
                 @yield('content')
             </div>
         </main>
-        @if ($vc_user->type == 'superadmin')
-            <!-- Theme Settings Modal Start -->
+
+        {{-- @if ($vc_user->type == 'superadmin')
+           
             <div class="modal fade modal-right scroll-out-negative" id="settings" data-bs-backdrop="true"
                 tabindex="-1" role="dialog" aria-labelledby="settings" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable full" role="document">
@@ -568,32 +640,32 @@
                 data-bs-target="#settings" id="settingsButton">
                 <i data-cs-icon="paint-roller" class="position-relative"></i>
             </button>
-            <!-- Theme Settings Modal End -->
-        @endif
-        <!-- Layout Footer Start -->
-        <footer>
+            
+        @endif --}}
+       
+        <footer style="margin-top: 0; margin-bottom: 0;">
             <div class="footer-content">
                 <div class="container">
                     <div class="row">
-                        <div class="col-12 col-sm-12">
+                        <div style="color: rgb(9, 9, 57);">
                             @php
-                                $commit = exec('git rev-parse HEAD');
-                                $commit = substr($commit, 0, 7);
+                            $commit = exec('git rev-parse HEAD');
+                            $commit = substr($commit, 0, 7);
                             @endphp
-                            <p class="mb-0 text-muted text-medium" style="text-align: right ; color:darkblue ">
-                                @if ($commit)
-                                    <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
-                                @endif
-                                <span>Todos
-                                    los derechos reservados por Sdrimsac Solutions {{ date('Y') }} <i
-                                        class="far fa-copyright"></i></span>
+                            <p class="mb-0 text-medium" style="text-align: right; font-size: 1.2rem;">
+                            @if ($commit)
+                                <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                            @endif
+                            <span>Todos los derechos reservados
+                                <span style="font-weight: bold;">Desarrollado por Sdrimsac Solutions {{ date('Y') }} <i
+                                class="far fa-copyright"></i></span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
         </footer>
-        <!-- Layout Footer End -->
+        
     </div>
 
     <style>
@@ -634,6 +706,22 @@
                 display: none !important;
             }
         }
+
+        @media (max-width: 768px) {
+            .user-image-container {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                min-height: 50px;
+            }
+        }
+
+        @media screen and (max-width: 800px) {
+            .date-time-container,
+            .user-image-container {
+                display: none !important;
+            }
+        }
         .user-image-container {
             aspect-ratio: 1/1; /* Fuerza una relación de aspecto 1:1 (cuadrado) */
             width: 60px; /* Ancho fijo */
@@ -651,30 +739,19 @@
         }
 
         .profile-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            image-rendering: -webkit-optimize-contrast;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+            width: 100% !important; /* La imagen ocupará el 100% del ancho del contenedor */
+            height: auto !important; /* La altura se ajustará automáticamente para mantener la proporción */
+            max-width: 700px !important; /* El ancho máximo será de 700px */
+            max-height: 300px !important; /* La altura máxima será de 300px */
+            object-fit: contain !important; /* La imagen se ajustará dentro del contenedor sin distorsionarse */
+            object-position: center !important; /* Centra la imagen si hay espacio adicional */
+            image-rendering: -webkit-optimize-contrast !important; /* Mejora la calidad de la imagen */
+            transform: translateZ(0) !important;
+            backface-visibility: hidden !important;
         }
 
-        @media (max-width: 768px) {
-            .user-image-container {
-                width: 50px;
-                height: 50px;
-                min-width: 50px;
-                min-height: 50px;
-            }
-        }
 
-        @media screen and (max-width: 800px) {
-            .date-time-container,
-            .user-image-container {
-                display: none !important;
-            }
-        }
+       
     </style>
     <!-- Vendor Scripts Start -->
     <script src="{{ asset('acorn/js/vendor/jquery-3.5.1.min.js') }}"></script>
@@ -799,5 +876,8 @@
     </script>
     <!-- Page Specific Scripts End -->
 </body>
-
+{{-- <div class="card" style="background-color: red; color: white; padding: 20px; margin: 20px; border-radius: 10px;">
+    <h3>Card Roja</h3>
+    <p>Este es un ejemplo de una tarjeta con fondo rojo.</p>
+</div> --}}
 </html>

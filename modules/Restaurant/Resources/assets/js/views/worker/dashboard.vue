@@ -30,7 +30,7 @@
 
                                 <el-button
                                     v-if="
-                                        configuration.chifa_china &&
+                                        configuration.created_items &&
                                             show == 'create' &&
                                             currentTable
                                     "
@@ -115,7 +115,7 @@
                     class="col-12 pt-2 pb-2"
                     v-if="show == 'create' && screenWidth > 678"
                 >
-                    <template v-if="configuration.chifa_china">
+                    <template v-if="configuration.category_deslay">
                         <div class="categories-scroll">
                             <div class="categories-wrapper">
                                 <div

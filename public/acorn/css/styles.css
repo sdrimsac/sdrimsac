@@ -11285,6 +11285,8 @@ html[data-placement='horizontal'] main {
   padding-top: calc(var(--nav-size-slim) + calc(var(--main-spacing-horizontal) / 6)); 
 }
 
+
+
 html[data-placement='vertical'][data-dimension='mobile'] main {
   padding-left: calc(var(--main-spacing-horizontal) + var(--nav-size-slim)); }
 

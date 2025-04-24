@@ -14,12 +14,12 @@
                                         :class="{ 'has-danger': errors.establishment }"
                                         class="form-group"
                                     >
-                                        <!-- <label class="control-label">
+                                        <label class="control-label">
                                             <i
                                                 class="fas fa-warehouse red-icon"
                                             ></i>
                                             Establecimiento
-                                        </label> -->
+                                        </label>
                                         <el-select
                                             v-model="form.establishment_id"
                                             @change="changeEstablishment"

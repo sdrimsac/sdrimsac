@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'delete_mozo',
+        'category_deslay',
+        'created_items',
         'yape_report',
         'image_comand',
         'edit_mesa',
@@ -30,7 +33,7 @@ class Configuration extends ModelTenant
         'crear_items',
         'catalog',
         'consolidated_quotation_details',
-        'mod_renta',    
+        'mod_renta',
         'credit_nv_show_pending',
         'edit_price',
         'odontologia',
@@ -316,6 +319,9 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'delete_mozo' => 'boolean',
+        'category_deslay' => 'boolean',
+        'created_items' => 'boolean',
         'yape_report' => 'boolean',
         'image_comand' => 'boolean',
         'edit_mesa' => 'boolean',
@@ -352,7 +358,7 @@ class Configuration extends ModelTenant
         'download_all_files' => 'boolean',
         'digital_notifications' => 'boolean',
         'warranty_product' => 'boolean',
-        'product_export' => 'boolean', 
+        'product_export' => 'boolean',
         'print_pos_worker' => 'boolean',
         'unit_type_select_barcode' => 'boolean',
         'sale_offert' => 'boolean',
@@ -575,6 +581,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'delete_mozo' => (bool) $this->delete_mozo,
+            'category_deslay' => (bool) $this->category_deslay,
+            'created_items' => (bool) $this->created_items,
             'yape_report' => (bool) $this->yape_report,
             'image_comand' => (bool) $this->image_comand,
             'edit_mesa' => (bool)$this->edit_mesa,
@@ -648,14 +657,14 @@ class Configuration extends ModelTenant
             'imprimir_comanda_cocina' => (bool)$this->imprimir_comanda_cocina,
             'imprimir_precuenta_comanda' => (bool)$this->imprimir_precuenta_comanda,
             'nuevo_comprobante_electronico' => (bool)$this->nuevo_comprobante_electronico,
-            'listado_boleta_factura_nuevo' =>(bool)$this->listado_boleta_factura_nuevo,
-            'no_enviados' =>(bool)$this->no_enviados,
-            'nota_venta' =>(bool)$this->nota_venta,
-            'nota_credito' =>(bool)$this-> nota_credito,
-            'cotizaciones' =>(bool)$this-> cotizaciones,
-            'resumenes' =>(bool)$this-> resumenes,
-            'anulaciones' =>(bool)$this-> anulaciones,
-            'listado_productos' =>(bool)$this->listado_productos,
+            'listado_boleta_factura_nuevo' => (bool)$this->listado_boleta_factura_nuevo,
+            'no_enviados' => (bool)$this->no_enviados,
+            'nota_venta' => (bool)$this->nota_venta,
+            'nota_credito' => (bool)$this->nota_credito,
+            'cotizaciones' => (bool)$this->cotizaciones,
+            'resumenes' => (bool)$this->resumenes,
+            'anulaciones' => (bool)$this->anulaciones,
+            'listado_productos' => (bool)$this->listado_productos,
             'guias_remision' => (bool)$this->guias_remision,
             'promocion_oferta' => (bool)$this->promocion_oferta,
             'ingreso_salida_productos' => (bool)$this->ingreso_salida_productos,
@@ -985,7 +994,8 @@ class Configuration extends ModelTenant
             'other_currency_pos' => (bool)$this->other_currency_pos,
         ];
     }
-    public function item_variation () {
+    public function item_variation()
+    {
         return $this->belongsTo(Item::class, 'item_variation_id');
     }
     public  function hasAffectationIgv(): ?bool

@@ -108,6 +108,7 @@
                         </el-button>
 
                         <el-button
+                        v-if="configuration.delete_mozo"
                             type="danger"
                             @click="cancelGeneralOrden"
                             class="btn btn-sm"
@@ -275,6 +276,7 @@
                                                         placement="top-start"
                                                     >
                                                         <el-button
+                                                            v-if="configuration.delete_mozo"
                                                             type="danger"
                                                             icon="el-icon-delete"
                                                             @click="

@@ -14045,6 +14045,189 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mt-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.delete_mozo
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"
+                                                                            ></i>
+                                                                            Quitar la opcion de cancelar pedidos en nmozo
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="con esta opciopn se ocultara la opcion de cancelar pedidos parcial o completo"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.delete_mozo
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'ocular la opcion de cancelar pedidos en mozo',
+                                                                                        form.delete_mozo,
+                                                                                        'variationIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mt-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.category_deslay
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"
+                                                                            ></i>
+                                                                            Mostrar categrotia en scrol seleccionable
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="activar esta opcion para mostrar las categorias en scroll con un formato mas visible como chifa china"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.category_deslay
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'activar la categoria en scroll',
+                                                                                        form.category_deslay,
+                                                                                        'variationIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mt-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.created_items
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"
+                                                                            ></i>
+                                                                            Crear productos nuevos desde mozo o caja
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="con esta opcion permite crear nuevos productos nuevos desde caja o mozo y automaticamente se seleccionara para enviar a la orden"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.created_items
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'crear productos nuevos desde mozo o caja',
+                                                                                        form.created_items,
+                                                                                        'variationIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         
                                                         <!-- <div class="col-md-2 mt-4">
                                                         <div class="form-group">
