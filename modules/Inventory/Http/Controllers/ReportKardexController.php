@@ -85,47 +85,28 @@ class ReportKardexController extends Controller
     }
 
 
-    /* public function records(Request $request, $note = true)
+    public function records(Request $request, $note = true)
     {
-
-        $item_id =  $request->item_id;
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-        $warehouse_id = $request->warehouse_id;
-
-        $records = DB::connection('tenant')->select('CALL get_inventory_kardex_filtered(?, ?, ?, ?)', [
-            $item_id,
-            $start_date,
-            $end_date,
-            $warehouse_id
-        ]);
-
-        return response()->json($records);
-        $stablecimiento = $request->id_establecimiento;
 
         $records = $this->getRecords($request->all(), $note);
 
 
-        return new ReportKardexCollection($records->paginate(config('tenant.items_per_page')))
-    } */
+        return new ReportKardexCollection($records->paginate(config('tenant.items_per_page')));
+    }
 
-    public function records(Request $request)
+    /* public function records(Request $request)
     {
-        // Set warehouse_id from establish parameter
         $warehouse_id = $request->establish;
 
         try {
-            // Parámetros para el stored procedure
             $params = [
                 $request->item_id,
-                $warehouse_id, // Using establish value here
+                $warehouse_id,
                 $request->date_start,
                 $request->date_end,
                 $request->input('page', 1),
-                $request->input('per_page', 20)
+                $request->input('per_page', 10000)
             ];
-
-            // Ejecutar stored procedure
             $records = DB::connection('tenant')
                 ->select('CALL GenerateKardexReport(?, ?, ?, ?, ?, ?)', $params);
 
@@ -144,7 +125,7 @@ class ReportKardexController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-    }
+    } */
 
     public function records_lots()
     {

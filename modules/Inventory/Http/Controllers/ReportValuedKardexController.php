@@ -42,27 +42,11 @@ class ReportValuedKardexController extends Controller
 
     public function records(Request $request)
     {
-       /*  ini_set('memory_limit', '10500M');
+       ini_set('memory_limit', '10500M');
         ini_set('max_execution_time', '30000');
 
         $records = $this->getRecords($request->all());
-        return new ReportValuedKardexCollection($records->paginate(config('tenant.items_per_page'))); */
-
-
-        $item_id =  $request->item_id;
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-        $warehouse_id = $request->warehouse_id;
-
-        $records = DB::select('CALL get_inventory_kardex_filtered(?, ?, ?, ?)', [
-            $item_id,
-            $start_date,
-            $end_date,
-            $warehouse_id
-        ]);
-
-        return response()->json($records);
-        dump($records);
+        return new ReportValuedKardexCollection($records->paginate(config('tenant.items_per_page')));
     }
 
 
