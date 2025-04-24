@@ -70,6 +70,28 @@
                                     data.state_type_id != '13'
                             }"
                         >
+                            <el-button
+                                type="danger"
+                                size="mini"
+                                plain
+                                @click="
+                                    previsualitation(
+                                        data.external_id,
+                                        data.document_type_id
+                                    )
+                                "
+                            >
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Previsualización de pdf (Descargar)"
+                                    placement="top-start"
+                                >
+                                    <i
+                                        class="far fa-file-pdf text-white fa-lg"
+                                    ></i>
+                                </el-tooltip>
+                            </el-button>
                             <div class="dropdown-as-select d-inline-block">
                                 <button
                                     v-if="
@@ -300,6 +322,29 @@
                                     data.state_type_id == '13'
                             }"
                         >
+                            <el-button
+                                type="danger"
+                                size="mini"
+                                plain
+                                @click="
+                                    previsualitation(
+                                        data.external_id,
+                                        data.document_type_id
+                                    )
+                                "
+                            >
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Previsualización de pdf (Descargar)"
+                                    placement="top-start"
+                                >
+                                    <i
+                                        class="far fa-file-pdf text-white fa-lg"
+                                    ></i>
+                                </el-tooltip>
+                            </el-button>
+
                             <div class="dropdown-as-select d-inline-block">
                                 <button
                                     v-if="
@@ -320,21 +365,21 @@
                                 >
                                     <!-- Anular Internamente -->
                                     <template v-if="configuration.caja_actions">
-                                    <el-button
-                                        class="dropdown-item d-flex align-items-center"
-                                        style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
-                                        v-if="
+                                        <el-button
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="
                                                 data.state_type_id != '11' &&
-                                                data.state_type_id != '13'
-                                        "
-                                        @click="clickVoidedNote(data)"
-                                    >
-                                        <i
-                                            class="el-icon-close me-2"
-                                            style="color: white; margin-right: 10px;"
-                                        ></i>
-                                        <span>Anular </span>
-                                    </el-button>
+                                                    data.state_type_id != '13'
+                                            "
+                                            @click="clickVoidedNote(data)"
+                                        >
+                                            <i
+                                                class="el-icon-close me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Anular </span>
+                                        </el-button>
                                     </template>
                                     <!-- Generar CPE (boletas facturas) -->
                                     <el-button
@@ -910,7 +955,7 @@ export default {
             showDialogPayments: false,
             showNoteModal: false,
             showDialogReasonToAvoid: false,
-            reasonToAvoid: null,
+            reasonToAvoid: null
         };
     },
 

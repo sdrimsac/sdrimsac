@@ -7,11 +7,7 @@ eval("var disposed = false\nvar normalizeComponent = __webpack_require__(1)\n/* 
 
 /***/ }),
 
-<<<<<<< Updated upstream
 /***/ 834:
-=======
-/***/ 831:
->>>>>>> Stashed changes
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

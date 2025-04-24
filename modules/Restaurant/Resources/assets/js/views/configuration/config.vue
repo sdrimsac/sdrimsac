@@ -1,102 +1,109 @@
 <template>
     <el-dialog
-        title="Insumos"
+        title="Configuración de Hotel"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
         :visible="showDialog"
         append-to-body
         @close="close"
         @open="open"
+        width="70%"
         class="rounded-dialog"
     >
         <div class="card">
-            <div class="row">
-                <!-- Template Hotel -->
-                <template v-if="form.hotels">
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Tiempo de alarma de alquileres por vencer
-                            </label>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Template Hotel -->
+                    <template v-if="form.hotels">
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100">
+                                    Tiempo de alarma de alquileres por vencer
+                                </label>
 
-                            <el-input-number
-                                @change="submit"
-                                v-model="form.alarm_to_end"
-                            ></el-input-number>
+                                <el-input-number
+                                    @change="submit"
+                                    v-model="form.alarm_to_end"
+                                ></el-input-number>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Tiempo para el calculo del inicio del dia
-                            </label>
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100">
+                                    Tiempo para el calculo del inicio del dia
+                                </label>
 
-                            <el-time-picker
-                                style="width: 100%;"
-                                value-format="HH:mm:ss"
-                                :format="'hh:mm A'"
-                                :picker-options="{
-                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                }"
-                                timezone="America/Lima"
-                                v-model="form.time_to_enter"
-                            ></el-time-picker>
+                                <el-time-picker
+                                    style="width: 100%;"
+                                    value-format="HH:mm:ss"
+                                    :format="'hh:mm A'"
+                                    :picker-options="{
+                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                    }"
+                                    timezone="America/Lima"
+                                    v-model="form.time_to_enter"
+                                ></el-time-picker>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Tiempo para el calculo del final del dia
-                            </label>
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100">
+                                    Tiempo para el calculo del final del dia
+                                </label>
 
-                            <el-time-picker
-                                style="width: 100%;"
-                                value-format="HH:mm:ss"
-                                :format="'hh:mm A'"
-                                :picker-options="{
-                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                }"
-                                timezone="America/Lima"
-                                v-model="form.time_to_leave"
-                            ></el-time-picker>
+                                <el-time-picker
+                                    style="width: 100%;"
+                                    value-format="HH:mm:ss"
+                                    :format="'hh:mm A'"
+                                    :picker-options="{
+                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                    }"
+                                    timezone="America/Lima"
+                                    v-model="form.time_to_leave"
+                                ></el-time-picker>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Tiempo de mantenimiento</label
-                            >
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100"
+                                    >Tiempo de mantenimiento</label
+                                >
 
-                            <el-input-number
-                                @change="submit"
-                                v-model="form.time_manteniment"
-                            ></el-input-number>
+                                <el-input-number
+                                    @change="submit"
+                                    v-model="form.time_manteniment"
+                                ></el-input-number>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Limite de la garantía - frigobar
-                            </label>
-                            <el-input-number
-                                @change="submit"
-                                v-model="form.credit_line_hotel_limit"
-                            ></el-input-number>
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100">
+                                    Limite de la garantía - frigobar
+                                </label>
+                                <el-input-number
+                                    @change="submit"
+                                    v-model="form.credit_line_hotel_limit"
+                                ></el-input-number>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3 mt-4">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Descuento aplicado por día a cambio del servicio
-                                x habitación
-                            </label>
-                            <el-input-number
-                                @change="submit"
-                                v-model="form.discount_amount_instead_service"
-                            ></el-input-number>
+                        <div class="col-md-4 mt-4">
+                            <div class="form-group">
+                                <label class="control-label w-100">
+                                    Descuento aplicado por día a cambio del
+                                    servicio x habitación
+                                </label>
+                                <el-input-number
+                                    @change="submit"
+                                    v-model="
+                                        form.discount_amount_instead_service
+                                    "
+                                ></el-input-number>
+                            </div>
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
             </div>
         </div>
     </el-dialog>
@@ -108,6 +115,7 @@ export default {
     components: {},
     data() {
         return {
+            resource: "configurations",
             form: {
                 alarm_to_end: 0,
                 time_to_enter: null,
@@ -119,22 +127,20 @@ export default {
             loading_submit: false
         };
     },
-    async created() {
-        await this.loadTables();
-        await this.initForm();
-        console.log(this.isArca);
-        this.getUsersExcluded();
-        await this.$http.get(`/${this.resource}/record`).then(response => {
-            if (response.data !== "") {
-                this.form = response.data.data;
-            }
-        });
-
-        if (this.isArca) {
-            this.activeTab = "hotel";
-        }
-    },
     methods: {
+        promotionsSetUp(optionName) {
+            if (
+                optionName === "Habilitar Promociones Documento" &&
+                this.form.is_promotion_document
+            ) {
+                this.form.promotions_by_points = false;
+            } else if (
+                optionName === "Habilitar Promociones por puntos" &&
+                this.form.promotions_by_points
+            ) {
+                this.form.is_promotion_document = false;
+            }
+        },
         async submit(
             optionName,
             isActive,
@@ -225,12 +231,30 @@ export default {
 
             this.animateIcon(iconRef); // Animar el ícono correspondiente
         },
-
-        open() {
-            
+        animateIcon(iconRef) {
+            const icon = this.$refs[iconRef];
+            if (icon) {
+                icon.classList.add("animate-icon");
+                setTimeout(() => {
+                    icon.classList.remove("animate-icon");
+                }, 1000);
+            }
         },
-        close(){
 
+        async open() {
+            console.log(this.isArca);
+            await this.$http.get(`/${this.resource}/record`).then(response => {
+                if (response.data !== "") {
+                    this.form = response.data.data;
+                }
+            });
+
+            if (this.isArca) {
+                this.activeTab = "hotel";
+            }
+        },
+        close() {
+            this.$emit('update:showDialog', false)
         }
     }
 };
