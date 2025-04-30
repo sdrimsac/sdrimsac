@@ -30,7 +30,7 @@ return [
     'delete_document_type_03' => env('DELETE_DOCUMENT_TYPE_03', false),
     'select_first_document_type_03' => env('SELECT_FIRST_DOCUMENT_TYPE_03', false),
     'igv_31556_start' => env('IGV_31556_START', '2022-09-01'),
-    'igv_31556_end' => env('IGV_31556_END', '2024-12-31'),
+    'igv_31556_end' => env('IGV_31556_END', '2027-12-31'),
     'igv_31556_percentage' => env('IGV_31556_PERCENTAGE', 10),
 
 ];
