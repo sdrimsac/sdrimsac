@@ -403,7 +403,6 @@
                                 <el-switch
                                     active-text="Si"
                                     v-model="form.includes"
-                                    :disabled="form.items.length === 0"
                                     inactive-text="No"
                                     @change="incluye_igv()"
                                 ></el-switch>
@@ -816,9 +815,9 @@
                                             </td>
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
-                                                {{ row.total_discount }}
+                                                <!-- {{ row.total_discount }} -->
 
-                                                <!-- <el-input-number
+                                                <el-input-number
                                                     :disabled="
                                                         row.lots.length > 0 ||
                                                             row.color_size
@@ -833,7 +832,7 @@
                                                             row.unit_price
                                                         )
                                                     "
-                                                ></el-input-number> -->
+                                                ></el-input-number>
                                             </td>
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
@@ -1376,7 +1375,7 @@ export default {
             currency_type: {},
             loading_search: false,
             purchaseNewId: null,
-            includes: false,
+            includes: true,
             number: null,
             category_name: null,
             restaurant_name: null,
@@ -1500,23 +1499,21 @@ export default {
             this.showImportDialog = true;
         },
         calculateItem(index, quantity, unit_price) {
-            /* this.form.items[index].quantity = quantity; */
-
-            const item = this.form.items[index];
-
-            item.quantity = quantity;
-
-            const discount = parseFloat(item.total_discount || 0);
-            const charge = parseFloat(item.total_charge || 0);
-
-            let total_base = quantity * unit_price;
-            total_base = total_base - discount + charge;
+            this.form.items[index].quantity = quantity;
 
             let total_venta = _.round(
                 Math.round(parseFloat(quantity) * parseFloat(unit_price) * 10) /
                     10,
                 2
             );
+
+            let discount = parseFloat(
+                this.form.items[index].total_discount || 0
+            );
+            let charge = parseFloat(this.form.items[index].total_charge || 0);
+
+            total_venta = _.round(total_venta - discount + charge, 2);
+
             this.form.items[index].total = total_venta;
             if (this.form.items[index].affectation_igv_type_id == "10") {
                 this.form.items[index].total_value = (
@@ -2045,7 +2042,7 @@ export default {
                 customer_id: null,
                 has_client: false,
                 has_payment: false,
-                includes: false
+                includes: true
             };
             // this.clickAddPayment();
 
@@ -2103,8 +2100,27 @@ export default {
                 console.log(e);
             }
         },
+        /* addRow(row) {
+            console.log("🚀 ~ addRow ~ row:", row);
+            this.form.items.push(row);
+            this.calculateTotal();
+        }, */
         addRow(row) {
             console.log("🚀 ~ addRow ~ row:", row);
+
+            
+            if (this.form.includes) {
+                console.log("incluye igv", this.form.includes);
+                row.total_value = row.total;
+                row.total_igv = 0;
+            } else {
+                row.total_value = _.round(
+                    row.total / (1 + this.percentage_igv / 100),
+                    2
+                );
+                row.total_igv = _.round(row.total - row.total_value, 2);
+            }
+
             this.form.items.push(row);
             this.calculateTotal();
         },
@@ -2147,8 +2163,8 @@ export default {
             //
 
             this.form.items.forEach(row => {
-                total_discount += parseFloat(row.total_discount);
-                total_charge += parseFloat(row.total_charge);
+                total_discount += parseFloat(row.total_discount || 0);
+                total_charge += parseFloat(row.total_charge || 0);
 
                 if (row.affectation_igv_type_id == "10") {
                     if (
@@ -2228,6 +2244,8 @@ export default {
             console.log("total igv", _.round(total_igv, 2));
             this.form.total_value = _.round(total_value, 2);
             this.form.total_taxes = _.round(total_igv, 2);
+            this.form.total_discount = _.round(total_discount, 2);
+            this.form.total_charge = _.round(total_charge, 2);
 
             // if(this.form.includes==false){
             //     this.form.total = _.round(total+this.form.total_igv, 2)

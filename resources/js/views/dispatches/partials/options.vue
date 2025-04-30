@@ -79,7 +79,7 @@
                     <p>Descargar CDR</p>
                 </div>
             </template>
-            <template v-else>
+            <template >
                 <div class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3">
                     <button class="btn btn-lg btn-info waves-effect waves-light"
                             type="button"

@@ -11,7 +11,6 @@ trait SearchTrait
 
         $items = Item::query();
         if($request->input){
-
             $items = $items->where('description','like', "%{$request->input}%")
                         ->orWhere(function ($subquery) use ($request){
                             $subquery->where('internal_id','like', "%{$request->input}%")
@@ -22,14 +21,16 @@ trait SearchTrait
             $items = $items->whereIn('id', $request->items_id);
         }
                     
-                    $items =  $items->where('unit_type_id','ZZ')
+        $items = $items->where('unit_type_id','ZZ')
                     ->whereNotIsSet()
                     ->whereIsActive()
+                    ->whereHas('warehouse', function($query) {
+                        $query->where('active', 1);
+                    }, '>=', 1) // Ensures at least one active warehouse exists
                     ->orderBy('description')
                     ->get();
 
-                    return $items;
-
+        return $items;
     }
 
     public function getItemsNotServices($request){
@@ -46,13 +47,15 @@ trait SearchTrait
             $items = $items->whereIn('id', $request->items_id);
         }
 
-                   $items = $items->whereNotIsSet()
+        $items = $items->whereNotIsSet()
                     ->whereIsActive()
+                    ->whereHas('warehouse', function($query) {
+                        $query->where('active', 1);
+                    }, '>=', 1) // Ensures at least one active warehouse exists
                     ->orderBy('description')
                     ->get();
 
-                    return $items;
-
+        return $items;
     }
 
 

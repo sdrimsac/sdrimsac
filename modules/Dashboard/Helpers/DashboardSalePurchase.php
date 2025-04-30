@@ -215,23 +215,23 @@ class DashboardSalePurchase
 
             $documents = Document::query()->where('establishment_id', $establishment_id)
                         ->whereIn('state_type_id', ['01','03','05','07','13'])
-                        ->where('user_id',auth()->user()->id)
+                        /* ->where('user_id',auth()->user()->id) */
                         ->whereBetween('date_of_issue', [$d_start, $d_end])->get();
 
 
             $sale_notes = SaleNote::query()->where([['establishment_id', $establishment_id]])
                         ->whereIn('state_type_id', ['01','03','05','07','13'])
-                        ->where('user_id',auth()->user()->id)
+                        /* ->where('user_id',auth()->user()->id) */
                         ->whereBetween('date_of_issue', [$d_start, $d_end])->get();
         }else{
 
             $documents = Document::query()->where('establishment_id', $establishment_id)
-                        ->where('user_id',auth()->user()->id)
+                        /* ->where('user_id',auth()->user()->id) */
                         ->whereIn('state_type_id', ['01','03','05','07','13'])->get();
 
 
             $sale_notes = SaleNote::query()->where([['establishment_id', $establishment_id]])
-                        ->where('user_id',auth()->user()->id)
+                        /* ->where('user_id',auth()->user()->id) */
                         ->whereIn('state_type_id', ['01','03','05','07','13'])->get();
 
         }
@@ -305,7 +305,7 @@ class DashboardSalePurchase
         $order_column = ($enabled_move_item) ? 'move_quantity' : 'total';
         $sorted = $items_by_sales->sortByDesc($order_column);
         return $sorted->values();
-    }    
+    }  
 
     /**
      * @param $purchases

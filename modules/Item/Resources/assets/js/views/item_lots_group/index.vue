@@ -72,6 +72,15 @@
                                     <th>
                                         Cantidad
                                     </th>
+                                    <th>
+                                        Lotes Dado de baja
+                                    </th>
+                                    <th>
+                                        Estado del Lote
+                                    </th>
+                                    <th>
+                                        Acciones
+                                    </th>
                                 </tr>
 
                                 <tr></tr>
@@ -83,7 +92,9 @@
                                         {{ row.lote }}
                                     </td>
                                     <td>
-                                        {{ row.item.description }}
+                                        {{ row.item.description }} <br />
+
+                                        {{ row.item.internal_id }}
                                     </td>
                                     <td>
                                         {{ row.date_of_due }}
@@ -94,14 +105,85 @@
                                     <td>
                                         {{ row.quantity }}
                                     </td>
+                                    <!-- <td>
+                                        {{ row.status }}
+                                    </td> -->
+                                    <td>
+                                        <span
+                                            :class="
+                                                row.status == 0 || row.status === '0'
+                                                    ? 'text-danger'
+                                                    : 'text-success'
+                                            "
+                                        >
+                                            {{
+                                                row.status == 0 || row.status === '0'
+                                                    ? "Dado de baja"
+                                                    : "Activo"
+                                            }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            :class="
+                                                daysUntilDue(row.date_of_due) <
+                                                0
+                                                    ? 'text-danger'
+                                                    : 'text-success'
+                                            "
+                                        >
+                                            {{
+                                                daysUntilDue(row.date_of_due) <
+                                                0
+                                                    ? "Lote vencido"
+                                                    : `Faltan ${daysUntilDue(
+                                                          row.date_of_due
+                                                      )} días para vencer`
+                                            }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <button
+                                            class="btn p-0"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                        >
+                                            <span
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-delay="0"
+                                                title
+                                                data-bs-original-title="Item Count"
+                                                aria-label="Item Count"
+                                                >Acciones</span
+                                            >
+                                        </button>
+                                        <div
+                                            class="dropdown-menu dropdown-menu-end bg-white"
+                                            style
+                                        >
+                                            <a
+                                                type="button"
+                                                class="dropdown-item text-warning"
+                                                @click.prevent="
+                                                    inhabilitar(row.id)
+                                                "
+                                                >Inhabilitar</a
+                                            >
+                                        </div>
+                                    </td>
                                 </tr>
                             </data-table>
                         </div>
                     </div>
                 </div>
             </div>
-        <lots-group-import :showDialog.sync="showImportDialog"></lots-group-import>
-
+            <lots-group-import
+                :showDialog.sync="showImportDialog"
+            ></lots-group-import>
         </div>
     </div>
 </template>
@@ -110,18 +192,68 @@
 import LotsGroupImport from "./lots_group_import.vue";
 import DataTable from "../../components/Datatable.vue";
 export default {
-    components: { DataTable,LotsGroupImport },
+    components: { DataTable, LotsGroupImport },
     data() {
         return {
             resource: "lotes",
             columns: {},
-            showImportDialog:false,
+            showImportDialog: false
         };
     },
-    methods:{
-        clickImport(){
-                        this.showImportDialog = true;
+    methods: {
+        parseDate(dateString) {
+            // Asume que el formato es DD/MM/YYYY
+            const [day, month, year] = dateString.split("/").map(Number);
+            return new Date(year, month - 1, day); // Crear fecha válida
         },
+        daysUntilDue(dateOfDue) {
+            const today = new Date(); // Fecha actual
+            const dueDate = this.parseDate(dateOfDue); // Parsear correctamente la fecha de vencimiento
+
+            // Calcular la diferencia en milisegundos
+            const diffTime = dueDate - today;
+
+            // Convertir la diferencia a días
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Si la fecha ya pasó, devolver un valor negativo
+            return diffDays;
+        },
+        clickImport() {
+            this.showImportDialog = true;
+        },
+        inhabilitar(id) {
+            this.$confirm(
+                "¿Está seguro de dar de baja este lote?",
+                "Advertencia",
+                {
+                    confirmButtonText: "Sí, dar de baja",
+                    cancelButtonText: "Cancelar",
+                    type: "warning"
+                }
+            )
+                .then(() => {
+                    this.$http
+                        .post(`/lotes/eliminated/${id}`)
+                        .then(response => {
+                            this.$eventHub.$emit("reloadData");
+                            this.$message({
+                                type: "success",
+                                message: "Lote dado de baja correctamente"
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            this.$message({
+                                type: "error",
+                                message: "Error al dar de baja el lote"
+                            });
+                        });
+                })
+                .catch(() => {
+                    // User cancelled the action
+                });
+        }
     }
 };
 </script>

@@ -14,6 +14,7 @@ use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\Series;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -82,7 +83,7 @@ class WarrantyController extends Controller
         return new WarrantyBoxCollection($records->paginate(10));
     }
     public function getRecords(Request $request)
-    { 
+    {
         $records = ItemWarranty::query();
 
         $customer_id = $request->customer_id;
@@ -94,7 +95,6 @@ class WarrantyController extends Controller
             if ($column == 'description') {
                 $records->whereHas('item', function ($query) use ($value) {
                     $query->where('', 'like', "%{$value}%");
-                        
                 });
             } else {
                 $records->where($column, 'like', "%{$value}%");
@@ -102,13 +102,13 @@ class WarrantyController extends Controller
         }
         if ($customer_id) {
             $records->where(function ($query) use ($customer_id) {
-                
+
                 $query->whereHas('SaleNoteItem.sale_note', function ($subQuery) use ($customer_id) {
                     $subQuery->where('customer_id', $customer_id);
                 })
-                ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
-                    $subQuery->where('customer_id', $customer_id);
-                });
+                    ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
+                        $subQuery->where('customer_id', $customer_id);
+                    });
             });
         }
         if ($item_id) {
@@ -116,16 +116,16 @@ class WarrantyController extends Controller
                 $query->whereHas('SaleNoteItem', function ($subQuery) use ($item_id) {
                     $subQuery->where('item_id', $item_id);
                 })
-                ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
-                    $subQuery->where('item_id', $item_id);
-                });
+                    ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
+                        $subQuery->where('item_id', $item_id);
+                    });
             });
         }
         return $records;
     }
 
     public function getRecordsBox(Request $request)
-    { 
+    {
         $records = ItemWarranty::query();
 
         $customer_id = $request->customer_id;
@@ -137,7 +137,6 @@ class WarrantyController extends Controller
             if ($column == 'description') {
                 $records->whereHas('item', function ($query) use ($value) {
                     $query->where('', 'like', "%{$value}%");
-                        
                 });
             } else {
                 $records->where($column, 'like', "%{$value}%");
@@ -145,13 +144,13 @@ class WarrantyController extends Controller
         }
         if ($customer_id) {
             $records->where(function ($query) use ($customer_id) {
-                
+
                 $query->whereHas('SaleNoteItem.sale_note', function ($subQuery) use ($customer_id) {
                     $subQuery->where('customer_id', $customer_id);
                 })
-                ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
-                    $subQuery->where('customer_id', $customer_id);
-                });
+                    ->orWhereHas('DocumentItem.document', function ($subQuery) use ($customer_id) {
+                        $subQuery->where('customer_id', $customer_id);
+                    });
             });
         }
         if ($item_id) {
@@ -159,9 +158,9 @@ class WarrantyController extends Controller
                 $query->whereHas('SaleNoteItem', function ($subQuery) use ($item_id) {
                     $subQuery->where('item_id', $item_id);
                 })
-                ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
-                    $subQuery->where('item_id', $item_id);
-                });
+                    ->orWhereHas('DocumentItem', function ($subQuery) use ($item_id) {
+                        $subQuery->where('item_id', $item_id);
+                    });
             });
         }
         return $records;
@@ -178,11 +177,20 @@ class WarrantyController extends Controller
             'description' => 'Descripción',  
         ];
     } */
-    public function tables ()
+    public function tables()
     {
         $customers = $this->table('customers');
         $items = $this->table('items');
-        return compact('items', 'customers');
+        $series = Series::whereIn('document_type_id', ['01', '03', '80'])->get()
+            ->transform(function ($series) {
+                return [
+                    'id' => $series->id,
+                    'number' => $series->number,
+                    'document_type_id' => $series->document_type_id,
+                    'label' => $series->number . ' ' . $series->establishment->description
+                ];
+            });
+        return compact('items', 'customers', 'series');
     }
 
     private function table($type)

@@ -3,7 +3,7 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
                             Filtrar por:
                         </label>
@@ -20,22 +20,6 @@
                                 clearable
                             ></el-option>
                         </el-select>
-                    </div>
-                    <!-- <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
-                        <label for="value">
-                            Buscar
-                        </label>
-
-                        <template>
-                            <el-input
-                                placeholder="Buscar"
-                                v-model="search.value"
-                                style="width: 100%;"
-                                prefix-icon="el-icon-search"
-                                @input="getRecords"
-                            >
-                            </el-input>
-                        </template>
                     </div> -->
                     <div class="col-md-3 col-lg-3">
                         <label for="seller_id">Productos</label>
@@ -59,7 +43,6 @@
                     </div>
                     <div class="col-md-3 col-lg-3">
                         <label for="seller_id">Clientes</label>
-
                         <el-select
                             filterable
                             clearable
@@ -77,28 +60,34 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <!-- <div class="col-lg-4 col-md-4 ">
-                        <div class="form-group">
-                            <label class="control-label w-100">Clientes</label>
-
-                            <el-select
-                                v-model="search.customer_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o número de documento"
-                                :remote-method="searchRemoteCustomers"
-                                :loading="loading_search"
-                            >
-                                <el-option
-                                    v-for="option in customers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
+                    <!-- <div class="col-md-2 col-lg-2">
+                        <label for="seller_id">Serie</label>
+                        <el-select
+                            filterable
+                            clearable
+                            v-model="search.series"
+                            class="border-left rounded-left border-info w-100"
+                            popper-class="el-select-customers"
+                            placeholder="Seleccione un producto"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in series"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.number"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-2 col-lg-2">
+                        <label for="seller_id">Numero</label>
+                        <el-input
+                            v-model="search.number"
+                            class="border-left rounded-left border-info w-100"
+                            placeholder="Ingrese el numero de serie"
+                            @input="getRecords"
+                            clearable
+                        ></el-input>
                     </div> -->
                     <div
                         class="col-md-3 d-flex align-items-center justify-content-center"
@@ -183,7 +172,9 @@ export default {
                 column: null,
                 value: null,
                 item_id: null,
-                customer_id: null
+                customer_id: null,
+                series: null,
+                number: null,
             },
             columns: [],
             records: [],
@@ -193,7 +184,8 @@ export default {
             warehouses: [],
             areas: [],
             items: [],
-            customers: []
+            customers: [],
+            series: []
         };
     },
     computed: {},
@@ -202,6 +194,7 @@ export default {
             console.log(response);
             this.items = response.data.items;
             this.customers = response.data.customers;
+            this.series = response.data.series;
             console.log(this.customers);
         });
         this.$eventHub.$on("reloadData", () => {
@@ -265,7 +258,7 @@ export default {
             );
         },
 
-        getRecords() {
+        /* getRecords() {
             if (this.time) {
                 clearTimeout(this.time);
             }
@@ -338,7 +331,36 @@ export default {
                 });
             }, 350);
         },
+ */
 
+        getRecords() {
+            if (this.time) {
+                clearTimeout(this.time);
+            }
+            this.time = setTimeout(async () => {
+                let url = `/${
+                    this.resource
+                }/records?${this.getQueryParameters()}`;
+                if (this.fromAdmin) {
+                    url = `/${
+                        this.resource
+                    }/records?${this.getQueryParameters()}&fromAdmin=true`;
+                }
+
+                return this.$http.get(url).then(response => {
+                    let data = response.data;
+
+                    if (this.resource !== "caja/cash-transfer/report") {
+                        this.records = data.data;
+
+                        this.pagination = data.meta;
+                        this.pagination.per_page = parseInt(data.meta.per_page);
+                    } else {
+                        this.records = data.data;
+                    }
+                });
+            }, 350);
+        },
         getQueryParameters() {
             if (
                 this.search.column == "date" &&
@@ -351,11 +373,13 @@ export default {
                 page: this.pagination.current_page,
                 limit: this.limit,
                 value: this.search.value,
-                
+
                 item_id: this.search.item_id,
                 customer_id: this.search.customer_id,
                 end_date: this.search.end_date,
-                warehouse_id: this.search.warehouse_id
+                warehouse_id: this.search.warehouse_id,
+                series: this.search.series,
+                number: this.search.number,
             });
         },
         changeClearInput() {

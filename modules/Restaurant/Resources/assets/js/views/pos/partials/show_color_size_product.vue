@@ -3,6 +3,7 @@
         @open="open"
         @close="close"
         :visible="showDialog"
+        :close-on-click-modal="false"
         title="Listado de colores y tallas"
     >
         <div class="p-1">
@@ -28,6 +29,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Codigo</th>
                         <th>Color</th>
                         <th>Size</th>
                         <th>Stock</th>
@@ -37,19 +39,28 @@
                 </thead>
                 <tbody>
                     <tr v-for="(colorsize, idx) in color_size" :key="idx">
-                        <td width="15%">{{ customIndex(idx) }}</td>
-                        <td width="25%">{{ colorsize.color }}</td>
-                        <td width="20%">{{ colorsize.size }}</td>
-                        <td width="15%">{{ colorsize.stock }}</td>
-                        <td width="15%">{{ colorsize.price }}</td>
-                        <td width="10%">
-                          <el-input
-                          type="number"
-                            v-model="colorsize.quantity"
-                            @input="saveColorSize(colorsize)"
-                          >
-
-                          </el-input>
+                        <td>{{ customIndex(idx) }}</td>
+                        <td>{{ colorsize.code }}</td>
+                        <td>{{ colorsize.color }}</td>
+                        <td>{{ colorsize.size }}</td>
+                        <td>{{ colorsize.stock }}</td>
+                        <td>{{ colorsize.price }}</td>
+                        <!-- <td>
+                            <el-input
+                                type="number"
+                                v-model="colorsize.quantity"
+                                @input="saveColorSize(colorsize)"
+                            >
+                            </el-input>
+                        </td> -->
+                        <td>
+                            <el-input-number
+                                v-model="colorsize.quantity"
+                                controls-position="right"
+                                @input="saveColorSize(colorsize)"
+                                :min="0"
+                                :max="50"
+                            ></el-input-number>
                         </td>
                     </tr>
                 </tbody>
@@ -92,6 +103,14 @@ export default {
         };
     },
     methods: {
+        /* selectRow(colorsize) {
+            if (!colorsize.quantity) {
+                colorsize.quantity = 1;
+            } else {
+                colorsize.quantity += 1;
+            }
+            this.saveColorSize(colorsize);
+        }, */
         checkColorSize() {
             for (let i = 0; i < this.color_size.length; i++) {
                 let color_size = this.colorSizeSelected.find(
@@ -116,25 +135,53 @@ export default {
                 1
             );
         },
-        saveColorSize(colorSize) {
+        /* saveColorSize(colorSize) {
             let color_size = [
                 ...this.colorSizeSelected.filter(
                     s => s.quantity && s.quantity != 0
                 )
             ];
-             color_size = color_size.filter(s => s.id != colorSize.id);
+            color_size = color_size.filter(s => s.id != colorSize.id);
             if (colorSize.quantity !== 0) {
                 //if(colorSize.quantity > colorSize.stock){
-                    //colorSize.quantity = colorSize.stock;
-                   // return this.$toast.error(
-                  //      "La cantidad no puede ser mayor al stock"
+                //colorSize.quantity = colorSize.stock;
+                // return this.$toast.error(
+                //      "La cantidad no puede ser mayor al stock"
                 //    );
-              //  }
+                //  }
                 colorSize.disabled = false;
                 color_size = [...color_size, colorSize];
             } else {
                 color_size = color_size.filter(s => s.id != colorSize.id);
             }
+            this.$forceUpdate();
+            this.$emit("update:colorSizeSelected", color_size);
+        }, */
+        saveColorSize(colorSize) {
+            if (
+                typeof colorSize.quantity !== "number" ||
+                isNaN(colorSize.quantity)
+            ) {
+                /* console.error("Cantidad inválida:", colorSize.quantity);
+                return; */
+            }
+
+            /* console.log("Guardando cantidad:", colorSize.quantity); */
+
+            let color_size = [
+                ...this.colorSizeSelected.filter(
+                    s => s.quantity && s.quantity != 0
+                )
+            ];
+            color_size = color_size.filter(s => s.id != colorSize.id);
+
+            if (colorSize.quantity !== 0) {
+                colorSize.disabled = false;
+                color_size = [...color_size, colorSize];
+            } else {
+                color_size = color_size.filter(s => s.id != colorSize.id);
+            }
+
             this.$forceUpdate();
             this.$emit("update:colorSizeSelected", color_size);
         },
@@ -155,11 +202,10 @@ export default {
 
                 page: this.pagination.current_page,
                 item_id: this.item.id,
-                color: this.inputSearch
+                code: this.inputSearch
             });
         },
         open() {
-
             if (this.item) {
                 this.getColorSize();
             }
@@ -168,6 +214,11 @@ export default {
             if (this.timer) {
                 clearTimeout(this.timer);
             }
+            if (!this.inputSearch) {
+                this.getColorSize();
+                return;
+            }
+
             this.timer = setTimeout(async () => {
                 await this.getColorSize();
             }, 350);
@@ -178,7 +229,59 @@ export default {
             this.color_size = [];
             this.$emit("update:showDialog", false);
         },
+
         async getColorSize() {
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `/item-color-size/records?${this.getQueryParameters()}`
+                );
+                let { data, meta } = response.data;
+
+                if (!this.inputSearch) {
+                    this.color_size = data.map(item => ({
+                        ...item,
+                        quantity: item.quantity || 0
+                    }));
+                    this.checkColorSize();
+                    this.pagination = meta;
+                    this.pagination.per_page = parseInt(meta.per_page);
+                } else {
+                    const foundItem = data.find(
+                        item => item.code === this.inputSearch
+                    );
+
+                    if (foundItem) {
+                        const existingItem = this.color_size.find(
+                            item => item.id === foundItem.id
+                        );
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                            console.log(
+                                "Cantidad actualizada:",
+                                existingItem.quantity
+                            );
+                        } else {
+                            this.$set(foundItem, "quantity", 1);
+                            console.log(
+                                "Cantidad inicializada:",
+                                foundItem.quantity
+                            );
+                            this.color_size.push(foundItem);
+                        }
+                        this.saveColorSize(foundItem);
+                    }
+                    this.inputSearch = null;
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
+        }
+
+        /* async getColorSize() {
             try {
                 this.loading = true;
                 const response = await this.$http(
@@ -189,12 +292,66 @@ export default {
                 this.checkColorSize();
                 this.pagination = meta;
                 this.pagination.per_page = parseInt(meta.per_page);
+
+                if (this.inputSearch) {
+                    const foundItem = this.color_size.find(
+                        item => item.code === this.inputSearch
+                    );
+                    if (foundItem) {
+                        foundItem.quantity = 1;
+                        this.saveColorSize(foundItem);
+                        this.inputSearch = null;
+                    }
+                }
             } catch (e) {
                 console.log(e);
             } finally {
                 this.loading = false;
             }
-        }
+        } */
+
+        /* async getColorSize() {
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `/item-color-size/records?${this.getQueryParameters()}`
+                );
+                let { data, meta } = response.data;
+
+                if (!this.inputSearch) {
+                    this.color_size = data;
+                    this.checkColorSize();
+                    this.pagination = meta;
+                    this.pagination.per_page = parseInt(meta.per_page);
+                } else {
+                    
+                    const foundItem = data.find(
+                        item => item.code === this.inputSearch
+                    );
+
+                    if (foundItem) {
+                        const existingItem = this.color_size.find(
+                            item => item.id === foundItem.id
+                        );
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            foundItem.quantity = 1;
+                            this.color_size.push(foundItem);
+                        }
+
+                        this.saveColorSize(foundItem);
+                    }
+
+                    this.inputSearch = null;
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
+        } */
     }
 };
 </script>

@@ -41,7 +41,7 @@ class FoodCollection extends ResourceCollection
             $hasAffectationIgv = $item->hasAffectationIgv();
             $igv = (new StoreController)->getIgvByUser();
             if ($item->lots_enabled && $item->lot_code == null) {
-                $lot_group = ItemLotsGroup::where('item_id', $item->id)->first();
+                $lot_group = ItemLotsGroup::where('item_id', $item->id)->where('quantity', '>', 0) ->first();
                 if ($lot_group) {
                     $item->lot_code = $lot_group->code;
                     $item->date_of_due = $lot_group->date_of_due;

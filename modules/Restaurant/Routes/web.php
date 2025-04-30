@@ -414,10 +414,6 @@ Route::prefix('caja')->group(function () {
         //**** MESAS */
         Route::prefix('worker')->group(function () {
 
-
-
-
-
             Route::get('cash_available/{cash_id}', [CashController::class, 'cash_avaible']);
             Route::get('data_reports', [BoxesController::class, 'data_reports']);
             Route::post('check_pin', [PosController::class, 'check_pin']);

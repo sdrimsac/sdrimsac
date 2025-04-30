@@ -3,27 +3,50 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                    <i class="fa fa-dolly" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                    Listado de {{ title }}
-                </h4>
-            </div>
-            <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3" style="margin-left: 1rem;">
-                <el-button class="btn_buscar me-2" 
-                           href="javascript:void(0)" @click.prevent="clickCreate()">
-                    <i class="fas fa-plus"></i>
-                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Nuevo Traslado de Productos</span>
-                </el-button>
-
-                </div> 
+                <div
+                    class="card-header bg-primary d-flex align-items-center"
+                    style="padding: 15px;"
+                >
+                    <h4
+                        class="my-0 text-white d-flex align-items-center"
+                        style="font-size: 1.5rem; font-weight: bold;"
+                    >
+                        <i
+                            class="fa fa-dolly"
+                            style="font-size: 2rem; margin-right: 0.5rem;"
+                        ></i>
+                        Listado de {{ title }}
+                    </h4>
+                </div>
+                <div
+                    class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
+                    style="margin-left: 1rem;"
+                >
+                    <el-button
+                        class="btn_buscar me-2"
+                        href="javascript:void(0)"
+                        @click.prevent="clickCreate()"
+                    >
+                        <i class="fas fa-plus"></i>
+                        <span
+                            style="color: #fff; font-size: 1.25rem; font-weight: bold;"
+                            >Nuevo Traslado de Productos</span
+                        >
+                    </el-button>
+                </div>
                 <div class="card-body">
                     <data-table :resource="resource">
                         <tr slot="heading" class="bg-primary">
                             <th class="text-white">#</th>
                             <th class="text-white">Fecha</th>
-                            <th class="text-white">Almacen Inicial <span class="badge bg-success">Origen</span></th>
-                            <th class="text-white">Almacen Destino <span class="badge bg-danger">Destino</span></th>
+                            <th class="text-white">
+                                Almacen Inicial
+                                <span class="badge bg-success">Origen</span>
+                            </th>
+                            <th class="text-white">
+                                Almacen Destino
+                                <span class="badge bg-danger">Destino</span>
+                            </th>
                             <th class="text-white">Motivo del Traslado</th>
                             <th class="text-white">Contenido del Traslado</th>
                             <th class="text-white">Unidades Trasladadas</th>
@@ -126,7 +149,7 @@ export default {
             resource: "transfers",
             recordId: null,
             typeTransaction: null,
-            direct:false
+            direct: false
         };
     },
     created() {

@@ -115,7 +115,7 @@ class ReportKardexController extends Controller
                 'data' => $records,
                 'pagination' => [
                     'current_page' => $request->input('page', 1),
-                    'per_page' => $request->input('per_page', 20)
+                    'per_page' => $request->input('per_page', 10000)
                 ]
             ]);
         } catch (\Exception $e) {

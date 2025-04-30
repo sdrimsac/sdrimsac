@@ -22,6 +22,7 @@ class TransferPlaceCollection extends ResourceCollection
             return [
                 'id' => $row->id,
                 'code' => $row->code,
+                'observation' => $row->observation,
                 'quantity' => round($row->quantity, 1),
                 'warehouse' => $row->warehouse->description,
                 'warehouse_destination' => $row->warehouse_destination->description,

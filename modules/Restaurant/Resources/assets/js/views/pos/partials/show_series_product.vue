@@ -3,6 +3,7 @@
         @open="open"
         @close="close"
         :visible="showDialog"
+        :close-on-click-modal="false"
         title="Listado de series"
     >
         <div class="p-1">
@@ -180,6 +181,26 @@ export default {
                 this.checkSeries();
                 this.pagination = meta;
                 this.pagination.per_page = parseInt(meta.per_page);
+
+                if (this.inputSearch) {
+                    const foundSerie = this.series.find(
+                        serie =>
+                            serie.series.toLowerCase() ===
+                            this.inputSearch.toLowerCase()
+                    );
+                    if (foundSerie) {
+                        foundSerie.selected = true;
+                        this.saveSerie(foundSerie);
+                        setTimeout(() => {
+                            this.inputSearch = null;
+                            this.search();
+                        }, 500);
+                    } else {
+                        this.$toast.warning(
+                            "No se encontró la serie especificada."
+                        );
+                    }
+                }
             } catch (e) {
                 console.log(e);
             } finally {

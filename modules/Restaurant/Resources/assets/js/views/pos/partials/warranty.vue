@@ -1,51 +1,54 @@
 <template>
-    <el-dialog  
-    @open="open"
-    @close="close"
-    append-to-body
-    :visible="showDialog"
-    title="Productos con Garantia"
-    close-on-click-modal
-    width="50%"
+    <el-dialog
+        @open="open"
+        @close="close"
+        append-to-body
+        :visible="showDialog"
+        title="Productos con Garantia"
+        close-on-click-modal
+        width="60%"
     >
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Producto</label>
-                    <el-input></el-input>
-
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Producto</label>
+                        <el-input></el-input>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Garantia</label>
+                        <el-input></el-input>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label>Garantia</label>
-                    <el-input></el-input>
-                </div>
-            </div>
-            <br>
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr class="bg-primary">
-                                <th class="text-white">N° DOCUMENTO</th>
-                                <th class="text-white">CLIENTE</th>
-                                <th class="text-white">PRODUCTO</th>
-                                <th class="text-white">SERIE</th>
-                                <th class="text-white">GARANTIA RESTANTE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="record in warranty" :key="record.id">
-                                <td>{{ record.document_number }}</td>
-                                <td>{{ record.client }}</td>
-                                <td>{{ record.product }}</td>
-                                <td>{{ record.series }}</td>
-                                <td>{{ record.remaining_warranty }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
+                <br />
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr class="bg-primary">
+                                    <th class="text-white">N° DOCUMENTO</th>
+                                    <th class="text-white">CLIENTE</th>
+                                    <th class="text-white">PRODUCTO</th>
+                                    <th class="text-white">SERIE</th>
+                                    <th class="text-white">
+                                        GARANTIA RESTANTE
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="record in warranty" :key="record.id">
+                                    <td>
+                                        {{ record.serie }}-{{ record.numero }}
+                                    </td>
+                                    <td>{{ record.cliente_nombre }}</td>
+                                    <td>{{ record.description }}</td>
+                                    <td>{{ record.series }}</td>
+                                    <td>{{ record.dias_restantes }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
                         <el-pagination
                             @current-change="getWarrantyRecords"
                             layout="total, prev, pager, next"
@@ -55,10 +58,9 @@
                         >
                         </el-pagination>
                     </div>
+                </div>
             </div>
         </div>
-    </div>
-
     </el-dialog>
 </template>
 <script>
@@ -71,8 +73,8 @@ export default {
                 total: 0,
                 per_page: 10,
                 current_page: 1
-            },
-        }
+            }
+        };
     },
     methods: {
         open() {
@@ -82,13 +84,19 @@ export default {
             this.$emit("update:showDialog", false);
         },
         getWarrantyRecords(page = 1) {
-            this.$http.get(`/warranty/records2?page=${page}&limit=${this.pagination.per_page}`).then(response => {
-                console.log(response.data);
-                this.warranty = response.data.data;
-                this.pagination = response.data.meta;
-                this.pagination.per_page = parseInt(response.data.meta.per_page);
-                console.log("ver llegando datos", this.warranty);
-            });
+            this.$http
+                .get(
+                    `/warranty/records2?page=${page}&limit=${this.pagination.per_page}`
+                )
+                .then(response => {
+                    console.log(response.data);
+                    this.warranty = response.data.data;
+                    this.pagination = response.data.meta;
+                    this.pagination.per_page = parseInt(
+                        response.data.meta.per_page
+                    );
+                    console.log("ver llegando datos", this.warranty);
+                });
         },
         customIndex(index) {
             if (this.resource == "caja/cash-transfer/report") {
@@ -112,10 +120,9 @@ export default {
                 page: this.pagination.current_page,
                 limit: this.limit,
                 value: this.search.value,
-                column: this.search.column,
+                column: this.search.column
             });
-        },
-
-    },
-}
+        }
+    }
+};
 </script>

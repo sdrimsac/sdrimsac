@@ -29,6 +29,7 @@ use Illuminate\Support\Str;
 use Modules\Inventory\Http\Resources\TransferPlaceCollection;
 use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Area;
+use Illuminate\Support\Facades\Storage;
 
 class TransferPlaceController extends Controller
 {
@@ -78,7 +79,7 @@ class TransferPlaceController extends Controller
         }
 
         $result = DB::connection('tenant')->transaction(function () use ($transfer) {
-          
+
             return [
                 'success' => true,
                 'message' => 'Traslado cancelado y stock revertido con éxito'
@@ -89,7 +90,7 @@ class TransferPlaceController extends Controller
     }
     public function tables()
     {
-        $printers = Area::whereNotNull('printer')->get()
+        $establishments = Establishment::all()
             ->transform(function ($row, $key) {
                 return [
                     'id' => $row->id,
@@ -98,7 +99,19 @@ class TransferPlaceController extends Controller
                 ];
             });
 
+        $printers = Area::whereNotNull('printer')->get()
+            ->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->description,
+                    'printer' => $row->printer,
+                ];
+            });
+        $configuration = Configuration::first();
+
         return [
+            'establishments' => $establishments,
+            'configuration' => $configuration,
             'printers' => $printers,
             //'items' => $this->optionsItemWareHouse(),
             'warehouses' => $this->optionsWarehouse()
@@ -378,8 +391,6 @@ class TransferPlaceController extends Controller
 
     public function place_transfer(Request $request)
     {
-
-
         $user = auth()->user();
         $code = $this->createCode();
 
@@ -412,19 +423,6 @@ class TransferPlaceController extends Controller
             }
             $detail->series_lots = $series_lots;
 
-            /* foreach ($it['color_size'] as $colorSize) {
-                $item = ItemWarehouse::where('item_id', $it['id'])
-                    ->where('warehouse_id', $request->warehouse_id)
-                    ->where('color', $colorSize['color'])
-                    ->where('size', $colorSize['size'])
-                    ->first();
-    
-                if ($item) {
-                    $item->stock -= $colorSize['quantity'];
-                    $item->save();
-                }
-            } */
-
 
             $item = ItemWarehouse::where(
                 'item_id',
@@ -449,5 +447,160 @@ class TransferPlaceController extends Controller
                 "success" => true,
             ];
         }
+    }
+
+    public function print_transfer_place($code)
+    {
+        try {
+            $company = Company::first();
+
+            $establishment = Establishment::first();
+            if ($establishment) {
+                $establishment = Establishment::find($establishment->id);
+            } else {
+                $establishment = null;
+            }
+            $printer = $establishment->printer;
+
+            $transfer = TransferPlace::where('code', $code)
+                ->whereIn('status', [1, 2])
+                ->first();
+
+            if (!$transfer) {
+                throw new Exception('Transfer not found');
+            }
+
+            // Add warehouse data to transfer object
+            $transfer->warehouse_data = [
+                'origin_warehouse' => $transfer->warehouse_id,
+                'destination_warehouse' => $transfer->warehouse_id_destination
+            ];
+
+            // Add formatted details to transfer object
+            $transfer->formatted_details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)
+                ->with('item:id,description,unit_type_id,max_quantity')
+                ->get()
+                ->map(function ($detail) {
+                    return [
+                        'quantity' => $detail->quantity,
+                        'series_lots' => $detail->series_lots,
+                        'item_id' => $detail->item_id,
+                        'item_description' => $detail->item->description,
+                        'formatted_quantity' => $this->formatQuantity($detail),
+                        'unit_type_id' => $detail->item->unit_type_id,
+                    ];
+                });
+
+            $height = 260;
+            foreach ($transfer->formatted_details as $detail) {
+                $height += 45;
+                if (isset($detail['series_lots']['lotes'])) {
+                    foreach ($detail['series_lots']['lotes'] as $value) {
+                        $height += 20;
+                    }
+                }
+            }
+
+            $data = compact('transfer', 'company');
+
+            $pdf_thermal = PDF::loadView('inventory::transfers.guie_2', $data)
+                ->setPaper([0, 0, 249.45, $height]);
+
+            $pdf_a4 = PDF::loadView('inventory::transfers.guie_a4', $data)
+                ->setPaper('a4');
+
+            $path = "public/transfers";
+            $filename_thermal = "transfer_thermal_{$code}.pdf";
+            $filename_a4 = "transfer_a4_{$code}.pdf";
+
+            Storage::put("{$path}/{$filename_thermal}", $pdf_thermal->output());
+            Storage::put("{$path}/{$filename_a4}", $pdf_a4->output());
+
+            return [
+                'success' => true,
+                'url_thermal' => asset(Storage::url("public/transfers/{$filename_thermal}")),
+                'url_a4' => asset(Storage::url("public/transfers/{$filename_a4}")),
+                'printer' => $printer,
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    /* private function formatQuantity($detail)
+    {
+        $quantity = $detail->quantity;
+        $item = $detail->item;
+        $unit_type_id = $item->unit_type_id;
+        $max_qty = $item->max_quantity;
+
+        $div = floatval($quantity / $max_qty);
+        $part_int = intval($div);
+        $parts = $div - $part_int;
+
+        if ($parts != 0) {
+            $part_dec = $parts * $max_qty;
+        }
+
+        $unit_type_dec = $unit_type_id;
+        $units = $item->item_unit_types;
+        foreach ($units as $unit) {
+            if ($unit->quantity_unit == $max_qty) {
+                $unit_type_dec = $unit->description;
+            }
+        }
+
+        $result = '';
+        if ($part_int != 0) {
+            $result .= $part_int . ' ' . $unit_type_dec;
+        }
+        if (isset($part_dec)) {
+            $result .= ' ' . $part_dec . ' ' . $unit_type_dec;
+        }
+
+        return $result;
+    } */
+
+    private function formatQuantity($detail)
+    {
+        $quantity = $detail->quantity;
+        $item = $detail->item;
+        $unit_type_id = $item->unit_type_id;
+        $max_qty = $item->max_quantity;
+
+        if (empty($max_qty) || $max_qty == 0) {
+            return $quantity . ' ' . $unit_type_id;
+        }
+
+        $div = floatval($quantity / $max_qty);
+        $part_int = intval($div);
+        $parts = $div - $part_int;
+
+        if ($parts != 0) {
+            $part_dec = $parts * $max_qty;
+        }
+
+        $unit_type_dec = $unit_type_id;
+        $units = $item->item_unit_types;
+        foreach ($units as $unit) {
+            if ($unit->quantity_unit == $max_qty) {
+                $unit_type_dec = $unit->description;
+            }
+        }
+
+        $result = '';
+        if ($part_int != 0) {
+            $result .= $part_int . ' ' . $unit_type_dec;
+        }
+        if (isset($part_dec)) {
+            $result .= ' ' . $part_dec . ' ' . $unit_type_dec;
+        }
+
+        dump($result);
+
+        return trim($result);
     }
 }

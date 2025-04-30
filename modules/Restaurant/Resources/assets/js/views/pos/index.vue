@@ -2481,6 +2481,11 @@ export default {
         };
         const response = await this.$http.post("/get_igv", form_data);
         this.percentage_igv = response.data ?? 18;
+        console.log(
+            "this.percentage_igv",
+            this.percentage_igv,
+            response.data
+        );
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -6042,8 +6047,8 @@ export default {
                         if (d.item.lots_group.length > 0) {
                             d.item.lots_group = d.item.lots_group.filter(
                                 lt =>
-                                    lt.warehouse_id ==
-                                    this.worker.establishment_id
+                                    lt.warehouse_id == this.worker.establishment_id &&
+                                    lt.quantity > 0
                             );
                         }
                         if (d.categoria_madera_item.length > 0) {

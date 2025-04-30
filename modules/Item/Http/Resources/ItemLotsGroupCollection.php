@@ -20,6 +20,7 @@ class ItemLotsGroupCollection extends ResourceCollection
             return [
                 'id' => $row->id,
                 'lote' => $row->code,
+                'status' => $row->status,
                 'item' => $row->item,
                 'item_id' => $row->item_id,
                 'date_of_due' => Carbon::parse($row->date_of_due)->format("d/m/Y"),

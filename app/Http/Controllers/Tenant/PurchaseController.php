@@ -1152,9 +1152,13 @@ class PurchaseController extends Controller
                 break;
 
             case 'items':
+                $items = Item::where('active', 1)
+                    ->whereNotIsSet()
+                    ->whereIsActive()
+                    ->orderBy('description')
+                    ->take(20)
+                    ->get();
 
-                $items = Item::whereNotIsSet()->whereIsActive()->orderBy('description')
-                    ->take(20)->get(); //whereWarehouse()
                 return collect($items)->transform(function ($row) {
                     $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
                     return [
@@ -1168,7 +1172,7 @@ class PurchaseController extends Controller
                         'sale_unit_price' => $row->sale_unit_price,
                         'purchase_unit_price' => $row->purchase_unit_price,
                         'unit_type_id' => $row->unit_type_id,
-                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id, 
                         'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
                         'has_perception' => (bool) $row->has_perception,
                         'lots_enabled' => (bool) $row->lots_enabled,
@@ -1190,16 +1194,18 @@ class PurchaseController extends Controller
                         'series_enabled' => (bool) $row->series_enabled,
                         'max_quantity' => $row->max_quantity,
                         'max_quantity_description' => $row->max_quantity_description,
-                        'warehouses' => collect($row->warehouses)->transform(function ($row) {
-                            return [
-                                'warehouse_id' => $row->warehouse->id,
-                                'warehouse_description' => $row->warehouse->description,
-                                'stock' => $row->stock,
-                            ];
-                        })
+                        'warehouses' => collect($row->warehouses)
+                            ->where('active', 1) // Only get warehouses where active=1
+                            ->transform(function ($row) {
+                                return [
+                                    'warehouse_id' => $row->warehouse->id,
+                                    'warehouse_description' => $row->warehouse->description,
+                                    'stock' => $row->stock,
+                                    'active' => $row->active,
+                                ];
+                            })
                     ];
                 });
-                //                return $items;
 
                 break;
             default:

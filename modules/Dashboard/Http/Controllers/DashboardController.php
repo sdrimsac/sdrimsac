@@ -17,6 +17,7 @@ use App\Models\Tenant\Company;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Arr;
+use Modules\Dashboard\Helpers\DashboardComparative;
 
 class DashboardController extends Controller
 {
@@ -75,6 +76,11 @@ class DashboardController extends Controller
     public function stockByProduct(Request $request)
     {
         return (new DashboardStock())->data($request);
+    }
+
+    public function Comparative(Request $request)
+    {
+        return (new DashboardComparative())->data($request);
     }
 
 

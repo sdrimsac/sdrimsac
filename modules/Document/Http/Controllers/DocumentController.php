@@ -271,6 +271,7 @@ class DocumentController extends Controller
                             'stock' => $row->stock,
                             'warehouse_id' => $row->warehouse_id,
                             'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
+                            'active' => ($row->active) ? true : false,
                         ];
                     });
 

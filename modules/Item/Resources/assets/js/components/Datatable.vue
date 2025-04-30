@@ -40,6 +40,10 @@
                                     class="el-icon-edit-outline"
                                 ></i
                             ></el-input>
+                            <br />
+                            <el-checkbox v-model="search.date_of_due"
+                                >Lotes Vencidos</el-checkbox
+                            >
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 ">
@@ -114,6 +118,21 @@
                                 value-format="yyyy-MM-dd"
                                 :picker-options="pickerOptionsDates"
                                 @change="changeEndDate"
+                            >
+                            </el-date-picker>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="col-lg-2 col-md-2 ">
+                        <div class="form-group">
+                            <label class="control-label w-100"
+                                >Lotes Vencidos</label
+                            >
+                            <el-date-picker
+                                v-model="search.date_of_due"
+                                type="month"
+                                value-format="yyyy-MM-dd"
+                                placeholder="Elija un mes"
                             >
                             </el-date-picker>
                         </div>
@@ -207,7 +226,9 @@
                             </el-date-picker>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
+                    <div
+                        class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center"
+                    >
                         <el-button
                             class="submit"
                             type="primary"
@@ -355,7 +376,6 @@ export default {
         await this.getRecords();
     },
     methods: {
-    
         getWeekNumber(date) {
             const d = new Date(date);
             d.setHours(0, 0, 0, 0);
@@ -387,6 +407,7 @@ export default {
                 has_sale: false,
                 active: true,
                 date_filter: "week",
+                date_of_due: Date.now()
             };
         },
         cleanInputs() {
@@ -443,14 +464,30 @@ export default {
             }, 350);
         },
         getQueryParameters() {
+            const today = moment().format("YYYY-MM-DD");
             if (this.search.d_start == null) {
                 this.search.d_end = null;
             }
-            return queryString.stringify({
+
+            const params = {
                 page: this.pagination.current_page,
                 limit: this.limit,
                 ...this.search
-            });
+            };
+
+            if (this.search.date_of_due === true) {
+                params.date_of_due = today;
+            } else {
+                delete params.date_of_due;
+            }
+
+            return queryString.stringify(params);
+
+            /* return queryString.stringify({
+                page: this.pagination.current_page,
+                limit: this.limit,
+                ...this.search
+            }); */
         },
         searchRemoteItems(input) {
             if (input.length > 0) {

@@ -186,7 +186,6 @@ class PosController extends Controller
         $brand_id = $request->brands;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
-
         $value = strtoupper($value);
         $value = trim($value);
         $establishment_id = auth()->user()->establishment_id;

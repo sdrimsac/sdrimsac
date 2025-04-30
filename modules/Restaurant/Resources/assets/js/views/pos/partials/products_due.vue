@@ -5,6 +5,7 @@
         append-to-body
         :visible="showDialog"
         title="Productos por vencer"
+        width="70%"
     >
         <div v-if="records != 0" class="d-flex justify-content-end mt-2">
             <el-button
@@ -37,6 +38,7 @@
                                 <th>Producto</th>
                                 <th>Fecha de vencimiento</th>
                                 <th>Cantidad</th>
+                                <th>Lote Por Vencer</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +50,18 @@
                                 <td>{{ record.item.description }}</td>
                                 <td>{{ record.date_of_due }}</td>
                                 <td>{{ record.quantity }}</td>
+                                <td>
+                                    <template>
+                                        <div
+                                            v-for="lot in record.item
+                                                .lots_group"
+                                            :key="lot.id"
+                                        >
+                                            {{ lot.code }} -
+                                            {{ lot.date_of_due }}
+                                        </div>
+                                    </template>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -65,18 +79,20 @@
             </el-pagination>
         </div>
         <whatsapp-modal
-        resource="/lotes/to_due/excel"
-        :showWhatsappForm.sync="showDialogWhatsapp"
-        message="Reporte de lotes vencidos a menos de 60 dias.xlsx"
+            resource="/lotes/to_due/excel"
+            :showWhatsappForm.sync="showDialogWhatsapp"
+            message="Reporte de lotes vencidos a menos de 60 dias.xlsx"
         >
-
         </whatsapp-modal>
     </el-dialog>
 </template>
 <script>
-const WhatsappModal= () => import("../../../../../../../../resources/js/components/WhatsappModalReports.vue");
+const WhatsappModal = () =>
+    import(
+        "../../../../../../../../resources/js/components/WhatsappModalReports.vue"
+    );
 export default {
-  components: { WhatsappModal },
+    components: { WhatsappModal },
     props: ["showDialog"],
     data() {
         return {

@@ -8,6 +8,8 @@ use App\Http\Controllers\Tenant\ReportProductosController;
 
 Route::get('reports/valued/excel', 'ReportValuedStockController@exportExcel');
 
+Route::get('transfer_place/print_transfer_place/{code}', [TransferPlaceController::class, 'print_transfer_place']);
+
 Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
     // Config inventory
 

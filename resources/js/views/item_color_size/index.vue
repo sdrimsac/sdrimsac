@@ -48,6 +48,7 @@
                         <th class="text-white">Talla</th>
                         <th class="text-white">Stock</th>
                         <th class="text-white">Precio</th>
+                        <th class="text-white">Estado</th>
                         <th class="text-right text-white">Acciones</th>
                     </tr>
 
@@ -61,6 +62,11 @@
                         <td>{{ row.size }}</td>
                         <td>{{ row.stock }}</td>
                         <td>{{ row.price }}</td>
+                        <td>
+                            <span :class="{ 'text-danger': row.stock === 0, 'text-success': row.stock > 0 }">
+                                {{ row.stock === 0 ? 'Agotado' : 'Disponible' }}
+                            </span>
+                        </td>
 
                         <td class="text-right">
                             <template
@@ -130,10 +136,12 @@ export default {
             showWarehousesDetail: false,
             resource: "item-color-size",
             recordId: null,
-            warehousesDetail: []
+            warehousesDetail: [],
+            warehouses: [],
         };
     },
-    created() {},
+    created() {
+    },
     methods: {
         clickImportSetIndividual() {
             this.showImportSetIndividualDialog = true;
@@ -153,7 +161,7 @@ export default {
             this.destroy(`/${this.resource}/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")
             );
-        }
+        },
     }
 };
 </script>

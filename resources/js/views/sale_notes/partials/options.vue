@@ -7,6 +7,7 @@
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :show-close="true"
+            append-to-body
         >
             <template v-if="configuration.print_direct == false">
                 <div class="row">

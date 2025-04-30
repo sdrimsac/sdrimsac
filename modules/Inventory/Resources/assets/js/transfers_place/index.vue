@@ -24,6 +24,22 @@
                 <div class="card-header bg-primary">
                     <h4 class="my-0 text-white">Listado de {{ title }}</h4>
                 </div>
+                <div
+                    class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
+                    style="margin-left: 1rem;"
+                >
+                    <el-button
+                        class="btn_buscar me-2"
+                        href="javascript:void(0)"
+                        @click.prevent="clickCreate"
+                    >
+                        <i class="fas fa-plus"></i>
+                        <span
+                            style="color: #fff; font-size: 1.25rem; font-weight: bold;"
+                            >Nuevo Traslado de Productos</span
+                        >
+                    </el-button>
+                </div>
                 <div class="card-body">
                     <data-table :resource="resource">
                         <tr slot="heading">
@@ -32,6 +48,7 @@
                             <th>Almacen Inicial</th>
                             <th>Almacen Destino</th>
                             <th>Usuario remitente</th>
+                            <th>Motivo del Traslado</th>
                             <th>Código</th>
                             <th>Detalle Productos</th>
                             <th>Cantidad Total</th>
@@ -45,6 +62,7 @@
                             <td>{{ row.warehouse }}</td>
                             <td>{{ row.warehouse_destination }}</td>
                             <td>{{ row.sender }}</td>
+                            <td>{{ row.observation }}</td>
                             <td>
                                 {{ row.code }}
                                 <button
@@ -54,6 +72,13 @@
                                 >
                                     <i class="fa fa-print"></i>
                                 </button>
+                                <!-- <button
+                                    @click="clickPrint(row.code)"
+                                    type="button"
+                                    class="btn btn-sm btn-primary"
+                                >
+                                    <i class="fa fa-print"></i>
+                                </button> -->
                             </td>
                             <td>
                                 <el-popover
@@ -198,20 +223,46 @@
                 </span>
             </el-dialog>
         </div>
+        <transfer-form
+            :showDialog.sync="showDialogTransferForm"
+            :configuration="configuration"
+            :direct="direct"
+            :warehouse_id="warehouse_id"
+            :establishment_id="establishment_id"
+            :establishments="establishments"
+            :printers="printers"
+            @reloadData="reloadData"
+        ></transfer-form>
+        <pdf-model
+            :showDialog.sync="showDialogPdf"
+            :currentCode="currentCode"
+            :printer_id="printer_id"
+            :printers="printers"
+            :configuration="configuration"
+            @reloadData="reloadData"
+            @Printer="Printer"
+        ></pdf-model>
     </div>
 </template>
 
 <script>
 import DataTable from "../../../../../../resources/js/components/DataTableTransfers.vue";
 import { deletable } from "../../../../../../resources/js/mixins/deletable";
+import TransferForm from "./form.vue";
+import pdfModel from "./partials/model_pdf.vue";
 
 export default {
     components: {
-        DataTable
+        DataTable,
+        TransferForm,
+        pdfModel
     },
+    props: ["direct", "areaPrinter", "warehouse_id", "establishment_id"],
     mixins: [deletable],
     data() {
         return {
+            showDialogPdf: false,
+            showDialogTransferForm: false,
             showDialogPrinters: false,
             title: null,
             showDialog: false,
@@ -221,10 +272,17 @@ export default {
             printer_id: null,
             printers: [],
             currentCode: null,
-            transferCode: ""
+            transferCode: "",
+            configuration: [],
+            establishments: []
         };
     },
+    /* created() {
+        this.title = "Traslados";
+        this.direct = this.configuration.translate_direct;
+    }, */
     created() {
+        /* this.direct = this.configuration.translate_direct; */
         this.title = "Traslados por aceptar";
         this.getTables();
         qz.security.setCertificatePromise((resolve, reject) => {
@@ -255,6 +313,12 @@ export default {
         });
     },
     methods: {
+        reloadData() {
+            this.$eventHub.$emit("reloadData");
+        },
+        clickCreate() {
+            this.showDialogTransferForm = true;
+        },
         getTables() {
             this.$http
                 .get("/transfers/transfer_place/tables")
@@ -266,6 +330,8 @@ export default {
                     // this.tables = response.data;
                     let { data } = response;
                     this.printers = data.printers;
+                    this.configuration = data.configuration;
+                    this.establishments = data.establishments;
                     console.log(
                         "🚀 ~ file: index.vue:144 ~ this.$http.get ~ this.$areaPrinter:",
                         this.$areaPrinter
@@ -330,21 +396,27 @@ export default {
             }
         },
         clickPrint(code) {
+            this.showDialogPdf = true;
+            console.log("Código enviado al modal:", code);
+            this.currentCode = code;
+            console.log("Código actual:", this.currentCode);
+        }
+        /* clickPrint(code) {
             this.showDialogPrinters = true;
             this.currentCode = code;
 
             // this.Printer(url);
-        },
-        clickCreate(recordId = null) {
+        }, */
+        /* clickCreate(recordId = null) {
             location.href = `/${this.resource}/create`;
             //this.recordId = recordId
             //this.showDialog = true
-        },
-        clickDelete(id) {
+        }, */
+        /* clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")
             );
-        }
+        } */
         /* cancel(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")

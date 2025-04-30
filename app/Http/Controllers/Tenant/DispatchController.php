@@ -424,7 +424,13 @@ class DispatchController extends Controller
                 $data = (new ServiceDispatchController())->getData($document->id);
                 $facturalo->setXmlUnsigned((new ServiceDispatchController())->createXmlUnsigned($data));
                 $facturalo->signXmlUnsigned();
+
+                // Generar PDF A4
                 $facturalo->createPdf();
+
+                // Generar PDF Ticket
+                $facturalo->createPdf($document, 'dispatch', 'ticket');
+
                 return $facturalo;
             });
 
@@ -434,7 +440,14 @@ class DispatchController extends Controller
             $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
+
+                // Generar PDF A4
                 $facturalo->createPdf();
+
+                // Generar PDF Ticket
+                $document = $facturalo->getDocument();
+                $facturalo->createPdf($document, 'dispatch', 'ticket');
+
                 return $facturalo;
             });
 
@@ -450,7 +463,6 @@ class DispatchController extends Controller
 
         $message = "Se creo la guía de remisión {$document->series}-{$document->number}";
 
-        /* dispatch(new DispatchSendSunatJobProccess($document->external_id))->delay(now()->addMinute(1)); */
         dispatch(new DispatchSendSunatJobProccess($document->external_id));
 
         return [
@@ -459,6 +471,8 @@ class DispatchController extends Controller
             'data' => [
                 'id' => $document->id,
                 'send_sunat' => $configuration->auto_send_dispatchs_to_sunat,
+                'print_ticket' => url('') . "/print/dispatch/{$document->external_id}/ticket",
+                'print_a4' => url('') . "/print/dispatch/{$document->external_id}/a4",
             ],
         ];
     }

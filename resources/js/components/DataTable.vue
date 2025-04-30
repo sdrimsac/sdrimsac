@@ -169,7 +169,9 @@
                     </div>
                     <div
                         class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                        v-if="resource == 'items'"
+                        v-if="
+                            resource == 'items' || resource == 'item-color-size'
+                        "
                     >
                         <label for="warehouse">
                             Almacén
@@ -235,6 +237,29 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <div
+                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                        v-if="resource == 'item-color-size'"
+                    >
+                        <label>Estados</label>
+                        <el-select
+                            v-model="search.status"
+                            @change="getRecords"
+                            clearable
+                            placeholder="Seleccione el estado"
+                        >
+                            <el-option
+                                v-for="(item, idx) in [
+                                    { id: 1, active: 'Disponible' },
+                                    { id: 0, active: 'Agotado' }
+                                ]"
+                                :key="idx"
+                                :label="item.active"
+                                :value="item.active"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
             </div>
             <div v-if="resource == 'items'" class="row"></div>
@@ -261,11 +286,18 @@
                     <el-button
                         class="submit"
                         type="success"
-                        v-if="
-                            resource !== 'item-color-size'"
+                        v-if="resource !== 'item-color-size'"
                         icon="el-icon-tickets"
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button
+                    >
+                    <el-button
+                        class="submit"
+                        type="success"
+                        v-if="resource == 'item-color-size'"
+                        icon="el-icon-tickets"
+                        @click.prevent="clickDownloadColor('excel')"
+                        >Exportar Excel Color</el-button
                     >
                     <el-button
                         class="submit"
@@ -275,34 +307,35 @@
                         @click.prevent="clickDownloadForImport('excel')"
                         >Exportar Excel - Formato de importacion</el-button
                     >
-                <el-tooltip content="Agregar productos a los almacenes faltantes" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToWarehouses"
-                    >Productos en todos los almacenes
-                    </el-button
+                    <el-tooltip
+                        content="Agregar productos a los almacenes faltantes"
+                        placement="top"
                     >
-                </el-tooltip>
+                        <el-button
+                            class="submit"
+                            type="primary"
+                            v-if="typeUser == 'superadmin'"
+                            icon="el-icon-tickets"
+                            @click.prevent="clickAddProductsToWarehouses"
+                            >Productos en todos los almacenes
+                        </el-button>
+                    </el-tooltip>
 
-
-                <el-tooltip content="Agregar las politicas en todo los almacenes" placement="top">
-
-                    <el-button
-                    class="submit"
-                    type="primary"
-                    v-if="typeUser == 'superadmin'"
-                    icon="el-icon-tickets"
-                    @click.prevent="clickAddProductsToPolitica"
-                    >Politicas en todos los almacenes
-                    </el-button
+                    <el-tooltip
+                        content="Agregar las politicas en todo los almacenes"
+                        placement="top"
                     >
-                </el-tooltip>
+                        <el-button
+                            class="submit"
+                            type="primary"
+                            v-if="typeUser == 'superadmin'"
+                            icon="el-icon-tickets"
+                            @click.prevent="clickAddProductsToPolitica"
+                            >Politicas en todos los almacenes
+                        </el-button>
+                    </el-tooltip>
 
-                <!-- <el-tooltip content="" placement="top">
+                    <!-- <el-tooltip content="" placement="top">
 
                     <el-button
                     class="submit"
@@ -389,7 +422,8 @@ export default {
                 warehouse_id: 1,
                 column: null,
                 value: null,
-                active: null
+                active: null,
+                status: null,
             },
             columns: [],
             records: [],
@@ -398,7 +432,7 @@ export default {
             time: null,
             warehouses: [],
             areas: [],
-            loading: false,
+            loading: false
         };
     },
     computed: {},
@@ -424,6 +458,12 @@ export default {
                 this.areas = response.data.data;
             });
         }
+
+        if (this.resource == "item-color-size") {
+            this.$http.get(`item-color-size/tables`).then(response => {
+                this.warehouses = response.data.warehouses;
+            });
+        }
     },
     async mounted() {
         let column_resource = this.resource; // _.split(this.resource, '/')
@@ -438,30 +478,43 @@ export default {
     methods: {
         clickAddProductsToPolitica() {
             this.loading = true;
-            this.$http.get(`/items/warehouse`).then(response => {
-                this.$showSAlert("EXITO", "Politicas agreagadas correctamente a todos los almacenes", "success");
-                /* this.$toast.success("Politicas agregadas correctamente a todos los almacenes"); */
-                this.getRecords();
-            }).catch(error => {
-                this.loading = false;
-            }).finally(() => {
-                this.loading = false;
-            });
+            this.$http
+                .get(`/items/warehouse`)
+                .then(response => {
+                    this.$showSAlert(
+                        "EXITO",
+                        "Politicas agreagadas correctamente a todos los almacenes",
+                        "success"
+                    );
+                    /* this.$toast.success("Politicas agregadas correctamente a todos los almacenes"); */
+                    this.getRecords();
+                })
+                .catch(error => {
+                    this.loading = false;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-
 
         clickAddProductsToWarehouses() {
             this.loading = true;
-            this.$http.get(`/items/warehouses/add-products`).then(response => {
-                this.$toast.success("Productos agregados correctamente a todos los almacenes");
-                this.getRecords();
-            }).catch(error => {
-                this.loading = false;
-            }).finally(() => {
-                this.loading = false;
-            });
+            this.$http
+                .get(`/items/warehouses/add-products`)
+                .then(response => {
+                    this.$toast.success(
+                        "Productos agregados correctamente a todos los almacenes"
+                    );
+                    this.getRecords();
+                })
+                .catch(error => {
+                    this.loading = false;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-    
+
         total_income() {
             return this.records.reduce(
                 (acc, item) => acc + Number(item.income),
@@ -489,6 +542,26 @@ export default {
         clickDownload(type) {
             this.$emit("clickReport", this.search, type);
         },
+
+        /* clickDownloadColor() {
+            this.$http
+                .get("/item-color-size/export_excel")
+                .then(response => {})
+                .catch(error => {
+                    this.loading = false;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        }, */
+        clickDownloadColor() {
+            let parameters = this.getQueryParameters();
+            window.open(
+                `/item-color-size/export_excel?${parameters}`,
+                "_blank"
+            );
+        },
+
         clickDownloadForImport() {
             this.$emit("clickReportForImport", this.search);
         },
@@ -504,7 +577,6 @@ export default {
             );
         },
         getRecords() {
-
             if (this.time) {
                 clearTimeout(this.time);
             }
@@ -518,22 +590,26 @@ export default {
                         this.resource
                     }/records?${this.getQueryParameters()}&fromAdmin=true`;
                 }
-                return this.$http.get(url).then(response => {
-                    if (this.resource !== "caja/cash-transfer/report") {
-                        this.records = response.data.data;
-                        this.pagination = response.data.meta;
-                        this.pagination.per_page = parseInt(
-                            response.data.meta.per_page
-                        );
-                    } else {
-                        let data = response.data;
-                        this.records = data.data;
-                    }
-                }).catch(error => {
-                    this.loading = false;
-                }).finally(() => {
-                    this.loading = false;
-                });
+                return this.$http
+                    .get(url)
+                    .then(response => {
+                        if (this.resource !== "caja/cash-transfer/report") {
+                            this.records = response.data.data;
+                            this.pagination = response.data.meta;
+                            this.pagination.per_page = parseInt(
+                                response.data.meta.per_page
+                            );
+                        } else {
+                            let data = response.data;
+                            this.records = data.data;
+                        }
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
             }, 350);
         },
         getQueryParameters() {
@@ -553,7 +629,8 @@ export default {
                 cash_id: this.search.cash_id,
                 end_date: this.search.end_date,
                 warehouse_id: this.search.warehouse_id,
-                area_id: this.search.area_id
+                area_id: this.search.area_id,
+                status: this.search.status,
             });
         },
         changeClearInput() {

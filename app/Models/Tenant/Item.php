@@ -299,6 +299,7 @@ class Item extends ModelTenant
                     'compromise_quantity' => 0
                 ];
             }),
+
             // 'color_size' =>$this->color_size->where('warehouse_id', $warehouse->id)
             'color_size' => ItemColorSize::where('item_id', $this->id)->where('warehouse_id', $warehouse->id)
                 ->get()

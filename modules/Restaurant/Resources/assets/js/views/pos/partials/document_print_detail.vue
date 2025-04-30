@@ -18,7 +18,6 @@
                         <th class="text-white" v-if="type == 'quotations'">
                             Opciones
                         </th>
-
                         <th
                             v-if="
                                 configuration.restaurant &&
@@ -70,6 +69,23 @@
                                     data.state_type_id != '13'
                             }"
                         >
+                            <el-button
+                                type="success"
+                                size="mini"
+                                plain
+                                @click="clickDocuments(data.id)"
+                            >
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Previsualización de pdf (Descargar)"
+                                    placement="top-start"
+                                >
+                                    <i
+                                        class="far fa-file-pdf text-white fa-lg"
+                                    ></i>
+                                </el-tooltip>
+                            </el-button>
                             <el-button
                                 type="danger"
                                 size="mini"
@@ -322,6 +338,23 @@
                                     data.state_type_id == '13'
                             }"
                         >
+                            <el-button
+                                type="success"
+                                size="mini"
+                                plain
+                                @click="clickOptions(data.id)"
+                            >
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Previsualización de pdf (Descargar)"
+                                    placement="top-start"
+                                >
+                                    <i
+                                        class="far fa-file-pdf text-white fa-lg"
+                                    ></i>
+                                </el-tooltip>
+                            </el-button>
                             <el-button
                                 type="danger"
                                 size="mini"
@@ -848,6 +881,24 @@
             :showDialog.sync="showDialogPaymentsSaleNotes"
             :documentId="recordId"
         ></sale-note-payments>
+        <sale-notes-options
+            :showDialog.sync="showDialogOptions"
+            :configuration.sync="configuration"
+            :showClose="true"
+            :company="company"
+            :recordId="recordId"
+            :editSale.sync="editSale"
+        ></sale-notes-options>
+
+        <document-options
+            :showDialog.sync="showDialogOptionsDocument"
+            :editDocument="editDocument"
+            :configuration="configuration"
+            :recordId="recordId"
+            :print="print"
+            :company="company"
+            :showClose="true"
+        ></document-options>
 
         <note-modal
             :configuration="configuration"
@@ -906,6 +957,8 @@ const SaleNoteGenerate = () =>
     );
 const CreateDispatch = () => import("./create_dispatch.vue");
 const NoteModal = () => import("./note_modal.vue");
+import SaleNotesOptions from "../../../../../../../../resources/js/views/sale_notes/partials/options.vue";
+import DocumentOptions from "../../../../../../../../resources/js/views/documents/partials/options.vue";
 const SaleNotePayments = () =>
     import(
         "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue"
@@ -921,7 +974,9 @@ export default {
         DocumentsVoided,
         DocumentsPayments,
         NoteModal,
-        SaleNotePayments
+        SaleNotePayments,
+        SaleNotesOptions,
+        DocumentOptions
     },
     mixins: [deletable],
     props: [
@@ -935,6 +990,9 @@ export default {
     ],
     data() {
         return {
+            showDialogOptionsDocument: false,
+            editDocument: false,
+            editSale: false,
             showDialogPaymentsSaleNotes: false,
             titleAvoidSaleNote: "Motivo de anulación",
             resourcePdf: null,
@@ -960,6 +1018,14 @@ export default {
     },
 
     methods: {
+        clickDocuments(recordId) {
+            this.recordId = recordId;
+            this.showDialogOptionsDocument = true;
+        },
+        clickOptions(recordId) {
+            this.recordId = recordId;
+            this.showDialogOptions = true;
+        },
         clickAnulateSaleNoteCredit() {
             if (this.reasonToAvoid == null || this.reasonToAvoid == "") {
                 this.$toast.error("Debe introducir un motivo de anulación");

@@ -223,9 +223,7 @@
                                                                     data.item
                                                                         .lots_enabled ==
                                                                         1 &&
-                                                                        data
-                                                                            .item
-                                                                            .date_of_due
+                                                                        data.item.date_of_due
                                                                 "
                                                             >
                                                                 <el-tag
@@ -551,11 +549,12 @@
                                     </div>
                                     <div
                                         class="d-flex flex-wrap justify-content-center m-1"
-                                        v-if="data.item.lots_enabled == 1"
+                                        v-if="data.item.lots_enabled == 1 && 
+                                            data.item.date_of_due
+                                           " 
                                     >
                                         <el-tag
-                                            v-for="(lot, idx) in data.item
-                                                .lots_group"
+                                            v-for="(lot, idx) in data.item.lots_group.filter(l => l.quantity > 0)"
                                             :key="idx"
                                             :type="
                                                 `${
@@ -567,6 +566,7 @@
                                         >
                                             {{ lot.code }} -
                                             {{ lot.date_of_due }}
+                                            {{ lot.quantity }}
                                         </el-tag>
                                     </div>
                                     <div

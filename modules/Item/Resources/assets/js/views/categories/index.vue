@@ -129,14 +129,7 @@
                                     >
                                         <i class="fa fa-edit"></i> Editar
                                     </a>
-                                    <!-- <a
-                    type="button"
-                    class="dropdown-item text-danger"
-                    @click.prevent="
-                                    clickDelete(row.id)"
-                  >
-                    <i class="fa fa-trash"></i> Eliminar
-                  </a>-->
+                                    
                                     <a
                                         type="button"
                                         class="dropdown-item text-warning"

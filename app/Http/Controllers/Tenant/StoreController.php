@@ -117,6 +117,8 @@ class StoreController extends Controller
 
     }
 
+    //para el igv de restaurante let 31556
+
     public function getIgv(Request $request)
     {
         $establishment_id = $request->input('establishment_id');

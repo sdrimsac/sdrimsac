@@ -145,6 +145,7 @@ export default {
     },
     computed: {},
     created() {
+        
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
@@ -171,6 +172,10 @@ export default {
         await this.getRecords();
     },
     methods: {
+        reloadData() {
+            this.getRecords();
+        },
+        
         customIndex(index) {
             return (
                 this.pagination.per_page * (this.pagination.current_page - 1) +

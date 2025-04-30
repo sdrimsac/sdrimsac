@@ -39,7 +39,7 @@
                                     v-model="form.period"
                                     @change="changePeriod"
                                 >
-                                   <!-- <el-option
+                                    <!-- <el-option
                                         key="all"
                                         value="all"
                                         label="Todos"
@@ -298,7 +298,6 @@
                                                     Comprobantes
                                                 </h2>
                                             </div>
-                                          
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -308,41 +307,36 @@
                                                 ></x-graph>
                                             </div>
                                         </div>
-                                          <div class="col-12">
-                                                <div class="summary">
-                                                    <h4 class="title text-info">
-                                                        Total Pagado S/
-                                                        {{
-                                                            document.totals
-                                                                .total_payment
-                                                        }}
-                                                    </h4>
-                                                </div>
+                                        <div class="col-12">
+                                            <div class="summary">
+                                                <h4 class="title text-info">
+                                                    Total Pagado S/
+                                                    {{
+                                                        document.totals
+                                                            .total_payment
+                                                    }}
+                                                </h4>
                                             </div>
-                                            <div class="col-12">
-                                                <div class="summary">
-                                                    <h4
-                                                        class="title text-danger"
-                                                    >
-                                                        Total por Pagar S/
-                                                        {{
-                                                            document.totals
-                                                                .total_to_pay
-                                                        }}
-                                                    </h4>
-                                                </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="summary">
+                                                <h4 class="title text-danger">
+                                                    Total por Pagar S/
+                                                    {{
+                                                        document.totals
+                                                            .total_to_pay
+                                                    }}
+                                                </h4>
                                             </div>
-                                            <div class="col-12">
-                                                <div class="summary">
-                                                    <h4 class="title">
-                                                        Total S/
-                                                        {{
-                                                            document.totals
-                                                                .total
-                                                        }}
-                                                    </h4>
-                                                </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="summary">
+                                                <h4 class="title">
+                                                    Total S/
+                                                    {{ document.totals.total }}
+                                                </h4>
                                             </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -453,21 +447,55 @@
                                                     Documentos emitidos
                                                 </h2>
                                             </div>
-                                          
-                     
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6 col-sm-6 col-12">
-                                                <h5 class="title">Facturas: {{count_documents.totals.invoices}}</h5>
-                                                <h5 class="title">Boletas: {{count_documents.totals.receives }} </h5>
-                                                <h5 class="title">Notas de venta: {{count_documents.totals.sale_notes}}</h5>
-                                                <h5 class="title">Notas de crédito: {{count_documents.totals.credit_notes}}</h5>
-                                                <h5 class="title">Notas de débito: {{count_documents.totals.debit_notes}}</h5>
+                                            <div
+                                                class="col-md-6 col-sm-6 col-12"
+                                            >
+                                                <h5 class="title">
+                                                    Facturas:
+                                                    {{
+                                                        count_documents.totals
+                                                            .invoices
+                                                    }}
+                                                </h5>
+                                                <h5 class="title">
+                                                    Boletas:
+                                                    {{
+                                                        count_documents.totals
+                                                            .receives
+                                                    }}
+                                                </h5>
+                                                <h5 class="title">
+                                                    Notas de venta:
+                                                    {{
+                                                        count_documents.totals
+                                                            .sale_notes
+                                                    }}
+                                                </h5>
+                                                <h5 class="title">
+                                                    Notas de crédito:
+                                                    {{
+                                                        count_documents.totals
+                                                            .credit_notes
+                                                    }}
+                                                </h5>
+                                                <h5 class="title">
+                                                    Notas de débito:
+                                                    {{
+                                                        count_documents.totals
+                                                            .debit_notes
+                                                    }}
+                                                </h5>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 col-12">
+                                            <div
+                                                class="col-md-6 col-sm-6 col-12"
+                                            >
                                                 <x-graph
                                                     type="doughnut"
-                                                    :all-data="count_documents.graph"
+                                                    :all-data="
+                                                        count_documents.graph
+                                                    "
                                                 ></x-graph>
                                             </div>
                                         </div>
@@ -530,7 +558,6 @@
                                                 <div class="summary">
                                                     <h4 class="title">
                                                         Utilidad
-                                                 
                                                     </h4>
                                                     <div class="info">
                                                         <strong class="amount"
@@ -735,7 +762,7 @@
                             </div>
                         </section>
                     </div>
-                     <!-- <div class="col-xl-3 mt-2 col-md-3  ">
+                    <!-- <div class="col-xl-3 mt-2 col-md-3  ">
                         <section
                             class="card card-featured-left card-featured-secondary"
                         >
@@ -952,9 +979,9 @@
                                         >Ordenar por movimientos</el-checkbox
                                     ><br />
                                 </div>
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                                     <table class="table">
-                                        <thead>
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 1;">
                                             <tr>
                                                 <th>#</th>
                                                 <th>Código</th>
@@ -976,11 +1003,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <template
-                                                v-for="(row,
-                                                index) in items_by_sales"
-                                            >
-                                                <tr :key="index">
+                                            <template>
+                                                <tr
+                                                    v-for="(row,
+                                                    index) in items_by_sales"
+                                                    :key="index"
+                                                >
                                                     <td>{{ index + 1 }}</td>
                                                     <td>
                                                         {{ row.internal_id }}
@@ -1074,7 +1102,9 @@
                 </div>
             </div>
 
-            <div class="col-xl-4"></div>
+            <div class="col-xl-6 col-md-12 col-lg-12">
+                <dashboard-conparative></dashboard-conparative>
+            </div>
         </div>
     </div>
 </template>
@@ -1087,21 +1117,21 @@
     font-size: 15px;
     font-weight: bold;
 }
-.custom-alert{
+.custom-alert {
     background-color: #cce5ff;
     color: #4a81b7;
-
 }
 </style>
 <script>
 // import DocumentPayments from "../../../../../../resources/js/views/tenant/documents/partials/payments.vue";
 // import SaleNotePayments from "../../../../../../resources/js/views/tenant/sale_notes/partials/payments.vue";
 import DashboardStock from "./partials/dashboard_stock.vue";
+import DashboardConparative from "./partials/dashboard_conparative.vue";
 import queryString from "query-string";
 
 export default {
     props: ["typeUser", "soapCompany"],
-    components: { DashboardStock },
+    components: { DashboardStock, DashboardConparative },
     data() {
         return {
             loading_search: false,
@@ -1114,11 +1144,11 @@ export default {
                 totals: {},
                 graph: {}
             },
-            count_documents:{
+            count_documents: {
                 totals: {},
                 graph: {}
             },
-            
+
             document: {
                 totals: {},
                 graph: {}
@@ -1292,15 +1322,17 @@ export default {
             this.onFetchData();
         },
         onFetchData() {
-            this.$http.post("/dashboard/global-data",this.form).then(response => {
-                const data = response.data;
-                this.document_total_global = data.document_total_global;
-                this.total_cpe = data.total_cpe;
-                this.sale_note_total_global = data.sale_note_total_global;
-                this.total =
-                    parseFloat(this.document_total_global) +
-                    parseFloat(this.sale_note_total_global);
-            });
+            this.$http
+                .post("/dashboard/global-data", this.form)
+                .then(response => {
+                    const data = response.data;
+                    this.document_total_global = data.document_total_global;
+                    this.total_cpe = data.total_cpe;
+                    this.sale_note_total_global = data.sale_note_total_global;
+                    this.total =
+                        parseFloat(this.document_total_global) +
+                        parseFloat(this.sale_note_total_global);
+                });
         },
         loadData() {
             this.$http

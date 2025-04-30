@@ -139,7 +139,9 @@ if ($hostname) {
                         Route::get('/record/{id}', [ItemColorSizeController::class, 'record']);
                         Route::post('/import', [ItemColorSizeController::class, 'import']);
                         Route::delete('/{id}', [ItemColorSizeController::class, 'delete']);
+                        Route::get('/tables', [ItemColorSizeController::class, 'tables']);
                         Route::post('/', [ItemColorSizeController::class, 'store']);
+                        Route::get('/export_excel', [ItemColorSizeController::class, 'exportable']);
                         Route::get('/last-record/{item_id}', [ItemColorSizeController::class, 'lastRecord']);
                     });
                 Route::prefix('warranty')
