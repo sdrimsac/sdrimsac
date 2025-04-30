@@ -1176,7 +1176,7 @@ class OrdenController extends Controller
                         if ($area_found->description == 'COCINA') {
                             $menaje_id = $this->getMenaje();
 
-                            dispatch(new PrintOrderJob($orden->id, "1", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
 
                             if ($menaje_id != null || $area_found->search_print == 1) {   
                                 $area_id = $menaje_id;
@@ -1201,13 +1201,13 @@ class OrdenController extends Controller
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
                         } */
                         if ($area_found) {
-                            $copies = $area_found->copies ?? 0; // Obtener el número de copias, por defecto 0
-                            $total_copies = $copies + 1; // Si copies es 1, imprimirá 2 veces
+                            $copies = $area_found->copies ?? 0;
+                            $total_copies = $copies + 1;
                 
                             if ($area_found->printer || $area_found->search_print == 1) {
-                                for ($i = 0; $i < $total_copies; $i++) { // Repetir según el número de copias
+                                for ($i = 0; $i < $total_copies; $i++) { 
                                     dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                    sleep(1); // Esperar un segundo entre impresiones
+                                    sleep(1);
                                 }
                             }
                         }
