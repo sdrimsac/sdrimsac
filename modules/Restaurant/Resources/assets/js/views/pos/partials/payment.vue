@@ -3125,7 +3125,7 @@ export default {
             this.customers = persons.filter(n => n.number != "88888888");
             this.updateAllCustomers(this.customers);
         },
-        async keyupCustomer(e) {
+        /* async keyupCustomer(e) {
             //buscar
             if (this.time) {
                 clearTimeout(this.time);
@@ -3152,60 +3152,43 @@ export default {
                 this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
             }, 1000);
-        },
+        }, */
 
-        /* async keyupCustomer(e) {
+        async keyupCustomer(e) {
             if (this.time) {
-            clearTimeout(this.time);
+                clearTimeout(this.time);
             }
-
-            this.typing = true;
-
-            const inputEl = this.$refs.select_person.$el.getElementsByTagName(
-            "input"
-            )[0];
-            const currentValue = inputEl.value;
-
-            // Don't search if less than 5 characters
-            if (!currentValue || currentValue.length < 5) {
-            return;
-            }
-
-            const isRUC = this.form.identity_document_type_id === "6";
-            const delay = isRUC ? 2000 : this.typingDelay;
 
             this.time = setTimeout(async () => {
-            this.typing = false;
-            
-            let url = `/caja/search_customers?value=${currentValue}`;
-            if (this.configuration.college) {
-                url += `&parents=${this.notRegister ? 0 : 1}`;
-            }
+                const inputValue = this.$refs.select_person.$el.getElementsByTagName(
+                    "input"
+                )[0].value;
+                this.input_person.number = inputValue;
 
-            try {
+                if (!inputValue || inputValue.length < 5) {
+                    return;
+                }
+
+                const urlBase = `/caja/search_customers?value=${inputValue}`;
+                const url = this.configuration.college
+                    ? `${urlBase}&parents=${this.notRegister ? 0 : 1}`
+                    : urlBase;
+
                 const response = await this.$http(url);
                 const { persons } = response.data;
 
-                // Update customers without affecting the select input
-                const filteredPersons = persons.filter(n => n.number != "88888888");
-                this.customers = filteredPersons;
-                
-                // Update all customers in parent component
-                await this.updateAllCustomers(filteredPersons);
+                this.customers = persons.filter(n => n.number !== "88888888");
+                this.updateAllCustomers(this.customers);
 
-                // Don't manipulate the input element after updating customers 
-                this.$nextTick(() => {
-                const selectInput = this.$refs.select_person.$el.querySelector('input');
-                if (selectInput && selectInput.value !== currentValue) {
-                    selectInput.value = currentValue;
-                }
-                });
+                // 👉 Solo limpiar si:
+                // - La entrada es 8 o más (usuario ya terminó de escribir)
+                // - No se encontró ningún cliente
+                /* if (inputValue.length >= 8 && this.customers.length === 0) {
+                    this.input_person.number = "";
+                } */
+            }, 1000);
+        },
 
-            } catch (error) {
-                console.error('Error searching customers:', error);
-            }
-            }, delay);
-        }, */
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
@@ -3321,10 +3304,6 @@ export default {
                         customer.identity_document_type_id == "4" ||
                         customer.identity_document_type_id == "-"
                     ) {
-                        if (customer.identity_document_type_id !== "6") {
-                            this.form.customer_id = null;
-                            this.value = null;
-                        }
                         /* this.form.customer_id = null;
                         this.value = null; */
                     }
