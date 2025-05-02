@@ -3138,9 +3138,6 @@ export default {
                 if (!this.input_person.number) {
                     return;
                 }
-                if (this.input_person.number.length < 5) {
-                    return;
-                }
 
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
@@ -3159,36 +3156,36 @@ export default {
                 clearTimeout(this.time);
             }
 
-            this.time = setTimeout(async () => {
-                const inputValue = this.$refs.select_person.$el.getElementsByTagName(
-                    "input"
-                )[0].value;
-                this.input_person.number = inputValue;
+            this.typing = true;
 
-                if (!inputValue || inputValue.length < 5) {
-                    return;
+            const isRUC = this.form.identity_document_type_id === "6";
+            const delay = isRUC ? 1000 : this.typingDelay;
+
+            this.time = setTimeout(async () => {
+                // Ya pasó el tiempo sin escribir, asumimos que terminó
+                this.typing = false;
+
+                const inputEl = this.$refs.select_person.$el.getElementsByTagName(
+                    "input"
+                )[0];
+                this.input_person.number = inputEl.value;
+
+                if (!this.input_person.number) {
+                    return; // No hagas nada si aún está vacío
                 }
 
-                const urlBase = `/caja/search_customers?value=${inputValue}`;
-                const url = this.configuration.college
-                    ? `${urlBase}&parents=${this.notRegister ? 0 : 1}`
-                    : urlBase;
+                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                if (this.configuration.college) {
+                    url += `&parents=${this.notRegister ? 0 : 1}`;
+                }
 
                 const response = await this.$http(url);
                 const { persons } = response.data;
 
-                this.customers = persons.filter(n => n.number !== "88888888");
+                this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
-
-                // 👉 Solo limpiar si:
-                // - La entrada es 8 o más (usuario ya terminó de escribir)
-                // - No se encontró ningún cliente
-                /* if (inputValue.length >= 8 && this.customers.length === 0) {
-                    this.input_person.number = "";
-                } */
-            }, 1000);
+            }, delay);
         },
-
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
@@ -3304,8 +3301,8 @@ export default {
                         customer.identity_document_type_id == "4" ||
                         customer.identity_document_type_id == "-"
                     ) {
-                        /* this.form.customer_id = null;
-                        this.value = null; */
+                        this.form.customer_id = null;
+                        this.value = null;
                     }
                 }
 
@@ -3326,9 +3323,6 @@ export default {
                     customer.identity_document_type_id !== "6"
                 ) {
                     this.form.document_type_id = "03";
-                }
-                if (customer.identity_document_type_id !== "6") {
-                    this.input_person.number = "";
                 }
                 this.changePromotion();
             }
@@ -5525,6 +5519,13 @@ export default {
                     c => c.id == this.form.customer_id
                 ).phone;
             } else {
+                const inputLength = this.input_person.number?.length || 0;
+                const expectedLength = isForRuc ? 11 : 8;
+
+                if (inputLength < expectedLength) {
+                    return;
+                }
+
                 if (this.customers.length > 0) {
                     let hasCustomerDefault = false;
                     if (this.customer_default) {
@@ -5547,9 +5548,14 @@ export default {
                     }
                     this.changeCustomer();
                 } else {
-                    this.value = null;
+                    if (inputLength >= expectedLength) {
+                        this.value = null;
+                        this.form.customer_id = null;
+                        this.form.customer_telephone = null;
+                    }
+                    /* this.value = null;
                     this.form.customer_id = null;
-                    this.form.customer_telephone = null;
+                    this.form.customer_telephone = null; */
                 }
             }
         },
