@@ -3162,7 +3162,6 @@ export default {
             const delay = isRUC ? 500 : this.typingDelay;
 
             this.time = setTimeout(async () => {
-                // Ya pasó el tiempo sin escribir, asumimos que terminó
                 this.typing = false;
 
                 const inputEl = this.$refs.select_person.$el.getElementsByTagName(
@@ -3171,7 +3170,11 @@ export default {
                 this.input_person.number = inputEl.value;
 
                 if (!this.input_person.number) {
-                    return; // No hagas nada si aún está vacío
+                    return;
+                }
+                if (this.input_person.number.length < 5) {
+                    /* this.$toast.warning("Ingrese un número válido."); */
+                    return;
                 }
 
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
@@ -3183,6 +3186,12 @@ export default {
                 const { persons } = response.data;
 
                 this.customers = persons.filter(n => n.number != "88888888");
+
+                if (this.customers.length === 0) {
+                    /* this.$toast.warning("No se encontraron resultados."); */
+                    return;
+                }
+
                 this.updateAllCustomers(this.customers);
             }, delay);
         },
