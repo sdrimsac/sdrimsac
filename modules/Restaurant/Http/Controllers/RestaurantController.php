@@ -262,7 +262,7 @@ class RestaurantController extends Controller
                 ];
             }
 
-            /* $currentSessionId = Session::getId();
+            $currentSessionId = Session::getId();
             if ($user->last_session_id && $user->last_session_id !== $currentSessionId) {
                 return [
                     'success' => false,
@@ -270,7 +270,7 @@ class RestaurantController extends Controller
                     'message' => "El usuario ya tiene una sesión iniciada. ¿Deseas cerrarla y continuar aquí?",
                     'user_id' => $user->id,
                 ];
-            } */
+            }
 
 
             Auth::login($user);

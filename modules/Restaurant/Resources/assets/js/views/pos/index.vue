@@ -102,7 +102,11 @@
                                                 class="btn btn-sm btn-primary"
                                                 type="button"
                                                 @click="buttonSmTables"
-                                                :title="isHotelArea ? '[F2] Cuartos para Alquilar' : '[F2] Mesas de Atención'"
+                                                :title="
+                                                    isHotelArea
+                                                        ? '[F2] Cuartos para Alquilar'
+                                                        : '[F2] Mesas de Atención'
+                                                "
                                             >
                                                 <i
                                                     v-if="isHotelArea"
@@ -282,59 +286,310 @@
                                 </template>
                             </div>
                         </div>
-                        <div class="row card mx-1 mt-2"
-                                v-if="
-                                    configuration.sale_note_credit_confirm
-                                        ? isAnalist ||
-                                        user.can_accept_credit_sale_note
-                                        : true
-                                ">
-                                <div>
-                                    <!-- Busqueda de Categorias  Chifa China -->
-                                    <template v-if="configuration.category_deslay">
-                                        <div class="d-flex row align-items-center">
-                                            <!-- Categorías Scroll -->
-                                            <div class="col-12 p-2">
-                                                <div class="categories-scroll">
-                                                    <div class="categories-wrapper">
+                        <div
+                            class="row card mx-1 mt-2"
+                            v-if="
+                                configuration.sale_note_credit_confirm
+                                    ? isAnalist ||
+                                      user.can_accept_credit_sale_note
+                                    : true
+                            "
+                        >
+                            <div>
+                                <!-- Busqueda de Categorias  Chifa China -->
+                                <template v-if="configuration.category_deslay">
+                                    <div class="d-flex row align-items-center">
+                                        <!-- Categorías Scroll -->
+                                        <div class="col-12 p-2">
+                                            <div class="categories-scroll">
+                                                <div class="categories-wrapper">
+                                                    <div
+                                                        v-for="item in categories"
+                                                        :key="item.id"
+                                                        class="category-card"
+                                                        :class="{
+                                                            active:
+                                                                category ===
+                                                                item.id
+                                                        }"
+                                                        @click="
+                                                            category = item.id;
+                                                            search_items(null);
+                                                        "
+                                                    >
                                                         <div
-                                                            v-for="item in categories"
-                                                            :key="item.id"
-                                                            class="category-card"
-                                                            :class="{ active: category === item.id }"
-                                                            @click="
-                                                                category = item.id;
-                                                                search_items(null);
-                                                            "
+                                                            class="category-circle"
                                                         >
-                                                            <div class="category-circle">
-                                                                <i class="fas fa-utensils"></i>
-                                                            </div>
-                                                            <span class="category-name">{{ item.name }}</span>
+                                                            <i
+                                                                class="fas fa-utensils"
+                                                            ></i>
                                                         </div>
+                                                        <span
+                                                            class="category-name"
+                                                            >{{
+                                                                item.name
+                                                            }}</span
+                                                        >
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <!-- Buscar -->
-                                            <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">
-                                                <h2 class="font-weight-bold custom-text-size">Buscar</h2>
-                                                <template v-if="selectOption == 4">
+                                        <!-- Buscar -->
+                                        <div
+                                            class="col-12 col-lg-4 p-2"
+                                            v-if="configuration.search_new"
+                                        >
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
+                                                Buscar
+                                            </h2>
+                                            <template v-if="selectOption == 4">
+                                                <el-input
+                                                    ref="input_items"
+                                                    size="small"
+                                                    v-model="input_item"
+                                                    @input="search()"
+                                                    @focus="clear_input()"
+                                                    autofocus
+                                                    clearable
+                                                >
+                                                    <el-button
+                                                        class="bg-light"
+                                                        slot="append"
+                                                        icon="el-icon-search"
+                                                        @click="search"
+                                                    ></el-button>
+                                                </el-input>
+                                            </template>
+                                            <template v-else>
+                                                <el-input
+                                                    ref="input_item"
+                                                    size="small"
+                                                    v-model="input_item"
+                                                    @input="search()"
+                                                    @focus="clear_input()"
+                                                    autofocus
+                                                >
+                                                    <el-button
+                                                        class="bg-light"
+                                                        slot="append"
+                                                        icon="el-icon-search"
+                                                        @click="search"
+                                                    ></el-button>
+                                                </el-input>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template v-else>
+                                    <!-- Card de Búsqueda -->
+
+                                    <div class="row">
+                                        <div class="row">
+                                            <!-- Series -->
+                                            <div
+                                                class="col-3 d-flex align-items-center justify-content-center"
+                                            >
+                                                <el-tooltip
+                                                    content="Envía a la lista de venta directamente (Imeis, Series)"
+                                                    placement="top"
+                                                >
+                                                    <el-checkbox
+                                                        v-if="
+                                                            configuration.search_series_pos
+                                                        "
+                                                        v-model="searchSeries"
+                                                        @change="
+                                                            saveInLocalStorageSearchSeries
+                                                        "
+                                                        class="d-flex align-items-center"
+                                                    >
+                                                        <i
+                                                            class="fas fa-list-alt me-2"
+                                                        ></i>
+                                                        <span>Series</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+
+                                            <!-- Barcode -->
+                                            <div
+                                                class="col-3 d-flex align-items-center justify-content-center"
+                                            >
+                                                <el-tooltip
+                                                    content="Habilitar búsqueda por código de barras"
+                                                    placement="top"
+                                                >
+                                                    <el-checkbox
+                                                        v-if="
+                                                            configuration.barcode
+                                                        "
+                                                        v-model="barcode"
+                                                        @change="
+                                                            saveInLocalStorageBarcode
+                                                        "
+                                                        class="d-flex align-items-center"
+                                                    >
+                                                        <i
+                                                            class="fas fa-barcode me-2"
+                                                        ></i>
+                                                        <span>Barcode</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+
+                                            <!-- Calidad -->
+                                            <div
+                                                class="col-3 d-flex align-items-center justify-content-center"
+                                            >
+                                                <el-tooltip
+                                                    content="Filtrar por calidad del producto"
+                                                    placement="top"
+                                                >
+                                                    <el-checkbox
+                                                        v-if="
+                                                            configuration.quality
+                                                        "
+                                                        v-model="quality"
+                                                        @change="
+                                                            saveInLocalStorageQuality
+                                                        "
+                                                        class="d-flex align-items-center"
+                                                    >
+                                                        <i
+                                                            class="fas fa-star me-2"
+                                                        ></i>
+                                                        <span>Calidad</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+
+                                            <!-- Modelo -->
+                                            <div
+                                                class="col-3 d-flex align-items-center justify-content-center"
+                                            >
+                                                <el-tooltip
+                                                    content="Filtrar por modelo del producto"
+                                                    placement="top"
+                                                >
+                                                    <el-checkbox
+                                                        v-if="
+                                                            configuration.model
+                                                        "
+                                                        v-model="model"
+                                                        @change="
+                                                            saveInLocalStorageModel
+                                                        "
+                                                        class="d-flex align-items-center"
+                                                    >
+                                                        <i
+                                                            class="fas fa-cube me-2"
+                                                        ></i>
+                                                        <span>Modelo</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <!-- Categorías y Marca -->
+                                        <div class="col-4" style="width: 50%;">
+                                            <div class="row align-items-center">
+                                                <div class="col-7">
+                                                    <!-- Categorías -->
+                                                    <div style="padding: 0;">
+                                                        <template>
+                                                            <el-select
+                                                                v-model="
+                                                                    category
+                                                                "
+                                                                filterable
+                                                                clearable
+                                                                placeholder="Categoría..."
+                                                                @change="
+                                                                    search_items(
+                                                                        null
+                                                                    )
+                                                                "
+                                                                size="small"
+                                                            >
+                                                                <el-option
+                                                                    v-for="item in categories"
+                                                                    :key="
+                                                                        item.id
+                                                                    "
+                                                                    :label="
+                                                                        item.name
+                                                                    "
+                                                                    :value="
+                                                                        item.id
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <!-- Marca -->
+                                                    <div
+                                                        v-if="
+                                                            configuration.brand
+                                                        "
+                                                    >
+                                                        <template>
+                                                            <el-select
+                                                                v-model="brand"
+                                                                filterable
+                                                                clearable
+                                                                placeholder="Marca..."
+                                                                @change="
+                                                                    search_items(
+                                                                        null
+                                                                    )
+                                                                "
+                                                                size="small"
+                                                            >
+                                                                <el-option
+                                                                    v-for="item in brands"
+                                                                    :key="
+                                                                        item.id
+                                                                    "
+                                                                    :label="
+                                                                        item.name
+                                                                    "
+                                                                    :value="
+                                                                        item.id
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Buscar -->
+                                        <div class="col-8" style="width: 50%;">
+                                            <div
+                                                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                                            >
+                                                <template
+                                                    v-if="selectOption == 4"
+                                                >
                                                     <el-input
                                                         ref="input_items"
                                                         size="small"
                                                         v-model="input_item"
+                                                        placeholder="producto a buscar..."
                                                         @input="search()"
                                                         @focus="clear_input()"
                                                         autofocus
                                                         clearable
+                                                        style="border: 2px solid #FFC107; border-radius: 4px;"
                                                     >
-                                                        <el-button
-                                                            class="bg-light"
-                                                            slot="append"
-                                                            icon="el-icon-search"
-                                                            @click="search"
-                                                        ></el-button>
                                                     </el-input>
                                                 </template>
                                                 <template v-else>
@@ -346,169 +601,13 @@
                                                         @focus="clear_input()"
                                                         autofocus
                                                     >
-                                                        <el-button
-                                                            class="bg-light"
-                                                            slot="append"
-                                                            icon="el-icon-search"
-                                                            @click="search"
-                                                        ></el-button>
                                                     </el-input>
                                                 </template>
                                             </div>
                                         </div>
-                                    </template>
-
-                                    <template v-else>
-                                        <!-- Card de Búsqueda -->
-                                        
-                                            <div class="row">
-                                                <div class="row">
-                                                    <!-- Series -->
-                                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                                        <el-tooltip content="Envía a la lista de venta directamente (Imeis, Series)" placement="top">
-                                                            <el-checkbox
-                                                                v-if="configuration.search_series_pos"
-                                                                v-model="searchSeries"
-                                                                @change="saveInLocalStorageSearchSeries"
-                                                                class="d-flex align-items-center"
-                                                            >
-                                                                <i class="fas fa-list-alt me-2"></i>
-                                                                <span>Series</span>
-                                                            </el-checkbox>
-                                                        </el-tooltip>
-                                                    </div>
-
-                                                    <!-- Barcode -->
-                                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                                        <el-tooltip content="Habilitar búsqueda por código de barras" placement="top">
-                                                            <el-checkbox
-                                                                v-if="configuration.barcode"
-                                                                v-model="barcode"
-                                                                @change="saveInLocalStorageBarcode"
-                                                                class="d-flex align-items-center"
-                                                            >
-                                                                <i class="fas fa-barcode me-2"></i>
-                                                                <span>Barcode</span>
-                                                            </el-checkbox>
-                                                        </el-tooltip>
-                                                    </div>
-
-                                                    <!-- Calidad -->
-                                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                                        <el-tooltip content="Filtrar por calidad del producto" placement="top">
-                                                            <el-checkbox
-                                                                v-if="configuration.quality"
-                                                                v-model="quality"
-                                                                @change="saveInLocalStorageQuality"
-                                                                class="d-flex align-items-center"
-                                                            >
-                                                                <i class="fas fa-star me-2"></i>
-                                                                <span>Calidad</span>
-                                                            </el-checkbox>
-                                                        </el-tooltip>
-                                                    </div>
-
-                                                    <!-- Modelo -->
-                                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                                        <el-tooltip content="Filtrar por modelo del producto" placement="top">
-                                                            <el-checkbox
-                                                                v-if="configuration.model"
-                                                                v-model="model"
-                                                                @change="saveInLocalStorageModel"
-                                                                class="d-flex align-items-center"
-                                                            >
-                                                                <i class="fas fa-cube me-2"></i>
-                                                                <span>Modelo</span>
-                                                            </el-checkbox>
-                                                        </el-tooltip>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <!-- Categorías y Marca -->
-                                                <div class="col-4" style="width: 50%;">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-7">
-                                                            <!-- Categorías -->
-                                                            <div style="padding: 0;">
-                                                                <template>
-                                                                    <el-select
-                                                                        v-model="category"
-                                                                        filterable
-                                                                        clearable
-                                                                        placeholder="Categoría..."
-                                                                        @change="search_items(null)"
-                                                                        size="small"
-                                                                    >
-                                                                        <el-option
-                                                                            v-for="item in categories"
-                                                                            :key="item.id"
-                                                                            :label="item.name"
-                                                                            :value="item.id"
-                                                                        ></el-option>
-                                                                    </el-select>
-                                                                </template>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <!-- Marca -->
-                                                            <div v-if="configuration.brand">
-                                                                <template>
-                                                                    <el-select
-                                                                        v-model="brand"
-                                                                        filterable
-                                                                        clearable
-                                                                        placeholder="Marca..."
-                                                                        @change="search_items(null)"
-                                                                        size="small"
-                                                                    >
-                                                                        <el-option
-                                                                            v-for="item in brands"
-                                                                            :key="item.id"
-                                                                            :label="item.name"
-                                                                            :value="item.id"
-                                                                        ></el-option>
-                                                                    </el-select>
-                                                                </template>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Buscar -->
-                                                <div class="col-8" style="width: 50%;">
-                                                    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                        <template v-if="selectOption == 4">
-                                                            <el-input
-                                                                ref="input_items"
-                                                                size="small"
-                                                                v-model="input_item"
-                                                                placeholder="producto a buscar..."
-                                                                @input="search()"
-                                                                @focus="clear_input()"
-                                                                autofocus
-                                                                clearable
-                                                                style="border: 2px solid #FFC107; border-radius: 4px;"
-                                                            >
-                                                            </el-input>
-                                                        </template>
-                                                        <template v-else>
-                                                            <el-input
-                                                                ref="input_item"
-                                                                size="small"
-                                                                v-model="input_item"
-                                                                @input="search()"
-                                                                @focus="clear_input()"
-                                                                autofocus
-                                                            >
-                                                            </el-input>
-                                                        </template>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        
-                                    </template>
-                                </div>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                         <div
                             class="row"
@@ -2471,6 +2570,7 @@ export default {
         }
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
+            console.log("reloadDataPersons pasa por aqui", customer_id);
         });
         this.$eventHub.$on("reloadDataItems", _ => {
             this.getFoods();
@@ -2481,11 +2581,7 @@ export default {
         };
         const response = await this.$http.post("/get_igv", form_data);
         this.percentage_igv = response.data ?? 18;
-        console.log(
-            "this.percentage_igv",
-            this.percentage_igv,
-            response.data
-        );
+        console.log("this.percentage_igv", this.percentage_igv, response.data);
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -6047,7 +6143,8 @@ export default {
                         if (d.item.lots_group.length > 0) {
                             d.item.lots_group = d.item.lots_group.filter(
                                 lt =>
-                                    lt.warehouse_id == this.worker.establishment_id &&
+                                    lt.warehouse_id ==
+                                        this.worker.establishment_id &&
                                     lt.quantity > 0
                             );
                         }
@@ -6522,6 +6619,10 @@ export default {
                 .get(`/${this.resource}/table/customers`)
                 .then(response => {
                     this.all_customers = response.data;
+                    console.log(
+                        "🚀 ~ this.$http.get ~ this.all_customers pasa por ahi:",
+                        this.all_customers
+                    );
                     this.form.customer_id = customer_id;
                     // this.changeCustomer();
                 });

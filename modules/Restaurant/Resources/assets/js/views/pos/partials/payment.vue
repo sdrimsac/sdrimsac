@@ -3159,7 +3159,7 @@ export default {
             this.typing = true;
 
             const isRUC = this.form.identity_document_type_id === "6";
-            const delay = isRUC ? 1000 : this.typingDelay;
+            const delay = isRUC ? 500 : this.typingDelay;
 
             this.time = setTimeout(async () => {
                 // Ya pasó el tiempo sin escribir, asumimos que terminó
@@ -3187,6 +3187,10 @@ export default {
             }, delay);
         },
         async updateAllCustomers(personsFromServer) {
+            if (personsFromServer.length === 0) {
+                return;
+            }
+
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
 
@@ -5519,13 +5523,6 @@ export default {
                     c => c.id == this.form.customer_id
                 ).phone;
             } else {
-                const inputLength = this.input_person.number?.length || 0;
-                const expectedLength = isForRuc ? 11 : 8;
-
-                if (inputLength < expectedLength) {
-                    return;
-                }
-
                 if (this.customers.length > 0) {
                     let hasCustomerDefault = false;
                     if (this.customer_default) {
@@ -5548,14 +5545,9 @@ export default {
                     }
                     this.changeCustomer();
                 } else {
-                    if (inputLength >= expectedLength) {
-                        this.value = null;
-                        this.form.customer_id = null;
-                        this.form.customer_telephone = null;
-                    }
-                    /* this.value = null;
+                    this.value = null;
                     this.form.customer_id = null;
-                    this.form.customer_telephone = null; */
+                    this.form.customer_telephone = null;
                 }
             }
         },
