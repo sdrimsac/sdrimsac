@@ -3125,7 +3125,7 @@ export default {
             this.customers = persons.filter(n => n.number != "88888888");
             this.updateAllCustomers(this.customers);
         },
-        /* async keyupCustomer(e) {
+        async keyupCustomer(e) {
             //buscar
             if (this.time) {
                 clearTimeout(this.time);
@@ -3138,7 +3138,10 @@ export default {
                 if (!this.input_person.number) {
                     return;
                 }
-
+                if (this.input_person.number.length < 5) {
+                    return;
+                }
+                
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -3149,59 +3152,60 @@ export default {
                 this.customers = persons.filter(n => n.number != "88888888");
                 this.updateAllCustomers(this.customers);
             }, 1000);
-        }, */
+        },
 
-        async keyupCustomer(e) {
+        /* async keyupCustomer(e) {
             if (this.time) {
-                clearTimeout(this.time);
+            clearTimeout(this.time);
             }
 
             this.typing = true;
+
+            const inputEl = this.$refs.select_person.$el.getElementsByTagName(
+            "input"
+            )[0];
+            const currentValue = inputEl.value;
+
+            // Don't search if less than 5 characters
+            if (!currentValue || currentValue.length < 5) {
+            return;
+            }
 
             const isRUC = this.form.identity_document_type_id === "6";
             const delay = isRUC ? 2000 : this.typingDelay;
 
             this.time = setTimeout(async () => {
-                this.typing = false;
+            this.typing = false;
+            
+            let url = `/caja/search_customers?value=${currentValue}`;
+            if (this.configuration.college) {
+                url += `&parents=${this.notRegister ? 0 : 1}`;
+            }
+
+            try {
+                const response = await this.$http(url);
+                const { persons } = response.data;
+
+                // Update customers without affecting the select input
+                const filteredPersons = persons.filter(n => n.number != "88888888");
+                this.customers = filteredPersons;
                 
-                const inputEl = this.$refs.select_person.$el.getElementsByTagName(
-                    "input"
-                )[0];
-                const currentValue = inputEl.value;
+                // Update all customers in parent component
+                await this.updateAllCustomers(filteredPersons);
 
-                if (!currentValue) {
-                    return;
+                // Don't manipulate the input element after updating customers 
+                this.$nextTick(() => {
+                const selectInput = this.$refs.select_person.$el.querySelector('input');
+                if (selectInput && selectInput.value !== currentValue) {
+                    selectInput.value = currentValue;
                 }
+                });
 
-                let url = `/caja/search_customers?value=${currentValue}`;
-                if (this.configuration.college) {
-                    url += `&parents=${this.notRegister ? 0 : 1}`;
-                }
-
-                try {
-                    const response = await this.$http(url);
-                    const { persons } = response.data;
-
-                    // Update customers without affecting the select input
-                    const filteredPersons = persons.filter(n => n.number != "88888888");
-                    this.customers = filteredPersons;
-                    
-                    // Update all customers in parent component
-                    await this.updateAllCustomers(filteredPersons);
-
-                    // Don't manipulate the input element after updating customers
-                    this.$nextTick(() => {
-                        const selectInput = this.$refs.select_person.$el.querySelector('input');
-                        if (selectInput && selectInput.value !== currentValue) {
-                            selectInput.value = currentValue;
-                        }
-                    });
-
-                } catch (error) {
-                    console.error('Error searching customers:', error);
-                }
+            } catch (error) {
+                console.error('Error searching customers:', error);
+            }
             }, delay);
-        },
+        }, */
         async updateAllCustomers(personsFromServer) {
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
