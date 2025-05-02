@@ -3168,22 +3168,33 @@ export default {
                 const inputEl = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0];
-                this.input_person.number = inputEl.value;
+                const currentValue = inputEl.value;
 
-                if (!this.input_person.number) {
-                    return; // No hagas nada si aún está vacío
+                // Preserve the current input value
+                this.input_person.number = currentValue;
+
+                if (!currentValue) {
+                    return; // No hagas nada si está vacío
                 }
 
-                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                let url = `/caja/search_customers?value=${currentValue}`;
                 if (this.configuration.college) {
                     url += `&parents=${this.notRegister ? 0 : 1}`;
                 }
 
-                const response = await this.$http(url);
-                const { persons } = response.data;
+                try {
+                    const response = await this.$http(url);
+                    const { persons } = response.data;
 
-                this.customers = persons.filter(n => n.number != "88888888");
-                this.updateAllCustomers(this.customers);
+                    // Update customers while preserving the current input
+                    this.customers = persons.filter(n => n.number != "88888888");
+                    await this.updateAllCustomers(this.customers);
+
+                    // Restore input value after customers update
+                    inputEl.value = currentValue;
+                } catch (error) {
+                    console.error('Error searching customers:', error);
+                }
             }, delay);
         },
         async updateAllCustomers(personsFromServer) {

@@ -1930,7 +1930,7 @@
                                                                                 <el-input
                                                                                     v-if="
                                                                                         isEditing &&
-                                                                                            configuration.edit_price
+                                                                                            configuration.edit_price_sales
                                                                                     "
                                                                                     class="custom_input fw-bold"
                                                                                     type="number"

@@ -6558,7 +6558,7 @@
                                                                     </div>
 
                                                                     <!-- Editar Precio del select de la Politica de Precio -->
-                                                                    <div
+                                                                    <!-- <div
                                                                         class="col-md-3 mt-4"
                                                                     >
                                                                         <div
@@ -6623,7 +6623,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <!-- Mostrar Precios por Políticas de Precio -->
                                                                     <div
