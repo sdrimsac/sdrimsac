@@ -3159,22 +3159,18 @@ export default {
             this.typing = true;
 
             const isRUC = this.form.identity_document_type_id === "6";
-            const delay = isRUC ? 1000 : this.typingDelay;
+            const delay = isRUC ? 2000 : this.typingDelay;
 
             this.time = setTimeout(async () => {
-                // Ya pasó el tiempo sin escribir, asumimos que terminó
                 this.typing = false;
-
+                
                 const inputEl = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0];
                 const currentValue = inputEl.value;
 
-                // Preserve the current input value
-                this.input_person.number = currentValue;
-
                 if (!currentValue) {
-                    return; // No hagas nada si está vacío
+                    return;
                 }
 
                 let url = `/caja/search_customers?value=${currentValue}`;
@@ -3186,12 +3182,21 @@ export default {
                     const response = await this.$http(url);
                     const { persons } = response.data;
 
-                    // Update customers while preserving the current input
-                    this.customers = persons.filter(n => n.number != "88888888");
-                    await this.updateAllCustomers(this.customers);
+                    // Update customers without affecting the select input
+                    const filteredPersons = persons.filter(n => n.number != "88888888");
+                    this.customers = filteredPersons;
+                    
+                    // Update all customers in parent component
+                    await this.updateAllCustomers(filteredPersons);
 
-                    // Restore input value after customers update
-                    inputEl.value = currentValue;
+                    // Don't manipulate the input element after updating customers
+                    this.$nextTick(() => {
+                        const selectInput = this.$refs.select_person.$el.querySelector('input');
+                        if (selectInput && selectInput.value !== currentValue) {
+                            selectInput.value = currentValue;
+                        }
+                    });
+
                 } catch (error) {
                     console.error('Error searching customers:', error);
                 }

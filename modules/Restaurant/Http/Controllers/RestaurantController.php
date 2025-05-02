@@ -72,21 +72,22 @@ class RestaurantController extends Controller
     {
         return view('restaurant::configuration.workers_type');
     }
-    public function search_customer_by_id($id){
-            $person = Person::where('id', $id)->whereType('customers')->get()->transform(function($row){
-                return [
-                    'id' => $row->id,
-                    'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
-                    'name' => $row->name,
-                    'number' => $row->number,
-                    'identity_document_type_id' => $row->identity_document_type_id,
-                    'identity_document_type_code' => $row->identity_document_type->code,
-                    'seller_id' =>  $row->seller_id,
-                    'phone' => $row->telephone,
-                ];
-            });
+    public function search_customer_by_id($id)
+    {
+        $person = Person::where('id', $id)->whereType('customers')->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'seller_id' =>  $row->seller_id,
+                'phone' => $row->telephone,
+            ];
+        });
 
-            return compact('person');
+        return compact('person');
     }
     public function search_customer(Request $request)
     {
@@ -260,6 +261,18 @@ class RestaurantController extends Controller
                     'message' => "Pin Incorrecto / Intente Nuevamente"
                 ];
             }
+
+            /* $currentSessionId = Session::getId();
+            if ($user->last_session_id && $user->last_session_id !== $currentSessionId) {
+                return [
+                    'success' => false,
+                    'session_conflict' => true,
+                    'message' => "El usuario ya tiene una sesión iniciada. ¿Deseas cerrarla y continuar aquí?",
+                    'user_id' => $user->id,
+                ];
+            } */
+
+
             Auth::login($user);
             //comprobar si el $user tiene api_token en caso que no lo tuvieran crearle uno
             if (!$user->api_token) {
@@ -316,11 +329,9 @@ class RestaurantController extends Controller
                 $logistic =  true;
             } else if (strtolower($user->worker_type->description) == "mantenimiento") {
                 $maintenance =  true;
-            } 
-            else if (strtolower($user->worker_type->description) == "estilista") {
+            } else if (strtolower($user->worker_type->description) == "estilista") {
                 $estilista = true;
-            }
-            else {
+            } else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $billar = strripos(strtolower($user->area->description), "billar");
@@ -335,9 +346,7 @@ class RestaurantController extends Controller
                     $pos = true;
                 } else if ($billar !== false) {
                     $pos = true;
-                } 
-             
-                else {
+                } else {
                     $kitchen = true;
                 }
             }
@@ -359,7 +368,7 @@ class RestaurantController extends Controller
                 'establishment' => $establishment,
                 'configuration' => $configuration,
             ];
-           
+
             return $response;
         } catch (Exception $e) {
             return [
