@@ -3321,8 +3321,12 @@ export default {
                         customer.identity_document_type_id == "4" ||
                         customer.identity_document_type_id == "-"
                     ) {
-                        this.form.customer_id = null;
-                        this.value = null;
+                        if (customer.identity_document_type_id !== "6") {
+                            this.form.customer_id = null;
+                            this.value = null;
+                        }
+                        /* this.form.customer_id = null;
+                        this.value = null; */
                     }
                 }
 
