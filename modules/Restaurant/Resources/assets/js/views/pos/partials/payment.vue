@@ -3141,7 +3141,7 @@ export default {
                 if (this.input_person.number.length < 5) {
                     return;
                 }
-                
+
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -3343,6 +3343,9 @@ export default {
                     customer.identity_document_type_id !== "6"
                 ) {
                     this.form.document_type_id = "03";
+                }
+                if (customer.identity_document_type_id !== "6") {
+                    this.input_person.number = "";
                 }
                 this.changePromotion();
             }
