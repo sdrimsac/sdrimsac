@@ -923,7 +923,7 @@ class OrdenController extends Controller
                     }
 
                     // Verificar si el código interno comienza con "PACK000" o "PLAT000" (es una receta)
-                    if (Str::startsWith($food->item->internal_id, ['PACK000', 'PLAT000'])) {
+                    if (Str::startsWith($food->item->internal_id, ['PACK0', 'PLAT0'])) {
                         // Obtener los productos individuales que componen la receta
                         $item_set = ItemSet::where('item_id', $food->item_id)->get();
 
