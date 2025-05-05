@@ -2241,7 +2241,7 @@ import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
 import StockMin from "./partials/stock_min.vue";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const options = {
     text: "Loading ...",
@@ -2617,7 +2617,7 @@ export default {
             }, 1000);
         }, 500);
 
-        (function() {
+        /* (function() {
             function generateUUID() {
                 return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
                     /[xy]/g,
@@ -2706,7 +2706,121 @@ export default {
                     checkForDuplicates(list);
                 }
             });
+        })(); */
+        if ( this.configuration.user_unit) {
+
+            (function() {
+            function generateUUID() {
+                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                    /[xy]/g,
+                    function(c) {
+                        const r = (Math.random() * 16) | 0,
+                            v = c === "x" ? r : (r & 0x3) | 0x8;
+                        return v.toString(16);
+                    }
+                );
+            }
+
+            let tabId = sessionStorage.getItem("tab_id");
+            if (!tabId) {
+                tabId = generateUUID();
+                sessionStorage.setItem("tab_id", tabId);
+            }
+
+            const windowId = generateUUID();
+
+            const basePath = window.location.pathname.split("/")[1];
+            const presenceKeyByRoute = `tab_presence_route_${basePath}`;
+            const presenceKeyByTab = `tab_presence_tab_${tabId}`;
+
+            let blockerVisible = false;
+            let hasDuplicate = false;
+
+            let justLoaded = true;
+            setTimeout(() => {
+                justLoaded = false;
+            }, 1000);
+
+            function updatePresence() {
+                const now = Date.now();
+                updateKey(presenceKeyByRoute, now);
+                updateKey(presenceKeyByTab, now);
+            }
+
+            function updateKey(key, now) {
+                let list = JSON.parse(localStorage.getItem(key) || "[]");
+
+                const index = list.findIndex(p => p.windowId === windowId);
+                if (index === -1) {
+                    list.push({ windowId, time: now });
+                } else {
+                    list[index].time = now;
+                }
+
+                list = list.filter(p => now - p.time < 1000);
+                localStorage.setItem(key, JSON.stringify(list));
+
+                checkForDuplicates(list);
+            }
+
+            function checkForDuplicates(allLists) {
+                if (justLoaded) return;
+
+                const now = Date.now();
+                const hasDupRoute =
+                    JSON.parse(
+                        localStorage.getItem(presenceKeyByRoute) || "[]"
+                    ).filter(p => now - p.time < 1000).length > 1;
+
+                const hasDupTab =
+                    JSON.parse(
+                        localStorage.getItem(presenceKeyByTab) || "[]"
+                    ).filter(p => now - p.time < 1000).length > 1;
+
+                hasDuplicate = hasDupRoute || hasDupTab;
+
+                if (hasDuplicate && !blockerVisible) {
+                    blockerVisible = true;
+                    Swal.fire({
+                        title: "¡Pestaña duplicada detectada!",
+                        text:
+                            "Ya tienes una ventana activa en este módulo o con esta sesión. Por favor, cierra las demás para evitar errores.",
+                        icon: "warning",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        backdrop: true,
+                        didOpen: () => {
+                            document.body.style.pointerEvents = "none";
+                        }
+                    });
+                }
+
+                // Solo cerramos si no hay duplicados y el Swal está visible
+                if (!hasDuplicate && blockerVisible) {
+                    blockerVisible = false;
+                    Swal.close();
+                    document.body.style.pointerEvents = "auto";
+                }
+            }
+
+            setTimeout(updatePresence, 100);
+            setInterval(updatePresence, 500);
+
+            window.addEventListener("storage", function(event) {
+                if (
+                    (event.key === presenceKeyByRoute ||
+                        event.key === presenceKeyByTab) &&
+                    !justLoaded
+                ) {
+                    checkForDuplicates();
+                }
+            });
         })();
+
+        }
+
+        
     },
     sockets: {},
     computed: {

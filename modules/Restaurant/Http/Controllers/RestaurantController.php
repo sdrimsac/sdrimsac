@@ -264,38 +264,43 @@ class RestaurantController extends Controller
                 ];
             }
 
-            $user->tab_id = $request->input('tab_id'); 
-
-            $currentSessionId = Session::getId();
-
-            $existingSession = UserSession::where('user_id', $user->id)->first();
-
-            if ($existingSession && $existingSession->session_id !== $currentSessionId) {
-                return response()->json([
-                    'success' => false,
-                    'session_conflict' => true,
-                    'message' => "El usuario ya tiene una sesión iniciada debe cerrar sesión para iniciar una nueva",
-                    'user_id' => $user->id,
-                ]);
-            }
-
             Auth::login($user);
             //comprobar si el $user tiene api_token en caso que no lo tuvieran crearle uno
             if (!$user->api_token) {
                 $user->api_token = Str::random(60);
                 $user->save();
             }
-            // user user_tab_id  igualar a el tab_id de la request
-            UserSession::updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'session_id' => Session::getId(),
-                    'user_agent' => $request->header('User-Agent'),
-                    'tab_id' => $request->input('tab_id'),
-                ]
-            );
-            $user = User::find($user->id);
             $configuration = Configuration::first();
+
+            if ($configuration->user_unit) {
+
+                $currentSessionId = Session::getId();
+
+                $existingSession = UserSession::where('user_id', $user->id)->first();
+
+                if ($existingSession && $existingSession->session_id !== $currentSessionId) {
+                    return response()->json([
+                        'success' => false,
+                        'session_conflict' => true,
+                        'message' => "El usuario ya tiene una sesión iniciada debe cerrar sesión para iniciar una nueva",
+                        'user_id' => $user->id,
+                    ]);
+                }
+
+
+                // user user_tab_id  igualar a el tab_id de la request
+                UserSession::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'session_id' => Session::getId(),
+                        'user_agent' => $request->header('User-Agent'),
+                        /* 'tab_id' => $request->input('tab_id'), */
+                    ]
+                );
+            }
+
+            $user = User::find($user->id);
+            
             if ($configuration->whatsapp_in_login && $user->type !== "superadmin") {
                 $name = $user->name;
                 $establishment = Establishment::find($user->establishment_id);
@@ -447,7 +452,7 @@ class RestaurantController extends Controller
         Session::flush();
         Auth::logout();
         return redirect('login');
-    } 
+    }
 
     public function window(Request $request)
     {
@@ -459,6 +464,5 @@ class RestaurantController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false], 401);
-
     }
 }

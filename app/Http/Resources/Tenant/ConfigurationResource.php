@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'user_unit' => (bool) $this->user_unit,
             'delete_mozo' => (bool) $this->delete_mozo,
             'category_deslay' => (bool) $this->category_deslay,
             'created_items' => (bool) $this->created_items,

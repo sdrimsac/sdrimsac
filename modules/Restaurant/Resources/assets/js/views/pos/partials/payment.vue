@@ -424,7 +424,7 @@
                                                         class="col-md-6"
                                                         ref="select_person"
                                                         :loading="
-                                                            loadingCustomers
+                                                            loading
                                                         "
                                                         v-model="value"
                                                         filterable

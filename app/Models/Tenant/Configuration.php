@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'user_unit',
         'delete_mozo',
         'category_deslay',
         'created_items',
@@ -319,6 +320,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'user_unit' => 'boolean',
         'delete_mozo' => 'boolean',
         'category_deslay' => 'boolean',
         'created_items' => 'boolean',
@@ -581,6 +583,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'user_unit' => (bool) $this->user_unit,
             'delete_mozo' => (bool) $this->delete_mozo,
             'category_deslay' => (bool) $this->category_deslay,
             'created_items' => (bool) $this->created_items,

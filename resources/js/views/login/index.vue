@@ -142,20 +142,6 @@ export default {
     created() {
         this.initForm();
         this.getOption("delete");
-
-        /* function generateUUID() {
-            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-                /[xy]/g,
-                function(c) {
-                    const r = (Math.random() * 16) | 0,
-                        v = c === "x" ? r : (r & 0x3) | 0x8;
-                    return v.toString(16);
-                }
-            );
-        } */
-
-        /* const tabId = generateUUID();
-        sessionStorage.setItem("tab_id", tabId); */
     },
     methods: {
         getOption(option) {
@@ -200,15 +186,9 @@ export default {
                 remember: false
             };
         },
-        // optener el user_tab_id del localstorage
-        /* getUserTabId() {
-            return sessionStorage.getItem("tab_id");
-        }, */
-        // pasarlo a la perticion de la api
 
         async enter(pin) {
 
-            /* const tab_id = this.getUserTabId(); */
             const response = await this.$http.post(`${this.resource}/login`, {
                 pin: pin,
             });
