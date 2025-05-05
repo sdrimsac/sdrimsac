@@ -393,13 +393,11 @@
                     </tr>
                 @endif
                 @if (!$to_kitchen)
-                    {{-- @if ($configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
                         <tr>
                             <td colspan="4" class="header_title text-center encabezado" valign="top">
                                 <strong>COMANDA</strong>
                             </td>
                         </tr>
-                    @endif --}}
                     <tr>
                         <td colspan="4" class="header_title text-center " valign="top">
                             <strong>NRO. MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}

@@ -423,6 +423,9 @@
                                                     <el-select
                                                         class="col-md-6"
                                                         ref="select_person"
+                                                        :loading="
+                                                            loadingCustomers
+                                                        "
                                                         v-model="value"
                                                         filterable
                                                         clearable
@@ -2044,6 +2047,7 @@ export default {
             this.checkTotal(newMethod);
         }
     },
+
     data() {
         return {
             isLocked: false,
@@ -2053,7 +2057,7 @@ export default {
             showDialogPromotionBox: false,
             promotionItems: [],
             showDialogPromotionBox: false,
-            dialogWidth: "70%", // Valor inicial para pantallas grandes
+            dialogWidth: "70%",
             hasPromotionText: null,
             paymentVariation: {
                 description: "Consumo",
@@ -2224,7 +2228,8 @@ export default {
             ventalista: 0,
             time: null,
             typing: false,
-            typingDelay: 1000
+            typingDelay: 1000,
+            
         };
     },
     computed: {
@@ -3172,8 +3177,7 @@ export default {
                 if (!this.input_person.number) {
                     return;
                 }
-                if (this.input_person.number.length < 5) {
-                    /* this.$toast.warning("Ingrese un número válido."); */
+                if (this.input_person.number.length < 4) {
                     return;
                 }
 
@@ -3188,7 +3192,8 @@ export default {
                 this.customers = persons.filter(n => n.number != "88888888");
 
                 if (this.customers.length === 0) {
-                    /* this.$toast.warning("No se encontraron resultados."); */
+                    this.value = null;
+                    this.form.customer_id = null;
                     return;
                 }
 
@@ -3232,6 +3237,7 @@ export default {
                     this.changeCustomer();
                 }
             }
+            
         },
 
         verifyPromotionPointsCustomer() {
@@ -3309,6 +3315,7 @@ export default {
                 this.customer = customer;
 
                 if (this.form.document_type_id == "01") {
+    
                     if (
                         customer.identity_document_type_id == "1" ||
                         customer.identity_document_type_id == "4" ||
@@ -3567,7 +3574,7 @@ export default {
                             "input"
                         )[0].value = this.clientSaleNoteNumber;
                         this.keyupCustomer();
-                    }, 1000);
+                    }, 50);
                     this.discount_amount = this.clientSaleNoteDiscount;
                     this.inputDiscountAmount();
                     this.discountTotal = true;
@@ -5514,13 +5521,18 @@ export default {
         filterCustomers() {
             let { document_type_id } = this.form;
             let isForRuc = document_type_id == "01";
+
             if (isForRuc) {
                 this.customers = this.all_customers.filter(
-                    f => f.identity_document_type_id == "6"
+                    f =>
+                        f.identity_document_type_id == "6" &&
+                        f.number != "99999999" &&
+                        f.number != "88888888"
                 );
             } else {
                 this.customers = this.all_customers;
             }
+
             //si this.form.customer_id no es nulo y existe en this.customers
             if (
                 this.form.customer_id &&
@@ -5562,7 +5574,9 @@ export default {
         },
 
         async filterSeries() {
+            
             this.filterCustomers();
+            
             // let check = this.checkCustomers();
             // if (!check && !this.started) {
             //     let dcto = "DNI";

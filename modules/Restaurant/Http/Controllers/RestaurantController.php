@@ -13,6 +13,7 @@ use App\Models\Tenant\Person;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
+use App\Models\Tenant\UserSession;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -239,6 +240,7 @@ class RestaurantController extends Controller
     public function login(Request $request)
     {
         try {
+
             if (!$request->pin) {
                 return [
                     'success' => false,
@@ -262,16 +264,20 @@ class RestaurantController extends Controller
                 ];
             }
 
+            $user->tab_id = $request->input('tab_id'); 
+
             $currentSessionId = Session::getId();
-            if ($user->last_session_id && $user->last_session_id !== $currentSessionId) {
-                return [
+
+            $existingSession = UserSession::where('user_id', $user->id)->first();
+
+            if ($existingSession && $existingSession->session_id !== $currentSessionId) {
+                return response()->json([
                     'success' => false,
                     'session_conflict' => true,
-                    'message' => "El usuario ya tiene una sesión iniciada. ¿Deseas cerrarla y continuar aquí?",
+                    'message' => "El usuario ya tiene una sesión iniciada debe cerrar sesión para iniciar una nueva",
                     'user_id' => $user->id,
-                ];
+                ]);
             }
-
 
             Auth::login($user);
             //comprobar si el $user tiene api_token en caso que no lo tuvieran crearle uno
@@ -279,6 +285,15 @@ class RestaurantController extends Controller
                 $user->api_token = Str::random(60);
                 $user->save();
             }
+            // user user_tab_id  igualar a el tab_id de la request
+            UserSession::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'session_id' => Session::getId(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'tab_id' => $request->input('tab_id'),
+                ]
+            );
             $user = User::find($user->id);
             $configuration = Configuration::first();
             if ($configuration->whatsapp_in_login && $user->type !== "superadmin") {
@@ -432,5 +447,18 @@ class RestaurantController extends Controller
         Session::flush();
         Auth::logout();
         return redirect('login');
+    } 
+
+    public function window(Request $request)
+    {
+        if (Auth::check()) {
+            UserSession::updateOrCreate(
+                ['user_id' => Auth::id()],
+                ['session_id' => session()->getId()]
+            );
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 401);
+
     }
 }

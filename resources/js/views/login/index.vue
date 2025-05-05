@@ -142,6 +142,20 @@ export default {
     created() {
         this.initForm();
         this.getOption("delete");
+
+        /* function generateUUID() {
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                function(c) {
+                    const r = (Math.random() * 16) | 0,
+                        v = c === "x" ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                }
+            );
+        } */
+
+        /* const tabId = generateUUID();
+        sessionStorage.setItem("tab_id", tabId); */
     },
     methods: {
         getOption(option) {
@@ -186,9 +200,17 @@ export default {
                 remember: false
             };
         },
+        // optener el user_tab_id del localstorage
+        /* getUserTabId() {
+            return sessionStorage.getItem("tab_id");
+        }, */
+        // pasarlo a la perticion de la api
+
         async enter(pin) {
+
+            /* const tab_id = this.getUserTabId(); */
             const response = await this.$http.post(`${this.resource}/login`, {
-                pin: pin
+                pin: pin,
             });
             console.log(
                 "🚀 ~ file: index.vue:174 ~ enter ~ response:",
@@ -250,8 +272,7 @@ export default {
                         route = "billar/worker/dashboard-pos";
                     } else if (this.config.mod_renta) {
                         route = "caja/worker/rent-pos";
-                    } 
-                    else if (this.config.mode_salon) {
+                    } else if (this.config.mode_salon) {
                         route = "caja/worker/salon-pos";
                     } else {
                         route = "caja/worker/dashboard-pos";
@@ -267,11 +288,9 @@ export default {
                     response.data.maintenance == true
                 ) {
                     route = "caja/worker/cleaner";
-                }
-                else if (response.data.estilista == true) {
+                } else if (response.data.estilista == true) {
                     route = "caja/estilista/time-worker";
-                }
-                else {
+                } else {
                     if (this.company.soap_type_id != "03") {
                         route = "documents";
                     } else {

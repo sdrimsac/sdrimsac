@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Modules\BusinessTurn\Models\BusinessTurn;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\System\Configuration as SystemConfiguration;
+use App\Models\Tenant\UserSession;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -48,7 +50,19 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+
         $this->middleware('guest')->except('logout');
+    }
+
+    public function logout(Request $request)
+    {
+        if (Auth::check()) {
+            UserSession::where('user_id', Auth::id())->delete();
+        }
+
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        return redirect('/login');
     }
 
     /**

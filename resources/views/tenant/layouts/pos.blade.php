@@ -354,7 +354,7 @@
         </div>  --}}
 
         <main>
-            <div id="main" >
+            <div id="main">
                 @yield('content')
             </div>
         </main>
@@ -665,7 +665,6 @@
                 </div>
             </div>
         </footer>
-        
     </div>
 
     <style>
@@ -809,6 +808,7 @@
                 }, 1000);
             }
         });
+
         $(document).ready(function() {
             $("#showPasswordButton").click(function() {
                 var passwordInput = $("#pin");
@@ -860,19 +860,7 @@
                     });
             });
         });
-        function updateDateTime() {
-                            const now = new Date();
-                            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                            
-                            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', dateOptions);
-                            document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES', timeOptions);
-                        }
-
-                        // Update initially
-                        updateDateTime();
-                        // Update every second
-                        setInterval(updateDateTime, 1000);
+        
     </script>
     <!-- Page Specific Scripts End -->
 </body>

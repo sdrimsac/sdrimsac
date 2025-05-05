@@ -33,7 +33,6 @@ class ExportColorZise implements FromCollection, WithHeadings, ShouldAutoSize, W
     public function records($records)
     {
         $this->records = $records;
-        dump($this->records);
         return $this;
     }
 

@@ -135,7 +135,9 @@ Vue.prototype.$showSManualAlert = ({
 } = {}) => {
     Swal.fire({
         title: title.toUpperCase(),
-        html: html || `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
+        html:
+            html ||
+            `<span style="font-weight: bold; font-size: 1.2rem;">${text}</span>`,
         icon: type,
         showConfirmButton,
         customClass: {
@@ -151,6 +153,93 @@ Vue.prototype.$closeSManualAlert = () => {
     Swal.close();
 };
 
+/* (function() {
+    function generateUUID() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+            c
+        ) {
+            const r = (Math.random() * 16) | 0,
+                v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    }
+
+    let tabId = sessionStorage.getItem("tab_id");
+    if (!tabId) {
+        tabId = generateUUID();
+        sessionStorage.setItem("tab_id", tabId);
+    }
+
+    const windowId = generateUUID();
+    const presenceKey = `tab_presence_${tabId}`;
+    let blockerVisible = false;
+
+    // Flag para evitar alerta al recargar
+    let justLoaded = true;
+    setTimeout(() => {
+        justLoaded = false;
+    }, 1000);
+
+    function updatePresence() {
+        let list = JSON.parse(localStorage.getItem(presenceKey) || "[]");
+        const now = Date.now();
+
+        const index = list.findIndex(p => p.windowId === windowId);
+        if (index === -1) {
+            list.push({ windowId, time: now });
+        } else {
+            list[index].time = now;
+        }
+
+        // Limpiar ventanas inactivas (más de 2 segundos)
+        list = list.filter(p => now - p.time < 1000);
+        localStorage.setItem(presenceKey, JSON.stringify(list));
+
+        checkForDuplicates(list);
+    }
+
+    function checkForDuplicates(list) {
+        if (justLoaded) return;
+
+        const now = Date.now();
+        const active = list.filter(p => now - p.time < 1000);
+
+        if (active.length > 1) {
+            if (!blockerVisible) {
+                blockerVisible = true;
+                Swal.fire({
+                    title: "¡Pestaña duplicada detectada!",
+                    text:
+                        "Esta ventana es una copia de otra. Por favor, cierra las demás para evitar errores.",
+                    icon: "warning",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    backdrop: true,
+                    didOpen: () => {
+                        document.body.style.pointerEvents = "none";
+                    }
+                });
+            }
+        } else {
+            if (blockerVisible) {
+                blockerVisible = false;
+                Swal.close();
+                document.body.style.pointerEvents = "auto";
+            }
+        }
+    }
+    setTimeout(updatePresence, 100);
+
+    setInterval(updatePresence, 500);
+
+    window.addEventListener("storage", function(event) {
+        if (event.key === presenceKey && !justLoaded) {
+            const list = JSON.parse(event.newValue || "[]");
+            checkForDuplicates(list);
+        }
+    });
+})(); */
 
 Vue.use(Toast, options);
 
@@ -201,9 +290,7 @@ const getAreaPrinter = async () => {
                 Vue.prototype.$areaPrinter = null;
             }
         }
-    } catch (e) {
-
-    }
+    } catch (e) {}
 };
 function limpiarcache(reload = true) {
     if ("caches" in window) {
@@ -272,7 +359,6 @@ axios.get("/commit/store").then(response => {
 // Vue.component('table-component', TableComponent);
 // Vue.component('table-column', TableColumn);
 
-
 // System
 
 Vue.component(
@@ -298,8 +384,14 @@ Vue.component(
 Vue.component("system-plans-index", require("./views/system/plans/index.vue"));
 Vue.component("system-plans-form", require("./views/system/plans/form.vue"));
 
-Vue.component("system-historial-index", require("./views/system/historial/index.vue"));
-Vue.component("system-historial-form", require("./views/system/historial/form.vue"));
+Vue.component(
+    "system-historial-index",
+    require("./views/system/historial/index.vue")
+);
+Vue.component(
+    "system-historial-form",
+    require("./views/system/historial/form.vue")
+);
 //auto update
 Vue.component("system-update", require("./views/system/update/index.vue"));
 
@@ -318,8 +410,6 @@ Vue.component(
     "system-configuration-apk-url",
     require("./views/system/configuration/apk-url.vue")
 );
-
-
 
 //emit document url
 Vue.component(
@@ -400,7 +490,7 @@ const app = new Vue({
     components: {
         "tenant-download-files-index": () =>
             import("@views/download_files/index.vue"),
-        
+
         "report-promotion-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/promotions/index.vue"
@@ -458,7 +548,6 @@ const app = new Vue({
             import(
                 "../../modules/items/Resources/assets/js/views/configuration/items.vue"
             ), */
-        
 
         "restaurant-ordens-index": () =>
             import(
@@ -473,8 +562,7 @@ const app = new Vue({
             import("./views/item_color_size/index.vue"),
         "tenant-item-sets-index": () => import("./views/item_sets/index.vue"),
         "tenant-receta-index": () => import("./views/receta/index.vue"),
-        "tenant-foods-index": () =>
-            import("./views/foods/index.vue"),
+        "tenant-foods-index": () => import("./views/foods/index.vue"),
         "restaurant-worker-dashboard": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/worker/dashboard.vue"
@@ -487,14 +575,14 @@ const app = new Vue({
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/workers/workers.vue"
             ),
-            "tenant-rent-pos": () =>
-                import(
-                    "../../modules/Restaurant/Resources/assets/js/views/pos/index_rent.vue"
-                ),
-                "tenant-salon-pos": () =>
-                    import(
-                        "../../modules/Restaurant/Resources/assets/js/views/pos/index_salon.vue"
-                    ),
+        "tenant-rent-pos": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/pos/index_rent.vue"
+            ),
+        "tenant-salon-pos": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/pos/index_salon.vue"
+            ),
         "tenant-restaurant-pos": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"
@@ -572,7 +660,6 @@ const app = new Vue({
 
         "tenant-shopping-index": () =>
             import("./views/purchases/shopping/index.vue"),
-        
 
         "tenant-purchases-edit": () =>
             import("./views/purchases/form_edit.vue"),
@@ -677,21 +764,20 @@ const app = new Vue({
             import(
                 "../../modules/Report/Resources/assets/js/views/cash/index.vue"
             ),
-            "tenant-madera-index": () =>
-                import(
-                    "../../modules/Restaurant/Resources/assets/js/views/madera/index.vue"
-                ),
+        "tenant-madera-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/madera/index.vue"
+            ),
 
-                "estilista-time-worker": () =>
-                    import(
-                        "../../modules/Restaurant/Resources/assets/js/views/estilista/index.vue"
-                    ),
+        "estilista-time-worker": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/estilista/index.vue"
+            ),
 
         "index-appointment-comment": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/estilista/index_appointment_comment.vue"
             ),
-
 
         "tenant-series-configurations-index": () =>
             import(
@@ -916,7 +1002,10 @@ const app = new Vue({
             import(
                 "../../modules/Workshop/Resources/assets/js/views/exportar/index.vue"
             ),
-        "tenant-billar-tarifa": () => import("../../modules/billar/Resources/assets/js/views/tarifa/index.vue"),
+        "tenant-billar-tarifa": () =>
+            import(
+                "../../modules/billar/Resources/assets/js/views/tarifa/index.vue"
+            ),
         "tenant-workshop-tipo": () =>
             import(
                 "../../modules/Workshop/Resources/assets/js/views/tipo/index.vue"

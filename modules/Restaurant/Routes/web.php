@@ -40,7 +40,7 @@ Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
 
-
+    Route::post('/override-session', [RestaurantController::class, 'window']);
 
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
