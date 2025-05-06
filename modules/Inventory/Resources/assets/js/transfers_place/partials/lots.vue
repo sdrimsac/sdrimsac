@@ -137,11 +137,11 @@ export default {
     methods: {
         create() {},
         async submit() {
-            // let val_lots = await this.validateLots()
-            // if(!val_lots.success)
-            //     return this.$toast.error(val_lots.message);
-            // await this.$emit('addRowLot', this.lots);
-            // await this.$emit('update:showDialog', false)
+            let val_lots = await this.validateLots()
+            if(!val_lots.success)
+            return this.$toast.error(val_lots.message);
+            await this.$emit('addRowLot', this.lots);
+            await this.$emit('update:showDialog', false)
         },
         close() {
             this.$emit("update:showDialog", false);

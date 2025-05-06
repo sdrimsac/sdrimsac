@@ -39,7 +39,8 @@
                     v-model="newTag"
                     placeholder="Nueva obs.."
                     size="medium"
-                    maxlength="50"
+                    maxlength="25"
+                    show-word-limit
 
                 >
                 </el-input>

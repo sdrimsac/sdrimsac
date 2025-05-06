@@ -41,19 +41,19 @@
                     </el-button>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th>Fecha</th>
-                            <th>Almacen Inicial</th>
-                            <th>Almacen Destino</th>
-                            <th>Usuario remitente</th>
-                            <th>Motivo del Traslado</th>
-                            <th>Código</th>
-                            <th>Detalle Productos</th>
-                            <th>Cantidad Total</th>
-                            <th>Estado</th>
-                            <th class="text-end">Acciones</th>
+                    <data-table ref="dataTable" :resource="resource">
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Fecha</th>
+                            <th class="text-white">Almacen Inicial</th>
+                            <th class="text-white">Almacen Destino</th>
+                            <th class="text-white">Usuario remitente</th>
+                            <th class="text-white">Motivo del Traslado</th>
+                            <th class="text-white">Código</th>
+                            <th class="text-white">Detalle Productos</th>
+                            <th class="text-white">Cantidad Total</th>
+                            <th class="text-white">Estado</th>
+                            <th class="text-end text-white">Acciones</th>
                         </tr>
                         <tr></tr>
                         <tr slot-scope="{ index, row }">
@@ -231,7 +231,7 @@
             :establishment_id="establishment_id"
             :establishments="establishments"
             :printers="printers"
-            @reloadData="reloadData"
+            @reloadData="reloadDataTable"
         ></transfer-form>
         <pdf-model
             :showDialog.sync="showDialogPdf"
@@ -313,8 +313,12 @@ export default {
         });
     },
     methods: {
+        reloadDataTable() {
+            console.log("Recargando datos desde el padre");
+            this.$eventHub.$emit("reloadData")
+        },
         reloadData() {
-            this.$eventHub.$emit("reloadData");
+            this.$eventHub.$emit("reloadData")
         },
         clickCreate() {
             this.showDialogTransferForm = true;
@@ -332,10 +336,6 @@ export default {
                     this.printers = data.printers;
                     this.configuration = data.configuration;
                     this.establishments = data.establishments;
-                    console.log(
-                        "🚀 ~ file: index.vue:144 ~ this.$http.get ~ this.$areaPrinter:",
-                        this.$areaPrinter
-                    );
                     if (this.$areaPrinter) {
                         //ordena printers de manera que $areaPrinter sea el primero
                         let index = this.printers.findIndex(

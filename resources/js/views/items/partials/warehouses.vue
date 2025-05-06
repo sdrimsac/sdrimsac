@@ -21,12 +21,14 @@
                         <div class="row">
                             <div class="col-md-12" v-if="warehouses && item">
                                 <table class="table">
-                                    <thead style="background-color: #1e5a85; color: white;">
-                                      <tr>
-                                        <th class="text-white">Almacén</th>
-                                        <th class="text-white">Stock</th>
-                                        <th  class="text-white"> Opciones</th>
-                                      </tr>
+                                    <thead
+                                        style="background-color: #1e5a85; color: white;"
+                                    >
+                                        <tr>
+                                            <th class="text-white">Almacén</th>
+                                            <th class="text-white">Stock</th>
+                                            <th class="text-white">Estado por almacen</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <tr
@@ -63,9 +65,21 @@
                                                 </template>
                                             </th>
                                             <th>
+                                                <el-button :type="row.active ? 'success' : 'danger'">
+                                                    {{
+                                                        row.active
+                                                            ? "Activo"
+                                                            : "Inhabilitado"
+                                                    }}
+                                                </el-button>
+                                            </th>
+
+                                            <!-- <th>
                                                 <button
                                                     v-if="
                                                         !hasSerie &&
+                                                </button>
+                                            </th>
                                                             config &&
                                                             config.item_adjustment
                                                     "
@@ -87,32 +101,7 @@
                                                         ></i>
                                                     </el-tooltip>
                                                 </button>
-                                                <!-- <button
-                                                    v-if="
-                                                        user.type ==
-                                                            'superadmin'
-                                                    "
-                                                    type="button"
-                                                    class="btn waves-effect waves-light btn-sm btn-warning"
-                                                    @click.prevent="
-                                                        clickStockRestoreKardex(
-                                                            row.id
-                                                        )
-                                                    "
-                                                >
-                                                    <i class="fa fa-trash"></i>
-                                                    <el-tooltip
-                                                        class="item"
-                                                        content="Elimina todo los registros del kardex e inserta la cantidad actual como stock inicial"
-                                                        effect="dark"
-                                                        placement="top"
-                                                    >
-                                                        <i
-                                                            class="fa fa-info-circle"
-                                                        ></i>
-                                                    </el-tooltip>
-                                                </button> -->
-                                            </th>
+                                            </th> -->
                                         </tr>
                                         <tr>
                                             <td>Total</td>
@@ -140,7 +129,7 @@
                                                     total.toFixed(2)
                                                 }}</template>
                                             </td>
-                                            <td> </td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -164,14 +153,16 @@
                                 <div v-if="unit_type.length > 0">
                                     <h6>Lista de Precios Creados</h6>
                                     <table class="table">
-                                        <thead style="background-color: #1e5a85; color: white; text-align: center;">
-                                          <tr>
-                                            <th>Unidad</th>
-                                            <th>Descripción</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Total</th>
-                                          </tr>
+                                        <thead
+                                            style="background-color: #1e5a85; color: white; text-align: center;"
+                                        >
+                                            <tr>
+                                                <th>Unidad</th>
+                                                <th>Descripción</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio</th>
+                                                <th>Total</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr
@@ -183,10 +174,7 @@
                                                 <th>{{ row.quantity_unit }}</th>
                                                 <th>{{ row.price2 }}</th>
                                                 <th>
-                                                    {{
-                                                        
-                                                    row.total
-                                                    }}
+                                                    {{ row.total }}
                                                 </th>
                                             </tr>
                                         </tbody>
@@ -199,20 +187,30 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-striped">
-                                    <thead style="background-color: #1e5a85; color: white;">
-                                      <tr>
-                                        <th class="text-center text-white">#</th>
-                                        <th class="text-white">Fecha</th>
-                                        <th class="text-center text-white">
-                                          Documento
-                                        </th>
-                                        <th class="text-center text-white">Cliente</th>
-                                        <th class="text-center text-white">
-                                          Cantidad
-                                        </th>
-                                        <th class="text-end text-white">Precio</th>
-                                        <th class="text-end text-white">Total</th>
-                                      </tr>
+                                    <thead
+                                        style="background-color: #1e5a85; color: white;"
+                                    >
+                                        <tr>
+                                            <th class="text-center text-white">
+                                                #
+                                            </th>
+                                            <th class="text-white">Fecha</th>
+                                            <th class="text-center text-white">
+                                                Documento
+                                            </th>
+                                            <th class="text-center text-white">
+                                                Cliente
+                                            </th>
+                                            <th class="text-center text-white">
+                                                Cantidad
+                                            </th>
+                                            <th class="text-end text-white">
+                                                Precio
+                                            </th>
+                                            <th class="text-end text-white">
+                                                Total
+                                            </th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <tr
@@ -258,16 +256,30 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table table-striped">
-                                    <thead style="background-color: #1e5a85; color: white;">
-                                      <tr>
-                                        <th class="text-white">#</th>
-                                        <th class="text-center text-white">Fecha</th>
-                                        <th class="text-center text-white">Documento</th>
-                                        <th class="text-center text-white">Proveedor</th>
-                                        <th class="text-center text-white">Cantidad</th>
-                                        <th class="text-end text-white">Precio</th>
-                                        <th class="text-end text-white">Total</th>
-                                      </tr>
+                                    <thead
+                                        style="background-color: #1e5a85; color: white;"
+                                    >
+                                        <tr>
+                                            <th class="text-white">#</th>
+                                            <th class="text-center text-white">
+                                                Fecha
+                                            </th>
+                                            <th class="text-center text-white">
+                                                Documento
+                                            </th>
+                                            <th class="text-center text-white">
+                                                Proveedor
+                                            </th>
+                                            <th class="text-center text-white">
+                                                Cantidad
+                                            </th>
+                                            <th class="text-end text-white">
+                                                Precio
+                                            </th>
+                                            <th class="text-end text-white">
+                                                Total
+                                            </th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <tr
@@ -319,166 +331,6 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <!-- <el-tab-pane label="Ajustar stock almacén" name="stock_warehouse"
-                    v-if="user.type == 'superadmin'"
-                    >
-                        <div class="row">
-                            <div class="col-md-12" v-if="warehouses && item">
-                                <table class="table">
-                                    <thead style="background-color: #1e5a85; color: white;">
-                                      <tr>
-                                        <th class="text-white">Almacén</th>
-                                        <th class="text-white">Stock</th>
-                                        <th  class="text-white"> Opciones</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(row, idx) in warehouses"
-                                            :key="idx"
-                                        >
-                                            <th>
-                                                {{ row.warehouse_description }}
-                                            </th>
-                                            <th>
-                                                <template
-                                                    v-if="item.max_quantity"
-                                                >
-                                                    {{
-                                                        stockMaxQuantity(
-                                                            row.stock,
-                                                            item
-                                                        )
-                                                    }}
-                                                </template>
-                                                <template v-else>
-                                                    <template
-                                                        v-if="
-                                                            config &&
-                                                                config.college
-                                                        "
-                                                        >{{
-                                                            parseInt(row.stock)
-                                                        }}</template
-                                                    >
-                                                    <template v-else>{{
-                                                        row.stock
-                                                    }}</template>
-                                                </template>
-                                            </th>
-                                            <th>
-                                                <button
-                                                    v-if="
-                                                        !hasSerie &&
-                                                            config &&
-                                                            config.item_adjustment
-                                                    "
-                                                    type="button"
-                                                    class="btn waves-effect waves-light btn-sm btn-warning"
-                                                    @click.prevent="
-                                                        clickStock(row)
-                                                    "
-                                                >
-                                                    Ajuste de Stock
-                                                    <el-tooltip
-                                                        class="item"
-                                                        content="Ajuste: stock del sistema no cuadre con el stock real"
-                                                        effect="dark"
-                                                        placement="top"
-                                                    >
-                                                        <i
-                                                            class="fa fa-info-circle"
-                                                        ></i>
-                                                    </el-tooltip>
-                                                </button>
-                                            
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <td>Total</td>
-                                            <td
-                                                class=""
-                                                template
-                                                v-if="config && config.college"
-                                            >
-                                                {{ parseInt(total) }}
-                                            </td>
-                                            <td class="text-end" v-else>
-                                                <template
-                                                    v-if="
-                                                        item &&
-                                                            item.max_quantity
-                                                    "
-                                                    >{{
-                                                        stockMaxQuantity(
-                                                            total,
-                                                            item
-                                                        )
-                                                    }}</template
-                                                >
-                                                <template v-else>{{
-                                                    total.toFixed(2)
-                                                }}</template>
-                                            </td>
-                                            <td> </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div v-if="hasSerie">
-                                    <table class="table">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    Total de series activas:
-                                                </td>
-                                                <td class="text-end">
-                                                    <strong>{{
-                                                        series
-                                                    }}</strong>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div v-if="unit_type.length > 0">
-                                    <h6>Lista de Precios Creados</h6>
-                                    <table class="table">
-                                        <thead style="background-color: #1e5a85; color: white; text-align: center;">
-                                          <tr>
-                                            <th>Unidad</th>
-                                            <th>Descripción</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Total</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                v-for="row in unit_type"
-                                                :key="row.id"
-                                            >
-                                                <th>{{ row.unit_type_id }}</th>
-                                                <th>{{ row.description }}</th>
-                                                <th>{{ row.quantity_unit }}</th>
-                                                <th>{{ row.price2 }}</th>
-                                                <th>
-                                                    {{
-                                                        (
-                                                            Number(row.price2) *
-                                                            Number(
-                                                                row.quantity_unit
-                                                            )
-                                                        ).toFixed(2)
-                                                    }}
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </el-tab-pane> -->
                     <div
                         class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                     >
@@ -522,7 +374,8 @@ export default {
         "item",
         "config",
         "record",
-        "fromPos"
+        "fromPos",
+        "active"
     ],
     data() {
         return {

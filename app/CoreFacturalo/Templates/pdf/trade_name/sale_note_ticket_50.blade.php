@@ -27,6 +27,12 @@
 </head>
 
 <body style="margin:0px!important;padding:0px!important;">
+    @if ($company->soap_type_id == '01')
+        <div class="company_logo_box" style="position: absolute; text-align: center; top:350px; left: 20px;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png'))) }}"
+            alt="demo" class="" style="opacity: 0.6; transform: rotate(-45deg);">
+        </div>
+    @endif
 
     @if ($stablishment->logo || $stablishment->document_logo)
         @if ($is_chifa_china)

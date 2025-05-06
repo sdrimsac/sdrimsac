@@ -640,11 +640,12 @@ export default {
                 .catch(error => {});
             this.$eventHub.$emit("reloadData");
         },
-        clickWarehouseDetail(id, hasSerie, warehouses, unit_type, item) {
+        clickWarehouseDetail(id, hasSerie, warehouses, unit_type, item, active) {
             this.currentItem = item;
             this.itemId = id;
             this.hasSerie = hasSerie;
             this.warehousesDetail = warehouses;
+            this.active = active;
             this.unit_type = unit_type;
             this.showWarehousesDetail = true;
         },

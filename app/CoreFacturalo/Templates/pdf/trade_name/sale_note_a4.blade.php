@@ -25,6 +25,12 @@
 </head>
 
 <body>
+    @if ($company->soap_type_id == '01')
+        <div class="" style="position: absolute; text-align: center; top:25%;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png'))) }}"
+            alt="demoa4" class="" style="opacity: 0.4; width: 80%;"> 
+        </div>
+    @endif
     <table class="full-width">
         <tr>
             @if ($configuration->show_logo_in_documents)

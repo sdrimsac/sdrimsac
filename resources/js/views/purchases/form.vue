@@ -658,9 +658,9 @@
                                             <th class="text-white text-end">
                                                 Descuento
                                             </th>
-                                            <th class="text-white text-end">
+                                            <!-- <th class="text-white text-end">
                                                 Cargo
-                                            </th>
+                                            </th> -->
                                             <th class="text-white text-end">
                                                 Total
                                             </th>
@@ -815,7 +815,6 @@
                                             </td>
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
-                                                <!-- {{ row.total_discount }} -->
 
                                                 <el-input-number
                                                     :disabled="
@@ -834,35 +833,10 @@
                                                     "
                                                 ></el-input-number>
                                             </td>
-                                            <td class="text-end">
-                                                {{ currency_type.symbol }}
-                                                {{ row.total_charge }}
-                                                <!-- <el-input-number
-                                                    :disabled="
-                                                        row.lots.length > 0 ||
-                                                            row.color_size
-                                                                .length > 0
-                                                    "
-                                                    :min="0.0"
-                                                    v-model="row.total_charge"
-                                                    @change="
-                                                        calculateItem(
-                                                            index,
-                                                            row.quantity,
-                                                            row.total_charge
-                                                        )
-                                                    "
-                                                ></el-input-number> -->
-                                            </td>
 
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
                                                 {{ row.total }}
-                                                <!-- <el-input-number
-                                                    v-model="row.total"
-                                                    @input="inputTotal(index,true)"
-                                                >
-                        </el-input-number>-->
                                             </td>
                                             <td class="text-end">
                                                 <button

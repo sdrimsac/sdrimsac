@@ -7,11 +7,6 @@ use App\Http\Resources\Tenant\DocumentSaludCollection;
 use App\Models\Tenant\DocumentSalud;
 use Illuminate\Http\Request;
 
-
-
-
-
-
 class DocumentSaludController extends Controller
 {
 

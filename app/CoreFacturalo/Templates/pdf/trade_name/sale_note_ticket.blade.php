@@ -133,6 +133,12 @@ contain"
         @endif
 
     @endif
+    @if ($company->soap_type_id == '01')
+        <div class="company_logo_box" style="position: absolute; text-align: center; top:350px; left: 40px;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png'))) }}"
+            alt="demo" class="" style="opacity: 0.6; transform: rotate(-45deg);">
+        </div>
+    @endif
     <table class="full-width">
         <tr>
             @if ($configuration->comercial_name)

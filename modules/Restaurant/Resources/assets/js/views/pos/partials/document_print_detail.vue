@@ -39,6 +39,9 @@
                         <th v-if="type == 'documents'" class="text-white">
                             N/V
                         </th>
+                        <th v-if="type == 'saleNotes'" class="text-white">
+                            CPE
+                        </th>
                         <th class="text-white">Estado</th>
                         <th
                             v-if="type == 'documents' || type == 'saleNotes'"
@@ -774,6 +777,15 @@
                             >
                                 <small class="d-block" :key="index">{{
                                     row.number
+                                }}</small>
+                            </template>
+                        </td>
+                        <td v-if="type == 'saleNotes'">
+                            <template
+                                v-for="(row, index) in data.documents"
+                            >
+                                <small class="d-block" :key="index">{{
+                                    row.number_full
                                 }}</small>
                             </template>
                         </td>

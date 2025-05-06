@@ -351,19 +351,19 @@
 
                     {{-- Traslados --}}
                     @if ($user->type == 'superadmin' || $config->receive_merchandise)
-                        <li>
+                        {{-- <li>
                             <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers.index') }}">
                                 <i class="icofont-truck-loaded" style="font-size: 1.5em;  margin-right: 10px;"></i>
                                 <span class="label" style="font-size: 1em; ">Traslados</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers_place.index') }}">
                                 <i class="icofont-truck" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; ">Traslados por
-                                    Aceptar</span>
+                                <span class="label" style="font-size: 1em; ">Traslados 
+                                    </span>
                             </a>
                         </li>
                     @endif

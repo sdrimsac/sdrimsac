@@ -8014,54 +8014,6 @@
                                                                     </div>
 
                                                                     <!-- Permitir Ajuste de Stock -->
-                                                                    <div
-                                                                        class="col-md-3 mt-4"
-                                                                    >
-                                                                        <div
-                                                                            class="card h-100"
-                                                                        >
-                                                                            <div
-                                                                                class="card-body d-flex flex-column"
-                                                                            >
-                                                                                <div
-                                                                                    class="form-group text-left flex-grow-1"
-                                                                                >
-                                                                                    <label
-                                                                                        class="control-label w-100"
-                                                                                    >
-                                                                                        <i
-                                                                                            class="fas fa-tools fa-lg"
-                                                                                        ></i>
-                                                                                        Permitir
-                                                                                        Ajuste
-                                                                                        de
-                                                                                        Stock
-                                                                                    </label>
-                                                                                    <el-switch
-                                                                                        v-model="
-                                                                                            form.item_adjustment
-                                                                                        "
-                                                                                        active-text="Si"
-                                                                                        inactive-text="No"
-                                                                                        :active-color="
-                                                                                            '#28a745'
-                                                                                        "
-                                                                                        :inactive-color="
-                                                                                            '#6c757d'
-                                                                                        "
-                                                                                        @change="
-                                                                                            submit(
-                                                                                                'Permitir Ajuste de Stock',
-                                                                                                form.item_adjustment,
-                                                                                                'item_adjustment',
-                                                                                                'toolsIcon'
-                                                                                            )
-                                                                                        "
-                                                                                    ></el-switch>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
 
                                                                     <!-- Vender con stock -->
                                                                     <div
@@ -8114,63 +8066,6 @@
                                                                     </div>
 
                                                                     <!-- Observación al hacer ajuste de stock -->
-                                                                    <div
-                                                                        class="col-md-3 mt-4"
-                                                                    >
-                                                                        <div
-                                                                            class="card h-100"
-                                                                        >
-                                                                            <div
-                                                                                class="card-body d-flex flex-column"
-                                                                            >
-                                                                                <div
-                                                                                    class="form-group text-left flex-grow-1"
-                                                                                >
-                                                                                    <label
-                                                                                        class="control-label w-100"
-                                                                                    >
-                                                                                        <i
-                                                                                            class="fas fa-edit tab-icon"
-                                                                                        ></i>
-                                                                                        Observación
-                                                                                        al
-                                                                                        hacer
-                                                                                        ajuste
-                                                                                        de
-                                                                                        stock
-                                                                                        <el-tooltip
-                                                                                            content="Obligar a dar razón del traslado"
-                                                                                        >
-                                                                                            <i
-                                                                                                class="fa fa-info-circle"
-                                                                                            ></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
-                                                                                    <el-switch
-                                                                                        v-model="
-                                                                                            form.observation_translate
-                                                                                        "
-                                                                                        active-text="Si"
-                                                                                        inactive-text="No"
-                                                                                        :active-color="
-                                                                                            '#28a745'
-                                                                                        "
-                                                                                        :inactive-color="
-                                                                                            '#6c757d'
-                                                                                        "
-                                                                                        @change="
-                                                                                            submit(
-                                                                                                'Observación al hacer ajuste de stock',
-                                                                                                form.observation_translate,
-                                                                                                'observation_translate',
-                                                                                                'editIcon'
-                                                                                            )
-                                                                                        "
-                                                                                    ></el-switch>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
 
                                                                     <!-- Crear Productos Compuestos en caja -->
                                                                     <div

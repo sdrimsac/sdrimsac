@@ -47,10 +47,14 @@
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png'))) }}"
                 alt="anulado" class="" style="opacity: 0.6;">
         </div>
+   @endif
+    @if ($company->soap_type_id == '01')
+        <div class="" style="position: absolute; text-align: center; top:25%;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png'))) }}"
+            alt="demoa4" class="" style="opacity: 0.4; width: 80%;"> 
+        </div>
     @endif
     <div>
-
-
         <div id="contenedor" class="clearfix">
             <div class="border_round text-center" id="lateral">
                 <table class="full-width text-center">

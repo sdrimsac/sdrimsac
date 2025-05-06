@@ -23,7 +23,13 @@
     @if ($document->state_type->id == '11')
         <div class="company_logo_box" style="position: absolute; text-align: center; top:30%;">
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png'))) }}"
-                alt="anulado" class="" style="opacity: 0.6;">
+                alt="anulado" class="" style="opacity: 0.4;">
+        </div>
+    @endif
+    @if ($company->soap_type_id == '01')
+        <div class="" style="position: absolute; text-align: center; top:30%;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png'))) }}"
+                alt="demoa4" class="" style="opacity: 0.4; width: 90%;">
         </div>
     @endif
     <div>

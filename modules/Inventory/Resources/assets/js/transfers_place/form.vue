@@ -6,6 +6,7 @@
         width="80%"
         @close="close()"
         :append-to-body="true"
+        :close-on-click-modal="false"
     >
         <div class="card mb-0 pt-2 pt-md-0">
             <div class="tab-content p-3">
@@ -419,6 +420,43 @@
                                                             }}
                                                         </el-tag>
                                                     </template>
+                                                    <template
+                                                        v-if="
+                                                            row.lots &&
+                                                                row.lots
+                                                                    .length > 0
+                                                        "
+                                                    >
+                                                        <br />
+                                                        <small
+                                                            class="text-primary"
+                                                            v-for="(lot,
+                                                            index) in row.lots"
+                                                            :key="index"
+                                                        >
+                                                            <b>Serie:</b>
+                                                            {{ lot.series }}
+                                                        </small>
+                                                    </template>
+
+                                                    <template
+                                                        v-if="
+                                                            row.lotes &&
+                                                                row.lotes
+                                                                    .length > 0
+                                                        "
+                                                    >
+                                                        <br />
+                                                        <small
+                                                            class="text-primary"
+                                                            v-for="(lot,
+                                                            index) in row.lotes"
+                                                            :key="index"
+                                                        >
+                                                            <b>Lote:</b>
+                                                            {{ lot.code }}
+                                                        </small>
+                                                    </template>
                                                 </td>
                                                 <td>
                                                     <template
@@ -467,36 +505,11 @@
                             class="col-12 col-lg-12 col-xl-5"
                             style="width: 40%;"
                         >
-                            <!-- <div class="card">
+                            <div class="card">
                                 <div
                                     class="card-body d-flex align-items-center gap-3"
                                 >
-                                    <el-checkbox v-model="isDisabled"
-                                        >inhabilitar</el-checkbox
-                                    >
-                                    <span>
-                                        <i class="fa fa-print fa-lg"></i>
-                                        Impresora:
-                                    </span>
-                                    <el-select
-                                        v-model="form.printer"
-                                        :disabled="isDisabled"
-                                        style="flex: 1;"
-                                    >
-                                        <el-option
-                                            v-for="printer in printers"
-                                            :key="printer.id"
-                                            :value="printer.id"
-                                            :label="
-                                                `${printer.description} - ${printer.printer}`
-                                            "
-                                        ></el-option>
-                                    </el-select>
-                                </div>
-                            </div> -->
-                            <div class="card">
-                                <div class="card-body d-flex align-items-center gap-3">
-                                    <el-checkbox v-model="isDisabled">inhabilitar</el-checkbox>
+                                    <!-- <el-checkbox v-model="isDisabled">inhabilitar</el-checkbox> -->
                                     <span>
                                         <i class="fa fa-print fa-lg"></i>
                                         Impresora:
@@ -510,7 +523,9 @@
                                             v-for="establishment in establishments"
                                             :key="establishment.id"
                                             :value="establishment.id"
-                                            :label="`${establishment.description} - ${establishment.printer}`"
+                                            :label="
+                                                `${establishment.description} - ${establishment.printer}`
+                                            "
                                         ></el-option>
                                     </el-select>
                                 </div>
@@ -568,10 +583,16 @@ import OutputLotsForm from "./partials/lots.vue";
 import OutputLotesForm from "./partials/lotes.vue";
 import OutputColorForm from "./partials/color.vue";
 import swal from "sweetalert2";
-import { printers } from "qz-tray";
+/* import { printers } from "qz-tray"; */
 
 export default {
-    props: ["establishment_id", "configuration", "showDialog", "printers", "establishments"],
+    props: [
+        "establishment_id",
+        "configuration",
+        "showDialog",
+        "printers",
+        "establishments"
+    ],
     components: {
         OutputLotsForm,
         OutputLotesForm,
@@ -599,7 +620,7 @@ export default {
             items: [],
             form_add: {},
             time: null,
-            currentItem: null,
+            currentItem: null
         };
     },
     watch: {
@@ -804,6 +825,12 @@ export default {
             this.form_add.lots_enabled = row.lots_enabled;
             this.form_add.series_enabled = row.series_enabled;
 
+            /* this.form_add.quantity = this.form_add.lotes.reduce(
+                (total, lote) => total + (lote.quantity || 0),
+                0
+            ); */
+            this.haslotes = this.form_add.lots_enabled_enabled || this.form_add.lots_enabled_enabled;
+
             this.hasLots =
                 this.form_add.lots_enabled || this.form_add.series_enabled;
             this.hasColor_size =
@@ -975,6 +1002,7 @@ export default {
                             await this.printTransfer(code, printer);
                         }
                         this.$emit("reloadData");
+                        /* this.$emit("update:reloadData"); */
                         this.close();
                     } else {
                         this.$toast.error(response.data.message);
