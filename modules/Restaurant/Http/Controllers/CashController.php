@@ -103,7 +103,6 @@ class CashController extends Controller
     }
     public function observ_register(Request $request)
     {
-
         $cash_income_principal = CashIncomePrincipal::findOrFail($request->id);
         $cash_income_principal->comment = $request->comment;
         $cash_income_principal->status = 2;

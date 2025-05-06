@@ -6510,6 +6510,62 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div
+                                                                        class="col-md-3 mt-4"
+                                                                    >
+                                                                        <div
+                                                                            class="card h-100"
+                                                                        >
+                                                                            <div
+                                                                                class="card-body d-flex flex-column"
+                                                                            >
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1"
+                                                                                >
+                                                                                    <label
+                                                                                        class="control-label w-100"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"
+                                                                                        ></i>
+                                                                                        Enviar wasap al hacer una venta modificando el precio unitario 
+                                                                                        <el-tooltip
+                                                                                            class="item"
+                                                                                            effect="dark"
+                                                                                            content="Al activar esta opcion se enciara un mesaje al wasap del dueño del nogocio avisando que se realizo una venta editando el precio unitario"
+                                                                                            placement="top-start"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"
+                                                                                            ></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch
+                                                                                        v-model="
+                                                                                            form.sale_edit
+                                                                                        "
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="
+                                                                                            '#28a745'
+                                                                                        "
+                                                                                        :inactive-color="
+                                                                                            '#6c757d'
+                                                                                        "
+                                                                                        @change="
+                                                                                            () =>
+                                                                                                submit(
+                                                                                                    'venta editada precio unitario',
+                                                                                                    form.sale_edit,
+                                                                                                    'sale_edit',
+                                                                                                    'lockIcon'
+                                                                                                )
+                                                                                        "
+                                                                                    ></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

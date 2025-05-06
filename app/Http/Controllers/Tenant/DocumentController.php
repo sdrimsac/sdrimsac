@@ -130,6 +130,7 @@ use App\Models\Tenant\HotelRentPenalty;
 use App\Services\SunatService;
 use App\Traits\CheckTotalTrait;
 use App\Traits\CheckDuplicateTrait;
+use App\Traits\CheckEditTrait;
 use GuzzleHttp\Psr7\UploadedFile;
 use Modules\Restaurant\Models\AppointmentComment;
 use Modules\Restaurant\Models\AppointmentDocument;
@@ -137,7 +138,7 @@ use Modules\Restaurant\Models\UserScheduleAppointment;
 
 class DocumentController extends Controller
 {
-    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait;
+    use StorageDocument, OfflineTrait, FinanceTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait, CheckEditTrait;
     private $max_count_payment = 0;
     protected $document_state = [
         '-' => '-',
@@ -1889,6 +1890,11 @@ class DocumentController extends Controller
             DB::connection('tenant')->commit();
             $this->checkTotalAndSendMessage($document);
             $this->checkDuplicateAndSendMessage($document);
+            if ($configuration->sale_edit) {
+                
+                $this->checkEditAndSendMessage($document);
+            }
+            
             return [
                 'success' => true,
                 'data' => [

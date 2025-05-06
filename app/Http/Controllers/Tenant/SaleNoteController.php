@@ -107,6 +107,7 @@ use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
 use App\Traits\CheckTotalTrait;
 use App\Traits\CheckDuplicateTrait;
+use App\Traits\CheckEditTrait;
 use Modules\Restaurant\Models\AppointmentComment;
 use Modules\Restaurant\Models\AppointmentDocument;
 use Modules\Restaurant\Models\UserScheduleAppointment;
@@ -114,7 +115,7 @@ use Modules\Restaurant\Models\UserScheduleAppointment;
 class SaleNoteController extends Controller
 {
 
-    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait;
+    use StorageDocument, FinanceTrait, FilePaymentTrait, PromotionDocumentTrait, CheckTotalTrait, CheckDuplicateTrait, CheckEditTrait;
     protected $sale_note;
     protected $company;
     protected $apply_change;
@@ -1936,6 +1937,7 @@ class SaleNoteController extends Controller
                                 }
                             }
                         }
+                        
                     } else {
                         $this->dumpWithTime("boxes 1.2");
                         if (!$configuration->sale_note_credit_cash) {
@@ -2122,6 +2124,10 @@ class SaleNoteController extends Controller
             $this->dumpWithTime("checkTotalAndSendMessage");
             $this->checkTotalAndSendMessage($this->sale_note);
             $this->checkDuplicateAndSendMessage($this->sale_note);
+            if ($configuration->sale_edit) {
+                $this->checkEditAndSendMessage($this->sale_note);
+            }
+            
             return [
                 'success' => true,
                 'data' => [

@@ -68,6 +68,20 @@ class WhatsappController extends Controller
         }
     }
 
+    public function sendMessageAllSupprotEdit($message)
+    {
+        $numbers = NumberActivity::all();
+        $website = $this->getTenantWebsite();
+        $company = Company::first();
+        $name = "*" . $company->trade_name . "*: ";
+        $message = $name . $message;
+
+        foreach ($numbers as $key => $number) {
+            // Get the number property from each NumberActivity model
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $number->number);
+        }
+    }
+
     public function sendMessageAll($message, $establishment_id = null)
     {
         $website = $this->getTenantWebsite();
@@ -285,8 +299,6 @@ class WhatsappController extends Controller
         } else {
             $web_whatsapp = config('app.web_whatsapp');
             $url = "https://" . $web_whatsapp . "/api/send-message";
-
-
 
             try {
                 $response = Http::withoutVerifying()->post($url, [
