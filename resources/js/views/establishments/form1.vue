@@ -6,17 +6,20 @@
         @close="close"
         @open="create"
         class="rounded-dialog"
+        width="60%"
     >
         <form autocomplete="off" @submit.prevent="submit">
-            <div class="form-body">
-                <br>
+            <div class="card-body">
+                <br />
                 <div class="row">
                     <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
                         >
-                            <label class="control-label">Descripción del Establecimiento</label>
+                            <label class="control-label"
+                                >Descripción del Establecimiento</label
+                            >
                             <el-input
                                 ref="inputDescription"
                                 v-model="form.description"
@@ -374,41 +377,50 @@
                         </div>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label"
+                        <label class="control-label w-100"
                             >Impresión dirección de la
                             <br />
                             empresa y establecimiento</label
-                        ><br />
+                        >
                         <el-checkbox v-model="conf.company_address">
                             {{ conf.company_address ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label">Imprimir comandas</label
-                        ><br />
+                        <label class="control-label w-100">Imprimir comandas</label
+                        >
                         <el-checkbox v-model="conf.print_command">
                             {{ conf.print_command ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label">Descuentos en caja</label
-                        ><br />
+                        <label class="control-label w-100">Descuentos en caja</label
+                        >
                         <el-checkbox v-model="conf.show_discounts_payment">
                             {{ conf.show_discounts_payment ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label">Metodos de pago</label
-                        ><br />
+                        <label class="control-label w-100">Metodos de pago</label
+                        >
                         <el-checkbox v-model="conf.show_payment_method">
                             {{ conf.show_payment_method ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label">Configuracion Android</label
-                        ><br />
+                        <label class="control-label w-100"
+                            >Configuracion Android</label
+                        >
                         <el-checkbox v-model="form.android_configuration">
                             {{ form.android_configuration ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
+                    <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label w-100"
+                            >Credito Nota de Venta </label
+                        >
+                        <el-checkbox v-model="form.credit_warehouse">
+                            {{ form.credit_warehouse ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div
@@ -429,11 +441,13 @@
                             {{ form.is_product ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
-                        <div
+                    <div
                         v-if="configuration.health_network"
                         class="col-md-3 flex-column justify-content-end"
                     >
-                        <label class="control-label">Report. Tab por cada caja</label><br />
+                        <label class="control-label"
+                            >Report. Tab por cada caja</label
+                        ><br />
                         <el-checkbox v-model="form.tab_single">
                             {{ form.tab_single ? "Si" : "No" }}
                         </el-checkbox>
@@ -535,53 +549,56 @@
                         ></el-switch>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6" v-if="soap_type_id != '03'">
-                    <label class="control-label"></label>
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.has_igv_31556 }"
-                    >
-                        <el-checkbox v-model="form.has_igv_31556">
-                            Sujeto al IGV - Ley 31556
-                        </el-checkbox>
-                    </div>
-                </div>
-
-                <div
-                    class="col-md-6"
-                    style="width:200px;"
-                    v-loading="loadingSerie"
-                    v-if="seriesDefault.length != 0 && !recordId"
-                >
-                    <label class="control-label">
-                        <el-checkbox v-model="createSeries">
-                            Series predeterminadas</el-checkbox
+                <div class="row">
+                    <div class="col-md-6" v-if="soap_type_id != '03'">
+                        <label class="control-label"></label>
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.has_igv_31556 }"
                         >
-                    </label>
+                            <el-checkbox v-model="form.has_igv_31556">
+                                Sujeto al IGV - Ley 31556
+                            </el-checkbox>
+                        </div>
+                    </div>
+
                     <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.has_igv_31556 }"
+                        class="col-md-6"
+                        style="width:200px;"
+                        v-loading="loadingSerie"
+                        v-if="seriesDefault.length != 0 && !recordId"
                     >
-                        <el-input-number
-                            @input="reloadSeries"
-                            :min="1"
-                            :max="99"
-                            :controls="false"
-                            :disabled="!createSeries"
-                            v-model="numberLocal"
-                        ></el-input-number>
-                        <label class="mt-1">
-                            <strong class="h5">
-                                {{
-                                    seriesDefault.map(m => m.serie).join(" / ")
-                                }}
-                            </strong>
+                        <label class="control-label">
+                            <el-checkbox v-model="createSeries">
+                                Series predeterminadas</el-checkbox
+                            >
                         </label>
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.has_igv_31556 }"
+                        >
+                            <el-input-number
+                                @input="reloadSeries"
+                                :min="1"
+                                :max="99"
+                                :controls="false"
+                                :disabled="!createSeries"
+                                v-model="numberLocal"
+                            ></el-input-number>
+                            <label class="mt-1">
+                                <strong class="h5">
+                                    {{
+                                        seriesDefault
+                                            .map(m => m.serie)
+                                            .join(" / ")
+                                    }}
+                                </strong>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="form-actions text-end pt-2 pb-2">
                 <el-button @click.prevent="close()">Cancelar</el-button>
                 <el-button
@@ -597,9 +614,9 @@
 
 <style>
 .el-dialog {
-    border-radius: 10px; 
-    overflow: hidden; 
-  }
+    border-radius: 10px;
+    overflow: hidden;
+}
 </style>
 
 <script>

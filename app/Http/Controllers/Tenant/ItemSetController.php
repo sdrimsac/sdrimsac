@@ -128,12 +128,18 @@ class ItemSetController extends Controller
 
         return $record;
     }
-    public function item_tables(Request $request)
+    /* public function item_tables(Request $request)
     {
         $warehouse_id = $request->warehouse_id;
         $input = $request->input;
         
-        $individual_items = Item::whereTypeUser()->whereNotIsSet()->whereIsActive();
+        $insumos_category = CategoryItem::where('name', 'INSUMOS')->first();
+        
+        $individual_items = Item::whereTypeUser()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->where('category_id', $insumos_category->id);
+
         if($input){
             $individual_items = $individual_items->where(function($query) use($input){
                 $query->where('description', 'like', "%{$input}%")
@@ -159,6 +165,48 @@ class ItemSetController extends Controller
                 'unit_type_description' => $unit_type_description,
             ];
         });
+
+        return compact('individual_items');
+    } */
+
+    public function item_tables(Request $request)
+    {
+        $warehouse_id = $request->warehouse_id;
+        $input = $request->input;
+
+        $insumos_category = CategoryItem::where('name', 'INSUMOS')->first();
+
+        $individual_items = Item::whereTypeUser()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->where('category_id', $insumos_category->id);
+
+        if ($input) {
+            $individual_items = $individual_items->where(function ($query) use ($input) {
+                $query->whereRaw('lower(description) like ?', ['%' . strtolower($input) . '%'])
+                    ->orWhereRaw('lower(internal_id) like ?', ['%' . strtolower($input) . '%']);
+            });
+        }
+
+        if ($warehouse_id) {
+            $individual_items = $individual_items->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);
+            });
+        }
+
+        $individual_items = $individual_items->get()
+            ->transform(function ($row) {
+                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
+                $unit_type_description = $row->unit_type->description;
+                return [
+                    'id' => $row->id,
+                    'full_description' => $full_description,
+                    'internal_id' => $row->internal_id, 
+                    'description' => $row->description,
+                    'sale_unit_price' => $row->sale_unit_price,
+                    'unit_type_description' => $unit_type_description,
+                ];
+            });
 
         return compact('individual_items');
     }

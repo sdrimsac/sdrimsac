@@ -286,6 +286,7 @@
                 @changePage="changePage"
                 @searchOrden="searchitem_modal"
                 :category.sync="category"
+                :cash_id.sync="cashId"
             ></detail-orden>
         </template>
         <Pos-form
@@ -497,7 +498,8 @@ export default {
         "areas",
         "tables_area",
         "tables_active",
-        "categories"
+        "categories",
+        "cash_id"
     ],
     data() {
         return {
@@ -703,6 +705,7 @@ export default {
         });
     }, */
     async created() {
+        this.cashId = this.cash_id;
         await this.getFoods();
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
@@ -765,16 +768,28 @@ export default {
             message: "Bienvenido " + this.user.name
         });
     },
+    beforeDestroy() {
+        clearInterval(this.timer);
+        // Limpiar listener al destruir componente
+        console.log("Destruyendo el componente y limpiando el listener");
+        this.$eventHub.$off("cashStatusChanged");
+    },
     methods: {
+        async updateCashId(id) {
+            // Cuando se abre la caja
+            console.log("Caja abierta con ID:", id);
+            this.$eventHub.$emit("cashStatusChanged", {
+                status: "open",
+                cashId: id
+            });
+            console.log("Emitiendo evento de cambio de caja:", id);
+            this.$emit("update:cash_id", id);
+        },
         filterZones(zone_id) {
-            /* console.log("Filtering zone:", zone_id);
-            console.log("All tables:", this.all_tables); */
 
             if (this.zone_id === zone_id) {
-                // If clicking the same zone, deselect it and show all tables
                 this.zone_id = null;
                 this.tables = this.all_tables;
-                /* console.log("Deselected zone, showing all tables:", this.tables.length); */
                 return;
             }
 

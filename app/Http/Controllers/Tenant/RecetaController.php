@@ -145,19 +145,27 @@ class RecetaController extends Controller
         $warehouse_id = $request->warehouse_id;
         $input = $request->input;
 
-        $individual_items = Item::whereTypeUser()->whereNotIsSet()->whereIsActive();
+        $individual_items = Item::whereTypeUser()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->whereHas('category', function($query) {
+                $query->where('name', 'INSUMOS');
+            });
+
         if ($input) {
             $individual_items = $individual_items->where(function ($query) use ($input) {
                 $query->where('description', 'like', "%{$input}%")
                     ->orWhere('internal_id', 'like', "%{$input}%");
             });
         }
+
         if ($warehouse_id) {
             $individual_items = $individual_items->whereHas('warehouses', function ($query) use ($warehouse_id) {
                 $query->where('warehouse_id', $warehouse_id);
             });
         }
-        $individual_items =  $individual_items->get()
+
+        $individual_items = $individual_items->get()
             ->take(20)
             ->transform(function ($row) {
                 $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;

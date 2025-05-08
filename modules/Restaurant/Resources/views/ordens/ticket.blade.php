@@ -501,18 +501,18 @@
                             @if ($row->observations != '-')
                                 <br>
                                 <strong>
-                                    @if ($configuration->observations_separate)
+                                    {{-- @if ($configuration->observations_separate)
                                         @php
-                                            $observations = explode('/', $row->observations); // Divide las observaciones por el carácter "/"
+                                            $observations = explode('/', $row->observations); 
                                         @endphp
                                         @foreach ($observations as $index => $observation)
                                             {{ strtoupper($row->desc_unit) }} OBSERVACIÓN {{ $index + 1 }}:
                                             {{ e(trim($observation)) }}
-                                            {{-- Obs{{ $index + 1 }}: {{ e($observation) }} --}}<br>
+                                            
                                         @endforeach
-                                    @else
+                                    @else --}}
                                         Obs: {{ e($row->observations) }}
-                                    @endif
+                                    {{-- @endif --}}
                                 </strong>
                             @endif
 

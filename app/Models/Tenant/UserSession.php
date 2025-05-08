@@ -21,6 +21,7 @@ class UserSession extends Authenticatable
         'session_id',
         'user_agent',
         'tab_id',
+        'last_activity',
     ];
 
     public function user()

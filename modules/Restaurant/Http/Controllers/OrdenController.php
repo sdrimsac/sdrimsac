@@ -866,6 +866,34 @@ class OrdenController extends Controller
             $mozo_id = $request->mozo_id;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
+
+            $mozo_user = auth()->user();
+
+            // Verificar si el usuario mozo y el usuario caja están en el mismo establecimiento
+            $establishment_id = $mozo_user->establishment_id;
+            $caja_user = User::whereHas('area', function ($query) {
+                $query->where('description', 'like', '%CAJ%');
+            })->where('establishment_id', $establishment_id)->first();
+
+            if (!$caja_user) {
+                return [
+                    'success' => false,
+                    'message' => 'No se encontró un usuario de caja asignado al establecimiento.'
+                ];
+            }
+
+            // Verificar si el usuario caja tiene una caja abierta
+            $caja_abierta = Cash::where('user_id', $caja_user->id)
+                ->whereNull('time_closed')
+                ->exists();
+
+            if (!$caja_abierta) {
+                return [
+                    'success' => false,
+                    'message' => 'La caja asignada al usuario de caja aún no está abierta. No se pueden realizar pedidos.'
+                ];
+            }
+
             if ($request->caja == false && $configuration->pin_switch) {
                 $pin = $request->pin;
                 if (!$pin) {
@@ -1013,7 +1041,7 @@ class OrdenController extends Controller
             if ($id != null) {
                 $orden = Orden::find($id);
                 $orden->ref = $ref;
-                $orden->mozo_id = $mozo_id; // Solo guardamos el ID
+                $orden->mozo_id = $mozo_id;
 
                 $table = Table::find($orden->table_id);
                 if ($table->is_room) {
@@ -1178,11 +1206,10 @@ class OrdenController extends Controller
 
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
 
-                            if ($menaje_id != null || $area_found->search_print == 1) {   
+                            if ($menaje_id != null || $area_found->search_print == 1) {
                                 $area_id = $menaje_id;
                                 dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
                             }
-
                         } else {
                             // Imprimir en el área actual
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
@@ -1203,9 +1230,9 @@ class OrdenController extends Controller
                         if ($area_found) {
                             $copies = $area_found->copies ?? 0;
                             $total_copies = $copies + 1;
-                
+
                             if ($area_found->printer || $area_found->search_print == 1) {
-                                for ($i = 0; $i < $total_copies; $i++) { 
+                                for ($i = 0; $i < $total_copies; $i++) {
                                     dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
                                     sleep(1);
                                 }

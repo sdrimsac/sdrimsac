@@ -392,6 +392,7 @@
                     @ordenDeleted="createOrden"
                     @listtables="clearTables"
                     @selectNewOrden="handleSelectOrden"
+                    :cashId="cash_id"
                 >
                 </current-orden>
             </div>
@@ -413,7 +414,8 @@ export default {
         "foods",
         "configuration",
         "tables_row_select",
-        "changingOrden"
+        "changingOrden",
+        "cash_id"
     ],
     async created() {
         this.ordens = this.table.orden;

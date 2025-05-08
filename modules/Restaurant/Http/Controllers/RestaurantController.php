@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Http\Requests\AreaRequest;
 use Modules\Restaurant\Http\Requests\WorkersTypeRequest;
 use Modules\Restaurant\Models\Area;
@@ -272,7 +273,30 @@ class RestaurantController extends Controller
             }
             $configuration = Configuration::first();
 
-            if ($configuration->user_unit) {
+            /* if ($configuration->user_unit) {
+                $existing = DB::connection('tenant')->table('user_sessions')
+                    ->where('user_id', $user->id)
+                    ->first();
+
+                if ($existing) {
+                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 1;
+
+                    if (!$expired && $existing->session_id !== Session::getId()) {
+                        Auth::logout();
+                        return response()->json([
+                            'success' => false,
+                            'session_conflict' => true,
+                            'message' => 'El usuario ya tiene una sesión activa.',
+                        ]);
+                    }
+
+                    // Si ha expirado, la sesión ya no es válida → eliminar
+                    if ($expired) {
+                        DB::connection('tenant')->table('user_sessions')
+                            ->where('user_id', $user->id)
+                            ->delete();
+                    }
+                }
 
                 $currentSessionId = Session::getId();
 
@@ -287,20 +311,62 @@ class RestaurantController extends Controller
                     ]);
                 }
 
-
-                // user user_tab_id  igualar a el tab_id de la request
                 UserSession::updateOrCreate(
                     ['user_id' => $user->id],
                     [
                         'session_id' => Session::getId(),
                         'user_agent' => $request->header('User-Agent'),
-                        /* 'tab_id' => $request->input('tab_id'), */
+                        'last_activity' => now(),
                     ]
                 );
+                $request->session()->put('user_id', $user->id);
+            } */
+
+            if ($configuration->user_unit) {
+
+                $existing = DB::connection('tenant')->table('user_sessions')
+                    ->where('user_id', $user->id)
+                    ->first();
+
+                $currentSessionId = Session::getId();
+
+                if ($existing) {
+                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 120;
+
+                    if ($expired) {
+                        // Si ha expirado, elimina y continúa con el login
+                        DB::connection('tenant')->table('user_sessions')
+                            ->where('user_id', $user->id)
+                            ->delete();
+                    } elseif ($existing->session_id !== $currentSessionId) {
+                        // Si NO ha expirado y la sesión es distinta, bloquea
+                        Auth::logout();
+                        return response()->json([
+                            'success' => false,
+                            'session_conflict' => true,
+                            'message' => 'El usuario ya tiene una sesión activa.',
+                        ]);
+                    }
+                }
+
+                // Llegado aquí, ya sea:
+                // - No hay sesión previa
+                // - O la sesión previa expiró y fue eliminada
+
+                UserSession::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'session_id' => $currentSessionId,
+                        'user_agent' => $request->header('User-Agent'),
+                        'last_activity' => now(),
+                    ]
+                );
+
+                $request->session()->put('user_id', $user->id);
             }
 
             $user = User::find($user->id);
-            
+
             if ($configuration->whatsapp_in_login && $user->type !== "superadmin") {
                 $name = $user->name;
                 $establishment = Establishment::find($user->establishment_id);

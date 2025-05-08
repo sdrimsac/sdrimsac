@@ -599,8 +599,6 @@ class TransferPlaceController extends Controller
             $result .= ' ' . $part_dec . ' ' . $unit_type_dec;
         }
 
-        dump($result);
-
         return trim($result);
     }
 }

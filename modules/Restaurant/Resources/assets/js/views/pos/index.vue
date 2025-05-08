@@ -165,7 +165,7 @@
                                     </template>
                                     <template
                                         v-if="
-                                            configuration.sale_note_credit_cash &&
+                                            configuration.sale_note_credit_cash && this.isCreditCash &&
                                                 !this.isSeller
                                         "
                                     >
@@ -2768,6 +2768,9 @@ export default {
         isAndroid() {
             return this.establishments.android_configuration;
         },
+        isCreditCash() {
+            return this.establishments.credit_warehouse;
+        },
         isSellerConsolidated() {
             return (
                 this.isSeller &&
@@ -3160,7 +3163,7 @@ export default {
                     id: 74,
                     title: ["Venta del", "mes"],
                     icon: "fas fa-history ",
-                    visible: true && this.establishments.is_product
+                    visible: true && this.establishments.is_product && !cashId
                 },
                 {
                     id: 63,
@@ -3180,7 +3183,7 @@ export default {
                     id: 97,
                     title: ["Pagos", "Detracciones"],
                     icon: "fas fa-money-check-alt",
-                    visible: this.configuration.detraction
+                    visible: this.configuration.detraction && this.cashId
                 },
                 {
                     id: 1,
@@ -3193,7 +3196,7 @@ export default {
                     id: 3,
                     title: ["Productos"],
                     icon: "fas fa-box-open",
-                    visible: this.configuration.product_cash
+                    visible: this.configuration.product_cash && this.cashId
                 },
                 {
                     id: 4,
@@ -3209,7 +3212,7 @@ export default {
                     title: [" Zona "],
                     icon: "fas fa-map-pin ",
                     visible:
-                        !this.isSeller &&
+                        !this.isSeller && this.cashId &&
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
@@ -3223,7 +3226,7 @@ export default {
                     title: [" Créditos", "Nota de venta "],
                     icon: "fas fa-cash-register",
                     visible:
-                        this.configuration.sale_note_credit_cash &&
+                        this.configuration.sale_note_credit_cash && this.cashId && this.isCreditCash && 
                         !this.isSeller
                 },
                 {
@@ -3231,7 +3234,7 @@ export default {
                     title: [" Habitaciones "],
                     icon: "fas fa-map-pin ",
                     visible:
-                        this.configuration.hotels &&
+                        this.configuration.hotels && this.cashId &&
                         this.worker.area.description.toUpperCase() == "HOTEL" &&
                         !this.isSeller &&
                         !this.isAnalist
@@ -3242,7 +3245,7 @@ export default {
                     icon: "icofont-money-bag",
                     visible:
                         (this.configuration.view_daily_cash ||
-                            this.configuration.view_daily_cash_pin) &&
+                            this.configuration.view_daily_cash_pin) && this.cashId &&
                         !this.isSeller
                 },
 
@@ -3251,7 +3254,7 @@ export default {
                     title: ["Historial", ""],
                     icon: "fas fa-history ",
                     visible:
-                        !this.isSeller &&
+                        !this.isSeller && this.cashId &&
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
 
@@ -3259,14 +3262,14 @@ export default {
                     id: 9,
                     title: ["Matriculas", "Mensualidades"],
                     icon: "fas fa-user-edit",
-                    visible: this.configuration.college && !this.isSeller
+                    visible: this.configuration.college && !this.isSeller && this.cashId
                 },
                 {
                     id: 10,
                     title: ["Canjear", "Promocion"],
                     icon: "fas fa-user-tag",
                     visible:
-                        this.configuration.promotions_sell && !this.isSeller
+                        this.configuration.promotions_sell && !this.isSeller && this.cashId
                 },
                 {
                     id: 33,
@@ -3278,38 +3281,38 @@ export default {
                     id: 25,
                     title: ["Guías", "Remisión"],
                     icon: "fas fa-file",
-                    visible: this.configuration.dispatch && !this.isSeller
+                    visible: this.configuration.dispatch && !this.isSeller && this.cashId
                 },
                 {
                     id: 102,
                     title: ["Cambiar", "Categorías"],
                     icon: "fa fa-bars",
                     visible:
-                        this.configuration.pos_drag_category && !this.isSeller
+                        this.configuration.pos_drag_category && !this.isSeller && this.cashId
                 },
                 {
                     id: 103,
                     title: ["Editar", "Productos"],
                     icon: "fa fa-edit",
-                    visible: this.configuration.edit_product_pos
+                    visible: this.configuration.edit_product_pos && this.cashId
                 },
                 {
                     id: 109,
                     title: ["Ver", "Consignaciones"],
                     icon: "fa fa-edit",
-                    visible: this.configuration.consignment && !this.isSeller
+                    visible: this.configuration.consignment && !this.isSeller 
                 },
                 {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
-                    visible: this.configuration.items_due_caja && !this.isSeller
+                    visible: this.configuration.items_due_caja && !this.isSeller 
                 },
                 {
                     id: 32,
                     title: ["Crear", "Producto compuesto"],
                     icon: "el-icon-connection",
-                    visible: this.configuration.item_set_caja && !this.isSeller
+                    visible: this.configuration.item_set_caja && !this.isSeller 
                 },
                 {
                     id: 34,
@@ -3439,12 +3442,21 @@ export default {
             return text;
         },
         buttonSmTables() {
+            if (!this.cashId) {
+                this.$message({
+                    showClose: true,
+                    message: 'Debe abrir una caja para poder realizar operaciones',
+                    type: 'warning'
+                });
+                return; 
+            }
+
             if (this.configuration.hotels) {
                 if (this.isCurrentAreaHotel()) {
                     this.roomSeeId = null;
                     this.openTablesRooms();
                 } else {
-                    this.openTables();
+                    this.openTables(); 
                 }
             } else {
                 this.openTables();

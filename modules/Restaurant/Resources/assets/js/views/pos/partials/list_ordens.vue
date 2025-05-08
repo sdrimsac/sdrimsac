@@ -1475,7 +1475,10 @@
                                                             <h6
                                                                 class="text-danger"
                                                                 v-if="
-                                                                    igvStatusMap[order_pend.id]
+                                                                    igvStatusMap[
+                                                                        order_pend
+                                                                            .id
+                                                                    ]
                                                                 "
                                                             >
                                                                 PRODUCTO CON IGV
@@ -2617,13 +2620,13 @@
             </div>
         </el-dialog>
         <el-dialog
-                    v-loading="deleteOrdenLoading"
-                    width="350px"
-                    :visible.sync="showPinRequest"
-                    title="Ingrese su PIN"
-                    append-to-body
-                    @closed="handlePinDialogClose"
-                >
+            v-loading="deleteOrdenLoading"
+            width="350px"
+            :visible.sync="showPinRequest"
+            title="Ingrese su PIN"
+            append-to-body
+            @closed="handlePinDialogClose"
+        >
             <div class="row mt-1">
                 <p class="h5" style="word-break: break-word;">
                     Para poder eliminar la orden debe ingresar un motivo y su
@@ -2866,7 +2869,7 @@
 
 /* 🔹 Cuando se llena un círculo */
 .filled {
-    background-color:rgb(0, 17, 173);
+    background-color: rgb(0, 17, 173);
 }
 
 /* 🔹 Ocultar el input real */
@@ -3056,7 +3059,7 @@ export default {
                 // Cuando se abre el diálogo, focus en el input oculto
                 this.$nextTick(() => {
                     if (this.$refs.pinInput) {
-                        this.$refs.pinInput.$el.querySelector('input').focus();
+                        this.$refs.pinInput.$el.querySelector("input").focus();
                     }
                 });
             }
@@ -3106,13 +3109,15 @@ export default {
     },
     computed: {
         igvStatusMap() {
-        // Crea un mapa que cachea los resultados por item
-        return this.localOrden.reduce((map, orden) => {
-            const igvTypeId = orden.food.item.sale_affectation_igv_type_id;
-            map[orden.id] = this.configuration.affectation_igv_type_id !== "10" && igvTypeId == "10";
-            return map;
-        }, {});
-    },
+            // Crea un mapa que cachea los resultados por item
+            return this.localOrden.reduce((map, orden) => {
+                const igvTypeId = orden.food.item.sale_affectation_igv_type_id;
+                map[orden.id] =
+                    this.configuration.affectation_igv_type_id !== "10" &&
+                    igvTypeId == "10";
+                return map;
+            }, {});
+        },
         isAppNotIgvAndHaveIgv() {
             return (
                 this.configuration.affectation_igv_type_id != "10" &&
@@ -3246,7 +3251,6 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
-    
         // checkIgvApp(igv_type_id) {
         //     console.log("igv_type_id", igv_type_id);
         //     return (
@@ -3596,7 +3600,7 @@ export default {
                                 customer_id,
                                 promotion_sale: true,
                                 caja: true,
-                                printerOn: false,
+                                printerOn: false
                             });
                             // this.$emit('update:localOrden',items)
                         }
@@ -4307,16 +4311,25 @@ export default {
         verifyStock(orden, idx) {
             let current_orden = this.localOrden.filter(o => o.id == orden.id);
             let unit_type_id = current_orden[0].food.item.unit_type_id;
-            
+
             // Update price based on quantity
-            this.localOrden[idx].price = this.getPriceRange(this.localOrden[idx]);
-            
-            if (this.configuration.sales_stock && !this.quotation_stock && unit_type_id != "ZZ") {
+            this.localOrden[idx].price = this.getPriceRange(
+                this.localOrden[idx]
+            );
+
+            if (
+                this.configuration.sales_stock &&
+                !this.quotation_stock &&
+                unit_type_id != "ZZ"
+            ) {
                 let qty = Number(this.localOrden[idx].quantity); // Get current input quantity
                 let stock = 0;
 
                 // Determine available stock
-                if (current_orden.length == 1 && current_orden[0].lotes.length == 1) {
+                if (
+                    current_orden.length == 1 &&
+                    current_orden[0].lotes.length == 1
+                ) {
                     let [orden] = current_orden;
                     let [lote] = orden.lotes;
                     stock = lote.quantity;
@@ -4326,10 +4339,12 @@ export default {
 
                 // Validate quantity against stock
                 if (qty > stock) {
-                    this.$toast.warning(`La cantidad excede el stock disponible (${stock})`);
+                    this.$toast.warning(
+                        `La cantidad excede el stock disponible (${stock})`
+                    );
                     // Reset to maximum available stock
                     this.localOrden[idx].quantity = stock;
-                    
+
                     // Update lots if single lot
                     if (current_orden.length == 1) {
                         let [orden] = current_orden;
@@ -4348,7 +4363,7 @@ export default {
                     }
                 }
             }
-            
+
             this.calculateTotal();
         },
         showOrdensPending() {
@@ -4432,7 +4447,7 @@ export default {
         async sendOrden() {
             if (this.localOrden.length == 0 && !this.variation) {
                 this.$showSAlert(
-                    "ALERTA", 
+                    "ALERTA",
                     "No Tienes Productos Para Cobrar",
                     "warning"
                 );
@@ -4446,15 +4461,18 @@ export default {
 
             this.ordenLoading = true;
             try {
-                const responses = await this.$http.post("/caja/worker/send-orden", {
-                    id: this.clientTableData.orden_id,
-                    ref: this.clientTableData.ref,
-                    items: this.localOrden,
-                    caja: true,
-                    printing: true,
-                    saleDirect: false,
-                    orden
-                });
+                const responses = await this.$http.post(
+                    "/caja/worker/send-orden",
+                    {
+                        id: this.clientTableData.orden_id,
+                        ref: this.clientTableData.ref,
+                        items: this.localOrden,
+                        caja: true,
+                        printing: true,
+                        saleDirect: false,
+                        orden
+                    }
+                );
 
                 // Check success property from response
                 if (!responses.data.success) {
@@ -4467,7 +4485,7 @@ export default {
 
                 let ordenId = responses.data.id;
                 this.ordenLoading = false;
-                
+
                 if (responses.status != 200) {
                     this.$toast.warning("Ocurrió un error");
                     return;
@@ -4476,7 +4494,7 @@ export default {
                 this.to_carry = false;
                 this.$emit("cancelOrden");
                 this.$emit("update:isCreatingOrden", false);
-                
+
                 let msg = "";
                 if (this.clientTableData.orden_id) {
                     msg = `Se agregaron los pedidos a la orden ${ordenId}`;
@@ -4484,7 +4502,6 @@ export default {
                     msg = `La orden ${ordenId} fue creada.`;
                 }
                 this.$toast.success(msg);
-
             } catch (e) {
                 this.ordenLoading = false;
                 if (e.response && e.response.data) {
@@ -4513,7 +4530,7 @@ export default {
             const { data } = response;
             return data;
         },
-
+        //aqui van los cases
         async trigerFunction(id) {
             switch (id) {
                 case 6:
@@ -4527,7 +4544,12 @@ export default {
                     }
                     break;
                 case 2:
-                    this.showTransfers();
+                    if (!this.cash_id) {
+                        this.$toast.error("Abra una caja");
+                    } else {
+                        this.showTransfers();
+                    }
+
                     break;
                 case 3:
                     if (this.cash_id) {
@@ -4559,9 +4581,19 @@ export default {
                     }
                     break;
                 case 5:
-                    this.showOrdensPending();
+                    if (!this.cash_id) {
+                        this.$toast.error("Abra una caja");
+                    } else {
+                        this.showOrdensPending();
+                    }
+
                     break;
                 case 4:
+                    if (!this.cash_id) {
+                        this.$toast.error("Abra una caja");
+                        return;
+                    }
+
                     if (this.ordenInBox.length > 0) {
                         this.listApart = true;
                     } else {
@@ -4582,6 +4614,10 @@ export default {
             this.getLasNumOrden();
         },
         openApart() {
+            if (!this.cash_id) {
+                this.$toast.error("Abra una caja");
+                return;
+            }
             if (this.localOrden.length == 0) {
                 /* this.$toast.error("Sin ordenes pendientes"); */
                 this.$showSAlert(
@@ -5130,20 +5166,20 @@ export default {
 
         handleKeyPress(event) {
             const key = event.key;
-            
+
             // Solo permitir números
             if (/^\d$/.test(key) && this.pin.length < 4) {
                 // No es necesario hacer nada ya que el v-model actualizará el pin
-            } else if (key === 'Backspace') {
+            } else if (key === "Backspace") {
                 // Permitir borrar
                 this.pin = this.pin.slice(0, -1);
-            } else if (key === 'Enter' && this.pin.length === 4) {
+            } else if (key === "Enter" && this.pin.length === 4) {
                 // Si presiona Enter y el PIN está completo
                 this.cancelOrdenaPin();
             }
-            
+
             // Prevenir cualquier otra entrada
-            if (!/^\d$/.test(key) && key !== 'Backspace') {
+            if (!/^\d$/.test(key) && key !== "Backspace") {
                 event.preventDefault();
             }
         },

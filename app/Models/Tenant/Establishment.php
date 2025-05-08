@@ -16,6 +16,7 @@ class Establishment extends ModelTenant
         'conf'
     ];
     protected $fillable = [
+        'credit_warehouse',
         'android_configuration',
         'tab_single',
         'is_product',
@@ -46,6 +47,7 @@ class Establishment extends ModelTenant
         'documents',
     ];
     protected $casts = [
+        'credit_warehouse' => 'boolean',
         'android_configuration' => 'boolean',
         'is_product' => 'boolean',
         'is_service' => 'boolean',

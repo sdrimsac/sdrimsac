@@ -2236,6 +2236,9 @@ export default {
         isAndroid() {
             return this.establishments.android_configuration;
         },
+        isCreditCash() {
+            return this.establishments.credit_warehouse;
+        },
         promotionByPoints() {
             return this.configuration.promotions_by_points;
         },
@@ -4569,7 +4572,7 @@ export default {
             if (
                 differen < 0 &&
                 this.form.payment_condition_id == "01" &&
-                !this.configuration.sale_note_credit_cash
+                !this.configuration.sale_note_credit_cash 
             ) {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"

@@ -730,7 +730,8 @@ export default {
         "referencia",
         "table",
         "divided_items",
-        "mozos"
+        "mozos",
+        "cash_id"
     ],
     async created() {
         this.referenciaInput = this.referencia;
@@ -1355,8 +1356,6 @@ export default {
             } else {
                 this.sendOrden();
             }
-            //this.loading = true;
-            //this.open_orders();
         },
         async cancelOrdenaPin() {
             if (this.pin.length > 3 && this.reasonToDelete) {

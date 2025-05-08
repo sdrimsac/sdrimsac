@@ -354,7 +354,6 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/success_service/{id}', 'TableRoomController@success_service');
         Route::get('rooms/desactive_promotion/{code}', 'TableRoomController@desactive_promotion');
 
-
         Route::post('room_services', 'TableRoomServiceController@room_services');
         Route::get('room_services/records', 'TableRoomServiceController@records');
         Route::get('room_services/record/{id}', 'TableRoomServiceController@record');
@@ -391,7 +390,6 @@ Route::prefix('caja')->group(function () {
         Route::get('workers/record/{id}', 'WorkerController@record');
         Route::post('workers', 'WorkerController@store');
 
-
         Route::get('pos', 'PosController@index')->name('restaurant.pos');
         Route::get('pos/search_orden', 'PosController@search');
         Route::get('pos/update_items_warehouse', 'PosController@updateItemWithWarehouse');
@@ -403,7 +401,6 @@ Route::prefix('caja')->group(function () {
         Route::get('boxes', 'BoxesController@index')->name('restaurant.boxes');
         Route::get('items_detail', [BoxesDetailController::class, 'items_detail']);
         Route::post('save_item', [BoxesDetailController::class, 'save_item']);
-
 
         Route::get('search_customers', [RestaurantController::class, 'search_customer']);
         Route::get('search_customer_by_id/{id}', [RestaurantController::class, 'search_customer_by_id']);
