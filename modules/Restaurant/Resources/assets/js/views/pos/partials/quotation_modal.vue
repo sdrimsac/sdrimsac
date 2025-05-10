@@ -85,7 +85,9 @@
                 v-if="form.total"
                 class="text-end"
             >
-                <h4 class="fw-bold">TOTAL: S/. {{ form.total.toFixed(2) }}</h4>
+                <h4 class="fw-bold">
+                    
+                    TOTAL: {{ currencyIdChoice == "USD" ? "$" : "S/" }} {{ form.total.toFixed(2) }}</h4>
             </div>
             
         </div>
@@ -132,7 +134,8 @@ export default {
         "configuration",
         "establishment",
         "categoriaMadera",
-        "fromPos"
+        "fromPos",
+        "currencyIdChoice"
     ],
     components: { PersonForm, QuotationOptions },
     data() {
@@ -164,6 +167,12 @@ export default {
     watch: {
         all_customers(newCustomer, _) {
             this.customers = newCustomer.filter(n => n.number != "88888888");
+        },
+        currencyIdChoice(newValue) {
+            // Ensure currency_type_id is updated based on currencyIdChoice
+            this.form.currency_type_id = newValue === "USD" ? "USD" : "PEN";
+
+            console.log("currencyIdChoice", newValue);
         }
     },
     methods: {
@@ -398,7 +407,7 @@ export default {
             this.form = {
                 customer_id: null,
                 date_of_issue: moment().format("YYYY-MM-DD"),
-                currency_type_id: "PEN",
+                currency_type_id: this.currencyIdChoice === "USD" ? "USD" : "PEN", // Explicitly set currency_type_id
                 exchange_rate_sale: 1,
                 establishment_id: 1,
                 prefix: "COT",
@@ -441,17 +450,18 @@ export default {
             };
             this.paymentsOrden();
             this.customers = this.all_customers;
-            console.log("🚀 ~ open ~ this.all_customers:", this.all_customers)
+            console.log("🚀 ~ open ~ this.all_customers:", this.all_customers);
             let customer = this.customers.find(c => c.number == "99999999");
             if (customer) {
                 this.form.customer_id = customer.id;
             }
-            if(this.quotationDirect){
-                if(this.formQtn.customer_id){
+            if (this.quotationDirect) {
+                if (this.formQtn.customer_id) {
                     this.form.customer_id = this.formQtn.customer_id;
                 }
                 this.submit();
             }
+            console.log("open", this.currencyIdChoice);
         },
         close() {
             this.$emit("update:showDialog", false);

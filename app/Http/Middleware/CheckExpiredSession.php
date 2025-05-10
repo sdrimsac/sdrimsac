@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 class CheckExpiredSession
 {
 
-    public function handle($request, Closure $next)
+    /* public function handle($request, Closure $next)
     {
         if (Auth::check()) {
             DB::connection('tenant')->table('user_sessions')
@@ -21,34 +21,20 @@ class CheckExpiredSession
         }
 
         return $next($request);
-    }
-
-    /* public function handle($request, Closure $next)
+    } */
+    public function handle($request, Closure $next)
     {
-        $sessionId = Session::getId();
-
-        if (!Auth::check()) {
-            if ($request->session()->has('session_id')) {
-                $userId = $request->session()->get('user_id');
+        if (Auth::check() && config('database.connections.tenant')) {
+            try {
+                DB::connection('tenant')->table('user_sessions')
+                    ->where('user_id', Auth::id())
+                    ->update(['last_activity' => now()]);
+            } catch (\Exception $e) {
+                // Puedes loguear si quieres saber si algo falló
                 
-                $dbSession = DB::connection('tenant')
-                    ->table('user_sessions')
-                    ->where('user_id', $userId)
-                    ->first();
-
-                if ($dbSession && $dbSession->session_id !== $sessionId) {
-                    DB::connection('tenant')->table('user_sessions')
-                        ->where('user_id', $userId)
-                        ->where('session_id', $dbSession->session_id)
-                        ->delete();
-
-                    $request->session()->forget('user_id');
-                }
             }
-        } else {
-            $request->session()->put('user_id', Auth::id());
         }
 
         return $next($request);
-    } */
+    }
 }

@@ -22,6 +22,7 @@ class QuotationCollection extends ResourceCollection
             return [
                 'weight_total' => $row->getWeightTotal(),
                 'reference' => $row->reference,
+                'currency_type_id' => $row->currency_type_id,
                 'id' => $row->id,
                 'soap_type_id' => $row->soap_type_id,
                 'external_id' => $row->external_id,

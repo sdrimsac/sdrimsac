@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Listeners\LogoutSessionCleanup;
+
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Logout;
@@ -19,9 +19,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
-        Logout::class => [
-            LogoutSessionCleanup::class,
         ],
     ];
 

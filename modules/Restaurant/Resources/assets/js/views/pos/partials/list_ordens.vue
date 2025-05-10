@@ -2582,6 +2582,7 @@
             :formQtn.sync="formQtn"
             :fromPos="true"
             @cotizacionCreada="handleCotizacionCreada"
+            :currencyIdChoice.sync="currencyIdChoice"
         ></quotation-form>
 
         <credit-form
@@ -2922,6 +2923,7 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+        "currencyIdChoice",
         "cotizarConfirmado",
         "formQtn",
         "users",

@@ -1230,6 +1230,7 @@
                             @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
                             "
+                            :currencyIdChoice.sync="currencyIdChoice"
                         ></list-orden>
                     </div>
                 </div>
@@ -1769,6 +1770,7 @@
                         :clientTableData.sync="clientTableData"
                         :categories.sync="categories"
                         @reloadProduct="search_items"
+                        :currencyIdChoice.sync="currencyIdChoice"
                         ref="listOrdens"
                     ></list-orden>
                 </div>

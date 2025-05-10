@@ -127,7 +127,7 @@
                                 </button>
                                 <div
                                     class="dropdown-menu p-1"
-                                    style="background-color: #6c757d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+                                    
                                 >
                                     <template>
                                         <!-- Anulado Interno -->
@@ -303,7 +303,7 @@
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
-                                        </el-tooltip>
+                                            </el-tooltip>
                                         <el-tooltip
                                             content="Previsualizar PDF"
                                             placement="top"
@@ -514,7 +514,7 @@
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
-                                        </el-tooltip>
+                                            </el-tooltip>
                                         <el-tooltip
                                             content="Previsualizar PDF"
                                             placement="top"
@@ -772,22 +772,14 @@
                         </td>
 
                         <td v-if="type == 'documents'">
-                            <template
-                                v-for="(row, index) in data.sale_note_related"
-                            >
-                                <small class="d-block" :key="index">{{
-                                    row.number
-                                }}</small>
-                            </template>
+                            <div v-for="(row, index) in data.sale_note_related" :key="index">
+                                <small class="d-block">{{ row.number }}</small>
+                            </div>
                         </td>
                         <td v-if="type == 'saleNotes'">
-                            <template
-                                v-for="(row, index) in data.documents"
-                            >
-                                <small class="d-block" :key="index">{{
-                                    row.number_full
-                                }}</small>
-                            </template>
+                            <div v-for="(row, index) in data.documents" :key="index">
+                                <small class="d-block">{{ row.number_full }}</small>
+                            </div>
                         </td>
 
                         <!-- Estado -->
@@ -818,7 +810,7 @@
                                 data.pending > 0 ? data.pending.toFixed(2) : ""
                             }}
                         </td>
-                        <td>{{ data.total }}</td>
+                        <td>{{ data.currency_type_id === 'USD' ? '$' : 'S/.' }} {{ data.total }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -830,9 +822,7 @@
             :current-page.sync="pagination.current_page"
             :page-size="pagination.per_page"
         ></el-pagination>
-        <!-- <br /><br /><br /><br />
-        <br />
-    <br />-->
+        
         <whatsapp-modal
             :documentNumber="currentNumber"
             :company="company"
@@ -1267,3 +1257,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.dropdown-menu {
+     
+    transform: translate(0, 0) !important;
+}
+</style>
