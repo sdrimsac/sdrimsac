@@ -883,7 +883,7 @@ class OrdenController extends Controller
             }
 
             // Verificar si el usuario caja tiene una caja abierta
-            $caja_abierta = Cash::where('user_id', $caja_user->id)
+            /* $caja_abierta = Cash::where('user_id', $caja_user->id)
                 ->whereNull('time_closed')
                 ->exists();
 
@@ -892,7 +892,7 @@ class OrdenController extends Controller
                     'success' => false,
                     'message' => 'La caja asignada al usuario de caja aún no está abierta. No se pueden realizar pedidos.'
                 ];
-            }
+            } */
 
             if ($request->caja == false && $configuration->pin_switch) {
                 $pin = $request->pin;
