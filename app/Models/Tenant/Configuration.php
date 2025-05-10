@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'anulate_sunat_cash',
         'sale_edit',
         'user_unit',
         'delete_mozo',
@@ -321,6 +322,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'anulate_sunat_cash' => 'boolean',
         'sale_edit' => 'boolean',
         'user_unit' => 'boolean',
         'delete_mozo' => 'boolean',
@@ -585,6 +587,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'anulate_sunat_cash' => (bool)$this->anulate_sunat_cash,
             'sale_edit' => (bool) $this->sale_edit,
             'user_unit' => (bool) $this->user_unit,
             'delete_mozo' => (bool) $this->delete_mozo,

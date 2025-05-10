@@ -1934,6 +1934,7 @@
             :establishment.sync="establishments"
             :area_id="area_id"
             :printer.sync="printer"
+            :cash_id.sync="cashId"
         ></documents-print>
         <PromotionCanje
             :showDialog.sync="showdialogPromocion"

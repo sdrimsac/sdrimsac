@@ -3010,6 +3010,14 @@ class SaleNoteController extends Controller
 
     public function anulate(Request $request, $id)
     {
+        // Validate if sale note is already voided
+        $obj = SaleNote::find($id);
+        if ($obj->state_type_id == 11) {
+            return [
+                'success' => false,
+                'message' => 'La nota de venta ya fue anulada anteriormente y no puede anularse nuevamente.'
+            ];
+        }
 
         DB::connection('tenant')->transaction(function () use ($id, $request) {
 
@@ -3023,7 +3031,6 @@ class SaleNoteController extends Controller
 
             foreach ($obj->items as $item) {
 
-                // Procesamiento de lotes (igual que antes)
                 $lots = isset($item->item->lots) ? $item->item->lots : [];
                 $quantity = $item->quantity;
 

@@ -339,22 +339,11 @@
                                                     >
                                                         <!-- Anulado Interno -->
                                                         <button
-                                                            :disabled="
-                                                                    row.deleting
-                                                            "
+                                                            :disabled="row.deleting || row.isProcessing"
                                                             type="button"
                                                             class="btn btn-info text-white rounded w-100 d-flex align-items-center"
                                                             style="height: 40px;"
-                                                            @click.prevent="
-                                                                row.deleting = true;
-                                                                clickDeleteDocument(
-                                                                    row.id
-                                                                ).finally(
-                                                                    () => {
-                                                                        row.deleting = false;
-                                                                    }
-                                                                );
-                                                            "
+                                                            @click.prevent="handleDelete(row)"
                                                             v-if="
                                                                     !isAccountant &&
                                                                     configuration.internal_voided
@@ -368,34 +357,6 @@
                                                                 Interno</span
                                                             >
                                                         </button>
-                                                        <!-- <a
-                                                            :disabled="
-                                                                row.btn_delete_doc_type_03 ||
-                                                                    row.deleting
-                                                            "
-                                                            type="button"
-                                                            class="dropdown-item bg-info text-white rounded w-100"
-                                                            @click.prevent="
-                                                                row.deleting = true;
-                                                                clickDeleteDocument(
-                                                                    row.id
-                                                                ).finally(
-                                                                    () => {
-                                                                        row.deleting = false;
-                                                                    }
-                                                                );
-                                                            "
-                                                            v-if="
-                                                                row.btn_delete_doc_type_03 &&
-                                                                    !isAccountant &&
-                                                                    configuration.internal_voided
-                                                            "
-                                                            >
-                                                            <i
-                                                                class="fas fa-ban me-2"
-                                                            ></i>
-                                                             Anulado Interno
-                                                        </a> -->
 
                                                         <!-- Cambiar a estado registrado -->
                                                         <button
@@ -515,7 +476,7 @@
                                                         <!-- Modificar CPE -->
                                                         <button
                                                             type="button"
-                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center"
+                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center" 
                                                             style="height: 40px;"
                                                             @click.prevent="
                                                                 clickEdit(
@@ -527,7 +488,8 @@
                                                                     '01' ||
                                                                     row.state_type_id ===
                                                                         '14') &&
-                                                                    !isAccountant
+                                                                    !isAccountant &&
+                                                                    !configuration.send_auto
                                                             "
                                                         >
                                                             <i
@@ -1650,6 +1612,18 @@ export default {
         },
         clickReportPayments() {
             this.showDialogReportPayment = true;
+        },
+        handleDelete(row) {
+            if (row.isProcessing) return;
+
+            this.$set(row, 'isProcessing', true);
+            this.$set(row, 'deleting', true);
+
+            this.clickDeleteDocument(row.id)
+                .finally(() => {
+                    this.$set(row, 'deleting', false);
+                    this.$set(row, 'isProcessing', false);
+                });
         }
     },
     mounted() {

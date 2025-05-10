@@ -137,7 +137,7 @@
                                             v-if="
                                                 data.state_type_id == '01' &&
                                                     configuration.caja_actions &&
-                                                    configuration.internal_voided
+                                                    configuration.internal_voided && cash_id
                                             "
                                             type="text"
                                             @click="
@@ -157,7 +157,7 @@
                                             style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             v-if="
                                                 data.document_type_id == '01' &&
-                                                    data.state_type_id == '05'
+                                                    data.state_type_id == '05' && configuration.anulate_sunat_cash && cash_id
                                             "
                                             type="text"
                                             @click="clickVoided(data.id)"
@@ -244,7 +244,7 @@
                                         style="background-color: #228B22; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="
                                             data.state_type_id != '11' &&
-                                                data.state_type_id != '13'
+                                                data.state_type_id != '13' && cash_id
                                         "
                                         type="text"
                                         @click="clickGenerateGuie(data.id)"
@@ -424,7 +424,7 @@
                                         v-if="
                                             data.state_type_id != '11' &&
                                                 data.state_type_id != '13' &&
-                                                !data.changed
+                                                !data.changed && cash_id
                                         "
                                         @click="clickGenerate(data.id)"
                                     >
@@ -441,7 +441,7 @@
                                         style="background-color: #28a745; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="
                                             data.state_type_id != '11' &&
-                                                data.state_type_id != '13'
+                                                data.state_type_id != '13' && cash_id
                                         "
                                         @click="
                                             clickGenerateGuie(data.id, '80')
@@ -586,6 +586,7 @@
                                     >
                                         <!-- Generar CPE a partir de una Cotización -->
                                         <el-button
+                                           v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #6f42c1; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             @click="
@@ -619,6 +620,7 @@
                                             " -->
                                         <!-- Anular -->
                                         <el-button
+                                         v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             @click="
@@ -988,7 +990,8 @@ export default {
         "company",
         "sender",
         "establishment",
-        "configuration"
+        "configuration",
+        "cash_id"
     ],
     data() {
         return {

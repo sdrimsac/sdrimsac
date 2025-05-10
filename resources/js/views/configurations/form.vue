@@ -2893,6 +2893,63 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div
+                                                                    class="col-md-3 mt-4"
+                                                                >
+                                                                    <div
+                                                                        class="card h-100"
+                                                                    >
+                                                                        <div
+                                                                            class="card-body d-flex flex-column"
+                                                                        >
+                                                                            <div
+                                                                                class="form-group text-left flex-grow-1"
+                                                                            >
+                                                                                <label
+                                                                                    class="control-label w-100"
+                                                                                    :style="{
+                                                                                        color: form.anulate_sunat_cash
+                                                                                            ? '#28a745'
+                                                                                            : '#6c757d'
+                                                                                    }"
+                                                                                >
+                                                                                    <i
+                                                                                        class="fas fa-bell tab-icon"
+                                                                                    ></i>
+                                                                                    Mostrar boton ocultar sunat en caja 
+                                                                                    <el-tooltip
+                                                                                        content="esta opcion al activar no se mostrara el boton de anular en la caja"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fa fa-info-circle"
+                                                                                        ></i>
+                                                                                    </el-tooltip>
+                                                                                </label>
+                                                                                <el-switch
+                                                                                    v-model="
+                                                                                        form.anulate_sunat_cash
+                                                                                    "
+                                                                                    active-text="Si"
+                                                                                    inactive-text="No"
+                                                                                    :active-color="
+                                                                                        '#28a745'
+                                                                                    "
+                                                                                    :inactive-color="
+                                                                                        '#6c757d'
+                                                                                    "
+                                                                                    @change="
+                                                                                        submit(
+                                                                                            'Quitar Anular Sunat en caja',
+                                                                                            form.anulate_sunat_cash,
+                                                                                            'configuration_establishments_numbers',
+                                                                                            'fileIcon'
+                                                                                        )
+                                                                                    "
+                                                                                ></el-switch>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -6416,7 +6473,11 @@
                                                                                         <i
                                                                                             class="el-icon-s-grid icon-tab"
                                                                                         ></i>
-                                                                                        Reporte de yape en caja 
+                                                                                        Reporte
+                                                                                        de
+                                                                                        yape
+                                                                                        en
+                                                                                        caja
                                                                                         <el-tooltip
                                                                                             class="item"
                                                                                             effect="dark"
@@ -6472,7 +6533,10 @@
                                                                                         <i
                                                                                             class="el-icon-s-grid icon-tab"
                                                                                         ></i>
-                                                                                        Una session por usuario
+                                                                                        Una
+                                                                                        session
+                                                                                        por
+                                                                                        usuario
                                                                                         <el-tooltip
                                                                                             class="item"
                                                                                             effect="dark"
@@ -6528,7 +6592,16 @@
                                                                                         <i
                                                                                             class="el-icon-s-grid icon-tab"
                                                                                         ></i>
-                                                                                        Enviar wasap al hacer una venta modificando el precio unitario 
+                                                                                        Enviar
+                                                                                        wasap
+                                                                                        al
+                                                                                        hacer
+                                                                                        una
+                                                                                        venta
+                                                                                        modificando
+                                                                                        el
+                                                                                        precio
+                                                                                        unitario
                                                                                         <el-tooltip
                                                                                             class="item"
                                                                                             effect="dark"
@@ -14076,7 +14149,14 @@
                                                                                 ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"
                                                                             ></i>
-                                                                            Quitar la opcion de cancelar pedidos en nmozo
+                                                                            Quitar
+                                                                            la
+                                                                            opcion
+                                                                            de
+                                                                            cancelar
+                                                                            pedidos
+                                                                            en
+                                                                            nmozo
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
@@ -14137,7 +14217,11 @@
                                                                                 ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"
                                                                             ></i>
-                                                                            Mostrar categrotia en scrol seleccionable
+                                                                            Mostrar
+                                                                            categrotia
+                                                                            en
+                                                                            scrol
+                                                                            seleccionable
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
@@ -14198,7 +14282,13 @@
                                                                                 ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"
                                                                             ></i>
-                                                                            Crear productos nuevos desde mozo o caja
+                                                                            Crear
+                                                                            productos
+                                                                            nuevos
+                                                                            desde
+                                                                            mozo
+                                                                            o
+                                                                            caja
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
@@ -14235,7 +14325,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <!-- <div class="col-md-2 mt-4">
                                                         <div class="form-group">
                                                             <label
@@ -17268,7 +17358,7 @@ export default {
                 if (response.data.success) {
                     Swal.fire({
                         position: "center",
-                        icon: isActive ? "success" : "error", 
+                        icon: isActive ? "success" : "error",
                         title: optionName
                             ? optionName.toUpperCase()
                             : "ACTUALIZADO",

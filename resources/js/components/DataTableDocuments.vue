@@ -317,7 +317,7 @@
                     id="scroll2"
                     style="overflow-x: auto"
                 >
-                    <table class="table" v-loading="loading">
+                    <table class="table">
                         <thead>
                             <slot name="heading"></slot>
                         </thead>

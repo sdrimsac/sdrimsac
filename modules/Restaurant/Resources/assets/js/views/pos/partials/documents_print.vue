@@ -173,6 +173,7 @@
                 :type="'saleNotes'"
                 :sender="sender"
                 :establishment.sync="establishment"
+                :cash_id.sync="cash_id"
               ></document-print-detail>
             </el-tab-pane>
             <!-- Boletas Facturas -->
@@ -187,6 +188,7 @@
                 :pagination.sync="pagination.documents"
                 :type="'documents'"
                 :establishment.sync="establishment"
+                :cash_id.sync="cash_id"
               ></document-print-detail>
             </el-tab-pane>
             <!-- Cotizaciones -->
@@ -204,6 +206,7 @@
                 :pagination.sync="pagination.quotations"
                 :type="'quotations'"
                 :establishment.sync="establishment"
+                :cash_id.sync="cash_id"
               ></document-print-detail>
             </el-tab-pane>
             <iframe ref="pdfFrame" style="display: none;"></iframe>
@@ -249,7 +252,8 @@ export default {
     "config",
     "establishment",
     "printer",
-    "area_id"
+    "area_id",
+    "cash_id"
   ],
   data() {
     return {

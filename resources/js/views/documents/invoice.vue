@@ -1649,7 +1649,7 @@
                                                             ></i>
                                                             Editar
                                                         </a>
-                                                        <a
+                                                        <!-- <a
                                                             type="button"
                                                             class="dropdown-item text-danger"
                                                             @click.prevent="
@@ -1662,7 +1662,7 @@
                                                                 class="fa fa-trash"
                                                             ></i>
                                                             Eliminar
-                                                        </a>
+                                                        </a> -->
                                                     </div>
                                                 </td>
                                             </tr>
