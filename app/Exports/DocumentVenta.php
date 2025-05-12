@@ -64,7 +64,7 @@ class DocumentVenta implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                     'customer_name' => $record->customer->name,
                     'customer_number' => $record->customer->number,
                     'internal_id' => $item->item->internal_id,
-                    'barcode' => $item->item->barcode,
+                    'barcode' => optional($item->item)->barcode ?? '',
                     'description' => $item->item->description,
                     'quantity' => number_format($item->quantity, 2),
                     'unit_value' => number_format($item->unit_value, 2),
