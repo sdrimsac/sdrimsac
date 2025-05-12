@@ -3,7 +3,8 @@
         :title="titleDialog"
         :visible="showDialog"
         @close="close"
-        @open="create"
+        @open="open"
+        append-to-body
         class="rounded-dialog"
         :close-on-click-modal="false"
     >
@@ -72,10 +73,7 @@
                                 @input="validateNumbers('number')"
                             >
                                 <el-button
-                                    v-if="
-                                        form.identity_document_type_id == 1 ||
-                                            form.identity_document_type_id == 4
-                                    "
+                                    v-if="form.identity_document_type_id == 1"
                                     @click="searchDocument"
                                     slot="prepend"
                                     class="btn btn-primary"
@@ -189,7 +187,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "document_types"],
+    props: ["showDialog", "recordId"],
     data() {
         return {
             loading_submit: false,
@@ -197,7 +195,8 @@ export default {
             resource: "drivers",
             errors: {},
             form: {},
-            options: []
+            options: [],
+            document_types: []
         };
     },
     watch: {
@@ -212,6 +211,26 @@ export default {
     },
 
     methods: {
+        open() {
+            this.getTables();
+
+            this.titleDialog = this.recordId
+                ? "Editar Conductor"
+                : "Nuevo Conductor";
+            if (this.recordId) {
+                this.$http
+                    .get(`/${this.resource}/record/${this.recordId}`)
+                    .then(response => {
+                        this.form = response.data.data;
+                    });
+            }
+        },
+        async getTables() {
+            const response = await this.$http(`${this.resource}/tables`);
+            console.log(response);
+            const { document_types } = response.data;
+            this.document_types = document_types;
+        },
         async searchDocument() {
             if (this.form.number === "") {
                 Swal.fire({
@@ -265,6 +284,27 @@ export default {
                 console.error("Error de solicitud:", error);
             }
         },
+        searchDocument() {
+            this.loading_search = true;
+            this.$http(`/${this.resource}/license/${this.form.number}`)
+                .then(response => {
+                    const data = response.data.data;
+
+                    this.form.serie = data.serie || "";
+                    this.form.model = data.modelo || "";
+                    this.form.brand = data.marca || "";
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.data;
+                    } else {
+                        console.log(error);
+                    }
+                })
+                .finally(() => {
+                    this.loading_search = false;
+                });
+        },
         validateNumbers(field) {
             const value = this.form[field];
             if (/[^0-9]/.test(value)) {
@@ -288,18 +328,7 @@ export default {
                 telephone: null
             };
         },
-        create() {
-            this.titleDialog = this.recordId
-                ? "Editar Conductor"
-                : "Nuevo Conductor";
-            if (this.recordId) {
-                this.$http
-                    .get(`/${this.resource}/record/${this.recordId}`)
-                    .then(response => {
-                        this.form = response.data.data;
-                    });
-            }
-        },
+
         submit() {
             this.loading_submit = true;
             const formData = {
@@ -312,7 +341,14 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
-                        this.$eventHub.$emit("reloadData");
+                        if (this.external) {
+                            // Emitir el evento con el nuevo conductor
+                            this.$emit("addDriver", response.data.data);
+                            console.log("Nuevo conductor emitido:", response.data.data);
+                        } else {
+                            this.$eventHub.$emit("reloadData");
+                        }
+                        
                         this.close();
                     } else {
                         this.$toast.error(response.data.message);

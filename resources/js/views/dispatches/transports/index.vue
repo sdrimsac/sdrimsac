@@ -24,7 +24,7 @@
                         <th class="text-left">Marca</th>
                         <th class="text-center">Predeterminado</th>
                         <th class="text-right">Acciones</th>
-                    <tr>
+                    </tr>
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
                         <td class="text-left">{{ row.plate_number }}</td>

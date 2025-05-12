@@ -15,7 +15,10 @@
                         <th v-if="type == 'saleNotes'" class="text-white">
                             Acciones
                         </th>
-                        <th class="text-white" v-if="type == 'quotations'">
+                        <th
+                            class="text-white"
+                            v-if="type == 'quotations' || type == 'guides'"
+                        >
                             Opciones
                         </th>
                         <th
@@ -49,7 +52,9 @@
                         >
                             Saldo
                         </th>
-                        <th class="text-white">Monto</th>
+                        <th class="text-white" v-if="type != 'guides'">
+                            Monto
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,10 +130,7 @@
                                 >
                                     <i class="fas fa-list"></i>
                                 </button>
-                                <div
-                                    class="dropdown-menu p-1"
-                                    
-                                >
+                                <div class="dropdown-menu p-1">
                                     <template>
                                         <!-- Anulado Interno -->
                                         <el-button
@@ -137,7 +139,8 @@
                                             v-if="
                                                 data.state_type_id == '01' &&
                                                     configuration.caja_actions &&
-                                                    configuration.internal_voided && cash_id
+                                                    configuration.internal_voided &&
+                                                    cash_id
                                             "
                                             type="text"
                                             @click="
@@ -157,7 +160,10 @@
                                             style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             v-if="
                                                 data.document_type_id == '01' &&
-                                                    data.state_type_id == '05' && configuration.anulate_sunat_cash && cash_id
+                                                    data.state_type_id ==
+                                                        '05' &&
+                                                    configuration.anulate_sunat_cash &&
+                                                    cash_id
                                             "
                                             type="text"
                                             @click="clickVoided(data.id)"
@@ -244,7 +250,8 @@
                                         style="background-color: #228B22; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="
                                             data.state_type_id != '11' &&
-                                                data.state_type_id != '13' && cash_id
+                                                data.state_type_id != '13' &&
+                                                cash_id
                                         "
                                         type="text"
                                         @click="clickGenerateGuie(data.id)"
@@ -303,7 +310,7 @@
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
-                                            </el-tooltip>
+                                        </el-tooltip>
                                         <el-tooltip
                                             content="Previsualizar PDF"
                                             placement="top"
@@ -424,7 +431,8 @@
                                         v-if="
                                             data.state_type_id != '11' &&
                                                 data.state_type_id != '13' &&
-                                                !data.changed && cash_id
+                                                !data.changed &&
+                                                cash_id
                                         "
                                         @click="clickGenerate(data.id)"
                                     >
@@ -441,7 +449,8 @@
                                         style="background-color: #28a745; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="
                                             data.state_type_id != '11' &&
-                                                data.state_type_id != '13' && cash_id
+                                                data.state_type_id != '13' &&
+                                                cash_id
                                         "
                                         @click="
                                             clickGenerateGuie(data.id, '80')
@@ -514,7 +523,7 @@
                                             >
                                                 <i class="fas fa-print"></i>
                                             </el-button>
-                                            </el-tooltip>
+                                        </el-tooltip>
                                         <el-tooltip
                                             content="Previsualizar PDF"
                                             placement="top"
@@ -586,7 +595,7 @@
                                     >
                                         <!-- Generar CPE a partir de una Cotización -->
                                         <el-button
-                                           v-if="cash_id"
+                                            v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #6f42c1; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             @click="
@@ -620,7 +629,7 @@
                                             " -->
                                         <!-- Anular -->
                                         <el-button
-                                         v-if="cash_id"
+                                            v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             @click="
@@ -632,6 +641,18 @@
                                                 style="color: white; margin-right: 10px;"
                                             ></i>
                                             <span>Anular</span>
+                                        </el-button>
+                                        <el-button
+                                            v-if="cash_id"
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            @click="clickQotations(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-delete me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Formatos pdf</span>
                                         </el-button>
 
                                         <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
@@ -706,6 +727,66 @@
                                 </div>
                             </template>
                         </td>
+                        <!-- para las guias -->
+                        <td
+                            v-if="
+                                type === 'guides' &&
+                                    type !== 'saleNotes' &&
+                                    type !== 'documents' &&
+                                    type !== 'quotations'
+                            "
+                        >
+                            <template v-if="type == 'guides'">
+                                <div class="dropdown-as-select d-inline-block">
+                                    <!-- Si esta Anulado  muestra este boton de Previsualizar -->
+
+                                    <!-- Acciones de Cotización -->
+                                    <button
+                                        v-if="data.state_type_id != '11'"
+                                        class="btn btn-primary btn-sm dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                    <div
+                                        class="dropdown-menu p-1"
+                                        style="background-color: #6c757d; 
+                                         border-radius: 8px; 
+                                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+                                    >
+                                        <el-button
+                                            v-if="cash_id"
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            @click="openPdfGuides(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-delete me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Formatos pdf</span>
+                                        </el-button>
+                                        <el-button
+                                            v-if="cash_id"
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: seagreen; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            
+                                            @click="whatsapp(data)"
+                                        >
+                                            <!-- <i
+                                                class="el-icon-delete me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i> -->
+                                            <span>WhatsApp</span>
+                                        </el-button>
+                                        
+                                    </div>
+                                </div>
+                            </template>
+                        </td>
 
                         <!-- Mesa y Ordenes (comandas) -->
                         <td
@@ -727,6 +808,8 @@
                                 type == "saleNotes"
                                     ? data.full_number
                                     : type == "documents"
+                                    ? data.number
+                                    : type == "guides"
                                     ? data.number
                                     : data.identifier
                             }}
@@ -774,13 +857,21 @@
                         </td>
 
                         <td v-if="type == 'documents'">
-                            <div v-for="(row, index) in data.sale_note_related" :key="index">
+                            <div
+                                v-for="(row, index) in data.sale_note_related"
+                                :key="index"
+                            >
                                 <small class="d-block">{{ row.number }}</small>
                             </div>
                         </td>
                         <td v-if="type == 'saleNotes'">
-                            <div v-for="(row, index) in data.documents" :key="index">
-                                <small class="d-block">{{ row.number_full }}</small>
+                            <div
+                                v-for="(row, index) in data.documents"
+                                :key="index"
+                            >
+                                <small class="d-block">{{
+                                    row.number_full
+                                }}</small>
                             </div>
                         </td>
 
@@ -812,7 +903,10 @@
                                 data.pending > 0 ? data.pending.toFixed(2) : ""
                             }}
                         </td>
-                        <td>{{ data.currency_type_id === 'USD' ? '$' : 'S/.' }} {{ data.total }}</td>
+                        <td v-if="type != 'guides'">
+                            {{ data.currency_type_id === "USD" ? "$" : "S/." }}
+                            {{ data.total }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -824,7 +918,7 @@
             :current-page.sync="pagination.current_page"
             :page-size="pagination.per_page"
         ></el-pagination>
-        
+
         <whatsapp-modal
             :documentNumber="currentNumber"
             :company="company"
@@ -904,12 +998,32 @@
             :showClose="true"
         ></document-options>
 
+        <quotation-options
+            :showDialog.sync="showDialogOptionsQuotation"
+            :recordId="recordId"
+            :showGenerate="false"
+            :showClose="true"
+            :external="true"
+        ></quotation-options>
+
         <note-modal
             :configuration="configuration"
             :showDialog.sync="showNoteModal"
             :recordId.sync="recordId"
             @getRecords="getRecords"
         ></note-modal>
+        <dispatch-options
+            :isUpdate="true"
+            :recordId="recordId"
+            :showClose="true"
+            :showDialog.sync="showDialogOptionsGuides"
+        ></dispatch-options>
+        <whatsapp-modal-reports
+            :resource="linkResource"
+            :message="message"
+            :showWhatsappForm.sync="showWhatsappForm"
+        >
+        </whatsapp-modal-reports>
         <el-dialog
             :visible.sync="showDialogReasonToAvoid"
             width="50%"
@@ -963,9 +1077,14 @@ const CreateDispatch = () => import("./create_dispatch.vue");
 const NoteModal = () => import("./note_modal.vue");
 import SaleNotesOptions from "../../../../../../../../resources/js/views/sale_notes/partials/options.vue";
 import DocumentOptions from "../../../../../../../../resources/js/views/documents/partials/options.vue";
+import DispatchOptions from "../../../../../../../../resources/js/views/dispatches/partials/options.vue";
 const SaleNotePayments = () =>
     import(
         "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue"
+    );
+const WhatsappModalReports = () =>
+    import(
+        "../../../../../../../../resources/js/components/WhatsappModalReports.vue"
     );
 export default {
     components: {
@@ -980,7 +1099,10 @@ export default {
         NoteModal,
         SaleNotePayments,
         SaleNotesOptions,
-        DocumentOptions
+        DocumentOptions,
+        QuotationOptions,
+        DispatchOptions,
+        WhatsappModalReports
     },
     mixins: [deletable],
     props: [
@@ -995,6 +1117,11 @@ export default {
     ],
     data() {
         return {
+            message: null,
+            linkResource: null,
+            showWhatsappForm: false,
+            showDialogOptionsGuides: false,
+            showDialogOptionsQuotation: false,
             showDialogOptionsDocument: false,
             editDocument: false,
             editSale: false,
@@ -1023,6 +1150,23 @@ export default {
     },
 
     methods: {
+        whatsapp(data) {
+            let { external_id } = data;
+            let formatoPdf = `/print/dispatch/${external_id}/ticket`;
+            this.linkResource = formatoPdf;
+            this.message =
+                "Su comprobante electrónico *" +
+                data.number +
+                "*, ha sido generado correctamente a través del facturador electrónico de " +
+                "*" +
+                this.$desarrollador +
+                "*";
+            this.showWhatsappForm = true;
+        },
+        openPdfGuides(recordId) {
+            this.recordId = recordId;
+            this.showDialogOptionsGuides = true;
+        },
         clickDocuments(recordId) {
             this.recordId = recordId;
             this.showDialogOptionsDocument = true;
@@ -1030,6 +1174,10 @@ export default {
         clickOptions(recordId) {
             this.recordId = recordId;
             this.showDialogOptions = true;
+        },
+        clickQotations(recordId) {
+            this.recordId = recordId;
+            this.showDialogOptionsQuotation = true;
         },
         clickAnulateSaleNoteCredit() {
             if (this.reasonToAvoid == null || this.reasonToAvoid == "") {
@@ -1263,7 +1411,6 @@ export default {
 
 <style scoped>
 .dropdown-menu {
-     
     transform: translate(0, 0) !important;
 }
 </style>

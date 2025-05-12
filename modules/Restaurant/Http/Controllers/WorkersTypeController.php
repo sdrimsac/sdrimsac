@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\CommercialTreatmentUserExcluded;
 use App\Models\Tenant\Configuration;

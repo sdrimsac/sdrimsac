@@ -2732,8 +2732,6 @@ export default {
         })();
 
         }
-
-        
     },
     sockets: {},
     computed: {
@@ -3280,12 +3278,12 @@ export default {
                     icon: "fas fa-credit-card",
                     visible: this.configuration.credits && !this.isSeller
                 },
-                {
+                /* {
                     id: 25,
                     title: ["Guías", "Remisión"],
                     icon: "fas fa-file",
                     visible: this.configuration.dispatch && !this.isSeller && this.cashId
-                },
+                }, */
                 {
                     id: 102,
                     title: ["Cambiar", "Categorías"],

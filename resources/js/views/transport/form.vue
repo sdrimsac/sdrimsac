@@ -4,6 +4,7 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        append-to-body
         class="rounded-dialog"
         :close-on-click-modal="false"
     >

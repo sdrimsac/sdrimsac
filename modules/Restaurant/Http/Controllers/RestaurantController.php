@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Events\OrderEvent;
 use App\Events\ReceiveOrder;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Establishment;
@@ -237,6 +238,13 @@ class RestaurantController extends Controller
             'success' => true,
             'message' => 'Orden enviada'
         ];
+    }
+    public function tables()
+    {
+        $document_types = IdentityDocumentType::whereActive()
+            ->whereNotIn('id', ['4', 'A', '6', '-'])
+            ->get();
+        return compact('document_types');
     }
     public function login(Request $request)
     {

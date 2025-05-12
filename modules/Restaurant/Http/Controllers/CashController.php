@@ -27,6 +27,7 @@ use App\Http\Resources\Tenant\BoxCollection;
 use App\Http\Resources\Tenant\CashResource;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Http\Resources\Tenant\CashCollection;
+use App\Http\Resources\Tenant\DispatchCollection;
 use App\Http\Resources\Tenant\DocumentCajaCollection;
 use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
@@ -44,6 +45,7 @@ use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Dispatch;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ExcludedUser;
@@ -1240,6 +1242,9 @@ class CashController extends Controller
 
         $model = null;
         switch ($type_document) {
+            case 'guides':
+                $model = Dispatch::class;
+                break;
             case 'documents':
                 $model = Document::class;
                 break;
@@ -1293,6 +1298,9 @@ class CashController extends Controller
         $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
         $result = null;
         switch ($type_document) {
+            case 'guides':
+                $result = new DispatchCollection($documents->paginate(10));
+                break;
             case 'documents':
                 $result = new DocumentCajaCollection($documents->paginate(10));
                 break;

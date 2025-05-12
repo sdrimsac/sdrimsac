@@ -9,6 +9,7 @@ use App\Http\Resources\Tenant\DriverCollection;
 use App\Http\Resources\Tenant\DriverResource;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Driver;
+use GuzzleHttp\Client;
 use Exception;
 
 class DriverController extends Controller
@@ -42,7 +43,7 @@ class DriverController extends Controller
     public function tables()
     {
         $document_types = IdentityDocumentType::whereActive()
-            ->where('id', '<>', '6')
+            ->whereNotIn('id', ['4', 'A', '6', '-'])
             ->get();
         return compact('document_types');
     }
@@ -58,6 +59,24 @@ class DriverController extends Controller
     public function store(DriverRequest $request)
     {
         $id = $request->input('id');
+        
+        // Check for existing license or number
+        $existingDriver = Driver::where(function($query) use ($request, $id) {
+            $query->where('license', $request->license)
+                  ->orWhere('number', $request->number);
+            if ($id) {
+                $query->where('id', '!=', $id);
+            }
+        })->first();
+
+        if ($existingDriver) {
+            $duplicateField = $existingDriver->license == $request->license ? 'licencia' : 'número';
+            return [
+                'success' => false,
+                'message' => "El {$duplicateField} ya está registrado en otro conductor"
+            ];
+        }
+
         $unit_type = Driver::firstOrNew(['id' => $id]);
         $unit_type->fill($request->all());
         $unit_type->save();
@@ -83,5 +102,20 @@ class DriverController extends Controller
 
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'La unidad esta siendo usada por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar la unidad'];
         }
+    }
+    public function license($Number){
+        $url = config('app.api_factiliza_service_url');
+        $token = config('app.api_factiliza_service_token');
+        $client = new Client(['base_uri' => $url]);
+        $api= "/licencia/info/".$Number; 
+        $path ="/v1";
+        $response = $client->request('GET',$path. $api, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+            ],
+            'verify' => false,
+        ]);
+        return response()->json(json_decode($response->getBody()->getContents(), true));
     }
 }

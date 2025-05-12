@@ -119,7 +119,6 @@
                     icon="fas fa-plus-circle fa-lg"
                     type="primary"
                     native-type="submit"
-                    :loading="loading_submit"
                     @click="clickAddItem"
                 >
                     <span>Guardar</span>

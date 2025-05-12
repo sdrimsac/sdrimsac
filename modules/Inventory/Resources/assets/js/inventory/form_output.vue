@@ -189,7 +189,7 @@
                                             }}
                                         </td>
                                         <td :class="{ 'text-danger': warehouse.stock < 0, 'text-success': warehouse.stock > 0 }">
-                                          {{ warehouse.stock }}
+                                        {{ Number(warehouse.stock).toFixed(2) }}
                                         </td>
                                     </tr>
                                 </tbody>

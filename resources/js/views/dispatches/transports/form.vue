@@ -12,7 +12,7 @@
           <div class="col-md-6">
             <div :class="{'has-danger': errors.plate_number}"
                  class="form-group">
-              <label class="control-label">Nro. de Placa <span class="text-danger">*</span></label>
+              <label class="control-label">Nro. de Placa aaa<span class="text-danger">*</span></label>
               <el-input v-model="form.plate_number"
                         dusk="name"></el-input>
               <small v-if="errors.plate_number"

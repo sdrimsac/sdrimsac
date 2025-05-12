@@ -2610,7 +2610,7 @@
                             icon="fas fa-save fa-lg"
                             type="primary"
                             native-type="submit"
-                            :loading="loading_submit"
+                            
                         >
                             <span>Guardar</span>
                         </el-button>

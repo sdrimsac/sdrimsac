@@ -783,7 +783,7 @@ if ($hostname) {
                 Route::get('drivers/record/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'record']);
                 Route::post('drivers', [App\Http\Controllers\Tenant\DriverController::class, 'store']);
                 Route::delete('drivers/{id}', [App\Http\Controllers\Tenant\DriverController::class, 'destroy']);
-
+                Route::get('drivers/license/{number}', [App\Http\Controllers\Tenant\DriverController::class, 'license']);
 
                 // para el transporte
                 Route::get('transport', [App\Http\Controllers\Tenant\TransportController::class, 'index'])->name('tenant.transport.index')->middleware('just.admin');

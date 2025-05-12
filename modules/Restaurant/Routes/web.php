@@ -531,8 +531,9 @@ Route::prefix('caja')->group(function () {
             Route::post('pos/getPrductosPromo', 'PromocionPorItemController@getPrductosPromo');
             Route::post('pos/canjearPromo', 'PromocionPorItemController@canjearPromo');
             Route::post('pos/HistCanje', 'PromocionPorItemController@HistCanje');
-        });
 
+            Route::get('drivers/tables', 'RestaurantController@tables');
+        });
 
         Route::post('send-order', 'RestaurantController@sendOrder');
         Route::post('receive-order', 'RestaurantController@receiveOrder');

@@ -75,7 +75,6 @@
         <driver-form
             :showDialog.sync="showDialog"
             :recordId="recordId"
-            :document_types="document_types"
         ></driver-form>
     </div>
 </template>
@@ -99,19 +98,12 @@ export default {
             document_types: [],
         };
     },
-    created() {
+    /* created() {
         this.getTables();
-    },
+    }, */
 
     methods: {
-        async getTables() {
-            const response = await this.$http(`${this.resource}/tables`);
-            console.log(response);
-            const { document_types } = response.data;
-            /* this.establishments = establishments; */
-            this.document_types = document_types;
-            // this.establishments = response.data.data.establishments;
-        },
+        
         clickCreate(recordId = null) {
             this.recordId = recordId;
             this.showDialog = true;

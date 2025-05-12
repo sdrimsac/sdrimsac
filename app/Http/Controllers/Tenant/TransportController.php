@@ -55,7 +55,7 @@ class TransportController extends Controller
                 'Authorization' => 'Bearer ' . $token,
                 'Accept' => 'application/json',
             ],
-            /* 'verify' => false, */
+            'verify' => false,
         ]);
         return response()->json(json_decode($response->getBody()->getContents(), true));
     }
@@ -70,13 +70,29 @@ class TransportController extends Controller
     public function store(TransportRequest $request)
     {
         $id = $request->input('id');
+        $plateNumber = $request->input('plate_number');
+
+        // Check if plate number exists (excluding current record if editing)
+        $exists = Transport::where('plate_number', $plateNumber)
+            ->when($id, function ($query) use ($id) {
+                return $query->where('id', '!=', $id);
+            })
+            ->exists();
+
+        if ($exists) {
+            return [
+                'success' => false,
+                'message' => 'El número de placa ya existe en la base de datos'
+            ];
+        }
+
         $transport = Transport::firstOrNew(['id' => $id]);
         $transport->fill($request->all());
         $transport->save();
 
         return [
             'success' => true,
-            'message' => ($id) ? 'Vehiculo editada con éxito' : 'Vehiculo registrada con éxito',
+            'message' => ($id) ? 'Vehiculo editado con éxito' : 'Vehiculo registrado con éxito',
         ];
     }
 
