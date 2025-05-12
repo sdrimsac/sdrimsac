@@ -22,10 +22,21 @@ class ItemsStockImport implements ToCollection
     use Importable;
 
     protected $data;
+    protected $warehouse_id;
+
+    public function setWarehouseId($warehouse_id)
+    {
+        $this->warehouse_id = $warehouse_id;
+    }
 
     public function collection(Collection $rows)
     {
-        //try {
+        $warehouse_id = $this->warehouse_id;
+
+        if (is_null($warehouse_id)) {
+            throw new Exception('El campo almacen no puede estar vacío.');
+        }
+
         $total = count($rows);
 
         $registered = 0;
@@ -35,7 +46,8 @@ class ItemsStockImport implements ToCollection
             $stock = $row[1];
 
 
-            $warehouse_id = request('warehouse_id');
+            /* $warehouse_id = request('warehouse_id'); */
+            /*  dump($warehouse_id); */
 
             if (is_null($warehouse_id)) {
                 throw new Exception('el campo almacen no puede estar estar nulo vacio');
@@ -66,12 +78,12 @@ class ItemsStockImport implements ToCollection
                         $item->stock = 0;
                         $item->save();
 
-                        // $inventory_kardex =  $inventory->inventory_kardex()->create([
-                        //     'date_of_issue' => date('Y-m-d'),
-                        //     'item_id' => $item->id,
-                        //     'warehouse_id' => $warehouse_id,
-                        //     'quantity' => $result['quantity'],
-                        // ]);
+                        /* $inventory_kardex =  $inventory->inventory_kardex()->create([
+                             'date_of_issue' => date('Y-m-d'),
+                             'item_id' => $item->id,
+                             'warehouse_id' => $warehouse_id,
+                             'quantity' => $result['quantity'],
+                         ]); */
 
                         // if ($result['type'] == 1) {
                         //     $item_warehouse->stock += $result['quantity'];

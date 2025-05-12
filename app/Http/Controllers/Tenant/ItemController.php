@@ -131,6 +131,7 @@ class ItemController extends Controller
         if ($request->hasFile('file')) {
             try {
                 $import = new ItemsStockImport();
+                $import->setWarehouseId($request->warehouse_id);
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();
                 return [
@@ -150,8 +151,6 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-
-    
 
     public function updatePriceUnitType(Request $request)
     {
@@ -1297,15 +1296,15 @@ class ItemController extends Controller
     }
 
 
-    public function store(ItemRequest $request) 
+    public function store(ItemRequest $request)
     {
         try {
             DB::connection('tenant')->beginTransaction();
-          
-            
+
+
             $all_establishment = $request->all_establishment;
             $id = $request->input('id');
-            
+
             $item = Item::firstOrNew(['id' => $id]);
             $item->item_type_id = '01';
             $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
@@ -1471,7 +1470,7 @@ class ItemController extends Controller
             if ($request['warehouse_prices'] != null) {
                 // Limpiamos registros previos
                 ItemWarehousePrice::where('item_id', $item->id)->delete();
-                
+
                 $processedWarehouses = [];
                 foreach ($request['warehouse_prices'] as $w) {
                     if ($w["price"] != null && !in_array($w["warehouse_id"], $processedWarehouses)) {
@@ -1485,26 +1484,26 @@ class ItemController extends Controller
                 }
             }
             if ($request['item_warehouses'] != null) {
-                $has_stock = collect($request['item_warehouses'])->some(function($w) {
+                $has_stock = collect($request['item_warehouses'])->some(function ($w) {
                     return $w['stock'] != null && $w['stock'] > 0;
                 });
-            
+
                 if ($has_stock) {
                     ItemWarehouse::where('item_id', $item->id)->delete();
-                    
+
                     $processedWarehouses = [];
                     foreach ($request['item_warehouses'] as $w) {
                         if (!in_array($w["warehouse_id"], $processedWarehouses)) {
                             // Asegurar que stock sea 0 si es null
                             $stock = $w["stock"] ?? 0;
-                            
+
                             // Crear registro de almacén
                             $item_warehouse = ItemWarehouse::create([
                                 'warehouse_id' => $w["warehouse_id"],
                                 'item_id' => $item->id,
                                 'stock' => $stock
                             ]);
-            
+
                             // Solo crear registros relacionados si es nuevo item y tiene stock positivo
                             if (!$id && $stock > 0) {
                                 // Crear registro de inventario
@@ -1516,7 +1515,7 @@ class ItemController extends Controller
                                     'quantity' => $stock, // Usar el stock específico del almacén
                                     'date_of_issue' => date('Y-m-d')
                                 ]);
-            
+
                                 // Crear registros de kardex solo para este almacén específico
                                 Kardex::create([
                                     'type' => null,
@@ -1524,7 +1523,7 @@ class ItemController extends Controller
                                     'item_id' => $item->id,
                                     'quantity' => $stock, // Usar el stock específico del almacén
                                 ]);
-            
+
                                 InventoryKardex::create([
                                     'date_of_issue' => date('Y-m-d'),
                                     'item_id' => $item->id,
@@ -1537,7 +1536,7 @@ class ItemController extends Controller
                                     'user_id' => auth()->id()
                                 ]);
                             }
-                            
+
                             $processedWarehouses[] = $w["warehouse_id"];
                         }
                     }
