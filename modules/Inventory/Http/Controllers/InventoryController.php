@@ -183,7 +183,9 @@ class InventoryController extends Controller
     public function getItems(Request $request)
     {
         $value = $request->value;
-        $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()
+        $records = Item::with(['warehouses', 'itemwarehouses.warehouse'])
+            ->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])
+            ->whereNotIsSet()
             ->where(function ($query) use ($value) {
                 $query->where('description', 'like', '%' . $value . '%')
                     ->orWhere('internal_id', 'like', '%' . $value . '%');
@@ -199,8 +201,14 @@ class InventoryController extends Controller
                 'series_enabled' => (bool) $row->series_enabled,
                 'has_color_size' => (bool) $row->has_color_size,
                 'color_size' => collect($row->color_size),
-
-                'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
+                'warehouse' => $row->itemwarehouses ? $row->itemwarehouses->transform(function($itemwarehouse) {
+                    return [
+                        'id' => $itemwarehouse->warehouse_id,
+                        'warehouse_description' => $itemwarehouse->warehouse->description ?? 'N/A',
+                        'stock' => $itemwarehouse->stock ?? 0
+                    ];
+                }) : [],
+                'lots' => optional($row->item_lots)->where('has_sale', false)->transform(function ($row) {
                     return [
                         'id' => $row->id,
                         'series' => $row->series,
@@ -210,7 +218,7 @@ class InventoryController extends Controller
                         'has_sale' => (bool)$row->has_sale,
                         'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
                     ];
-                }),
+                }) ?? [],
                 'lots_group' => collect($row->lots_group)->transform(function ($row) {
                     return [
                         'id'  => $row->id,
