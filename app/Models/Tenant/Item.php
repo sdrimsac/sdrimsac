@@ -17,6 +17,7 @@ use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Food;
 use App\Traits\RegisterMovementTrait;
 use Illuminate\Http\Request;
+use Modules\Restaurant\Models\Observation;
 use Modules\Restaurant\Models\OrdenItem;
 
 /* use Illuminate\Http\Request; */
@@ -673,6 +674,10 @@ class Item extends ModelTenant
     public  function sale_note_items()
     {
         return $this->hasMany(SaleNoteItem::class, 'item_id');
+    }
+
+    public function obervation() {
+        return $this->hasMany(Observation::class);
     }
 
     public function scopeWhereFilterValuedKardex($query, $params)

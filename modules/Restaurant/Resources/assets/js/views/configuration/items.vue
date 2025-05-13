@@ -160,6 +160,15 @@
                             <th
                                 class="text-white"
                                 v-if="
+                                    type != 'caja/tables' &&
+                                        type != 'caja/rooms'
+                                "
+                            >
+                                producto
+                            </th>
+                            <th
+                                class="text-white"
+                                v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
                                 "
@@ -219,6 +228,15 @@
                                 "
                             >
                                 {{ row.description }}
+                            </td>
+                            <td
+                                :class="row.active ? '' : 'text-danger'"
+                                v-if="
+                                    type != 'caja/tables' &&
+                                        type != 'caja/rooms'
+                                "
+                            >
+                                {{ row.item }}
                             </td>
                             <td
                                 v-if="

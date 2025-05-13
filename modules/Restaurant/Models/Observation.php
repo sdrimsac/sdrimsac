@@ -14,6 +14,12 @@ class Observation extends ModelTenant
     protected $table = "observations";
     protected $fillable = [
         'description',
+        'item_id',
         'active',
     ];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

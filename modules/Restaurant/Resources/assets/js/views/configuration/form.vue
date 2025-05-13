@@ -24,6 +24,38 @@
                         >
                             <label class="control-label">
                                 <i class="fas fa-info-circle mr-2"></i>
+                                Producto
+                            </label>
+                            <el-select v-model="form.item_id" 
+                            clearable
+                            filterable
+                            placeholder="Seleccione un producto"
+                            >
+                                <el-option
+                                    v-for="(data, index) in items"
+                                    :key="index"
+                                    :label="data.description"
+                                    :value="data.id"
+                                ></el-option>
+                            </el-select>
+                            <!-- <el-input v-model="form.description"></el-input> -->
+                            <small
+                                class="text-danger"
+                                v-if="errors.description"
+                                v-text="errors.description[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div
+                        v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
+                        class="col-md-12"
+                    >
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.description }"
+                        >
+                            <label class="control-label">
+                                <i class="fas fa-info-circle mr-2"></i>
                                 Descripción
                             </label>
                             <el-input v-model="form.description"></el-input>
@@ -639,6 +671,7 @@ export default {
             detailsArray: [],
             detail: null,
             details: [],
+            items: [],
             showMinibar: false
         };
     },
@@ -813,6 +846,16 @@ export default {
                 this.$toast.warning("Ocurrió un error");
             }
         },
+        async getItems() {
+            const response = await this.$http("/caja/observations/items");
+            if (response.status == 200) {
+                const { items } = response.data;
+                this.items = items;
+                
+            } else {
+                this.$toast.warning("Ocurrió un error");
+            }
+        },
         filterFloorsByTower(tower_id) {
             this.form.floor_id = null;
             this.form.tower_id = tower_id;
@@ -869,6 +912,9 @@ export default {
             }
         },
         async create() {
+            /* if (configurations.mod_renta) { */
+            this.getItems();
+            /* } */
             if (this.type == "caja/rooms") {
                 await this.getTables();
             }

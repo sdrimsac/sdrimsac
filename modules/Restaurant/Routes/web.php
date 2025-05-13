@@ -224,6 +224,7 @@ Route::prefix('caja')->group(function () {
         Route::get('observations/columns', 'ObservationController@columns');
         Route::get('observations/remove/{id}', 'ObservationController@remove');
         Route::get('observations/records', 'ObservationController@records');
+        Route::get('observations/items', 'ObservationController@tables');
         Route::post('observations', 'ObservationController@store');
         Route::get('observations/record/{id}', 'ObservationController@record');
         Route::get('observations/{id}', 'ObservationController@active');

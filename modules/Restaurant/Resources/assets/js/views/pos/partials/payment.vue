@@ -3180,7 +3180,7 @@ export default {
                 if (!this.input_person.number) {
                     return;
                 }
-                if (this.input_person.number.length < 4) {
+                if (this.input_person.number.length < 3) {
                     return;
                 }
 

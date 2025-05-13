@@ -617,7 +617,7 @@ export default {
                 await this.getLastDocuments();
             }, 500);
         },
-        getQueryParameters(form = {}) {
+        /* getQueryParameters(form = {}) {
             let page =
                 this.activeName == "saleNotes"
                     ? this.pagination.saleNotes.current_page
@@ -634,6 +634,28 @@ export default {
                 remain: this.remain
 
                 // limit: this.limit
+            });
+        }, */
+        getQueryParameters(form = {}) {
+            let page;
+            if (this.activeName == "saleNotes") {
+                page = this.pagination.saleNotes.current_page;
+            } else if (this.activeName == "documents") {
+                page = this.pagination.documents.current_page;
+            } else if (this.activeName == "quotations") {
+                // <-- Agrega esta condición
+                page = this.pagination.quotations.current_page;
+            } else if (this.activeName == "guides") {
+                page = this.pagination.guides.current_page;
+            }
+
+            return queryString.stringify({
+                page,
+                isNote: this.activeName == "saleNotes",
+                typeDocument: this.activeName,
+                column: this.typeSearch,
+                value: this.value,
+                remain: this.remain
             });
         },
         handleClick() {

@@ -4,6 +4,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Item;
 use App\Services\RoleService;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Http\Requests\ObservationRequest;
@@ -66,6 +67,11 @@ class ObservationController extends Controller
                 ];
             });
         }
+    }
+    public function tables (){
+        $items = Item::where('active', 1)->get();
+
+        return compact('items');
     }
 
     public function actives()
