@@ -15,6 +15,7 @@ class CategoryResource extends JsonResource
             'icono' => $this->icono,
             'identifier' => $this->identifier,
             'image_url' => ($this->icono !== 'imagen-no-disponible.jpg') ? asset('storage/uploads/category/'.$this->icono) : asset("/logo/{$this->icono}"),
+            'images' => $this->images,
 
         ];
     }

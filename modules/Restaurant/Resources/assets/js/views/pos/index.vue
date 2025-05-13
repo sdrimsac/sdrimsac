@@ -165,7 +165,8 @@
                                     </template>
                                     <template
                                         v-if="
-                                            configuration.sale_note_credit_cash && this.isCreditCash &&
+                                            configuration.sale_note_credit_cash &&
+                                                this.isCreditCash &&
                                                 !this.isSeller
                                         "
                                     >
@@ -303,33 +304,51 @@
                                         <div class="col-12 p-2">
                                             <div class="categories-scroll">
                                                 <div class="categories-wrapper">
+                                                    <!-- Add All Categories circle -->
+                                                    <div
+                                                        class="category-card"
+                                                        :class="{
+                                                            active: category === null
+                                                        }"
+                                                        @click="
+                                                            category = null;
+                                                            search_items(null);
+                                                        "
+                                                    >
+                                                        <div class="category-circle">
+                                                            <i class="fas fa-th text-primary" style="font-size: 24px;"></i>
+                                                        </div>
+                                                        <span class="category-name">Todas</span>
+                                                    </div>
+
+                                                    <!-- Existing categories -->
                                                     <div
                                                         v-for="item in categories"
                                                         :key="item.id"
                                                         class="category-card"
                                                         :class="{
-                                                            active:
-                                                                category ===
-                                                                item.id
+                                                            active: category === item.id
                                                         }"
                                                         @click="
                                                             category = item.id;
                                                             search_items(null);
-                                                        "
+                                                        "  
                                                     >
-                                                        <div
-                                                            class="category-circle"
-                                                        >
-                                                            <i
-                                                                class="fas fa-utensils"
-                                                            ></i>
+                                                        <div class="category-circle">
+                                                            <img
+                                                                v-if="item.icono"
+                                                                :src="`/storage/uploads/category/${item.icono}`"
+                                                                alt=""
+                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
+                                                            />
+                                                            <img
+                                                                v-else
+                                                                src="/logo/imagen-no-disponible.jpg"
+                                                                alt="Imagen no disponible"
+                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
+                                                            />
                                                         </div>
-                                                        <span
-                                                            class="category-name"
-                                                            >{{
-                                                                item.name
-                                                            }}</span
-                                                        >
+                                                        <span class="category-name">{{ item.name }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2620,117 +2639,115 @@ export default {
             }, 1000);
         }, 500);
 
-        if ( this.configuration.user_unit) {
-
+        if (this.configuration.user_unit) {
             (function() {
-            function generateUUID() {
-                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-                    /[xy]/g,
-                    function(c) {
-                        const r = (Math.random() * 16) | 0,
-                            v = c === "x" ? r : (r & 0x3) | 0x8;
-                        return v.toString(16);
-                    }
-                );
-            }
-
-            let tabId = sessionStorage.getItem("tab_id");
-            if (!tabId) {
-                tabId = generateUUID();
-                sessionStorage.setItem("tab_id", tabId);
-            }
-
-            const windowId = generateUUID();
-
-            const basePath = window.location.pathname.split("/")[1];
-            const presenceKeyByRoute = `tab_presence_route_${basePath}`;
-            const presenceKeyByTab = `tab_presence_tab_${tabId}`;
-
-            let blockerVisible = false;
-            let hasDuplicate = false;
-
-            let justLoaded = true;
-            setTimeout(() => {
-                justLoaded = false;
-            }, 1000);
-
-            function updatePresence() {
-                const now = Date.now();
-                updateKey(presenceKeyByRoute, now);
-                updateKey(presenceKeyByTab, now);
-            }
-
-            function updateKey(key, now) {
-                let list = JSON.parse(localStorage.getItem(key) || "[]");
-
-                const index = list.findIndex(p => p.windowId === windowId);
-                if (index === -1) {
-                    list.push({ windowId, time: now });
-                } else {
-                    list[index].time = now;
-                }
-
-                list = list.filter(p => now - p.time < 1000);
-                localStorage.setItem(key, JSON.stringify(list));
-
-                checkForDuplicates(list);
-            }
-
-            function checkForDuplicates(allLists) {
-                if (justLoaded) return;
-
-                const now = Date.now();
-                const hasDupRoute =
-                    JSON.parse(
-                        localStorage.getItem(presenceKeyByRoute) || "[]"
-                    ).filter(p => now - p.time < 1000).length > 1;
-
-                const hasDupTab =
-                    JSON.parse(
-                        localStorage.getItem(presenceKeyByTab) || "[]"
-                    ).filter(p => now - p.time < 1000).length > 1;
-
-                hasDuplicate = hasDupRoute || hasDupTab;
-
-                if (hasDuplicate && !blockerVisible) {
-                    blockerVisible = true;
-                    Swal.fire({
-                        title: "¡Pestaña duplicada detectada!",
-                        text:
-                            "Ya tienes una ventana activa en este módulo o con esta sesión. Por favor, cierra las demás para evitar errores.",
-                        icon: "warning",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showConfirmButton: false,
-                        backdrop: true,
-                        didOpen: () => {
-                            document.body.style.pointerEvents = "none";
+                function generateUUID() {
+                    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                        /[xy]/g,
+                        function(c) {
+                            const r = (Math.random() * 16) | 0,
+                                v = c === "x" ? r : (r & 0x3) | 0x8;
+                            return v.toString(16);
                         }
-                    });
+                    );
                 }
 
-                // Solo cerramos si no hay duplicados y el Swal está visible
-                if (!hasDuplicate && blockerVisible) {
-                    blockerVisible = false;
-                    Swal.close();
-                    document.body.style.pointerEvents = "auto";
+                let tabId = sessionStorage.getItem("tab_id");
+                if (!tabId) {
+                    tabId = generateUUID();
+                    sessionStorage.setItem("tab_id", tabId);
                 }
-            }
 
-            setTimeout(updatePresence, 100);
-            setInterval(updatePresence, 500);
+                const windowId = generateUUID();
 
-            window.addEventListener("storage", function(event) {
-                if (
-                    (event.key === presenceKeyByRoute ||
-                        event.key === presenceKeyByTab) &&
-                    !justLoaded
-                ) {
-                    checkForDuplicates();
+                const basePath = window.location.pathname.split("/")[1];
+                const presenceKeyByRoute = `tab_presence_route_${basePath}`;
+                const presenceKeyByTab = `tab_presence_tab_${tabId}`;
+
+                let blockerVisible = false;
+                let hasDuplicate = false;
+
+                let justLoaded = true;
+                setTimeout(() => {
+                    justLoaded = false;
+                }, 1000);
+
+                function updatePresence() {
+                    const now = Date.now();
+                    updateKey(presenceKeyByRoute, now);
+                    updateKey(presenceKeyByTab, now);
                 }
-            });
-        })();
 
+                function updateKey(key, now) {
+                    let list = JSON.parse(localStorage.getItem(key) || "[]");
+
+                    const index = list.findIndex(p => p.windowId === windowId);
+                    if (index === -1) {
+                        list.push({ windowId, time: now });
+                    } else {
+                        list[index].time = now;
+                    }
+
+                    list = list.filter(p => now - p.time < 1000);
+                    localStorage.setItem(key, JSON.stringify(list));
+
+                    checkForDuplicates(list);
+                }
+
+                function checkForDuplicates(allLists) {
+                    if (justLoaded) return;
+
+                    const now = Date.now();
+                    const hasDupRoute =
+                        JSON.parse(
+                            localStorage.getItem(presenceKeyByRoute) || "[]"
+                        ).filter(p => now - p.time < 1000).length > 1;
+
+                    const hasDupTab =
+                        JSON.parse(
+                            localStorage.getItem(presenceKeyByTab) || "[]"
+                        ).filter(p => now - p.time < 1000).length > 1;
+
+                    hasDuplicate = hasDupRoute || hasDupTab;
+
+                    if (hasDuplicate && !blockerVisible) {
+                        blockerVisible = true;
+                        Swal.fire({
+                            title: "¡Pestaña duplicada detectada!",
+                            text:
+                                "Ya tienes una ventana activa en este módulo o con esta sesión. Por favor, cierra las demás para evitar errores.",
+                            icon: "warning",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            backdrop: true,
+                            didOpen: () => {
+                                document.body.style.pointerEvents = "none";
+                            }
+                        });
+                    }
+
+                    // Solo cerramos si no hay duplicados y el Swal está visible
+                    if (!hasDuplicate && blockerVisible) {
+                        blockerVisible = false;
+                        Swal.close();
+                        document.body.style.pointerEvents = "auto";
+                    }
+                }
+
+                setTimeout(updatePresence, 100);
+                setInterval(updatePresence, 500);
+
+                window.addEventListener("storage", function(event) {
+                    if (
+                        (event.key === presenceKeyByRoute ||
+                            event.key === presenceKeyByTab) &&
+                        !justLoaded
+                    ) {
+                        checkForDuplicates();
+                    }
+                });
+            })();
         }
     },
     sockets: {},
@@ -3213,7 +3230,8 @@ export default {
                     title: [" Zona "],
                     icon: "fas fa-map-pin ",
                     visible:
-                        !this.isSeller && this.cashId &&
+                        !this.isSeller &&
+                        this.cashId &&
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
@@ -3227,7 +3245,9 @@ export default {
                     title: [" Créditos", "Nota de venta "],
                     icon: "fas fa-cash-register",
                     visible:
-                        this.configuration.sale_note_credit_cash && this.cashId && this.isCreditCash && 
+                        this.configuration.sale_note_credit_cash &&
+                        this.cashId &&
+                        this.isCreditCash &&
                         !this.isSeller
                 },
                 {
@@ -3235,7 +3255,8 @@ export default {
                     title: [" Habitaciones "],
                     icon: "fas fa-map-pin ",
                     visible:
-                        this.configuration.hotels && this.cashId &&
+                        this.configuration.hotels &&
+                        this.cashId &&
                         this.worker.area.description.toUpperCase() == "HOTEL" &&
                         !this.isSeller &&
                         !this.isAnalist
@@ -3246,7 +3267,8 @@ export default {
                     icon: "icofont-money-bag",
                     visible:
                         (this.configuration.view_daily_cash ||
-                            this.configuration.view_daily_cash_pin) && this.cashId &&
+                            this.configuration.view_daily_cash_pin) &&
+                        this.cashId &&
                         !this.isSeller
                 },
 
@@ -3255,7 +3277,8 @@ export default {
                     title: ["Historial", ""],
                     icon: "fas fa-history ",
                     visible:
-                        !this.isSeller && this.cashId &&
+                        !this.isSeller &&
+                        this.cashId &&
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
 
@@ -3263,14 +3286,19 @@ export default {
                     id: 9,
                     title: ["Matriculas", "Mensualidades"],
                     icon: "fas fa-user-edit",
-                    visible: this.configuration.college && !this.isSeller && this.cashId
+                    visible:
+                        this.configuration.college &&
+                        !this.isSeller &&
+                        this.cashId
                 },
                 {
                     id: 10,
                     title: ["Canjear", "Promocion"],
                     icon: "fas fa-user-tag",
                     visible:
-                        this.configuration.promotions_sell && !this.isSeller && this.cashId
+                        this.configuration.promotions_sell &&
+                        !this.isSeller &&
+                        this.cashId
                 },
                 {
                     id: 33,
@@ -3289,7 +3317,9 @@ export default {
                     title: ["Cambiar", "Categorías"],
                     icon: "fa fa-bars",
                     visible:
-                        this.configuration.pos_drag_category && !this.isSeller && this.cashId
+                        this.configuration.pos_drag_category &&
+                        !this.isSeller &&
+                        this.cashId
                 },
                 {
                     id: 103,
@@ -3301,19 +3331,19 @@ export default {
                     id: 109,
                     title: ["Ver", "Consignaciones"],
                     icon: "fa fa-edit",
-                    visible: this.configuration.consignment && !this.isSeller 
+                    visible: this.configuration.consignment && !this.isSeller
                 },
                 {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
-                    visible: this.configuration.items_due_caja && !this.isSeller 
+                    visible: this.configuration.items_due_caja && !this.isSeller
                 },
                 {
                     id: 32,
                     title: ["Crear", "Producto compuesto"],
                     icon: "el-icon-connection",
-                    visible: this.configuration.item_set_caja && !this.isSeller 
+                    visible: this.configuration.item_set_caja && !this.isSeller
                 },
                 {
                     id: 34,
@@ -3446,10 +3476,11 @@ export default {
             if (!this.cashId) {
                 this.$message({
                     showClose: true,
-                    message: 'Debe abrir una caja para poder realizar operaciones',
-                    type: 'warning'
+                    message:
+                        "Debe abrir una caja para poder realizar operaciones",
+                    type: "warning"
                 });
-                return; 
+                return;
             }
 
             if (this.configuration.hotels) {
@@ -3457,7 +3488,7 @@ export default {
                     this.roomSeeId = null;
                     this.openTablesRooms();
                 } else {
-                    this.openTables(); 
+                    this.openTables();
                 }
             } else {
                 this.openTables();
@@ -6335,10 +6366,6 @@ export default {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
                 this.users = response.data.users;
-                /* console.log(
-                    "🚀 ~ awaitthis.$http.get ~ this.users:",
-                    this.users
-                ); */
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({
                     ...t,
@@ -6429,6 +6456,7 @@ export default {
                 return {
                     id: obj.id,
                     name: obj.name,
+                    icono: obj.icono,
                     color: contex.getColor(index)
                 };
             });

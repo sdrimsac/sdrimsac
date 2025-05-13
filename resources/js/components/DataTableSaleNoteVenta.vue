@@ -61,6 +61,17 @@
                         >
                         </el-date-picker>
                     </div>
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                        <label class="control-label w-100">Año</label>
+                        <el-date-picker
+                            v-model="search.year"
+                            type="year"
+                            style="width: 100%;"
+                            placeholder="Buscar"
+                            value-format="yyyy"
+                            @change="getRecords"
+                        ></el-date-picker>
+                    </div>
                     <div class="col-md-3 col-lg-3">
                         <label for="seller_id">Vendedor</label>
 
@@ -272,6 +283,7 @@ export default {
                 series: null,
                 end: null,
                 user_id: null,
+                year: null,
             },
             totals: {
                 total_pen: 0,

@@ -27,7 +27,8 @@ class CategoryCollection extends ResourceCollection
                 'created_at' => Carbon::parse($row->created_at)->format('Y-m-d H:i'),
                 'updated_at' => $row->updated_at,
                 'user_name' => $row->user ? $row->user->name : '',
-                'active' => $row->active
+                'active' => $row->active,
+                'images' => $row->images,
             ];
         });
 

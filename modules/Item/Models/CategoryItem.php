@@ -20,7 +20,8 @@ class CategoryItem extends ModelTenant
         'icono',
         'pos_drag',
         'user_id',
-        'active'
+        'active',
+        'images',
 
     ];
 
