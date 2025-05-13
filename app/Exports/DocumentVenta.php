@@ -38,6 +38,7 @@ class DocumentVenta implements FromCollection, WithHeadings, ShouldAutoSize, Wit
 
     public function establishment($establishment) {
         $this->establishment = $establishment;
+        dump($this->establishment);
         return $this;
     }
 

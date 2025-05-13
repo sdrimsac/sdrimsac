@@ -723,6 +723,7 @@ class SaleNoteController extends Controller
         return (new NotaVentaExport)
             ->records($records)
             ->company($company)
+            ->establishment($establishment)
             ->download('Reporte_productos_nota_venta' . Carbon::now() . '.xlsx');
     }
 

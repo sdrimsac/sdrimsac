@@ -2,40 +2,119 @@
 
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
-class NotaVentaExport implements  FromView, ShouldAutoSize
+class NotaVentaExport implements FromCollection, WithHeadings, ShouldAutoSize, WithChunkReading, WithCustomStartCell, WithStyles
 {
-    use Exportable;
-    
+    protected $records;
+    protected $company;
+    protected $establishment;
+
+    public function __construct()
+    {
+        $this->records = collect();
+    }
+
     public function records($records) {
         $this->records = $records;
-        
         return $this;
     }
-    
+
     public function company($company) {
         $this->company = $company;
-        
         return $this;
     }
-    
-    /*public function establishment($establishment) {
+
+    public function establishment($establishment) {
         $this->establishment = $establishment;
-        
         return $this;
-    }*/
-    
-    public function view(): View {
-        return view('tenant.reports.nota_venta.report_excel', [
-            'records'=> $this->records,
-            'company' => $this->company,
-            //'establishment'=>$this->establishment
-        ]);
+    }
+
+    public function collection()
+    {
+        $data = collect();
+        
+        foreach ($this->records as $record) {
+            foreach ($record->items as $item) {
+                $data->push([
+                    'number' => $record->number,
+                    'date_of_issue' => $record->date_of_issue,
+                    'establishment' => optional($record->establishment)->description,
+                    'internal_id' => $item->item->internal_id,
+                    'barcode' => optional($item->item)->barcode ?? '',
+                    'description' => $item->item->description,
+                    'quantity' => number_format($item->quantity, 2),
+                    'unit_value' => number_format($item->unit_value, 2),
+                    'total' => number_format($item->total, 2),
+                ]);
+            }
+        }
+
+        return $data;
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Número',
+            'Fecha emisión',
+            'Establecimiento',
+            'Código Interno',
+            'Categoria Principal',
+            'Producto',
+            'Cantidad',
+            'Precio',
+            'Total'
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Estilos para el título y la información de la empresa
+        $sheet->mergeCells('A1:J1');
+        $sheet->mergeCells('A2:D2');
+        $sheet->mergeCells('E2:J2');
+        $sheet->mergeCells('A3:E3');
+        $sheet->mergeCells('F3:J3');
+
+        // Información de la empresa y fechas
+        $sheet->setCellValue('A1', 'Reporte De Productos vendidos Nota de Venta');
+        $sheet->setCellValue('A2', 'Empresa: ' . $this->company->name);
+        $sheet->setCellValue('A3', 'Ruc: ' . $this->company->number);
+        $sheet->setCellValue('F3', 'Establecimiento: ' . $this->establishment->address . ' - ' . 
+                                   $this->establishment->department->description . ' - ' . 
+                                   $this->establishment->district->description);
+
+        // Estilos generales
+        return [
+            1 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCDCDC']]],
+            2 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCDCDC']]],
+            3 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCDCDC']]],
+            4 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCDCDC']]]
+        ];
+    }
+
+    public function startCell(): string
+    {
+        return 'A4';
+    }
+
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
+
+    public function download($filename)
+    {
+        return Excel::download($this, $filename);
     }
 }

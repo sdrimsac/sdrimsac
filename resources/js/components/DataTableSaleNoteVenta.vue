@@ -194,7 +194,7 @@
                             size="small"
                             v-if="records.length > 0"
                             @click="exportRecords"
-                            :disabled="!search.date_start && !search.date_end && !search.customer_id"
+                            :disabled="!search.date_start && !search.date_end && !search.customer_id && !search.year"
                         >
                             <el-tooltip
                                 class="item"
