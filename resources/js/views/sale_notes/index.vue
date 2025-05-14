@@ -203,22 +203,28 @@
                                                 <i class="far fa-file-alt"></i>
                                                 Generar guía
                                             </a>
-                                            <a
-                                                href="!#"
+                                            <!-- <a 
+                                                
+                                            >  -->
+
+                                            <el-button 
+                                        
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         (user_type == 'admin' ||
                                                             user_type ==
                                                                 'superadmin')
                                                 "
-                                                class="dropdown-item"
+                                                class="btn-danger"
                                                 @click.prevent="
                                                     clickVoided(row.id)
-                                                "
-                                            >
+                                                ">
+
                                                 <i class="fas fa-trash"></i>
                                                 Anular Nota de Venta
-                                            </a>
+
+                                            </el-button>    
+                                            <!-- </a> -->
                                             <!-- <div
                                                 class="dropdown-divider"
                                                 v-if="
@@ -823,9 +829,30 @@ export default {
                 .then(() => {});
         },
         clickVoided(id) {
-            this.anular(`/${this.resource}/anulate/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
+            swal.fire({
+                title: "Motivo de Anulación",
+                input: "text",
+                inputPlaceholder: "Escribe el motivo de la anulación",
+                showCancelButton: true,
+                confirmButtonText: "Anular",
+                cancelButtonText: "Cancelar",
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "El motivo es obligatorio";
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const motivo = result.value;
+                    this.$http.get(`/${this.resource}/anulate/${id}`, { params: { motivo } }).then(() => {
+                        this.$eventHub.$emit("reloadData");
+                        this.$toast.success("Nota de venta anulada correctamente");
+                    }).catch((error) => {
+                        this.$toast.error("Ocurrió un error al anular la nota de venta");
+                        console.error(error);
+                    });
+                }
+            });
         }
     },
     mounted() {

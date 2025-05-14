@@ -464,7 +464,7 @@
                                     </el-button>
 
                                     <!-- Pagos Pendientes -->
-                                    <el-button
+                                    <!-- <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #17a2b8; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="data.paid == 0 && !data.is_credit"
@@ -475,7 +475,7 @@
                                             style="color: white; margin-right: 10px;"
                                         ></i>
                                         <span>Pagos</span>
-                                    </el-button>
+                                    </el-button> -->
                                     <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
                                     <template v-if="type !== 'quotations'">
                                         <el-tooltip
@@ -1086,6 +1086,7 @@ const WhatsappModalReports = () =>
     import(
         "../../../../../../../../resources/js/components/WhatsappModalReports.vue"
     );
+import swal from "sweetalert2";
 export default {
     components: {
         whatsappModal,
@@ -1102,7 +1103,9 @@ export default {
         DocumentOptions,
         QuotationOptions,
         DispatchOptions,
-        WhatsappModalReports
+        WhatsappModalReports,
+        swal
+
     },
     mixins: [deletable],
     props: [
@@ -1196,7 +1199,7 @@ export default {
             this.showDialogReasonToAvoid = true;
             this.reasonToAvoid = null;
         },
-        clickVoidedNote(data) {
+        /* clickVoidedNote(data) {
             let id = data.id;
             let is_credit = data.is_credit;
             if (is_credit) {
@@ -1208,6 +1211,43 @@ export default {
                     this.$emit("getRecords")
                 );
             }
+        }, */
+        clickVoidedNote(data) {
+            let id = data.id;
+            let is_credit = data.is_credit;
+            if (is_credit) {
+                this.showDialogReasonToAvoid = true;
+                this.reasonToAvoid = null;
+                this.titleAvoidSaleNote =
+                    "Motivo de anulación - " + data.identifier;
+            } else {
+                swal.fire({
+                title: "Motivo de Anulación",
+                input: "text",
+                inputPlaceholder: "Escribe el motivo de la anulación",
+                showCancelButton: true,
+                confirmButtonText: "Anular",
+                cancelButtonText: "Cancelar",
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "El motivo es obligatorio";
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const motivo = result.value;
+                    this.$http.get(`/sale-notes/anulate/${id}`, { params: { motivo } }).then(() => {
+                        this.$eventHub.$emit("reloadData");
+                        this.$toast.success("Nota de venta anulada correctamente");
+                    }).catch((error) => {
+                        this.$toast.error("Ocurrió un error al anular la nota de venta");
+                        console.error(error);
+                    });
+                    this.$emit("getRecords")
+                }
+            });
+            }
+            
         },
         clickNote(id) {
             this.recordId = id;

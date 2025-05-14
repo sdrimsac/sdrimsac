@@ -105,6 +105,7 @@ class SaleNoteCollection extends ResourceCollection
                 }
             }
             return [
+                'observation' => $row->observations,
                 'last_register' => $this->get_last_document($row),
                 'ordens_ref' => $ordens_ref,
                 'table_number' => $table_number,

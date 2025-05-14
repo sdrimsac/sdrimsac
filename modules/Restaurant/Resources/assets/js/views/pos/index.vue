@@ -318,7 +318,7 @@
                                                         <div class="category-circle">
                                                             <i class="fas fa-th text-primary" style="font-size: 24px;"></i>
                                                         </div>
-                                                        <span class="category-name">Todas</span>
+                                                        <span class="category-name">Todo Catego</span>
                                                     </div>
 
                                                     <!-- Existing categories -->

@@ -56,8 +56,7 @@
                     <button class="btn btn-success" type="button">
                         {{ formattedCountdown }} restantes
                     </button>
-                    <el-button class="btn btn-success"
-                        type="button"
+                    <el-button class="btn-info"
                         @click="openOrden"
                         icon="el-icon-view"
                         >
@@ -953,452 +952,7 @@
                                         class="os-content"
                                         style="padding: 0px 5px; height: 100%; width: 100%"
                                     >
-                                        <div
-                                            v-if="
-                                                ordens.length != 0 && !variation
-                                            "
-                                            class="mx-2 h4 txt-info p-10 f-w-700 d-flex align-items-center"
-                                        >
-                                            <a
-                                                class="badge badge bg-dark text-white"
-                                                style="margin-right: 5px"
-                                            >
-                                                <template
-                                                    v-if="ordens.length <= 9"
-                                                >
-                                                    0{{ ordens.length }}
-                                                </template>
-                                                <template v-else>
-                                                    {{ ordens.length }}
-                                                </template>
-                                            </a>
-                                            Atendidos
-                                        </div>
-                                        <div
-                                            v-if="variation"
-                                            class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
-                                        >
-                                            <div
-                                                v-for="(variationItem,
-                                                idx) in foodDefaults"
-                                                :key="idx"
-                                                class="mx-2 coupon rounded d-flex justify-content-between"
-                                            >
-                                                <div
-                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
-                                                >
-                                                    <div
-                                                        class="overflow-hidden"
-                                                    >
-                                                        <h3
-                                                            class="lead font-weight-light"
-                                                        >
-                                                            {{
-                                                                variationItem.description.toUpperCase()
-                                                            }}
-                                                            <el-tag
-                                                                role="button"
-                                                                @click="
-                                                                    showChangeDescription(
-                                                                        idx
-                                                                    )
-                                                                "
-                                                                >Cambiar</el-tag
-                                                            >
-
-                                                            <el-tag
-                                                                type="success"
-                                                                v-if="idx == 0"
-                                                                role="button"
-                                                                @click="
-                                                                    addVariation
-                                                                "
-                                                            >
-                                                                Agregar otro
-                                                                item
-                                                            </el-tag>
-                                                            <el-tag
-                                                                v-if="
-                                                                    foodDefaults.length >
-                                                                        1
-                                                                "
-                                                                type="danger"
-                                                                role="button"
-                                                                @click="
-                                                                    deleteDefaultFood(
-                                                                        idx
-                                                                    )
-                                                                "
-                                                                >x</el-tag
-                                                            >
-                                                        </h3>
-                                                        <p
-                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
-                                                        ></p>
-                                                        <div
-                                                            class="row align-items-end"
-                                                        >
-                                                            <div
-                                                                class="col-md-4"
-                                                            >
-                                                                <span
-                                                                    class="text-muted"
-                                                                >
-                                                                    Cantidad
-                                                                    <br />
-                                                                    <div
-                                                                        class="input-group spinner"
-                                                                    >
-                                                                        <input
-                                                                            type="text"
-                                                                            class="form-control text-center"
-                                                                            v-model="
-                                                                                variationItem.quantity
-                                                                            "
-                                                                            data-rule="currency"
-                                                                        />
-                                                                        <div
-                                                                            class="input-group-text"
-                                                                        >
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-up"
-                                                                                data-spin="up"
-                                                                                @click="
-                                                                                    updateDefaultFoodQty(
-                                                                                        true,
-                                                                                        idx
-                                                                                    )
-                                                                                "
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-down"
-                                                                                data-spin="down"
-                                                                                @click="
-                                                                                    updateDefaultFoodQty(
-                                                                                        false,
-                                                                                        idx
-                                                                                    )
-                                                                                "
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </span>
-                                                            </div>
-
-                                                            <div
-                                                                class="col-md-4"
-                                                            >
-                                                                <span
-                                                                    class="time font-weight-light"
-                                                                >
-                                                                    <span
-                                                                        class="text-muted"
-                                                                    >
-                                                                        Precio
-                                                                        <br />
-                                                                        <el-input
-                                                                            class="custom_input"
-                                                                            style="width: 100%"
-                                                                            type="number"
-                                                                            v-model="
-                                                                                variationItem.sale_unit_price
-                                                                            "
-                                                                        >
-                                                                            <span
-                                                                                slot="prepend"
-                                                                                style="padding-left: 6px;padding-right: 6px;"
-                                                                            >
-                                                                                <template
-                                                                                    v-if="
-                                                                                        configuration.other_currency_pos
-                                                                                    "
-                                                                                >
-                                                                                    {{
-                                                                                        currency_id ==
-                                                                                        "USD"
-                                                                                            ? "$"
-                                                                                            : "S/"
-                                                                                    }}
-                                                                                </template>
-                                                                                <template
-                                                                                    v-else
-                                                                                >
-                                                                                    S/
-                                                                                </template>
-                                                                            </span>
-                                                                        </el-input>
-                                                                    </span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div
-                                            v-show="
-                                                ordens.length > 0 && !variation
-                                            "
-                                            class="col-12"
-                                            v-for="(ord, idx) in ordens"
-                                            :key="`${idx}-A`"
-                                        >
-                                            <div
-                                                class="mx-2 coupon rounded d-flex justify-content-between"
-                                            >
-                                                <div
-                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
-                                                >
-                                                    <div
-                                                        class="overflow-hidden w-100 card shadow-lg p-3"
-                                                        style="
-                              box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
-                            "
-                                                    >
-                                                        <h3
-                                                            class="lead font-weight-light fw-bold"
-                                                        >
-                                                            <template
-                                                                v-if="
-                                                                    ord.food
-                                                                        .item
-                                                                        .name_product_pdf
-                                                                "
-                                                            >
-                                                                {{
-                                                                    ord.food.item.name_product_pdf.toUpperCase()
-                                                                }}
-                                                            </template>
-                                                            <template v-else>
-                                                                {{
-                                                                    ord.food.description.toUpperCase()
-                                                                }}
-                                                            </template>
-
-                                                            <span
-                                                                v-if="
-                                                                    ord.type_id
-                                                                "
-                                                                class="text-primary"
-                                                            >
-                                                                <small>
-                                                                    <strong>
-                                                                        *{{
-                                                                            ord.type_description
-                                                                        }}
-                                                                    </strong>
-                                                                </small>
-                                                            </span>
-                                                            <span
-                                                                v-if="
-                                                                    ord.categoriaMadera
-                                                                "
-                                                                class="text-primary"
-                                                            >
-                                                                <small>
-                                                                    <strong>
-                                                                        *{{
-                                                                            `${ord.categoriaMadera.selectedGrosor}x${ord.categoriaMadera.selectedAncho}x${ord.categoriaMadera.selectedLargo}`
-                                                                        }}
-                                                                    </strong>
-                                                                </small>
-                                                            </span>
-                                                        </h3>
-                                                        <p
-                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
-                                                        ></p>
-                                                        <div
-                                                            class="row align-items-end"
-                                                        >
-                                                            <div
-                                                                class="col-5 col-md-5 col-lg-3 col-xl-4"
-                                                            >
-                                                                <span
-                                                                    class="text-muted"
-                                                                >
-                                                                    Cantidad
-                                                                    <br />
-                                                                    <div
-                                                                        class="input-group spinner"
-                                                                        data-trigger="spinner"
-                                                                    >
-                                                                        <input
-                                                                            type="text"
-                                                                            readonly
-                                                                            class="form-control text-center"
-                                                                            v-model="
-                                                                                ord.quantity
-                                                                            "
-                                                                            data-rule="currency"
-                                                                        />
-                                                                        <input
-                                                                            v-if="
-                                                                                ord.categoriaMadera
-                                                                            "
-                                                                            type="text"
-                                                                            readonly
-                                                                            class="form-control text-center"
-                                                                            v-model="
-                                                                                ord
-                                                                                    .categoriaMadera
-                                                                                    .quantity
-                                                                            "
-                                                                            data-rule="currency"
-                                                                        />
-                                                                        <div
-                                                                            class="input-group-text"
-                                                                        >
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-up"
-                                                                                data-spin="up"
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-down"
-                                                                                data-spin="down"
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </span>
-                                                            </div>
-
-                                                            <div
-                                                                class="col-6 col-md-5 col-lg-3 col-xl-4"
-                                                            >
-                                                                <span
-                                                                    class="time font-weight-light"
-                                                                >
-                                                                    <span
-                                                                        class="text-muted"
-                                                                    >
-                                                                        Precio
-                                                                        <br />
-                                                                        <el-input
-                                                                            class="custom_input"
-                                                                            style="width: 100%"
-                                                                            type="number"
-                                                                            v-model="
-                                                                                ord.price
-                                                                            "
-                                                                            @input="
-                                                                                calculateTotal
-                                                                            "
-                                                                        >
-                                                                            <template
-                                                                                slot="prepend"
-                                                                            >
-                                                                                {{
-                                                                                    currency_id ==
-                                                                                    "USD"
-                                                                                        ? "$"
-                                                                                        : "S/"
-                                                                                }}
-                                                                            </template>
-                                                                            <!-- <template
-                                                                                slot="prepend"
-                                                                                v-if="
-                                                                                    ord
-                                                                                        .food
-                                                                                        .item
-                                                                                        .currency_type_id ==
-                                                                                        'USD'
-                                                                                "
-                                                                            >
-                                                                                $
-                                      </template>-->
-                                                                        </el-input>
-                                                                    </span>
-                                                                </span>
-                                                            </div>
-                                                            <div
-                                                                class="col-md-6 m2 mt-2 col-lg-3"
-                                                            >
-                                                                <el-button-group>
-                                                                    <el-button
-                                                                        v-if="
-                                                                            ord.status_orden_id !=
-                                                                                3
-                                                                        "
-                                                                        @click="
-                                                                            ordenReady(
-                                                                                ord.id
-                                                                            )
-                                                                        "
-                                                                        type="success"
-                                                                        icon="el-icon-check"
-                                                                        size="mini"
-                                                                        circle
-                                                                    ></el-button>
-                                                                    <el-button
-                                                                        class="text-white"
-                                                                        type="danger"
-                                                                        icon="el-icon-delete"
-                                                                        size="mini"
-                                                                        circle
-                                                                        @click="
-                                                                            cancelOrdena(
-                                                                                ord.id
-                                                                            )
-                                                                        "
-                                                                    ></el-button>
-                                                                </el-button-group>
-                                                                <el-tag
-                                                                    size="medium"
-                                                                >
-                                                                    <strong
-                                                                        style="font-weight: 700"
-                                                                    >
-                                                                        {{
-                                                                            parseFloat(
-                                                                                ord.price *
-                                                                                    ord.quantity
-                                                                            ).toFixed(
-                                                                                2
-                                                                            )
-                                                                        }}
-                                                                    </strong>
-                                                                </el-tag>
-                                                            </div>
-                                                            <div
-                                                                v-if="
-                                                                    configuration.restaurant &&
-                                                                        ord.observations
-                                                                "
-                                                                class="col-md-12 mt-1"
-                                                            >
-                                                                <small>
-                                                                    OBS:
-                                                                    {{
-                                                                        ord.observations
-                                                                    }}
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div
+                                    <div
                                             class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
                                         >
                                             <template
@@ -1420,6 +974,7 @@
                                                         {{ localOrden.length }}
                                                     </template>
                                                 </a>
+                                                <!-- terterterterterter -->
                                                 Por solicitar
                                                 <template
                                                     v-if="
@@ -2432,7 +1987,7 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="d-flex h-50 justify-content-center align-items-center"
+                                            class="d-flex h-0 justify-content-center align-items-center"
                                             v-if="
                                                 localOrden.length == 0 &&
                                                     !variation
@@ -2442,6 +1997,495 @@
                                                 Lista vacía.
                                             </p>
                                         </div>
+                                        <div
+                                            v-if="
+                                                ordens.length != 0 && !variation
+                                            "
+                                            class="mx-2 h4 txt-info p-10 f-w-700 d-flex align-items-center"
+                                        >
+                                            <a
+                                                class="badge badge bg-dark text-white"
+                                                style="margin-right: 5px"
+                                            >
+                                                <template
+                                                    v-if="ordens.length <= 9"
+                                                >
+                                                    0{{ ordens.length }}
+                                                </template>
+                                                <template v-else>
+                                                    {{ ordens.length }}
+                                                </template>
+                                            </a>
+                                            Atendidos
+                                        </div>
+                                        <div
+                                            v-if="variation"
+                                            class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
+                                        >
+                                            <div
+                                                v-for="(variationItem,
+                                                idx) in foodDefaults"
+                                                :key="idx"
+                                                class="mx-2 coupon rounded d-flex justify-content-between"
+                                            >
+                                                <div
+                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
+                                                >
+                                                    <div
+                                                        class="overflow-hidden"
+                                                    >
+                                                        <h3
+                                                            class="lead font-weight-light"
+                                                        >
+                                                            {{
+                                                                variationItem.description.toUpperCase()
+                                                            }}
+                                                            <el-tag
+                                                                role="button"
+                                                                @click="
+                                                                    showChangeDescription(
+                                                                        idx
+                                                                    )
+                                                                "
+                                                                >Cambiar</el-tag
+                                                            >
+
+                                                            <el-tag
+                                                                type="success"
+                                                                v-if="idx == 0"
+                                                                role="button"
+                                                                @click="
+                                                                    addVariation
+                                                                "
+                                                            >
+                                                                Agregar otro
+                                                                item
+                                                            </el-tag>
+                                                            <el-tag
+                                                                v-if="
+                                                                    foodDefaults.length >
+                                                                        1
+                                                                "
+                                                                type="danger"
+                                                                role="button"
+                                                                @click="
+                                                                    deleteDefaultFood(
+                                                                        idx
+                                                                    )
+                                                                "
+                                                                >x</el-tag
+                                                            >
+                                                        </h3>
+                                                        <p
+                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
+                                                        ></p>
+                                                        <div
+                                                            class="row align-items-end"
+                                                        >
+                                                            <div
+                                                                class="col-md-4"
+                                                            >
+                                                                <span
+                                                                    class="text-muted"
+                                                                >
+                                                                    Cantidad
+                                                                    <br />
+                                                                    <div
+                                                                        class="input-group spinner"
+                                                                    >
+                                                                        <input
+                                                                            type="text"
+                                                                            class="form-control text-center"
+                                                                            v-model="
+                                                                                variationItem.quantity
+                                                                            "
+                                                                            data-rule="currency"
+                                                                        />
+                                                                        <div
+                                                                            class="input-group-text"
+                                                                        >
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-up"
+                                                                                data-spin="up"
+                                                                                @click="
+                                                                                    updateDefaultFoodQty(
+                                                                                        true,
+                                                                                        idx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-down"
+                                                                                data-spin="down"
+                                                                                @click="
+                                                                                    updateDefaultFoodQty(
+                                                                                        false,
+                                                                                        idx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </div>
+
+                                                            <div
+                                                                class="col-md-4"
+                                                            >
+                                                                <span
+                                                                    class="time font-weight-light"
+                                                                >
+                                                                    <span
+                                                                        class="text-muted"
+                                                                    >
+                                                                        Precio
+                                                                        <br />
+                                                                        <el-input
+                                                                            class="custom_input"
+                                                                            style="width: 100%"
+                                                                            type="number"
+                                                                            v-model="
+                                                                                variationItem.sale_unit_price
+                                                                            "
+                                                                        >
+                                                                            <span
+                                                                                slot="prepend"
+                                                                                style="padding-left: 6px;padding-right: 6px;"
+                                                                            >
+                                                                                <template
+                                                                                    v-if="
+                                                                                        configuration.other_currency_pos
+                                                                                    "
+                                                                                >
+                                                                                    {{
+                                                                                        currency_id ==
+                                                                                        "USD"
+                                                                                            ? "$"
+                                                                                            : "S/"
+                                                                                    }}
+                                                                                </template>
+                                                                                <template
+                                                                                    v-else
+                                                                                >
+                                                                                    S/
+                                                                                </template>
+                                                                            </span>
+                                                                        </el-input>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            v-show="
+                                                ordens.length > 0 && !variation
+                                            "
+                                            class="col-12"
+                                            v-for="(ord, idx) in ordens"
+                                            :key="`${idx}-A`"
+                                        >
+                                            <div
+                                                class="mx-2 coupon rounded d-flex justify-content-between"
+                                            >
+                                                <div
+                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
+                                                >
+                                                    <div
+                                                        class="overflow-hidden w-100 card shadow-lg p-3"
+                                                        style="
+                              box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
+                            "
+                                                    >
+                                                        <h3
+                                                            class="lead font-weight-light fw-bold"
+                                                        >
+                                                            <template
+                                                                v-if="
+                                                                    ord.food
+                                                                        .item
+                                                                        .name_product_pdf
+                                                                "
+                                                            >
+                                                                {{
+                                                                    ord.food.item.name_product_pdf.toUpperCase()
+                                                                }}
+                                                            </template>
+                                                            <template v-else>
+                                                                {{
+                                                                    ord.food.description.toUpperCase()
+                                                                }}
+                                                            </template>
+
+                                                            <span
+                                                                v-if="
+                                                                    ord.type_id
+                                                                "
+                                                                class="text-primary"
+                                                            >
+                                                                <small>
+                                                                    <strong>
+                                                                        *{{
+                                                                            ord.type_description
+                                                                        }}
+                                                                    </strong>
+                                                                </small>
+                                                            </span>
+                                                            <span
+                                                                v-if="
+                                                                    ord.categoriaMadera
+                                                                "
+                                                                class="text-primary"
+                                                            >
+                                                                <small>
+                                                                    <strong>
+                                                                        *{{
+                                                                            `${ord.categoriaMadera.selectedGrosor}x${ord.categoriaMadera.selectedAncho}x${ord.categoriaMadera.selectedLargo}`
+                                                                        }}
+                                                                    </strong>
+                                                                </small>
+                                                            </span>
+                                                        </h3>
+                                                        <p
+                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
+                                                        ></p>
+                                                        <div
+                                                            class="row align-items-end"
+                                                        >
+                                                            <div
+                                                                class="col-5 col-md-5 col-lg-3 col-xl-4"
+                                                            >
+                                                                <span
+                                                                    class="text-muted"
+                                                                >
+                                                                    Cantidad
+                                                                    <br />
+                                                                    <div
+                                                                        class="input-group spinner"
+                                                                        data-trigger="spinner"
+                                                                    >
+                                                                        <input
+                                                                            type="text"
+                                                                            readonly
+                                                                            class="form-control text-center"
+                                                                            v-model="
+                                                                                ord.quantity
+                                                                            "
+                                                                            data-rule="currency"
+                                                                        />
+                                                                        <input
+                                                                            v-if="
+                                                                                ord.categoriaMadera
+                                                                            "
+                                                                            type="text"
+                                                                            readonly
+                                                                            class="form-control text-center"
+                                                                            v-model="
+                                                                                ord
+                                                                                    .categoriaMadera
+                                                                                    .quantity
+                                                                            "
+                                                                            data-rule="currency"
+                                                                        />
+                                                                        <div
+                                                                            class="input-group-text"
+                                                                        >
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-up"
+                                                                                data-spin="up"
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-down"
+                                                                                data-spin="down"
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </div>
+
+                                                            <div
+                                                                class="col-6 col-md-5 col-lg-3 col-xl-4"
+                                                            >
+                                                                <span
+                                                                    class="time font-weight-light"
+                                                                >
+                                                                    <span
+                                                                        class="text-muted"
+                                                                    >
+                                                                        Precio
+                                                                        <br />
+                                                                        <el-input
+                                                                            class="custom_input"
+                                                                            style="width: 100%"
+                                                                            type="number"
+                                                                            v-model="
+                                                                                ord.price
+                                                                            "
+                                                                            @input="
+                                                                                calculateTotal
+                                                                            "
+                                                                        >
+                                                                            <template
+                                                                                slot="prepend"
+                                                                            >
+                                                                                {{
+                                                                                    currency_id ==
+                                                                                    "USD"
+                                                                                        ? "$"
+                                                                                        : "S/"
+                                                                                }}
+                                                                            </template>
+                                                                            <!-- <template
+                                                                                slot="prepend"
+                                                                                v-if="
+                                                                                    ord
+                                                                                        .food
+                                                                                        .item
+                                                                                        .currency_type_id ==
+                                                                                        'USD'
+                                                                                "
+                                                                            >
+                                                                                $
+                                                                        </template>-->
+                                                                        </el-input>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                            <div
+                                                                class="col-md-6 m2 mt-2 col-lg-3"
+                                                            >
+                                                                <el-button-group>
+                                                                    <el-button
+                                                                        v-if="
+                                                                            ord.status_orden_id !=
+                                                                                3
+                                                                        "
+                                                                        @click="
+                                                                            ordenReady(
+                                                                                ord.id
+                                                                            )
+                                                                        "
+                                                                        type="success"
+                                                                        icon="el-icon-check"
+                                                                        size="mini"
+                                                                        circle
+                                                                    ></el-button>
+                                                                    <el-button
+                                                                        class="text-white"
+                                                                        type="danger"
+                                                                        icon="el-icon-delete"
+                                                                        size="mini"
+                                                                        circle
+                                                                        @click="
+                                                                            cancelOrdena(
+                                                                                ord.id
+                                                                            )
+                                                                        "
+                                                                    ></el-button>
+                                                                </el-button-group>
+                                                                <el-tag
+                                                                    size="medium"
+                                                                >
+                                                                    <strong
+                                                                        style="font-weight: 700"
+                                                                    >
+                                                                        {{
+                                                                            parseFloat(
+                                                                                ord.price *
+                                                                                    ord.quantity
+                                                                            ).toFixed(
+                                                                                2
+                                                                            )
+                                                                        }}
+                                                                    </strong>
+                                                                </el-tag>
+                                                            </div>
+                                                            <div
+                                                                v-if="
+                                                                    configuration.restaurant &&
+                                                                        ord.observations
+                                                                "
+                                                                class="col-md-12 mt-1"
+                                                            >
+                                                                <small>
+                                                                    OBS:
+                                                                    {{
+                                                                        ord.observations
+                                                                    }}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div
+                                            class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
+                                        >
+                                            <template
+                                                v-if="configuration.restaurant"
+                                            >
+                                                <a
+                                                    class="bage bg-dark text-white"
+                                                    style="margin-right: 5px"
+                                                >
+                                                    <template
+                                                        v-if="
+                                                            localOrden.length <=
+                                                                9
+                                                        "
+                                                    >
+                                                        0{{ localOrden.length }}
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ localOrden.length }}
+                                                    </template>
+                                                </a>
+                                                
+                                                Por solicitar
+                                                <template
+                                                    v-if="
+                                                        configuration.divided_items
+                                                    "
+                                                >
+                                                    <el-checkbox
+                                                        v-model="
+                                                            localDividedItems
+                                                        "
+                                                        style="margin-left: 10px;"
+                                                        @change="
+                                                            saveDividedItemsLocalStorage
+                                                        "
+                                                        >Dividir ordenes
+                                                        iguales</el-checkbox
+                                                    >
+                                                </template>
+                                            </template>
+                                        </div> -->
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -2790,7 +2834,11 @@
             </div>
         </el-dialog>
         <digital-payments :showDigitalPay.sync="showDigitalPay"/>
-        <open-items :showOpenOrden.sync="showOpenOrden" />
+        <open-items 
+        :showDialog.sync="showOpenOrden" 
+        :selectedItems="selectedItems" 
+        :localOrden="localOrden"
+        />
     </div>
 </template>
 <style>
@@ -2975,6 +3023,7 @@ export default {
 
     data() {
         return {
+            selectedItems: [], // Array para almacenar los elementos seleccionados
             isEditing: false,
             /* localOrden: [], */
             /* totalUniqueProducts: 0,
@@ -3269,6 +3318,18 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        addItemToSelection(item) {
+            // Agregar el elemento seleccionado al array
+            if (!this.selectedItems.includes(item)) {
+                this.selectedItems.push(item);
+            }
+        },
+        removeItemFromSelection(item) {
+            // Eliminar el elemento del array si se deselecciona
+            this.selectedItems = this.selectedItems.filter(
+                (selectedItem) => selectedItem !== item
+            );
+        },
         // checkIgvApp(igv_type_id) {
         //     console.log("igv_type_id", igv_type_id);
         //     return (

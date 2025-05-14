@@ -3020,7 +3020,8 @@ class SaleNoteController extends Controller
 
     public function anulate(Request $request, $id)
     {
-        // Validate if sale note is already voided
+        $motivo = $request->motivo;
+
         $obj = SaleNote::find($id);
         if ($obj->state_type_id == 11) {
             return [
@@ -3029,10 +3030,11 @@ class SaleNoteController extends Controller
             ];
         }
 
-        DB::connection('tenant')->transaction(function () use ($id, $request) {
+        DB::connection('tenant')->transaction(function () use ($id, $request, $motivo) { // Added $motivo to use()
 
             $obj =  SaleNote::find($id);
             $obj->state_type_id = 11;
+            $obj->observations = $motivo;
             $obj->save();
             Box::where('sale_note_id', $obj->id)->delete();
             $establishment = Establishment::where('id', $obj->establishment_id)->first();
@@ -3048,7 +3050,7 @@ class SaleNoteController extends Controller
                     ItemLot::find($lot->id)->update(["has_sale" => 0]);
                 }
 
-                // Ajustar cantidad por unidad de medida
+                // Ajustar cantidad por unidad de medida 
                 if (isset($item->item->from_unit_type_id)) {
                     $unit_type = ItemUnitType::where('id', $item->item->from_unit_type_id)->first();
                     if ($unit_type) {
@@ -3058,7 +3060,7 @@ class SaleNoteController extends Controller
 
                 // 📦 Stock del ítem principal (el "plato")
                 $wr = ItemWarehouse::where([
-                    ['item_id', $item->item_id],
+                    ['item_id', $item->item_id], 
                     ['warehouse_id', $item->warehouse_id ?? $warehouse->id]
                 ])->first();
 
