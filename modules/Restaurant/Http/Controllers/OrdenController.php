@@ -777,6 +777,7 @@ class OrdenController extends Controller
             ];
         }
     }
+    /* para la precuenta */
     public function record($id, Request $request)
     {
         $orden = Orden::find($id);
@@ -785,12 +786,11 @@ class OrdenController extends Controller
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
         $printer = null;
-        // Optimizamos la obtención del nombre del mozo y la zona
+
         $mozo_name = null;
         $zone_name = null;
 
         if ($orden) {
-            // Obtenemos el nombre del mozo
             if ($orden->mozo_id) {
                 $mozo = DB::connection('tenant')
                     ->table('seller_mozo')
@@ -799,11 +799,10 @@ class OrdenController extends Controller
                 $mozo_name = $mozo ? $mozo->name : null;
             }
 
-            // Obtenemos el nombre de la zona directamente mediante una consulta JOIN
             if ($orden->table_id) {
                 $zone = DB::connection('tenant')
                     ->table('tables as t')
-                    ->join('zones as z', 't.zone_id', '=', 'z.id')
+                    ->join('zones as z', 't.zone_id', '=', 'z.id') 
                     ->where('t.id', $orden->table_id)
                     ->select('z.name')
                     ->first();
@@ -832,13 +831,17 @@ class OrdenController extends Controller
                 'print'  => "Nº Orden no existe"
             ];
         } else {
-            $orden_items = OrdenItem::where('orden_id', $id)->pluck('id')->toArray();
+            // Filter out cancelled items (status_orden_id = 5) for precuenta
+            $orden_items_query = OrdenItem::where('orden_id', $id);
+            if ($precuenta) {
+                $orden_items_query->where('status_orden_id', '!=', 5);
+            }
+            $orden_items = $orden_items_query->pluck('id')->toArray();
+            
             $ids_string = "";
             if (count($orden_items) != 0) {
                 $ids_string = join("_", $orden_items);
             }
-
-            // Asignamos los valores al objeto orden
             $orden->mozo_name = $mozo_name;
             $orden->zone_name = $zone_name;
 
