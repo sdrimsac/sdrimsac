@@ -56,6 +56,12 @@
                     <button class="btn btn-success" type="button">
                         {{ formattedCountdown }} restantes
                     </button>
+                    <el-button class="btn btn-success"
+                        type="button"
+                        @click="openOrden"
+                        icon="el-icon-view"
+                        >
+                    </el-button>
                     <button
                         v-if="configuration.digital_notifications"
                         class="btn btn-warning"
@@ -1742,7 +1748,11 @@
                                                                         @click="
                                                                             openLocalObservationDialog(
                                                                                 indexx,
-                                                                                order_pend.observation
+                                                                                order_pend.observation,
+                                                                                order_pend
+                                                                                    .food
+                                                                                    .item
+                                                                                    .id
                                                                             )
                                                                         "
                                                                     ></el-button>
@@ -2565,7 +2575,9 @@
             :current="current"
             :observations.sync="tags"
             :showDialog.sync="showObservations"
+            :ordenId="currentOrden"
             @addObservation="addObservation"
+            :configuration="configuration"
         ></observation-form>
         <quotation-form
             v-if="configuration.quotation"
@@ -2777,7 +2789,8 @@
                 >
             </div>
         </el-dialog>
-        <digital-payments :showDigitalPay.sync="showDigitalPay" />
+        <digital-payments :showDigitalPay.sync="showDigitalPay"/>
+        <open-items :showOpenOrden.sync="showOpenOrden" />
     </div>
 </template>
 <style>
@@ -2899,6 +2912,7 @@ const CreditListModal = () => import("../partials/credit_list_modal.vue");
 const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
 const ConsolidatedModal = () => import("../partials/consolidated_modal.vue");
 const DigitalPayments = () => import("../partials/digital_payments.vue");
+const OpenItems = () => import("../partials/visualizate.vue");
 import { exchangeRate } from "@mixins/functions";
 export default {
     mixins: [exchangeRate],
@@ -2920,7 +2934,8 @@ export default {
         ShowLotesProduct,
         TransfersModal,
         QuotationForm,
-        ShowColorSizeProduct
+        ShowColorSizeProduct,
+        OpenItems
     },
     props: [
         "currencyIdChoice",
@@ -2966,6 +2981,7 @@ export default {
             totalQuantityProducts: 0, */
             localCotizarConfirmado: this.cotizarConfirmado,
             showDigitalPay: false,
+            showOpenOrden: false,
             countdown: 0,
             num_orden: 0,
             isRestaurantWarehouse: true,
@@ -3326,6 +3342,10 @@ export default {
                 "Cotización confirmada, procesando...",
                 this.cotizarConfirmado
             );
+        },
+
+        openOrden() {
+            this.showOpenOrden = true;
         },
 
         openDigitalPay() {
@@ -5293,9 +5313,12 @@ export default {
             this.observation = null;
         },
 
-        openLocalObservationDialog(idx, obs) {
+        openLocalObservationDialog(idx, obs, ordenId) {
+            this.currentOrden = ordenId;
+            console.log("orden id ver si pasa el id", ordenId);
             this.showObservations = true;
             this.currentLocalOrden = idx;
+            console.log("local orden", this.currentLocalOrden);
             this.current = obs;
             return;
 

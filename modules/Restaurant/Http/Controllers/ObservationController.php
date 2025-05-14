@@ -64,6 +64,7 @@ class ObservationController extends Controller
                     'id'          => $row->id,
                     'description' => $row->description,
                     'active'      => $row->active,
+                    'item_id'    => $row->item_id,
                 ];
             });
         }

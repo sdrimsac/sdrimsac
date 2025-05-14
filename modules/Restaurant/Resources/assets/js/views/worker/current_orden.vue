@@ -4,6 +4,8 @@
             :current="current"
             :observations.sync="tags"
             :showDialog.sync="showObservations"
+            :configuration="configuration"
+            :ordenId="currentOrden"
             @addObservation="addObservation"
         ></observation-form>
         <el-dialog
@@ -510,7 +512,11 @@
                                                             @click="
                                                                 openLocalObservationDialog(
                                                                     idx,
-                                                                    order_pend.observation
+                                                                    order_pend.observation,
+                                                                    order_pend
+                                                                                    .food
+                                                                                    .item
+                                                                                    .id
                                                                 )
                                                             "
                                                             style="width: 58px;"
@@ -1506,7 +1512,8 @@ export default {
             this.$emit("update:localOrden", ordenModified);
             this.closeLocalObservationDialog();
         },
-        openLocalObservationDialog(idx, obs) {
+        openLocalObservationDialog(idx, obs, ordenId) {
+            this.currentOrden = ordenId;
             this.showObservations = true;
             this.currentLocalOrden = idx;
             this.current = obs;

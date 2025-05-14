@@ -14325,6 +14325,67 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mt-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.created_items
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"
+                                                                            ></i>
+                                                                            Observaciones por producto
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="al activar esta opcion tendra la opcion de crear observaciones por cada producto independientemente"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.observer_item
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'crear observaciones por cada producto',
+                                                                                        form.observer_item,
+                                                                                        'variationIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <!-- <div class="col-md-2 mt-4">
                                                         <div class="form-group">

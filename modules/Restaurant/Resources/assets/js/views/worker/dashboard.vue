@@ -126,7 +126,22 @@
                                     @click="select_category(item.id)"
                                 >
                                     <div class="category-circle">
-                                        <i class="fas fa-utensils"></i>
+                                        <img
+                                            v-if="item.icono"
+                                            :src="
+                                                `/storage/uploads/category/${item.icono}`
+                                            "
+                                            alt=""
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
+                                        />
+                                        <img
+                                            v-else
+                                            src="/logo/imagen-no-disponible.jpg"
+                                            alt="Imagen no disponible"
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
+                                        />
+
+                                        <!-- <i class="fas fa-utensils"></i> -->
                                     </div>
                                     <span class="category-name">{{
                                         item.name
@@ -218,7 +233,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div
                 class="col-6 col-md-4 col-xl-2 p-1"
                 v-for="(data, index) in tables"
@@ -786,7 +801,6 @@ export default {
             this.$emit("update:cash_id", id);
         },
         filterZones(zone_id) {
-
             if (this.zone_id === zone_id) {
                 this.zone_id = null;
                 this.tables = this.all_tables;
@@ -1310,7 +1324,7 @@ export default {
             this.selectOption = 1;
             this.tables_row_select = null; // Then reset currentTable
             this.currentTable = null; // Important: reset currentTable to null
-            this.show = 'tables';
+            this.show = "tables";
         }
     }
 };

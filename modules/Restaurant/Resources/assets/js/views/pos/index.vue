@@ -3278,7 +3278,6 @@ export default {
                     icon: "fas fa-history ",
                     visible:
                         !this.isSeller &&
-                        this.cashId &&
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
 

@@ -20,6 +20,7 @@ class ObservationCollection extends ResourceCollection
                 'id'          => $row->id,
                 'description' => $row->description,
                 'active'      => $row->active,
+                'item_id'    => $row->item_id,
                 'item'        => $row->item ? $row->item->description : null,
 
             ];

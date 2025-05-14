@@ -6,7 +6,6 @@
         @open="open"
         :visible="showDialog"
         title="Agregar Observacion"
-        
     >
         <div class="d-flex flex-column" style="margin-top:15px">
             <el-input readonly v-model="observation"> </el-input>
@@ -24,15 +23,17 @@
                 </el-tag>
                 <template v-if="tags.length == 0">
                     <el-tag type="danger" :disable-transitions="true">
-                        <span
-                            > PRESIONE
-                            <b>+ AGREGAR</b> PARA GUARDARLA
-                        </span>
+                        <span> PRESIONE <b>+ AGREGAR</b> PARA GUARDARLA </span>
                     </el-tag>
                 </template>
             </div>
-
-            <div class="d-flex flex-column flex-sm-row justify-content-end align-items-center">
+            <div
+                class="d-flex flex-column flex-sm-row justify-content-end align-items-center"
+            >
+            </div>
+            <div
+                class="d-flex flex-column flex-sm-row justify-content-end align-items-center"
+            >
                 <el-input
                     class="input-new-tag"
                     @input="search"
@@ -41,7 +42,6 @@
                     size="medium"
                     maxlength="25"
                     show-word-limit
-
                 >
                 </el-input>
                 <el-button
@@ -125,7 +125,7 @@
 </style>
 <script>
 export default {
-    props: ["showDialog", "observations", "current"],
+    props: ["showDialog", "observations", "current", "ordenId", "configuration"],
     data() {
         return {
             observation: null,
@@ -139,9 +139,11 @@ export default {
     methods: {
         search(input) {
             this.tags = this.observations
-                .filter(o => o.description.includes(input.toUpperCase()) && o.active)
+                .filter(
+                    o => o.description.includes(input.toUpperCase()) && o.active
+                )
                 .slice(0, 10);
-            if (input.length > 50){
+            if (input.length > 50) {
                 this.newTag = input.slice(0, 50);
             }
         },
@@ -156,18 +158,26 @@ export default {
 
                     try {
                         this.loading = true;
+                        const payload = {
+                            description: toAdd,
+                            active: 1
+                        };
+
+                        if (this.configuration.observer_item) {
+                            payload.item_id = this.ordenId;
+                        }
+
                         const response = await this.$http.post(
                             "../observations",
-                            {
-                                description: toAdd,
-                                active: 1
-                            }
+                            payload
                         );
+
                         if (response.status == 200) {
                             this.tags.push({
                                 description: toAdd,
                                 selected: true,
-                                active: 1
+                                active: 1,
+                                item_id: this.configuration.observer_item ? this.ordenId : null
                             });
                             this.addWord(toAdd);
                             this.formatObs();
@@ -176,7 +186,15 @@ export default {
                                 ...this.observations,
                                 ...this.tags
                             ]);
-                            this.tags = this.observations.slice(0, 10);
+
+                            // Filtrar nuevamente las observaciones si observer_item es true
+                            if (this.configuration.observer_item) {
+                                this.tags = this.observations
+                                    .filter(o => o.active && o.item_id === this.ordenId)
+                                    .slice(0, 10);
+                            } else {
+                                this.tags = this.observations.slice(0, 10);
+                            }
                         } else {
                             if (response.status == 422) {
                                 this.$toast.error("La obse ya existe.");
@@ -210,14 +228,33 @@ export default {
             this.formatObs();
         },
         open() {
-            this.tags = this.observations.filter(o => o.active).slice(0, 10).map(o => ({
-                ...o,
-                description: o.description.toUpperCase(),
-                selected: false
-            }));
+            console.log("open ver si pasa el id", this.ordenId);
+
+            if (this.configuration.observer_item) {
+                // Filtrar observaciones relacionadas al item_id si observer_item es true
+                this.tags = this.observations
+                    .filter(o => o.active && o.item_id === this.ordenId)
+                    .slice(0, 10)
+                    .map(o => ({
+                        ...o,
+                        description: o.description.toUpperCase(),  
+                        selected: false
+                    }));
+            } else {
+                this.tags = this.observations
+                    .filter(o => o.active)
+                    .slice(0, 10)
+                    .map(o => ({
+                        ...o,
+                        description: o.description.toUpperCase(),
+                        selected: false
+                    }));
+            }
+
             this.observation = null;
             this.observationsArray = [];
             this.newTag = null;
+
             if (this.current != null) {
                 if (this.current.length > 1) {
                     this.observation = this.current;
