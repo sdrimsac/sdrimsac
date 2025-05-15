@@ -202,159 +202,6 @@
                 class="product-wrapper-grid list-view p-2"
                 style="height:calc(100vh - 27rem);overflow-y: auto;overflow-x:hidden;margin-bottom:15px;"
             >
-                <div class="row" v-if="ordens.length != 0">
-                    <div class="col-12">
-                        <p class="h4 txt-info p-10 txt-primary f-w-700">
-                            <i class="icofont icofont-fork-and-knife"></i>
-                            <a
-                                class="badge badge bg-dark text-white"
-                                href="javascript:void(0)"
-                            >
-                                <template
-                                    v-if="
-                                        ordens.length > 0 && ordens.length <= 9
-                                    "
-                                    >0{{ ordens.length }}</template
-                                >
-                                <template v-else>{{ ordens.length }}</template>
-                            </a>
-                            Orden de Pedido Nº {{ ordenSelectedId }}
-                        </p>
-                    </div>
-                    <div
-                        class="col-md-12"
-                        v-for="(ord_row, idxx) in ordens"
-                        :key="idxx"
-                    >
-                        <div class="card mb-2" id="card">
-                            <div class="row">
-                                <div class="col-auto">
-                                    <template
-                                        v-if="
-                                            ord_row.food.image ==
-                                                'imagen-no-disponible.jpg'
-                                        "
-                                    >
-                                        <img
-                                            src="/images/imagen-no-disponible.jpg"
-                                            alt="User Img"
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
-                                    </template>
-                                    <template v-else>
-                                        <img
-                                            :src="
-                                                formatUrlImage(
-                                                    ord_row.food.image
-                                                )
-                                            "
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
-                                    </template>
-                                </div>
-                                <div
-                                    class="col position-relative h-100 p-0 m-0"
-                                >
-                                    <div class="card-body p-2">
-                                        <div class="row h-100">
-                                            <div
-                                                class="col-12 mb-md-0 d-flex align-items-center p-1"
-                                            >
-                                                <div class="pt-0 pb-0 pe-2">
-                                                    <div
-                                                        class="h6 mb-0 clamp-line"
-                                                        data-line="1"
-                                                    >
-                                                        {{
-                                                            ord_row.food &&
-                                                            ord_row.food
-                                                                .description
-                                                                ? ord_row.food.description.toUpperCase()
-                                                                : ""
-                                                        }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row h-100">
-                                            <div
-                                                class="col-5 mb-md-0 d-flex align-items-center p-1"
-                                            >
-                                                {{ ord_row.quantity }} x
-                                                {{
-                                                    Number(
-                                                        ord_row.price
-                                                    ).toFixed(2)
-                                                }}
-                                            </div>
-
-                                            <div
-                                                class="col-5 d-flex justify-content-start justify-content-md-start align-items-center p-1"
-                                            >
-                                                <el-button-group>
-                                                    <el-tooltip
-                                                        v-if="
-                                                            ord_row.status_orden_id !=
-                                                                3
-                                                        "
-                                                        effect="dark"
-                                                        content="Pedido listo"
-                                                        placement="top-start"
-                                                    >
-                                                        <el-button
-                                                            @click="
-                                                                ordenReady(
-                                                                    ord_row.id
-                                                                )
-                                                            "
-                                                            type="success"
-                                                            icon="el-icon-check"
-                                                            size="mini"
-                                                            style="width: 58px;"
-                                                        ></el-button>
-                                                    </el-tooltip>
-                                                </el-button-group>
-                                                <el-button-group>
-                                                    <el-tooltip
-                                                        effect="dark"
-                                                        content="Cancelar pedido"
-                                                        placement="top-start"
-                                                    >
-                                                        <el-button
-                                                            v-if="
-                                                                configuration.delete_mozo
-                                                            "
-                                                            type="danger"
-                                                            icon="el-icon-delete"
-                                                            @click="
-                                                                cancelOrden(
-                                                                    ord_row.id
-                                                                )
-                                                            "
-                                                            style="width: 58px;"
-                                                            size="mini"
-                                                        ></el-button>
-                                                    </el-tooltip>
-                                                </el-button-group>
-                                            </div>
-                                            <div
-                                                class="col-md-12"
-                                                v-if="ord_row.observations"
-                                            >
-                                                <small>
-                                                    OBS:
-                                                    {{ ord_row.observations }}
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row" v-if="localOrden.length != 0">
                     <div class="col-12">
                         <p class="h4 txt-info p-10 txt-primary f-w-700">
@@ -578,6 +425,158 @@
                                                 <small>
                                                     OBS.:
                                                     {{ order_pend.observation }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" v-if="ordens.length != 0">
+                    <div class="col-12">
+                        <p class="h4 txt-info p-10 txt-primary f-w-700">
+                            <i class="icofont icofont-fork-and-knife"></i>
+                            <a
+                                class="badge badge bg-dark text-white"
+                                href="javascript:void(0)"
+                            >
+                                <template
+                                    v-if="
+                                        ordens.length > 0 && ordens.length <= 9
+                                    "
+                                    >0{{ ordens.length }}</template
+                                >
+                                <template v-else>{{ ordens.length }}</template>
+                            </a>
+                            Orden de Pedido Nº {{ ordenSelectedId }}
+                        </p>
+                    </div>
+                    <div
+                        class="col-md-12"
+                        v-for="(ord_row, idxx) in ordens"
+                        :key="idxx"
+                    >
+                        <div class="card mb-2" id="card">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <template
+                                        v-if="
+                                            ord_row.food.image ==
+                                                'imagen-no-disponible.jpg'
+                                        "
+                                    >
+                                        <img
+                                            src="/images/imagen-no-disponible.jpg"
+                                            alt="User Img"
+                                            class="card-img card-img-horizontal h-100 thumbail"
+                                        />
+                                    </template>
+                                    <template v-else>
+                                        <img
+                                            :src="
+                                                formatUrlImage(
+                                                    ord_row.food.image
+                                                )
+                                            "
+                                            class="card-img card-img-horizontal h-100 thumbail"
+                                        />
+                                    </template>
+                                </div>
+                                <div
+                                    class="col position-relative h-100 p-0 m-0"
+                                >
+                                    <div class="card-body p-2">
+                                        <div class="row h-100">
+                                            <div
+                                                class="col-12 mb-md-0 d-flex align-items-center p-1"
+                                            >
+                                                <div class="pt-0 pb-0 pe-2">
+                                                    <div
+                                                        class="h6 mb-0 clamp-line"
+                                                        data-line="1"
+                                                    >
+                                                        {{
+                                                            ord_row.food &&
+                                                            ord_row.food
+                                                                .description
+                                                                ? ord_row.food.description.toUpperCase()
+                                                                : ""
+                                                        }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row h-100">
+                                            <div
+                                                class="col-5 mb-md-0 d-flex align-items-center p-1"
+                                            >
+                                                {{ ord_row.quantity }} x
+                                                {{
+                                                    Number(
+                                                        ord_row.price
+                                                    ).toFixed(2)
+                                                }}
+                                            </div>
+
+                                            <div
+                                                class="col-5 d-flex justify-content-start justify-content-md-start align-items-center p-1"
+                                            >
+                                                <el-button-group>
+                                                    <el-tooltip
+                                                        v-if="
+                                                            ord_row.status_orden_id !=
+                                                                3
+                                                        "
+                                                        effect="dark"
+                                                        content="Pedido listo"
+                                                        placement="top-start"
+                                                    >
+                                                        <el-button
+                                                            @click="
+                                                                ordenReady(
+                                                                    ord_row.id
+                                                                )
+                                                            "
+                                                            type="success"
+                                                            icon="el-icon-check"
+                                                            size="mini"
+                                                            style="width: 58px;"
+                                                        ></el-button>
+                                                    </el-tooltip>
+                                                </el-button-group>
+                                                <el-button-group>
+                                                    <el-tooltip
+                                                        effect="dark"
+                                                        content="Cancelar pedido"
+                                                        placement="top-start"
+                                                    >
+                                                        <el-button
+                                                            v-if="
+                                                                configuration.delete_mozo
+                                                            "
+                                                            type="danger"
+                                                            icon="el-icon-delete"
+                                                            @click="
+                                                                cancelOrden(
+                                                                    ord_row.id
+                                                                )
+                                                            "
+                                                            style="width: 58px;"
+                                                            size="mini"
+                                                        ></el-button>
+                                                    </el-tooltip>
+                                                </el-button-group>
+                                            </div>
+                                            <div
+                                                class="col-md-12"
+                                                v-if="ord_row.observations"
+                                            >
+                                                <small>
+                                                    OBS:
+                                                    {{ ord_row.observations }}
                                                 </small>
                                             </div>
                                         </div>
