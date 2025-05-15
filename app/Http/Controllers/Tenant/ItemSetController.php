@@ -173,13 +173,16 @@ class ItemSetController extends Controller
     {
         $warehouse_id = $request->warehouse_id;
         $input = $request->input;
-
-        $insumos_category = CategoryItem::where('name', 'INSUMOS')->first();
+        $configuration = Configuration::first();
 
         $individual_items = Item::whereTypeUser()
             ->whereNotIsSet()
-            ->whereIsActive()
-            ->where('category_id', $insumos_category->id);
+            ->whereIsActive();
+
+        if($configuration->restaurant) {
+            $insumos_category = CategoryItem::where('name', 'INSUMOS')->first();
+            $individual_items = $individual_items->where('category_id', $insumos_category->id);
+        }
 
         if ($input) {
             $individual_items = $individual_items->where(function ($query) use ($input) {
@@ -201,8 +204,8 @@ class ItemSetController extends Controller
                 return [
                     'id' => $row->id,
                     'full_description' => $full_description,
-                    'internal_id' => $row->internal_id, 
-                    'description' => $row->description,
+                    'internal_id' => $row->internal_id,
+                    'description' => $row->description, 
                     'sale_unit_price' => $row->sale_unit_price,
                     'unit_type_description' => $unit_type_description,
                 ];
