@@ -1775,6 +1775,7 @@
             :customer_default="customer_default"
             @setPayments="setPayments"
             :printerOn="printerOn"
+            :establishments="establishments"
         >
         </show-split-payment-form>
         <person-college-form
@@ -2032,7 +2033,6 @@ export default {
         "payments",
         "configuration",
         "idOrden",
-        "company",
         "desarrollador",
         "percentage_igv",
         "all_customers",

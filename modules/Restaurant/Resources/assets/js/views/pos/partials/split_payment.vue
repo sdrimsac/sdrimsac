@@ -94,7 +94,7 @@
                             <label for="document_type_id"
                                 >Tipo de documento</label
                             >
-                            <el-select
+                            <!-- <el-select
                                 v-model="person.document_type_id"
                                 filterable
                             >
@@ -103,6 +103,26 @@
                                     :key="option.value"
                                     :value="option.value"
                                     :label="option.text"
+                                ></el-option>
+                            </el-select> -->
+                            <el-select
+                                v-model="person.document_type_id"
+                                filterable
+                            >
+                                <el-option
+                                    v-if="establishments.documents.invoice"
+                                    value="01"
+                                    label="FACTURA"
+                                ></el-option>
+                                <el-option
+                                    v-if="establishments.documents.receipt"
+                                    value="03"
+                                    label="BOLETA"
+                                ></el-option>
+                                <el-option
+                                    v-if="establishments.documents.sale_note"
+                                    value="80"
+                                    label="NOTA DE VENTA"
                                 ></el-option>
                             </el-select>
                         </div>
@@ -257,7 +277,8 @@ export default {
         "orden_items",
         "customer_default",
         "form",
-        "series"
+        "series",
+        "establishments"
     ],
     created() {},
     data() {
