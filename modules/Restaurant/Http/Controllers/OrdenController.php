@@ -874,28 +874,15 @@ class OrdenController extends Controller
 
             // Verificar si el usuario mozo y el usuario caja están en el mismo establecimiento
             $establishment_id = $mozo_user->establishment_id;
-            $caja_user = User::whereHas('area', function ($query) {
+            $user = User::whereHas('area', function ($query) {
                 $query->where('description', 'like', '%CAJ%');
             })->where('establishment_id', $establishment_id)->first();
 
-            if (!$caja_user) {
+            if (!$user) {
                 return [
                     'success' => false,
                     'message' => 'No se encontró un usuario de caja asignado al establecimiento.'
                 ];
-            }
-
-            if ($configuration->restaurant) {
-                $caja_abierta = Cash::where('user_id', $caja_user->id)
-                    ->whereNull('time_closed')
-                    ->exists();
-
-                if (!$caja_abierta) {
-                    return [
-                        'success' => false,
-                        'message' => 'La caja asignada al usuario de caja aún no está abierta. No se pueden realizar pedidos.'
-                    ];
-                }
             }
 
             if ($request->caja == false && $configuration->pin_switch) {
