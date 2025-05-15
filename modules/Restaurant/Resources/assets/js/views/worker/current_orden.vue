@@ -29,6 +29,10 @@
         </el-dialog>
 
         <template>
+            <open-items
+                :showDialog.sync="showOpenOrden"
+                :localOrden="localOrden"
+            />
             <Pinform
                 @sendOrden="sendOrden"
                 :showDialogPing.sync="showDialogPing"
@@ -82,47 +86,70 @@
             <div v-if="ordens.length > 0" class="row d-flex flex-row p-2">
                 <div class="col-12 d-flex justify-content-end">
                     <el-button-group>
-                        <el-button
-                            type="success"
-                            class="btn btn-sm"
-                            @click="printTicketPos"
-                            v-if="configuration.print_pos_worker"
+                        <el-tooltip
+                            effect="dark"
+                            content="Imprimir ticket en caja"
+                            placement="top-start"
                         >
-                            <i class="icofont-printer"></i> Imprimir Precuenta -
-                            Caja
-                        </el-button>
-                        <el-button
-                           v-if="configuration.re_printer"
-                            type="primary"
-                            class="btn btn-sm"
-                            @click="printTicket"
+                            <el-button
+                                type="success"
+                                class="btn btn-sm"
+                                @click="printTicketPos"
+                                v-if="configuration.print_pos_worker"
+                            >
+                                <i class="icofont-printer"></i>
+                                Caja
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            effect="dark"
+                            content="Imprimir precuenta"
+                            placement="top-start"
                         >
-                            <i class="icofont-printer"></i> Reimprimir Comanda
-                        </el-button>
+                            <el-button
+                                v-if="configuration.re_printer"
+                                type="primary"
+                                class="btn btn-sm"
+                                @click="printTicket"
+                            >
+                                <i class="icofont-printer"></i>
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            effect="dark"
+                            content="Imprimir ticket en cocina"
+                            placement="top-start"
+                        >
+                            <el-button
+                                v-if="configuration.pdf_preorder"
+                                type="info"
+                                @click="printTicketPdf"
+                                class="btn btn-sm"
+                            >
+                                <i class="icofont-printer"></i> PDF
+                            </el-button>
+                        </el-tooltip>
 
-                        <el-button
-                            v-if="configuration.pdf_preorder"
-                            type="info"
-                            @click="printTicketPdf"
-                            class="btn btn-sm"
+                        <el-tooltip
+                            effect="dark"
+                            content="Cancelar orden"
+                            placement="top-start"
                         >
-                            <i class="icofont-printer"></i> PDF ticket
-                        </el-button>
-
-                        <el-button
-                        v-if="configuration.delete_mozo"
-                            type="danger"
-                            @click="cancelGeneralOrden"
-                            class="btn btn-sm"
-                        >
-                            <i class="icofont-close-line"></i> Cancelar
-                        </el-button>
+                            <el-button
+                                v-if="configuration.delete_mozo"
+                                type="danger"
+                                @click="cancelGeneralOrden"
+                                class="btn btn-sm"
+                            >
+                                <i class="icofont-close-line"></i>
+                            </el-button>
+                        </el-tooltip>
                     </el-button-group>
                 </div>
             </div>
             <div class="row p-2" v-if="localOrden.length != 0">
-                <div class="col-6 f-w-700 text-end pt-2 pb-2">
-                    <label class="control-label w-100">Todo para llevar</label>
+                <div class="col-4 f-w-700 text-end pt-2 pb-2">
+                    <label class="control-label w-100">para llevar</label>
                     <el-switch
                         v-model="to_carry"
                         active-text="Si"
@@ -130,10 +157,27 @@
                         @change="allToCarry"
                     ></el-switch>
                 </div>
-                <div class="col-6 d-flex justify-content-end">
-                    <button @click="submit" class="btn btn-success btn-sm">
-                        Enviar pedido
-                    </button>
+                <div class="col-8 d-flex justify-content-end">
+                    <el-tooltip
+                        effect="dark"
+                        content="Enviar ordenes"
+                        placement="top-start"
+                    >
+                        <el-button @click="submit" class="btn-sm bg-success">
+                            <i class="el-icon-s-promotion"></i>
+                        </el-button>
+                    </el-tooltip>
+                    <el-tooltip
+                        effect="dark"
+                        content="ver ordenes antes de enviar"
+                        placement="top-start"
+                    >
+                        <el-button
+                            class="btn-sm"
+                            @click="openOrden"
+                            icon="el-icon-view"
+                        ></el-button>
+                    </el-tooltip>
                 </div>
             </div>
 
@@ -278,7 +322,9 @@
                                                         placement="top-start"
                                                     >
                                                         <el-button
-                                                            v-if="configuration.delete_mozo"
+                                                            v-if="
+                                                                configuration.delete_mozo
+                                                            "
                                                             type="danger"
                                                             icon="el-icon-delete"
                                                             @click="
@@ -514,9 +560,8 @@
                                                                     idx,
                                                                     order_pend.observation,
                                                                     order_pend
-                                                                                    .food
-                                                                                    .item
-                                                                                    .id
+                                                                        .food
+                                                                        .item.id
                                                                 )
                                                             "
                                                             style="width: 58px;"
@@ -725,7 +770,8 @@
 import Pinform from "./paid.vue";
 import ObservationForm from "../partials/observation_form.vue";
 import swal from "sweetalert2";
-import Swal from "sweetalert2";
+const OpenItems = () => import("../../views/pos/partials/visualizate.vue");
+
 export default {
     props: [
         "localOrden",
@@ -749,10 +795,12 @@ export default {
     components: {
         swal,
         Pinform,
-        ObservationForm
+        ObservationForm,
+        OpenItems
     },
     data() {
         return {
+            showOpenOrden: false,
             localDividedItems: this.divided_items,
             deleteGeneralOrden: false,
             ordenIdToDelete: null,
@@ -795,6 +843,9 @@ export default {
     },
     mounted() {},
     methods: {
+        openOrden() {
+            this.showOpenOrden = true;
+        },
         saveDividedItemsLocalStorage() {
             this.$emit("update:divided_items", this.localDividedItems);
 

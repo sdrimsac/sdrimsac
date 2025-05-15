@@ -81,7 +81,7 @@
                             <th class="text-end text-white">Cliente</th>
                             <th class="text-end text-white">Nota de Venta</th>
                             <th class="text-end text-white">Guia</th>
-                            <th class="text-end text-white">Estado</th>
+                            <th class="text-end text-white">Motivo Anulacion</th>
                             <th class="text-white text-center">Moneda</th>
                             <th
                                 class="text-white text-end"
@@ -369,7 +369,8 @@
                                     <br />
                                 </span>
                             </td>
-                            <td>{{ row.state_type_description }}</td>
+                            <!-- <td>{{ row.state_type_description }}</td> -->
+                            <td>{{ row.observation }}</td>
                             <td class="text-center">
                                 {{ row.currency_type_id }}
                             </td>

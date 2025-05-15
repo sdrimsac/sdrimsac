@@ -11,6 +11,11 @@
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-8">
+                        <div class="form-group">
+                            <el-checkbox v-model="barcodeMode"
+                                >¿Usar lector de código de barras?</el-checkbox
+                            >
+                        </div>
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
@@ -18,26 +23,35 @@
                             <label class="control-label">
                                 <i class="fas fa-box"></i> Producto
                             </label>
-                            <el-select
-                                v-model="form.item_id"
-                                class="w-100"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                @change="changeItem"
-                                @keydown.native="handleBarcode"
-                                placeholder="Escanee código de barras o busque por nombre/código"
-                                :remote-method="searchRemoteItems"
-                                :loading="loading_search_item"
-                            >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
+                            <template v-if="!barcodeMode">
+                                <el-select
+                                    v-model="form.item_id"
+                                    ref="itemSelect"
+                                    class="w-100"
+                                    filterable
+                                    clearable
+                                    @change="changeItem"
+        
+                                    placeholder=" busque por nombre/código"
+                                    :remote-method="searchRemoteItems"
+                                    :loading="loading_search_item"
+                                >
+                                    <el-option
+                                        v-for="option in items"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                    ></el-option>
+                                </el-select>
+                            </template>
+                            <template v-else>
+                                <el-input
+                                    v-model="barcodeInput"
+                                    placeholder="Escanee el código de barras aquí"
+                                    @keydown.native="handleBarcodeInput"
+                                    clearable
+                                ></el-input>
+                            </template>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.item_id"
@@ -124,7 +138,8 @@
                             :class="{ 'has-danger': errors.date_of_due }"
                         >
                             <label class="control-label">
-                                <i class="fas fa-calendar-alt"></i> Fec. Vencimiento
+                                <i class="fas fa-calendar-alt"></i> Fec.
+                                Vencimiento
                             </label>
                             <el-date-picker
                                 v-model="form.date_of_due"
@@ -150,7 +165,8 @@
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickLotcode"
                         >
-                            <i class="fas fa-list-ol"></i> [&#10004; Ingresar series]
+                            <i class="fas fa-list-ol"></i> [&#10004; Ingresar
+                            series]
                         </a>
                     </div>
                     <div
@@ -163,7 +179,8 @@
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickColorSize"
                         >
-                            <i class="fas fa-palette"></i> [&#10004; Ingresar Color & Talla]
+                            <i class="fas fa-palette"></i> [&#10004; Ingresar
+                            Color & Talla]
                         </a>
                     </div>
                     <div class="col-md-8">
@@ -174,7 +191,8 @@
                             }"
                         >
                             <label class="control-label">
-                                <i class="fas fa-exchange-alt"></i> Motivo traslado
+                                <i class="fas fa-exchange-alt"></i> Motivo
+                                traslado
                             </label>
                             <el-select
                                 v-model="form.inventory_transaction_id"
@@ -247,7 +265,6 @@
                     <span>Aceptar</span>
                 </el-button>
             </div>
-
         </form>
 
         <input-lots-form
@@ -303,8 +320,10 @@ export default {
             inventory_transactions: [],
             loading_search_item: false,
             product: null,
-            barcodeBuffer: '',
+            barcodeBuffer: "",
             lastKeyTime: 0,
+            barcodeMode: false,
+            barcodeInput: ""
         };
     },
     created() {
@@ -329,21 +348,59 @@ export default {
         },
         handleBarcode(event) {
             const currentTime = new Date().getTime();
-            
             if (currentTime - this.lastKeyTime > 100) {
-                this.barcodeBuffer = '';
+                this.barcodeBuffer = "";
             }
             this.lastKeyTime = currentTime;
-            
             this.barcodeBuffer += event.key;
-            
-            if (event.key === 'Enter' && this.barcodeBuffer.length > 0) {
+            if (event.key === "Enter" && this.barcodeBuffer.length > 0) {
                 event.preventDefault();
+                // Solo buscar el producto, no limpiar el modelo ni el input visual aquí
                 this.searchRemoteItems(this.barcodeBuffer);
-                this.barcodeBuffer = '';
+                this.barcodeBuffer = "";
             }
         },
-
+        handleBarcodeInput(event) {
+            if (!this.barcodeMode) return;
+            const currentTime = new Date().getTime();
+            if (currentTime - this.lastKeyTime > 100) {
+                this.barcodeBuffer = "";
+            }
+            this.lastKeyTime = currentTime;
+            // Solo agregar caracteres imprimibles
+            if (
+                event.key.length === 1 &&
+                !event.ctrlKey &&
+                !event.altKey &&
+                !event.metaKey
+            ) {
+                this.barcodeBuffer += event.key;
+            }
+            if (event.key === "Enter" && this.barcodeBuffer.length > 0) {
+                event.preventDefault();
+                this.loading_search_item = true;
+                this.$http
+                    .get(`/${this.resource}/items?value=${this.barcodeBuffer}`)
+                    .then(response => {
+                        this.items = response.data;
+                        if (this.items.length > 0) {
+                            // Si se encuentra producto, agregarlo como válido y mostrar la descripción en el input
+                            this.setProduct([this.items[0]]);
+                            this.barcodeInput = this.items[0].descripcion || this.items[0].description || '';
+                            this.form.quantity = this.items[0].stock || 0; // Actualizar el stock
+                        } else {
+                            // Si no hay resultados, limpia la selección y el input
+                            this.form.item_id = null;
+                            this.item = null;
+                            this.barcodeInput = "";
+                        }
+                        this.loading_search_item = false;
+                    })
+                    .finally(() => {
+                        this.barcodeBuffer = "";
+                    });
+            }
+        },
         searchRemoteItems(input) {
             if (input.length >= 3) {
                 clearTimeout(this.timer);
@@ -354,7 +411,6 @@ export default {
                         .then(response => {
                             this.items = response.data;
                             this.loading_search_item = false;
-                            
                         });
                 }, 300);
             }
@@ -520,27 +576,36 @@ export default {
             if (items && items.length > 0) {
                 const item = items[0];
 
+                // Asegurar que la propiedad warehouse esté disponible para selectedWarehouses
+                if (item.warehouses && !item.warehouse) {
+                    item.warehouse = item.warehouses;
+                }
+
                 // Agregar el item al array de items si no existe
                 if (!this.items.some(i => i.id === item.id)) {
                     this.items.push({
                         id: item.id,
                         description: item.descripcion,
                         stock: item.stock || 0,
-                        // Agregar cualquier otra propiedad necesaria
                         lots_enabled: item.lots_enabled || false,
                         series_enabled: item.series_enabled || false,
-                        has_color_size: item.has_color_size || false
+                        has_color_size: item.has_color_size || false,
+                        warehouse: item.warehouse || item.warehouses || [] // Asegura almacenes
                     });
                 }
 
                 this.form.item_id = item.id;
                 this.form.description = item.descripcion;
                 this.form.quantity = item.stock || 0;
+                this.item = item; // Asegura que selectedWarehouses se actualice
 
-                // Forzar la actualización del item seleccionado
-                /* this.$nextTick(() => {
-                    this.changeItem();
-                }); */
+                this.$nextTick(() => {
+                    if (this.$refs.itemSelect) {
+                        this.$refs.itemSelect.blur();
+                        this.$refs.itemSelect.$el.querySelector("input").value = "";
+                    }
+                });
+                this.barcodeBuffer = "";
             }
         }
     }

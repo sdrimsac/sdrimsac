@@ -10,7 +10,7 @@
             <div class="form-body">
                 <br />
                 <div class="row">
-                    <div class="col-md-8">
+                    <!-- <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
@@ -39,6 +39,54 @@
                                     :label="option.description"
                                 ></el-option>
                             </el-select>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.item_id"
+                                v-text="errors.item_id[0]"
+                            ></small>
+                        </div>
+                    </div> -->
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <el-checkbox v-model="barcodeMode"
+                                >¿Usar lector de código de barras?</el-checkbox
+                            >
+                        </div>
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.item_id }"
+                        >
+                            <label class="control-label">
+                                <i class="fas fa-box"></i> Producto
+                            </label>
+                            <template v-if="!barcodeMode">
+                                <el-select
+                                    v-model="form.item_id"
+                                    ref="itemSelect"
+                                    class="w-100"
+                                    filterable
+                                    clearable
+                                    @change="changeItem"
+                                    placeholder=" busque por nombre/código"
+                                    :remote-method="searchRemoteItems"
+                                    :loading="loading_search_item"
+                                >
+                                    <el-option
+                                        v-for="option in items"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                    ></el-option>
+                                </el-select>
+                            </template>
+                            <template v-else>
+                                <el-input
+                                    v-model="barcodeInput"
+                                    placeholder="Escanee el código de barras aquí"
+                                    @keydown.native="handleBarcodeInput"
+                                    clearable
+                                ></el-input>
+                            </template>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.item_id"
@@ -188,8 +236,19 @@
                                                 warehouse.warehouse_description
                                             }}
                                         </td>
-                                        <td :class="{ 'text-danger': warehouse.stock < 0, 'text-success': warehouse.stock > 0 }">
-                                        {{ Number(warehouse.stock).toFixed(2) }}
+                                        <td
+                                            :class="{
+                                                'text-danger':
+                                                    warehouse.stock < 0,
+                                                'text-success':
+                                                    warehouse.stock > 0
+                                            }"
+                                        >
+                                            {{
+                                                Number(warehouse.stock).toFixed(
+                                                    2
+                                                )
+                                            }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -221,8 +280,7 @@
                         <span>Aceptar</span>
                     </el-button>
                 </div>
-                
-      
+
                 <!-- <el-button
                     type="primary"
                     icon="fas fa-save fa-lg"
@@ -284,16 +342,18 @@ export default {
             timer: null,
             item: null,
             showDialogColorSizeOutput: false,
-            barcodeBuffer: '',
-            barcodeTimeoutHandle: null
+            barcodeBuffer: "",
+            barcodeTimeoutHandle: null,
+            barcodeMode: false,
+            barcodeInput: ""
         };
     },
-    mounted() {
-        document.addEventListener('keypress', this.handleBarcodeInput);
+    /* mounted() {
+        document.addEventListener("keypress", this.handleBarcodeInput);
     },
     beforeDestroy() {
-        document.removeEventListener('keypress', this.handleBarcodeInput);
-    },
+        document.removeEventListener("keypress", this.handleBarcodeInput);
+    }, */
     created() {
         this.initForm();
     },
@@ -303,6 +363,49 @@ export default {
         }
     },
     methods: {
+        handleBarcodeInput(event) {
+            if (!this.barcodeMode) return;
+            const currentTime = new Date().getTime();
+            if (currentTime - this.lastKeyTime > 100) {
+                this.barcodeBuffer = "";
+            }
+            this.lastKeyTime = currentTime;
+            if (
+                event.key.length === 1 &&
+                !event.ctrlKey &&
+                !event.altKey &&
+                !event.metaKey
+            ) {
+                this.barcodeBuffer += event.key;
+            }
+            if (event.key === "Enter" && this.barcodeBuffer.length > 0) {
+                event.preventDefault();
+                this.loading_search_item = true;
+                this.$http
+                    .get(`/${this.resource}/items?value=${this.barcodeBuffer}`)
+                    .then(response => {
+                        this.items = response.data;
+                        if (this.items.length > 0) {
+                            // Si se encuentra producto, seleccionarlo y actualizar datos
+                            this.form.item_id = this.items[0].id;
+                            this.changeItem();
+                            this.barcodeInput =
+                                this.items[0].descripcion ||
+                                this.items[0].description ||
+                                "";
+                            this.form.quantity = this.items[0].stock || 0;
+                        } else {
+                            this.form.item_id = null;
+                            this.item = null;
+                            this.barcodeInput = "";
+                        }
+                        this.loading_search_item = false;
+                    })
+                    .finally(() => {
+                        this.barcodeBuffer = "";
+                    });
+            }
+        },
         colorSizeSelected(color_size) {
             console.log(
                 "🚀 ~ file: form_output.vue:263 ~ colorSizeSelected ~ color_size:",
@@ -313,28 +416,29 @@ export default {
         clickSelectColorSize() {
             this.showDialogColorSizeOutput = true;
         },
-        handleBarcode(event) {
+        /* handleBarcode(event) {
             const currentTime = new Date().getTime();
-            
+
             if (currentTime - this.lastKeyTime > 100) {
-                this.barcodeBuffer = '';
+                this.barcodeBuffer = "";
             }
             this.lastKeyTime = currentTime;
-            
+
             this.barcodeBuffer += event.key;
-            
-            if (event.key === 'Enter' && this.barcodeBuffer.length > 0) {
+
+            if (event.key === "Enter" && this.barcodeBuffer.length > 0) {
                 event.preventDefault();
                 this.searchRemoteItems(this.barcodeBuffer);
-                this.barcodeBuffer = '';
+                this.barcodeBuffer = "";
             }
-        },
+        }, */
         async searchRemoteItems(input) {
             if (input.length >= 3) {
                 clearTimeout(this.timer);
                 this.loading_search_item = true;
                 this.timer = setTimeout(() => {
-                    this.$http.get(`/${this.resource}/items?value=${input}`)
+                    this.$http
+                        .get(`/${this.resource}/items?value=${input}`)
                         .then(response => {
                             this.items = response.data;
                             // Si encontramos exactamente un item, lo seleccionamos automáticamente
