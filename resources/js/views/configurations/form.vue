@@ -10088,6 +10088,67 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.demo_pdf
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="printPosWorkerIcon"
+                                                                                class="fas fa-ticket-alt tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Mostar demo marca de agua en pdf
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="Mostar marca de agua en pdf al activar este boton"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.demo_pdf
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'Mostar demo marca de agua en pdf',
+                                                                                        form.demo_pdf,
+                                                                                        'printPosWorkerIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

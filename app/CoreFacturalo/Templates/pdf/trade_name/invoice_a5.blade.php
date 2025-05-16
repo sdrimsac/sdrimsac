@@ -37,7 +37,7 @@
                 alt="anulado" class="" style="opacity: 0.6;">
         </div>
     @endif
-    @if ($company->soap_type_id == '01')
+    @if ($company->soap_type_id == '01' && $configuration->demo_pdf)
         <div class="" style="position: absolute; text-align: center; top:30%;">
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png'))) }}"
                 alt="demoa4" class="" style="opacity: 0.4; width: 90%;">

@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    @if ($company->soap_type_id == '01')
+    @if ($company->soap_type_id == '01' && $configuration->demo_pdf)
         <div class="" style="position: absolute; text-align: center; top:25%;">
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demoa4.png'))) }}"
             alt="demoa4" class="" style="opacity: 0.4; width: 80%;"> 

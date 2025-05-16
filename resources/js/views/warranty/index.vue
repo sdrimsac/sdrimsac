@@ -34,6 +34,7 @@
                         <th class="text-white">Producto</th>
                         <th class="text-white">Serie Numero</th>
                         <th class="text-white">Cliente</th>
+                        <th class="text-white">Serie Vendida</th>
                         <th class="text-white">Fecha Inicio Garantia</th>
                         <th class="text-white">Tiempo De Garantia</th>
                         <th class="text-white">Fecha final Garantia</th>
@@ -51,6 +52,9 @@
                         <td>
                             {{ row.cliente_nombre }}<br>
                             {{ row.cliente_numero }}
+                        </td>
+                        <td>
+                            {{ row.serie_vendida }}
                         </td>
                         <td>{{ row.warranty_start_date }}</td>
                         <td v-if="row.month_day && row.month_day !== 'NA'">{{ row.month_day }} meses</td>

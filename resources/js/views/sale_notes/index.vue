@@ -81,7 +81,9 @@
                             <th class="text-end text-white">Cliente</th>
                             <th class="text-end text-white">Nota de Venta</th>
                             <th class="text-end text-white">Guia</th>
-                            <th class="text-end text-white">Motivo Anulacion</th>
+                            <th class="text-end text-white">
+                                Motivo Anulacion
+                            </th>
                             <th class="text-white text-center">Moneda</th>
                             <th
                                 class="text-white text-end"
@@ -138,8 +140,9 @@
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td class="text-end">
+                                <template v-if="row.state_type_id != 11">
                                 <div
-                                    v-if="row.state_type_id != 11"
+                                    
                                     class="btn-toolbar mb-2"
                                     role="toolbar"
                                 >
@@ -203,12 +206,9 @@
                                                 <i class="far fa-file-alt"></i>
                                                 Generar guía
                                             </a>
-                                            <!-- <a 
-                                                
-                                            >  -->
+                                            
 
-                                            <el-button 
-                                        
+                                            <el-button
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         (user_type == 'admin' ||
@@ -218,22 +218,12 @@
                                                 class="btn-danger"
                                                 @click.prevent="
                                                     clickVoided(row.id)
-                                                ">
-
+                                                "
+                                            >
                                                 <i class="fas fa-trash"></i>
                                                 Anular Nota de Venta
-
-                                            </el-button>    
-                                            <!-- </a> -->
-                                            <!-- <div
-                                                class="dropdown-divider"
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                      ></div>-->
+                                            </el-button>
+                                            
                                             <a
                                                 href="!#"
                                                 class="dropdown-item"
@@ -254,15 +244,7 @@
                                                 ></i>
                                                 Editar nota de Venta
                                             </a>
-                                            <!-- <div
-                                                class="dropdown-divider"
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                      ></div>-->
+                                            
                                             <a
                                                 href="!#"
                                                 class="dropdown-item"
@@ -284,15 +266,6 @@
                                                 ></i>
                                                 Generar Comprobante
                                             </a>
-                                            <!-- <div
-                                                class="dropdown-divider"
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                      ></div>-->
                                             <a
                                                 href="!#"
                                                 v-if="row.state_type_id != '11'"
@@ -307,7 +280,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                </template>
+                                <template v-else>
+                                    <el-button
+                                    
+                                    @click.prevent="clickOptions(row.id)"
+                                >
+                                    <i class="fas fa-print"></i>
+                                </el-button>
+
+                                </template>
                             </td>
+                            <!-- <td v-if="row.state_type_id == '11'">
+                                
+                            </td> -->
                             <td>
                                 <template
                                     v-if="
@@ -332,7 +318,6 @@
                                     >
                                     <br />
                                     <span
-                                        
                                         style="font-family: Arial, sans-serif;"
                                     >
                                         <!-- {{
@@ -837,21 +822,30 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: "Anular",
                 cancelButtonText: "Cancelar",
-                inputValidator: (value) => {
+                inputValidator: value => {
                     if (!value) {
                         return "El motivo es obligatorio";
                     }
                 }
-            }).then((result) => {
+            }).then(result => {
                 if (result.isConfirmed) {
                     const motivo = result.value;
-                    this.$http.get(`/${this.resource}/anulate/${id}`, { params: { motivo } }).then(() => {
-                        this.$eventHub.$emit("reloadData");
-                        this.$toast.success("Nota de venta anulada correctamente");
-                    }).catch((error) => {
-                        this.$toast.error("Ocurrió un error al anular la nota de venta");
-                        console.error(error);
-                    });
+                    this.$http
+                        .get(`/${this.resource}/anulate/${id}`, {
+                            params: { motivo }
+                        })
+                        .then(() => {
+                            this.$eventHub.$emit("reloadData");
+                            this.$toast.success(
+                                "Nota de venta anulada correctamente"
+                            );
+                        })
+                        .catch(error => {
+                            this.$toast.error(
+                                "Ocurrió un error al anular la nota de venta"
+                            );
+                            console.error(error);
+                        });
                 }
             });
         }

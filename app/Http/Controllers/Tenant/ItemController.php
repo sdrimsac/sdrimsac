@@ -1041,6 +1041,7 @@ class ItemController extends Controller
                         })
                             ->orWhere('internal_id', 'like', "%{$request->value}%")
                             ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('barcode', 'like', "%{$request->value}%")
                             ->orWhere('active', 'like', "%{$request->value}%");
                     } else {
                         $records->where(function ($query) use ($textoIntoArray) {
@@ -1050,6 +1051,7 @@ class ItemController extends Controller
                         })
                             ->orWhere('internal_id', 'like', "%{$request->value}%")
                             ->orWhere('second_name', 'like', "%{$request->value}%")
+                            ->orWhere('barcode', 'like', "%{$request->value}%")
                             ->orWhere('active', 'like', "%{$request->value}%");
                     }
 

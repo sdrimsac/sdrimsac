@@ -188,7 +188,8 @@ class InventoryController extends Controller
             ->whereNotIsSet()
             ->where(function ($query) use ($value) {
                 $query->where('description', 'like', '%' . $value . '%')
-                    ->orWhere('internal_id', 'like', '%' . $value . '%');
+                    ->orWhere('internal_id', 'like', '%' . $value . '%')
+                    ->orWhere('barcode', 'like', '%' . $value . '%');
             })
             ->take(25)
             ->get();
