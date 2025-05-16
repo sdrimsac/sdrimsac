@@ -560,6 +560,7 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
+            this.barcodeInput = "";
         },
         clickLotGroup() {
             if (this.form.warehouse_id) {

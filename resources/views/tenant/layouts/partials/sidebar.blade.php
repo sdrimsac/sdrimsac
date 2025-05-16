@@ -362,8 +362,8 @@
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers_place.index') }}">
                                 <i class="icofont-truck" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; ">Traslados 
-                                    </span>
+                                <span class="label" style="font-size: 1em; ">Traslados
+                                </span>
                             </a>
                         </li>
                     @endif
@@ -765,6 +765,7 @@
     @endif
 
     {{-- Reportes --}}
+
     @if (!$roleService->isArca() || $user->is_arca)
         <li>
             <a href="#reporte" data-bs-toggle="collapse" data-role="button"
@@ -774,7 +775,9 @@
                 <i class="icofont-file-alt" style="font-size: 2em; color: #ffffff; margin-right: 10px;"></i>
                 <span class="label" style="font-size: 1em; color: #ffffff;">Reportes</span>
             </a>
-            <ul id="reporte" class="collapse ">
+            <ul id="reporte" class="collapse" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                <!-- Rest of the menu items remain the same -->
+                <!-- Just added max-height and overflow-y to create a scrollable container -->
 
                 {{-- <ul id="contabilidad" class="collapse "> --}}
                 @if ($user->type == 'superadmin' || !$roleService->isLogistic())
@@ -787,8 +790,8 @@
                         </a>
                     </li>
                 @endif
-                {{-- </ul> --}}
-                {{-- Reporte de Métodos de Pago --}}
+
+                <!-- ... rest of the existing menu items ... -->
                 @if (!$roleService->isAccountant($user->worker_type_id))
                     @if (
                         $user->type == 'superadmin' ||
@@ -1031,20 +1034,24 @@
                             </a>
                         </li>
                     @endif
-                    <li>
-                        <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
-                            href="{{ route('tenant.shopping.index') }}">
-                            <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; ">Productos Comprados</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'foods' ? 'active' : '' }}"
-                            href="{{ route('tenant.foods.index') }}">
-                            <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span class="label" style="font-size: 1em; ">Reporte Platos Vendidos</span>
-                        </a>
-                    </li>
+                    @if ($config->purchases_sales)
+                        <li>
+                            <a class="{{ $path[0] === 'purchases' ? 'active' : '' }}"
+                                href="{{ route('tenant.shopping.index') }}">
+                                <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Productos Comprados</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->dishes_sold)
+                        <li>
+                            <a class="{{ $path[0] === 'foods' ? 'active' : '' }}"
+                                href="{{ route('tenant.foods.index') }}">
+                                <i class="icofont-shopping-cart" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span class="label" style="font-size: 1em; ">Reporte Platos Vendidos</span>
+                            </a>
+                        </li>
+                    @endif
                 @endif
 
             </ul>
@@ -1274,7 +1281,10 @@
 
 
     {{-- Hotel --}}
-    @if (($config->hotels || $config->mod_renta) && !$roleService->isLogistic() && !$roleService->isAccountant($user->worker_type_id))
+    @if (
+        ($config->hotels || $config->mod_renta) &&
+            !$roleService->isLogistic() &&
+            !$roleService->isAccountant($user->worker_type_id))
         <li>
             <a href="#hotelUl" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'tasks' ? true : false }} "

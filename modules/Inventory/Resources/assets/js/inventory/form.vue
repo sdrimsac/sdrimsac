@@ -571,6 +571,7 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
+            this.barcodeInput = ""; // Limpiar input de código de barras al cerrar modal
         },
         setProduct(items) {
             if (items && items.length > 0) {

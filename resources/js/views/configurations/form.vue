@@ -13054,6 +13054,80 @@
                                                                 ></el-switch>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-boxes"
+                                                                    ></i>
+                                                                    Reporte de compras 
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.purchases_sales
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'Reporte Productos comprados',
+                                                                            form.purchases_sales,
+                                                                            'Reporte Productos comprados',
+                                                                            'fingerprintIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-2 mt-4"
+                                                        >
+                                                            <div
+                                                                class="form-group"
+                                                            >
+                                                                <label
+                                                                    class="control-label w-100"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-boxes"
+                                                                    ></i>
+                                                                    Reporte de platos vendidos 
+                                                                </label>
+                                                                <el-switch
+                                                                    v-model="
+                                                                        form.dishes_sold
+                                                                    "
+                                                                    active-text="Si"
+                                                                    inactive-text="No"
+                                                                    :active-color="
+                                                                        '#28a745'
+                                                                    "
+                                                                    :inactive-color="
+                                                                        '#6c757d'
+                                                                    "
+                                                                    @change="
+                                                                        submit(
+                                                                            'Reporte Platos vendidos',
+                                                                            form.dishes_sold,
+                                                                            'Reporte Platos vendidos',
+                                                                            'fingerprintIcon'
+                                                                        )
+                                                                    "
+                                                                ></el-switch>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </el-tab-pane>

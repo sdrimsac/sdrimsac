@@ -1662,8 +1662,18 @@ class ItemController extends Controller
     public function destroy($id)
     {
         try {
-
             $item = Item::findOrFail($id);
+            
+            // Verificar si el item tiene registros en inventories
+            $has_inventory = Inventory::where('item_id', $id)->exists();
+            
+            if($has_inventory) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede eliminar el producto porque ya tiene stock cargado en inventario'
+                ];
+            }
+
             ItemUnitType::where('item_id', $id)->delete();
             ItemLotsGroup::where('item_id', $id)->delete();
             if ($item) {
@@ -1678,7 +1688,9 @@ class ItemController extends Controller
             ];
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
+            return ($e->getCode() == '23000') ? 
+                ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] : 
+                ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
         }
     }
 
