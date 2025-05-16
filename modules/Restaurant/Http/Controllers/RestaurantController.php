@@ -248,6 +248,7 @@ class RestaurantController extends Controller
     }
     public function login(Request $request)
     {
+        $browserToken = $request->input('browser_token');
         try {
 
             if (!$request->pin) {
@@ -282,14 +283,22 @@ class RestaurantController extends Controller
             $configuration = Configuration::first();
 
             /* if ($configuration->user_unit) {
+
                 $existing = DB::connection('tenant')->table('user_sessions')
                     ->where('user_id', $user->id)
                     ->first();
 
-                if ($existing) {
-                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 1;
+                $currentSessionId = Session::getId();
 
-                    if (!$expired && $existing->session_id !== Session::getId()) {
+                if ($existing) {
+                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 5;
+
+                    if ($expired) {
+                        // Si ha expirado, elimina y continúa con el login
+                        DB::connection('tenant')->table('user_sessions')
+                            ->where('user_id', $user->id)
+                            ->delete();
+                    } elseif ($existing->session_id !== $currentSessionId) {
                         Auth::logout();
                         return response()->json([
                             'success' => false,
@@ -297,36 +306,58 @@ class RestaurantController extends Controller
                             'message' => 'El usuario ya tiene una sesión activa.',
                         ]);
                     }
-
-                    // Si ha expirado, la sesión ya no es válida → eliminar
-                    if ($expired) {
-                        DB::connection('tenant')->table('user_sessions')
-                            ->where('user_id', $user->id)
-                            ->delete();
-                    }
-                }
-
-                $currentSessionId = Session::getId();
-
-                $existingSession = UserSession::where('user_id', $user->id)->first();
-
-                if ($existingSession && $existingSession->session_id !== $currentSessionId) {
-                    return response()->json([
-                        'success' => false,
-                        'session_conflict' => true,
-                        'message' => "El usuario ya tiene una sesión iniciada debe cerrar sesión para iniciar una nueva",
-                        'user_id' => $user->id,
-                    ]);
                 }
 
                 UserSession::updateOrCreate(
                     ['user_id' => $user->id],
                     [
-                        'session_id' => Session::getId(),
+                        'session_id' => $currentSessionId,
                         'user_agent' => $request->header('User-Agent'),
                         'last_activity' => now(),
                     ]
                 );
+
+                $request->session()->put('user_id', $user->id);
+            } */
+
+            /* if ($configuration->user_unit) {
+
+                $existing = DB::connection('tenant')->table('user_sessions')
+                    ->where('user_id', $user->id)
+                    ->first();
+
+                $currentSessionId = Session::getId();
+                $currentUserAgent = $request->header('User-Agent');
+                $sessionLifetime = config('session.lifetime');
+
+                if ($existing) {
+                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > $sessionLifetime;
+                    $sameBrowser = $existing->tab_id === $browserToken;
+
+                    if ($expired || $sameBrowser) {
+                        DB::connection('tenant')->table('user_sessions')
+                            ->where('user_id', $user->id)
+                            ->delete();
+                    } else {
+                        Auth::logout();
+                        return response()->json([
+                            'success' => false,
+                            'session_conflict' => true,
+                            'message' => 'El usuario ya tiene una sesión activa en otro navegador o dispositivo.',
+                        ]);
+                    }
+                }
+
+                UserSession::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'session_id' => $currentSessionId,
+                        'user_agent' => $currentUserAgent,
+                        'last_activity' => now(),
+                        'tab_id' => $browserToken,
+                    ]
+                );
+
                 $request->session()->put('user_id', $user->id);
             } */
 
@@ -337,36 +368,36 @@ class RestaurantController extends Controller
                     ->first();
 
                 $currentSessionId = Session::getId();
+                $currentUserAgent = $request->header('User-Agent');
+                $sessionLifetime = config('session.lifetime'); // minutos
+                $browserToken = $request->input('browser_token'); // viene desde el frontend
 
                 if ($existing) {
-                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 120;
+                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > $sessionLifetime;
+                    $sameBrowser = $existing->tab_id === $browserToken;
 
-                    if ($expired) {
-                        // Si ha expirado, elimina y continúa con el login
+                    if ($expired || $sameBrowser) {
                         DB::connection('tenant')->table('user_sessions')
                             ->where('user_id', $user->id)
                             ->delete();
-                    } elseif ($existing->session_id !== $currentSessionId) {
-                        // Si NO ha expirado y la sesión es distinta, bloquea
+                    } else {
                         Auth::logout();
                         return response()->json([
                             'success' => false,
                             'session_conflict' => true,
-                            'message' => 'El usuario ya tiene una sesión activa.',
+                            'message' => 'El usuario ya tiene una sesión activa en otro navegador o dispositivo.',
                         ]);
                     }
                 }
 
-                // Llegado aquí, ya sea:
-                // - No hay sesión previa
-                // - O la sesión previa expiró y fue eliminada
-
+                // Crear o actualizar sesión
                 UserSession::updateOrCreate(
                     ['user_id' => $user->id],
                     [
                         'session_id' => $currentSessionId,
-                        'user_agent' => $request->header('User-Agent'),
+                        'user_agent' => $currentUserAgent,
                         'last_activity' => now(),
+                        'tab_id' => $browserToken,
                     ]
                 );
 
@@ -484,6 +515,7 @@ class RestaurantController extends Controller
 
         return view('restaurant::worker.login');
     }
+
 
     /**
      * Store a newly created resource in storage.
