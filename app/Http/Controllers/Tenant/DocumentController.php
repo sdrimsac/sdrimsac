@@ -1037,6 +1037,7 @@ class DocumentController extends Controller
                 'number' => $row->number
             ];
         });
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $configuration = Configuration::first();
         $document_types_invoice = DocumentType::whereIn('id', ['01', '03'])->where('active', '1')->get();
         $document_types_note = DocumentType::whereIn('id', ['07', '08'])->where('active', '1')->get();
@@ -1120,7 +1121,8 @@ class DocumentController extends Controller
             'payment_destinations',
             'payment_conditions',
             'closebox',
-            'configuration'
+            'configuration',
+            'affectation_igv_types'
         );
     }
 
@@ -2852,6 +2854,7 @@ class DocumentController extends Controller
         $configuration = Configuration::all();
         $items = $this->getItems();
         $sellers = Seller::all();
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $categories = CategoryItem::orderBy('name')->get();
         $state_types = StateType::get();
         $document_types = DocumentType::whereIn('id', ['01', '03', '07', '08'])->get();
@@ -2885,7 +2888,8 @@ class DocumentController extends Controller
             'categories',
             'user_type',
             'unit_types',
-            'users'
+            'users',
+            'affectation_igv_types',
         );
     }
 

@@ -435,7 +435,7 @@ export default {
             this.all_series = response.data.series;
             this.establishments = response.data.establishments;
             this.payment_conditions = response.data.payment_conditions;
-            this.userType = response.data.user_type; // Agregamos el tipo de usuario
+            this.userType = response.data.user_type;
         });
 
         await this.getRecords();

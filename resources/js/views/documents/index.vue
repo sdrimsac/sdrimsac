@@ -1275,7 +1275,7 @@ export default {
         "typeUser",
         "import_documents",
         "import_documents_second",
-        "configuration"
+        "configuration",
     ],
     components: {
         DocumentSaludModal,

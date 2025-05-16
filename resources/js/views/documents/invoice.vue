@@ -94,154 +94,294 @@
                             <!-- Primera Fila -->
                             <div class="card h-100 mb-3">
                                 <div class="card-body d-flex flex-column">
-                                    <div class="form-group text-left flex-grow-1 d-flex flex-wrap gap-3">
+                                    <div
+                                        class="form-group text-left flex-grow-1 d-flex flex-wrap gap-3"
+                                    >
                                         <!-- Tipo de Comprobante -->
                                         <div class="col-lg-2 pb-2">
-                                            <div class="form-group" :class="{ 'has-danger': errors.document_type_id }">
-                                                <label class="control-label font-weight-bold">
-                                                    <i class="fas fa-file-invoice fa-lg"></i> Tipo de Comprobante
-                                                    <el-tooltip content="Campo Obligatorio">
-                                                        <span class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.document_type_id
+                                                }"
+                                            >
+                                                <label
+                                                    class="control-label font-weight-bold"
+                                                >
+                                                    <i
+                                                        class="fas fa-file-invoice fa-lg"
+                                                    ></i>
+                                                    Tipo de Comprobante
+                                                    <el-tooltip
+                                                        content="Campo Obligatorio"
+                                                    >
+                                                        <span
+                                                            class="text-danger"
+                                                            ><i
+                                                                class="fas fa-exclamation-circle"
+                                                            ></i
+                                                        ></span>
                                                     </el-tooltip>
                                                 </label>
-                                                <el-select 
-                                                    :disabled="editandoDocument" 
-                                                    v-model="form.document_type_id" 
-                                                    @change="changeDocumentType" 
-                                                    popper-class="el-select-document_type" 
-                                                    dusk="document_type_id">
-                                                    <el-option 
-                                                        v-for="option in document_types" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="option.description">
+                                                <el-select
+                                                    :disabled="editandoDocument"
+                                                    v-model="
+                                                        form.document_type_id
+                                                    "
+                                                    @change="changeDocumentType"
+                                                    popper-class="el-select-document_type"
+                                                    dusk="document_type_id"
+                                                >
+                                                    <el-option
+                                                        v-for="option in document_types"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <small 
-                                                    class="form-control-feedback" 
-                                                    v-if="errors.document_type_id" 
-                                                    v-text="errors.document_type_id[0]">
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.document_type_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .document_type_id[0]
+                                                    "
+                                                >
                                                 </small>
                                             </div>
                                         </div>
 
                                         <!-- Establecimiento -->
                                         <div class="col-lg-2 pb-2">
-                                            <div class="form-group" :class="{ 'has-danger': errors.establishment_id }">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.establishment_id
+                                                }"
+                                            >
                                                 <label class="control-label">
-                                                    <i class="fas fa-warehouse red-icon fa-lg"></i> Establecimiento
+                                                    <i
+                                                        class="fas fa-warehouse red-icon fa-lg"
+                                                    ></i>
+                                                    Establecimiento
                                                 </label>
-                                                <el-select 
-                                                    v-model="form.establishment_id" 
-                                                    @change="changeEstablishment">
-                                                    <el-option 
-                                                        v-for="option in establishments" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="option.description">
+                                                <el-select
+                                                    v-model="
+                                                        form.establishment_id
+                                                    "
+                                                    @change="
+                                                        changeEstablishment
+                                                    "
+                                                >
+                                                    <el-option
+                                                        v-for="option in establishments"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <small 
-                                                    class="form-control-feedback" 
-                                                    v-if="errors.establishment_id" 
-                                                    v-text="errors.establishment_id[0]">
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.establishment_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .establishment_id[0]
+                                                    "
+                                                >
                                                 </small>
                                             </div>
                                         </div>
 
                                         <!-- Tipo de Operación -->
                                         <div class="col-lg-2 pb-2">
-                                            <div class="form-group" :class="{ 'has-danger': errors.operation_type_id }">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.operation_type_id
+                                                }"
+                                            >
                                                 <label class="control-label">
-                                                    <i class="fas fa-clipboard-list red-icon fa-lg"></i> Tipo Operación
-                                                    <el-tooltip content="Campo Obligatorio">
-                                                        <span class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                                    <i
+                                                        class="fas fa-clipboard-list red-icon fa-lg"
+                                                    ></i>
+                                                    Tipo Operación
+                                                    <el-tooltip
+                                                        content="Campo Obligatorio"
+                                                    >
+                                                        <span
+                                                            class="text-danger"
+                                                            ><i
+                                                                class="fas fa-exclamation-circle"
+                                                            ></i
+                                                        ></span>
                                                     </el-tooltip>
-                                                    <template v-if="form.operation_type_id == '1001' && has_data_detraction">
-                                                        <a 
-                                                            href="#" 
-                                                            @click.prevent="showDialogDocumentDetraction = true" 
-                                                            class="text-center font-weight-bold text-info">
+                                                    <template
+                                                        v-if="
+                                                            form.operation_type_id ==
+                                                                '1001' &&
+                                                                has_data_detraction
+                                                        "
+                                                    >
+                                                        <a
+                                                            href="#"
+                                                            @click.prevent="
+                                                                showDialogDocumentDetraction = true
+                                                            "
+                                                            class="text-center font-weight-bold text-info"
+                                                        >
                                                             [+ Ver datos]
                                                         </a>
                                                     </template>
                                                 </label>
-                                                <el-select 
-                                                    v-model="form.operation_type_id" 
-                                                    @change="changeOperationType">
-                                                    <el-option 
-                                                        v-for="option in operation_types" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="option.description">
+                                                <el-select
+                                                    v-model="
+                                                        form.operation_type_id
+                                                    "
+                                                    @change="
+                                                        changeOperationType
+                                                    "
+                                                >
+                                                    <el-option
+                                                        v-for="option in operation_types"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <small 
-                                                    class="form-control-feedback" 
-                                                    v-if="errors.operation_type_id" 
-                                                    v-text="errors.operation_type_id[0]">
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.operation_type_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .operation_type_id[0]
+                                                    "
+                                                >
                                                 </small>
                                             </div>
                                         </div>
 
                                         <!-- Serie -->
                                         <div class="col-lg-2 pb-2">
-                                            <div class="form-group" :class="{ 'has-danger': errors.series_id }">
-                                                <label class="control-label font-weight-bold">
-                                                    <i class="fas fa-layer-group fa-lg"></i> Serie
-                                                    <el-tooltip content="Campo Obligatorio">
-                                                        <span class="text-danger"><i class="fas fa-exclamation-circle"></i></span>
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.series_id
+                                                }"
+                                            >
+                                                <label
+                                                    class="control-label font-weight-bold"
+                                                >
+                                                    <i
+                                                        class="fas fa-layer-group fa-lg"
+                                                    ></i>
+                                                    Serie
+                                                    <el-tooltip
+                                                        content="Campo Obligatorio"
+                                                    >
+                                                        <span
+                                                            class="text-danger"
+                                                            ><i
+                                                                class="fas fa-exclamation-circle"
+                                                            ></i
+                                                        ></span>
                                                     </el-tooltip>
                                                 </label>
-                                                <el-select 
-                                                    v-if="editandoDocument" 
-                                                    v-model="form.series_id" 
-                                                    :disabled="editandoDocument">
-                                                    <el-option 
-                                                        v-for="option in series" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="`${option.number} - ${documentinfo}`">
+                                                <el-select
+                                                    v-if="editandoDocument"
+                                                    v-model="form.series_id"
+                                                    :disabled="editandoDocument"
+                                                >
+                                                    <el-option
+                                                        v-for="option in series"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            `${option.number} - ${documentinfo}`
+                                                        "
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <el-select 
-                                                    v-else 
-                                                    v-model="form.series_id">
-                                                    <el-option 
-                                                        v-for="option in series" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="option.number">
+                                                <el-select
+                                                    v-else
+                                                    v-model="form.series_id"
+                                                >
+                                                    <el-option
+                                                        v-for="option in series"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="option.number"
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <small 
-                                                    class="form-control-feedback" 
-                                                    v-if="errors.series_id" 
-                                                    v-text="errors.series_id[0]">
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.series_id"
+                                                    v-text="errors.series_id[0]"
+                                                >
                                                 </small>
                                             </div>
                                         </div>
 
                                         <!-- Moneda -->
                                         <div class="col-lg-2 pb-2">
-                                            <div class="form-group" :class="{ 'has-danger': errors.currency_type_id }">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.currency_type_id
+                                                }"
+                                            >
                                                 <label class="control-label">
-                                                    <i class="fas fa-coins red-icon fa-lg"></i> Moneda
+                                                    <i
+                                                        class="fas fa-coins red-icon fa-lg"
+                                                    ></i>
+                                                    Moneda
                                                 </label>
-                                                <el-select 
-                                                    v-model="form.currency_type_id" 
-                                                    @change="changeCurrencyType">
-                                                    <el-option 
-                                                        v-for="option in currency_types" 
-                                                        :key="option.id" 
-                                                        :value="option.id" 
-                                                        :label="option.description">
+                                                <el-select
+                                                    v-model="
+                                                        form.currency_type_id
+                                                    "
+                                                    @change="changeCurrencyType"
+                                                >
+                                                    <el-option
+                                                        v-for="option in currency_types"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    >
                                                     </el-option>
                                                 </el-select>
-                                                <small 
-                                                    class="form-control-feedback" 
-                                                    v-if="errors.currency_type_id" 
-                                                    v-text="errors.currency_type_id[0]">
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.currency_type_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .currency_type_id[0]
+                                                    "
+                                                >
                                                 </small>
                                             </div>
                                         </div>
@@ -249,24 +389,29 @@
                                 </div>
                             </div>
 
-                            <br>
+                            <br />
 
                             <!-- Segunda fila -->
                             <div class="card h-100 mb-3">
                                 <div class="card-body d-flex flex-column">
-                                    <div class="form-group text-left flex-grow-1 d-flex flex-wrap gap-3">
+                                    <div
+                                        class="form-group text-left flex-grow-1 d-flex flex-wrap gap-3"
+                                    >
                                         <!-- Clientes -->
                                         <div class="col-lg-4 pb-2">
                                             <div
                                                 class="form-group"
                                                 :class="{
-                                                    'has-danger': errors.customer_id
+                                                    'has-danger':
+                                                        errors.customer_id
                                                 }"
                                             >
                                                 <label
                                                     class="control-label font-weight-bold text-primary "
                                                 >
-                                                    <i class="fas fa-user fa-lg"></i>
+                                                    <i
+                                                        class="fas fa-user fa-lg"
+                                                    ></i>
                                                     Cliente
                                                     <a
                                                         href="#"
@@ -284,8 +429,12 @@
                                                     popper-class="el-select-customers"
                                                     dusk="customer_id"
                                                     placeholder="Escriba el nombre o número de documento del cliente"
-                                                    :remote-method="searchRemoteCustomers"
-                                                    @keyup.enter.native="keyupCustomer"
+                                                    :remote-method="
+                                                        searchRemoteCustomers
+                                                    "
+                                                    @keyup.enter.native="
+                                                        keyupCustomer
+                                                    "
                                                     :loading="loading_search"
                                                     @change="changeCustomer"
                                                 >
@@ -293,17 +442,21 @@
                                                         v-for="option in customers"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="option.description"
+                                                        :label="
+                                                            option.description
+                                                        "
                                                     ></el-option>
                                                 </el-select>
                                                 <small
                                                     class="form-control-feedback"
                                                     v-if="errors.customer_id"
-                                                    v-text="errors.customer_id[0]"
+                                                    v-text="
+                                                        errors.customer_id[0]
+                                                    "
                                                 ></small>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Dirección del Cliente -->
                                         <div class="col-lg-6 pb-2">
                                             <div class="form-group">
@@ -317,7 +470,9 @@
                                                     Dirección
                                                 </label>
                                                 <el-select
-                                                    v-model="form.customer_address_id"
+                                                    v-model="
+                                                        form.customer_address_id
+                                                    "
                                                 >
                                                     <el-option
                                                         v-for="option in customer_addresses"
@@ -328,17 +483,22 @@
                                                 </el-select>
                                             </div>
                                         </div>
-                                        
+
                                         <template v-if="!is_client">
                                             <div
                                                 class="col-lg-2 mt-2 mb-2"
-                                                v-if="form.document_type_id == '03'"
+                                                v-if="
+                                                    form.document_type_id ==
+                                                        '03'
+                                                "
                                             >
                                                 <div class="form-group">
                                                     <el-checkbox
                                                         v-model="is_receivable"
                                                         class=" font-weight-bold"
-                                                        @change="changeIsReceivable"
+                                                        @change="
+                                                            changeIsReceivable
+                                                        "
                                                         >¿Es venta por cobrar?
                                                     </el-checkbox>
                                                 </div>
@@ -351,9 +511,7 @@
                         <div class="row mt-1">
                             <div class="col-lg-4 pb-2">
                                 <div class="form-group">
-                                    <label class="control-label"
-                                        >Cajero</label
-                                    >
+                                    <label class="control-label">Cajero</label>
 
                                     <el-select
                                         v-model="form.user_id"
@@ -369,7 +527,6 @@
                                     </el-select>
                                 </div>
                             </div>
-
                         </div>
                         <div class="row align-items-center">
                             <div class="col-lg-3">
@@ -535,34 +692,66 @@
                                     ></small>
                                 </div>
                             </div>
-                            <div class="col-lg-2" v-if="configuration.promotions_by_points || configuration.is_promotion_document">
+
+                            <!-- <div
+                                class="col-lg-2"
+                                v-if="configuration.affectation_optional"
+                            >
+                                <label>
+                                    Afectación IGV para el documento
+                                </label>
+                                <el-select
+                                    v-model="form.affectation_optional_id"
+                                    clearable
+                                    filterable
+                                >
+                                    <el-option
+                                        v-for="option in affectation_igv_types.filter(
+                                            affectation =>
+                                                affectation.id == '10'
+                                        )"
+                                        :key="option.id"
+                                        :label="option.description"
+                                        :value="option.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div> -->
+
+                            <div
+                                class="col-lg-2"
+                                v-if="
+                                    configuration.promotions_by_points ||
+                                        configuration.is_promotion_document
+                                "
+                            >
                                 <div
                                     class="form-group"
                                     :class="{
                                         'has-danger': errors.promotion_id
                                     }"
                                 >
-                                <label for="promotion" class="w-100 fw-bold"
-                                >Promoción</label
-                            >
-                            <div class="d-flex justify-content-center">
-                                <el-select
-                                    :disabled="isClientesVarios()"
-                                    v-model="form.promotion_id"
-                                    filterable
-                                    clearable
-                                    placeholder="Promoción"
-                                    @change="changePromotion"
-                                >
-                                    <el-option
-                                        v-for="(option,
-                                        idx) in promotions_document"
-                                        :key="idx"
-                                        :label="option.description"
-                                        :value="option.id"
-                                    ></el-option>
-                                </el-select>
-                            </div>
+                                    <label for="promotion" class="w-100 fw-bold"
+                                        >Promoción</label
+                                    >
+                                    <div class="d-flex justify-content-center">
+                                        <el-select
+                                            :disabled="isClientesVarios()"
+                                            v-model="form.promotion_id"
+                                            filterable
+                                            clearable
+                                            placeholder="Promoción"
+                                            @change="changePromotion"
+                                        >
+                                            <el-option
+                                                v-for="(option,
+                                                idx) in promotions_document"
+                                                :key="idx"
+                                                :label="option.description"
+                                                :value="option.id"
+                                            ></el-option>
+                                        </el-select>
+                                    </div>
                                 </div>
                             </div>
                             <div
@@ -1477,13 +1666,15 @@
                                                         ></div>
                                                     </template>
                                                     {{
-                                                        row.item.presentation ? row.item.presentation.hasOwnProperty(
-                                                            "description"
-                                                        )
-                                                            ? row.item
-                                                                  .presentation
-                                                                  .description
-                                                            : "" : ""
+                                                        row.item.presentation
+                                                            ? row.item.presentation.hasOwnProperty(
+                                                                  "description"
+                                                              )
+                                                                ? row.item
+                                                                      .presentation
+                                                                      .description
+                                                                : ""
+                                                            : ""
                                                     }}<br /><small>{{
                                                         row.affectation_igv_type
                                                             .description
@@ -1563,7 +1754,6 @@
                                                     <div>
                                                         <!-- <strong>Establecimiento: {{ row.item.warehouses.find(item => item.checked).warehouse_description }}</strong> -->
                                                     </div>
-
                                                 </td>
                                                 <td class="text-center">
                                                     {{ row.item.unit_type_id }}
@@ -1990,13 +2180,13 @@
                 @addDocumentDetraction="addDocumentDetraction"
             ></document-detraction>
             <Promotion-Box
-            :showDialog.sync="showDialogPromotionBox"
-            :listPromotionItems="listPromotionItems"
-            :hasPromotionText="hasPromotionText"
-            @update:showDialog="showDialog = $event"
-            @submit="handleSubmit"
-        >
-        </Promotion-Box>
+                :showDialog.sync="showDialogPromotionBox"
+                :listPromotionItems="listPromotionItems"
+                :hasPromotionText="hasPromotionText"
+                @update:showDialog="showDialog = $event"
+                @submit="handleSubmit"
+            >
+            </Promotion-Box>
         </div>
     </div>
 </template>
@@ -2023,7 +2213,10 @@ import DocumentOptions from "../documents/partials/options.vue";
 import { functions, exchangeRate } from "../../mixins/functions";
 import { calculateRowItem } from "../../helpers/functions";
 import Logo from "../companies/logo.vue";
-const PromotionBox = () => import("../../../../modules/Restaurant/Resources/assets/js/views/pos/partials/promotion_box.vue");
+const PromotionBox = () =>
+    import(
+        "../../../../modules/Restaurant/Resources/assets/js/views/pos/partials/promotion_box.vue"
+    );
 export default {
     props: ["id", "typeUser", "configuration", "documentinfo"],
     components: {
@@ -2038,7 +2231,7 @@ export default {
     data() {
         return {
             showDialogPromotionBox: false,
-            promotions_document:[],
+            promotions_document: [],
             readonly_date_of_due: false,
             sellers: [],
             editandoDocument: false,
@@ -2118,6 +2311,7 @@ export default {
             text_loader: "Espere porfavor....",
             hasPromotionText: null,
             listPromotionItems: [],
+            affectation_igv_types: []
         };
     },
     computed: {
@@ -2126,7 +2320,7 @@ export default {
         },
         promotionDocument() {
             return this.configuration.is_promotion_document;
-        },
+        }
     },
     async created() {
         await this.initForm();
@@ -2162,13 +2356,13 @@ export default {
 
         await this.$http.get(`/documents/tables`).then(response => {
             this.promotions_document = response.data.promotions_document.filter(
-                    p => {
-                        if (this.configuration.promotions_by_points) {
-                            return p.is_points;
-                        }
-                        return !p.is_points;
+                p => {
+                    if (this.configuration.promotions_by_points) {
+                        return p.is_points;
                     }
-                );
+                    return !p.is_points;
+                }
+            );
             this.sellers = response.data.sellers;
             this.show_restriction =
                 response.data.configuration.show_restriction;
@@ -2218,6 +2412,7 @@ export default {
             this.payment_destinations = response.data.payment_destinations;
             this.user_default = response.data.user_select.id;
             this.form.user_id = response.data.user_select.id;
+            this.affectation_igv_types = response.data.affectation_igv_types;
 
             this.selectDocumentType();
             this.changeEstablishment();
@@ -2337,7 +2532,6 @@ export default {
             this.showDialogPromotionBox = true;
         },
         addFreeItem(i) {
-        
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
             );
@@ -2494,7 +2688,7 @@ export default {
                             this.hasPromotionText = data.message;
                             this.listPromotionItems = data.items;
                             /* console.log("ver si esta llegando los items a este filla", this.listPromotionItems); */
-                        }else{
+                        } else {
                             this.hasPromotionText = null;
                             this.listPromotionItems = [];
                         }
@@ -3521,7 +3715,6 @@ export default {
                 this.form.fee[0].amount = this.form.total;
             }
             this.calculateFee();
-            
         },
         clickRemoveItem(index) {
             this.form.items.splice(index, 1);
@@ -3572,7 +3765,10 @@ export default {
                 if (row.affectation_igv_type_id === "40") {
                     total_exportation += parseFloat(row.total_value);
                 }
-                console.log("row.affectation_igv_type_id", row.affectation_igv_type_id);
+                console.log(
+                    "row.affectation_igv_type_id",
+                    row.affectation_igv_type_id
+                );
                 if (
                     ["10", "20", "30", "40"].indexOf(
                         row.affectation_igv_type_id
@@ -3590,17 +3786,15 @@ export default {
                     row.total_taxes =
                         row.total_value -
                         total_value_partial +
-                        isNaN(
-                    parseFloat(row.total_plastic_bag_taxes)
-                )
-                    ? 0.0
-                    : parseFloat(row.total_plastic_bag_taxes);
+                        isNaN(parseFloat(row.total_plastic_bag_taxes))
+                            ? 0.0
+                            : parseFloat(row.total_plastic_bag_taxes);
 
                     row.total_igv =
                         total_value_partial * (row.percentage_igv / 100);
                     row.total_base_igv = total_value_partial;
                     total_value -= row.total_value;
-                    total += parseFloat(row.total); 
+                    total += parseFloat(row.total);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
@@ -3611,10 +3805,14 @@ export default {
                     total += parseFloat(row.total);
                 }
 
-            if (!["21", "37"].includes(row.affectation_igv_type_id)) {
-                console.log("sumando total_value: ", row.total_value, row.affectation_igv_type_id);
-                total_value +=  parseFloat(row.total_value);
-            }
+                if (!["21", "37"].includes(row.affectation_igv_type_id)) {
+                    console.log(
+                        "sumando total_value: ",
+                        row.total_value,
+                        row.affectation_igv_type_id
+                    );
+                    total_value += parseFloat(row.total_value);
+                }
                 total_plastic_bag_taxes += parseFloat(
                     row.total_plastic_bag_taxes || 0
                 );
@@ -3637,7 +3835,10 @@ export default {
                 total + this.form.total_plastic_bag_taxes,
                 2
             );
-            console.log("total_plastic_bag_taxes", this.form.total_plastic_bag_taxes);
+            console.log(
+                "total_plastic_bag_taxes",
+                this.form.total_plastic_bag_taxes
+            );
 
             if (this.enabled_discount_global) this.discountGlobal();
 

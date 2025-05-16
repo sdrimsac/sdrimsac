@@ -30,11 +30,11 @@
                                     class="w-100"
                                     filterable
                                     clearable
-                                    @change="changeItem"
-        
-                                    placeholder=" busque por nombre/código"
+                                    remote
                                     :remote-method="searchRemoteItems"
                                     :loading="loading_search_item"
+                                    @change="changeItem"
+                                    placeholder=" busque por nombre/código"
                                 >
                                     <el-option
                                         v-for="option in items"
@@ -386,7 +386,10 @@ export default {
                         if (this.items.length > 0) {
                             // Si se encuentra producto, agregarlo como válido y mostrar la descripción en el input
                             this.setProduct([this.items[0]]);
-                            this.barcodeInput = this.items[0].descripcion || this.items[0].description || '';
+                            this.barcodeInput =
+                                this.items[0].descripcion ||
+                                this.items[0].description ||
+                                "";
                             this.form.quantity = this.items[0].stock || 0; // Actualizar el stock
                         } else {
                             // Si no hay resultados, limpia la selección y el input
@@ -402,18 +405,25 @@ export default {
             }
         },
         searchRemoteItems(input) {
-            if (input.length >= 3) {
-                clearTimeout(this.timer);
-                this.loading_search_item = true;
-                this.timer = setTimeout(() => {
-                    this.$http
-                        .get(`/${this.resource}/items?value=${input}`)
-                        .then(response => {
-                            this.items = response.data;
-                            this.loading_search_item = false;
-                        });
-                }, 300);
+            if (!input || input.length < 3) {
+                this.items = [];
+                this.loading_search_item = false;
+                return;
             }
+            clearTimeout(this.timer);
+            this.loading_search_item = true;
+            this.timer = setTimeout(() => {
+                this.$http
+                    .get(`/${this.resource}/items?value=${input}`)
+                    .then(response => {
+                        this.items = response.data;
+                        this.loading_search_item = false;
+                    })
+                    .catch(() => {
+                        this.items = [];
+                        this.loading_search_item = false;
+                    });
+            }, 300);
         },
         async changeItem() {
             if (this.type == "output") {
@@ -571,13 +581,12 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
-            this.barcodeInput = ""; // Limpiar input de código de barras al cerrar modal
+            this.barcodeInput = "";
         },
         setProduct(items) {
             if (items && items.length > 0) {
                 const item = items[0];
 
-                // Asegurar que la propiedad warehouse esté disponible para selectedWarehouses
                 if (item.warehouses && !item.warehouse) {
                     item.warehouse = item.warehouses;
                 }
@@ -603,7 +612,8 @@ export default {
                 this.$nextTick(() => {
                     if (this.$refs.itemSelect) {
                         this.$refs.itemSelect.blur();
-                        this.$refs.itemSelect.$el.querySelector("input").value = "";
+                        this.$refs.itemSelect.$el.querySelector("input").value =
+                            "";
                     }
                 });
                 this.barcodeBuffer = "";

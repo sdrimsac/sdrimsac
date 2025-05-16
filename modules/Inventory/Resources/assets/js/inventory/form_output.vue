@@ -66,6 +66,7 @@
                                     class="w-100"
                                     filterable
                                     clearable
+                                    remote
                                     @change="changeItem"
                                     placeholder=" busque por nombre/código"
                                     :remote-method="searchRemoteItems"
