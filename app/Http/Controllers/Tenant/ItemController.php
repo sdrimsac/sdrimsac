@@ -13,6 +13,7 @@ use Mpdf\HTMLParserMode;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\ItemImage;
 use App\Models\Tenant\Warehouse;
+use App\Models\Tenant\ItemCodes;
 
 use Illuminate\Support\Str;
 
@@ -769,6 +770,7 @@ class ItemController extends Controller
             'date_of_due' => 'Fecha vencimiento',
             'warranty' => 'meses garantía',
             'lot_code' => 'Código lote',
+            'code_barcode' => 'Código de busqueda',
             // 'description' => 'Descripción'
         ];
     }
@@ -1031,6 +1033,11 @@ class ItemController extends Controller
                     $q->where('name', 'like', "%{$request->value}%");
                 });
                 break;
+            case 'code_barcode':
+                $records->whereHas('item_codes', function ($q) use ($request) {
+                    $q->where('code_barcode', $request->value);
+                });
+                break;
             case 'description':
                 if ($request->value) {
                     if (count($textoIntoArray) === 1) {
@@ -1244,6 +1251,7 @@ class ItemController extends Controller
     public function tables()
     {
         $company = Company::active();
+        $item_codes = ItemCodes::all();
         $establishment = Establishment::first();
         $categoria_madera = CategoriaMadera::all();
         $unit_types = UnitType::whereActive()->orderByDescription()->get();
@@ -1286,7 +1294,8 @@ class ItemController extends Controller
             'brands',
             'configuration',
             'company',
-            'establishment'
+            'establishment',
+            'item_codes',
         );
     }
 
@@ -1352,6 +1361,19 @@ class ItemController extends Controller
                 $food->image = 'imagen-no-disponible.jpg';
             }
             $item->save();
+            if ($request->has('item_codes') && is_array($request->item_codes)) {
+                // Elimina los códigos anteriores de este item (opcional)
+                ItemCodes::where('item_id', $item->id)->delete();
+                foreach ($request->item_codes as $code) {
+                    if (!empty($code['code_barcode'])) {
+                        ItemCodes::create([
+                            'item_id' => $item->id,
+                            'code_barcode' => $code['code_barcode']
+                        ]);
+                    }
+                }
+            }
+
             $item->item_price_ranges()->delete();
             $item_price_ranges = $request->input('item_price_ranges');
             if ($item_price_ranges) {
@@ -1379,7 +1401,6 @@ class ItemController extends Controller
                         $newCategoriaMadera->save();
                     }
                 }
-                /*  */
             }
 
             if ($all_establishment) {

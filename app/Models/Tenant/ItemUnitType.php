@@ -27,6 +27,7 @@ class ItemUnitType extends ModelTenant
         'price_default',
         'warehouse_id',
         'total',
+        'unique_code'
     ];
 
     protected $casts = [

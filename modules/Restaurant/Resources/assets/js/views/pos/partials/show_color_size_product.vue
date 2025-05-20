@@ -45,14 +45,6 @@
                         <td>{{ colorsize.size }}</td>
                         <td>{{ colorsize.stock }}</td>
                         <td>{{ colorsize.price }}</td>
-                        <!-- <td>
-                            <el-input
-                                type="number"
-                                v-model="colorsize.quantity"
-                                @input="saveColorSize(colorsize)"
-                            >
-                            </el-input>
-                        </td> -->
                         <td>
                             <el-input-number
                                 v-model="colorsize.quantity"
@@ -103,14 +95,6 @@ export default {
         };
     },
     methods: {
-        /* selectRow(colorsize) {
-            if (!colorsize.quantity) {
-                colorsize.quantity = 1;
-            } else {
-                colorsize.quantity += 1;
-            }
-            this.saveColorSize(colorsize);
-        }, */
         checkColorSize() {
             for (let i = 0; i < this.color_size.length; i++) {
                 let color_size = this.colorSizeSelected.find(
@@ -135,28 +119,6 @@ export default {
                 1
             );
         },
-        /* saveColorSize(colorSize) {
-            let color_size = [
-                ...this.colorSizeSelected.filter(
-                    s => s.quantity && s.quantity != 0
-                )
-            ];
-            color_size = color_size.filter(s => s.id != colorSize.id);
-            if (colorSize.quantity !== 0) {
-                //if(colorSize.quantity > colorSize.stock){
-                //colorSize.quantity = colorSize.stock;
-                // return this.$toast.error(
-                //      "La cantidad no puede ser mayor al stock"
-                //    );
-                //  }
-                colorSize.disabled = false;
-                color_size = [...color_size, colorSize];
-            } else {
-                color_size = color_size.filter(s => s.id != colorSize.id);
-            }
-            this.$forceUpdate();
-            this.$emit("update:colorSizeSelected", color_size);
-        }, */
         saveColorSize(colorSize) {
             if (
                 typeof colorSize.quantity !== "number" ||
@@ -280,78 +242,6 @@ export default {
                 this.loading = false;
             }
         }
-
-        /* async getColorSize() {
-            try {
-                this.loading = true;
-                const response = await this.$http(
-                    `/item-color-size/records?${this.getQueryParameters()}`
-                );
-                let { data, meta } = response.data;
-                this.color_size = data;
-                this.checkColorSize();
-                this.pagination = meta;
-                this.pagination.per_page = parseInt(meta.per_page);
-
-                if (this.inputSearch) {
-                    const foundItem = this.color_size.find(
-                        item => item.code === this.inputSearch
-                    );
-                    if (foundItem) {
-                        foundItem.quantity = 1;
-                        this.saveColorSize(foundItem);
-                        this.inputSearch = null;
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-            } finally {
-                this.loading = false;
-            }
-        } */
-
-        /* async getColorSize() {
-            try {
-                this.loading = true;
-                const response = await this.$http(
-                    `/item-color-size/records?${this.getQueryParameters()}`
-                );
-                let { data, meta } = response.data;
-
-                if (!this.inputSearch) {
-                    this.color_size = data;
-                    this.checkColorSize();
-                    this.pagination = meta;
-                    this.pagination.per_page = parseInt(meta.per_page);
-                } else {
-                    
-                    const foundItem = data.find(
-                        item => item.code === this.inputSearch
-                    );
-
-                    if (foundItem) {
-                        const existingItem = this.color_size.find(
-                            item => item.id === foundItem.id
-                        );
-
-                        if (existingItem) {
-                            existingItem.quantity += 1;
-                        } else {
-                            foundItem.quantity = 1;
-                            this.color_size.push(foundItem);
-                        }
-
-                        this.saveColorSize(foundItem);
-                    }
-
-                    this.inputSearch = null;
-                }
-            } catch (e) {
-                console.log(e);
-            } finally {
-                this.loading = false;
-            }
-        } */
     }
 };
 </script>

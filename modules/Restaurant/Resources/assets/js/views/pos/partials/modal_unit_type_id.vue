@@ -7,21 +7,31 @@
         append-to-body
     >
         <div class="row mt-2">
-          <div class="table-responsive">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Tipo de unidad</th>
-                            <th>Precio</th>
+                            <th>Descripcion</th>
+                            <th>Precio1</th>
+                            <th>Precio2</th>
+                            <th>Precio3</th>
+                            <th>Precio Por Defecto</th>
                             <th>Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="unit_type in unit_types" :key="unit_type.id">
+                            <td>{{ unit_type.unit_type_id }}</td>
                             <td>{{ unit_type.description }}</td>
+                            <td>{{ unit_type.price3 }}</td>
+                            <td>{{ unit_type.price2 }}</td>
+                            <td>{{ unit_type.price1 }}</td>
                             <td>{{ getDefPrice(unit_type) }}</td>
                             <td>
-                                <el-button type="primary" icon="el-icon-check"
+                                <el-button
+                                    type="primary"
+                                    icon="el-icon-check"
                                     @click="selectUnitType(unit_type)"
                                 ></el-button>
                             </td>

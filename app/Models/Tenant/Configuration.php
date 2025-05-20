@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'unique_code_unit_types',
         'demo_pdf',
         'purchases_sales',
         'dishes_sold',
@@ -326,6 +327,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'unique_code_unit_types' => 'boolean',
         'demo_pdf' => 'boolean',
         'purchases_sales' => 'boolean',
         'dishes_sold' => 'boolean',
@@ -595,6 +597,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'unique_code_unit_types' => $this->unique_code_unit_types,
             'demo_pdf' => (bool)$this->demo_pdf,
             'purchases_sales' => (bool)$this->purchases_sales,
             'dishes_sold' => (bool)$this->dishes_sold,

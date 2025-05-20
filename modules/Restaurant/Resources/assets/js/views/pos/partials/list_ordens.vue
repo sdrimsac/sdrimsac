@@ -3023,7 +3023,7 @@ export default {
 
     data() {
         return {
-            selectedItems: [], // Array para almacenar los elementos seleccionados
+            selectedItems: [],
             isEditing: false,
             /* localOrden: [], */
             /* totalUniqueProducts: 0,
@@ -4082,14 +4082,6 @@ export default {
         },
         async updateColorSize(idx, color_size) {
             let ordens = [...this.localOrden];
-            // ordens[idx].color_size = [...color_size];
-            // // if (price != 0) {
-            // //     ordens[idx].price = price;
-            // // }
-            // ordens[idx].quantity = color_size.reduce(
-            //     (a, b) => a + Number(b.quantity),
-            //     0
-            // );
             if (this.hasSamePrice(color_size)) {
                 let [first] = color_size;
                 let { price } = first;
@@ -4103,23 +4095,22 @@ export default {
                     0
                 );
             } else {
-                // let orden = { ...ordens[idx] };
-                //clona la orden actual
-                let orden = JSON.parse(JSON.stringify(ordens[idx]));
-                //remove the current orden
+                // Clonar la orden original y dividir por grupos de color_size con el mismo precio
+                let ordenOriginal = JSON.parse(JSON.stringify(ordens[idx]));
+                // Eliminar la orden original de la lista
                 ordens = ordens.filter((o, i) => i != idx);
                 let colors_sizes = this.splitByPrice(color_size);
                 for (let i = 0; i < colors_sizes.length; i++) {
-                    let color_size = colors_sizes[i];
-                    let newOrden = JSON.parse(JSON.stringify(orden));
-                    let [first] = color_size;
+                    let color_size_group = colors_sizes[i];
+                    let newOrden = JSON.parse(JSON.stringify(ordenOriginal));
+                    let [first] = color_size_group;
                     let { price } = first;
-                    newOrden.color_size = [...color_size];
+                    newOrden.color_size = [...color_size_group];
                     price = Number(price || "0");
                     if (price != 0) {
                         newOrden.price = price;
                     }
-                    newOrden.quantity = color_size.reduce(
+                    newOrden.quantity = color_size_group.reduce(
                         (a, b) => a + Number(b.quantity),
                         0
                     );

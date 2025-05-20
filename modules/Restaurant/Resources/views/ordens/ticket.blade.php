@@ -350,7 +350,7 @@
                         @endif --}}
                         <tr>
                             <td colspan="4" class="header_title text-center " valign="top">
-                                <strong>NRO. MESA
+                                <strong>NRO.
                                     {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
                                 </strong>
                             </td>

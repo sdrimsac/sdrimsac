@@ -308,17 +308,28 @@
                                                     <div
                                                         class="category-card"
                                                         :class="{
-                                                            active: category === null
+                                                            active:
+                                                                category ===
+                                                                null
                                                         }"
                                                         @click="
                                                             category = null;
                                                             search_items(null);
                                                         "
                                                     >
-                                                        <div class="category-circle">
-                                                            <i class="fas fa-th text-primary" style="font-size: 24px;"></i>
+                                                        <div
+                                                            class="category-circle"
+                                                        >
+                                                            <i
+                                                                class="fas fa-th text-primary"
+                                                                style="font-size: 24px;"
+                                                            ></i>
                                                         </div>
-                                                        <span class="category-name">Todo Catego</span>
+                                                        <span
+                                                            class="category-name"
+                                                            >Todo
+                                                            Categoria</span
+                                                        >
                                                     </div>
 
                                                     <!-- Existing categories -->
@@ -327,17 +338,25 @@
                                                         :key="item.id"
                                                         class="category-card"
                                                         :class="{
-                                                            active: category === item.id
+                                                            active:
+                                                                category ===
+                                                                item.id
                                                         }"
                                                         @click="
                                                             category = item.id;
                                                             search_items(null);
-                                                        "  
+                                                        "
                                                     >
-                                                        <div class="category-circle">
+                                                        <div
+                                                            class="category-circle"
+                                                        >
                                                             <img
-                                                                v-if="item.icono"
-                                                                :src="`/storage/uploads/category/${item.icono}`"
+                                                                v-if="
+                                                                    item.icono
+                                                                "
+                                                                :src="
+                                                                    `/storage/uploads/category/${item.icono}`
+                                                                "
                                                                 alt=""
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
                                                             />
@@ -348,7 +367,12 @@
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
                                                             />
                                                         </div>
-                                                        <span class="category-name">{{ item.name }}</span>
+                                                        <span
+                                                            class="category-name"
+                                                            >{{
+                                                                item.name
+                                                            }}</span
+                                                        >
                                                     </div>
                                                 </div>
                                             </div>
@@ -511,6 +535,28 @@
                                                     </el-checkbox>
                                                 </el-tooltip>
                                             </div>
+                                            <!-- <div
+                                                class="col-3 d-flex align-items-center justify-content-center"
+                                            >
+                                                <el-tooltip
+                                                    content="Filtrar por modelo del producto"
+                                                    placement="top"
+                                                >
+                                                    <el-checkbox
+                                                        
+                                                        v-model="policy"
+                                                        @change="
+                                                            saveInLocalStoragePolicy
+                                                        "
+                                                        class="d-flex align-items-center"
+                                                    >
+                                                        <i
+                                                            class="fas fa-cube me-2"
+                                                        ></i>
+                                                        <span>Politica</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="row">
@@ -641,6 +687,7 @@
                                     :blockAdd.sync="blockCart"
                                     ref="list_foods"
                                     :barcode.sync="barcode"
+                                    :policy.sync="policy"
                                     :searchSeries.sync="searchSeries"
                                     :searchSecondName.sync="searchSecondName"
                                     :model.sync="model"
@@ -650,6 +697,7 @@
                                     @insertOrden="insertOrden"
                                     :configuration="configuration"
                                     :foods.sync="allFoods"
+                                    :value="input_item"
                                     @buscarnuevo="buscarnuevo"
                                     :medida_alto="medida_alto"
                                     :medida_ancho="medida_ancho"
@@ -1980,6 +2028,14 @@
             :currentIndex="currentIndex"
         ></unit-type-modal>
 
+        <policy-type-modal
+            @addUnitType="addUnitType"
+            @addCategoriaMadera="addCategoriaMadera"
+            :showDialog.sync="showPolicyTypeModal"
+            :item="selectedFood"
+            :currentIndex="currentIndex"
+        ></policy-type-modal>
+
         <dispatch-modal
             :configuration="configuration"
             :showDialog.sync="showDispatch"
@@ -2259,6 +2315,8 @@ const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 
+import PolicyTypeModal from "../pos/partials/policy_types.vue";
+
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
@@ -2337,7 +2395,8 @@ export default {
         PromotionCanje,
         TablesRooms,
         SaleNoteCreditCash,
-        Swal
+        Swal,
+        PolicyTypeModal
     },
     mixins: [functions, exchangeRate],
 
@@ -2360,6 +2419,7 @@ export default {
             loading_search: false,
             selectedFood: null,
             showUnitTypeModal: false,
+            showPolicyTypeModal: false,
             currentIndex: null,
             addingType: false,
             showConsolidatedList: false,
@@ -2409,6 +2469,7 @@ export default {
             conf: {},
             showDialogCollege: false,
             barcode: false,
+            policy: false,
             sender: null,
             socket: null,
             variation: false,
@@ -2546,6 +2607,7 @@ export default {
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
+        let policy = localStorage.getItem("policy");
         let searchSeries = localStorage.getItem("searchSeries");
         let searchSecondName = localStorage.getItem("searchSecondName");
         let model = localStorage.getItem("model");
@@ -2569,9 +2631,9 @@ export default {
         if (quality) {
             this.quality = quality == "1" ? true : false;
         }
-        /* if (brand){
-            this.brand = brand == "1" ? true : false;
-        } */
+        if (policy) {
+            this.policy = policy == "1" ? true : false;
+        }
         // ;
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
@@ -3398,6 +3460,9 @@ export default {
         saveInLocalStorageQuality(quality) {
             localStorage.setItem("quality", quality ? "1" : "0");
         },
+        saveInLocalStoragePolicy(policy) {
+            localStorage.setItem("policy", policy ? "1" : "0");
+        },
         clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
@@ -3754,6 +3819,9 @@ export default {
                 this.ordens[i].food.item.lots = item.series;
                 this.ordens[i].food.item.color_size = item.color_size
                     ? [...item.color_size]
+                    : [];
+                this.ordens[i].food.item.item_codes = item.item_codes
+                    ? [...item.item_codes]
                     : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
@@ -4397,7 +4465,11 @@ export default {
                 } else {
                     orden.series = [];
                 }
+                if (color_size.length > 0 && color_size[0].price) {
+                    orden.price = color_size[0].price;
+                }
                 orden.color_size = color_size;
+
                 orden.lotes = [];
                 let added = false;
                 let {
@@ -4476,7 +4548,8 @@ export default {
                         let prices = [
                             unit_type.price1,
                             unit_type.price2,
-                            unit_type.price3
+                            unit_type.price3,
+                            unit_type.unique_code
                         ];
                         let default_price = unit_type.price_default - 1;
                         let newPrices = [
@@ -4533,7 +4606,8 @@ export default {
                                 let prices = [
                                     unit_type.price1,
                                     unit_type.price2,
-                                    unit_type.price3
+                                    unit_type.price3,
+                                    unit_type.unique_code
                                 ];
                                 let default_price = unit_type.price_default - 1;
 
@@ -4563,6 +4637,7 @@ export default {
                         orden.series = [];
                         orden.lotes = [];
                         orden.color_size = [];
+                        console.log("color_size pasa por aqui", color_size);
                         let {
                             food: {
                                 item: { lots_group }
@@ -4659,13 +4734,16 @@ export default {
                                 }
                             }
                         }
-                        if (color_size.length > 0) {
+                        /* if (color_size.length > 0) {
                             let existingColorSize = this.localOrden[indexFind]
                                 .color_size;
+                            console.log("existingColorSize", existingColorSize);
 
                             for (let newColor of color_size) {
                                 let existingColor = existingColorSize.find(
-                                    c => c.code === newColor.code
+                                    c =>
+                                        c.code === newColor.code &&
+                                        c.price === newColor.price
                                 );
 
                                 if (existingColor) {
@@ -4691,6 +4769,79 @@ export default {
                                     existingColorSize.push(newColor);
                                 }
                             }
+                        } */
+                        if (color_size && color_size.length > 0) {
+                            // Agrupar color_size por precio
+                            let prices = Array.from(
+                                new Set(color_size.map(c => c.price))
+                            );
+                            for (let price of prices) {
+                                let color_size_group = color_size.filter(
+                                    c => c.price == price
+                                );
+                                // Buscar si ya existe una orden con ese food_id y ese precio
+                                let indexFind = this.localOrden.findIndex(
+                                    o =>
+                                        o.id == food_id &&
+                                        o.price == Number(price)
+                                );
+                                if (indexFind !== -1) {
+                                    // Sumar cantidades de color_size existentes
+                                    for (let newColor of color_size_group) {
+                                        let existingColor = this.localOrden[
+                                            indexFind
+                                        ].color_size.find(
+                                            c =>
+                                                c.code === newColor.code &&
+                                                c.price === newColor.price
+                                        );
+                                        if (existingColor) {
+                                            existingColor.quantity =
+                                                Number(existingColor.quantity) +
+                                                Number(newColor.quantity || 1);
+                                        } else {
+                                            this.localOrden[
+                                                indexFind
+                                            ].color_size.push({
+                                                ...newColor,
+                                                quantity: Number(
+                                                    newColor.quantity || 1
+                                                )
+                                            });
+                                        }
+                                    }
+                                    // Actualizar cantidad total
+                                    this.localOrden[
+                                        indexFind
+                                    ].quantity = this.localOrden[
+                                        indexFind
+                                    ].color_size.reduce(
+                                        (a, b) => a + Number(b.quantity),
+                                        0
+                                    );
+                                } else {
+                                    // Crear nueva orden para este grupo de color_size y precio
+                                    let newOrden = JSON.parse(
+                                        JSON.stringify(orden)
+                                    );
+                                    newOrden.color_size = [...color_size_group];
+                                    newOrden.price = Number(price);
+                                    newOrden.quantity = color_size_group.reduce(
+                                        (a, b) => a + Number(b.quantity || 1),
+                                        0
+                                    );
+                                    newOrden.original_price = newOrden.price;
+                                    if (
+                                        this.configuration.order_desc_items ==
+                                        true
+                                    ) {
+                                        this.localOrden.push(newOrden);
+                                    } else {
+                                        this.localOrden.unshift(newOrden);
+                                    }
+                                }
+                            }
+                            return;
                         }
                         //actualizamos el elemento que agregamos, pero lo sacamos del objeot y lo volvemos a colocar de primero, de esta manera podemos saber si ya esta el producto que estamos agregando a la lista y saber cuanto tenemos en total
                         this.localOrden[indexFind].quantity =
@@ -6277,6 +6428,7 @@ export default {
             return queryString.stringify({
                 page: this.pagination.current_page,
                 external_id: this.barcode,
+                unique_code: this.policy,
                 search_by_series: this.searchSeries,
                 customer_unit_type_id: this.customer_unit_type_id,
                 search_by_second_name: this.searchSecondName,
@@ -6288,6 +6440,10 @@ export default {
                 // limit: this.limit
             });
         },
+        /**
+         * Agrega automáticamente un ítem según el unique_code recibido en value.
+         * Si el value es un unique_code válido, llama a getFoods con ese código.
+         */
         async getFoods(query = "") {
             try {
                 this.loadingItems = true;
@@ -6894,6 +7050,11 @@ export default {
                 this.currentIndex = index;
                 return;
             }
+            if (item_unit_types.length > 0 && !this.addingType) {
+                this.showPolicyTypeModal = true;
+                this.currentIndex = index;
+                return;
+            }
             this.currentIndex = null;
             this.addingType = false;
 
@@ -7023,6 +7184,7 @@ export default {
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
         },
+        
         async processPrintQueue() {
             if (this.isPrinting || this.printQueue.length === 0) return;
 

@@ -994,10 +994,7 @@
                                         </el-input>
                                     </div>
                                 </div>
-                                <div
-                                    class="col-12 col-lg-6 col-xl-3 px-2"
-                                   
-                                >
+                                <div class="col-12 col-lg-6 col-xl-3 px-2">
                                     <div class="form-group">
                                         <label
                                             class="control-label d-flex align-items-center"
@@ -1638,13 +1635,18 @@
                                 "
                                 class="col-md-12"
                             >
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
+                                <div class="price-policy-table-wrapper">
+                                    <table
+                                        class="table table-striped price-policy-table"
+                                    >
                                         <thead>
                                             <tr
                                                 slot="heading"
                                                 class="bg-primary"
                                             >
+                                                <th class="text-white" v-if="configuration.unit_type_select_barcode">
+                                                    Codigo de politica
+                                                </th>
                                                 <th
                                                     width="12%"
                                                     class="text-white text-center"
@@ -1727,9 +1729,7 @@
                                                 >
                                                     Almacén
                                                 </th>
-                                                <!-- <th class="text-center">
-                                                              Poli. x defecto
-                          </th> -->
+
                                                 <th class="text-white">
                                                     MAX
                                                     <el-tooltip
@@ -1753,6 +1753,20 @@
                                                 :key="index"
                                             >
                                                 <template v-if="row.id">
+                                                    <td v-if="configuration.unit_type_select_barcode">
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.unique_code
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i>
+                                                            </el-input>
+                                                        </div>
+                                                    </td>
                                                     <td class="text-center">
                                                         {{ row.unit_type_id }}
                                                     </td>
@@ -2154,6 +2168,20 @@
                                                             ></el-option>
                                                         </el-select>
                                                     </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <el-input
+                                                                v-model="
+                                                                    row.unique_code
+                                                                "
+                                                            >
+                                                                <i
+                                                                    slot="prefix"
+                                                                    class="el-icon-edit-outline"
+                                                                ></i>
+                                                            </el-input>
+                                                        </div>
+                                                    </td>
                                                     <td class="text-center">
                                                         <el-checkbox
                                                             v-model="
@@ -2166,6 +2194,24 @@
                                                             "
                                                         ></el-checkbox>
                                                     </td>
+                                                    <td
+                                                        class="series-table-actions text-end"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-sm btn-danger"
+                                                            @click.prevent="
+                                                                clickCancel(
+                                                                    index
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+
                                                     <td
                                                         class="series-table-actions text-end"
                                                     >
@@ -2593,6 +2639,95 @@
                             </div>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane
+                        v-if="configuration.unique_code_unit_types"
+                        label="Lista de codigos de barras"
+                        name="barcodes"
+                    >
+                        <div class="row">
+                            <div
+                                v-if="form.unit_type_id != 'ZZ'"
+                                class="col-md-12"
+                            >
+                                <h6 class="separator-title">
+                                    <i
+                                        class="fa-solid fa-money-bill-transfer"
+                                    ></i>
+                                    Codigos de barras
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
+                                        placement="top"
+                                    >
+                                        <i class="fas fa-info-circle"></i>
+                                    </el-tooltip>
+                                    <a
+                                        href="#"
+                                        class="control-label font-weight-bold text-info"
+                                        @click="clickAddBarcode"
+                                        >[ + Nuevo]</a
+                                    >
+                                </h6>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr
+                                                slot="heading"
+                                                class="bg-primary"
+                                            >
+                                                <th
+                                                    width="20%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Codigo de barras
+                                                </th>
+                                                <th
+                                                    width="20%"
+                                                    class="text-white text-center"
+                                                >
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(barcode,
+                                                index) in form.item_codes"
+                                                :key="index"
+                                            >
+                                                <td>
+                                                    <el-input
+                                                        v-model="
+                                                            barcode.code_barcode
+                                                        "
+                                                        placeholder="Codigo de barras"
+                                                    ></el-input>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        class="btn waves-effect waves-light btn-sm btn-danger"
+                                                        @click.prevent="
+                                                            clickDeleteBarcode(
+                                                                index
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fa fa-trash"
+                                                        ></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </el-tab-pane>
                     <div
                         class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                     >
@@ -2610,7 +2745,6 @@
                             icon="fas fa-save fa-lg"
                             type="primary"
                             native-type="submit"
-                            
                         >
                             <span>Guardar</span>
                         </el-button>
@@ -2720,6 +2854,41 @@
     color: #666;
     /* Cambiar a un color más oscuro al pasar el mouse */
 }
+
+/* Mejora para tablas responsivas en el tab de política de precios */
+.price-policy-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+.price-policy-table {
+    min-width: 1100px;
+    /* Aumenta el ancho mínimo para más espacio */
+}
+.price-policy-table th,
+.price-policy-table td {
+    white-space: nowrap;
+    /* Evita que el contenido se divida en varias líneas */
+}
+.price-policy-table td input,
+.price-policy-table td .el-input__inner {
+    min-width: 110px;
+    /* Espacio suficiente para números largos */
+    width: 100%;
+    box-sizing: border-box;
+}
+.price-policy-table td .el-input {
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .price-policy-table {
+        font-size: 13px;
+        min-width: 900px;
+    }
+    .price-policy-table td input,
+    .price-policy-table td .el-input__inner {
+        min-width: 90px;
+    }
+}
 </style>
 
 <script>
@@ -2758,6 +2927,7 @@ export default {
             },
             warehouses: [],
             categoria_madera: [],
+            item_codes: [],
             loading_submit: false,
             showPercentagePerception: false,
             has_percentage_perception: false,
@@ -2770,10 +2940,12 @@ export default {
             form: {
                 promotion_count: null,
                 item_price_ranges: [],
+                categoria_madera: [],
+                item_codes: [],
                 category_id: null,
                 brand_id: null,
-                warehouse_prices: [], // Para precios por almacén
-                item_warehouses: [] // Para stock por almacén
+                warehouse_prices: [],
+                item_warehouses: []
             },
             sale_unit_price: null,
             configuration: {},
@@ -2795,7 +2967,8 @@ export default {
                 price1: 0,
                 price2: 0,
                 price3: 0,
-                price_default: 2
+                price_default: 2,
+                unique_code: null
             },
             attribute_types: [],
             area_id: 2,
@@ -2817,6 +2990,7 @@ export default {
             this.system_isc_types = response.data.system_isc_types;
             this.affectation_igv_types = response.data.affectation_igv_types;
             this.warehouses = response.data.warehouses;
+            this.item_codes = response.data.item_codes;
             // this.form.categoria_madera = response.data.categoria_madera;
             this.categoria_madera = response.data.categoria_madera.map(x => {
                 x.precio = 0;
@@ -2948,6 +3122,14 @@ export default {
             this.$confirm("¿Estás seguro de eliminar este registro?")
                 .then(() => {
                     this.form.item_price_ranges.splice(index, 1);
+                })
+                .catch(() => {});
+        },
+
+        async clickDeleteBarcode(index) {
+            this.$confirm("¿Estás seguro de eliminar este registro?")
+                .then(() => {
+                    this.form.item_codes.splice(index, 1);
                 })
                 .catch(() => {});
         },
@@ -3259,7 +3441,14 @@ export default {
                 price2: 0,
                 price3: 0,
                 price_default: 1,
-                warehouse_id: 1
+                warehouse_id: 1,
+                unique_code: null
+            });
+        },
+        clickAddBarcode() {
+            this.form.item_codes.push({
+                id: null,
+                code_barcode: null
             });
         },
         clickCancel(index) {
@@ -3274,6 +3463,7 @@ export default {
             this.form = {
                 item_price_ranges: [],
                 categoria_madera: [],
+                item_codes: [],
                 subject_to_detraction: false,
                 is_manufactured: false,
                 id: null,

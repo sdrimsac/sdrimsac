@@ -143,6 +143,7 @@ class FoodCollection extends ResourceCollection
                 'second_name' => $item->second_name,
                 'currency_type_id' => $item->currency_type_id,
                 'currency' => $item->currency_type->symbol,
+                'item_codes' => $item->item_codes,
                 'item_price_ranges' => $item->item_price_ranges->transform(function ($row, $key) {
                     return [
                         'quantity_min' => $row->quantity_min,

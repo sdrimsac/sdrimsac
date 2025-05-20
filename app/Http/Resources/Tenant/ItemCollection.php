@@ -59,6 +59,18 @@ class ItemCollection extends ResourceCollection
                     ];
                 });
             }
+            if ($row->item_codes == null) {
+                $item_codes = [];
+            } else {
+                $item_codes = collect($row->item_codes)->transform(function ($row) {
+                    return [
+                        'item_id' => $row->item_id,
+                        'code_barcode' => $row->code_barcode,
+                        'is_primary' => $row->is_primary,
+                        'active' => $row->active,
+                    ];
+                });
+            }
             return [
                 //row es una instancia de Item
                 'commission' => $row->commission,
@@ -104,6 +116,7 @@ class ItemCollection extends ResourceCollection
                 //  ],
                 'unit_type_description' => ($row->unit_type) ? $row->unit_type->description : '',
                 'unit_type' => $item_unit_types,
+                'item_codes' => $item_codes,
                 'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
              
                     return [

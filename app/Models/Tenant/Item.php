@@ -285,6 +285,7 @@ class Item extends ModelTenant
                     'price_default' => $item_unit_types->price_default,
                     'factor_default' => (bool) $item_unit_types->factor_default,
                     'barcode' => $item_unit_types->barcode,
+                    'unique_code' => $item_unit_types->unique_code,
                 ];
             }),
             'warehouses' => $warehouses,
@@ -609,7 +610,7 @@ class Item extends ModelTenant
 
     public function item_unit_types()
     {
-        return $this->hasMany(ItemUnitType::class);
+        return $this->hasMany(ItemUnitType::class, 'item_id');
     }
     public function categoria_madera()
     {
@@ -675,8 +676,14 @@ class Item extends ModelTenant
     {
         return $this->hasMany(SaleNoteItem::class, 'item_id');
     }
+    public function item_codes()
+    {
+        return $this->hasMany(ItemCodes::class, 'item_id');
+    }
 
-    public function obervation() {
+
+    public function obervation()
+    {
         return $this->hasMany(Observation::class);
     }
 

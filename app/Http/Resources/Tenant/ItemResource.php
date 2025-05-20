@@ -102,6 +102,15 @@ class ItemResource extends JsonResource
             'lots_enabled' => (bool) $this->lots_enabled,
             'percentage_perception' => $this->percentage_perception,
             'item_unit_types' => $this->item_unit_types,
+            'item_codes' => collect($this->item_codes)->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->item_id,
+                    'code_barcode' => $row->code_barcode,
+                    'is_primary' => (bool) $row->is_primary,
+                    'active' => (bool) $row->active,
+                ];
+            }),
             'image' => $this->image,
             'account_id' => $this->account_id,
             'category_id' => $this->category_id,

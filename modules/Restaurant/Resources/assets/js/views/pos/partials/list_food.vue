@@ -223,7 +223,9 @@
                                                                     data.item
                                                                         .lots_enabled ==
                                                                         1 &&
-                                                                        data.item.date_of_due
+                                                                        data
+                                                                            .item
+                                                                            .date_of_due
                                                                 "
                                                             >
                                                                 <el-tag
@@ -549,12 +551,16 @@
                                     </div>
                                     <div
                                         class="d-flex flex-wrap justify-content-center m-1"
-                                        v-if="data.item.lots_enabled == 1 && 
-                                            data.item.date_of_due
-                                           " 
+                                        v-if="
+                                            data.item.lots_enabled == 1 &&
+                                                data.item.date_of_due
+                                        "
                                     >
                                         <el-tag
-                                            v-for="(lot, idx) in data.item.lots_group.filter(l => l.quantity > 0)"
+                                            v-for="(lot,
+                                            idx) in data.item.lots_group.filter(
+                                                l => l.quantity > 0
+                                            )"
                                             :key="idx"
                                             :type="
                                                 `${
@@ -945,7 +951,9 @@
                                                 </el-row>
                                             </span>
                                             <span
-                                                v-if="configuration.zones_workers"
+                                                v-if="
+                                                    configuration.zones_workers
+                                                "
                                                 class="col-2 button-container"
                                             >
                                                 <el-row>
@@ -983,12 +991,13 @@
                                         </div>
                                     </template>
                                 </div>
-                               
+
                                 <div v-else>
-                                    <div 
-                                    v-if="configuration.zones_workers"
-                                    class="row justify-content-end" 
-                                    style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;">
+                                    <div
+                                        v-if="configuration.zones_workers"
+                                        class="row justify-content-end"
+                                        style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"
+                                    >
                                         <span class="col-2 button-container">
                                             <el-row>
                                                 <el-button
@@ -1100,6 +1109,7 @@ export default {
         "canAddItem",
         "loadingItems",
         "foods",
+        "value",
         "configuration",
         "worker",
         "pagination",
@@ -1107,6 +1117,7 @@ export default {
         "localOrden",
         "type_code",
         "barcode",
+        "policy",
         "model",
         "quality",
         "searchSeries",
@@ -1374,7 +1385,7 @@ export default {
             if (foodItem) {
                 this.currentItem = {
                     ...foodItem,
-                    description: foodItem.description // Ensure description is included
+                    description: foodItem.description
                 };
             }
             this.showImagesFoods = true;
@@ -1442,6 +1453,18 @@ export default {
                     select: false
                 };
             });
+            if (this.barcode && this.listFoods.length === 1 && this.value) {
+                let [food] = this.listFoods;
+                if (food.types && Array.isArray(food.types)) {
+                    let type = food.types.find(
+                        t => t.unique_code === this.value
+                    );
+                    if (type) {
+                        this.clickCommand(type);
+                        return;
+                    }
+                }
+            }
             if (
                 (this.barcode && this.listFoods.length == 1) ||
                 (this.type_code && this.listFoods.length == 1)
@@ -1486,6 +1509,7 @@ export default {
                 this.addFood(0, null, true);
             }
         },
+        
         formatedStockPresentation(
             {
                 max_quantity,
@@ -1595,6 +1619,7 @@ export default {
             }
             return pass;
         },
+
         async addFood(
             index = 0,
             type = null,
@@ -1821,6 +1846,7 @@ export default {
             if (categoria) {
                 setQuantity = categoria.quantity;
             }
+
             this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
