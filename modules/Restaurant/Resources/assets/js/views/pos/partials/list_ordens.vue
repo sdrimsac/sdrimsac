@@ -823,7 +823,7 @@
                                 ></el-option>
                             </el-select>
                         </template>
-                        <div class="row" v-if="configuration.hotels">   
+                        <div class="row" >   
                             <div class="col-md-6">
                                 <div class="row">
                                     <template>
@@ -846,7 +846,7 @@
                                     </template>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-if="configuration.hotels">
                                 <div class="row">
                                     <!-- Canjear Promoción Piscina y Desayuno -->
                                      <template>

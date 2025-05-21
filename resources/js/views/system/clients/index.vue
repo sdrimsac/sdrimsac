@@ -1,6 +1,6 @@
 <template>
     <div v-loading="loading">
-        <header class="page-header">
+        <!-- <header class="page-header">
             <h2>
                 <a href="/dashboard">
                     <i class="fa fa-list-alt"></i>
@@ -11,11 +11,23 @@
                     <span>Dashboard</span>
                 </li>
             </ol>
-        </header>
+        </header> -->
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body p-0">
+                        <div class="row px-4 mt-2" style="padding-bottom: 0;">
+                            <div class="col-2 font-weight-bold">
+                                <span style="color: #073f68; font-size: 1.5em;">
+                                    {{ year }}
+                                </span>
+                            </div>
+                            <div class="col-10 text-right">
+                                <span style="color: #000; font-weight: bold;">
+                                    CPE generados por Mes
+                                </span>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div
@@ -28,15 +40,7 @@
                                         ></chart-line>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="row px-4 mt-2 pb-3">
-                            <div class="col-2 font-weight-bold text-primary">
-                                {{ year }}
-                            </div>
-                            <div class="col-10 font-weight-semibold text-right">
-                                Comprobantes generados por mes
+                                <br />
                             </div>
                         </div>
                     </div>
@@ -60,9 +64,10 @@
                                 </h2>
                                 <div class="summary-footer">
                                     <a
-                                        class="text-muted text-uppercase"
+                                        class="text-uppercase"
                                         href="#client-list"
-                                        >Ver todos</a
+                                        style="color: #007bff;"
+                                    >Ver todos</a>
                                     >
                                 </div>
                             </div>
@@ -77,7 +82,7 @@
                             </header>
                             <div class="card-body p-4 text-center">
                                 <p class="font-weight-semibold mb-0 mt-3">
-                                    Total Comprobantes
+                                    Total CPE Generados
                                 </p>
                                 <h2 class="font-weight-semibold mt-0 mb-3">
                                     {{ total_documents }}
@@ -88,7 +93,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- Seccion de Discos  Comentados -->
+        <!-- <div class="row">
             <div class="col-xl-3 col-lg-6">
                 <section
                     class="card card-featured-left card-featured-primary mb-4"
@@ -127,13 +133,13 @@
                             <div class="widget-summary-col">
                                 <div class="summary">
                                     <h4 class="title">
-                                        <!-- Disco <br> Duro -->
+                                      
                                     </h4>
                                     <div class="info">
                                         <strong class="amount"
                                             >Disco Duro</strong
                                         ><br />
-                                        <!-- <span class="text-warning" v-if="discUsed == 0">no se pudo obtener</span> -->
+                                        <span class="text-warning" v-if="discUsed == 0">no se pudo obtener</span>
                                     </div>
                                 </div>
                                 <div class="summary-footer d-block">
@@ -187,11 +193,11 @@
                             <div class="widget-summary-col">
                                 <div class="summary">
                                     <h4 class="title">
-                                        <!-- Disco <br> Duro -->
+                                        
                                     </h4>
                                     <div class="info">
                                         <strong class="amount">Inodes</strong>
-                                        <!-- <span class="text-primary">(14 unread)</span> -->
+                                       
                                     </div>
                                 </div>
                                 <div class="summary-footer d-block">
@@ -245,18 +251,18 @@
                             <div class="widget-summary-col">
                                 <div class="summary">
                                     <h4 class="title">
-                                        <!-- Disco <br> Duro -->
+                                       
                                     </h4>
                                     <div class="info">
                                         <strong class="amount"
                                             >Archivos <br />
                                             Generados</strong
                                         >
-                                        <!-- <span class="text-primary">(14 unread)</span> -->
+                                       
                                     </div>
                                 </div>
                                 <div class="summary-footer">
-                                    <!-- <a class="text-muted text-uppercase">(view all)</a> -->
+                                   
                                 </div>
                             </div>
                         </div>
@@ -282,7 +288,7 @@
                             <div class="widget-summary-col">
                                 <div class="summary">
                                     <h4 class="title">
-                                        <!-- Disco <br> Duro -->
+                                       
                                     </h4>
                                     <div class="info">
                                         <strong class="amount">Versión</strong
@@ -293,14 +299,14 @@
                                     </div>
                                 </div>
                                 <div class="summary-footer">
-                                    <!-- <a class="text-muted text-uppercase">(view all)</a> -->
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
-        </div>
+        </div> -->
 
         <div id="client-list" class="card mb-0">
             <div class="card-header bg-secondary">
@@ -309,23 +315,25 @@
                     Listado de Clientes
                 </h4>
             </div>
-            <div class="data-table-visible-columns">
-                <!-- botone para las tareas programados -->
+            <div class="data-table-visible-columns d-flex align-items-center" style="gap: 12px; flex-wrap: wrap;">
+                <!-- botones para las tareas programados -->
                 <el-tooltip
                     class="item"
-                    content="Eviar toda las tareas programadas mnaualmente"
+                    content="Eviar toda las tareas programadas manualmente"
                     effect="dark"
                     placement="top-start"
                 >
-                    <el-button
-                        type="secondary"
-                        class=""
+                    <vs-button
                         :loading="buttonLoading"
                         :disabled="buttonLoading"
                         @click.prevent="clickResetProgramn"
+                        class="mr-2 same-size-btn"
+                        style="background-color: #ffc107; color: #fff; border-color: #ffc107;"
                     >
-                        Tareas Programados
-                    </el-button>
+                        <i class="fas fa-tasks btn-icon"></i>
+                        <span class="btn-label" style="margin: 0 8px;">Tareas</span>
+                        <i class="fas fa-clock btn-icon"></i>
+                    </vs-button>
                 </el-tooltip>
                 <el-tooltip
                     class="item"
@@ -333,14 +341,18 @@
                     effect="dark"
                     placement="top-start"
                 >
-                    <el-button
-                        type="secondary"
-                        class=""
-                        @click.prevent="clickSendPaymentsMessages()"
+                    <vs-button
+                        :active="active == 4"
+                        :loading="loading"
+                        :disabled="loading"
+                        @click.prevent="active = 4; clickSendPaymentsMessages()"
+                        class="mr-2 same-size-btn"
+                        style="background-color: #28a745; color: #fff; border-color: #28a745;"
                     >
-                        <i class="fab fa-whatsapp fa-lg"></i>
-                        <i class="fas fa-bell fa-lg"></i>
-                    </el-button>
+                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                        <span class="btn-label" style="margin: 0 8px;">Cobros</span>
+                        <i class="fas fa-bell fa-lg btn-icon"></i>
+                    </vs-button>
                 </el-tooltip>
                 <el-tooltip
                     class="item"
@@ -348,40 +360,47 @@
                     effect="dark"
                     placement="top-start"
                 >
-                    <el-button
-                        type="secondary"
-                        class=""
-                        @click.prevent="clickSendPendingDocuments()"
+                    <vs-button
+                        :active="active == 5"
+                        :loading="loading"
+                        :disabled="loading"
+                        @click.prevent="active = 5; clickSendPendingDocuments()"
+                        class="mr-2 same-size-btn"
+                        style="background-color: #17a2b8; color: #fff; border-color: #17a2b8;"
                     >
-                        <i class="fab fa-whatsapp fa-lg"></i>
-                        <i class="fas fa-file fa-lg"></i>
-                    </el-button>
+                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                        <span class="btn-label" style="margin: 0 8px;">Pendientes</span>
+                        <i class="fas fa-file fa-lg btn-icon"></i>
+                    </vs-button>
                 </el-tooltip>
                 <el-tooltip
                     class="item"
-                    content="Reiniciar Whatsapp"
+                    content="Reiniciar Whatsapp y enviar mensajes"
                     effect="dark"
                     placement="top-start"
                 >
-                    <el-button
-                        type="secondary"
-                        class=""
-                        @click.prevent="clickRestartWhatsapp()"
+                    <vs-button
+                        :active="active == 6"
+                        :loading="loading"
+                        :disabled="loading"
+                        @click.prevent="active = 6; clickRestartWhatsapp()"
+                        class="mr-2 same-size-btn"
+                        style="background-color: #007bff; color: #fff; border-color: #007bff;"
                     >
-                        <i class="fab fa-whatsapp fa-lg"></i>
-                        <i class="fa fa-sync"></i>
-                    </el-button>
+                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                        <span class="btn-label" style="margin: 0 8px;">Reiniciar</span>
+                        <i class="fa fa-sync btn-icon"></i>
+                    </vs-button>
                 </el-tooltip>
-                <el-button
-                    type="secondary"
-                    class=""
-                    href="javascript:void(0)"
-                    @click.prevent="clickCreate()"
+                <vs-button
+                    :active="active == 1"
+                    @click.prevent="active = 1; clickCreate()"
+                    class="same-size-btn"
+                    style="background-color: #007bff; color: #fff; border-color: #007bff;"
                 >
-                    <i class="fas fa-user fa-lg"></i>
-                    <i class="fa fa-plus-circle"></i>
-                    Nuevo Cliente
-                </el-button>
+                    <i class="fa fa-plus-circle btn-icon"></i>
+                    <span class="btn-label" style="margin: 0 8px;">Nueva APP</span>
+                </vs-button>
             </div>
 
             <div class="card-body">

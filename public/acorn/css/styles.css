@@ -3156,7 +3156,7 @@ html[data-color='light-pink'] {
     --primary-darker: #042237;
     --secondary-darker: #0e7ea6;
     --tertiary-darker: #d0d0d0;
-    --quaternary-darker: #531332;
+    --quaternary-darker: #6c726c;
     --body: #073f68;
     --alternate: #7c7c7c;
     --muted: #afafaf;
@@ -13512,6 +13512,54 @@ h5 {
 /* Botón deshabilitado */
 .btn_imprimir[disabled] {
   background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Estilos generales para el botón de tareas programadas */
+.btn-tareasprogramadas {
+  background-color: #ffc107 !important; /* Ámbar como fondo sólido */
+  color: #fff !important; /* Texto blanco */
+  font-size: 1.25rem !important;
+  font-weight: bold !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  width: auto !important;
+  min-width: 180px !important;
+  height: 55px !important;
+}
+
+/* Hover para el botón de tareas programadas */
+.btn-tareasprogramadas:hover {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.85), rgba(255, 215, 64, 0.85)) !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important;
+  transform: scale(1.05) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Ícono dentro del botón */
+.btn-tareasprogramadas i {
+  color: white !important;
+  font-size: 1.5rem !important;
+}
+
+/* Botón en estado activo */
+.btn-tareasprogramadas:active {
+  transform: scale(1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón deshabilitado */
+.btn-tareasprogramadas[disabled] {
+  background: #b3b3b3 !important;
   color: #f5f5f5 !important;
   box-shadow: none !important;
   cursor: not-allowed;

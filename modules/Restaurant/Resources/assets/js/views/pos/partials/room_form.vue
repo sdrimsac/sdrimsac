@@ -128,9 +128,7 @@
                     </div>
                 </div>
             </div>
-            <div
-                class="col-md-6 d-flex align-items-center justify-content-center"
-            >
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
                 <div
                     class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                 >

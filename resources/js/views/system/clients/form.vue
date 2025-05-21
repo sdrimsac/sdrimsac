@@ -1,3 +1,4 @@
+<!-- Nuevo Cliente App (empresa) -->
 <template>
     <el-dialog
         :close-on-click-modal="false"
@@ -5,38 +6,42 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        class="custom-dialog"
     >
-        <form autocomplete="off" @submit.prevent="submit">
-            <div class="form-body">
-                <div class="row">
-                    <!-- <div class="col-12">
+
+                <!-- <div class="row">
+                    <div class="col-12">
                         <el-checkbox
                         v-model="form.migration"
                         >
                             Migración
                         </el-checkbox>
-                    </div> -->
-                </div>
+                    </div>
+                </div> -->
+        <form autocomplete="off" @submit.prevent="submit">
+            <div class="form-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div
                             :class="{ 'has-danger': errors.number }"
                             class="form-group"
                         >
-                            <label class="control-label">RUC</label>
-                            <!-- <el-input :disabled="form.is_update" v-model="form.number" :maxlength="11" dusk="number">
+                            <label class="control-label">
+                              <i class="fa fa-id-card" style="margin-right:8px;"></i>
+                              RUC
+                            </label>
+                            <el-input :disabled="form.is_update" v-model="form.number" :maxlength="11" dusk="number">
                                 <el-button :disabled="form.is_update" type="primary" slot="append" :loading="loading_search" icon="el-icon-search" @click.prevent="searchSunat">
                                     SUNAT
                                 </el-button>
-                            </el-input> -->
+                            </el-input>
 
                             <!-- apiperu -->
                             <x-input-service
                                 v-model="form.number"
-                                :identity_document_type_id="
-                                    form.identity_document_type_id
-                                "
+                                :identity_document_type_id="form.identity_document_type_id"
                                 @search="searchNumber"
+                                style="display: none;"
                             ></x-input-service>
                         </div>
                     </div>
@@ -46,7 +51,8 @@
                             class="form-group"
                         >
                             <label class="control-label"
-                                >Nombre de la Empresa</label
+                                ><i class="fa fa-building" style="margin-right:8px;"></i>
+                                Nombre de la Empresa</label
                             >
                             <el-input
                                 v-model="form.name"
@@ -90,6 +96,7 @@
                             class="form-group"
                         >
                             <label class="control-label">
+                              <i class="fa fa-globe" style="margin-right:8px;"></i>
                                 Nombre de Subdominio
                             </label>
                             <el-input v-model="form.subdomain" dusk="subdomain">
@@ -117,6 +124,7 @@
                             class="form-group"
                         >
                             <label class="control-label">
+                              <i class="fa fa-envelope" style="margin-right:8px;"></i>
                                 Correo de Acceso
                             </label>
                             <el-input
@@ -141,6 +149,7 @@
                             class="form-group"
                         >
                             <label class="control-label">
+                              <i class="fa fa-lock" style="margin-right:8px;"></i>
                                 Contraseña
 
                                 <el-tooltip
@@ -186,6 +195,7 @@
                             class="form-group"
                         >
                             <label class="control-label">
+                              <i class="fa fa-list-alt" style="margin-right:8px;"></i>
                                 Plan
                             </label>
                             <el-select v-model="form.plan_id" dusk="plan_id">
@@ -212,6 +222,7 @@
                             class="form-group"
                         >
                             <label class="control-label">
+                              <i class="fa fa-user-tag" style="margin-right:8px;"></i>
                                 Perfil
                             </label>
                             <el-select
@@ -234,84 +245,98 @@
                             </small>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.phone }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                                Teléfono
-                            </label>
-                            <el-input
-                                v-model="form.phone"
-                            >
-                            </el-input>
-                            <small
-                                v-if="errors.phone"
-                                class="form-control-feedback"
-                                v-text="errors.phone[0]"
-                            >
-                            </small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.group_whatsapp }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                                Grupo de Whatsapp
-                            </label>
-                            <el-input
-                                v-model="form.group_whatsapp"
-                            >
-                            </el-input>
-                            <small
-                                v-if="errors.group_whatsapp"
-                                class="form-control-feedback"
-                                v-text="errors.group_whatsapp[0]"
-                            >
-                            </small>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.sent_to_group }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                                Tipo de envío
-                            </label>
-                            <el-switch
-                                v-model="form.sent_to_group"
-                                active-text="Enviar a grupo"
-                                inactive-text="Enviar a cliente"
-                            >
-                            </el-switch>
-                        
-                        </div>
-                    </div>
-                    <div class="col-md-6 center-el-checkbox mt-4" v-show="false">
-                        <div
-                            :class="{ 'has-danger': errors.locked_emission }"
-                            class="form-group"
-                        >
-                            <el-checkbox
-                                v-model="form.locked_emission"
-                                :disabled="form.is_update"
-                            >
-                                Limitar emisión de documentos
-                            </el-checkbox>
-                            <br />
-                            <small
-                                v-if="errors.locked_emission"
-                                class="form-control-feedback"
-                                v-text="errors.locked_emission[0]"
-                            >
-                            </small>
+                   
+                    <div class="col-12">
+                        <div class="card" >
+                            <div class="card-body" style="background-color: #6c726c !important;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div
+                                            :class="{ 'has-danger': errors.phone }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label">
+                                            
+                                                Nro Whatsapp
+                                            </label>
+                                            <el-input
+                                                v-model="form.phone"
+                                            >
+                                            </el-input>
+                                            <small
+                                                v-if="errors.phone"
+                                                class="form-control-feedback"
+                                                v-text="errors.phone[0]"
+                                            >
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div
+                                            :class="{ 'has-danger': errors.group_whatsapp }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label">
+                                              
+                                                Grupo de Whatsapp
+                                            </label>
+                                            <el-input
+                                                v-model="form.group_whatsapp"
+                                            >
+                                            </el-input>
+                                            <small
+                                                v-if="errors.group_whatsapp"
+                                                class="form-control-feedback"
+                                                v-text="errors.group_whatsapp[0]"
+                                            >
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="col-md-6">
+                                        <div
+                                            :class="{ 'has-danger': errors.sent_to_group }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label">
+                                              <i class="fa fa-paper-plane" style="margin-right:8px;"></i>
+                                                Tipo de envío
+                                            </label>
+                                            <el-switch
+                                                v-model="form.sent_to_group"
+                                                active-text="Enviar a grupo"
+                                                inactive-text="Enviar a cliente"
+                                            >
+                                            </el-switch>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 center-el-checkbox mt-4" v-show="false">
+                                        <div
+                                            :class="{ 'has-danger': errors.locked_emission }"
+                                            class="form-group"
+                                        >
+                                            <el-checkbox
+                                                v-model="form.locked_emission"
+                                                :disabled="form.is_update"
+                                            >
+                                                Limitar emisión de documentos
+                                            </el-checkbox>
+                                            <br />
+                                            <small
+                                                v-if="errors.locked_emission"
+                                                class="form-control-feedback"
+                                                v-text="errors.locked_emission[0]"
+                                            >
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <el-collapse v-show="false" v-model="collapse">
                     <el-collapse-item name="1" title="Módulos">
                         <div class="row">
@@ -420,7 +445,6 @@
                                         >
                                         </el-option>
                                     </el-select>
-
                                     <el-checkbox
                                         v-if="
                                             form.soap_send_id == '02' &&
@@ -746,15 +770,17 @@
                     </div>
                 </div>
             </div>
+            
             <div class="form-actions text-right pt-2">
                 <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
                     Cancelar
                 </el-button>
                 <el-button
+                    class="btn-save"
                     :loading="loading_submit"
                     dusk="submit"
                     native-type="submit"
-                    type="primary"
+                    type=""
                     icon="fas fa-save fa-lg"
                 >
                     <template v-if="loading_submit">
@@ -943,9 +969,9 @@ export default {
         },
         create() {
             if (this.recordId) {
-                this.titleDialog = "Editar Cliente";
+                this.titleDialog = "Editar Datos del Aplicativo";
             } else {
-                this.titleDialog = "Nuevo Cliente";
+                this.titleDialog = "Datos del Nuevo Aplicativo";
                 const preSelecteds = [];
                 this.modules.map(m => {
                     preSelecteds.push(m.id);
@@ -1159,3 +1185,19 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.custom-dialog >>> .el-dialog {
+    border-radius: 18px;
+}
+.custom-dialog >>> .el-dialog__header {
+    background: #073f68;
+    font-weight: bold;
+}
+.custom-dialog >>> .el-dialog__title {
+    color: #fff !important;
+}
+.custom-dialog >>> .el-dialog__body {
+    padding: 5px 24px 16px 24px; /* Ejemplo: puedes ajustar estos valores a tu gusto */
+}
+</style>
