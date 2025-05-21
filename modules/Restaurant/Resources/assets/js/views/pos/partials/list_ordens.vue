@@ -838,7 +838,7 @@
                                                 class="black-placeholder"
                                                 v-model="clientTableData.ref"
                                                 placeholder="Referencia:"
-                                                maxlength="25"
+                                                maxlength="45"
                                                 show-word-limit
                                                 style="margin-bottom: 10px;"
                                             ></el-input>
