@@ -3244,7 +3244,7 @@ export default {
                     id: 74,
                     title: ["Venta del", "mes"],
                     icon: "fas fa-history ",
-                    visible: true && this.establishments.is_product && !cashId
+                    visible: true && this.establishments.is_product && this.cashId
                 },
                 {
                     id: 63,
