@@ -243,6 +243,11 @@ Vue.prototype.$closeSManualAlert = () => {
 
 Vue.use(Toast, options);
 
+import Vuesax from 'vuesax';
+import 'vuesax/dist/vuesax.css';
+
+Vue.use(Vuesax);
+
 document.addEventListener("DOMContentLoaded", function() {
     getDesarrollador();
     getAreaPrinter();

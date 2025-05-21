@@ -1,58 +1,73 @@
 <template>
     <el-dialog
-        title="PAGOS DIGITAL"
+        title="Pagos Digitales - Yape"
         :visible="showDigitalPay"
         @open="openDigitalPay"
         @close="closeDigitalPay"
         append-to-body
+        :close-on-press-escape="false"
+        :close-on-click-modal="false"
+        width="70%"
+        
+        
     >   
     <div class="row m-3">
-        <div class="col-md-4">
-            <el-input
-                v-model="filters.person_name"
-                placeholder="Buscar por persona"
-                clearable
-                @input="searchWithDebounce"
-            >
-            </el-input>
-        </div>
-        <div class="col-md-4">
-            <el-input
-                v-model="filters.amount"
-                placeholder="Buscar por monto"
-                type="number"
-                clearable
-                @input="searchWithDebounce"
-            >
-            </el-input>
-        </div>
-        <div class="col-md-4">
-            <el-date-picker
-                v-model="filters.date"
-                type="date"
-                placeholder="Seleccionar fecha"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-                @change="getDigitalPayments"
-                clearable
-            >
-            </el-date-picker>
+        <div class="card w-100">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <el-input
+                        v-model="filters.person_name"
+                        placeholder="Buscar por persona"
+                        clearable
+                        @input="searchWithDebounce"
+                        >
+                        </el-input>
+                    </div>
+                    <div class="col-md-4">
+                        <el-input
+                        v-model="filters.amount"
+                        placeholder="Buscar por monto"
+                        type="number"
+                        clearable
+                        @input="searchWithDebounce"
+                        >
+                        </el-input>
+                    </div>
+                    <div class="col-md-4">
+                        <el-date-picker
+                        v-model="filters.date"
+                        type="date"
+                        placeholder="Seleccionar fecha"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        @change="getDigitalPayments"
+                        clearable
+                        style="width: 100%; max-width: 200px;"
+                        >
+                        </el-date-picker>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
         <div class="row m-3" v-loading="loading">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-hover table-striped table-bordered table-responsive">
+                <thead style="background-color: #073f68; color: white;">
                     <tr>
-                        <th scope="col">Persona</th>
-                        <th scope="col">Monto</th>
-                        <th scope="col">Fecha</th>
+                        <th class="text-white" scope="col">Persona</th>
+                        <th class="text-white" scope="col">Monto</th>
+                        <th class="text-white" scope="col">Fecha</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="payment in digitalPayments" :key="payment.id">
                         <td>{{ payment.person_name }}</td>
                         <td>{{ payment.amount }}</td>
-                        <td>{{ payment.created_at }}</td>
+                        <td>
+                            <div>{{ payment.created_at.split(' ')[0] }}</div>
+                            <div>{{ payment.created_at.split(' ')[1] }}</div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -64,7 +79,7 @@
             :total="pagination.total"
             :current-page.sync="pagination.current_page"
             :page-size="pagination.per_page"
-        >
+         >
         </el-pagination>
     </el-dialog>
 </template>

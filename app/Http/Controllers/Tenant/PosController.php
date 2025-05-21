@@ -55,6 +55,7 @@ use App\Models\Tenant\PromotionDocumentCustomer;
 use Modules\Item\Models\Brand;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\TableType;
+use Modules\Restaurant\Models\TableUserMaintenance;
 
 class PosController extends Controller
 {
@@ -528,12 +529,27 @@ class PosController extends Controller
             $item_default = Item::where('id', $config->item_variation_id)->first();
         }
         $areas = Area::all();
-        $tablesClean = [];
+        $tablesClean = DB::connection('tenant')->table('tables')
+            ->where('establishment_id', auth()->user()->establishment_id)
+            ->where('is_cleaning', true)
+            ->get()
+            ->map(function ($table) {
+                $lastMaintenance = DB::connection('tenant')->table('table_user_maintenance')
+                    ->where('table_id', $table->id)
+                    ->latest('id')
+                    ->first();
+
+                $table->last_maintenance = $lastMaintenance ? [
+                    'init_time' => $lastMaintenance->init_time,
+                    'finish_time' => $lastMaintenance->finish_time,
+                    'status' => $lastMaintenance->status,
+                ] : null;
+
+                return $table;
+            });
         $tablesLeave = [];
         if ($config->hotels) {
-            $tablesClean = DB::connection('tenant')->table('tables')
-                ->where('establishment_id', auth()->user()->establishment_id)
-                ->where('is_cleaning', true)->get();
+            $tablesCleaner = TableUserMaintenance::all();
 
             $configuration = Configuration::first();
             $time_to_leave = $configuration->alarm_to_end;
@@ -575,6 +591,8 @@ class PosController extends Controller
         }
         $promotions_document = PromotionDocument::where('active', true)->get();
 
+        $tablesCleaner = TableUserMaintenance::all();
+
         return compact(
             'categories_to_show',
             'brands',
@@ -601,7 +619,7 @@ class PosController extends Controller
             'medida_alto',
             'medida_ancho',
             'medida_grosor',
-            'categoria_madera'
+            'categoria_madera',
 
         );
     }

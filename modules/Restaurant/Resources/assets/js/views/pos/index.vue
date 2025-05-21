@@ -223,6 +223,7 @@
                                         type="button"
                                         class="btn btn-dirty"
                                         @click="isCleaned(t.id)"
+                                        
                                     >
                                         <span>{{ t.time_to_finish }}</span>
                                         <svg
@@ -434,7 +435,7 @@
                                         <div class="row">
                                             <!-- Series -->
                                             <div
-                                                class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.search_series_pos" class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Envía a la lista de venta directamente (Imeis, Series)"
@@ -460,7 +461,7 @@
 
                                             <!-- Barcode -->
                                             <div
-                                                class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.barcode" class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Habilitar búsqueda por código de barras"
@@ -486,7 +487,7 @@
 
                                             <!-- Calidad -->
                                             <div
-                                                class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.quality" class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Filtrar por calidad del producto"
@@ -512,7 +513,7 @@
 
                                             <!-- Modelo -->
                                             <div
-                                                class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.model" class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Filtrar por modelo del producto"

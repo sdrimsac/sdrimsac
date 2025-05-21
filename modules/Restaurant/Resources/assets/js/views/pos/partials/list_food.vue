@@ -1,18 +1,21 @@
+<!-- Productos y Servicios  en Caja los CARDS -->
 <template>
     <div>
         <div class="row p-2" v-loading="loadingItems">
-            <h2 class="small-title">Productos</h2>
-            <template v-if="listFoods.length == 0">
-                <div class="col-12 text-center font-weight-bold">
-                    <label>No Hay Productos</label>
+            <div class="row w-100 m-0 p-0">
+                <div class="col-9 d-flex align-items-center">
+                    <h2 class="small-title" style="color: blue; font-weight: bold;">Productos</h2>
+                    <template v-if="listFoods.length == 0">
+                        <div class="col-12 text-center font-weight-bold">
+                            <label>No Hay Productos</label>
+                        </div>
+                    </template>
                 </div>
-            </template>
-            <template v-if="configuration.list_or_card">
-                <div>
-                    <div>
+                <div class="col-3">
+                    <div v-if="configuration.list_or_card">
                         <button
                             @click="toggleView"
-                            class="btn btn-primary btn-sm ml-auto"
+                            class="btn btn-primary btn-sm ml-auto float-right"
                         >
                             {{
                                 form.show_list
@@ -22,297 +25,287 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            
+            <template v-if="configuration.list_or_card">
                 <template v-if="form.show_list">
-                    <div class="row card mx-1 mt-2">
-                        <div class>
-                            <div
-                                class="infinite-list-wrapper"
-                                style="max-height: 800px; overflow-y: auto;"
-                            >
-                                <ul
-                                    class="list-group"
-                                    infinite-scroll-disabled="isDisabled"
-                                    infinite-scroll-distance="5"
-                                >
-                                    <li class="list-group-item">
-                                        <div id="app" class="container">
-                                            <table
-                                                class="table table-hover table-bordered"
+                    <div
+                        class="infinite-list-wrapper w-100"
+                        style="max-height: 800px; overflow-y: auto;"
+                        >
+                        <ul
+                            class="list-group"
+                            infinite-scroll-disabled="isDisabled"
+                            infinite-scroll-distance="5"
+                        >
+                            <li class="list-group-item p-2">
+                                <div id="app" class="container">
+                                    <table
+                                        class="table table-hover table-bordered m-0"
+                                    >
+                                        <thead class="sticky-top bg-primary" style="z-index: 1;">
+                                            <tr>
+                                                <th class="text-white">
+                                                    Producto o Servicio
+                                                </th>
+                                                <th class="text-white text-center">
+                                                    Precio
+                                                </th>
+                                                <th
+                                                    v-if="
+                                                        configuration.show_stock_cash ==
+                                                            true
+                                                    "
+                                                    class="text-white text-center"
+                                                >
+                                                    Stock
+                                                </th>
+                                                <th
+                                                    class="text-white text-center"
+                                                    v-if="
+                                                        configuration.lotgroup_list_or_card
+                                                    "
+                                                >
+                                                    Lote
+                                                </th>
+                                                <th
+                                                    class="text-white"
+                                                    v-if="
+                                                        configuration.listprice_list_or_card
+                                                    "
+                                                >
+                                                    Política de Precios
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(data,
+                                                index) in foods"
+                                                :key="index"
+                                                @click="
+                                                    (configuration.consolidated_quotations ||
+                                                        configuration.direct_unit_type) &&
+                                                    data.types &&
+                                                    data.types.length >
+                                                        0
+                                                        ? clickCommand(
+                                                                data
+                                                                    .types[0]
+                                                            )
+                                                        : addFood(index)
+                                                "
                                             >
-                                                <thead>
-                                                    <tr class="bg-primary">
-                                                        <th class="text-white">
-                                                            CODIGO
-                                                        </th>
-                                                        <th class="text-white">
-                                                            DESCRIPCION
-                                                        </th>
-                                                        <th class="text-white">
-                                                            PRECIO
-                                                        </th>
-                                                        <th
-                                                            v-if="
-                                                                configuration.show_stock_cash ==
-                                                                    true
-                                                            "
-                                                            class="text-white"
-                                                        >
-                                                            STOCK
-                                                        </th>
-                                                        <th
-                                                            class="text-white text-center"
-                                                            v-if="
-                                                                configuration.lotgroup_list_or_card
+                                                <td>
+                                                    <div role="button">
+                                                        <span
+                                                            :class="
+                                                                `lead-font-weight-700 ${
+                                                                    configuration.trunc_txt
+                                                                        ? 'd-inline-block text-truncate'
+                                                                        : ''
+                                                                }`
                                                             "
                                                         >
-                                                            LOTE
-                                                        </th>
-                                                        <th
-                                                            class="text-white"
+                                                            {{ data.code }}
+                                                            <br />
+                                                            {{
+                                                                data.description.toUpperCase()
+                                                            }}
+                                                        </span>
+                                                        <template
                                                             v-if="
-                                                                configuration.listprice_list_or_card
+                                                                configuration.trunc_txt
                                                             "
                                                         >
-                                                            POLITICA PRECIO
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr
-                                                        v-for="(data,
-                                                        index) in foods"
-                                                        :key="index"
-                                                        @click="
-                                                            (configuration.consolidated_quotations ||
-                                                                configuration.direct_unit_type) &&
-                                                            data.types &&
-                                                            data.types.length >
-                                                                0
-                                                                ? clickCommand(
-                                                                      data
-                                                                          .types[0]
-                                                                  )
-                                                                : addFood(index)
+                                                            <el-tooltip
+                                                                class="item"
+                                                                effect="dark"
+                                                                :content="
+                                                                    data.description.toUpperCase()
+                                                                "
+                                                                placement="top-start"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-ellipsis-h"
+                                                                ></i>
+                                                            </el-tooltip>
+                                                        </template>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right">
+                                                    {{ data.item.currency_type_id == "PEN" ? "S/" : "$" }}
+                                                    {{ data.price }}
+                                                </td>
+                                                <td class="text-center"
+                                                    v-if="
+                                                        configuration.show_stock_cash ==
+                                                            true
+                                                    "
+                                                >
+                                                    <template
+                                                        v-if="
+                                                            data.item
+                                                                .is_set ==
+                                                                0 &&
+                                                                data
+                                                                    .item
+                                                                    .unit_type_id !=
+                                                                    'ZZ' &&
+                                                                data
+                                                                    .item
+                                                                    .stock >
+                                                                    0
                                                         "
                                                     >
-                                                        <td>{{ data.code }}</td>
-                                                        <td>
-                                                            <div role="button">
-                                                                <span
-                                                                    :class="
-                                                                        `lead-font-weight-700 ${
-                                                                            configuration.trunc_txt
-                                                                                ? 'd-inline-block text-truncate'
-                                                                                : ''
-                                                                        }`
-                                                                    "
-                                                                >
-                                                                    {{
-                                                                        data.description.toUpperCase()
-                                                                    }}
-                                                                </span>
-                                                                <template
-                                                                    v-if="
-                                                                        configuration.trunc_txt
-                                                                    "
-                                                                >
-                                                                    <el-tooltip
-                                                                        class="item"
-                                                                        effect="dark"
-                                                                        :content="
-                                                                            data.description.toUpperCase()
-                                                                        "
-                                                                        placement="top-start"
-                                                                    >
-                                                                        <i
-                                                                            class="fas fa-ellipsis-h"
-                                                                        ></i>
-                                                                    </el-tooltip>
-                                                                </template>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {{
-                                                                data.item
-                                                                    .currency_type_id ==
-                                                                "PEN"
-                                                                    ? "S/"
-                                                                    : "$"
-                                                            }}
-                                                            {{ data.price }}
-                                                        </td>
-                                                        <td
-                                                            v-if="
-                                                                configuration.show_stock_cash ==
-                                                                    true
-                                                            "
+                                                        <span
+                                                            class="m-l-0"
+                                                            style="text-align: center !important"
                                                         >
                                                             <template
                                                                 v-if="
-                                                                    data.item
-                                                                        .is_set ==
-                                                                        0 &&
-                                                                        data
-                                                                            .item
-                                                                            .unit_type_id !=
-                                                                            'ZZ' &&
-                                                                        data
-                                                                            .item
-                                                                            .stock >
-                                                                            0
+                                                                    data
+                                                                        .item
+                                                                        .max_quantity
                                                                 "
                                                             >
-                                                                <span
-                                                                    class="m-l-0"
-                                                                    style="text-align: center !important"
-                                                                >
-                                                                    <template
-                                                                        v-if="
-                                                                            data
-                                                                                .item
-                                                                                .max_quantity
-                                                                        "
-                                                                    >
-                                                                        {{
-                                                                            formatedStockPresentation(
-                                                                                data.item,
-                                                                                data
-                                                                                    .item
-                                                                                    .stock
-                                                                            )
-                                                                        }}
-                                                                    </template>
-                                                                    <template
-                                                                        v-else
-                                                                    >
-                                                                        {{
-                                                                            parseFloat(
-                                                                                data
-                                                                                    .item
-                                                                                    .stock
-                                                                            )
-                                                                        }}
-                                                                    </template>
-                                                                </span>
+                                                                {{
+                                                                    formatedStockPresentation(
+                                                                        data.item,
+                                                                        data
+                                                                            .item
+                                                                            .stock
+                                                                    )
+                                                                }}
                                                             </template>
-                                                            <template v-else>
-                                                                <span
-                                                                    class="text-danger m-l-0"
-                                                                    style="text-align: center !important"
-                                                                >
-                                                                    <template
-                                                                        v-if="
-                                                                            data
-                                                                                .item
-                                                                                .unit_type_id !=
-                                                                                'ZZ'
-                                                                        "
-                                                                        >Agotado</template
-                                                                    >
-                                                                </span>
+                                                            <template
+                                                                v-else
+                                                            >
+                                                                {{
+                                                                    parseFloat(
+                                                                        data
+                                                                            .item
+                                                                            .stock
+                                                                    )
+                                                                }}
                                                             </template>
-                                                        </td>
-                                                        <td
-                                                            v-if="
-                                                                configuration.lotgroup_list_or_card
-                                                            "
+                                                        </span>
+                                                    </template>
+                                                    <template v-else>
+                                                        <span
+                                                            class="text-danger m-l-0"
+                                                            style="text-align: center !important"
                                                         >
-                                                            <div
-                                                                class
+                                                            <template
                                                                 v-if="
-                                                                    data.item
-                                                                        .lots_enabled ==
-                                                                        1 &&
+                                                                    data
+                                                                        .item
+                                                                        .unit_type_id !=
+                                                                        'ZZ'
+                                                                "
+                                                                >Agotado</template
+                                                            >
+                                                        </span>
+                                                    </template>
+                                                </td>
+                                                <td
+                                                    v-if="
+                                                        configuration.lotgroup_list_or_card
+                                                    "
+                                                >
+                                                    <div
+                                                        v-if="
+                                                            data.item
+                                                                .lots_enabled ==
+                                                                1 &&
+                                                                data
+                                                                    .item
+                                                                    .date_of_due
+                                                        "
+                                                    >
+                                                        <el-tag
+                                                            :type="
+                                                                `${
+                                                                    isExpired(
                                                                         data
                                                                             .item
                                                                             .date_of_due
-                                                                "
-                                                            >
-                                                                <el-tag
-                                                                    :type="
-                                                                        `${
-                                                                            isExpired(
-                                                                                data
-                                                                                    .item
-                                                                                    .date_of_due
-                                                                            )
-                                                                                ? 'danger'
-                                                                                : 'primary'
-                                                                        }`
-                                                                    "
-                                                                >
-                                                                    {{
-                                                                        data
-                                                                            .item
-                                                                            .lot_code
-                                                                    }}
-                                                                    -
-                                                                    {{
-                                                                        data
-                                                                            .item
-                                                                            .date_of_due
-                                                                    }}
-                                                                </el-tag>
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            v-if="
-                                                                configuration.listprice_list_or_card
+                                                                    )
+                                                                        ? 'danger'
+                                                                        : 'primary'
+                                                                }`
                                                             "
                                                         >
-                                                            <div
-                                                                v-if="
-                                                                    data.types &&
-                                                                        data
-                                                                            .types
-                                                                            .length >
-                                                                            0
-                                                                "
+                                                            {{
+                                                                data
+                                                                    .item
+                                                                    .lot_code
+                                                            }}
+                                                            -
+                                                            {{
+                                                                data
+                                                                    .item
+                                                                    .date_of_due
+                                                            }}
+                                                        </el-tag>
+                                                    </div>
+                                                </td>
+                                                <td
+                                                    v-if="
+                                                        configuration.listprice_list_or_card
+                                                    "
+                                                >
+                                                    <div
+                                                        v-if="
+                                                            data.types &&
+                                                                data
+                                                                    .types
+                                                                    .length >
+                                                                    0
+                                                        "
+                                                    >
+                                                        <el-dropdown
+                                                            @command="
+                                                                clickCommand
+                                                            "
+                                                        >
+                                                            <span
+                                                                class="el-dropdown-link"
                                                             >
-                                                                <el-dropdown
-                                                                    @command="
-                                                                        clickCommand
+                                                                Precios
+                                                                <i
+                                                                    class="el-icon-arrow-down el-icon--right"
+                                                                ></i>
+                                                            </span>
+                                                            <el-dropdown-menu
+                                                                slot="dropdown"
+                                                            >
+                                                                <el-dropdown-item
+                                                                    v-for="(type,
+                                                                    idx) in data.types"
+                                                                    :key="
+                                                                        idx
+                                                                    "
+                                                                    :command="
+                                                                        type
                                                                     "
                                                                 >
-                                                                    <span
-                                                                        class="el-dropdown-link"
-                                                                    >
-                                                                        Precios
-                                                                        <i
-                                                                            class="el-icon-arrow-down el-icon--right"
-                                                                        ></i>
-                                                                    </span>
-                                                                    <el-dropdown-menu
-                                                                        slot="dropdown"
-                                                                    >
-                                                                        <el-dropdown-item
-                                                                            v-for="(type,
-                                                                            idx) in data.types"
-                                                                            :key="
-                                                                                idx
-                                                                            "
-                                                                            :command="
-                                                                                type
-                                                                            "
-                                                                        >
-                                                                            {{
-                                                                                formatDescriptionType(
-                                                                                    type
-                                                                                )
-                                                                            }}
-                                                                        </el-dropdown-item>
-                                                                    </el-dropdown-menu>
-                                                                </el-dropdown>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                                                                    {{
+                                                                        formatDescriptionType(
+                                                                            type
+                                                                        )
+                                                                    }}
+                                                                </el-dropdown-item>
+                                                            </el-dropdown-menu>
+                                                        </el-dropdown>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </template>
                 <template v-else>

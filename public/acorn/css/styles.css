@@ -3154,14 +3154,14 @@ html[data-color='light-pink'] {
     --tertiary-rgb: 180, 36, 72;
     --quaternary-rgb: 131, 34, 81;
     --primary-darker: #042237;
-    --secondary-darker: #ce6899;
-    --tertiary-darker: #7e1932;
+    --secondary-darker: #0e7ea6;
+    --tertiary-darker: #d0d0d0;
     --quaternary-darker: #531332;
     --body: #073f68;
     --alternate: #7c7c7c;
     --muted: #afafaf;
     --separator: #dddddd;
-    --separator-light: #f1f1f1;
+    --separator-light: #e9dada;
     
     --body-rgb: 59, 59, 59;
     --alternate-rgb: 124, 124, 124;
@@ -3181,8 +3181,8 @@ html[data-color='light-pink'] {
     --gradient-1: #073f68;
     --gradient-2: #073f68;
     --gradient-3: #073f68;
-    --gradient-1-darker: #b9437c;
-    --gradient-2-darker: #d35291;
+    --gradient-1-darker: #9f1019;
+    --gradient-2-darker: #e3d10c;
     --gradient-3-darker: #d8849b;
     --light-text: #fff;
     --dark-text: #343a40;
@@ -13785,6 +13785,14 @@ h5 {
   box-shadow: none !important;
   cursor: not-allowed;
 }
+
+.btn-verde{
+  
+  color: #148406 !important;
+  
+}
+                                        #148406
+
 
 
 /* Títulos de los inputs en negrita */

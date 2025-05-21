@@ -1780,6 +1780,43 @@ class TableRoomController extends Controller
 
         foreach ($insumos as $insumo) {
 
+            // Obtener el insumo completo con item_id correcto
+            $insumoHotel = DB::connection('tenant')
+                ->table('insumos_hotels')
+                ->where('id', $insumo->insumos_hotel_id)
+                ->first();
+
+            if (!$insumoHotel) {
+                // O manejar error o continuar
+                continue;
+            }
+
+            $item_id = $insumoHotel->item_id;
+
+            $item_warehouse = ItemWarehouse::where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
+
+            if ($item_warehouse) {
+                $item_warehouse->stock += $insumo->quantity;
+                $item_warehouse->save();
+            }
+
+            InventoryKardex::create([
+                'date_of_issue' => date('Y-m-d'),
+                'item_id' => $item_id, // Usar aquí el item_id correcto
+                'quantity' => $insumo->quantity,
+                'warehouse_id' => $warehouse_id,
+                'type' => 'input',
+                'description' => 'Entrada por cancelación de habitación',
+                'inventory_kardexable_id' => $hotel_rent_item->id,
+                'inventory_kardexable_type' => 'App\Models\Tenant\HotelRentItem',
+                'user_id' => auth()->user()->id,
+            ]);
+        }
+
+        /* foreach ($insumos as $insumo) {
+
             $item_warehouse = ItemWarehouse::where('item_id', $insumo->insumos_hotel_id)
                 ->where('warehouse_id', $warehouse_id)
                 ->first();
@@ -1800,7 +1837,7 @@ class TableRoomController extends Controller
                 'inventory_kardexable_type' => 'App\Models\Tenant\HotelRentItem',
                 'user_id' => auth()->user()->id,
             ]);
-        }
+        } */
 
         return [
             'success' => true,

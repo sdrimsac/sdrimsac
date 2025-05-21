@@ -101,7 +101,7 @@
             </div>
             <div
                 class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-            >
+             >
                 <!-- Botón Cancelar -->
                 <el-button
                     class="btn-cancel btn-cancel:hover"

@@ -1,18 +1,19 @@
+<!-- Mantenimiento hotel -->
 <template>
     <el-dialog
         :title="title"
         :visible="showDialog"
-        width="30%"
+        width="40%"
         @close="close"
         @open="open"
         append-to-body
     >
         <div class="row m-2" v-loading="loading">
             <div class="col-12">
-                <label for="">Trabajador</label>
+                <label for="">{{ workerLabel }}</label>
                 <el-select
                     v-model="form.worker_id"
-                    placeholder="Seleccione un trabajador"
+                    :placeholder="workerPlaceholder"
                 >
                     <el-option
                         v-for="worker in workers"
@@ -41,10 +42,30 @@
                 ></el-input>
             </div>
         </div>
-        <span slot="footer" class="dialog-footer">
+        <div class="col-md-12 d-flex align-items-center justify-content-end">
+            <!-- Botón Cancelar -->
+            <el-button
+            class="btn-cancel btn-cancel:hover"
+            icon="fas fa-times fa-lg"
+            @click="close"
+            size="small"
+            >
+            <span>Cancelar</span>
+            </el-button>
+            <!-- Botón Guardar -->
+            <el-button
+            class="btn-save btn-save:hover"
+            icon="fab fa-whatsapp fa-lg"
+            type="primary"
+            @click="submit"
+            >
+            <span>Enviar</span>
+            </el-button>
+        </div>
+        <!-- <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Aceptar</el-button>
-        </span>
+        </span> -->
     </el-dialog>
 </template>
 
@@ -61,6 +82,14 @@ export default {
                 description: null
             }
         };
+    },
+    computed: {
+        workerLabel() {
+            return this.type === 'limpieza' ? 'Personal de Limpieza' : 'Técnico de Mantenimiento';
+        },
+        workerPlaceholder() {
+            return this.type === 'limpieza' ? 'Seleccione personal' : 'Seleccione un técnico';
+        }
     },
     methods: {
         async getWorkers() {

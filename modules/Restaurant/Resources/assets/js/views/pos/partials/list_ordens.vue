@@ -15,7 +15,7 @@
                                 ? isAnalist || user.can_accept_credit_sale_note
                                 : true
                         "
-                        class="btn p-0"
+                        class="btn p-2"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-haspopup="true"
@@ -43,32 +43,51 @@
                         type="button"
                         @click="trigerFunction(3)"
                     >
-                        Cerrar caja
+                        Cerrar Caja
                     </button>
+
                     <button
                         v-if="!cash_id && !isSeller"
                         class="btn btn-danger"
                         type="button"
                         @click="openCash"
+                        style="width: 130px;"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Si la CAJA está cerrada no puede realizar ninguna Operación de Venta"
                     >
-                        Sin caja abierta
+                        <i class="el-icon-folder-opened" style="margin-right: 5px;"></i>
+                        Abrir Caja
                     </button>
+
+                   
+
                     <button class="btn btn-success" type="button">
-                        {{ formattedCountdown }} restantes
+                        <i class="fas fa-clock"></i> {{ formattedCountdown }}
                     </button>
                     <el-button class="btn-info"
                         @click="openOrden"
                         icon="el-icon-view"
                         >
                     </el-button>
-                    <button
+
+                    
+                     <!-- Pagos digitales -->
+                     <button
                         v-if="configuration.digital_notifications"
-                        class="btn btn-warning"
+                        class="btn btn-purple"
                         type="button"
                         @click="openDigitalPay"
+                        style="width: 100px;"
                     >
-                        Pagos Digitales
+                        <img 
+                            src="/status_images/pagosdigitales.png" 
+                            alt="Pagos Digitales" 
+                            style="width: 100px; height: 40px; margin-right: 10px;" 
+                        />
+                        
                     </button>
+                    
                     <button
                         v-if="
                             configuration.sale_note_credit_confirm &&
@@ -216,23 +235,26 @@
                         {{ clientTableData.ref }}
                     </strong>
                 </div>
-                <div class="row col-12">
-                    <div class="h5 text-white col-6" style="padding-left: 25px">
-                        <strong v-if="!clientTableData.table">
-                            <template v-if="!isConsignment">
-                                {{
-                                    quotationId
-                                        ? `GENERANDO COMPROBANTE - COTIZACIÓN ${cotIdentifier}`
-                                        : "VENTA DIRECTA"
-                                }}
-                            </template>
-                            <template v-else
-                                >LIQUIDACIÓN DE CONSIGNACIÓN</template
-                            >
-                        </strong>
-                    </div>
 
-                    <div class="col-6">
+                <div class="row col-12">
+                    <div class="col-7">
+                        
+                        <div class="h6 text-white col-12" style="padding-left: 25px">
+                            <strong v-if="!clientTableData.table">
+                                <template v-if="!isConsignment">
+                                    {{
+                                        quotationId
+                                            ? `GENERANDO COMPROBANTE - COTIZACIÓN ${cotIdentifier}`
+                                            : "VENTA DIRECTA"
+                                    }}
+                                </template>
+                                <template v-else
+                                    >LIQUIDACIÓN DE CONSIGNACIÓN</template
+                                >
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="col-5">
                         <div class="row">
                             <h3
                                 v-if="!clientTableData.table"
@@ -243,97 +265,110 @@
                                 {{ (total + totalOrdenItems).toFixed(2) }}
                             </h3>
                         </div>
-                        <div
-                            class="d-flex justify-content-end"
-                            v-if="configuration.other_currency_pos"
-                        >
-                            <!-- <div class="col-3 text-white" style="">
-                                <label for="currency" class="text-white">
-                                    <small>Moneda</small>
-                                </label>
-                                <el-radio-group
-                                    style=""
-                                    @change="changeCurrency"
-                                    v-model="currency_id"
-                                >
-                                    <el-radio-button
-                                        value="PEN"
-                                        label="S/"
-                                    ></el-radio-button>
-                                    <el-radio-button
-                                        value="USD"
-                                        label="$"
-                                    ></el-radio-button>
-                                </el-radio-group>
-                            </div> -->
-                            <div
-                                style="margin-top: 5px"
-                                class="justify-content-end text-end"
-                            >
-                                <label
-                                    for="currency"
-                                    class="text-white w-100 margin-top: 10px;"
-                                >
-                                    <small>Moneda</small>
-                                </label>
-                                <el-radio-group
-                                    v-model="currency_id"
-                                    size="small"
-                                    @change="changeCurrency"
-                                >
-                                    <el-radio-button
-                                        value="PEN"
-                                        label="S/"
-                                    ></el-radio-button>
-                                    <el-radio-button
-                                        value="USD"
-                                        label="$"
-                                    ></el-radio-button>
-                                </el-radio-group>
-                            </div>
-                            <div
-                                class="text-white text-end"
-                                style="margin-top: 5px"
-                            >
-                                <label for="tc" class="text-white w-100"
-                                    >T/C</label
-                                >
-                                <el-input
-                                    v-model="exchange_rate_sale"
-                                    type="number"
-                                    style="width: 100px"
-                                    @input="calculateTotal"
-                                ></el-input>
-                            </div>
-                        </div>
-                        <br />
-                        <div
-                            class="row"
-                            v-if="configuration.edit_count_products"
-                        >
-                            <h6
-                                v-if="!clientTableData.table"
-                                class="text-white fw-bold"
-                                style="text-align: right"
-                            >
-                                TOTAL DE PRODUCTOS:
-                                {{ totalUniqueProducts }}
-                            </h6>
-                        </div>
-                        <div
-                            class="row"
-                            v-if="configuration.edit_count_products"
-                        >
-                            <h6
-                                v-if="!clientTableData.table"
-                                class="text-white fw-bold"
-                                style="text-align: right"
-                            >
-                                TOTAL DE CANTIDADES:
-                                {{ totalQuantityProducts }}
-                            </h6>
-                        </div>
                     </div>
+                </div>
+
+
+                <div class="row col-12" style="padding-left: 20px;">
+                    <div class="col-6" v-if="configuration.other_currency_pos">
+                            <div class="row">
+                                <div class="col-md-6">
+                                        <div class="row">
+                                            <label for="currency" class="text-white w-100 margin-top: 10px;">
+                                                <small>Moneda</small>
+                                            </label>
+                                            <el-radio-group
+                                                v-model="currency_id"
+                                                size="small"
+                                                @change="changeCurrency"
+                                            >
+                                                <el-radio-button
+                                                    value="PEN"
+                                                    label="S/"
+                                                ></el-radio-button>
+                                                <el-radio-button
+                                                    value="USD"
+                                                    label="$"
+                                                ></el-radio-button>
+                                            </el-radio-group>
+                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                        <div class="row">
+                                            <label for="tc" class="text-white text-center w-100"
+                                                >T/C
+                                            </label>
+                                            <el-input
+                                                v-model="exchange_rate_sale"
+                                                type="number"
+                                                style="width: 100px"
+                                                :controls="false"
+                                                @input="calculateTotal">
+                                            </el-input>
+                                        </div>
+                                </div>
+                                <!-- <div class="d-flex justify-content-end" v-if="configuration.other_currency_pos">
+                                    <div style="margin-top: 5px" class="justify-content-end text-end">
+                                        <label for="currency" class="text-dark w-100 margin-top: 10px;">
+                                            <small>Moneda</small>
+                                        </label>
+                                        <el-radio-group
+                                            v-model="currency_id"
+                                            size="small"
+                                            @change="changeCurrency"
+                                        >
+                                            <el-radio-button
+                                                value="PEN"
+                                                label="S/"
+                                            ></el-radio-button>
+                                            <el-radio-button
+                                                value="USD"
+                                                label="$"
+                                            ></el-radio-button>
+                                        </el-radio-group>
+                                    </div>
+                                    <div class="text-dark text-end" style="margin-top: 5px">
+                                       
+                                    </div>
+                                </div> -->
+                            </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card bg-white">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="row justify-content-center" v-if="configuration.edit_count_products">
+                                        <h6 v-if="!clientTableData.table" class="text-white fw-bold text-center">
+                                            <span style="color: darkblue; font-weight: bold; font-size: 12px;">
+                                                Productos:
+                                            </span>
+                                            <br>
+                                            <span style="color: darkblue; font-weight: bold; display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; border-radius: 50%; background-color: lightblue;">
+                                                {{ totalUniqueProducts }}</span>
+                                            <el-tooltip content="Total de producto a vender" placement="top" effect="light">
+                                            </el-tooltip>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    
+                                    <div class="row justify-content-center" v-if="configuration.edit_count_products">
+                                        <h6 v-if="!clientTableData.table" class="text-white fw-bold text-center">
+                                            <span style="color: darkblue; font-weight: bold; font-size: 12px;">
+                                                Unidades:
+                                            </span>
+                                            <br>
+                                            <span style="color: darkblue; font-weight: bold; display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; border-radius: 50%; background-color: lightblue;">
+                                                {{ totalQuantityProducts }}
+                                            </span>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    
                 </div>
 
                 <!-- <div
@@ -394,13 +429,14 @@
                                     type="button"
                                     @click="payOrden()"
                                     :disabled="cotizarConfirmado"
-                                    style="max-height: 45px ; max-width: 80px;"
+                                    style="max-height: 45px ; max-width: 60px;"
                                 >
                                     <i
                                         class="fas fa-money-bill-wave fw-bold"
                                         style="color: var(--primary) !important"
                                     ></i>
-                                    <br />Cobrar
+                                    <br />
+                                    <span style="display: flex; justify-content: center;">Pagar</span>
                                 </button>
                             </template>
                         </template>
@@ -429,13 +465,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="cancelOrden"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-trash"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Limpiar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Limpiar</span>
                         </button>
                         <button
                             v-if="isDev"
@@ -462,13 +499,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="openQuotation"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-clipboard-list"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Cotizar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Cotizar</span>
                         </button>
 
                         <button
@@ -482,13 +520,14 @@
                             :disabled="cotizarConfirmado"
                             class="btn btn-light mt-2"
                             type="button"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-cart-arrow-down"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Aparcar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Aparcar</span>
                         </button>
                         <button
                             v-if="
@@ -499,13 +538,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="openConsignment"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-clipboard-list"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Consignar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Consigna</span>
                         </button>
                         <button
                             v-if="
@@ -516,13 +556,14 @@
                             "
                             @click="openCredit"
                             class="btn btn-light mt-2"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-credit-card"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Crédito
+                            <br />
+                            <span style="display: flex; justify-content: center;">Crédito</span>
                         </button>
 
                         <button
@@ -536,13 +577,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="toCreditList"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="far fa-credit-card"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />A cuenta
+                            <br />
+                            <span style="display: flex; justify-content: center;">A Cuenta</span>
                         </button>
                         <button
                             v-if="
@@ -556,13 +598,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="sendOrden()"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-paper-plane"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Enviar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Enviar</span>
                         </button>
                         <button
                             v-if="
@@ -573,13 +616,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="printOrden()"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-print"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Imprimir
+                            <br />
+                            <span style="display: flex; justify-content: center;">Imprimir</span>
                         </button>
                         <button
                             v-if="
@@ -591,13 +635,14 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="printOrdenPdf()"
-                            style="max-height: 45px ; max-width: 80px;"
+                            style="max-height: 45px ; max-width: 60px;"
                         >
                             <i
                                 class="fas fa-print"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />PDF
+                            <br />
+                            <span style="display: flex; justify-content: center;">PDF</span>
                         </button>
                         <span class="float-end" v-if="isSellerConsolidated">
                             <span class="h3 text-white"
@@ -612,7 +657,7 @@
                             "
                             class="btn btn-light mt-2"
                             type="button"
-                            style="max-height: 45px ;  max-width: 80px;"
+                            style="max-height: 45px ;  max-width: 60px;"
                             @click="
                                 cancelGeneralOrden(clientTableData.orden_id)
                             "
@@ -621,79 +666,12 @@
                                 class="fas fa-window-close"
                                 style="color: var(--primary) !important"
                             ></i>
-                            <br />Cancelar
+                            <br />
+                            <span style="display: flex; justify-content: center;">Cancelar</span>
                         </button>
-                        <div
-                            class="dropdown-as-select d-inline-block mt-2"
-                            data-childselector="span"
-                        >
-                            <template
-                                v-if="!configuration.sale_note_credit_confirm"
-                            >
-                                <!-- <button
-                  class="btn p-0"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  style="max-height: 45px ;max-width: 150px;"
-                >
-                  <span
-                    class="btn btn-light dropdown-toggle"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-delay="0"
-                    title
-                    data-bs-original-title="Item Count"
-                    aria-label="Item Count"
-                  >
-                    Mas Opciones..
-                    <i class="fas fa-list" style="color: var(--primary) !important"></i>
-                  </span>
-                </button>-->
-                                <div
-                                    class="dropdown-menu dropdown-menu-start col-md-2 col-1"
-                                    style="max-width: 154px;"
-                                >
-                                    <!-- <div class="col-12">
-                    <el-button
-                      v-if="
-                                                isCreatingOrden == false &&
-                                                    clientTableData.table ==
-                                                        undefined &&
-                                                    !configuration.college
-                                            "
-                      @click="openApart"
-                      class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                      style="max-width: 150px;"
-                    >
-                      <div class="text-center" style="margin-bottom: 2px">
-                        <span style="margin: 0 !important; padding: 0 !important">Aparcar</span>
-                        <i class="fas fa-cart-arrow-down" style="color: var(--primary) !important"></i>
-                      </div>
-                      <div></div>
-                    </el-button>
-                    <div></div>
-                  </div>-->
-                                    <!-- <div class="col-12">
-                    <el-button
-                      v-if="
-                             configuration.consignment &&
-                             localOrden.length != 0 &&
-                             !isSeller
-                            "
-                      class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                      type="button"
-                      @click="openConsignment"
-                      style="max-height: 45px ;max-width: 150px;"
-                    >
-                      <div class="text-center" style="margin-bottom: 2px">
-                        <span style="margin: 0 !important; padding: 0 !important">Consignar</span>
-                        <i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-                      </div>
-                      <div></div>
-                    </el-button>
-                  </div>-->
+                        <div class="dropdown-as-select d-inline-block mt-2" data-childselector="span">
+                            <template v-if="!configuration.sale_note_credit_confirm">
+                                <div class="dropdown-menu dropdown-menu-start col-md-2 col-1" style="max-width: 154px;">
                                     <div class="col-12">
                                         <el-button
                                             v-if="
@@ -730,18 +708,21 @@
                                     class="btn btn-light mt-2"
                                     type="button"
                                     @click="openCredit"
-                                    style="max-height: 45px ; max-width: 80px;"
+                                    style="max-height: 45px ; max-width: 60px;"
                                 >
                                     <i
                                         class="fas fa-money-bill-wave"
                                         style="color: var(--primary) !important"
                                     ></i>
                                     <br />
-                                    {{
-                                        localOrden.length != 0
-                                            ? "Crédito"
-                                            : "Simular"
-                                    }}
+                                    <span style="display: flex; justify-content: center;">
+                                        {{
+                                            localOrden.length != 0
+                                                ? "Crédito"
+                                                : "Simular"
+                                        }}
+                                    </span>
+                                    
                                 </button>
                             </template>
                         </div>
@@ -758,12 +739,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="row col-md-12">
-                    <div class="row col-md-12 mx-1">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"></div>
-                    </div>
-                </div>
+              
+                <!-- Para llevar  y Variación -->
                 <div class="d-flex align-items-center p-1 m-2">
                     <div class="col-12">
                         <template
@@ -846,50 +823,65 @@
                                 ></el-option>
                             </el-select>
                         </template>
-                        <template>
-                            <el-input
-                                v-if="
-                                    !configuration.college &&
-                                        configuration.restaurant
-                                "
-                                type="text"
-                                class="black-placeholder"
-                                v-model="clientTableData.ref"
-                                placeholder="Referencia (DNI)"
-                            ></el-input>
-                        </template>
-                        <template v-if="configuration.hotels">
-                            <el-input
-                                @input="seachPromotion"
-                                type="text"
-                                maxlength="10"
-                                show-word-limit
-                                v-model="promotionCode"
-                                placeholder="Canjear código de promoción"
-                            ></el-input>
-                            <el-input
-                                @input="searchOrdenNumber"
-                                type="text"
-                                maxlength="10"
-                                show-word-limit
-                                v-model="ordenNumber"
-                                placeholder="Cobrar por N° de orden"
-                            ></el-input>
-                        </template>
+                        <div class="row" v-if="configuration.hotels">   
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <template>
+                                        <div class="custom-flex">
+                                            
+                                            <el-input
+                                                v-if="
+                                                    !configuration.college &&
+                                                        configuration.restaurant
+                                                "
+                                                type="text"
+                                                class="black-placeholder"
+                                                v-model="clientTableData.ref"
+                                                placeholder="Referencia:"
+                                                maxlength="25"
+                                                show-word-limit
+                                                style="margin-bottom: 10px;"
+                                            ></el-input>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <!-- Canjear Promoción Piscina y Desayuno -->
+                                     <template>
+                                        <div class="custom-flex">
+                                            <el-input
+                                            @input="seachPromotion"
+                                            type="text"
+                                            maxlength="10"
+                                            show-word-limit
+                                            v-model="promotionCode"
+                                            placeholder="Canjear Promoción"
+                                            style="margin-bottom: 10px;"
+                                        ></el-input>
+                                        </div>
+                                     </template>
+                                        <!-- Canjear  por N° de orden -->
+                                        <!-- <el-input
+                                            @input="searchOrdenNumber"
+                                            type="text"
+                                            maxlength="10"
+                                            show-word-limit
+                                            v-model="ordenNumber"
+                                            placeholder="Cobrar por N° de orden"
+                                        ></el-input> -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div
-                        class="col-md-6 d-flex justify-content-end align-items-end"
-                        v-if="
-                            establishments.conf &&
-                                establishments.conf.direct_sale
-                        "
-                    >
-                        <div
-                            class="d-flex flex-column"
-                            style="margin-left:15px;"
-                        >
-                            <label class="text-white">Venta rápida</label>
+                    <!-- Venta rápida solo con Nota de venta  y con clientes varios-->
+                    <div class="col-md-6 d-flex justify-content-end align-items-end" v-if="establishments.conf && establishments.conf.direct_sale">
+                        <div class="d-flex flex-column" style="margin-left:15px;">
+                            <label class="text-white">
+                                Venta rápida
+                            </label>
                             <el-switch
                                 @change="changeQuickSale"
                                 v-model="establishments.conf.pos_quick_sale"
@@ -916,8 +908,8 @@
                 <section
                     v-loading="loading"
                     class="scroll-section border bg-white"
-                    vid="checkboxes"
-                >
+                    vid="checkboxes">
+
                     <div class="scroll-out">
                         <div
                             class="scroll-by-count os-host os-theme-dark os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition"
@@ -1129,12 +1121,8 @@
                                                                         </template>
                                                                     </small>
                                                                 </span>
-                                                                <span
-                                                                    v-if="
-                                                                        order_pend.categoriaMadera
-                                                                    "
-                                                                    class="text-primary"
-                                                                >
+                                                                <span v-if="order_pend.categoriaMadera"
+                                                                      class="text-primary">
                                                                     <small>
                                                                         <strong>
                                                                             {{
@@ -1143,30 +1131,19 @@
                                                                         </strong>
                                                                     </small>
                                                                 </span>
-                                                                <span
-                                                                    v-if="
-                                                                        configuration.quantity_prices &&
-                                                                            order_pend
+
+                                                                <span v-if="configuration.quantity_prices && order_pend
                                                                                 .food
                                                                                 .item_price_ranges
-                                                                                .length >
-                                                                                0
-                                                                    "
-                                                                >
+                                                                                .length > 0">
                                                                     <el-tooltip>
-                                                                        <template
-                                                                            slot="content"
-                                                                        >
-                                                                            <div
-                                                                                v-for="(price_range,
-                                                                                index) in order_pend
+                                                                        <template slot="content">
+                                                                            <div v-for="(price_range,index) in order_pend
                                                                                     .food
                                                                                     .item_price_ranges"
-                                                                                :key="
-                                                                                    index
-                                                                                "
+                                                                                :key="index"
                                                                                 style="margin-bottom: 4px;"
-                                                                            >
+                                                                             >
                                                                                 <strong
                                                                                     >Cantidad:</strong
                                                                                 >
@@ -1190,9 +1167,7 @@
                                                                 </span>
 
                                                                 <el-tooltip
-                                                                    v-if="
-                                                                        configuration.edit_name_product
-                                                                    "
+                                                                    v-if="configuration.edit_name_product"
                                                                     content="Cambiar nombre del producto"
                                                                 >
                                                                     <el-tag
@@ -1314,22 +1289,13 @@
                                                                 </el-button-group>
                                                             </div>
                                                         </div>
-
-                                                        <div
-                                                            class="row align-items-end"
-                                                        >
-                                                            <div
-                                                                class="col-6 col-4 col-md-5 col-lg-4 col-xl-4"
-                                                            >
-                                                                <span
-                                                                    class="fw-bold"
-                                                                >
-                                                                    Cantidad
+                                                        <!-- Cantidad de productos en lista de venta directa -->
+                                                        <div class="row align-items-end">
+                                                            <div class="col-6 col-4 col-md-5 col-lg-4 col-xl-4">
+                                                                <span class="fw-bold">
+                                                                    Cantidad:
                                                                     <br />
-                                                                    <div
-                                                                        class="input-group spinner"
-                                                                        data-trigger="spinner"
-                                                                    >
+                                                                    <div class="input-group spinner"data-trigger="spinner">
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
@@ -1472,29 +1438,18 @@
                                                                     </div>
                                                                 </span>
                                                             </div>
-                                                            <!-- vendedor  -->
-                                                            <template>
-                                                                <div
-                                                                    class="col-6 col-md-5 col-lg-5 col-xl-4"
-                                                                >
-                                                                    <span
-                                                                        class="time font-weight-light"
-                                                                    >
-                                                                        <span
-                                                                            class="fw-bold"
-                                                                        >
-                                                                            <!-- aqui es el precio pa modificar siempre aaaa -->
-                                                                            Precio
 
+                                                           <!-- Precio unitario del produto en lista de venta directa -->
+                                                            <template>
+                                                                <div class="col-6 col-md-5 col-lg-5 col-xl-4">
+                                                                    <span class="time font-weight-light">
+                                                                        <span class="fw-bold">
+                                                                            Precio:
                                                                             {{
                                                                                 currency_id
                                                                             }}
                                                                             <br />
-                                                                            <template
-                                                                                v-if="
-                                                                                    order_pend.prices
-                                                                                "
-                                                                            >
+                                                                            <template v-if="order_pend.prices">
                                                                                 <el-input
                                                                                     v-if="
                                                                                         isEditing &&
@@ -1574,13 +1529,13 @@
                                                                                         )
                                                                                     "
                                                                                 >
-                                                                                    <template
+                                                                                    <!-- <template
                                                                                         slot="prepend"
                                                                                     >
                                                                                         {{
                                                                                             currency_id
                                                                                         }}
-                                                                                    </template>
+                                                                                    </template> -->
                                                                                 </el-input>
                                                                             </template>
                                                                         </span>
@@ -3702,16 +3657,16 @@ export default {
             this.optionsMenu = [
                 {
                     id: 1,
-                    title: ["Configuración"],
                     icon: "fas fa-cogs",
+                    title: ["Configuración"],
                     visible: false
                 },
                 {
                     id: 2,
                     title: ["Recibir ", "mercaderia"],
                     icon: "fas fa-people-carry",
-                    visible:
-                        this.configuration.receive_merchandise && !this.isSeller
+                    visible: this.configuration.receive_merchandise && !this.isSeller,
+                    
                 },
                 {
                     id: 3,

@@ -51,7 +51,7 @@
                     v-model="localDividedItems"
                     style="margin-left: 10px;"
                     @change="saveDividedItemsLocalStorage"
-                    >Dividir ordenes iguales</el-checkbox
+                    >Dividir Ordenes Iguales</el-checkbox
                 >
             </template>
         </div>
