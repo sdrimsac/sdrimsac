@@ -77,7 +77,17 @@ class ItemClientProductExport implements FromArray, WithHeadings, ShouldAutoSize
                 $data[] = [
                     '',
                     $producto['total_quantity'] ?? '',
-                    $producto['item_description'] ?? '',
+                    /* $producto['item_description'] ?? '', */
+                    ($producto['item_description'] ?? '') .
+                        (
+                            (!empty($producto['selectedGrosor']) || !empty($producto['selectedAncho']) || !empty($producto['selectedLargo']))
+                            ? ' - ' .
+                            (!empty($producto['selectedGrosor']) ? $producto['selectedGrosor'] : '') .
+                            (!empty($producto['selectedAncho']) ? 'x' . $producto['selectedAncho'] : '') .
+                            (!empty($producto['selectedLargo']) ? 'x' . $producto['selectedLargo'] : '')
+                            : ''
+                        ),
+
                     ($producto['series'] ?? '') . '-' . ($producto['number'] ?? ''),
                     isset($producto['date_of_issue']) ? \Carbon\Carbon::parse($producto['date_of_issue'])->format('Y-m-d') : '',
                     $producto['total'] ?? '',
