@@ -1054,8 +1054,8 @@
             :item="currentItem"
             :showDialog.sync="showColorSize"
             :colorSizeSelected.sync="currentColorSize"
-            @updateColorSize="updateColorSize"
             :establishments="establishments"
+            @updateColorSize="updateColorSize"
         ></show-color-size-product>
     </div>
 </template>
@@ -1128,10 +1128,12 @@ export default {
         "medida_ancho",
         "medida_alto",
         "medida_grosor",
-        "categoria_madera"
+        "categoria_madera",
+        "establishments"
     ],
     data() {
         return {
+            currentColorSize: null,
             limitQty: 0,
             showColorSize: false,
             localCotizarConfirmado: this.cotizarConfirmado,
@@ -1255,7 +1257,7 @@ export default {
                 ]
             },
             screenWidth: 0,
-            stockData: {} // Store stock updates by food_id
+            stockData: {}
         };
     },
     mounted() {
@@ -1327,6 +1329,60 @@ export default {
         }
     },
     methods: {
+        async updateColorSize(idx, color_size) {
+            let ordens = [...this.localOrden];
+            if (this.hasSamePrice(color_size)) {
+                let [first] = color_size;
+                let { price } = first;
+                price = Number(price || "0");
+                ordens[idx].color_size = [...color_size];
+                if (price != 0) {
+                    ordens[idx].price = price;
+                }
+                ordens[idx].quantity = color_size.reduce(
+                    (a, b) => a + Number(b.quantity),
+                    0
+                );
+            } else {
+                // Clonar la orden original y dividir por grupos de color_size con el mismo precio
+                let ordenOriginal = JSON.parse(JSON.stringify(ordens[idx]));
+                // Eliminar la orden original de la lista
+                ordens = ordens.filter((o, i) => i != idx);
+                let colors_sizes = this.splitByPrice(color_size);
+                for (let i = 0; i < colors_sizes.length; i++) {
+                    let color_size_group = colors_sizes[i];
+                    let newOrden = JSON.parse(JSON.stringify(ordenOriginal));
+                    let [first] = color_size_group;
+                    let { price } = first;
+                    newOrden.color_size = [...color_size_group];
+                    price = Number(price || "0");
+                    if (price != 0) {
+                        newOrden.price = price;
+                    }
+                    newOrden.quantity = color_size_group.reduce(
+                        (a, b) => a + Number(b.quantity),
+                        0
+                    );
+                    ordens.push(newOrden);
+                }
+            }
+            await this.$emit("update:localOrden", ordens);
+        },
+        hasSamePrice(color_price) {
+            let samePrice = true;
+            let price = 0;
+            for (let i = 0; i < color_price.length; i++) {
+                if (i == 0) {
+                    price = color_price[i].price;
+                } else {
+                    if (price != color_price[i].price) {
+                        samePrice = false;
+                        break;
+                    }
+                }
+            }
+            return samePrice;
+        },
         agregarItem(producto) {
             if (!producto || !producto.food) {
                 return;
@@ -1484,8 +1540,6 @@ export default {
                 ) {
                     this.foodWithTypes = food;
                     this.showDialogUnitType = true;
-                } else if (this.configuration.color_size_enabled) {
-                    this.foodWithTypes = food;
                 } else {
                     if (
                         this.configuration.direct_unit_type &&
@@ -1499,6 +1553,19 @@ export default {
             }
             if (this.searchSeries && this.listFoods.length == 1) {
                 this.addFood(0, null, true);
+            }
+
+            if (
+                this.barcode &&
+                this.configuration.color_size_enabled &&
+                this.listFoods.length === 1 &&
+                this.value
+            ) {
+                let [food] = this.listFoods;
+                if (food.item && food.item.has_color_size) {
+                    this.showColorSizeDialog(food);
+                    return;
+                }
             }
 
             if (this.configuration.color_size_enabled) {
@@ -1519,6 +1586,59 @@ export default {
             }
         },
 
+        /* showColorSizeDialog(orden, index = null) {
+            this.limitQty = orden.type_quantity ?? 0;
+
+            let ordens = this.localOrden.filter(l => l.id == orden.id);
+            if (ordens.length == 1) {
+                let [currentOrden] = ordens;
+                let color_size = currentOrden.color_size.map(s => ({
+                    ...s,
+                    quantity: s.quantity || 0
+                }));
+                this.currentColorSize = color_size;
+            } else {
+                let color_size = [];
+                for (let i = 0; i < ordens.length; i++) {
+                    let currentOrden = ordens[i];
+                    color_size = [
+                        ...color_size,
+                        ...currentOrden.color_size.map(s => ({
+                            ...s,
+                            quantity: s.quantity || 0
+                        }))
+                    ];
+                }
+                this.currentColorSize = color_size;
+            }
+            this.currentItem = orden.food.item;
+            // this.currentSeries = orden.series;
+
+            this.currentIdx = index;
+            this.showColorSize = true;
+        }, */
+
+        showColorSizeDialog(orden, index = null) {
+            this.limitQty = orden.type_quantity ?? 0;
+
+            let ordens = this.localOrden.filter(l => l.id == orden.id);
+            if (ordens.length > 0) {
+                // ...código existente...
+            } else {
+                // Si no está en la orden, usa el producto directamente
+                let color_size = Array.isArray(orden.color_size)
+                    ? orden.color_size.map(s => ({
+                          ...s,
+                          quantity: s.quantity || 0
+                      }))
+                    : [];
+                this.currentColorSize = color_size;
+                this.currentItem = orden.item || orden; // Asegura que tenga el item
+            }
+            this.currentIdx = index;
+            this.showColorSize = true;
+        },
+
         formatedStockPresentation(
             {
                 max_quantity,
@@ -1528,34 +1648,6 @@ export default {
             },
             stock
         ) {
-            // let item_unit = item_unit_types.find(
-            //     i => Number(i.quantity_unit) == Number(max_quantity)
-            // );
-            // let general = 0;
-            // if (item_unit) {
-            //     general = Math.trunc(stock / max_quantity);
-            // } else {
-            //     general = stock / max_quantity;
-            // }
-            // let part = ((stock / max_quantity) % 1).toFixed(2);
-            // let part_general = general.toString().split(".");
-
-            // if (part_general.length > 1 && part_general[1].length > 2) {
-            //     general = general.toFixed(2);
-            // }
-            // let text = `${general} ${unit_type.id}`;
-            // if (part != 0) {
-            //     if (item_unit) {
-            //         text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
-            //     } else {
-            //         text = `${general} ${max_quantity_description ||
-            //             unit_type.id}`;
-            //     }
-            // } else {
-            //     text = `${general} ${max_quantity_description || unit_type.id}`;
-            // }
-
-            // return text;
             let general = Math.trunc(stock / max_quantity);
             let part = ((stock / max_quantity) % 1).toFixed(2);
 
@@ -1636,32 +1728,6 @@ export default {
             categoria = null,
             color_size = []
         ) {
-            /* const selectedFood = this.listFoods[index];
-            const foodId = selectedFood.id; */
-
-            // Validate stock availability from socket data
-            /* const remainingStock = this.stockData[foodId];
-            if (remainingStock !== undefined && remainingStock <= 0) {
-                this.$showSAlert(
-                    "Stock insuficiente",
-                    "Este producto ya no está disponible para la venta.",
-                    "error"
-                );
-                return;
-            } */
-
-            //const productId = this.listFoods[index].id; // Get the product ID
-            //const validationResponse = await this.validateAdd(productId);
-
-            /* if (!validationResponse.success) {
-                this.$notify({
-                    title: 'Error',
-                    message: validationResponse.message,
-                    type: 'error'
-                });
-                return;
-            } */
-
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",

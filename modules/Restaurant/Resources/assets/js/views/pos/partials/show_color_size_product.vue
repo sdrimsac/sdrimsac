@@ -135,6 +135,12 @@ export default {
                     s => s.quantity && s.quantity != 0
                 )
             ];
+            /* let color_size = [
+                ...(Array.isArray(this.colorSizeSelected)
+                    ? this.colorSizeSelected
+                    : []
+                ).filter(s => s.quantity && s.quantity != 0)
+            ]; */
             color_size = color_size.filter(s => s.id != colorSize.id);
 
             if (colorSize.quantity !== 0) {
@@ -151,7 +157,7 @@ export default {
             if (this.limitQty != 0) {
                 if (this.colorSizeSelected.length % this.limitQty != 0) {
                     return this.$toast.error(
-                        "La cantidad de series no coninciden con la cantidad de venta por politica de precio"
+                        "La cantidad de talla color no coninciden con la cantidad de venta"
                     );
                 }
             }
@@ -168,6 +174,14 @@ export default {
             });
         },
         open() {
+            console.log(
+                "open",
+                this.limitQty,
+                this.item,
+                this.idx,
+                this.colorSizeSelected,
+                this.establishments
+            );
             if (this.item) {
                 this.getColorSize();
             }

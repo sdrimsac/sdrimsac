@@ -22,7 +22,7 @@
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Productos por cliente AAA</h6>
+                    <h6 class="my-0 text-white">Productos por cliente</h6>
                 </div>
                 <div class="card-body">
                     <div class="col-md-12 col-lg-12 col-xl-12 ">

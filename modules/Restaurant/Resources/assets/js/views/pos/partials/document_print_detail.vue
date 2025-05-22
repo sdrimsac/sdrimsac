@@ -158,7 +158,7 @@
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             v-if="
-                                                data.document_type_id == '01' &&
+                                                data.document_type_id == '01' && data.document_type_id == '03' &&
                                                     data.state_type_id ==
                                                         '05' &&
                                                     configuration.anulate_sunat_cash

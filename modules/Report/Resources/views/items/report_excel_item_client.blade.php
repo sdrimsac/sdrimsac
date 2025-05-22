@@ -20,54 +20,6 @@ function format_unit($row, $uit)
     <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <style>
-        html {
-            font-family: sans-serif;
-            font-size: 12px;
-        }
-
-        table {
-            width: 100%;
-            border-spacing: 0;
-            border: 1px solid black;
-        }
-
-        .celda {
-            text-align: center;
-            padding: 2px;
-            border: 0.1px solid black;
-        }
-
-        .th {
-            padding: 2px;
-            text-align: center;
-            border-color: #c4c4c4;
-            border: 0.1px solid black;
-        }
-
-        .title {
-            font-weight: bold;
-            padding: 5px;
-            font-size: 20px !important;
-            text-decoration: underline;
-        }
-
-        .small2 {
-            font-size: 8px;
-        }
-
-        p>strong {
-            margin-left: 5px;
-            font-size: 13px;
-        }
-
-        .thead {
-            font-weight: bold;
-            background: #c4c4c4;
-            color: black;
-            text-align: center;
-        }
-    </style>
 </head>
 
 <body>
