@@ -139,8 +139,7 @@
                                             v-if="
                                                 data.state_type_id == '01' &&
                                                     configuration.caja_actions &&
-                                                    configuration.internal_voided &&
-                                                    cash_id
+                                                    configuration.internal_voided
                                             "
                                             type="text"
                                             @click="
@@ -162,8 +161,7 @@
                                                 data.document_type_id == '01' &&
                                                     data.state_type_id ==
                                                         '05' &&
-                                                    configuration.anulate_sunat_cash &&
-                                                    cash_id
+                                                    configuration.anulate_sunat_cash
                                             "
                                             type="text"
                                             @click="clickVoided(data.id)"

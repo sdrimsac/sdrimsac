@@ -74,36 +74,26 @@ trait InventoryTrait
 
     public function optionsItemWareHousexId($warehouse_id, $description = null, $type = 'description', $is_service = false)
     {
-
         $records = Item::whereHas('warehouses', function ($query) use ($warehouse_id) {
             $query->where('warehouse_id', $warehouse_id);
         })
+        ->where([['item_type_id', '01'], ['unit_type_id', $is_service ? '=' : '!=', 'ZZ'], ['active', 1]])
+        ->whereNotIsSet();
 
-            ->where([['item_type_id', '01'], ['unit_type_id', $is_service ? '=' : '!=', 'ZZ'], ['active', 1]])->whereNotIsSet();
-        //$establishment_id = auth()->user()->establishment_id;
-        //$current_warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
-        switch ($type) {
-            case 'serie':
-                $records = $records->whereHas('item_lots', function ($query) use ($description) {
-                    $query->where('series', 'like', '%' . $description . '%');
-                });
-                break;
-            case 'lote':
-                //
-                $records = $records->whereHas('lots_group', function ($query) use ($description) {
-                    $query->where('code', 'like', '%' . $description . '%');
-                });
-                break;
-            case 'has_color_size':
-                $records = $records->whereHas('has_color_size', function ($query) use ($description) {
-                    $query->where('talla', 'like', '%' . $description . '%');
-                });
-            default:
-                if ($description) {
-                    $records = $records->where('description', 'like', '%' . $description . '%')
-                        ->orWhere('internal_id', 'like', '%' . $description . '%');
-                }
-                break;
+        if ($description) {
+            $records->where(function($query) use ($description) {
+                $query->where('description', 'like', '%' . $description . '%')
+                    ->orWhere('internal_id', 'like', '%' . $description . '%')
+                    ->orWhereHas('item_lots', function ($q) use ($description) {
+                        $q->where('series', 'like', '%' . $description . '%');
+                    })
+                    ->orWhereHas('lots_group', function ($q) use ($description) {
+                        $q->where('code', 'like', '%' . $description . '%');
+                    })
+                    ->orWhereHas('color_size', function ($q) use ($description) {
+                        $q->where('code', 'like', '%' . $description . '%');
+                    });
+            });
         }
 
 
@@ -152,6 +142,7 @@ trait InventoryTrait
                         'color' => $row->color,
                         'stock' => $row->stock,
                         'price' => $row->price,
+                        'code' => $row->code,
 
                     ];
                 }) : [],
@@ -217,7 +208,8 @@ trait InventoryTrait
                         'size' => $row->size,
                         'color' => $row->color,
                         'stock' => $row->stock,
-                        'price' => $row->price
+                        'price' => $row->price,
+                        'code' => $row->code,
                     ];
                 }) : []
             ];

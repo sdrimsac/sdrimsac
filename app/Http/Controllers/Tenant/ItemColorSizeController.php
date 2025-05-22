@@ -115,6 +115,7 @@ class ItemColorSizeController extends Controller
             'description' => 'Producto',
             'color' => 'Color',
             'size' => 'Talla',
+            'code' => 'Código familia',
         ];
     }
     public function delete($id)

@@ -553,7 +553,7 @@ export default {
 
             this.loading_submit = true;
             this.form.type = this.type;
-            //
+            console.log("Datos enviados al servidor:", this.form);
             await this.$http
                 .post(`/${this.resource}/transaction`, this.form)
                 .then(response => {

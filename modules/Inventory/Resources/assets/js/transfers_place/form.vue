@@ -162,7 +162,7 @@
                             <div clas="card-body">
                                 <div class="p-5 conteiner">
                                     <div class="row">
-                                        <div class="col-12 col-lg-12 col-xl-2">
+                                        <!-- <div class="col-12 col-lg-12 col-xl-2">
                                             <div class="form-group">
                                                 <label class="control-label"
                                                     >Filtrar Busqueda por</label
@@ -182,8 +182,8 @@
                                                     ></el-option>
                                                 </el-select>
                                             </div>
-                                        </div>
-                                        <div class="col-12 col-lg-12 col-xl-4">
+                                        </div> -->
+                                        <div class="col-12 col-lg-12 col-xl-6">
                                             <div class="form-group">
                                                 <label class="control-label"
                                                     >Seleccione el Producto a

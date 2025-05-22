@@ -101,7 +101,10 @@
                             :class="{ 'has-danger': errors.quantity }"
                         >
                             <label class="control-label">Cantidad</label>
-                            <el-input v-model="form.quantity">
+                            <el-input
+                                v-model="form.quantity"
+                                :disabled="form.has_color_size"
+                            >
                                 <i
                                     slot="prefix"
                                     class="el-icon-edit-outline"
@@ -151,12 +154,12 @@
                                 form.lots_group.length > 0
                         "
                     >
-                        <a
+                        <el-button
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickLotGroup"
-                            >[&#10004; Seleccionar lote]</a
-                        >
+                            >[&#10004; Seleccionar lote]
+                        </el-button>
                     </div>
                     <div
                         style="padding-top: 3%;"
@@ -164,11 +167,11 @@
                         v-if="form.item_id && form.series_enabled"
                     >
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
-                        <a
+                        <el-button
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickSelectLots"
-                            >[&#10004; Seleccionar series]</a
+                            >[&#10004; Seleccionar series]</el-button
                         >
                     </div>
                     <div
@@ -181,11 +184,11 @@
                         "
                     >
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
-                        <a
+                        <el-button
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickSelectColorSize"
-                            >[&#10004; Seleccionar color & talla]</a
+                            >[&#10004; Seleccionar color & talla]</el-button
                         >
                     </div>
                     <div class="col-md-8">
@@ -408,11 +411,13 @@ export default {
             }
         },
         colorSizeSelected(color_size) {
-            console.log(
-                "🚀 ~ file: form_output.vue:263 ~ colorSizeSelected ~ color_size:",
-                color_size
-            );
+            // Guardar el array
             this.form.color_size = color_size;
+            // Si hay color y talla, sumar la cantidad total y reflejar en el input
+            if (this.form.has_color_size && Array.isArray(color_size)) {
+                const total = color_size.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+                this.form.quantity = total;
+            }
         },
         clickSelectColorSize() {
             this.showDialogColorSizeOutput = true;

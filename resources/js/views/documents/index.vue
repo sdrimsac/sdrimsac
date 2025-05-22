@@ -345,6 +345,7 @@
                                                             style="height: 40px;"
                                                             @click.prevent="handleDelete(row)"
                                                             v-if="
+                                                            row.state_type_id == '01' &&
                                                                     !isAccountant &&
                                                                     configuration.internal_voided
                                                             "

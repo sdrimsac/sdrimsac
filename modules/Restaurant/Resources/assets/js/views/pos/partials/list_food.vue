@@ -4,7 +4,12 @@
         <div class="row p-2" v-loading="loadingItems">
             <div class="row w-100 m-0 p-0">
                 <div class="col-9 d-flex align-items-center">
-                    <h2 class="small-title" style="color: blue; font-weight: bold;">Productos</h2>
+                    <h2
+                        class="small-title"
+                        style="color: blue; font-weight: bold;"
+                    >
+                        Productos
+                    </h2>
                     <template v-if="listFoods.length == 0">
                         <div class="col-12 text-center font-weight-bold">
                             <label>No Hay Productos</label>
@@ -26,13 +31,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <template v-if="configuration.list_or_card">
                 <template v-if="form.show_list">
                     <div
                         class="infinite-list-wrapper w-100"
                         style="max-height: 800px; overflow-y: auto;"
-                        >
+                    >
                         <ul
                             class="list-group"
                             infinite-scroll-disabled="isDisabled"
@@ -43,12 +48,17 @@
                                     <table
                                         class="table table-hover table-bordered m-0"
                                     >
-                                        <thead class="sticky-top bg-primary" style="z-index: 1;">
+                                        <thead
+                                            class="sticky-top bg-primary"
+                                            style="z-index: 1;"
+                                        >
                                             <tr>
                                                 <th class="text-white">
                                                     Producto o Servicio
                                                 </th>
-                                                <th class="text-white text-center">
+                                                <th
+                                                    class="text-white text-center"
+                                                >
                                                     Precio
                                                 </th>
                                                 <th
@@ -80,19 +90,16 @@
                                         </thead>
                                         <tbody>
                                             <tr
-                                                v-for="(data,
-                                                index) in foods"
+                                                v-for="(data, index) in foods"
                                                 :key="index"
                                                 @click="
                                                     (configuration.consolidated_quotations ||
                                                         configuration.direct_unit_type) &&
                                                     data.types &&
-                                                    data.types.length >
-                                                        0
+                                                    data.types.length > 0
                                                         ? clickCommand(
-                                                                data
-                                                                    .types[0]
-                                                            )
+                                                              data.types[0]
+                                                          )
                                                         : addFood(index)
                                                 "
                                             >
@@ -134,10 +141,17 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-right">
-                                                    {{ data.item.currency_type_id == "PEN" ? "S/" : "$" }}
+                                                    {{
+                                                        data.item
+                                                            .currency_type_id ==
+                                                        "PEN"
+                                                            ? "S/"
+                                                            : "$"
+                                                    }}
                                                     {{ data.price }}
                                                 </td>
-                                                <td class="text-center"
+                                                <td
+                                                    class="text-center"
                                                     v-if="
                                                         configuration.show_stock_cash ==
                                                             true
@@ -145,17 +159,13 @@
                                                 >
                                                     <template
                                                         v-if="
-                                                            data.item
-                                                                .is_set ==
+                                                            data.item.is_set ==
                                                                 0 &&
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .unit_type_id !=
                                                                     'ZZ' &&
-                                                                data
-                                                                    .item
-                                                                    .stock >
-                                                                    0
+                                                                data.item
+                                                                    .stock > 0
                                                         "
                                                     >
                                                         <span
@@ -164,8 +174,7 @@
                                                         >
                                                             <template
                                                                 v-if="
-                                                                    data
-                                                                        .item
+                                                                    data.item
                                                                         .max_quantity
                                                                 "
                                                             >
@@ -178,9 +187,7 @@
                                                                     )
                                                                 }}
                                                             </template>
-                                                            <template
-                                                                v-else
-                                                            >
+                                                            <template v-else>
                                                                 {{
                                                                     parseFloat(
                                                                         data
@@ -198,8 +205,7 @@
                                                         >
                                                             <template
                                                                 v-if="
-                                                                    data
-                                                                        .item
+                                                                    data.item
                                                                         .unit_type_id !=
                                                                         'ZZ'
                                                                 "
@@ -218,8 +224,7 @@
                                                             data.item
                                                                 .lots_enabled ==
                                                                 1 &&
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .date_of_due
                                                         "
                                                     >
@@ -237,14 +242,12 @@
                                                             "
                                                         >
                                                             {{
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .lot_code
                                                             }}
                                                             -
                                                             {{
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .date_of_due
                                                             }}
                                                         </el-tag>
@@ -258,10 +261,8 @@
                                                     <div
                                                         v-if="
                                                             data.types &&
-                                                                data
-                                                                    .types
-                                                                    .length >
-                                                                    0
+                                                                data.types
+                                                                    .length > 0
                                                         "
                                                     >
                                                         <el-dropdown
@@ -283,9 +284,7 @@
                                                                 <el-dropdown-item
                                                                     v-for="(type,
                                                                     idx) in data.types"
-                                                                    :key="
-                                                                        idx
-                                                                    "
+                                                                    :key="idx"
                                                                     :command="
                                                                         type
                                                                     "
@@ -1049,6 +1048,15 @@
             :showDialog.sync="showDialogUnitType"
             :item="foodWithTypes"
         ></modal-unit-type-id>
+        <show-color-size-product
+            :limitQty="limitQty"
+            :idx="currentIdx"
+            :item="currentItem"
+            :showDialog.sync="showColorSize"
+            :colorSizeSelected.sync="currentColorSize"
+            @updateColorSize="updateColorSize"
+            :establishments="establishments"
+        ></show-color-size-product>
     </div>
 </template>
 <style>
@@ -1088,13 +1096,16 @@ import WarehousesDetail from "./warehouses.vue";
 import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
 import ImagesFood from "./images_food.vue";
+const ShowColorSizeProduct = () =>
+    import("../partials/show_color_size_product.vue");
 import swal from "sweetalert2";
 export default {
     components: {
         WarehousesDetail,
         UnitTypeModal,
         ModalUnitTypeId,
-        ImagesFood
+        ImagesFood,
+        ShowColorSizeProduct
     },
     props: [
         "lastQuery",
@@ -1121,6 +1132,8 @@ export default {
     ],
     data() {
         return {
+            limitQty: 0,
+            showColorSize: false,
             localCotizarConfirmado: this.cotizarConfirmado,
             foodWithTypes: null,
             showDialogUnitType: false,
@@ -1133,6 +1146,7 @@ export default {
             hasSerie: false,
             user: false,
             config: {},
+            currentIdx: null,
             showImagesFoods: false,
             showWarehousesDetail: false,
             warehousesDetail: [],
@@ -1470,6 +1484,8 @@ export default {
                 ) {
                     this.foodWithTypes = food;
                     this.showDialogUnitType = true;
+                } else if (this.configuration.color_size_enabled) {
+                    this.foodWithTypes = food;
                 } else {
                     if (
                         this.configuration.direct_unit_type &&
@@ -1502,7 +1518,7 @@ export default {
                 this.addFood(0, null, true);
             }
         },
-        
+
         formatedStockPresentation(
             {
                 max_quantity,

@@ -312,7 +312,9 @@
                                         'has-danger': errors.has_color_size
                                     }">
                                 <div>
-                                    <button class="btn btnsdr-tallas-colores" style="margin-top:2%;" type="primary" @click.prevent="clickColorSize">
+                                    <button class="btn btnsdr-tallas-colores" style="margin-top:2%;" type="primary" 
+                                    :disabled="!form.item_id || colorSizeImported"
+                                    @click.prevent="clickColorSize">
                                         <i class="fas fa-tshirt"></i>
                                         Color & talla
                                     </button>
@@ -324,9 +326,14 @@
                             <div class="form-group" :class="{
                                         'has-danger': errors.has_color_size
                                     }">
-                                <div>
+                                <div class="d-flex gap-3">
                                     <el-tooltip class="item" effect="dark" content="Descargar Formato de Excel" placement="top">
                                         <a href="/formats/color_talla_compras.xlsx" class="text-success d-inline-flex align-items-center gap-1">
+                                            <i class="fas fa-file-excel fa-2x"></i>
+                                        </a>
+                                    </el-tooltip>
+                                    <el-tooltip class="item" effect="dark" content="Descargar Formato de Excel con codigo familia" placement="top">
+                                        <a href="/formats/color_talla_compras_code.xlsx" class="text-success d-inline-flex align-items-center gap-1">
                                             <i class="fas fa-file-excel fa-2x"></i>
                                         </a>
                                     </el-tooltip>
@@ -528,7 +535,8 @@ export default {
             showWarehousesDetail: false,
             warehousesDetail: [],
             selectedProductStock: 0,
-            lotsGroup: []
+            lotsGroup: [],
+            colorSizeImported: false
         };
     },
     watch: {
@@ -644,19 +652,21 @@ export default {
                     let size = row[1];
                     let stock = row[2];
                     let price = row[3];
+                    let code = row[4];
 
                     return {
                         color,
                         size,
                         stock,
-                        price
+                        price,
+                        code,
                     };
                 });
                 this.form.quantity = this.color_size.reduce(
                     (a, b) => a + Number(b.stock),
                     0
                 );
-                // this.form.quantity = this.lots.length;
+                this.colorSizeImported = true;
                 event.target.value = "";
             });
         },
@@ -1055,6 +1065,7 @@ export default {
                 this.$refs.input_barcode.focus();
             }
             this.$emit("add", this.row);
+            this.colorSizeImported = false;
         },
         changeWarehouse(row) {
             let warehouse = _.find(this.warehouses, {
