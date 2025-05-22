@@ -222,6 +222,11 @@ class ItemController extends Controller
     }
     public function items_by_clients_excel(Request $request)
     {
+
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        ini_set('max_execution_time', 0);
+        
         $categoria_id = $request->categoria_id;
         $item_id = $request->item_id;
         $establishment_id = $request->establishment_id;
