@@ -6463,6 +6463,7 @@ export default {
                     });
                     this.listFoods = this.allLocalFoods;
                     this.allFoods = this.allLocalFoods;
+                    
 
                     this.pagination = meta;
 

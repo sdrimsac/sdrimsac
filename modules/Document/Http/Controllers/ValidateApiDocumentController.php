@@ -72,7 +72,7 @@ class ValidateApiDocumentController extends Controller
 
         $documents = Document::where('soap_type_id', '02')
             ->whereNull('state_sunat')
-            ->whereIn('state_type_id', ['01', '03', '05']); // Only these three states
+            ->whereIn('state_type_id', ['01', '03', '05']);
 
         if ($document_type_id) {
             $documents = $documents->where('document_type_id', $document_type_id);
@@ -81,7 +81,6 @@ class ValidateApiDocumentController extends Controller
             $documents = $documents->whereBetween('date_of_issue', [$d_start, $d_end]);
         }
 
-        // Check if documents exist
         if ($documents->count() == 0) {
             return [
                 "success" => false,

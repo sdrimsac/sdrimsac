@@ -16,14 +16,6 @@
                     >
                     </el-input>
                 </div>
-                <!-- <div class="col-md-4">
-                    <el-button
-                        :type="showSelecteds ? 'primary' : 'danger'"
-                        @click="showSelected"
-                    >
-                        {{ showSelecteds ? "Ocultar" : "Ver seleccionados" }}
-                    </el-button>
-                </div> -->
             </div>
             <table v-loading="loading" class="table">
                 <thead>
@@ -124,11 +116,11 @@ export default {
                 typeof colorSize.quantity !== "number" ||
                 isNaN(colorSize.quantity)
             ) {
-                /* console.error("Cantidad inválida:", colorSize.quantity);
-                return; */
+                console.error("Cantidad inválida:", colorSize.quantity);
+                return;
             }
 
-            /* console.log("Guardando cantidad:", colorSize.quantity); */
+            console.log("Guardando cantidad:", colorSize.quantity);
 
             let color_size = [
                 ...this.colorSizeSelected.filter(
@@ -167,7 +159,6 @@ export default {
         getQueryParameters() {
             return queryString.stringify({
                 warehouse_id: this.establishments.id,
-
                 page: this.pagination.current_page,
                 item_id: this.item.id,
                 code: this.inputSearch

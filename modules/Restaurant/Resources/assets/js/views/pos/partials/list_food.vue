@@ -1165,7 +1165,6 @@ export default {
             item: null,
             search: "Buscar por Codigo",
             currentImage: null,
-            showImage: false,
             listFoods: [], // Initialize listFoods as an empty array
             selectedFood: null,
             /* isAnalist: false, */
@@ -1330,6 +1329,7 @@ export default {
     },
     methods: {
         async updateColorSize(idx, color_size) {
+            console.log("updateColorSize ver que llega aqui", idx, color_size);
             let ordens = [...this.localOrden];
             if (this.hasSamePrice(color_size)) {
                 let [first] = color_size;
@@ -1344,9 +1344,7 @@ export default {
                     0
                 );
             } else {
-                // Clonar la orden original y dividir por grupos de color_size con el mismo precio
                 let ordenOriginal = JSON.parse(JSON.stringify(ordens[idx]));
-                // Eliminar la orden original de la lista
                 ordens = ordens.filter((o, i) => i != idx);
                 let colors_sizes = this.splitByPrice(color_size);
                 for (let i = 0; i < colors_sizes.length; i++) {
@@ -1369,6 +1367,7 @@ export default {
             await this.$emit("update:localOrden", ordens);
         },
         hasSamePrice(color_price) {
+            console.log("color_price", color_price);
             let samePrice = true;
             let price = 0;
             for (let i = 0; i < color_price.length; i++) {
@@ -1563,7 +1562,8 @@ export default {
             ) {
                 let [food] = this.listFoods;
                 if (food.item && food.item.has_color_size) {
-                    this.showColorSizeDialog(food);
+                    this.currentItem = food.item;
+                    this.showColorSize = true;
                     return;
                 }
             }
@@ -1586,7 +1586,7 @@ export default {
             }
         },
 
-        /* showColorSizeDialog(orden, index = null) {
+        showColorSizeDialog(orden, index = null) {
             this.limitQty = orden.type_quantity ?? 0;
 
             let ordens = this.localOrden.filter(l => l.id == orden.id);
@@ -1597,6 +1597,11 @@ export default {
                     quantity: s.quantity || 0
                 }));
                 this.currentColorSize = color_size;
+                console.log(
+                    "orden.color_size ver si hay dato aqui",
+                    this.currentColorSize,
+                    currentOrden
+                );
             } else {
                 let color_size = [];
                 for (let i = 0; i < ordens.length; i++) {
@@ -1612,29 +1617,8 @@ export default {
                 this.currentColorSize = color_size;
             }
             this.currentItem = orden.food.item;
-            // this.currentSeries = orden.series;
+            console.log("orden.color_size", this.color_size);
 
-            this.currentIdx = index;
-            this.showColorSize = true;
-        }, */
-
-        showColorSizeDialog(orden, index = null) {
-            this.limitQty = orden.type_quantity ?? 0;
-
-            let ordens = this.localOrden.filter(l => l.id == orden.id);
-            if (ordens.length > 0) {
-                // ...código existente...
-            } else {
-                // Si no está en la orden, usa el producto directamente
-                let color_size = Array.isArray(orden.color_size)
-                    ? orden.color_size.map(s => ({
-                          ...s,
-                          quantity: s.quantity || 0
-                      }))
-                    : [];
-                this.currentColorSize = color_size;
-                this.currentItem = orden.item || orden; // Asegura que tenga el item
-            }
             this.currentIdx = index;
             this.showColorSize = true;
         },

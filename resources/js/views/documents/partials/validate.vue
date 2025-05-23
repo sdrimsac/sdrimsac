@@ -359,11 +359,22 @@ export default {
             }
         },
         getQueryParameters() {
-            return queryString.stringify({
-                page: this.pagination.current_page,
-                limit: this.limit,
-                ...this.form
-            });
+            let params = {
+                document_type_id: this.form.document_type_id,
+                period: this.form.period
+            };
+            if (this.form.period === "month") {
+                params.month_start = this.form.month_start;
+            } else if (this.form.period === "between_months") {
+                params.month_start = this.form.month_start;
+                params.month_end = this.form.month_end;
+            } else if (this.form.period === "date") {
+                params.date_start = this.form.date_start;
+            } else if (this.form.period === "between_dates") {
+                params.date_start = this.form.date_start;
+                params.date_end = this.form.date_end;
+            }
+            return queryString.stringify(params);
         },
         changeClearInput() {
             this.search.value = "";
