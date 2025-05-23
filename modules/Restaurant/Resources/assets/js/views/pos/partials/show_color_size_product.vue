@@ -167,11 +167,7 @@ export default {
         open() {
             console.log(
                 "open",
-                this.limitQty,
-                this.item,
-                this.idx,
                 this.colorSizeSelected,
-                this.establishments
             );
             if (this.item) {
                 this.getColorSize();

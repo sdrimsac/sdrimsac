@@ -239,20 +239,25 @@ export default {
                 const response = await this.$http.get(
                     `/reports/validate-documents/validar_masivo?${this.getQueryParameters()}`
                 );
-                if (response.status == 200) {
+                if (response.status == 200 && response.data.result && response.data.result.success !== false) {
                     const { result } = response.data;
                     let message = result.message;
-                    // Object.keys(result).forEach(k => {
-                    //     let insert = `${k}:${result[k]} `;
-                    //     message += insert;
-                    // });
                     this.$toast.success(message);
                 } else {
-                    this.$toast.warning("No se pudo validar");
+                    // Si success es false o no hay documentos, mostrar el mensaje de error
+                    let message = response.data.result && response.data.result.message
+                        ? response.data.result.message
+                        : (response.data.message || "No se pudo validar");
+                    this.$toast.error(message);
                 }
             } catch (e) {
+                // Si hay error de red u otro, mostrar el mensaje si existe
+                let message =
+                    (e.response && e.response.data && e.response.data.message)
+                        ? e.response.data.message
+                        : "Ocurrió un error al validar";
+                this.$toast.error(message);
                 console.log(e);
-                this.$toast.error("Ocurrió un problema");
             } finally {
                 this.loading_submit = false;
             }
@@ -364,10 +369,17 @@ export default {
                 period: this.form.period
             };
             if (this.form.period === "month") {
-                params.month_start = this.form.month_start;
+                // Enviar el primer y último día del mes seleccionado
+                const start = moment(this.form.month_start + '-01').startOf('month').format('YYYY-MM-DD');
+                const end = moment(this.form.month_start + '-01').endOf('month').format('YYYY-MM-DD');
+                params.date_start = start;
+                params.date_end = end;
             } else if (this.form.period === "between_months") {
-                params.month_start = this.form.month_start;
-                params.month_end = this.form.month_end;
+                // Entre meses: enviar el primer día del mes inicial y el último día del mes final
+                const start = moment(this.form.month_start + '-01').startOf('month').format('YYYY-MM-DD');
+                const end = moment(this.form.month_end + '-01').endOf('month').format('YYYY-MM-DD');
+                params.date_start = start;
+                params.date_end = end;
             } else if (this.form.period === "date") {
                 params.date_start = this.form.date_start;
             } else if (this.form.period === "between_dates") {
