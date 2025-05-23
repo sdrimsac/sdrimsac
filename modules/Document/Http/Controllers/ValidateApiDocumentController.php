@@ -88,7 +88,7 @@ class ValidateApiDocumentController extends Controller
             ];
         }
 
-        $documents = $documents->limit(250);
+        $documents = $documents->limit(100);
         try {
             $documents->chunk(50, function ($documents_chunk) use ($company_number, &$fileContent) {
                 foreach ($documents_chunk as $doc) {
@@ -328,7 +328,7 @@ class ValidateApiDocumentController extends Controller
                     $contenido .= intval($row->number) . "|";
                     $contenido .= substr($row->date_of_issue, 8, 2) . "/" . substr($row->date_of_issue, 5, 2) . "/" . substr($row->date_of_issue, 0, 4) . "|";
                     $contenido .= $row->total . "\n";
-                    if ($conteo == 250) { //CANTIDAD_TXT=250
+                    if ($conteo == 100) { //CANTIDAD_TXT=250
                         Storage::disk('public')->put("txt/" . $correlativo . "_" . $company->number . "_validarcpe.txt", $contenido);
                         $correlativo++;
                         $conteo = -1;
