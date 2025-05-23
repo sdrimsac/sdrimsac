@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Routing\Route;
+
 Route::middleware(['auth', 'locked.tenant'])->group(function () {
 
     Route::prefix('documents/not-sent')->group(function () {
