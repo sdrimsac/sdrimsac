@@ -47,7 +47,7 @@ class ValidateApiDocumentController extends Controller
         $period = $request['period'];
         $d_start = null;
         $d_end = null;
-        
+
         switch ($period) {
             case 'month':
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
@@ -124,6 +124,14 @@ class ValidateApiDocumentController extends Controller
             $newRequest->files->set('txt_file', $uploadedFile);
 
             $documentController = new DocumentController();
+            $filesize = filesize($tempFile);
+            if ($filesize > 1024 * 1024) { // 1MB
+                unlink($tempFile);
+                return [
+                    "success" => false,
+                    "message" => "El archivo generado excede el tamaño permitido para enviar a SUNAT."
+                ];
+            }
             $result = $documentController->txtValidate($newRequest);
 
             unlink($tempFile);
@@ -132,7 +140,6 @@ class ValidateApiDocumentController extends Controller
                 "success" => true,
                 "result" => $result
             ];
-
         } catch (\Exception $e) {
             return [
                 "success" => false,
