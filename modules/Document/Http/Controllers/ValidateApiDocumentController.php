@@ -36,7 +36,105 @@ class ValidateApiDocumentController extends Controller
     {
         return view('document::validate_documents.index');
     }
+
     public function validateMassiveNew(Request $request)
+    {
+        $company = Company::first();
+        $document_type_id = $request->input('document_type_id');
+        $date_start = $request->input('date_start');
+        $date_end = $request->input('date_end');
+        $month_start = $request->input('month_start');
+        $month_end = $request->input('month_end');
+        $period = $request->input('period');
+
+        switch ($period) {
+            case 'month':
+                $d_start = Carbon::parse($date_start ?? "{$month_start}-01")->startOfDay();
+                $d_end = Carbon::parse($date_end ?? "{$month_start}-01")->endOfMonth()->endOfDay();
+                break;
+            case 'between_months':
+                $d_start = Carbon::parse("{$month_start}-01")->startOfDay();
+                $d_end = Carbon::parse("{$month_end}-01")->endOfMonth()->endOfDay();
+                break;
+            case 'date':
+            case 'between_dates':
+                $d_start = Carbon::parse($date_start)->startOfDay();
+                $d_end = Carbon::parse($date_start)->endOfDay();
+                break;
+            default:
+                return [
+                    "success" => false,
+                    "message" => "Periodo inválido"
+                ];
+        }
+
+        $documents = Document::where('soap_type_id', '02')
+            ->whereIn('state_type_id', ['01', '03', '05']);
+
+        $documents->whereBetween('date_of_issue', [$d_start, $d_end]);
+
+
+        if ($document_type_id) {
+            $documents->where('document_type_id', $document_type_id);
+        }
+
+        $documents = $documents->orderBy('date_of_issue')->get();
+
+        if ($documents->isEmpty()) {
+            return [
+                "success" => false,
+                "message" => "No hay documentos para validar en el rango de fechas seleccionado"
+            ];
+        }
+
+        $fileContent = '';
+        foreach ($documents as $doc) {
+            $documenType = $doc->document_type_id;
+            $serie = $doc->series;
+            $number = $doc->number;
+            $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
+            $total = $doc->total;
+            $fileContent .= "{$company->number}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
+        }
+
+        if (empty($fileContent)) {
+            return [
+                "success" => false,
+                "message" => "Error al generar el archivo TXT"
+            ];
+        }
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'validate_');
+        file_put_contents($tempFile, $fileContent);
+
+        $uploadedFile = new \Illuminate\Http\UploadedFile(
+            $tempFile,
+            'validate.txt',
+            'text/plain',
+            null,
+            true
+        );
+
+        if (filesize($tempFile) > 1024 * 1024) {
+            unlink($tempFile);
+            return [
+                "success" => false,
+                "message" => "El archivo generado excede el tamaño permitido para enviar a SUNAT."
+            ];
+        }
+
+        $newRequest = new Request();
+        $newRequest->files->set('txt_file', $uploadedFile);
+        $result = (new DocumentController())->txtValidate($newRequest);
+
+        unlink($tempFile);
+
+        return [
+            "success" => true,
+            "result" => $result
+        ];
+    }
+    /* public function validateMassiveNew(Request $request)
     {
         $company = Company::first();
         $document_type_id = $request['document_type_id'];
@@ -50,8 +148,14 @@ class ValidateApiDocumentController extends Controller
 
         switch ($period) {
             case 'month':
-                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
+                // Si vienen date_start y date_end, usarlos (nuevo frontend)
+                if ($date_start && $date_end) {
+                    $d_start = $date_start;
+                    $d_end = $date_end;
+                } else {
+                    $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
+                    $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
+                }
                 break;
             case 'between_months':
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
@@ -101,7 +205,6 @@ class ValidateApiDocumentController extends Controller
                 }
             });
 
-            // Verify if file content was generated
             if (empty($fileContent)) {
                 return [
                     "success" => false,
@@ -146,88 +249,6 @@ class ValidateApiDocumentController extends Controller
                 "message" => "Error al procesar el archivo TXT: " . $e->getMessage()
             ];
         }
-    }
-
-    /* public function validateMassiveNew(Request $request)
-    {
-        $company = Company::first();
-        $document_type_id = $request['document_type_id'];
-        $date_start = $request['date_start'];
-        $date_end = $request['date_end'];
-        $month_start = $request['month_start'];
-        $month_end = $request['month_end'];
-        $period = $request['period'];
-        $d_start = null;
-        $d_end = null;
-        switch ($period) {
-            case 'month':
-                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
-                break;
-            case 'between_months':
-                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_end . '-01')->endOfMonth()->format('Y-m-d');
-                break;
-            case 'date':
-                $d_start = $date_start;
-                $d_end = $date_end;
-                break;
-            case 'between_dates':
-                $d_start = $date_start;
-                $d_end = $date_end;
-                break;
-        }
-        $company_number = $company->number;
-        $fileContent = "";
-
-        $documents = Document::where('soap_type_id', '02')
-            ->whereNull('state_sunat')
-            ->whereIn('state_type_id', ['01', '03', '05', '11', '09']);
-        if ($document_type_id) {
-            $documents = $documents->where('document_type_id', $document_type_id);
-        }
-        if ($d_start && $d_end) {
-            $documents = $documents->whereBetween('date_of_issue', [$d_start, $d_end]);
-        }
-        $documents = $documents->limit(250);
-        $documents->chunk(50, function ($documents_chunk) use ($company_number, &$fileContent) {
-            foreach ($documents_chunk as $doc) {
-                $documenType = $doc->document_type_id;
-                $serie = $doc->series;
-                $number = $doc->number;
-                $date_of_issue = Carbon::parse($doc->date_of_issue)->format('d/m/Y');
-                $total = $doc->total;
-                $fileContent .= "{$company_number}|{$documenType}|{$serie}|{$number}|{$date_of_issue}|{$total}\n";
-            }
-        });
-
-        // Crear un archivo temporal con el contenido
-        $tempFile = tempnam(sys_get_temp_dir(), 'validate_');
-        file_put_contents($tempFile, $fileContent);
-
-        // Crear un objeto UploadedFile
-        $uploadedFile = new \Illuminate\Http\UploadedFile(
-            $tempFile,
-            'validate.txt',
-            'text/plain',
-            null,
-            true
-        );
-
-        // Crear una nueva request con el archivo
-        $newRequest = new Request();
-        $newRequest->files->set('txt_file', $uploadedFile);
-
-        $documentController = new DocumentController();
-        $result = $documentController->txtValidate($newRequest);
-
-        // Limpiar el archivo temporal
-        unlink($tempFile);
-
-        return [
-            "success" => true,
-            "result" => $result
-        ];
     } */
 
     public function records(ValidateApiDocumentsRequest $request)
@@ -293,8 +314,14 @@ class ValidateApiDocumentController extends Controller
         $d_end = null;
         switch ($period) {
             case 'month':
-                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
+                // Usar date_start y date_end si existen (igual que validateMassiveNew)
+                if ($date_start && $date_end) {
+                    $d_start = $date_start;
+                    $d_end = $date_end;
+                } else {
+                    $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
+                    $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
+                }
                 break;
             case 'between_months':
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
@@ -309,7 +336,8 @@ class ValidateApiDocumentController extends Controller
                 $d_end = $date_end;
                 break;
         }
-        $records = Document::where('document_type_id', $document_type_id)->whereBetween('date_of_issue', [$d_start, $d_end]);
+        $records = Document::where('document_type_id', $document_type_id)
+            ->whereBetween('date_of_issue', [$d_start, $d_end]);
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $correlativo = 0;
         $conteo = 0;
