@@ -95,219 +95,6 @@
             </div>
         </div>
         <!-- Seccion de Discos  Comentados -->
-        <!-- <div class="row">
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        :data-value="discUsed"
-                                        class="progress1 mx-auto"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ discUsed
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                      
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount"
-                                            >Disco Duro</strong
-                                        ><br />
-                                        <span class="text-warning" v-if="discUsed == 0">no se pudo obtener</span>
-                                    </div>
-                                </div>
-                                <div class="summary-footer d-block">
-                                    <a
-                                        class="text-muted text-uppercase"
-                                        href="https://docs.google.com/document/d/1hpEQUs9OFha_35yyLb1cMKeluD-dEku5lQsQ3TJFib8/edit"
-                                        target="BLANK"
-                                        >Incrementar</a
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        :data-value="iUsed"
-                                        class="progress1 mx-auto"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ iUsed
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                        
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount">Inodes</strong>
-                                       
-                                    </div>
-                                </div>
-                                <div class="summary-footer d-block">
-                                    <a
-                                        class="text-muted text-uppercase"
-                                        href="https://drive.google.com/open?id=1foPKDI3V3Z9uKTjRc2SPSoztVSOBevPAluT2BqFbfxA"
-                                        target="BLANK"
-                                        >Limpiar</a
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        class="progress1 mx-auto"
-                                        data-value="100"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-tertiary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-tertiary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ storageSize
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                       
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount"
-                                            >Archivos <br />
-                                            Generados</strong
-                                        >
-                                       
-                                    </div>
-                                </div>
-                                <div class="summary-footer">
-                                   
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div
-                                    class="summary-icon"
-                                    style="background-color: #292961"
-                                >
-                                    <i class="fab fa-gitlab"></i>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                       
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount">Versión</strong
-                                        ><br />
-                                        <span class="text-primary">{{
-                                            version
-                                        }}</span>
-                                    </div>
-                                </div>
-                                <div class="summary-footer">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div> -->
 
         <div id="client-list" class="card mb-0">
             <div class="card-header bg-secondary">
@@ -510,7 +297,7 @@
                             <!-- <th class="text-white text-center">CPE Y NV </th> -->
                         </tr>
 
-                        <tr slot-scope="{ index, row }">
+                        <tr slot-scope="{ index, row, canSee }">
                             <td class="">{{ index }}</td>
                             <td>
                                 <el-dropdown
@@ -905,6 +692,9 @@
             :record="record"
             :showDialog.sync="showDialogDelete"
         ></client-delete>
+        <data-table :resource="resource" :canSee.sync="canSee" ref="dataTable">
+            <!-- ... -->
+        </data-table>
     </div>
 </template>
 
@@ -961,7 +751,7 @@ import { debounce } from "lodash";
 
 export default {
     mixins: [deletable, changeable],
-    props: ["discUsed", "iUsed", "storageSize", "version", "canSee"],
+    props: ["discUsed", "iUsed", "storageSize", "version"],
     components: {
         CompaniesForm,
         ChartLine,
@@ -973,6 +763,7 @@ export default {
     },
     data() {
         return {
+            canSee: false,
             active: null,
             client_name: null,
             client_number: null,

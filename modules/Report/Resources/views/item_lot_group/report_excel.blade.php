@@ -14,17 +14,9 @@
         <div style="margin-top:20px; margin-bottom:15px;">
             <table>
                 @if(!empty($records))
-                {{-- <tr>
-                        <td>
-                            <p><b>Producto: </b></p>
-                        </td>
-                        <td align="center">
-                            <p><strong>{{($records[0]->item->internal_id) ? $records[0]->item->internal_id.' -':''}} {{$records[0]->item->description}}</strong></p>
-                </td>
-                </tr> --}}
                 @endif
                 <tr>
-                    <td colspan="6" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px; font-weight: bold;">
+                    <td colspan="7" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px; font-weight: bold;">
                         <h3 class="title"><strong>LOTES</strong></h3>
                     </td>
                 </tr>
@@ -32,7 +24,7 @@
                     <td colspan="4" style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
                         <p><strong>Empresa:</strong>{{$company->name}}</p>
                     </td>
-                    <td colspan="2" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
+                    <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
                         <p><strong>Fecha: </strong>{{date('Y-m-d')}}</p>
                     </td>
                 </tr>
@@ -40,7 +32,7 @@
                     <td colspan="4" style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
                         <p><strong>Establecimiento: </strong>{{$establishment->address}} - {{$establishment->department->description}} - {{$establishment->district->description}}</p>
                     </td>
-                    <td colspan="2" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
+                    <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px; font-weight: bold;">
                     <p><strong>Ruc: </strong>{{$company->number}}</p>
                 </td>
             </table>
@@ -59,6 +51,7 @@
                             <th class="" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Fecha de vencimiento</th>
                             <th class="" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Almacén</th>
                             <th class="" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Cantidad</th>
+                            <th class="" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +63,7 @@
                             <td class="celda" style="border: 2px solid black; text-align: center;">{{$value->date_of_due}}</td>
                             <td class="celda" style="border: 2px solid black; text-align: center;">{{$value->warehouse->description}}</td>
                             <td class="celda" style="border: 2px solid black; text-align: center;">{{$value->quantity}}</td>
+                            <td class="celda" style="border: 2px solid black; text-align: center;">{{$value->status == 1 ? 'Activo' : 'Dado de baja'}}</td>
 
                         </tr>
 

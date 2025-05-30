@@ -36,13 +36,7 @@ class ClientController extends Controller
 
     public function index()
     {
-        $canSee = false;
-
-        if (strpos(url()->current(), 'sdrimsac') !== false) {
-            $canSee = true;
-        }
-
-        return view('system.clients.index', compact('canSee'));
+        return view('system.clients.index');
     }
 
     public function create()
@@ -285,6 +279,10 @@ class ClientController extends Controller
 
     public function records(Request $request)
     {
+        if (strpos(url()->current(), 'sdrimsac') !== false) {
+            $canSee = true;
+        }
+        
         $query = Client::query();
 
         if ($request->has('column') && $request->column === 'name' && $request->has('value') && $request->value) {
@@ -369,7 +367,8 @@ class ClientController extends Controller
         $clientCollection = new ClientCollection($records);
 
         $clientCollection->additional([
-            'totalClients' => $totalClients
+            'totalClients' => $totalClients,
+            'canSee' => $canSee ?? false,
         ]);
 
         return $clientCollection;

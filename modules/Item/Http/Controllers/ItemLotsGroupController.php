@@ -86,58 +86,26 @@ class ItemLotsGroupController extends Controller
     }
     public function excel(Request $request)
     {
-        $date_filter = $request->date_filter;
-        $date_filter_value = $request->date_filter_value;
+        
+        $records = $this->getRecords($request)->get();
         $company = Company::first();
         $establishment = Establishment::first();
 
-        $lote = $request->lote;
-        $item_id = $request->item_id;
-        $warehouse_id = $request->warehouse_id;
-        $d_start = $request->d_start;
-        $d_end = $request->d_end;
-        $records = ItemLotsGroup::where("id", "<>", null);
-        if ($lote) {
-            $records = $records->where('code', 'like', "%{$lote}%");
-        }
-        if ($item_id) {
-            $records = $records->where('item_id', $item_id);
-        }
-        if ($warehouse_id) {
-            $records = $records->where('warehouse_id', $warehouse_id);
-        }
-        if ($date_filter_value) {
-            $date = Carbon::parse($date_filter_value);
-            if ($date_filter == 'week') {
-                $records = $records->whereBetween('date_of_due', [$date->startOfWeek()->format('Y-m-d'), $date->endOfWeek()->format('Y-m-d')]);
-            }
-            if ($date_filter == 'month') {
-                $records = $records->whereMonth('date_of_due', $date->month)
-                    ->whereYear('date_of_due', $date->year);
-            }
-            if ($date_filter == 'year') {
-                $records = $records->whereYear('date_of_due', $date->year);
-            }
-        }
-
-        if ($d_start && $date_filter && $date_filter == 'between') {
-            if ($d_end) {
-                $records = $records->whereBetween('date_of_due', [$d_start, $d_end]);
-            } else {
-                $records = $records->whereDate('date_of_due', $d_start);
-            }
-        }
-
-
-
         return (new ItemLotGroupExport)
-            ->records($records->get())
+            ->records($records)
             ->company($company)
             ->establishment($establishment)
             ->download('Reporte_Lotes_por_Producto_' . Carbon::now() . '.xlsx');
     }
 
     public function records(Request $request)
+    {
+        $records = $this->getRecords($request);
+
+        return new ItemLotsGroupCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function getRecords(Request $request)
     {
         $lote = $request->lote;
         $date_filter = $request->date_filter;
@@ -181,11 +149,13 @@ class ItemLotsGroupController extends Controller
                 $records = $records->whereDate('date_of_due', $d_start);
             }
         }
-        // que ordene por la ultima fecha de creacion hacia atraz lo lostes 
         $records = $records->orderBy('created_at', 'desc');
 
-        return new ItemLotsGroupCollection($records->paginate(config('tenant.items_per_page')));
+        return $records;
+
+        /* return new ItemLotsGroupCollection($records->paginate(config('tenant.items_per_page'))); */
     }
+    
 
     public function tables()
     {

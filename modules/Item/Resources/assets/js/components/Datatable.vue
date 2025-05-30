@@ -86,58 +86,6 @@
                             </el-select>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha inicio
-                            </label>
-
-                            <el-date-picker
-                                v-model="search.d_start"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                @change="changeDisabledDates"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha término</label
-                            >
-
-                            <el-date-picker
-                                v-model="search.d_end"
-                                type="date"
-                                :disabled="!search.d_start"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                :picker-options="pickerOptionsDates"
-                                @change="changeEndDate"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="col-lg-2 col-md-2 ">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Lotes Vencidos</label
-                            >
-                            <el-date-picker
-                                v-model="search.date_of_due"
-                                type="month"
-                                value-format="yyyy-MM-dd"
-                                placeholder="Elija un mes"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div> -->
-
                     <div class="col-lg-2 col-md-2 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100"

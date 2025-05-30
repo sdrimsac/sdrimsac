@@ -4,6 +4,6 @@
 @inject('roleService', 'App\Services\RoleService')
 
     <system-clients-index 
-    :can-see="{{json_encode($canSee)}}"
+    can-see="{{ $canSee }}"
     ></system-clients-index>
 @endsection
