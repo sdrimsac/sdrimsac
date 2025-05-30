@@ -16,14 +16,6 @@
                     >
                     </el-input>
                 </div>
-                <!-- <div class="col-md-4">
-                    <el-button
-                        :type="showSelecteds ? 'primary' : 'danger'"
-                        @click="showSelected"
-                    >
-                        {{ showSelecteds ? "Ocultar" : "Ver seleccionados" }}
-                    </el-button>
-                </div> -->
             </div>
             <table v-loading="loading" class="table">
                 <thead>
@@ -44,12 +36,6 @@
                         <td>{{ colorsize.size }}</td>
                         <td class="text-end">{{ colorsize.stock }}</td>
                         <td class="text-end">
-                            <!-- <el-input
-                                type="number"
-                                v-model="colorsize.quantity"
-                                @input="saveColorSize(colorsize)"
-                            >
-                            </el-input> -->
 
                               <el-input-number 
                               v-model="colorsize.quantity" 

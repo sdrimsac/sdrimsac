@@ -27,7 +27,8 @@
             <tenant-configurations-form 
             :can-see="{{json_encode($canSee)}}"
             :is-arca="{{json_encode($roleService->isArca())}}"
-            :type-user="{{ json_encode(auth()->user()->type) }}"></tenant-configurations-form>
+            :type-user="{{ json_encode(auth()->user()->type) }}"
+            ></tenant-configurations-form>
         </div>
         {{-- @if(!$roleService->isArca())
         <div class="col-lg-6 col-md-12">

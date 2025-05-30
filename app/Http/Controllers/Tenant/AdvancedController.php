@@ -11,7 +11,6 @@ class AdvancedController extends Controller
         if (strpos(url()->current(), 'sdrimsac') !== false) {
             $canSee = true;
         }
-        
         return view('tenant.advanced.index',compact('canSee'));
     }
 }

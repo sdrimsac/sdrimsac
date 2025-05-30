@@ -18,7 +18,7 @@ use Modules\Restaurant\Models\Orden;
 
 class Document extends ModelTenant
 {
-    use RegisterMovementTrait, 
+    use RegisterMovementTrait,
         UsesTenantConnection;
 
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
@@ -114,8 +114,6 @@ class Document extends ModelTenant
         'series_guia',
         'number_guia',
         'ref'
-
-
     ];
 
     protected $casts = [
@@ -127,47 +125,13 @@ class Document extends ModelTenant
     protected static function boot()
     {
         parent::boot();
-        //created
-        /* static::created(function ($model) {
-            $type = $model->get_document_type();
-            $request = Request::capture();
-            $description = null;
-            $original_model = Document::find($model->id);
-            $description = "$type Creado";
-            $data = $original_model->toArray();
-             RegisterMovementTrait::registerCreate(
-                $model,
-                $request,
-                $description,
-                $data
-            );
 
-            try {
-                $serie = $model->series;
-                $number = $model->number;
-                $soap_type_id = $model->soap_type_id;
-                $exist = $model->hasDuplicate($serie, $number, $soap_type_id);
-                if ($exist) {
-                    $company = Company::first();
-                    $company_name = $company->name;
-
-                    $message = "🚨🚨🚨⚠️⚠️⚠️ ATENCIÓN ⚠️⚠️⚠️🚨🚨🚨 \n\nSe ha detectado una duplicidad de comprobante en la empresa $company_name \n\nSerie: $serie \nNúmero: $number.";
-                    (new WhatsappController)->sendSupportMessage($message);
-                }
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                Log::error($message);
-            }
-        }); */
-        /* static::created(function ($model) {
-            // Registro del movimiento de creación
-            $type = $model->get_document_type();
+        // CREACIÓN
+        static::created(function ($model) {
             $request = Request::capture();
-            $description = "$type Creado";
-            $original_model = Document::find($model->id);
-            $data = $original_model->toArray();
-            $created_at = $created_at ?? now();
-            
+            $description = "Nuevo Documento Creado";
+            $data = $model->toArray();
+            $created_at = now();
             RegisterMovementTrait::registerCreate(
                 $model,
                 $request,
@@ -175,65 +139,58 @@ class Document extends ModelTenant
                 $data,
                 $created_at
             );
-        
-            // Verificación de duplicados y notificación
-            try {
-                $serie = $model->series;
-                $number = $model->number;
-                $soap_type_id = $model->soap_type_id;
-                $exist = $model->hasDuplicate($serie, $number, $soap_type_id);
-        
-                if ($exist) {
-                    $company = Company::first();
-                    $company_name = $company->name;
-        
-                    $message = "🚨🚨🚨⚠️⚠️⚠️ ATENCIÓN ⚠️⚠️⚠️🚨🚨🚨 \n\nSe ha detectado una duplicidad de comprobante en la empresa $company_name \n\nSerie: $serie \nNúmero: $number.";
-                    (new WhatsappController)->sendSupportMessage($message);
-                }
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                Log::error($message);
-            }
-        }); */
-        /* static::updated(function ($model) {
-            $type = $model->get_document_type();
+        });
+
+        // ACTUALIZACIÓN
+        static::updated(function ($model) {
             $request = Request::capture();
-            $description = null;
-             $original_model = Document::find($model->id);
-             $description = "$type editado";
-             $data = $original_model->toArray();
-             $created_at = $created_at ?? now();
-             RegisterMovementTrait::registerUpdate(
-                 $model,
-                 $request,
-                 $description,
-                 $data,
-                $created_at
-             );
-         });
-        static::deleted(
-            function ($model) {
-                $type = $model->get_document_type();
-                $request = Request::capture();
-                $description = "$type eliminada";
-                $data = $model->toArray();
-                $created_at = $created_at ?? now();
-                RegisterMovementTrait::registerDelete(
-                    $model,
-                    $request,
-                    $description,
-                    $data,
-                    $created_at
-                );
+            $created_at = now();
+
+            $description = "Documento actualizado";
+
+            $original_state = $model->getOriginal('state_type_id');
+            $new_state      = $model->state_type_id;
+
+            if ($original_state !== $new_state) {
+                if ($new_state === '11') {
+                    $description = "Documento Anulado";
+                } elseif ($new_state === '13') {
+                    $description = "Documento Anulado SUNAT";
+                }
             }
-        ); */
+
+            $data = $model->toArray();
+
+            RegisterMovementTrait::registerUpdate(
+                $model,
+                $request,
+                $description,
+                $data,
+                $created_at
+            );
+        });
+
+        // ELIMINACIÓN
+        static::deleted(function ($model) {
+            $request = Request::capture();
+            $description = "Documento Eliminado";
+            $data = $model->toArray();
+            $created_at = now();
+
+            RegisterMovementTrait::registerDelete(
+                $model,
+                $request,
+                $description,
+                $data,
+                $created_at
+            );
+        });
     }
     public function hasDuplicate($serie, $number, $soap_type_id)
     {
         $count = Document::where('series', $serie)->where('number', $number)->where('soap_type_id', $soap_type_id)->count();
         return $count > 1;
     }
-
 
     public function comercial_treatment()
     {
@@ -251,7 +208,6 @@ class Document extends ModelTenant
     }
     public function getGlobalDiscountsNoBase()
     {
-
         //descuentos globales que no afectan la base
         $allowance_total_amount = 0;
 

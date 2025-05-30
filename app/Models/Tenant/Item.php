@@ -315,15 +315,6 @@ class Item extends ModelTenant
                         'code' => $row->code,
                     ];
                 }),
-            /* 'warranty' => ItemWarranty::where('item_id', $this->id)->first()
-                ->transform(function ($row) {
-                    return [
-                        'id' => $row->id,
-                        'warranty_end_date' => $row->warranty_end_date,
-                        'sale_note_item_id' => $row->sale_note_item_id,
-                        'document_item_id' => $row->document_item_id,
-                    ];
-                }), */
             'lots'           => $lots,
             'lots_enabled'   => (bool)$this->lots_enabled,
             'series_enabled' => (bool)$this->series_enabled,

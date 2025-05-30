@@ -1311,6 +1311,11 @@ class BoxesController extends Controller
         $all = [];
         $documents = Document::select(['series', 'number', 'date_of_issue', 'total'])
             ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
+        /* $documents = Document::select(['series', 'number', 'date_of_issue', 'total'])
+            ->where('cash_id', $cash_id)
+            ->whereIn('state_type_id', ['11', '13'])
+            ->where('internal_voided', 1)
+            ->get(); */
         $sale_notes = SaleNote::select(['series', 'number', 'date_of_issue', 'total'])
             ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
 
@@ -2283,7 +2288,7 @@ class BoxesController extends Controller
         $deliveries = [];
         $promotions = [];
         $promotions_give = [];
-        $anulate_documents = $this->get_anulate_documents($cash_id);;
+        $anulate_documents = $this->get_anulate_documents($cash_id);
         $stock_init_report = $this->get_stock_report($cash_id);
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
         $order_anulate_items = $this->get_orden_item_anulate($cash_id);
@@ -2813,7 +2818,7 @@ class BoxesController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
 
-    public function reports_resumen_yape(Request $request) 
+    public function reports_resumen_yape(Request $request)
     {
         ini_set('memory_limit', '1024M');
         ini_set('max_execution_time', '300');
@@ -2823,9 +2828,9 @@ class BoxesController extends Controller
         $socket_channel = $configuration->socket_channel;
         $company = Company::select('name', 'number')->first();
         $company_number = $company->number;
-        
+
         // Check if PDF exists and cash is closed
-        $path = storage_path('app/public/report_yape_pdf_'.$cash_id.'_'.$company_number.'_'.$socket_channel.'.pdf');
+        $path = storage_path('app/public/report_yape_pdf_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         $cash = Cash::find($cash_id);
 
         if (file_exists($path) && $cash->state == 0) {
@@ -2843,8 +2848,8 @@ class BoxesController extends Controller
         $processed_transactions = [];
         $total_amount = 0;
 
-        foreach($yape_boxes as $box) {
-            if($box->document_id && $box->document) {
+        foreach ($yape_boxes as $box) {
+            if ($box->document_id && $box->document) {
                 $processed_transactions[] = [
                     'type' => 'Comprobante',
                     'number' => $box->document->number_full,
@@ -2855,10 +2860,10 @@ class BoxesController extends Controller
                 ];
                 $total_amount += $box->amount;
             }
-            
-            if($box->sale_note_id && $box->saleNote) {
+
+            if ($box->sale_note_id && $box->saleNote) {
                 $processed_transactions[] = [
-                    'type' => 'Nota de Venta', 
+                    'type' => 'Nota de Venta',
                     'number' => $box->saleNote->number_full,
                     'customer' => $box->saleNote->customer->name,
                     'date_of_issue' => Carbon::parse($box->saleNote->date_of_issue)->format('d/m/Y'),
@@ -2899,9 +2904,9 @@ class BoxesController extends Controller
         $pdf = PDF::loadView('report::boxes.report_yape_pdf', $data)
             ->setPaper('a4');
 
-        return $pdf->stream('Reporte_Yape_'.date('YmdHis').'.pdf');
+        return $pdf->stream('Reporte_Yape_' . date('YmdHis') . '.pdf');
     }
-    
+
 
 
     public function reports_resumen_type(Request $request)

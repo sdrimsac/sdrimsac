@@ -97,15 +97,13 @@ export default {
     },
     methods: {
         addColorSize() {
-            if (this.verifyStock()) {
-                if (this.verifyCompleteData()) {
-                    this.sortItems();
-                    this.$emit("addRowColorSize", this.colorSizes);
-                    console.log("ver que datos esta pasando en el color size", this.colorSizes);
-                    this.close();
-                } else {
-                    this.$toast.warning("Debe llenar todos los campos");
-                }
+            if (this.verifyCompleteData()) {
+                this.sortItems();
+                this.$emit("addRowColorSize", this.colorSizes);
+                console.log("ver que datos esta pasando en el color size", this.colorSizes);
+                this.close();
+            } else {
+                this.$toast.warning("Debe llenar todos los campos");
             }
         },
         verifyCompleteData() {
@@ -117,19 +115,6 @@ export default {
                 }
             });
             return complete;
-        },
-        verifyStock() {
-            let total = 0;
-            this.colorSizes.forEach(item => {
-                total += parseInt(item.stock);
-            });
-            if (total != this.stock) {
-                this.$toast.warning(
-                    "El stock total debe ser igual al stock del producto"
-                );
-                return false;
-            }
-            return true;
         },
         clickAddColorSize() {
             this.colorSizes.push({

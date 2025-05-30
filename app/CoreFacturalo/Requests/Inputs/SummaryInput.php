@@ -42,7 +42,8 @@ class SummaryInput
             'date_of_reference' => $date_of_reference,
             'identifier' => $identifier,
             'filename' => $filename,
-            'documents' => $inputs['documents']
+            'documents' => $inputs['documents'],
+            'affect_cash' => $inputs['affect_cash'] ?? null // <-- ahora se incluye si viene del frontend
         ];
     }
 }

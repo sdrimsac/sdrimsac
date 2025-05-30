@@ -22,6 +22,11 @@
                                 @change="changePeriod"
                             >
                                 <el-option
+                                    key="date"
+                                    value="date"
+                                    label="Por fecha"
+                                ></el-option>
+                                <el-option
                                     key="month"
                                     value="month"
                                     label="Por mes"
@@ -31,11 +36,7 @@
                                     value="between_months"
                                     label="Entre meses"
                                 ></el-option>
-                                <el-option
-                                    key="date"
-                                    value="date"
-                                    label="Por fecha"
-                                ></el-option>
+
                                 <el-option
                                     key="between_dates"
                                     value="between_dates"
@@ -126,8 +127,9 @@
                                     ></label
                                 >
                                 <el-select
-                                clearable
-                                v-model="form.document_type_id">
+                                    clearable
+                                    v-model="form.document_type_id"
+                                >
                                     <el-option
                                         v-for="option in document_types"
                                         :key="option.id"
@@ -142,28 +144,24 @@
                                 ></small>
                             </div>
                         </div>
-                        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                            
-                            
-
-                                <el-button
-                                    class="btn-agregar btn-agregar:hover"
-                                    @click.prevent="getRecords2"
-                                    :loading="loading_submit"
-                                    icon="el-icon-check fa-lg"
-                                    >
-                                    <span>Validar</span>
-                                    </el-button
-                                >
-                                <el-button
-                                    class="btn-cancel btn-cancel:hover"
-                                    @click.prevent="close"
-                                    icon="fas fa-times fa-lg"
-                                    >Salir
-                                </el-button>
-                        
+                        <div
+                            class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                        >
+                            <el-button
+                                class="btn-agregar btn-agregar:hover"
+                                @click.prevent="getRecords2"
+                                :loading="loading_submit"
+                                icon="el-icon-check fa-lg"
+                            >
+                                <span>Validar</span>
+                            </el-button>
+                            <el-button
+                                class="btn-cancel btn-cancel:hover"
+                                @click.prevent="close"
+                                icon="fas fa-times fa-lg"
+                                >Salir
+                            </el-button>
                         </div>
-                        
                     </div>
                 </div>
             </form>
@@ -239,21 +237,26 @@ export default {
                 const response = await this.$http.get(
                     `/reports/validate-documents/validar_masivo?${this.getQueryParameters()}`
                 );
-                if (response.status == 200 && response.data.result && response.data.result.success !== false) {
+                if (
+                    response.status == 200 &&
+                    response.data.result &&
+                    response.data.result.success !== false
+                ) {
                     const { result } = response.data;
                     let message = result.message;
                     this.$toast.success(message);
                 } else {
                     // Si success es false o no hay documentos, mostrar el mensaje de error
-                    let message = response.data.result && response.data.result.message
-                        ? response.data.result.message
-                        : (response.data.message || "No se pudo validar");
+                    let message =
+                        response.data.result && response.data.result.message
+                            ? response.data.result.message
+                            : response.data.message || "No se pudo validar";
                     this.$toast.error(message);
                 }
             } catch (e) {
                 // Si hay error de red u otro, mostrar el mensaje si existe
                 let message =
-                    (e.response && e.response.data && e.response.data.message)
+                    e.response && e.response.data && e.response.data.message
                         ? e.response.data.message
                         : "Ocurrió un error al validar";
                 this.$toast.error(message);
@@ -268,10 +271,12 @@ export default {
         async initForm() {
             this.form = {
                 document_type_id: "01",
-                period: "month",
-                date_start: moment()
+                period: "date",
+                /* date_start: moment()
                     .startOf("month")
-                    .format("YYYY-MM-DD"),
+                    .format("YYYY-MM-DD"), */
+                 // Fecha actual
+                date_start: moment().format("YYYY-MM-DD"),
                 date_end: moment()
                     .endOf("month")
                     .format("YYYY-MM-DD"),
@@ -370,14 +375,22 @@ export default {
             };
             if (this.form.period === "month") {
                 // Enviar el primer y último día del mes seleccionado
-                const start = moment(this.form.month_start + '-01').startOf('month').format('YYYY-MM-DD');
-                const end = moment(this.form.month_start + '-01').endOf('month').format('YYYY-MM-DD');
+                const start = moment(this.form.month_start + "-01")
+                    .startOf("month")
+                    .format("YYYY-MM-DD");
+                const end = moment(this.form.month_start + "-01")
+                    .endOf("month")
+                    .format("YYYY-MM-DD");
                 params.date_start = start;
                 params.date_end = end;
             } else if (this.form.period === "between_months") {
                 // Entre meses: enviar el primer día del mes inicial y el último día del mes final
-                const start = moment(this.form.month_start + '-01').startOf('month').format('YYYY-MM-DD');
-                const end = moment(this.form.month_end + '-01').endOf('month').format('YYYY-MM-DD');
+                const start = moment(this.form.month_start + "-01")
+                    .startOf("month")
+                    .format("YYYY-MM-DD");
+                const end = moment(this.form.month_end + "-01")
+                    .endOf("month")
+                    .format("YYYY-MM-DD");
                 params.date_start = start;
                 params.date_end = end;
             } else if (this.form.period === "date") {
@@ -405,6 +418,10 @@ export default {
             this.initForm();
         },
         changePeriod() {
+            if (this.form.period === "date") {
+                this.form.date_start = moment().format("YYYY-MM-DD");
+                this.form.date_end = moment().format("YYYY-MM-DD");
+            }
             if (this.form.period === "month") {
                 this.form.month_start = moment().format("YYYY-MM");
                 this.form.month_end = moment().format("YYYY-MM");
@@ -416,10 +433,6 @@ export default {
                 this.form.month_end = moment()
                     .endOf("year")
                     .format("YYYY-MM");
-            }
-            if (this.form.period === "date") {
-                this.form.date_start = moment().format("YYYY-MM-DD");
-                this.form.date_end = moment().format("YYYY-MM-DD");
             }
             if (this.form.period === "between_dates") {
                 this.form.date_start = moment()
