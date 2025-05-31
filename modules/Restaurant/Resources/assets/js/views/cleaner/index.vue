@@ -7,7 +7,16 @@
             >
                 <div
                     v-for="(table, idx) in records"
-                    class=" btn-dirty col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
+                    :class="[
+                        'btn',
+                        'col-2',
+                        'm-1',
+                        'd-flex',
+                        'flex-column',
+                        'justify-content-center',
+                        'align-items-center',
+                        table.status == 1 ? 'btn-dirty' : (table.status == 2 ? 'btn-cleaning' : 'btn-dirty')
+                    ]"
                     :key="idx"
                     style="height: 150px; width: 135px;"
                     @click="changeState(table)"
@@ -18,14 +27,14 @@
                         <span style="font-size:45px;margin:5px;">
                             <i class="fas fa-door-closed"></i>
                         </span>
-                        <span
-                            class="text-center
-                        "
-                            >{{ table.name.toUpperCase() }}</span
-                        >
-
+                        <span class="text-center">
+                            {{ table.name.toUpperCase() }}
+                        </span>
                         <span v-if="table.status == 1">
                             EMPEZAR
+                        </span>
+                        <span v-else-if="table.status == 2">
+                            EN LIMPIEZA
                         </span>
                         <span v-else>
                             TERMINAR
@@ -53,8 +62,19 @@
             </div>
 
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showDialog = false">Cancelar</el-button>
-                <el-button type="primary" @click="sendState">Enviar</el-button>
+                <el-button 
+                    @click="showDialog = false" 
+                    style="background-color: #e74c3c; color: #fff; font-size: 18px; border-radius: 25px; padding: 10px 30px; border: none;"
+                >
+                    Cancelar
+                </el-button>
+                <el-button 
+                    type="primary" 
+                    @click="sendState"
+                    style="background-color: #27ae60; color: #fff; font-size: 18px; border-radius: 25px; padding: 10px 30px; border: none;"
+                >
+                    Enviar
+                </el-button>
             </span>
         </el-dialog>
     </div>
@@ -72,10 +92,18 @@
 .btn-reserve {
     background-color: #7030a0;
 }
+.btn-cleaning {
+    background-color: #4fc3f7;
+    color: #fff;
+}
 </style>
 <script>
+import Swal from 'sweetalert2';
 export default {
     props: ["configuration", "establishment"],
+    components: {
+        Swal
+    },
     data() {
         return {
             resource: "caja/worker/cleaner",
@@ -128,12 +156,18 @@ export default {
             }
             try {
                 if (table.status == 1) {
-                    await this.$confirm(message, "Confirmación", {
-                        confirmButtonText: "Aceptar",
-                        cancelButtonText: "Cancelar",
-                        type: "warning"
+                    const result = await Swal.fire({
+                        title: 'Confirmación',
+                        text: message,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Aceptar',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true
                     });
-                    await this.sendState();
+                    if (result.isConfirmed) {
+                        await this.sendState();
+                    }
                 } else {
                     this.showFinishDialog();
                 }
