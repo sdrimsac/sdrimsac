@@ -2382,10 +2382,6 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
-        /* handleOneClick(event) {
-            event.target.disabled = true;
-            this.sendPayment();
-        }, */
 
         async handleOneClick() {
             if (this.isLocked) return;
@@ -4821,10 +4817,12 @@ export default {
             if (is_bank) {
                 if (!this.form.bank_account_id) {
                     this.$toast.error("Debe seleccionar una cuenta bancaria");
+                    this.isLocked = false;
                     pass = false;
                 }
                 if (!this.form.reference_number) {
                     this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
                     pass = false;
                 }
             }
@@ -4841,6 +4839,7 @@ export default {
                         this.$toast.error(
                             "Debe ingresar el número de operación"
                         );
+                        this.isLocked = false;
                         pass = false;
                     }
                 }
@@ -4853,6 +4852,7 @@ export default {
                 let { operation_number } = payments[i];
                 if (!operation_number) {
                     this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
                     return false;
                 }
             }
@@ -4893,6 +4893,7 @@ export default {
                         }
                     );
                 } catch (e) {
+                    this.button_payment = false;
                     return;
                 }
             }
@@ -4913,6 +4914,7 @@ export default {
                 this.setSeries();
             }
             if (!this.checkBankAccount()) {
+                this.button_payment = false; 
                 return;
             }
 
@@ -4932,6 +4934,7 @@ export default {
             ) {
                 if (!this.form.student_id) {
                     this.$toast.error("El alumno es obligatorio");
+                    this.isLocked = false;
 
                     return;
                 }
@@ -4944,12 +4947,14 @@ export default {
                 this.$toast.error(
                     "El monto total no puede ser menor o igual a 0"
                 );
+                this.isLocked = false;
                 return;
             }
             if (form.total + 200 <= form.enter_amount) {
                 this.$toast.error(
                     "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
                 );
+                this.isLocked = false;
                 return;
             }
 
@@ -4966,19 +4971,23 @@ export default {
             ) {
                 if (!this.existNumber()) {
                     this.$toast.error("Número para envío whatsapp inválido");
+                    this.isLocked = false;
                     return;
                 }
             }
             if (form.customer_id == null || form.customer_id == "") {
+                this.isLocked = false;
                 return this.$toast.error("Elija un cliente");
             }
             if (
                 customer.identity_document_type_id == "1" &&
                 form.document_type_id == "01"
             ) {
+                this.isLocked = false;
                 return this.$toast.error("No puede emitir Factura con DNI");
             }
             if (!form.series_id) {
+                this.isLocked = false;
                 return this.$toast.warning(
                     "El establecimiento no tiene series disponibles para el comprobante"
                 );
@@ -4986,7 +4995,6 @@ export default {
             // form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
-
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";
@@ -5019,6 +5027,7 @@ export default {
                 let isOk = this.checkPaymentsIsOk();
                 if (!isOk) {
                     this.$toast.error("Las cuotas no coinciden con el total");
+                    this.isLocked = false;
                     return;
                 }
             }
@@ -5079,6 +5088,7 @@ export default {
                 this.$toast.error(
                     "Las boletas mayores a 699 deben tener un dni o ruc válido."
                 );
+                this.isLocked = false;
                 return;
             }
             this.verifyBoxesDuplicate();
@@ -5094,6 +5104,7 @@ export default {
             }
             this.loading_submit = true;
             this.button_payment = true;
+
 
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
@@ -5142,6 +5153,7 @@ export default {
                         this.button_payment = false;
                         this.isLocked = false;
                         this.$emit("update:is_payment", false);
+                        this.isLocked = false;
                         return;
                     }
                     ordenId = responses.data.id;

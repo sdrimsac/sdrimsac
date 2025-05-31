@@ -510,12 +510,12 @@ class TableRoomController extends Controller
                 'record',
                 'company'
             ))
-                ->setPaper(array(0, 0, 249.45, $height));
+                ->setPaper(array(0, 0, 226.77, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
 
-        return $pdf->stream('pdf_transfers.pdf');
+        return $pdf->stream('pdf_credit_line.pdf');
     }
     public function print_service($id)
     {
@@ -1687,6 +1687,7 @@ class TableRoomController extends Controller
                     $hotel_rent_item_person->save();
                 }
                 if ($hotel_rent_item->credit_line > 0) {
+                    /* $this->print_warranty($hotel_rent_item->id); */
                     event(new PrintEvent($hotel_rent_item->id, "CL", true));
                 }
             }

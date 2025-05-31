@@ -850,25 +850,7 @@
                                 @if (!empty($row->warranty_end_date))
                                     Garantía Hasta el {{ $row->warranty_end_date }}
                                 @endif
-                                {{-- @if (isset($row->item->month_day))
-                                    tiene {{ $row->item->month_day }} meses garantía
-                                @endif --}}
                             @endif
-                            {{-- @if (isset($row->item->categoriaMadera))
-                                -
-                                @php
-                                    $madera = $row->item->categoriaMadera;
-                                    $ancho = $madera->selectedAncho;
-                                    $largo = $madera->selectedLargo;
-                                    $grosor = $madera->selectedGrosor;
-                                    if (isset($madera->sumTotals) && $madera->sumTotals == true) {
-                                        $quantity_totals += $row->quantity;
-                                        $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
-                                    }
-                                    $m_description = "${grosor}x${ancho}x${largo}";
-                                @endphp
-                                {{ $m_description }}
-                            @endif --}}
                             @if (isset($row->item->categoriaMadera))
                                 -
                                 @php
@@ -879,7 +861,7 @@
                                     $quantity_totals += $row->quantity;
                                     $fot_locals = $row->quantity * (($ancho * $largo * $grosor) / 12);
                                     $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
-                                    //}
+                                    
                                     $m_description = "${grosor}x${ancho}x${largo}";
                                 @endphp
                                 {{ $m_description }} <br />

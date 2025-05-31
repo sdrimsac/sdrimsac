@@ -86,7 +86,7 @@ class ItemLotsGroupController extends Controller
     }
     public function excel(Request $request)
     {
-        
+
         $records = $this->getRecords($request)->get();
         $company = Company::first();
         $establishment = Establishment::first();
@@ -155,7 +155,7 @@ class ItemLotsGroupController extends Controller
 
         /* return new ItemLotsGroupCollection($records->paginate(config('tenant.items_per_page'))); */
     }
-    
+
 
     public function tables()
     {
@@ -209,42 +209,25 @@ class ItemLotsGroupController extends Controller
             DB::beginTransaction();
 
             $item_lots_group = ItemLotsGroup::findOrFail($id);
-            
-            if($item_lots_group->quantity > 0) {
-                
+
+            if ($item_lots_group->quantity > 0) {
                 $item = $item_lots_group->item;
                 $warehouse_id = $item_lots_group->warehouse_id;
-                $quantity = $item_lots_group->quantity;
-
-                $item_warehouse = DB::connection('tenant')->table('item_warehouse')
-                    ->where('item_id', $item->id)
-                    ->where('warehouse_id', $warehouse_id)
-                    ->first();
-
-                if($item_warehouse) {
-                    DB::connection('tenant')->table('item_warehouse')
-                        ->where('item_id', $item->id)
-                        ->where('warehouse_id', $warehouse_id)
-                        ->update(['stock' => $item_warehouse->stock - $quantity]);
-                }
-
-                $item->stock -= $quantity;
+                $lot_quantity = $item_lots_group->quantity;
+                $item->stock -= $lot_quantity;
                 $item->save();
 
+                // Update lots group
                 $item_lots_group->quantity = 0;
                 $item_lots_group->status = '0';
                 $item_lots_group->save();
-
                 $inventory = new Inventory();
-                $inventory->establishment_id = $item_lots_group->establishment_id;
+                $inventory->type = 1;
+                $inventory->description = 'Lote dado de baja ' . $item->description;
                 $inventory->warehouse_id = $item_lots_group->warehouse_id;
                 $inventory->item_id = $item_lots_group->item_id;
-                $inventory->item_lots_group_id = $item_lots_group->id;
-                $inventory->quantity = $quantity;
-                $inventory->date_of_due = $item_lots_group->date_of_due;
-                $inventory->date_of_inventory = Carbon::now()->format('Y-m-d H:i:s');
-                $inventory->type = 'eliminated';
-                $inventory->user_id = auth()->user()->id;
+                $inventory->quantity = -$lot_quantity;
+                $inventory->lot_code = $item_lots_group->code;
                 $inventory->save();
             }
 
@@ -254,7 +237,6 @@ class ItemLotsGroupController extends Controller
                 'success' => true,
                 'message' => 'Lote dado de baja con éxito'
             ];
-
         } catch (Exception $e) {
             DB::rollBack();
             return [
@@ -276,16 +258,16 @@ class ItemLotsGroupController extends Controller
                 $warehouse_id = $item_lots_group->warehouse_id;
                 $lot_quantity = $item_lots_group->quantity;
 
-                // Update item stock - only reduce by this lot's quantity
-
+                // Descontar stock del producto
                 $item->stock -= $lot_quantity;
                 $item->save();
 
-                // Update lots group
+                // Actualizar lote
                 $item_lots_group->quantity = 0;
                 $item_lots_group->status = '0';
                 $item_lots_group->save();
 
+                // Registrar en inventario
                 $inventory = new Inventory();
                 $inventory->type = 1;
                 $inventory->description = 'Lote dado de baja ' . $item->description;
@@ -294,6 +276,10 @@ class ItemLotsGroupController extends Controller
                 $inventory->quantity = -$lot_quantity;
                 $inventory->lot_code = $item_lots_group->code;
                 $inventory->save();
+            } elseif ($item_lots_group->quantity == 0 && $item_lots_group->status == '1') {
+                // Solo cambiar el estado a inactivo si el stock ya es 0
+                $item_lots_group->status = '0';
+                $item_lots_group->save();
             }
 
             DB::commit();

@@ -586,7 +586,7 @@ class PurchaseController extends Controller
                                 $color_size_exists->stock += $color_size['stock'];
 
                                 if (!empty($color_size['code'])) {
-                                    
+
                                     if (strpos($color_size_exists->code, $color_size['code']) === false) {
                                         $color_size_exists->code .= '-' . $color_size['code'];
                                     }

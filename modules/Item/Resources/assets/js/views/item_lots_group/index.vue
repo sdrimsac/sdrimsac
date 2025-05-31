@@ -171,7 +171,7 @@
                                                 @click.prevent="
                                                     inhabilitar(row.id)
                                                 "
-                                                >Inhabilitar</a
+                                                >Dar de baja</a
                                             >
                                         </div>
                                     </td>

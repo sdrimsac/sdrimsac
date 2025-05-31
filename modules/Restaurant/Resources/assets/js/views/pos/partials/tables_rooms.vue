@@ -399,9 +399,11 @@
                                                         type="text"
                                                         class="form-control"
                                                         id="checkin_date"
+                                                        
                                                         :value="
                                                             `${new Date(
-                                                                currentRoom.checkin_date
+                                                                currentRoom.checkin_date +
+                                                                    'T12:00:00'
                                                             ).toLocaleDateString(
                                                                 'es-ES',
                                                                 {
@@ -453,7 +455,8 @@
                                                         id="checkout_date"
                                                         :value="
                                                             `${new Date(
-                                                                currentRoom.checkout_date_estimated
+                                                                currentRoom.checkout_date_estimated +
+                                                                    'T12:00:00'
                                                             ).toLocaleDateString(
                                                                 'es-ES',
                                                                 {
@@ -1075,46 +1078,6 @@
                                                 <template
                                                     v-if="table.is_cleaning"
                                                 >
-                                                    <!-- <el-tooltip
-                                                        :disabled="
-                                                            table.reserves
-                                                                .length == 0
-                                                        "
-                                                        placement="top"
-                                                    > -->
-                                                    <!-- <div
-                                                            class="d-flex flex-column align-items-center justify-content-center"
-                                                            slot="content"
-                                                        >
-                                                            <div
-                                                                v-for="(reserve,
-                                                                idx) in table.reserves"
-                                                                :key="idx"
-                                                            >
-                                                                <span>
-                                                                    {{
-                                                                        reserve.checkin_date
-                                                                    }}
-                                                                    -
-                                                                    {{
-                                                                        reserve.checkin_time
-                                                                    }}
-                                                                </span>
-                                                            </div>
-                                                        </div> -->
-
-                                                    <!-- Al enviar a limpiar Habitaciones -->
-                                                    <!-- <div
-                                                            class="col-4 d-flex justify-content-center align-items-center"
-                                                            style="display: flex; justify-content: center; align-items: center; height: 100%;"
-                                                        >
-                                                            <img
-                                                                src="/images/imghotel/15.png"
-                                                                alt="Limpieza"
-                                                                width="40"
-                                                                height="40"
-                                                            />
-                                                        </div> -->
                                                     <div
                                                         class="col-6 d-flex justify-content-center align-items-center"
                                                         style="display: flex; justify-content: center; align-items: center; height: 100%;"

@@ -2337,14 +2337,14 @@ export default {
                             this.showDialogOptions = true;
                         }
                     } else {
-                        this.$toast.error(response.data.message);
+                        this.$showSAlert("ALERTA", response.data.message, "error");
                     }
                 })
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
                     } else {
-                        this.$toast.error(error.response.data.message);
+                        this.$showSAlert("ALERTA", error.response.data.message, "error");
                     }
                 })
                 .then(() => {
