@@ -167,7 +167,6 @@ class PosController extends Controller
         return compact('food');
     }
 
-
     public function foods(Request $request)
     {
         $configuration = Configuration::first();
@@ -185,7 +184,195 @@ class PosController extends Controller
         $category_id = $request->category;
         $brand_id = $request->brands;
         $external_id =  $request->external_id == "true" ? true : false;
-        $unique_code =  $request->policy == "true" ? true : false;
+        $value = $request->value;
+        $value = strtoupper($value);
+        $value = trim($value);
+        $establishment_id = auth()->user()->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+        $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+        $warehouse_id = $warehouse->id;
+        $warehouse_product_id = auth()->user()->warehouse_product_id;
+        if ($warehouse_product_id) {
+            $warehouse_id = $warehouse_product_id;
+        }
+
+        $textoIntoArray =  explode(' ', $value);
+
+        $brand_id = $request->brand;
+        $model = $request->model == "true" ? true : false;
+        $quality = $request->quality == "true" ? true : false;
+
+        $foods = Food::query()->whereHas(
+            "item",
+            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment, $brand_id, $customer_unit_type_id, $color_size_enabled) {
+                $query
+                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
+                        $query->where('warehouse_id', $warehouse_id);
+                    })
+                    ->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                        // Filtrar solo precios activos para el almacén específico
+                        $query->where('active', 1)
+                            ->where('warehouse_id', $warehouse_id);
+                    });
+                if ($brand_id) {
+                    $query->whereHas('brand', function ($query) use ($brand_id) {
+                        $query->where('id', $brand_id);
+                    });
+                }
+                if ($search_by_series == true) {
+                    $query->where('series_enabled', 1)
+                        ->whereHas('item_lots', function ($query) use ($warehouse_id, $value) {
+                            $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
+                                ->where('series', 'like', '%' . $value . '%');
+                        });
+                }
+
+                $consolidated_quotations = $configuration->consolidated_quotations && !$configuration->consolidated_quotation_details;
+                if ($consolidated_quotations && $customer_unit_type_id) {
+                    $item_unit_types_person = UnitTypePerson::where('customer_id', $customer_unit_type_id)->pluck('description')->values();
+                    $query->whereHas('item_unit_types', function ($query) use ($item_unit_types_person) {
+                        $query->whereIn('description', $item_unit_types_person);
+                    });
+                }
+
+                if ($configuration->health_network) {
+                    if ($establishment->is_service) {
+                        $query->where('unit_type_id', 'ZZ');
+                    }
+                    if ($establishment->is_product) {
+                        $query->where('unit_type_id', '<>', 'ZZ');
+                    }
+                }
+            }
+        );
+
+
+        if ($category_id) {
+
+            $foods = $foods->where('category_food_id', $category_id);
+        }
+        if ($value && $search_by_series == null || $search_by_series == false) {
+            if (count($textoIntoArray) === 1) {
+                if ($external_id || $model || $quality) {
+
+                    $foods = $foods->whereHas('item', function ($query) use ($value, $quality, $model) {
+                        $query->where('description', 'LIKE', '%' . $value . '%')
+                            ->orWhere(function ($query) use ($value, $quality, $model) {
+                                $query->where('internal_id', 'LIKE', '%' . $value . '%')
+                                    ->orWhere('barcode', 'LIKE', '%' . $value . '%');
+                                if ($quality) {
+                                    $query->orWhere('quality', 'LIKE', '%' . $value . '%');
+                                }
+                                if ($model) {
+                                    $query->orWhere('model', 'LIKE', '%' . $value . '%');
+                                }
+                            });
+                    });
+                } else {
+
+                    $foods = $foods->where(function ($query) use ($value, $search_by_second_name, $color_size_enabled, $warehouse_id) {
+                        $query->where('description', 'LIKE', '%' . $value . '%')
+                            ->orWhere('code', 'LIKE', '%' . $value . '%');
+                        if ($search_by_second_name) {
+                            $query->orWhereHas('item', function ($query) use ($value) {
+                                $query->where('second_name', 'LIKE', '%' . $value . '%');
+                            });
+                        }
+
+                        if ($color_size_enabled) {
+                            $query->orWhereHas('item', function ($query) use ($value,  $warehouse_id) {
+                                $query->whereHas('color_size', function ($query) use ($warehouse_id, $value) {
+                                    $query->where('warehouse_id', $warehouse_id)->where('code', 'like', '%' . $value . '%')
+                                        ->where('stock', '>', 0);
+                                });
+                            });
+                        }
+                        $query->orWhereHas('item.item_codes', function ($query) use ($value) {
+                            $query->where('code_barcode', 'LIKE', '%' . $value . '%');
+                        });
+                    });
+                }
+            } else {
+
+                $foods = $foods->where(function ($query) use ($value, $textoIntoArray, $search_by_second_name) {
+                    $query->where(function ($subquery) use ($textoIntoArray) {
+                        foreach ($textoIntoArray as $key => $valor) {
+                            $subquery->where('description', 'LIKE', '%' . $valor . '%');
+                        }
+                    });
+
+                    if ($search_by_second_name) {
+                        $query->orWhereHas('item', function ($subquery) use ($textoIntoArray) {
+                            foreach ($textoIntoArray as $key => $valor) {
+                                $subquery->where('second_name', 'LIKE', '%' . $valor . '%');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        if ($category_ins_id) {
+            $foods = $foods->where('category_food_id', '<>', $category_ins_id);
+        }
+        //orderBy('description', 'ASC')
+        $configuration = Configuration::first();
+        $hotels = $configuration->hotels;
+        // if($hotels){
+        //     $user = auth()->user();
+        //     $area = $user->area;
+        //     $is_hotel = $area->is_hotel();
+        //     if($is_hotel){
+        //         $foods = $foods->where('area_id',$area->id);
+        //     }
+        // }
+        /* if ($configuration->ord_dscp) {
+            // Ordena los resultados priorizando la palabra exacta
+            $foods = $foods->orderByRaw("description LIKE '{$value}%' DESC")
+                ->orderByRaw("description LIKE '%{$value}%' DESC")
+                ->orderBy('description', 'ASC');
+        } */
+        if ($configuration->ord_dscp) {
+            $foods = $foods->orderByRaw("description LIKE ? DESC", ["{$value}%"])
+                ->orderByRaw("description LIKE ? DESC", ["%{$value}%"])
+                ->orderBy('description', 'ASC');
+        }
+
+        if ($configuration->ord_dscp) {
+            $foods = $foods->orderBy('description', 'ASC');
+        }
+        $all_foods = $configuration->all_items_pos;
+        if ($all_foods) {
+            $count_foods = Food::query()->count();
+            return new FoodCollection($foods->paginate($count_foods));
+        } else {
+            if (empty($datafoods)) {
+
+                return new FoodCollection($foods->paginate(50));
+            } else {
+                return new FoodCollection($foods->paginate(100), $search_by_series);
+            }
+        }
+    }
+
+
+    /* public function foods(Request $request)
+    {
+        $configuration = Configuration::first();
+        $color_size_enabled = $configuration->color_size_enabled;
+        $customer_unit_type_id = $request->customer_unit_type_id;
+        $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
+        $category_ins_id = null;
+        if ($category_ins) {
+            $category_ins_id = $category_ins->id;
+        }
+        // $user = User::find(auth()->user()->id);
+        $search_by_second_name = $configuration->search_by_second_name;
+        $datafoods = $request->all();
+        $search_by_series = $request->search_by_series == "true" ? true : false;
+        $category_id = $request->category;
+        $brand_id = $request->brands;
+        $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
         $value = strtoupper($value);
         $value = trim($value);
@@ -260,63 +447,65 @@ class PosController extends Controller
 
 
             if ($category_id) {
-
                 $foods = $foods->where('category_food_id', $category_id);
             }
-            if ($value && $search_by_series == null || $search_by_series == false) {
+            // Corregir precedencia de operadores y agrupar correctamente la búsqueda
+            if ($value && ($search_by_series === null || $search_by_series === false)) {
+                $valueLower = strtolower($value);
                 if (count($textoIntoArray) === 1) {
                     if ($external_id || $model || $quality) {
-
-                        $foods = $foods->whereHas('item', function ($query) use ($value, $quality, $model) {
-                            $query->where('description', 'LIKE', '%' . $value . '%')
-                                ->orWhere(function ($query) use ($value, $quality, $model) {
-                                    $query->where('internal_id', 'LIKE', '%' . $value . '%')
-                                        ->orWhere('barcode', 'LIKE', '%' . $value . '%');
-                                    if ($quality) {
-                                        $query->orWhere('quality', 'LIKE', '%' . $value . '%');
-                                    }
-                                    if ($model) {
-                                        $query->orWhere('model', 'LIKE', '%' . $value . '%');
-                                    }
-                                });
-                                // Siempre buscar code_barcode como si fuera internal_id
-                                $query->orWhereHas('item_codes', function ($q) use ($value) {
-                                    $q->where('code_barcode', 'LIKE', '%' . $value . '%');
-                                });
-                        });
-                    } else {
-
-                        $foods = $foods->where(function ($query) use ($value, $search_by_second_name, $color_size_enabled, $warehouse_id) {
-                            $query->where('description', 'LIKE', '%' . $value . '%')
-                                ->orWhere('code', 'LIKE', '%' . $value . '%');
-                            if ($search_by_second_name) {
-                                $query->orWhereHas('item', function ($query) use ($value) {
-                                    $query->where('second_name', 'LIKE', '%' . $value . '%');
-                                });
-                            }
-
-                            if ($color_size_enabled) {
-                                $query->orWhereHas('item', function ($query) use ($value,  $warehouse_id) {
-                                    $query->whereHas('color_size', function ($query) use ($warehouse_id, $value) {
-                                        $query->where('warehouse_id', $warehouse_id)->where('code', 'like', '%' . $value . '%')
-                                            ->where('stock', '>', 0);
+                        $foods = $foods->whereHas('item', function ($query) use ($value, $valueLower, $quality, $model) {
+                            $query->where(function ($q) use ($value, $valueLower, $quality, $model) {
+                                $q->whereRaw('LOWER(description) LIKE ?', ['%' . $valueLower . '%'])
+                                    ->orWhere('internal_id', 'LIKE', '%' . $value . '%')
+                                    ->orWhere('barcode', 'LIKE', '%' . $value . '%')
+                                    ->orWhereHas('item_codes', function ($q2) use ($value) {
+                                        $q2->where('code_barcode', 'LIKE', '%' . $value . '%');
                                     });
-                                });
-                            }
-                            $query->orWhereHas('item.item_codes', function ($query) use ($value) {
-                                $query->where('code_barcode', 'LIKE', '%' . $value . '%');
+                                if ($quality) {
+                                    $q->orWhere('quality', 'LIKE', '%' . $value . '%');
+                                }
+                                if ($model) {
+                                    $q->orWhere('model', 'LIKE', '%' . $value . '%');
+                                }
                             });
                         });
+                        $foods = $foods->orWhereRaw('LOWER(description) LIKE ?', ['%' . $valueLower . '%']);
+                        $foods = $foods->orWhere('code', 'LIKE', '%' . $value . '%');
+                    } else {
+                        $foods = $foods->where(function ($query) use ($value, $valueLower, $search_by_second_name, $color_size_enabled, $warehouse_id) {
+                            $query->where(function ($q) use ($value, $valueLower, $search_by_second_name, $color_size_enabled, $warehouse_id) {
+                                $q->whereRaw('LOWER(description) LIKE ?', ['%' . $valueLower . '%'])
+                                    ->orWhere('code', 'LIKE', '%' . $value . '%')
+                                    ->orWhereHas('item_codes', function ($q2) use ($value) {
+                                        $q2->where('code_barcode', 'LIKE', '%' . $value . '%');
+                                    });
+                                if ($search_by_second_name) {
+                                    $q->orWhereHas('item', function ($q3) use ($value) {
+                                        $q3->where('second_name', 'LIKE', '%' . $value . '%');
+                                    });
+                                }
+                                if ($color_size_enabled) {
+                                    $q->orWhereHas('item', function ($q4) use ($value, $warehouse_id) {
+                                        $q4->whereHas('color_size', function ($q5) use ($warehouse_id, $value) {
+                                            $q5->where('warehouse_id', $warehouse_id)
+                                                ->where('code', 'like', '%' . $value . '%')
+                                                ->where('stock', '>', 0);
+                                        });
+                                    });
+                                }
+                            });
+                        });
+                        $foods = $foods->orWhereRaw('LOWER(description) LIKE ?', ['%' . $valueLower . '%']);
+                        $foods = $foods->orWhere('code', 'LIKE', '%' . $value . '%');
                     }
                 } else {
-
-                    $foods = $foods->where(function ($query) use ($value, $textoIntoArray, $search_by_second_name) {
+                    $foods = $foods->where(function ($query) use ($textoIntoArray, $search_by_second_name) {
                         $query->where(function ($subquery) use ($textoIntoArray) {
                             foreach ($textoIntoArray as $key => $valor) {
-                                $subquery->where('description', 'LIKE', '%' . $valor . '%');
+                                $subquery->whereRaw('LOWER(description) LIKE ?', ['%' . strtolower($valor) . '%']);
                             }
                         });
-
                         if ($search_by_second_name) {
                             $query->orWhereHas('item', function ($subquery) use ($textoIntoArray) {
                                 foreach ($textoIntoArray as $key => $valor) {
@@ -325,6 +514,8 @@ class PosController extends Controller
                             });
                         }
                     });
+                    $foods = $foods->orWhereRaw('LOWER(description) LIKE ?', ['%' . $valueLower . '%']);
+                    $foods = $foods->orWhere('code', 'LIKE', '%' . $value . '%');
                 }
             }
 
@@ -357,7 +548,7 @@ class PosController extends Controller
                 return new FoodCollection($foods->paginate(100), $search_by_series);
             }
         }
-    }
+    } */
 
     public function pos()
     {
