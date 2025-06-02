@@ -9,7 +9,8 @@ use Modules\Restaurant\Models\WorkersType;
 
 class RoleService
 {
-    public static function isArcaUserId($id){
+    public static function isArcaUserId($id)
+    {
         $user = \App\Models\Tenant\User::find($id);
         $worker_type_id = $user->worker_type_id;
         if ($worker_type_id == null) {
@@ -74,7 +75,7 @@ class RoleService
                 $invoice = $documents['invoice'];
                 $receipt = $documents['receipt'];
 
-                if ($invoice== false && $receipt == false) {
+                if ($invoice == false && $receipt == false) {
                     return true;
                 }
             }

@@ -872,18 +872,17 @@ class OrdenController extends Controller
 
             $mozo_user = auth()->user();
 
-            // Verificar si el usuario mozo y el usuario caja están en el mismo establecimiento
             $establishment_id = $mozo_user->establishment_id;
             $user = User::whereHas('area', function ($query) {
                 $query->where('description', 'like', '%CAJ%');
             })->where('establishment_id', $establishment_id)->first();
 
-            if (!$user) {
+            /* if (!$user) {
                 return [
                     'success' => false,
                     'message' => 'No se encontró un usuario de caja asignado al establecimiento.'
                 ];
-            }
+            } */
 
             if ($request->caja == false && $configuration->pin_switch) {
                 $pin = $request->pin;

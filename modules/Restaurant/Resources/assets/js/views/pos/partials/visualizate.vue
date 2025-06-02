@@ -39,7 +39,7 @@
                                 style="padding: 12px 15px; border-bottom: 1px solid #ddd;"
                                 :data-label="'Precio'"
                             >
-                                {{ item.price }}
+                                {{ Number(item.price).toFixed(2) }}
                             </td>
                             <td
                                 style="padding: 12px 15px; border-bottom: 1px solid #ddd;"

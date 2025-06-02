@@ -16,38 +16,34 @@
                     >
                     </el-input>
                 </div>
-                <!-- <div class="col-md-4">
-                    <el-button
-                        :type="showSelecteds ? 'primary' : 'danger'"
-                        @click="showSelected"
-                    >
-                        {{ showSelecteds ? "Ocultar" : "Ver seleccionados" }}
-                    </el-button>
-                </div> -->
             </div>
             <table v-loading="loading" class="table">
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Code</th>
                         <th>Color</th>
                         <th>Size</th>
                         <th class="text-end">Stock</th>
-                        <th>Cantidad</th>
+                        <th class="text-end">Cantidad</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(colorsize, idx) in color_size" :key="idx">
-                        <td width="15%">{{ customIndex(idx) }}</td>
-                        <td width="25%">{{ colorsize.color }}</td>
-                        <td width="20%">{{ colorsize.size }}</td>
-                        <td width="15%" class="text-end">{{ colorsize.stock }}</td>
-                        <td width="10%">
-                            <el-input
-                                type="number"
-                                v-model="colorsize.quantity"
-                                @input="saveColorSize(colorsize)"
-                            >
-                            </el-input>
+                        <td>{{ customIndex(idx) }}</td>
+                        <td>{{ colorsize.code }}</td>
+                        <td>{{ colorsize.color }}</td>
+                        <td>{{ colorsize.size }}</td>
+                        <td class="text-end">{{ colorsize.stock }}</td>
+                        <td class="text-end">
+
+                              <el-input-number 
+                              v-model="colorsize.quantity" 
+                              @input="saveColorSize(colorsize)"
+                              controls-position="right"  
+                              :min="0" 
+                              :max="100">
+                            </el-input-number>
                         </td>
                     </tr>
                 </tbody>
@@ -116,34 +112,26 @@ export default {
             );
         },
         saveColorSize(colorSize) {
-            console.log("🚀 ~ file: color_size_output.vue:119 ~ saveColorSize ~ colorSize:", colorSize)
-            let color_size = [];
-            color_size = color_size.filter(s => s.id != colorSize.id);
-            if (colorSize.quantity !== 0) {
-                //if(colorSize.quantity > colorSize.stock){
-                //colorSize.quantity = colorSize.stock;
-                // return this.$toast.error(
-                //      "La cantidad no puede ser mayor al stock"
-                //    );
-                //  }
-                colorSize.disabled = false;
-                color_size = [...color_size, colorSize];
-            } else {
-                color_size = color_size.filter(s => s.id != colorSize.id);
+            // Actualizar o agregar la cantidad de la combinación actual en colorSizeSelected
+            const idx = this.colorSizeSelected.findIndex(s => s.id === colorSize.id);
+            if (colorSize.quantity && colorSize.quantity > 0) {
+                if (idx !== -1) {
+                    // Actualizar existente
+                    this.colorSizeSelected[idx] = { ...colorSize };
+                } else {
+                    // Agregar nuevo
+                    this.colorSizeSelected.push({ ...colorSize });
+                }
+            } else if (idx !== -1) {
+                // Eliminar si la cantidad es 0
+                this.colorSizeSelected.splice(idx, 1);
             }
             this.$forceUpdate();
-            this.colorSizeSelected = [...color_size];
         },
         save() {
-            // if (this.limitQty != 0) {
-            //     if (this.colorSizeSelected.length % this.limitQty != 0) {
-            //         return this.$toast.error(
-            //             "La cantidad de series no coninciden con la cantidad de venta por politica de precio"
-            //         );
-            //     }
-            // }
+            // No limpiar colorSizeSelected ni color_size aquí, solo emitir y cerrar
             this.$emit("updateColorSize", this.colorSizeSelected);
-            this.close();
+            this.$emit("update:showDialog", false);
         },
         getQueryParameters() {
             return queryString.stringify({
@@ -155,7 +143,6 @@ export default {
             });
         },
         open() {
-    
             if (this.item) {
                 this.getColorSize();
             }
@@ -169,10 +156,12 @@ export default {
             }, 350);
         },
         close() {
+            this.$emit("update:showDialog", false);
+            // Limpiar solo si se cierra el modal (Aceptar o Cancelar)
             this.inputSearch = null;
             this.pagination = {};
             this.color_size = [];
-            this.$emit("update:showDialog", false);
+            this.colorSizeSelected = [];
         },
         async getColorSize() {
             try {

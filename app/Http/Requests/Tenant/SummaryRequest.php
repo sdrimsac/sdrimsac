@@ -19,6 +19,9 @@ class SummaryRequest extends FormRequest
             ],
             'documents' => [
                 'required'
+            ],
+            'affect_cash' => [
+                'nullable', 'boolean'
             ]
         ];
     }

@@ -128,7 +128,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div
+                class="col-md-6 d-flex align-items-center justify-content-center"
+            >
                 <div
                     class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
                 >
@@ -147,7 +149,6 @@
                         icon="fas fa-save fa-lg"
                         type="primary"
                         @click="submit"
-                        :disabled="!form.customer_id"
                         size="small"
                     >
                         <span>Guardar</span>
@@ -497,7 +498,13 @@
                                 :disabled="!form.customer_id"
                             ></el-input>
                             <br />
-                            <div v-if="room.services.length > 0 && !room.is_month_rent" class="mb-2">
+                            <div
+                                v-if="
+                                    room.services.length > 0 &&
+                                        !room.is_month_rent
+                                "
+                                class="mb-2"
+                            >
                                 Promociones
                                 <div
                                     class="d-flex align-items-center mb-2 w-100"
@@ -506,7 +513,10 @@
                                         @change="discountService(room)"
                                         v-model="room.discount_instead_services"
                                         label="Cambiar por descuento"
-                                        :disabled="room.is_month_rent || !form.customer_id"
+                                        :disabled="
+                                            room.is_month_rent ||
+                                                !form.customer_id
+                                        "
                                         class="flex-grow-1"
                                         style="margin-left: 8px;"
                                     ></el-checkbox>
@@ -683,7 +693,6 @@
                                         v-model="service.quantity"
                                         controls-position="right"
                                         @input="updateServices"
-                                        
                                         :min="0"
                                         :max="2"
                                     >
@@ -851,19 +860,6 @@ export default {
         };
     },
     methods: {
-        checkCustomerSelected(action) {
-            if (!this.form.customer_id) {
-                this.$showSAlert(
-                    "Alerta",
-                    "Debe seleccionar un cliente",
-                    "warning"
-                );
-                return;
-            }
-            if (typeof action === "function") {
-                action();
-            }
-        },
         removeGuess(room, idx) {
             room.guesses.splice(idx, 1);
             room.quantity_persons = room.guesses.length;
@@ -899,21 +895,6 @@ export default {
             await this.checkDateReserve(room);
             this.calculateTotal();
         },
-        /* async changeMonthRent(room) {
-            let { is_month_rent } = room;
-            if (is_month_rent) {
-                // Verificar disponibilidad al marcar "Mensual"
-                const disp = await this.checkDateReserve(room, true);
-                if (disp) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Habitación Disponible",
-                        text: "Puede continuar con el procedimiento."
-                    });
-                }
-            }
-            this.calculateTotal();
-        }, */
         async changeTable(room) {
             this.textLoading = "Verificando reserva...";
             await this.checkDateReserve(room);
@@ -948,14 +929,13 @@ export default {
                     if (success) {
                         delete room.not_available;
                         if (showAvailableMsg) {
-                            // Mensaje personalizado solo si se solicita
                             return true;
                         } else {
-                            Swal.fire(message);
+                            this.$showSAlert(message, "puede realizar la reserva");
                         }
                     } else {
                         room.not_available = true;
-                        Swal.fire(message);
+                        this.$showSAlert("ALERTA", message);
                     }
                 }
             } catch (e) {
@@ -1074,16 +1054,15 @@ export default {
             this.calculateSubtotal();
             if (this.form.advance > this.form.sub_total) {
                 this.form.advance = 0;
-                Swal.fire("El adelanto no puede ser mayor al total");
+                this.$showSAlert(
+                    "ALERTA",
+                    "El adelanto no puede ser mayor al total"
+                );
             }
             let total = this.form.sub_total - this.form.advance;
             this.form.total = total;
         },
         addGuess(idx) {
-            if (!this.rooms[idx].guess_id) {
-                Swal.fire("Debe seleccionar un cliente");
-                return;
-            }
             let customer = this.customers.find(
                 c => c.id == this.rooms[idx].guess_id
             );
@@ -1247,6 +1226,7 @@ export default {
             if (!this.validate()) {
                 return;
             }
+
             try {
                 this.loading = true;
 
@@ -1277,27 +1257,51 @@ export default {
                 this.loading = false;
             } catch (e) {
                 this.loading = false;
-                Swal.fire("Error al ingresar huesped");
+                this.$showSAlert(
+                    "ALERTA",
+                    "Error al ingresar huesped",
+                    "warning"
+                );
             }
         },
         validate() {
+            console.log("Validando formulario...");
             let pass = true;
             let { customer_id, rooms } = this.form;
             if (!customer_id) {
-                Swal.fire("Debe seleccionar un cliente");
+                this.$showSAlert(
+                    "ALERTA",
+                    "Debe seleccionar un cliente",
+                    "warning"
+                );
                 pass = false;
             }
+
             for (let idx in rooms) {
                 let room = rooms[idx];
+
+                if (
+                    room.is_reserve &&
+                    (!room.advances || Number(room.advances) <= 0)
+                ) {
+                    this.$showSAlert(
+                        "ALERTA",
+                        `debe ingresar un adelanto de pago para realizar reservas`,
+                        "warning"
+                    );
+                    pass = false;
+                }
                 if (!room.table_id) {
-                    Swal.fire(
+                    this.$showSAlert(
+                        "ALERTA",
                         `Habitación N° ${parseInt(idx) +
                             1} tiene datos incompletos`
                     );
                     pass = false;
                 }
                 if (room.not_available) {
-                    Swal.fire(
+                    this.$showSAlert(
+                        "ALERTA",
                         `Habitación N° ${parseInt(idx) + 1} no está disponible`
                     );
                     pass = false;
@@ -1336,7 +1340,7 @@ export default {
             }
             this.loading = false;
             // Lanzar alerta si no hay cliente seleccionado
-            this.checkCustomerSelected();
+            /* this.checkCustomerSelected(); */
         },
         updateServices() {
             this.$forceUpdate();

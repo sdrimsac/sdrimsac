@@ -139,8 +139,7 @@
                                             v-if="
                                                 data.state_type_id == '01' &&
                                                     configuration.caja_actions &&
-                                                    configuration.internal_voided &&
-                                                    cash_id
+                                                    configuration.internal_voided
                                             "
                                             type="text"
                                             @click="
@@ -159,11 +158,10 @@
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             v-if="
-                                                data.document_type_id == '01' &&
+                                                data.document_type_id == '01' && data.document_type_id == '03' &&
                                                     data.state_type_id ==
                                                         '05' &&
-                                                    configuration.anulate_sunat_cash &&
-                                                    cash_id
+                                                    configuration.anulate_sunat_cash
                                             "
                                             type="text"
                                             @click="clickVoided(data.id)"

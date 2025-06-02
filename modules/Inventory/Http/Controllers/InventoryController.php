@@ -445,10 +445,12 @@ class InventoryController extends Controller
                     $color = $row["color"];
                     $size = $row["size"];
                     $price = $row["price"];
+                    $code = $row["code"];
                     $color_size_exist = ItemColorSize::where('item_id', $item_id)
                         ->where('warehouse_id', $warehouse_id)
                         ->where('color', $color)
                         ->where('size', $size)
+                        ->where('code', $code)
                         ->first();
                     if ($color_size_exist) {
                         $color_size_exist->stock = $color_size_exist->stock + $stock;
@@ -463,7 +465,8 @@ class InventoryController extends Controller
                             'stock' => $stock,
                             'color' => $color,
                             'size' => $size,
-                            'price' => $price
+                            'price' => $price,
+                            'code' => $code
                         ]);
                     }
                 }

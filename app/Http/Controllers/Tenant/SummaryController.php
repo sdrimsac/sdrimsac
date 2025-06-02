@@ -17,11 +17,19 @@ use App\Http\Resources\Tenant\{
 };
 use App\Traits\SummaryTrait;
 use App\Models\Tenant\{
+    Box,
     Document,
     Summary,
-    Company
+    Company,
+    Configuration
 };
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Modules\College\Models\CollegePayment;
+use Modules\College\Models\CollegeStudent;
+use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\OrdenItem;
 
 class SummaryController extends Controller
 {
@@ -79,6 +87,30 @@ class SummaryController extends Controller
 
     public function store(SummaryRequest $request)
     {
+        $affectCash = $request->input('affect_cash');
+        $documents = $request->input('documents');
+        $document_id = null;
+        if (is_array($documents) && isset($documents[0]['document_id'])) {
+            $document_id = $documents[0]['document_id'];
+        }
+
+        if ($affectCash && $document_id) {
+            try {
+                $record = Document::find($document_id);
+                $boxDeleted = Box::where('document_id', $document_id)->delete();
+                if ($record) {
+                    $record->internal_voided = true;
+                    $record->save();
+                }
+                Log::info('Se eliminó el documento de la caja y se marcó como internal_voided', [
+                    'document_id' => $document_id,
+                    'box_deleted' => $boxDeleted
+                ]);
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+        }
+
         ini_set('max_execution_time', 6000);
         ini_set('memory_limit', '-1');
         return $this->save($request);

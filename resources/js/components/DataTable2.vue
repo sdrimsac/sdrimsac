@@ -87,7 +87,12 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <template v-else-if="search.column == 'active' && resource=='caja/workers-type'">
+                        <template
+                            v-else-if="
+                                search.column == 'active' &&
+                                    resource == 'caja/workers-type'
+                            "
+                        >
                             <el-select
                                 v-model="search.value"
                                 @change="getRecords"
@@ -223,7 +228,6 @@
                         >Exportar Excel - Formato de importacion</el-button
                     >
                 </div> -->
-       
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -236,6 +240,7 @@
                                 v-for="(row, index) in records"
                                 :row="row"
                                 :index="customIndex(index)"
+                                :canSee="row.canSee"
                             ></slot>
                         </tbody>
                     </table>
@@ -258,13 +263,13 @@
 <style>
 /* Asegura que las filas no se ajusten y el contenido se mantenga en una sola línea */
 .table tbody tr {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .table tbody td {
-  overflow: hidden;
-  text-overflow: ellipsis; /* Añade puntos suspensivos si el contenido es demasiado largo */
-  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añade puntos suspensivos si el contenido es demasiado largo */
+    white-space: nowrap;
 }
 </style>
 
@@ -292,6 +297,10 @@ export default {
             type: Boolean,
             default: false,
             required: false
+        },
+        canSee: {
+            type: Boolean,
+            default: false
         },
         config: Object
     },
@@ -337,7 +346,7 @@ export default {
         clickDownload() {
             this.$emit("clickReport", this.search);
         },
-        clickDownloadForImport(){
+        clickDownloadForImport() {
             this.$emit("clickReportForImport", this.search);
         },
 
@@ -368,6 +377,9 @@ export default {
                 }
                 return this.$http.get(url).then(response => {
                     this.records = response.data.data;
+                    /* this.canSee = response.data.canSee;
+                    this.$emit("update:canSee", this.canSee); */
+                    this.$emit('update:canSee', response.data.canSee);
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(
                         response.data.meta.per_page

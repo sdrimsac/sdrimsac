@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
 {
+
     public function index()
     {
         return view('system.clients.index');
@@ -52,10 +53,7 @@ class ClientController extends Controller
 
         ];
     }
-    public function sendPaymentsMessages(Request $request)
-    {
-        
-    }
+    public function sendPaymentsMessages(Request $request) {}
     public function clientEmitDocument(Request $request)
     {
         $configuration = Configuration::first();
@@ -281,6 +279,10 @@ class ClientController extends Controller
 
     public function records(Request $request)
     {
+        if (strpos(url()->current(), 'sdrimsac') !== false) {
+            $canSee = true;
+        }
+        
         $query = Client::query();
 
         if ($request->has('column') && $request->column === 'name' && $request->has('value') && $request->value) {
@@ -318,13 +320,13 @@ class ClientController extends Controller
                 ->table('users')
                 ->count();
             $row->company_number = DB::connection('tenant')
-            ->table('companies')
-            ->first()
-            ->number;
+                ->table('companies')
+                ->first()
+                ->number;
             $row->company_name = DB::connection('tenant')
-            ->table('companies')
-            ->first()
-            ->name;
+                ->table('companies')
+                ->first()
+                ->name;
             $row->count_sales_notes = 0;
             $quantity_pending_documents = $this->getQuantityPendingDocuments();
 
@@ -365,7 +367,8 @@ class ClientController extends Controller
         $clientCollection = new ClientCollection($records);
 
         $clientCollection->additional([
-            'totalClients' => $totalClients
+            'totalClients' => $totalClients,
+            'canSee' => $canSee ?? false,
         ]);
 
         return $clientCollection;
@@ -742,7 +745,7 @@ class ClientController extends Controller
             'messages' => $message_send_schedules
         ];
     }
-    
+
     public function store(ClientRequest $request)
     {
         $migration = $request->input('migration');
@@ -932,12 +935,14 @@ class ClientController extends Controller
             $array_levels = [];
             foreach ($request->modules as $module) {
                 array_push($array_modules, [
-                    'module_id' => $module, 'user_id' => $user_id
+                    'module_id' => $module,
+                    'user_id' => $user_id
                 ]);
             }
             foreach ($request->levels as $level) {
                 array_push($array_levels, [
-                    'module_level_id' => $level, 'user_id' => $user_id
+                    'module_level_id' => $level,
+                    'user_id' => $user_id
                 ]);
             }
             DB::connection('tenant')->table('module_user')->insert($array_modules);

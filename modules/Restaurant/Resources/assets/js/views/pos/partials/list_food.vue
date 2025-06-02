@@ -4,7 +4,12 @@
         <div class="row p-2" v-loading="loadingItems">
             <div class="row w-100 m-0 p-0">
                 <div class="col-9 d-flex align-items-center">
-                    <h2 class="small-title" style="color: blue; font-weight: bold;">Productos</h2>
+                    <h2
+                        class="small-title"
+                        style="color: blue; font-weight: bold;"
+                    >
+                        Productos
+                    </h2>
                     <template v-if="listFoods.length == 0">
                         <div class="col-12 text-center font-weight-bold">
                             <label>No Hay Productos</label>
@@ -26,13 +31,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <template v-if="configuration.list_or_card">
                 <template v-if="form.show_list">
                     <div
                         class="infinite-list-wrapper w-100"
                         style="max-height: 800px; overflow-y: auto;"
-                        >
+                    >
                         <ul
                             class="list-group"
                             infinite-scroll-disabled="isDisabled"
@@ -43,12 +48,17 @@
                                     <table
                                         class="table table-hover table-bordered m-0"
                                     >
-                                        <thead class="sticky-top bg-primary" style="z-index: 1;">
+                                        <thead
+                                            class="sticky-top bg-primary"
+                                            style="z-index: 1;"
+                                        >
                                             <tr>
                                                 <th class="text-white">
                                                     Producto o Servicio
                                                 </th>
-                                                <th class="text-white text-center">
+                                                <th
+                                                    class="text-white text-center"
+                                                >
                                                     Precio
                                                 </th>
                                                 <th
@@ -80,19 +90,16 @@
                                         </thead>
                                         <tbody>
                                             <tr
-                                                v-for="(data,
-                                                index) in foods"
+                                                v-for="(data, index) in foods"
                                                 :key="index"
                                                 @click="
                                                     (configuration.consolidated_quotations ||
                                                         configuration.direct_unit_type) &&
                                                     data.types &&
-                                                    data.types.length >
-                                                        0
+                                                    data.types.length > 0
                                                         ? clickCommand(
-                                                                data
-                                                                    .types[0]
-                                                            )
+                                                              data.types[0]
+                                                          )
                                                         : addFood(index)
                                                 "
                                             >
@@ -134,10 +141,17 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-right">
-                                                    {{ data.item.currency_type_id == "PEN" ? "S/" : "$" }}
+                                                    {{
+                                                        data.item
+                                                            .currency_type_id ==
+                                                        "PEN"
+                                                            ? "S/"
+                                                            : "$"
+                                                    }}
                                                     {{ data.price }}
                                                 </td>
-                                                <td class="text-center"
+                                                <td
+                                                    class="text-center"
                                                     v-if="
                                                         configuration.show_stock_cash ==
                                                             true
@@ -145,17 +159,13 @@
                                                 >
                                                     <template
                                                         v-if="
-                                                            data.item
-                                                                .is_set ==
+                                                            data.item.is_set ==
                                                                 0 &&
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .unit_type_id !=
                                                                     'ZZ' &&
-                                                                data
-                                                                    .item
-                                                                    .stock >
-                                                                    0
+                                                                data.item
+                                                                    .stock > 0
                                                         "
                                                     >
                                                         <span
@@ -164,8 +174,7 @@
                                                         >
                                                             <template
                                                                 v-if="
-                                                                    data
-                                                                        .item
+                                                                    data.item
                                                                         .max_quantity
                                                                 "
                                                             >
@@ -178,9 +187,7 @@
                                                                     )
                                                                 }}
                                                             </template>
-                                                            <template
-                                                                v-else
-                                                            >
+                                                            <template v-else>
                                                                 {{
                                                                     parseFloat(
                                                                         data
@@ -198,8 +205,7 @@
                                                         >
                                                             <template
                                                                 v-if="
-                                                                    data
-                                                                        .item
+                                                                    data.item
                                                                         .unit_type_id !=
                                                                         'ZZ'
                                                                 "
@@ -218,8 +224,7 @@
                                                             data.item
                                                                 .lots_enabled ==
                                                                 1 &&
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .date_of_due
                                                         "
                                                     >
@@ -237,14 +242,12 @@
                                                             "
                                                         >
                                                             {{
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .lot_code
                                                             }}
                                                             -
                                                             {{
-                                                                data
-                                                                    .item
+                                                                data.item
                                                                     .date_of_due
                                                             }}
                                                         </el-tag>
@@ -258,10 +261,8 @@
                                                     <div
                                                         v-if="
                                                             data.types &&
-                                                                data
-                                                                    .types
-                                                                    .length >
-                                                                    0
+                                                                data.types
+                                                                    .length > 0
                                                         "
                                                     >
                                                         <el-dropdown
@@ -283,9 +284,7 @@
                                                                 <el-dropdown-item
                                                                     v-for="(type,
                                                                     idx) in data.types"
-                                                                    :key="
-                                                                        idx
-                                                                    "
+                                                                    :key="idx"
                                                                     :command="
                                                                         type
                                                                     "
@@ -1049,6 +1048,15 @@
             :showDialog.sync="showDialogUnitType"
             :item="foodWithTypes"
         ></modal-unit-type-id>
+        <show-color-size-product
+            :limitQty="limitQty"
+            :idx="currentIdx"
+            :item="currentItem"
+            :showDialog.sync="showColorSize"
+            :colorSizeSelected.sync="currentColorSize"
+            :establishments="establishments"
+            @updateColorSize="updateColorSize"
+        ></show-color-size-product>
     </div>
 </template>
 <style>
@@ -1088,13 +1096,16 @@ import WarehousesDetail from "./warehouses.vue";
 import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
 import ImagesFood from "./images_food.vue";
+const ShowColorSizeProduct = () =>
+    import("../partials/show_color_size_product.vue");
 import swal from "sweetalert2";
 export default {
     components: {
         WarehousesDetail,
         UnitTypeModal,
         ModalUnitTypeId,
-        ImagesFood
+        ImagesFood,
+        ShowColorSizeProduct
     },
     props: [
         "lastQuery",
@@ -1117,10 +1128,14 @@ export default {
         "medida_ancho",
         "medida_alto",
         "medida_grosor",
-        "categoria_madera"
+        "categoria_madera",
+        "establishments"
     ],
     data() {
         return {
+            currentColorSize: null,
+            limitQty: 0,
+            showColorSize: false,
             localCotizarConfirmado: this.cotizarConfirmado,
             foodWithTypes: null,
             showDialogUnitType: false,
@@ -1133,6 +1148,7 @@ export default {
             hasSerie: false,
             user: false,
             config: {},
+            currentIdx: null,
             showImagesFoods: false,
             showWarehousesDetail: false,
             warehousesDetail: [],
@@ -1149,7 +1165,6 @@ export default {
             item: null,
             search: "Buscar por Codigo",
             currentImage: null,
-            showImage: false,
             listFoods: [], // Initialize listFoods as an empty array
             selectedFood: null,
             /* isAnalist: false, */
@@ -1241,7 +1256,7 @@ export default {
                 ]
             },
             screenWidth: 0,
-            stockData: {} // Store stock updates by food_id
+            stockData: {}
         };
     },
     mounted() {
@@ -1313,6 +1328,60 @@ export default {
         }
     },
     methods: {
+        async updateColorSize(idx, color_size) {
+            console.log("updateColorSize ver que llega aqui", idx, color_size);
+            let ordens = [...this.localOrden];
+            if (this.hasSamePrice(color_size)) {
+                let [first] = color_size;
+                let { price } = first;
+                price = Number(price || "0");
+                ordens[idx].color_size = [...color_size];
+                if (price != 0) {
+                    ordens[idx].price = price;
+                }
+                ordens[idx].quantity = color_size.reduce(
+                    (a, b) => a + Number(b.quantity),
+                    0
+                );
+            } else {
+                let ordenOriginal = JSON.parse(JSON.stringify(ordens[idx]));
+                ordens = ordens.filter((o, i) => i != idx);
+                let colors_sizes = this.splitByPrice(color_size);
+                for (let i = 0; i < colors_sizes.length; i++) {
+                    let color_size_group = colors_sizes[i];
+                    let newOrden = JSON.parse(JSON.stringify(ordenOriginal));
+                    let [first] = color_size_group;
+                    let { price } = first;
+                    newOrden.color_size = [...color_size_group];
+                    price = Number(price || "0");
+                    if (price != 0) {
+                        newOrden.price = price;
+                    }
+                    newOrden.quantity = color_size_group.reduce(
+                        (a, b) => a + Number(b.quantity),
+                        0
+                    );
+                    ordens.push(newOrden);
+                }
+            }
+            await this.$emit("update:localOrden", ordens);
+        },
+        hasSamePrice(color_price) {
+            console.log("color_price", color_price);
+            let samePrice = true;
+            let price = 0;
+            for (let i = 0; i < color_price.length; i++) {
+                if (i == 0) {
+                    price = color_price[i].price;
+                } else {
+                    if (price != color_price[i].price) {
+                        samePrice = false;
+                        break;
+                    }
+                }
+            }
+            return samePrice;
+        },
         agregarItem(producto) {
             if (!producto || !producto.food) {
                 return;
@@ -1485,6 +1554,20 @@ export default {
                 this.addFood(0, null, true);
             }
 
+            if (
+                this.barcode &&
+                this.configuration.color_size_enabled &&
+                this.listFoods.length === 1 &&
+                this.value
+            ) {
+                let [food] = this.listFoods;
+                if (food.item && food.item.has_color_size) {
+                    this.currentItem = food.item;
+                    this.showColorSize = true;
+                    return;
+                }
+            }
+
             if (this.configuration.color_size_enabled) {
                 if (this.listFoods.length == 1) {
                     let [food] = this.listFoods;
@@ -1502,7 +1585,44 @@ export default {
                 this.addFood(0, null, true);
             }
         },
-        
+
+        showColorSizeDialog(orden, index = null) {
+            this.limitQty = orden.type_quantity ?? 0;
+
+            let ordens = this.localOrden.filter(l => l.id == orden.id);
+            if (ordens.length == 1) {
+                let [currentOrden] = ordens;
+                let color_size = currentOrden.color_size.map(s => ({
+                    ...s,
+                    quantity: s.quantity || 0
+                }));
+                this.currentColorSize = color_size;
+                console.log(
+                    "orden.color_size ver si hay dato aqui",
+                    this.currentColorSize,
+                    currentOrden
+                );
+            } else {
+                let color_size = [];
+                for (let i = 0; i < ordens.length; i++) {
+                    let currentOrden = ordens[i];
+                    color_size = [
+                        ...color_size,
+                        ...currentOrden.color_size.map(s => ({
+                            ...s,
+                            quantity: s.quantity || 0
+                        }))
+                    ];
+                }
+                this.currentColorSize = color_size;
+            }
+            this.currentItem = orden.food.item;
+            console.log("orden.color_size", this.color_size);
+
+            this.currentIdx = index;
+            this.showColorSize = true;
+        },
+
         formatedStockPresentation(
             {
                 max_quantity,
@@ -1512,34 +1632,6 @@ export default {
             },
             stock
         ) {
-            // let item_unit = item_unit_types.find(
-            //     i => Number(i.quantity_unit) == Number(max_quantity)
-            // );
-            // let general = 0;
-            // if (item_unit) {
-            //     general = Math.trunc(stock / max_quantity);
-            // } else {
-            //     general = stock / max_quantity;
-            // }
-            // let part = ((stock / max_quantity) % 1).toFixed(2);
-            // let part_general = general.toString().split(".");
-
-            // if (part_general.length > 1 && part_general[1].length > 2) {
-            //     general = general.toFixed(2);
-            // }
-            // let text = `${general} ${unit_type.id}`;
-            // if (part != 0) {
-            //     if (item_unit) {
-            //         text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
-            //     } else {
-            //         text = `${general} ${max_quantity_description ||
-            //             unit_type.id}`;
-            //     }
-            // } else {
-            //     text = `${general} ${max_quantity_description || unit_type.id}`;
-            // }
-
-            // return text;
             let general = Math.trunc(stock / max_quantity);
             let part = ((stock / max_quantity) % 1).toFixed(2);
 
@@ -1620,32 +1712,6 @@ export default {
             categoria = null,
             color_size = []
         ) {
-            /* const selectedFood = this.listFoods[index];
-            const foodId = selectedFood.id; */
-
-            // Validate stock availability from socket data
-            /* const remainingStock = this.stockData[foodId];
-            if (remainingStock !== undefined && remainingStock <= 0) {
-                this.$showSAlert(
-                    "Stock insuficiente",
-                    "Este producto ya no está disponible para la venta.",
-                    "error"
-                );
-                return;
-            } */
-
-            //const productId = this.listFoods[index].id; // Get the product ID
-            //const validationResponse = await this.validateAdd(productId);
-
-            /* if (!validationResponse.success) {
-                this.$notify({
-                    title: 'Error',
-                    message: validationResponse.message,
-                    type: 'error'
-                });
-                return;
-            } */
-
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",

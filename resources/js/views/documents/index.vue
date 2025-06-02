@@ -151,6 +151,11 @@
                                     </th>
                                     <th
                                         class="text-white"
+                                    >
+                                        Actividad
+                                    </th>
+                                    <th
+                                        class="text-white"
                                         v-if="columns.user_name.visible"
                                     >
                                         Usuario
@@ -339,12 +344,21 @@
                                                     >
                                                         <!-- Anulado Interno -->
                                                         <button
-                                                            :disabled="row.deleting || row.isProcessing"
+                                                            :disabled="
+                                                                row.deleting ||
+                                                                    row.isProcessing
+                                                            "
                                                             type="button"
                                                             class="btn btn-info text-white rounded w-100 d-flex align-items-center"
                                                             style="height: 40px;"
-                                                            @click.prevent="handleDelete(row)"
+                                                            @click.prevent="
+                                                                handleDelete(
+                                                                    row
+                                                                )
+                                                            "
                                                             v-if="
+                                                                row.state_type_id ==
+                                                                    '01' &&
                                                                     !isAccountant &&
                                                                     configuration.internal_voided
                                                             "
@@ -476,7 +490,7 @@
                                                         <!-- Modificar CPE -->
                                                         <button
                                                             type="button"
-                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center" 
+                                                            class="btn btn-info text-white rounded w-100 d-flex align-items-center"
                                                             style="height: 40px;"
                                                             @click.prevent="
                                                                 clickEdit(
@@ -647,59 +661,49 @@
                                             </div>
                                         </div>
                                     </td>
-
-                                    <!-- <td> 
-                                        <el-button 
-                                            type="primary" 
-                                            @click="clickView(row.id)"
-                                         
-                                         >
-                                            Ver Movimiento
-                                        </el-button>
-                                    </td> -->
-                                    <!-- <td class="text-center">
-                                        <div
+                                    <td>
+                                        <template
                                             v-if="
                                                 row.last_register &&
-                                                    row.last_register.user &&
-                                                    row.last_register.ip
-                                            "
-                                        >
-                                            <strong
-                                                v-if="
-                                                    row.last_register.ip !=
-                                                        'SERVIDOR'
-                                                "
-                                                >Usuario:
-                                                {{
                                                     row.last_register.user
-                                                }}</strong
+                                            "
+                                            class="text-center"
+                                        >
+                                            <span
+                                                class="text-center fw-bold"
+                                                style="font-family: Arial, sans-serif;"
+                                                >{{
+                                                    row.last_register.user
+                                                }}</span
                                             >
-                                            <strong>SERVIDOR</strong>
-                                            <br />
-                                            <span class="text-primary">{{
-                                                row.last_register.description
-                                            }}</span>
+                                            :
                                             <br />
                                             <span
-                                                :class="{
-                                                    'text-danger':
+                                                class="text-primary"
+                                                style="font-family: Arial, sans-serif;"
+                                                >{{
+                                                    row.last_register
+                                                        .description
+                                                }}</span
+                                            >
+                                            <br />
+                                            <span
+                                                :class="
+                                                    `${
                                                         row.last_register
                                                             .date_time.is24Hours
-                                                }"
+                                                            ? 'text-danger'
+                                                            : ''
+                                                    }`
+                                                "
+                                                style="font-family: Arial, sans-serif;"
                                             >
-                                                 {{
-                                                    formatDateTime(
-                                                        row.last_register
-                                                            .date_time
-                                                    )
-                                                }} -->
-                                    <!-- {{
+                                                {{
                                                     row.last_register.created_at
                                                 }}
-                                            </span> -->
-                                    <!-- </div>
-                                    </td> -->
+                                            </span>
+                                        </template>
+                                    </td>
 
                                     <!-- Usuario y  Area de trabajo -->
                                     <td
@@ -1208,6 +1212,7 @@
                         <documents-voided
                             :showDialog.sync="showDialogVoided"
                             :recordId="recordId"
+                            @destroy-document="handleDestroyDocument"
                         ></documents-voided>
 
                         <items-import
@@ -1275,7 +1280,7 @@ export default {
         "typeUser",
         "import_documents",
         "import_documents_second",
-        "configuration",
+        "configuration"
     ],
     components: {
         DocumentSaludModal,
@@ -1604,6 +1609,12 @@ export default {
         clickImportSecond() {
             this.showImportSecondDialog = true;
         },
+        async handleDestroyDocument(document_id) {
+            await this.destroy(
+                `/${this.resource}/delete_document/${document_id}`
+            );
+            this.$eventHub.$emit("reloadData");
+        },
         async clickDeleteDocument(document_id) {
             await this.destroy(
                 `/${this.resource}/delete_document/${document_id}`
@@ -1616,14 +1627,13 @@ export default {
         handleDelete(row) {
             if (row.isProcessing) return;
 
-            this.$set(row, 'isProcessing', true);
-            this.$set(row, 'deleting', true);
+            this.$set(row, "isProcessing", true);
+            this.$set(row, "deleting", true);
 
-            this.clickDeleteDocument(row.id)
-                .finally(() => {
-                    this.$set(row, 'deleting', false);
-                    this.$set(row, 'isProcessing', false);
-                });
+            this.clickDeleteDocument(row.id).finally(() => {
+                this.$set(row, "deleting", false);
+                this.$set(row, "isProcessing", false);
+            });
         }
     },
     mounted() {

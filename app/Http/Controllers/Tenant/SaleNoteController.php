@@ -719,7 +719,7 @@ class SaleNoteController extends Controller
     {
         $records = $this->get_recordsNota($request)->get();
         $company = Company::active();
-        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $establishment = Establishment::first();
         return (new NotaVentaExport)
             ->records($records)
             ->company($company)

@@ -706,6 +706,7 @@
                                     :categoria_madera="categoria_madera"
                                     @cotizarConfirmado="handleCotizarConfirmado"
                                     :cotizarConfirmado.sync="cotizarConfirmado"
+                                    :establishments="establishments"
                                     @cotizarConfirmadoChanged="
                                         handleCotizarConfirmado
                                     "
@@ -2029,14 +2030,6 @@
             :currentIndex="currentIndex"
         ></unit-type-modal>
 
-        <policy-type-modal
-            @addUnitType="addUnitType"
-            @addCategoriaMadera="addCategoriaMadera"
-            :showDialog.sync="showPolicyTypeModal"
-            :item="selectedFood"
-            :currentIndex="currentIndex"
-        ></policy-type-modal>
-
         <dispatch-modal
             :configuration="configuration"
             :showDialog.sync="showDispatch"
@@ -2316,8 +2309,6 @@ const ConsolidatedListModal = () =>
     import("./partials/consolidated_list_modal.vue");
 import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 
-import PolicyTypeModal from "../pos/partials/policy_types.vue";
-
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
@@ -2397,7 +2388,6 @@ export default {
         TablesRooms,
         SaleNoteCreditCash,
         Swal,
-        PolicyTypeModal
     },
     mixins: [functions, exchangeRate],
 
@@ -2420,7 +2410,6 @@ export default {
             loading_search: false,
             selectedFood: null,
             showUnitTypeModal: false,
-            showPolicyTypeModal: false,
             currentIndex: null,
             addingType: false,
             showConsolidatedList: false,
@@ -6474,6 +6463,7 @@ export default {
                     });
                     this.listFoods = this.allLocalFoods;
                     this.allFoods = this.allLocalFoods;
+                    
 
                     this.pagination = meta;
 
@@ -7015,7 +7005,6 @@ export default {
             return `/${formated}`;
         },
         addFood(index = 0, type = null, categoria = null) {
-            /* ; */
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",
@@ -7051,11 +7040,7 @@ export default {
                 this.currentIndex = index;
                 return;
             }
-            if (item_unit_types.length > 0 && !this.addingType) {
-                this.showPolicyTypeModal = true;
-                this.currentIndex = index;
-                return;
-            }
+            
             this.currentIndex = null;
             this.addingType = false;
 
@@ -7324,8 +7309,6 @@ export default {
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             async e => {
-                /* ; */
-
                 console.log("imprimiendo", e);
                 let user_establishment_id = e.data.user_establishment_id;
                 let user_establishment_id_printer =

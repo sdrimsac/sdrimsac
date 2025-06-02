@@ -67,7 +67,8 @@
                                         class="text-uppercase"
                                         href="#client-list"
                                         style="color: #007bff;"
-                                    >Ver todos</a>
+                                        >Ver todos</a
+                                    >
                                     >
                                 </div>
                             </div>
@@ -94,219 +95,6 @@
             </div>
         </div>
         <!-- Seccion de Discos  Comentados -->
-        <!-- <div class="row">
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        :data-value="discUsed"
-                                        class="progress1 mx-auto"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ discUsed
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                      
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount"
-                                            >Disco Duro</strong
-                                        ><br />
-                                        <span class="text-warning" v-if="discUsed == 0">no se pudo obtener</span>
-                                    </div>
-                                </div>
-                                <div class="summary-footer d-block">
-                                    <a
-                                        class="text-muted text-uppercase"
-                                        href="https://docs.google.com/document/d/1hpEQUs9OFha_35yyLb1cMKeluD-dEku5lQsQ3TJFib8/edit"
-                                        target="BLANK"
-                                        >Incrementar</a
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        :data-value="iUsed"
-                                        class="progress1 mx-auto"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-primary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ iUsed
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                        
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount">Inodes</strong>
-                                       
-                                    </div>
-                                </div>
-                                <div class="summary-footer d-block">
-                                    <a
-                                        class="text-muted text-uppercase"
-                                        href="https://drive.google.com/open?id=1foPKDI3V3Z9uKTjRc2SPSoztVSOBevPAluT2BqFbfxA"
-                                        target="BLANK"
-                                        >Limpiar</a
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div class="summary-icon text-secondary">
-                                    <div
-                                        class="progress1 mx-auto"
-                                        data-value="100"
-                                    >
-                                        <span class="progress1-left">
-                                            <span
-                                                class="progress1-bar border-tertiary"
-                                            ></span>
-                                        </span>
-                                        <span class="progress1-right">
-                                            <span
-                                                class="progress1-bar border-tertiary"
-                                            ></span>
-                                        </span>
-                                        <div
-                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            <div class="font-weight-bold">
-                                                {{ storageSize
-                                                }}<small class="small"></small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                       
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount"
-                                            >Archivos <br />
-                                            Generados</strong
-                                        >
-                                       
-                                    </div>
-                                </div>
-                                <div class="summary-footer">
-                                   
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <section
-                    class="card card-featured-left card-featured-primary mb-4"
-                >
-                    <div class="card-body">
-                        <div class="widget-summary widget-summary-md">
-                            <div
-                                class="widget-summary-col widget-summary-col-icon"
-                            >
-                                <div
-                                    class="summary-icon"
-                                    style="background-color: #292961"
-                                >
-                                    <i class="fab fa-gitlab"></i>
-                                </div>
-                            </div>
-                            <div class="widget-summary-col">
-                                <div class="summary">
-                                    <h4 class="title">
-                                       
-                                    </h4>
-                                    <div class="info">
-                                        <strong class="amount">Versión</strong
-                                        ><br />
-                                        <span class="text-primary">{{
-                                            version
-                                        }}</span>
-                                    </div>
-                                </div>
-                                <div class="summary-footer">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div> -->
 
         <div id="client-list" class="card mb-0">
             <div class="card-header bg-secondary">
@@ -315,7 +103,10 @@
                     Listado de Clientes
                 </h4>
             </div>
-            <div class="data-table-visible-columns d-flex align-items-center" style="gap: 12px; flex-wrap: wrap;">
+            <div
+                class="data-table-visible-columns d-flex align-items-center"
+                style="gap: 12px; flex-wrap: wrap;"
+            >
                 <!-- botones para las tareas programados -->
                 <el-tooltip
                     class="item"
@@ -324,6 +115,7 @@
                     placement="top-start"
                 >
                     <vs-button
+                        v-if="canSee"
                         :loading="buttonLoading"
                         :disabled="buttonLoading"
                         @click.prevent="clickResetProgramn"
@@ -331,7 +123,9 @@
                         style="background-color: #ffc107; color: #fff; border-color: #ffc107;"
                     >
                         <i class="fas fa-tasks btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Tareas</span>
+                        <span class="btn-label" style="margin: 0 8px;"
+                            >Tareas</span
+                        >
                         <i class="fas fa-clock btn-icon"></i>
                     </vs-button>
                 </el-tooltip>
@@ -342,15 +136,21 @@
                     placement="top-start"
                 >
                     <vs-button
+                        v-if="canSee"
                         :active="active == 4"
                         :loading="loading"
                         :disabled="loading"
-                        @click.prevent="active = 4; clickSendPaymentsMessages()"
+                        @click.prevent="
+                            active = 4;
+                            clickSendPaymentsMessages();
+                        "
                         class="mr-2 same-size-btn"
                         style="background-color: #28a745; color: #fff; border-color: #28a745;"
                     >
                         <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Cobros</span>
+                        <span class="btn-label" style="margin: 0 8px;"
+                            >Cobros</span
+                        >
                         <i class="fas fa-bell fa-lg btn-icon"></i>
                     </vs-button>
                 </el-tooltip>
@@ -361,15 +161,21 @@
                     placement="top-start"
                 >
                     <vs-button
+                        v-if="canSee"
                         :active="active == 5"
                         :loading="loading"
                         :disabled="loading"
-                        @click.prevent="active = 5; clickSendPendingDocuments()"
+                        @click.prevent="
+                            active = 5;
+                            clickSendPendingDocuments();
+                        "
                         class="mr-2 same-size-btn"
                         style="background-color: #17a2b8; color: #fff; border-color: #17a2b8;"
                     >
                         <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Pendientes</span>
+                        <span class="btn-label" style="margin: 0 8px;"
+                            >Pendientes</span
+                        >
                         <i class="fas fa-file fa-lg btn-icon"></i>
                     </vs-button>
                 </el-tooltip>
@@ -380,26 +186,37 @@
                     placement="top-start"
                 >
                     <vs-button
+                        v-if="canSee"
                         :active="active == 6"
                         :loading="loading"
                         :disabled="loading"
-                        @click.prevent="active = 6; clickRestartWhatsapp()"
+                        @click.prevent="
+                            active = 6;
+                            clickRestartWhatsapp();
+                        "
                         class="mr-2 same-size-btn"
                         style="background-color: #007bff; color: #fff; border-color: #007bff;"
                     >
                         <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Reiniciar</span>
+                        <span class="btn-label" style="margin: 0 8px;"
+                            >Reiniciar</span
+                        >
                         <i class="fa fa-sync btn-icon"></i>
                     </vs-button>
                 </el-tooltip>
                 <vs-button
                     :active="active == 1"
-                    @click.prevent="active = 1; clickCreate()"
+                    @click.prevent="
+                        active = 1;
+                        clickCreate();
+                    "
                     class="same-size-btn"
                     style="background-color: #007bff; color: #fff; border-color: #007bff;"
                 >
                     <i class="fa fa-plus-circle btn-icon"></i>
-                    <span class="btn-label" style="margin: 0 8px;">Nueva APP</span>
+                    <span class="btn-label" style="margin: 0 8px;"
+                        >Nueva APP</span
+                    >
                 </vs-button>
             </div>
 
@@ -456,13 +273,9 @@
                                     <i class="fas fa-info-circle"></i>
                                 </el-tooltip>
                             </th>
-                            <!-- <th class="text-white">Plan</th> -->
-                            <!-- <th class="text-white">Correo</th> -->
-                            <!-- <th class="text-white text-center border">Ruc</th> -->
                             <th class="text-white text-center border">
                                 Total CPE
                             </th>
-                            <!-- <th class="text-white text-center">CPE Ciclo Facturacion</th> -->
                             <th class="text-white text-center border">
                                 Usuarios
                             </th>
@@ -484,7 +297,7 @@
                             <!-- <th class="text-white text-center">CPE Y NV </th> -->
                         </tr>
 
-                        <tr slot-scope="{ index, row }">
+                        <tr slot-scope="{ index, row, canSee }">
                             <td class="">{{ index }}</td>
                             <td>
                                 <el-dropdown
@@ -703,19 +516,6 @@
                                     placeholder="Ingrese el monto de facturación por mes"
                                 ></el-input>
                             </td>
-                            <!-- <td>{{ row.plan }}</td> -->
-                            <!-- <td>{{ row.email }}</td> -->
-                            <!-- <td>
-                            <span v-if="row.soap_type == '01'" class="badge badge-default">Demo</span>
-                            <span v-if="row.soap_type == '02'" class="badge badge-success">Producción</span>
-                            <span v-if="row.soap_type == '03'" class="badge badge-info">Interno</span>
-                        </td> -->
-
-                            <!-- <td class="text-center">
-                            <label>
-                                <strong>{{ row.count_doc }}</strong>
-                            </label>
-                        </td> -->
 
                             <td class="text-center">
                                 <strong>
@@ -874,9 +674,6 @@
             :showDialog.sync="showDialog"
         ></system-clients-form>
 
-        <!--<system-clients-form-edit :showDialog.sync="showDialogEdit"
-        :recordId="recordId"></system-clients-form-edit>-->
-
         <client-payments
             :clientId="recordId"
             :affectation_tenant="affectation_tenant"
@@ -895,6 +692,9 @@
             :record="record"
             :showDialog.sync="showDialogDelete"
         ></client-delete>
+        <data-table :resource="resource" :canSee.sync="canSee" ref="dataTable">
+            <!-- ... -->
+        </data-table>
     </div>
 </template>
 
@@ -963,6 +763,8 @@ export default {
     },
     data() {
         return {
+            canSee: false,
+            active: null,
             client_name: null,
             client_number: null,
             loading: false,
@@ -993,7 +795,7 @@ export default {
             },
             showDialogDelete: false,
             record: {},
-            buttonLoading: false, // Add a new state for the button
+            buttonLoading: false
         };
     },
     async mounted() {
@@ -1007,6 +809,8 @@ export default {
             // this.records = response.data.data
         });
         this.loaded = true;
+
+        console.log("Valor de canSee:", this.canSee);
     },
     created() {
         this.$eventHub.$on("reloadData", () => {

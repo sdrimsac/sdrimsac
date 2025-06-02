@@ -528,7 +528,7 @@ class PurchaseController extends Controller
         return $records->get();
     }
 
-    public function store(PurchaseRequest $request) 
+    public function store(PurchaseRequest $request)
     {
         $has_error = false;
         $message = '';
@@ -570,6 +570,12 @@ class PurchaseController extends Controller
 
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {
+                            // Validar que el code sea único en toda la tabla
+                            $code_exists = ItemColorSize::where('code', $color_size['code'])->exists();
+                            if ($code_exists) {
+                                $message = "El código {$color_size['code']} ya existe para otra combinación de color/talla. Debe ser único.";
+                                throw new \Exception($message);
+                            }
                             $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
                                 ->where('warehouse_id', $row['warehouse_id'])
                                 ->where('code', $color_size['code'])
@@ -578,10 +584,19 @@ class PurchaseController extends Controller
                                 ->first();
                             if ($color_size_exists) {
                                 $color_size_exists->stock += $color_size['stock'];
+
+                                if (!empty($color_size['code'])) {
+
+                                    if (strpos($color_size_exists->code, $color_size['code']) === false) {
+                                        $color_size_exists->code .= '-' . $color_size['code'];
+                                    }
+                                }
+
                                 $price = $color_size['price'];
-                                if ($price != 0 && $price != null || $price != '') {
+                                if ($price !== 0 && ($price !== null && $price !== '')) {
                                     $color_size_exists->price = $price;
                                 }
+
                                 $color_size_exists->save();
                             } else {
                                 $item->color_size()->create([
@@ -1172,7 +1187,7 @@ class PurchaseController extends Controller
                         'sale_unit_price' => $row->sale_unit_price,
                         'purchase_unit_price' => $row->purchase_unit_price,
                         'unit_type_id' => $row->unit_type_id,
-                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id, 
+                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
                         'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
                         'has_perception' => (bool) $row->has_perception,
                         'lots_enabled' => (bool) $row->lots_enabled,

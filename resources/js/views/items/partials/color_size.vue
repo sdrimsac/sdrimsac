@@ -152,11 +152,22 @@ export default {
         verifyCompleteData() {
             //verificar si todos los campos estan llenos
             let complete = true;
+            let codes = new Set();
+            let hasDuplicateCode = false;
             this.colorSizes.forEach(item => {
                 if (item.color == "" || item.size == "" || item.stock == 0) {
                     complete = false;
                 }
+                if (codes.has(item.code)) {
+                    hasDuplicateCode = true;
+                } else {
+                    codes.add(item.code);
+                }
             });
+            if (hasDuplicateCode) {
+                this.$showSAlert("ALERTA", "No se permite repetir el mismo código en dos filas", "warning");
+                return false;
+            }
             return complete;
         },
         verifyStock() {

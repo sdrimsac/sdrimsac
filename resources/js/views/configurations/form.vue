@@ -2864,9 +2864,17 @@
                                                                                     <i
                                                                                         class="fas fa-bell tab-icon"
                                                                                     ></i>
-                                                                                    Ocultar
+                                                                                    
                                                                                     Anular
                                                                                     sunat
+                                                                                    administrador
+                                                                                    <el-tooltip
+                                                                                        content="al activar este boton se habilitara el boton de anular sunat en el administrador"
+                                                                                    >
+                                                                                        <i
+                                                                                            class="fa fa-info-circle"
+                                                                                        ></i>
+                                                                                    </el-tooltip>
                                                                                 </label>
                                                                                 <el-switch
                                                                                     v-model="
@@ -2918,12 +2926,12 @@
                                                                                     ></i>
                                                                                     Mostrar
                                                                                     boton
-                                                                                    ocultar
+                                                                                    anular
                                                                                     sunat
                                                                                     en
                                                                                     caja
                                                                                     <el-tooltip
-                                                                                        content="esta opcion al activar no se mostrara el boton de anular en la caja"
+                                                                                        content="esta opcion al activar se mostrara el boton de anular en la caja"
                                                                                     >
                                                                                         <i
                                                                                             class="fa fa-info-circle"

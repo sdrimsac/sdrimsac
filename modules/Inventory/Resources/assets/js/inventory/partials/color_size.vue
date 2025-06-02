@@ -28,8 +28,11 @@
                             <th>
                                 STOCK
                             </th>
-                                                        <th>
+                            <th>
                                 PRECIO
+                            </th>
+                            <th>
+                                CODIGO FAMILIA 
                             </th>
                             <th></th>
                         </tr>
@@ -48,11 +51,18 @@
                                     v-model="row.stock"
                                 ></el-input>
                             </td>
-                               <td>
+                            <td>
                                 <el-input
                                     type="number"
                                     step="0.01"
                                     v-model="row.price"
+                                ></el-input>
+                            </td>
+                            <td>
+                                <el-input
+                                    type="number"
+                                    step="0.01"
+                                    v-model="row.code"
                                 ></el-input>
                             </td>
                             <td>
@@ -77,24 +87,23 @@
 
 <script>
 export default {
-    props: ["showDialog",  "stock", "recordId"],
+    props: ["showDialog", "stock", "recordId"],
     data() {
         return {
             titleDialog: `Color - Talla`,
             loading: false,
-            colorSizes:[],
+            colorSizes: []
         };
     },
     methods: {
         addColorSize() {
-            if (this.verifyStock()) {
-                if (this.verifyCompleteData()) {
-                    this.sortItems();
-                    this.$emit("addRowColorSize", this.colorSizes);
-                    this.close();
-                } else {
-                    this.$toast.warning("Debe llenar todos los campos");
-                }
+            if (this.verifyCompleteData()) {
+                this.sortItems();
+                this.$emit("addRowColorSize", this.colorSizes);
+                console.log("ver que datos esta pasando en el color size", this.colorSizes);
+                this.close();
+            } else {
+                this.$toast.warning("Debe llenar todos los campos");
             }
         },
         verifyCompleteData() {
@@ -107,25 +116,13 @@ export default {
             });
             return complete;
         },
-        verifyStock() {
-            let total = 0;
-            this.colorSizes.forEach(item => {
-                total += parseInt(item.stock);
-            });
-            if (total != this.stock) {
-                this.$toast.warning(
-                    "El stock total debe ser igual al stock del producto"
-                );
-                return false;
-            }
-            return true;
-        },
         clickAddColorSize() {
             this.colorSizes.push({
                 color: "",
                 size: "",
                 stock: 0,
-                price: 0
+                price: 0,
+                code: ""
             });
         },
         addMoreColorSizes() {
@@ -175,7 +172,7 @@ export default {
             this.colorSizes.forEach(item => {
                 if (item.size && item.color) {
                     item.color = item.color.toUpperCase();
-                   if(isNaN(item.size)){
+                    if (isNaN(item.size)) {
                         item.size = item.size.toUpperCase();
                     }
                 }

@@ -67,7 +67,7 @@
                             <label class="control-label">
                                 <i class="fas fa-sort-numeric-up"></i> Cantidad
                             </label>
-                            <el-input v-model="form.quantity">
+                            <el-input v-model="form.quantity" :disabled="form.series_enabled || form.has_color_size">
                                 <i
                                     slot="prefix"
                                     class="el-icon-edit-outline"
@@ -340,11 +340,15 @@ export default {
             this.showDialogColorSizeInput = true;
         },
         updateColorSize(color_size) {
-            console.log(
-                "🚀 ~ file: form.vue:256 ~ updateColorSize ~ color_size:",
-                color_size
-            );
+            console.log("Color y Talla seleccionados:", color_size);
             this.form.color_size = color_size;
+            if (Array.isArray(color_size)) {
+                // Sumar la cantidad total de todas las tallas y colores
+                const total = color_size.reduce((acc, c) => acc + Number(c.quantity || 0), 0);
+                this.form.quantity = total;
+                // Forzar actualización del input si es necesario
+                this.$forceUpdate && this.$forceUpdate();
+            }
         },
         handleBarcode(event) {
             const currentTime = new Date().getTime();
@@ -426,34 +430,18 @@ export default {
             }, 300);
         },
         async changeItem() {
-            if (this.type == "output") {
-                this.form.lots = [];
-                let item = await _.find(this.items, { id: this.form.item_id });
-                console.log(
-                    "🚀 ~ file: form.vue:277 ~ changeItem ~ item:",
-                    item
-                );
-                this.item = item;
-                this.form.lots_enabled = item.lots_enabled;
-                let lots = await _.filter(item.lots, {
-                    warehouse_id: this.form.warehouse_id
-                });
-                // console.log(item)
-                this.form.lots = lots;
-                this.form.lots_enabled = item.lots_enabled;
-                this.form.series_enabled = item.series_enabled;
-                this.form.has_color_size = item.has_color_size;
-            } else {
-                let item = await _.find(this.items, { id: this.form.item_id });
-                console.log(
-                    "🚀 ~ file: form.vue:277 ~ changeItem ~ item:",
-                    item
-                );
-                this.item = item;
-                this.form.lots_enabled = item.lots_enabled;
-                this.form.series_enabled = item.series_enabled;
-                this.form.has_color_size = item.has_color_size;
-            }
+            let item = await _.find(this.items, { id: this.form.item_id });
+            console.log('Producto seleccionado:', item);
+            this.item = item;
+            this.form.lots_enabled = item.lots_enabled;
+            let lots = await _.filter(item.lots, {
+                warehouse_id: this.form.warehouse_id
+            });
+            // console.log(item)
+            this.form.lots = lots;
+            this.form.lots_enabled = item.lots_enabled;
+            this.form.series_enabled = item.series_enabled;
+            this.form.has_color_size = item.has_color_size;
         },
         addRowOutputLot(lots) {
             this.form.lots = lots;
@@ -553,7 +541,7 @@ export default {
 
             this.loading_submit = true;
             this.form.type = this.type;
-            //
+            console.log("Datos enviados al servidor:", this.form);
             await this.$http
                 .post(`/${this.resource}/transaction`, this.form)
                 .then(response => {
@@ -606,7 +594,12 @@ export default {
 
                 this.form.item_id = item.id;
                 this.form.description = item.descripcion;
-                this.form.quantity = item.stock || 0;
+                // Solo actualizar la cantidad si NO es talla/color
+                if (!item.has_color_size) {
+                    this.form.quantity = item.stock || 0;
+                } else {
+                    this.form.quantity = 0;
+                }
                 this.item = item; // Asegura que selectedWarehouses se actualice
 
                 this.$nextTick(() => {

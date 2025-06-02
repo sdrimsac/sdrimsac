@@ -16,14 +16,6 @@
                     >
                     </el-input>
                 </div>
-                <!-- <div class="col-md-4">
-                    <el-button
-                        :type="showSelecteds ? 'primary' : 'danger'"
-                        @click="showSelected"
-                    >
-                        {{ showSelecteds ? "Ocultar" : "Ver seleccionados" }}
-                    </el-button>
-                </div> -->
             </div>
             <table v-loading="loading" class="table">
                 <thead>
@@ -124,17 +116,23 @@ export default {
                 typeof colorSize.quantity !== "number" ||
                 isNaN(colorSize.quantity)
             ) {
-                /* console.error("Cantidad inválida:", colorSize.quantity);
-                return; */
+                console.error("Cantidad inválida:", colorSize.quantity);
+                return;
             }
 
-            /* console.log("Guardando cantidad:", colorSize.quantity); */
+            console.log("Guardando cantidad:", colorSize.quantity);
 
             let color_size = [
                 ...this.colorSizeSelected.filter(
                     s => s.quantity && s.quantity != 0
                 )
             ];
+            /* let color_size = [
+                ...(Array.isArray(this.colorSizeSelected)
+                    ? this.colorSizeSelected
+                    : []
+                ).filter(s => s.quantity && s.quantity != 0)
+            ]; */
             color_size = color_size.filter(s => s.id != colorSize.id);
 
             if (colorSize.quantity !== 0) {
@@ -151,7 +149,7 @@ export default {
             if (this.limitQty != 0) {
                 if (this.colorSizeSelected.length % this.limitQty != 0) {
                     return this.$toast.error(
-                        "La cantidad de series no coninciden con la cantidad de venta por politica de precio"
+                        "La cantidad de talla color no coninciden con la cantidad de venta"
                     );
                 }
             }
@@ -161,13 +159,16 @@ export default {
         getQueryParameters() {
             return queryString.stringify({
                 warehouse_id: this.establishments.id,
-
                 page: this.pagination.current_page,
                 item_id: this.item.id,
                 code: this.inputSearch
             });
         },
         open() {
+            console.log(
+                "open",
+                this.colorSizeSelected,
+            );
             if (this.item) {
                 this.getColorSize();
             }

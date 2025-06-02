@@ -7,22 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garantía</title>
 </head>
-<?php
-function format_serie($id)
-{
-    if (10 > $id) {
-        return '000' . $id;
-    }
-    if (100 > $id) {
-        return '00' . $id;
-    }
-    if (100 > $id) {
-        return '0' . $id;
-    }
-
-    return '000' . $id;
-}
-?>
 <style>
     html {
         font-family: sans-serif;
@@ -290,16 +274,10 @@ function format_serie($id)
 
                 </tr>
                 <tr>
-                    <th
-                    colspan="4"
-                    class="header_title0 text-center"
-                    >
-                    HORA:   {{date('H:i:s')}}
+                    <th colspan="4" class="header_title0 text-center">
+                        HORA: {{ date('H:i:s') }}
                     </th>
                 </tr>
-
-
-
             </thead>
 
             <tbody>
@@ -321,23 +299,23 @@ function format_serie($id)
                         </strong>
                     </td>
                 </tr>
-               
+
             </tbody>
 
         </table>
-     
+
 
         <div style="margin-top:15px;">
 
             <table border="0" style="border:0px solid;width:100%">
                 <tbody>
-               
+
                     <tr>
                         <td colspan="4" class="header_title0 text-left">
                             <strong>CAJERO:</strong> {{ $record->user_name }}
                         </td>
                     </tr>
-            
+
 
                 </tbody>
             </table>

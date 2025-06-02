@@ -25,6 +25,7 @@ class ItemColorSizeImport implements ToCollection
         $registered = 0;
         unset($rows[0]);
         $warehouse_id = request('warehouse_id');
+        $duplicados = [];
         foreach ($rows as $row) {
 
 
@@ -80,39 +81,35 @@ class ItemColorSizeImport implements ToCollection
                         ]);
                         $item_color_size->save();
                         $color_size_id = $item_color_size->id;
+                        
+                        $inventory =    InventoryKardex::create([
+                            'date_of_issue' => date('Y-m-d'),
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_id,
+                            'inventory_kardexable_type' => 'App\\Models\\Tenant\\ItemColorSize',
+                            'inventory_kardexable_id' => $color_size_id,
+                            'quantity' => $stock,
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                            'is_import_excel' => true,
+                            'user_id' => optional(auth()->user())->id
+                        ]);
+                        $detail = "Color: $color, Talla: $size";
+                        InventoryKardexDetail::create([
+                            'inventory_kardex_id' => $inventory->id,
+                            'detail' => $detail,
+                        ]);
+                        $registered += 1;
                     } else {
-                        if ($price != null||$price != 0) {
-                            $color_size_exits->price = $price;
-                        }
-                        // $color_size_exits->price = $price;
-                        $color_size_exits->stock = $color_size_exits->stock + $stock;
-                        $color_size_exits->save();
-                        $color_size_id = $color_size_exits->id;
+                        // Si ya existe, guardar el código duplicado
+                        $duplicados[] = $code;
+                        continue;
                     }
 
-                $inventory =    InventoryKardex::create([
-                        'date_of_issue' => date('Y-m-d'),
-                        'item_id' => $item_id,
-                        'warehouse_id' => $warehouse_id,
-                        'inventory_kardexable_type' => 'App\Models\Tenant\ItemColorSize',
-                        'inventory_kardexable_id' => $color_size_id,
-                        'quantity' => $stock,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s'),
-                        'is_import_excel' => true,
-                        'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
-                    ]);
-                    $detail = "Color: $color, Talla: $size";
-                    InventoryKardexDetail::create([
-                        'inventory_kardex_id' => $inventory->id,
-                        'detail' => $detail,
-                    ]);
-
-                    $registered += 1;
                 }
             }
         }
-        $this->data = compact('total', 'registered');
+        $this->data = compact('total', 'registered', 'duplicados');
     }
 
     public function getData()

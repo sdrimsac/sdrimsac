@@ -1894,10 +1894,10 @@ class DocumentController extends Controller
             $this->checkTotalAndSendMessage($document);
             $this->checkDuplicateAndSendMessage($document);
             if ($configuration->sale_edit) {
-                
+
                 $this->checkEditAndSendMessage($document);
             }
-            
+
             return [
                 'success' => true,
                 'data' => [
@@ -2715,8 +2715,6 @@ class DocumentController extends Controller
                 $query->select('id', 'amount', 'document_id')->without('document');
             }, 'orden', 'sale_note_related']);
         }
-
-
         return $records;
     }
 
@@ -3017,7 +3015,7 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
-                
+
                 // Check if document is already voided
                 if ($record->state_type_id == '11') {
                     return [
@@ -3053,7 +3051,7 @@ class DocumentController extends Controller
 
                     Box::where('document_id', $document_id)->delete();
                     $desc = "App\Models\Tenant\Document";
-                    $record->internal_voided = true;  
+                    $record->internal_voided = true;
                     $record->save();
 
                     if ($orden_id) {
@@ -3097,7 +3095,7 @@ class DocumentController extends Controller
                     ];
                 }
                 return [
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now,
                     'from_sale_note' => false
                 ];
@@ -3108,12 +3106,11 @@ class DocumentController extends Controller
                 'message' => $deleted['message'],
                 'from_sale_note' => $deleted['from_sale_note'] ?? false
             ];
-
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return ($e->getCode() == '23000') ? 
-                ['success' => false,'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] :
-                ['success' => false,'message' => 'Error inesperado, no se pudo eliminar el Documento'];
+            return ($e->getCode() == '23000') ?
+                ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] :
+                ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el Documento'];
         }
     }
 

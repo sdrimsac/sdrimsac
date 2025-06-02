@@ -1500,7 +1500,7 @@
                                                                 warehouse.id
                                                             ).stock
                                                         "
-                                                        :disabled="!!recordId"
+                                                        :disabled="!!recordId || form.has_color_size"
                                                         min="0"
                                                         @input="
                                                             calculateTotalStock
@@ -1644,7 +1644,12 @@
                                                 slot="heading"
                                                 class="bg-primary"
                                             >
-                                                <th class="text-white" v-if="configuration.unit_type_select_barcode">
+                                                <th
+                                                    class="text-white"
+                                                    v-if="
+                                                        configuration.unit_type_select_barcode
+                                                    "
+                                                >
                                                     Codigo de politica
                                                 </th>
                                                 <th
@@ -1752,21 +1757,26 @@
                                                 index) in form.item_unit_types"
                                                 :key="index"
                                             >
+                                                <td
+                                                    v-if="
+                                                        configuration.unit_type_select_barcode
+                                                    "
+                                                >
+                                                    <div class="form-group">
+                                                        <el-input
+                                                            v-model="
+                                                                row.unique_code
+                                                            "
+                                                        >
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i>
+                                                        </el-input>
+                                                    </div>
+                                                </td>
+
                                                 <template v-if="row.id">
-                                                    <td v-if="configuration.unit_type_select_barcode">
-                                                        <div class="form-group">
-                                                            <el-input
-                                                                v-model="
-                                                                    row.unique_code
-                                                                "
-                                                            >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </div>
-                                                    </td>
                                                     <td class="text-center">
                                                         {{ row.unit_type_id }}
                                                     </td>
@@ -2168,50 +2178,6 @@
                                                             ></el-option>
                                                         </el-select>
                                                     </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <el-input
-                                                                v-model="
-                                                                    row.unique_code
-                                                                "
-                                                            >
-                                                                <i
-                                                                    slot="prefix"
-                                                                    class="el-icon-edit-outline"
-                                                                ></i>
-                                                            </el-input>
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <el-checkbox
-                                                            v-model="
-                                                                row.selected
-                                                            "
-                                                            @change="
-                                                                selectedMax(
-                                                                    index
-                                                                )
-                                                            "
-                                                        ></el-checkbox>
-                                                    </td>
-                                                    <td
-                                                        class="series-table-actions text-end"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="btn waves-effect waves-light btn-sm btn-danger"
-                                                            @click.prevent="
-                                                                clickCancel(
-                                                                    index
-                                                                )
-                                                            "
-                                                        >
-                                                            <i
-                                                                class="fa fa-trash"
-                                                            ></i>
-                                                        </button>
-                                                    </td>
-
                                                     <td
                                                         class="series-table-actions text-end"
                                                     >
@@ -3058,6 +3024,12 @@ export default {
         this.create();
     },
 
+    watch: {
+        "form.internal_id": "syncMainUnitType",
+        "form.unit_type_id": "syncMainUnitType",
+        "form.sale_unit_price": "syncMainUnitType"
+    },
+
     computed: {
         /* totalStock() {
             return this.form.item_warehouses.reduce(
@@ -3094,6 +3066,36 @@ export default {
     }, */
 
     methods: {
+        syncMainUnitType() {
+            // Solo para productos nuevos (sin recordId)
+            if (this.recordId) return;
+
+            const newRow = {
+                id: null,
+                unique_code: this.form.internal_id,
+                unit_type_id: this.form.unit_type_id,
+                description: "unidad",
+                quantity_unit: 1,
+                price1: this.form.sale_unit_price,
+                price2: 0,
+                price3: 0,
+                price_default: 1,
+                warehouse_id: this.form.warehouse_id || null,
+                selected: false,
+                total: null,
+                item_unit_type_price_ranges: []
+            };
+
+            if (!this.form.item_unit_types.length) {
+                // Usar Vue.set para reactividad
+                this.$set(this.form, "item_unit_types", [newRow]);
+            } else {
+                // Usar Vue.set para reactividad en el array
+                this.$set(this.form.item_unit_types, 0, newRow);
+            }
+            this.$forceUpdate();
+        },
+
         clickDeleteUnitTypePriceRange(index, indexx) {
             this.form.item_unit_types[index].item_unit_type_price_ranges.splice(
                 indexx,
@@ -3430,7 +3432,7 @@ export default {
                 this.form.percentage_perception = null;
             }
         },
-        clickAddRow() {
+        /* clickAddRow() {
             this.form.item_unit_types.push({
                 item_unit_type_price_ranges: [],
                 id: null,
@@ -3444,6 +3446,44 @@ export default {
                 warehouse_id: 1,
                 unique_code: null
             });
+        }, */
+
+        clickAddRow() {
+            if (this.form.item_unit_types.length === 0) {
+                // Primera fila: pre-rellena con datos del formulario general
+                this.form.item_unit_types.push({
+                    item_unit_type_price_ranges: [],
+                    id: null,
+                    unique_code: this.form.internal_id,
+                    unit_type_id: this.form.unit_type_id,
+                    description: "unidad",
+                    quantity_unit: 1,
+                    price1: this.form.sale_unit_price,
+                    price2: 0,
+                    price3: 0,
+                    price_default: 1,
+                    warehouse_id: this.form.warehouse_id || 1,
+                    selected: false,
+                    total: null
+                });
+            } else {
+                // Siguientes filas: vacías para que el usuario las llene
+                this.form.item_unit_types.push({
+                    item_unit_type_price_ranges: [],
+                    id: null,
+                    unique_code: null,
+                    unit_type_id: "NIU",
+                    description: null,
+                    quantity_unit: 0,
+                    price1: 0,
+                    price2: 0,
+                    price3: 0,
+                    price_default: 1,
+                    warehouse_id: this.form.warehouse_id || 1,
+                    selected: false,
+                    total: null
+                });
+            }
         },
         clickAddBarcode() {
             this.form.item_codes.push({

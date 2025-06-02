@@ -510,12 +510,12 @@ class TableRoomController extends Controller
                 'record',
                 'company'
             ))
-                ->setPaper(array(0, 0, 249.45, $height));
+                ->setPaper(array(0, 0, 226.77, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
 
-        return $pdf->stream('pdf_transfers.pdf');
+        return $pdf->stream('pdf_credit_line.pdf');
     }
     public function print_service($id)
     {
@@ -816,7 +816,7 @@ class TableRoomController extends Controller
         $table = $hotel_rent_item->table;
         $number = $table->number;
 
-        return "Habitación n° $number por $duration días ";
+        return "Habitación n° $number por $duration día(s) ";
     }
     function recalculate(HotelRentItem $hote_rent_item)
     {
@@ -1133,7 +1133,6 @@ class TableRoomController extends Controller
             $concept =  "Adelanto de habitación n° " . $hotel_rent_item->table->number;
             if ($hotel_rent_item->is_month_rent) {
                 $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
-                //$day
 
                 $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
                 //obtener el día y el mes de la fecha de checkin, el mes en letras
@@ -1144,7 +1143,11 @@ class TableRoomController extends Controller
                 $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
                 $month_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('m');
                 $month_one_more_month = $this->getMonth($month_one_more_month);
+                if ($advances = $hotel_rent_item->advances > 0) {
+                    $concept = "Adelanto de Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
+                } else {
                 $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
+                }
             }
             $service->description = $concept;
             $service->item->description = $concept;
@@ -1687,6 +1690,7 @@ class TableRoomController extends Controller
                     $hotel_rent_item_person->save();
                 }
                 if ($hotel_rent_item->credit_line > 0) {
+                    /* $this->print_warranty($hotel_rent_item->id); */
                     event(new PrintEvent($hotel_rent_item->id, "CL", true));
                 }
             }

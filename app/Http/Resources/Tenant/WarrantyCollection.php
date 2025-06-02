@@ -83,10 +83,9 @@ class WarrantyCollection extends ResourceCollection
             $serie_vendida = null;
             if ($saleNoteItem && isset($saleNoteItem->item)) {
                 $serie_vendida = $this->extraerSeriesDesdeCampoItem($saleNoteItem->item);
-                dump($serie_vendida);
+        
             } elseif ($documentItem && isset($documentItem->item)) {
                 $serie_vendida = $this->extraerSeriesDesdeCampoItem($documentItem->item);
-                dump($serie_vendida);
             }
 
             return [
@@ -124,7 +123,7 @@ class WarrantyCollection extends ResourceCollection
         } elseif (is_string($jsonItem)) {
             $decoded = json_decode($jsonItem, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                dump('Error al decodificar JSON:', json_last_error_msg());
+                
                 return '';
             }
         } elseif (is_array($jsonItem)) {

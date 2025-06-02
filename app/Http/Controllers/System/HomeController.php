@@ -20,7 +20,6 @@ class HomeController extends Controller
 
         $storage_size = $storage_size != "" ? substr($storage_size, 0) : 0;
 
-
         return view('system.dashboard')->with('clients', count($clients))
             ->with('delete_permission', $delete_permission)
             ->with('disc_used', $storage_size)

@@ -46,9 +46,9 @@ class NotaVentaExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         foreach ($this->records as $record) {
             foreach ($record->items as $item) {
                 $data->push([
-                    'number' => $record->number,
-                    'date_of_issue' => $record->date_of_issue,
-                    'establishment' => optional($record->establishment)->description,
+                    'series_number' => $record->series . '-' . $record->number,
+                    'date_time_of_issue' => Carbon::parse($record->date_of_issue)->format('Y-m-d') . ' - ' . Carbon::parse($record->time_of_issue)->format('H:i:s'),
+                    /* 'establishment' => optional($record->establishment)->description, */
                     'internal_id' => $item->item->internal_id,
                     'barcode' => optional($item->item)->barcode ?? '',
                     'description' => $item->item->description,
@@ -67,7 +67,7 @@ class NotaVentaExport implements FromCollection, WithHeadings, ShouldAutoSize, W
         return [
             'Número',
             'Fecha emisión',
-            'Establecimiento',
+            /* 'Establecimiento', */
             'Código Interno',
             'Categoria Principal',
             'Producto',

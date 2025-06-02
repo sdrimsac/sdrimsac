@@ -1661,10 +1661,6 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
-        /* handleOneClick(event) {
-            event.target.disabled = true;
-            this.sendPayment();
-        }, */
 
         async handleOneClick() {
             if (this.isLocked) return;
@@ -4083,6 +4079,595 @@ export default {
                 }
             } else {
                 console.log("no envio variation");
+            }
+        },
+        checkPaymentsIsOk() {
+            let total = 0;
+            this.currentPayments.forEach(p => {
+                total += parseFloat(p.amount);
+            });
+            return total == this.form.total;
+        },
+        checkBankAccount() {
+            let pass = true;
+            let { is_bank } = this.form_payment;
+            if (is_bank) {
+                if (!this.form.bank_account_id) {
+                    this.$toast.error("Debe seleccionar una cuenta bancaria");
+                    this.isLocked = false;
+                    pass = false;
+                }
+                if (!this.form.reference_number) {
+                    this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
+                    pass = false;
+                }
+            }
+
+            return pass;
+        },
+        verifyHasOperationNumber() {
+            //itera sobre this.currentPayments si el method es "Yape" o "PLIN" verifica que tengan el operation_number, en caso que no regresa un error
+            let pass = true;
+
+            this.currentPayments.forEach(p => {
+                if (this.methodsValidate.includes(p.method)) {
+                    if (!p.operation_number) {
+                        this.$toast.error(
+                            "Debe ingresar el número de operación"
+                        );
+                        this.isLocked = false;
+                        pass = false;
+                    }
+                }
+            });
+            return pass;
+        },
+        async validOperationNumber(form) {
+            let { payments } = form;
+            for (let i = 0; i < payments.length; i++) {
+                let { operation_number } = payments[i];
+                if (!operation_number) {
+                    this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
+                    return false;
+                }
+            }
+
+            const response = await this.$http.post(
+                "/caja/boxes/validation",
+                form
+            );
+            const { success, message } = response.data;
+            if (success) {
+                return true;
+            } else {
+                this.$toast.error(message);
+                return false;
+            }
+        },
+        // realzia la peticon y validacion para cobrar y liberar las mesas
+        async clickPayment(form) {
+            let boxes = this.currentPayments.reduce(
+                (a, b) => a + Number(b.amount),
+                0
+            );
+            let amount1 = Number(this.form.enter_amount);
+            let amount2 = Number(this.form.total);
+            if (
+                this.configuration.sale_note_credit_cash &&
+                boxes + amount1 < amount2 &&
+                this.form.document_type_id == "80"
+            ) {
+                try {
+                    await this.$confirm(
+                        "¿Desear realizar la nota de venta al crédito?",
+                        "Advertencia",
+                        {
+                            confirmButtonText: "Sí",
+                            cancelButtonText: "No",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    this.button_payment = false;
+                    return;
+                }
+            }
+
+            if (this.configuration.auth_discount && this.discount_amount > 0) {
+                this.loading_submit = true;
+                //con async y await deten el flujo por 5 segundos
+                this.loadingText =
+                    "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
+                await this.sleep(3000);
+                this.loadingText = "DESCUENTO AUTORIZADO";
+                await this.sleep(2000);
+                this.loadingText = "CARGANDO...";
+                this.loading_submit = false;
+            }
+            if (this.form.promotion_sale) {
+                this.form.document_type_id = "80";
+                this.setSeries();
+            }
+            if (!this.checkBankAccount()) {
+                this.button_payment = false; 
+                return;
+            }
+
+            let how_is;
+            this.reCalculateTotal();
+            // return;
+            if (
+                (!this.form.series_id && this.conf.pos_quick_sale) ||
+                this.ordens_all_table
+            ) {
+                this.setSeries();
+            }
+            if (
+                this.configuration.college &&
+                !this.conf.pos_quick_sale &&
+                !this.notRegister
+            ) {
+                if (!this.form.student_id) {
+                    this.$toast.error("El alumno es obligatorio");
+                    this.isLocked = false;
+
+                    return;
+                }
+            }
+            if (
+                (form.document_type_id == "01" ||
+                    form.document_type_id == "03") &&
+                form.total <= 0
+            ) {
+                this.$toast.error(
+                    "El monto total no puede ser menor o igual a 0"
+                );
+                this.isLocked = false;
+                return;
+            }
+            if (form.total + 200 <= form.enter_amount) {
+                this.$toast.error(
+                    "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
+                );
+                this.isLocked = false;
+                return;
+            }
+
+            let customer = this.customers.find(c => c.id == form.customer_id);
+
+            if (customer == undefined) {
+                await this.reloadDataCustomers(form.customer_id);
+                customer = this.customers.find(c => c.id == form.customer_id);
+            }
+
+            if (
+                form.customer_telephone != null &&
+                form.customer_telephone != ""
+            ) {
+                if (!this.existNumber()) {
+                    this.$toast.error("Número para envío whatsapp inválido");
+                    this.isLocked = false;
+                    return;
+                }
+            }
+            if (form.customer_id == null || form.customer_id == "") {
+                this.isLocked = false;
+                return this.$toast.error("Elija un cliente");
+            }
+            if (
+                customer.identity_document_type_id == "1" &&
+                form.document_type_id == "01"
+            ) {
+                this.isLocked = false;
+                return this.$toast.error("No puede emitir Factura con DNI");
+            }
+            if (!form.series_id) {
+                this.isLocked = false;
+                return this.$toast.warning(
+                    "El establecimiento no tiene series disponibles para el comprobante"
+                );
+            }
+            // form.date_of_issue = moment().format("YYYY-MM-DD");
+            if (form.document_type_id === "80") {
+                form.prefix = "NV";
+                form.paid = this.form.total == this.form.enter_amount;
+                this.resource_documents = "sale-notes";
+                this.resource_payments = "sale_note_payments";
+                this.resource_options = this.resource_documents;
+            } else {
+                form.prefix = null;
+                this.resource_documents = "documents";
+                this.resource_payments = "document_payments";
+                this.resource_options = this.resource_documents;
+            }
+            if (this.orden != null) {
+                form.additional_information = `Orden N°${this.orden}`;
+            }
+            form.advances = 0.0;
+            form.total_advances = 0.0;
+            form.total_payment = form.total - (amount2 - amount1);
+
+            // {
+            //     payment_method_type_id: "01",
+            //     date_of_payment: form.date_of_issue,
+            //     payment: this.form.enter_amount,
+            // }
+            form.cash_id = this.cash_id;
+            if (this.form.payment_condition_id == "01") {
+                form.boxes = this.currentPayments;
+                if (this.form_payment.is_bank) {
+                    this.changeBankAccount();
+                }
+            } else {
+                let isOk = this.checkPaymentsIsOk();
+                if (!isOk) {
+                    this.$toast.error("Las cuotas no coinciden con el total");
+                    this.isLocked = false;
+                    return;
+                }
+            }
+
+            if (this.form.payment_condition_id !== "01") {
+                form.fee = this.currentPayments.map(b => ({
+                    id: null,
+                    currency_type_id: "PEN",
+                    amount: b.amount,
+                    date: b.date
+                }));
+                form.payment_condition_id = "02";
+            } else {
+                this.addPayment();
+                if (this.configuration.require_code) {
+                    if (!this.verifyHasOperationNumber()) {
+                        this.currentPayments.pop();
+                        this.enterAmount();
+                        return;
+                    } else {
+                        if (
+                            this.currentPayments
+                                .filter(p =>
+                                    this.methodsValidate.includes(p.method)
+                                )
+                                .map(p => ({
+                                    method: p.method,
+                                    operation_number: p.operation_number
+                                })).length > 0
+                        ) {
+                            if (
+                                !(await this.validOperationNumber({
+                                    payments: this.currentPayments
+                                        .filter(p =>
+                                            this.methodsValidate.includes(
+                                                p.method
+                                            )
+                                        )
+                                        .map(p => ({
+                                            method: p.method,
+                                            operation_number: p.operation_number
+                                        }))
+                                }))
+                            ) {
+                                this.currentPayments.pop();
+                                this.method_payment("Efectivo");
+                                if (this.currentPayments.length == 0) {
+                                    this.form.enter_amount = this.form.total;
+                                }
+                                this.enterAmount();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.checkLimitReceipt()) {
+                this.$toast.error(
+                    "Las boletas mayores a 699 deben tener un dni o ruc válido."
+                );
+                this.isLocked = false;
+                return;
+            }
+            this.verifyBoxesDuplicate();
+            if (this.form.boxes) {
+                form.payments = this.form.boxes.map(p => ({
+                    payment_method_type_id: p.method_payment_id,
+                    date_of_payment: form.date_of_issue,
+                    payment: p.amount
+                }));
+            }
+            if (this.quotationId) {
+                form.quotation_id = this.quotationId;
+            }
+            this.loading_submit = true;
+            this.button_payment = true;
+
+
+            this.form.items = this.form.items.filter(
+                item => Number(item.quantity) > 0
+            );
+            if (this.isConsignment) {
+                this.form.from_consignment = true;
+            }
+
+            try {
+                let ordenId = this.idOrden;
+
+                let hotels = this.configuration.hotels;
+                let printOrdenHotel = true;
+
+                if (hotels) {
+                    let resultado =
+                        this.form.is_room !== undefined &&
+                        this.form.promotion_sale !== undefined
+                            ? this.form.is_room && this.form.promotion_sale
+                            : false;
+                    printOrdenHotel = resultado;
+                }
+                /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
+                if (
+                    (ordenId == undefined || ordenId == null) &&
+                    (form.variation == undefined ||
+                        form.variation == null ||
+                        form.variation == false) &&
+                    !this.conf.pos_quick_sale &&
+                    !this.ordens_all_table &&
+                    printOrdenHotel
+                ) {
+                    const responses = await this.$http.post(
+                        "/caja/worker/send-orden",
+                        this.orden_items
+                    );
+                    if (!responses.data.success) {
+                        // Mostrar mensaje de error del servidor
+                        this.$showSAlert(
+                            "ALERTA",
+                            responses.data.message,
+                            "error"
+                        );
+                        this.ordenLoading = false;
+                        this.loading_submit = false;
+                        this.button_payment = false;
+                        this.isLocked = false;
+                        this.$emit("update:is_payment", false);
+                        this.isLocked = false;
+                        return;
+                    }
+                    ordenId = responses.data.id;
+                    if (responses.status != 200) {
+                        return;
+                    }
+                }
+                form.orden_id = ordenId;
+                if (this.ordens_all_table) {
+                    form.all_ordens = true;
+                }
+                if (this.sumCoins.length > 0) {
+                    form.sumCoins = this.sumCoins;
+                }
+                /* if (this.configuration.split_payments_pos){
+                    message = "Venta realizada";
+                } else {
+                    const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                } */
+                const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                let { data } = response;
+                if (response.status == 200 && data.data) {
+                    let format = null;
+                    let data = response.data.data;
+                    switch (data.format_printer) {
+                        case 1:
+                            format = data.print_a4;
+                            break;
+                        case 2:
+                            format = data.print_a5;
+                            break;
+                        default:
+                            format = data.print_ticket;
+                            break;
+                    }
+
+                    this.operation_number = null;
+                    if (response.data.success == true) {
+                        let document_id = 0;
+
+                        if (form.document_type_id === "80") {
+                            this.number = response.data.data.number;
+                            document_id = response.data.data.id;
+                            this.form_cash_document.sale_note_id =
+                                response.data.data.id;
+                        } else {
+                            document_id = response.data.data.id;
+                            this.form_cash_document.document_id =
+                                response.data.data.id;
+                            this.number = response.data.data.number;
+                        }
+                        this.documentNewId = response.data.data.id;
+
+                        if (response.data.success == true) {
+                            if (this.configuration.all_items_pos) {
+                                this.$emit("reloadItems");
+                            }
+
+                            if (ordenId) {
+                                // Convertir llamadas await en promesas
+                                const promises = [];
+
+                                if (
+                                    this.configuration.college &&
+                                    this.form.student_id
+                                ) {
+                                    promises.push(
+                                        this.$http.post(
+                                            "/college/registers/sale",
+                                            {
+                                                is_sale_note:
+                                                    form.document_type_id ==
+                                                    "80",
+                                                document_id: this.documentNewId,
+                                                detail: {
+                                                    items: this.form.items.map(
+                                                        s => s.item
+                                                    )
+                                                },
+                                                student_id: this.form.student_id
+                                            }
+                                        )
+                                    );
+                                }
+
+                                if (
+                                    this.configuration.consignment &&
+                                    this.consignment_id &&
+                                    this.isConsignment
+                                ) {
+                                    promises.push(
+                                        this.$http
+                                            .post(`/consignment/liquidated`, {
+                                                id: this.consignment_id,
+                                                items: this.form.items.map(
+                                                    i => ({
+                                                        consignment_item_id:
+                                                            i.consignment_item_id,
+                                                        toWarehouse:
+                                                            i.toWarehouse,
+                                                        quantity: i.quantity
+                                                    })
+                                                ),
+                                                document_id: this.documentNewId,
+                                                document_type_id:
+                                                    form.document_type_id
+                                            })
+                                            .then(response => {
+                                                if (response.status == 200) {
+                                                    this.$toast.success(
+                                                        "Liquidación de consignación realizada."
+                                                    );
+                                                }
+                                            })
+                                    );
+                                }
+
+                                // Agregar promesa de orden_payment
+                                promises.push(
+                                    this.$http.post("pos/orden_payment", {
+                                        id: ordenId,
+                                        customer_id: customer.id,
+                                        document: {
+                                            isNoteSale:
+                                                form.document_type_id === "80",
+                                            id: this.documentNewId
+                                        }
+                                    })
+                                );
+
+                                if (this.configuration.promotions_sell) {
+                                    how_is = this.all_customers.find(
+                                        c => c.id == form.customer_id
+                                    );
+                                    if (!how_is.name.includes("VARIOS")) {
+                                        let itemspromo = form.items;
+                                        promises.push(
+                                            axios.post(`pos/processPromo`, {
+                                                itemspromo,
+                                                how_is
+                                            })
+                                        );
+                                    }
+                                }
+
+                                // Ejecutar todas las promesas en paralelo
+                                Promise.all(promises).then(responses => {
+                                    const response2 =
+                                        responses[promises.length - 1]; // orden_payment response
+                                    if (response2.data.success == true) {
+                                        if (this.form.customer_telephone) {
+                                            if (this.personalWhatsapp) {
+                                                this.$emit("getFile", {
+                                                    total: this.form.total,
+                                                    documentId: this
+                                                        .documentNewId,
+                                                    documentTypeId:
+                                                        form.document_type_id,
+                                                    number: this.form
+                                                        .customer_telephone,
+                                                    message: this.form.message
+                                                });
+                                            } else {
+                                                this.clickSendWhatsapp(
+                                                    form.document_type_id,
+                                                    this.documentNewId,
+                                                    this.number,
+                                                    form
+                                                );
+                                            }
+                                        }
+                                        if (!this.variation) {
+                                            this.$emit("limpiarForm");
+                                        }
+                                        this.$emit("removeConsignment");
+                                        this.loading_submit = false;
+                                        this.back(true);
+                                    }
+                                });
+                            } else {
+                                if (this.conf.pos_quick_sale) {
+                                    this.$toast.success("Venta realizada.");
+                                }
+                                if (this.form.customer_telephone) {
+                                    if (this.personalWhatsapp) {
+                                        this.$emit("getFile", {
+                                            total: this.form.total,
+                                            documentId: this.documentNewId,
+                                            documentTypeId:
+                                                form.document_type_id,
+                                            number: this.form
+                                                .customer_telephone,
+                                            message: this.form.message
+                                        });
+                                    } else {
+                                        this.clickSendWhatsapp(
+                                            form.document_type_id,
+                                            this.documentNewId,
+                                            this.number,
+                                            form
+                                        );
+                                    }
+                                }
+                                if (!this.variation) {
+                                    this.$emit("limpiarForm");
+                                }
+                                this.$emit("removeConsignment");
+                                this.loading_submit = false;
+                                this.back(true);
+                            }
+                        }
+                    }
+                } else {
+                    let {
+                        data: { message }
+                    } = response;
+                    this.$toast.error(message || "Ocurrió un error");
+                }
+            } catch (error) {
+                console.log(error);
+                const response = error.response;
+                let {
+                    data: { message }
+                } = response;
+
+                this.$toast.error(message || "Ocurrió un error");
+            } finally {
+                /* this.loading_submit = false;
+                this.loading = false; */
+                this.button_payment = false;
+                /* this.isLocked = false; */
             }
         },
         unlockButton() {

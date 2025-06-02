@@ -577,7 +577,6 @@ export default {
             // this.calculateTotal();
         },
         discountService(room) {
-            
             let { discount_instead_services } = room;
             if (discount_instead_services) {
                 room.services = room.services.map(s => {
@@ -940,7 +939,6 @@ export default {
             }
             try {
                 this.loading = true;
-
                 const response = await this.$http.post(
                     "/caja/rooms/set-guess",
                     this.form
