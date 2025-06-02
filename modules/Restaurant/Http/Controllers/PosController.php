@@ -283,7 +283,6 @@ class PosController extends Controller
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere('code', 'LIKE', '%' . $value . '%')
                             ->orWhereHas('item.item_unit_types', function ($q) use ($value) {
-                                dump($value);
                                 $q->where('unique_code', 'LIKE', '%' . $value . '%');
                             });
                         if ($search_by_second_name) {
