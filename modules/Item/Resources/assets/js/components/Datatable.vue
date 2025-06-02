@@ -4,256 +4,180 @@
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
-                        <div class="form-group">
-                            <label class="control-label font-custom"
-                                ><strong>Filtros de busqueda</strong></label
-                            >
-                            <template v-if="!see_more">
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                    ><strong> [+ Ver más]</strong></a
-                                >
-                            </template>
-                            <template v-else>
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                    ><strong> [- Ver menos]</strong></a
-                                >
-                            </template>
+                        <div class="form-group d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <label class="control-label font-custom mb-0"><strong>Filtros de Busqueda de Lotes</strong></label>
+                                <template v-if="!see_more">
+                                    <a class="control-label font-weight-bold text-info font-custom ml-2" href="#" @click="clickSeeMore">
+                                        <strong>[+ Ver más]</strong>
+                                    </a>
+                                </template>
+                                <template v-else>
+                                    <a class="control-label font-weight-bold text-info font-custom ml-2" href="#" @click="clickSeeMore">
+                                        <strong>[- Ver menos]</strong>
+                                    </a>
+                                </template>
+                            </div>
+                            <div class="d-flex align-items-center" v-if="see_more">
+                                <el-button class="btn_buscarsmall" type="primary" @click.prevent="getRecords"
+                                    :loading="loading_submit" icon="el-icon-search"
+                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                    Buscar
+                                </el-button>
+                                <el-button class="btn_limpiarsmall btn_limpiarsmall:hover" type="" @click.prevent="cleanInputs"
+                                    icon="el-icon-delete"
+                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                    Limpiar
+                                </el-button>
+                                <el-button class="btn_excelsmall" v-if="resource == 'lotes' && records.length > 0"
+                                    type="" @click.prevent="exportRecords"
+                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                    <i class="icofont-file-excel"></i>
+                                    <span style="margin-left: 5px;">Exportar</span>
+                                </el-button>
+                            </div>
                         </div>
+
                     </div>
                 </div>
-                <div class="row mt-2" v-if="see_more">
-                    <div class="col-lg-2 col-md-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Lote</label>
-                            <el-input
-                                placeholder="Ingresar"
-                                v-model="search.lote"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                            <br />
-                            <el-checkbox v-model="search.date_of_due"
-                                >Lotes Vencidos</el-checkbox
-                            >
+                <div class="row mb-3" v-if="see_more">
+                    <div class="col-md-6">
+                        <div class="card" style="padding: 12px 6px;">
+                            <div class="card-body" style="padding: 0px 0px;">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <i class="el-icon-collection-tag mr-1"></i>
+                                                Lote
+                                            </label>
+                                            <el-input placeholder="Ingresar" v-model="search.lote">
+                                                <i slot="prefix" class="el-icon-edit-outline"></i>
+                                            </el-input>
+                                            <br />
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <i class="el-icon-goods mr-1"></i>
+                                                Productos
+                                                <el-checkbox v-model="search.date_of_due">
+                                                    <el-tooltip content="Muestra todos los lotes vencidos y con stock"
+                                                        placement="top">
+                                                        <i class="el-icon-warning-outline mr-1" style="color: red;"></i>
+                                                    </el-tooltip>
+                                                    <span style="color: red;">Vencidos</span>
+                                                </el-checkbox>
+                                            </label>
+                                            <el-select class="w-100" v-model="search.item_id" filterable remote
+                                                popper-class="el-select-customers" clearable
+                                                placeholder="Nombre o código interno" :remote-method="searchRemoteItems"
+                                                :loading="loading_search_item">
+                                                <el-option v-for="option in items" :key="option.id" :value="option.id"
+                                                    :label="option.description"></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <i class="el-icon-office-building mr-1"></i>
+                                                Almacén
+                                            </label>
+                                            <el-select class="w-100" v-model="search.warehouse_id" clearable>
+                                                <el-option v-for="option in warehouses" :key="option.id"
+                                                    :value="option.id" :label="option.description"></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 ">
-                        <div class="form-group">
-                            <label class="control-label w-100">Productos</label>
-                            <el-select
-                                class="w-100"
-                                v-model="search.item_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o código interno"
-                                :remote-method="searchRemoteItems"
-                                :loading="loading_search_item"
-                            >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
+                    <div class="col-md-6">
+                        <div class="card" style="padding: 12px 6px;">
+                            <div class="card-body" style="padding: 0px 0px;">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <i class="el-icon-date mr-1"></i>
+                                                Rango Fecha:
+                                            </label>
+                                            <el-select class="w-100" v-model="search.date_filter" clearable>
+                                                <el-option v-for="option in due_date_filter" :key="option.id"
+                                                    :value="option.value" :label="option.label"></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 ">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <!-- Vacio -->
+                                            </label>
+                                            <template v-if="search.date_filter == 'week'">
+                                                <el-date-picker v-model="search.date_filter_value"
+                                                    :picker-options="optionPicker" type="week" value-format="yyyy-MM-dd"
+                                                    :format="customFormat" placeholder="Semana">
+                                                </el-date-picker>
+                                            </template>
+                                            <template v-if="search.date_filter == 'month'">
+                                                <el-date-picker v-model="search.date_filter_value" type="month"
+                                                    value-format="yyyy-MM-dd" placeholder="Mes">
+                                                </el-date-picker>
+                                            </template>
+                                            <template v-if="search.date_filter == 'year'">
+                                                <el-date-picker v-model="search.date_filter_value" type="year"
+                                                    value-format="yyyy-MM-dd" placeholder="Año">
+                                                </el-date-picker>
+                                            </template>
+                                            <template v-if="search.date_filter == 'between'">
+                                                <el-date-picker v-model="search.d_start" type="date"
+                                                    style="width: 100%;" placeholder="Inicial" value-format="yyyy-MM-dd"
+                                                    @change="changeDisabledDates">
+                                                </el-date-picker>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 " v-if="search.date_filter == 'between'">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                <!-- Vacio -->
+                                            </label>
+                                            <el-date-picker v-model="search.d_end" type="date" value-format="yyyy-MM-dd"
+                                                :disabled="!search.d_start" style="width: 100%;" placeholder="Final"
+                                                :picker-options="pickerOptionsDates" @change="changeEndDate">
+                                            </el-date-picker>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">Almacén</label>
-                            <el-select
-                                class="w-100"
-                                v-model="search.warehouse_id"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in warehouses"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <!-- <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha inicio
-                            </label>
-
-                            <el-date-picker
-                                v-model="search.d_start"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                @change="changeDisabledDates"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha término</label
-                            >
-
-                            <el-date-picker
-                                v-model="search.d_end"
-                                type="date"
-                                :disabled="!search.d_start"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                :picker-options="pickerOptionsDates"
-                                @change="changeEndDate"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="col-lg-2 col-md-2 ">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Lotes Vencidos</label
-                            >
-                            <el-date-picker
-                                v-model="search.date_of_due"
-                                type="month"
-                                value-format="yyyy-MM-dd"
-                                placeholder="Elija un mes"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div> -->
-
-                    <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Filtrar fecha de vencimiento</label
-                            >
-                            <el-select
-                                class="w-100"
-                                v-model="search.date_filter"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in due_date_filter"
-                                    :key="option.id"
-                                    :value="option.value"
-                                    :label="option.label"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 pb-2">
-                        <div class="form-group">
-                            <label class="control-label w-100">
-                                Fecha de vencimiento
-                            </label>
-
-                            <template v-if="search.date_filter == 'week'">
-                                <el-date-picker
-                                    v-model="search.date_filter_value"
-                                    :picker-options="optionPicker"
-                                    type="week"
-                                    value-format="yyyy-MM-dd"
-                                    :format="customFormat"
-                                    placeholder="Elija una semana"
-                                >
-                                </el-date-picker>
-                            </template>
-                            <template v-if="search.date_filter == 'month'">
-                                <el-date-picker
-                                    v-model="search.date_filter_value"
-                                    type="month"
-                                    value-format="yyyy-MM-dd"
-                                    placeholder="Elija un mes"
-                                >
-                                </el-date-picker>
-                            </template>
-                            <template v-if="search.date_filter == 'year'">
-                                <el-date-picker
-                                    v-model="search.date_filter_value"
-                                    type="year"
-                                    value-format="yyyy-MM-dd"
-                                    placeholder="Elija un año"
-                                >
-                                </el-date-picker>
-                            </template>
-                            <template v-if="search.date_filter == 'between'">
-                                <el-date-picker
-                                    v-model="search.d_start"
-                                    type="date"
-                                    style="width: 100%;"
-                                    placeholder="Buscar"
-                                    value-format="yyyy-MM-dd"
-                                    @change="changeDisabledDates"
-                                >
-                                </el-date-picker>
-                            </template>
-                        </div>
-                    </div>
-                    <div
-                        class="col-lg-2 col-md-2 pb-2"
-                        v-if="search.date_filter == 'between'"
-                    >
-                        <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha final
-                            </label>
-                            <el-date-picker
-                                v-model="search.d_end"
-                                type="date"
-                                value-format="yyyy-MM-dd"
-                                :disabled="!search.d_start"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                :picker-options="pickerOptionsDates"
-                                @change="changeEndDate"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div
-                        class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center"
-                    >
-                        <el-button
-                            class="submit"
-                            type="primary"
-                            @click.prevent="getRecords"
-                            :loading="loading_submit"
-                            icon="el-icon-search"
-                            >Buscar</el-button
-                        >
-                        <el-button
-                            class="submit"
-                            type="info"
-                            @click.prevent="cleanInputs"
+                    <br />
+                    <!-- <div class="d-flex align-items-center justify-content-end">
+                        <el-button class="btn_buscarsmall" type="primary" @click.prevent="getRecords"
+                            :loading="loading_submit" icon="el-icon-search"
+                            style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                            Buscar
+                        </el-button>
+                        <el-button class="btn_limpiarsmall btn_limpiarsmall:hover" type="" @click.prevent="cleanInputs"
                             icon="el-icon-delete"
-                            >Limpiar
+                            style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                            Limpiar
                         </el-button>
-                        <el-button
-                            v-if="resource == 'lotes' && records.length > 0"
-                            class="submit"
-                            type="success"
+                        <el-button class="btn_excelsmall" v-if="resource == 'lotes' && records.length > 0" type=""
                             @click.prevent="exportRecords"
-                            icon="el-icon-download"
-                            >Exportar
+                            style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                            <i class="icofont-file-excel"></i>
+                            <span style="margin-left: 5px;">Exportar</span>
                         </el-button>
-                    </div>
+                    </div> -->
                 </div>
+
+
             </div>
 
             <div class="col-md-12">
@@ -263,21 +187,13 @@
                             <slot name="heading"></slot>
                         </thead>
                         <tbody v-loading="loading">
-                            <slot
-                                v-for="(row, index) in records"
-                                :row="row"
-                                :index="customIndex(index)"
-                            ></slot>
+                            <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
                         </tbody>
                     </table>
                     <div>
-                        <el-pagination
-                            @current-change="getRecords"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        >
+                        <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
+                            :total="pagination.total" :current-page.sync="pagination.current_page"
+                            :page-size="pagination.per_page">
                         </el-pagination>
                     </div>
                 </div>
@@ -441,13 +357,11 @@ export default {
                 clearTimeout(this.time);
             }
             this.time = setTimeout(async () => {
-                let url = `/${
-                    this.resource
-                }/records?${this.getQueryParameters()}`;
+                let url = `/${this.resource
+                    }/records?${this.getQueryParameters()}`;
                 if (this.fromAdmin) {
-                    url = `/${
-                        this.resource
-                    }/records?${this.getQueryParameters()}&fromAdmin=true`;
+                    url = `/${this.resource
+                        }/records?${this.getQueryParameters()}&fromAdmin=true`;
                 }
                 try {
                     this.loading = true;

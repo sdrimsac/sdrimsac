@@ -12,10 +12,10 @@
                         style="font-size: 1.5rem; font-weight: bold;"
                     >
                         <i
-                            class="far fa-address-book"
+                            class="fas fa-box-open"
                             style="font-size: 2rem; margin-right: 0.5rem;"
                         ></i>
-                        Módulo de Productos
+                        Listado de Productos
                     </h4>
                 </div>
 

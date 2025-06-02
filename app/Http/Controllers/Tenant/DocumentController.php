@@ -847,7 +847,8 @@ class DocumentController extends Controller
                 'identity_document_type_code' => $row->identity_document_type->code,
                 'addresses' => $row->addresses,
                 'address' =>  $row->address,
-                'seller_id' =>  $row->seller_id
+                'seller_id' =>  $row->seller_id,
+                'telephone' => $row->telephone,
             ];
         });
 

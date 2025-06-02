@@ -127,8 +127,8 @@
           </el-button>
           <el-button
             v-if="resource == 'caja/tables' || resource == 'caja/rooms'"
-            type="primary"
-            class="custom-button"
+            type=""
+            class="btn_buscar"
             href="javascript:void(0)"
             @click.prevent="clickCreateMassive()"
           >

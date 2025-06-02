@@ -1,42 +1,22 @@
 <!-- Modulo de Colores y Tallas -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Colores & Tallas</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Lista de Productos con colores &
-                                    tallas</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+        
         <div class="card mb-0">
-            <div class="card-header bg-primary">
-                <h4 class="my-0 text-white">
-                    <i class="fas fa-tshirt"></i>
-                    <i class="fas fa-palette"></i>
-                    Colores & Tallas</h4>
+
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                    <i class="fas fa-tshirt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                    Colores & Tallas
+                </h4>
             </div>
             <div class="data-table-visible-columns">
-                            <el-button  type="primary" 
-                                        class="btn btn-icon btn-icon-start w-100 w-md-auto" 
-                                        href="javascript:void(0)" @click.prevent="clickImportColorSize()">
-                                        <i class="fa fa-upload"></i>
-                                        Importar
-                            </el-button>
-            </div> 
+                <el-button type="" class="btn_buscar" href="javascript:void(0)"
+                    @click.prevent="clickImportColorSize()">
+                    <i class="fa fa-upload"></i>
+                    Importar
+                </el-button>
+            </div>
             <div class="card-body">
                 <data-table class="table-striped" ref="datatable" :resource="resource">
                     <tr slot="heading" width="100%" class="bg-primary">
@@ -69,12 +49,10 @@
                         </td>
 
                         <td class="text-right">
-                            <template
-                                v-if="
-                                    typeUser === 'admin' ||
-                                        typeUser === 'superadmin'
-                                "
-                            >
+                            <template v-if="
+                                typeUser === 'admin' ||
+                                typeUser === 'superadmin'
+                            ">
                                 <!-- <button
                                     type="button"
                                     class="btn waves-effect waves-light btn-xs btn-info btn-sm"
@@ -82,11 +60,8 @@
                                 >
                                     Editar
                                 </button> -->
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
-                                    @click.prevent="clickDelete(row.id)"
-                                >
+                                <button type="button" class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
+                                    @click.prevent="clickDelete(row.id)">
                                     Eliminar
                                 </button>
                             </template>
@@ -95,21 +70,15 @@
                 </data-table>
             </div>
 
-            <items-form
-                :showDialog.sync="showDialog"
-                :recordId="recordId"
-            ></items-form>
-            <import-color-size
-                :showDialog.sync="showImportColorSizeDialog"
-            ></import-color-size>
+            <items-form :showDialog.sync="showDialog" :recordId="recordId"></items-form>
+            <import-color-size :showDialog.sync="showImportColorSizeDialog"></import-color-size>
         </div>
     </div>
 </template>
 
 <style>
-
 .table-striped tr:nth-child(even) {
-background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 </style>
 

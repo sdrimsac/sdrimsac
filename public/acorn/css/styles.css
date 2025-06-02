@@ -13273,6 +13273,69 @@ width: 181px;
   color: white !important; /* Letras blancas */
 }
 
+/* Estilos para el botón btn_excelsmall */
+.btn_excelsmall {
+  background-color: #28a745 !important; /* Verde Excel */
+  border-radius: 5px !important; /* Bordes más pequeños */
+  color: white !important; /* Letras blancas */
+  font-size: 0.85rem !important; /* Texto más pequeño */
+  font-weight: bold !important;
+  padding: 4px 10px !important; /* Padding reducido */
+  min-height: 28px !important; /* Altura más baja */
+  min-width: 60px !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+}
+
+.btn_excelsmall:hover {
+  background-color: #218838 !important;
+  color: #e6ffe6 !important; /* Verde claro en hover */
+}
+
+
+.btn_pdfsmall {
+  background-color: #dc3545 !important; /* Rojo */
+  border-radius: 5px !important;
+  color: white !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  padding: 4px 10px !important;
+  min-height: 28px !important;
+  min-width: 60px !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+}
+
+.btn_pdfsmall:hover {
+  background-color: #b52a37 !important;
+  color: #ffe6e6 !important;
+}
+.btn_politicasmall {
+  background-color: #6c63ff !important; /* Morado azulado */
+  border-radius: 5px !important;
+  color: white !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  padding: 4px 10px !important;
+  min-height: 28px !important;
+  min-width: 60px !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+}
+
+.btn_politicasmall:hover {
+  background-color: #5548c8 !important;
+  color: #e6e6ff !important;
+}
 /* Tooltip de Bootstrap */
 .tooltip-inner {
   background-color: #28a745 !important; /* Verde */
@@ -13614,81 +13677,170 @@ h5 {
 
 /* Estilos generales para los botones */
 .btn_buscar {
-  /* background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important; */
-   /* Gradiente con azul marino y azul brillante */
-  background-color: #003366 !important; /* Azul marino como fondo sólido */
-  color: #fff !important; /* Texto blanco */
-  font-size: 1.25rem !important; /* Tamaño de la fuente más uniforme */
+  background-color: #003366 !important;
+  color: #fff !important;
+  font-size: 1rem !important; /* Más pequeño */
   font-weight: bold !important;
-  padding: 10px 20px !important; /* Ajuste en el padding para reducir el tamaño */
-  border-radius: 12px !important; /* Bordes redondeados */
-  border: 2px solid rgba(255, 255, 255, 0.2) !important; /* Borde sutil blanco con opacidad */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Sombra más ligera */
-  transition: all 0.3s ease !important; /* Transición suave */
+  padding: 6px 14px !important; /* Padding reducido */
+  border-radius: 10px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
   display: flex !important;
-  align-items: center !important; /* Centra verticalmente contenido */
-  justify-content: center !important; /* Centra horizontalmente contenido */
-  gap: 0.75rem !important; /* Espacio entre ícono y texto */
-  width: auto !important; /* Asegura que el botón se ajuste */
-  /* min-width: 180px !important; */
-   /* Establece un tamaño mínimo uniforme para todos los botones */
-  height: 45px !important; /* Ajusta la altura del botón para que sea más pequeño */
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  width: auto !important;
+  height: 34px !important; /* Más bajo */
 }
 
-/* Hover para los botones */
 .btn_buscar:hover {
-  background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important; /* Invertir gradiente con opacidad */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important; /* Sombra más intensa */
-  transform: scale(1.05) !important; /* Efecto de agrandamiento leve */
-  border-color: rgba(255, 255, 255, 0.5) !important; /* Aumenta la visibilidad del borde en hover */
+  background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35) !important;
+  transform: scale(1.05) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Estilo para el ícono dentro del botón */
 .btn_buscar i {
-  color: white !important; /* Cambiar color del ícono a blanco */
-  font-size: 1.5rem !important; /* Ajustar el tamaño del ícono */
+  color: white !important;
+  font-size: 1.2rem !important; /* Más pequeño */
 }
 
-/* Estilos adicionales para ordenar los botones (si es necesario) */
 .btn_buscar_container {
   display: flex !important;
-  flex-direction: column !important; /* Si los botones deben estar apilados */
+  flex-direction: column !important;
   align-items: center !important;
-  gap: 10px !important; /* Espacio entre los botones */
-  margin: 10px !important; /* Margen para separar de otros elementos */
+  gap: 10px !important;
+  margin: 10px !important;
 }
 
-/* Botón en estado activo */
 .btn_buscar:active {
-  transform: scale(1); /* Tamaño normal cuando se hace clic */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+  transform: scale(1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Ícono del botón */
 .btn_buscar .icon-style {
-  font-size: 1.2rem; /* Tamaño reducido del ícono */
-  color: #ffe400; /* Color llamativo para el ícono */
-  transition: transform 0.3s ease, color 0.3s ease; /* Transición de movimiento y color */
+  font-size: 1rem;
+  color: #ffe400;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* Hover para el ícono */
 .btn_buscar:hover .icon-style {
-  transform: rotate(10deg); /* Efecto de rotación leve del ícono */
-  color: #ffeb3b; /* Color más brillante */
+  transform: rotate(10deg);
+  color: #ffeb3b;
+}
+
+.btn_buscar .label-style {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+}
+
+.btn_buscar[disabled] {
+  background: #b3b3b3 !important;
+  color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Estilos para el botón buscarsmall */
+.btn_buscarsmall {
+  background-color: #003366 !important;
+  color: #fff !important;
+  font-size: 0.85rem !important; /* Más pequeño */
+  font-weight: bold !important;
+  padding: 4px 10px !important; /* Padding reducido */
+  border-radius: 7px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  width: auto !important;
+  height: 28px !important; /* Más bajo */
+  min-width: 60px !important;
+}
+
+/* Hover */
+.btn_buscarsmall:hover {
+  background: linear-gradient(135deg, rgba(0, 51, 102, 0.85), rgba(0, 123, 255, 0.85)) !important;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.22) !important;
+  transform: scale(1.04) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Ícono dentro del botón */
+.btn_buscarsmall i {
+  color: white !important;
+  font-size: 1rem !important; /* Más pequeño */
 }
 
 /* Texto del botón */
-.btn_buscar .label-style {
-  font-size: 1.25rem; /* Tamaño del texto del botón */
+.btn_buscarsmall .label-style {
+  font-size: 0.85rem !important;
   font-weight: bold;
-  line-height: 1; /* Centra verticalmente el texto */
-  color: #fff; /* Color blanco */
+  line-height: 1;
+  color: #fff;
 }
 
 /* Botón deshabilitado */
-.btn_buscar[disabled] {
-  background: #b3b3b3 !important; /* Color gris para estado deshabilitado */
+.btn_buscarsmall[disabled] {
+  background: #b3b3b3 !important;
   color: #f5f5f5 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Estilos para el botón btn_limpiarsmall */
+.btn_limpiarsmall {
+  background-color: #e0f7fa !important; /* Celeste claro, color de limpieza */
+  color: #009688 !important; /* Verde agua, asociado a limpieza */
+  font-size: 0.85rem !important; /* Más pequeño */
+  font-weight: bold !important;
+  padding: 4px 10px !important; /* Padding reducido */
+  border-radius: 7px !important;
+  border: 1px solid #b2dfdb !important; /* Borde suave */
+  box-shadow: 0 2px 5px rgba(0, 150, 136, 0.10) !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  width: auto !important;
+  height: 28px !important; /* Más bajo */
+  min-width: 60px !important;
+}
+
+/* Hover */
+.btn_limpiarsmall:hover {
+  background: linear-gradient(135deg, #b2ebf2 80%, #80cbc4 100%) !important;
+  color: #00695c !important;
+  box-shadow: 0 3px 7px rgba(0, 150, 136, 0.18) !important;
+  transform: scale(1.04) !important;
+  border-color: #4dd0e1 !important;
+}
+
+/* Ícono dentro del botón */
+.btn_limpiarsmall i {
+  color: #009688 !important;
+  font-size: 1rem !important;
+}
+
+/* Texto del botón */
+.btn_limpiarsmall .label-style {
+  font-size: 0.85rem !important;
+  font-weight: bold;
+  line-height: 1;
+  color: #009688;
+}
+
+/* Botón deshabilitado */
+.btn_limpiarsmall[disabled] {
+  background: #e0e0e0 !important;
+  color: #bdbdbd !important;
   box-shadow: none !important;
   cursor: not-allowed;
 }

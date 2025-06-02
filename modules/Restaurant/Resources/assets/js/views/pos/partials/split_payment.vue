@@ -1,217 +1,51 @@
 <template>
-    <el-dialog
-        append-to-body
-        @open="open"
-        @close="close"
-        v-loading="loading"
-        :visible="showSplitPayment"
-        :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`"
-        width="85%"
-    >
-        <div class="row mt-2">
-            <div class="d-flex flex-column col-md-6 col-lg-6 col-12">
-                <div class="row">
-                    <div class="col-md-6 col-12 col-lg-6">
-                        <label for="">Dividir entre:</label><br />
-                        <el-input-number
-                            class="w-100"
-                            :min="2"
-                            @input="updatePayments"
-                            v-model="number"
-                            controls
-                        ></el-input-number>
-                    </div>
-                    <div class="col-md-6 col-12 col-lg-6">
-                        <label for="type">Tipo</label>
-                        <br />
-                        <el-radio-group
-                            v-model="splitByAmount"
-                            @change="updatePayments"
-                        >
-                            <el-radio-button label="1"
-                                >Por cuotas</el-radio-button
-                            >
-                            <el-radio-button label="2" :disabled="quantity == 1"
-                                >Por producto</el-radio-button
-                            >
-                        </el-radio-group>
-                    </div>
+    <el-dialog append-to-body @open="open" @close="close" v-loading="loading" :visible="showSplitPayment"
+        :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`" :width="dialogWidth" :top="dialogTop">
+        <div class="row">
+            <div class="col-2">
+                <div class="col-md-12">
+                    <label for="">Entre:</label>
+                    <el-input-number class="w-100 split-input-number" :min="2" :max="5" @input="updatePayments"
+                        v-model="number" size="mini"></el-input-number>
                 </div>
-                <div
-                    class="row mt-1"
-                    v-for="(person, idx) in persons"
-                    :key="idx"
-                >
-                    <div
-                        class="row"
-                        :class="{
-                            'mt-2': idx == 0
-                        }"
-                    >
-                        <div class="col-2">
-                            <br />
-                            <el-button
-                                :type="
-                                    `${person.selected ? 'primary' : 'default'}`
-                                "
-                                icon="el-icon-plus"
-                                :disabled="splitByAmount == '1'"
-                                @click="selectAccount(idx)"
-                            ></el-button>
-                        </div>
-                        <div class="col-10">
-                            <label for="new_customer_id">
-                                <a
-                                    href="#"
-                                    @click.prevent="openDialogNewPerson(idx)"
-                                    >[+ Nuevo]</a
-                                >
-                            </label>
-                            <el-select
-                                v-model="person.customer_id"
-                                filterable
-                                remote
-                                :class="{
-                                    pperson: person.selected
-                                }"
-                                popper-class="el-select-customers"
-                                placeholder="Escriba el nombre o número de documento del cliente"
-                                :remote-method="searchRemoteCustomers"
-                                :loading="loading_search"
-                                @change="changeCustomer(idx)"
-                                :ref="`customer_${idx}`"
-                            >
-                                <el-option
-                                    v-for="option in customers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-
-                        <div class="col-4">
-                            <label for="document_type_id"
-                                >Tipo de documento</label
-                            >
-                            <!-- <el-select
-                                v-model="person.document_type_id"
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in documentTypes"
-                                    :key="option.value"
-                                    :value="option.value"
-                                    :label="option.text"
-                                ></el-option>
-                            </el-select> -->
-                            <el-select
-                                v-model="person.document_type_id"
-                                filterable
-                            >
-                                <el-option
-                                    v-if="establishments.documents.invoice"
-                                    value="01"
-                                    label="FACTURA"
-                                ></el-option>
-                                <el-option
-                                    v-if="establishments.documents.receipt"
-                                    value="03"
-                                    label="BOLETA"
-                                ></el-option>
-                                <el-option
-                                    v-if="establishments.documents.sale_note"
-                                    value="80"
-                                    label="NOTA DE VENTA"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                        <div class="col-4">
-                            <label for="payment_method_id"
-                                >Método de pago</label
-                            >
-                            <el-select
-                                v-model="person.payment_method"
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in paymentMethods"
-                                    :key="option.value"
-                                    :value="option.text"
-                                    :label="option.text"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                        <div class="col-4">
-                            <label for="amount">Monto</label>
-                            <el-input
-                                v-model="person.amount"
-                                readonly
-                            ></el-input>
-                        </div>
-                        <div class="col-3"></div>
-                        <div
-                            class="col-12 m-1"
-                            v-if="
-                                splitByAmount == '2' &&
-                                    person.products.length > 0
-                            "
-                        >
-                            <el-collapse>
-                                <el-collapse-item
-                                    :title="
-                                        `Productos ${person.products.length}`
-                                    "
-                                >
-                                    <el-table
-                                        :data="person.products"
-                                        style="width: 100%"
-                                    >
-                                        <el-table-column
-                                            prop="quantity"
-                                            label="Cantidad"
-                                            width="150"
-                                        ></el-table-column>
-                                        <el-table-column
-                                            prop="description"
-                                            label="Descripción"
-                                        ></el-table-column>
-                                        <el-table-column
-                                            label="Acciones"
-                                            width="120"
-                                        >
-                                            <template slot-scope="scope">
-                                                <el-button
-                                                    size="mini"
-                                                    type="danger"
-                                                    @click="
-                                                        removeItem(
-                                                            scope.row.id,
-                                                            idx
-                                                        )
-                                                    "
-                                                >
-                                                    Remover
-                                                </el-button>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                </el-collapse-item>
-                            </el-collapse>
-                        </div>
-                    </div>
-                    <el-divider></el-divider>
+                <div class="col-md-12">
+                    <label for="type" style="display: flex; ">Cuentas</label>
+                    <el-radio-group v-model="splitByAmount" @change="updatePayments" size="mini"
+                        class="split-radio-group">
+                        <el-tooltip content="Dividir la cuenta en partes iguales" placement="top">
+                            <el-radio-button label="1">
+                                <span style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-equals"></i>
+                                </span>
+                            </el-radio-button>
+                        </el-tooltip>
+                        <el-tooltip content="Dividir cuenta por productos consumidos" placement="top">
+                            <el-radio-button label="2" :disabled="quantity == 1">
+                                <span style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="el-icon-goods"></i>
+                                </span>
+                            </el-radio-button>
+                        </el-tooltip>
+                    </el-radio-group>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-6 col-12">
+            <div class="col-10">
                 <div class="table-responsive">
                     <table class="table">
-                        <thead>
+                        <thead style="background-color: #073f68; color: #fff;">
                             <tr>
-                                <th>Producto</th>
-                                <th>P/U</th>
-                                <th colspan="2">Cant</th>
-                                <th></th>
+                                <th style="color: #fff;">Producto</th>
+                                <th style="color: #fff; text-align: right;">P/U</th>
+                                <th
+                                    style="color: #fff; width: 55px; min-width: 55px; max-width: 200px; text-align: center;">
+                                    Cant</th>
+                                <th
+                                    style="color: #fff; width: 60px; min-width: 60px; max-width: 200px; text-align: center;">
+                                    Resta</th>
+                                <th
+                                    style="color: #fff; width: 50px; min-width: 50px; max-width: 200px; text-align: center;">
+                                    <i class="fas fa-bolt" style="color: yellow;"></i>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -219,17 +53,19 @@
                                 <td>
                                     {{ item.food.description }}
                                 </td>
-                                <td>S/. {{ item.price }}</td>
-                                <td class="text-primary font-weight-bold">
+                                <td :style="{ width: '80px', minWidth: '80px', maxWidth: '200px', textAlign: 'right' }">
+                                    {{ item.price }}</td>
+                                <td class="text-primary font-weight-bold" style="text-align: center;">
                                     {{ item.originalQuantity }}
                                 </td>
-                                <td>{{ item.quantity }}</td>
+                                <td style="text-align: center;">{{ item.quantity }}</td>
                                 <td>
-                                    <el-button
-                                        icon="el-icon-plus"
-                                        :disabled="item.quantity == 0"
-                                        @click="addItem(item)"
-                                    ></el-button>
+                                    <el-tooltip content="Enviar producto a la cuenta seleccionada" placement="top">
+                                        <el-button icon="el-icon-s-promotion" :disabled="item.quantity == 0"
+                                            @click="addItem(item)"
+                                            style="background-color: #073f68; color: #fff; border-color: #073f68;">
+                                        </el-button>
+                                    </el-tooltip>
                                 </td>
                             </tr>
                         </tbody>
@@ -237,19 +73,188 @@
                 </div>
             </div>
         </div>
-        <person-form
-            :showDialog.sync="showDialogNewPerson"
-            type="customers"
-            :user_id="form.user_id"
-            :external="true"
-            document_type_id="03"
-            @reloadDataPersons="reloadDataCustomers"
-        ></person-form>
+        
+
+            <div class="row" v-for="(person, idx) in persons" :key="idx" style="width: 103%;">
+                <div class="row" :class="{ 'mt-2': idx == 0 }">
+                    <div class="col-12 mb-2">
+                        <div class="card" :style="{
+                            background: colorArray[idx % colorArray.length].background,
+                            color: colorArray[idx % colorArray.length].color,
+                            borderRadius: '8px',
+                            padding: '12px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                        }">
+                            <!-- Título de la cuenta -->
+                            <div class="d-flex align-items-center">
+                                <span style="font-weight: bold; font-size: 1.1em;">
+                                    Cuenta #{{ idx + 1 }}
+                                </span>
+                                <span v-if="person.amount" class="ml-3"
+                                    style="font-size: 1em; margin-left: auto; display: flex; align-items: center;">
+                                    Monto: <b>S/. {{ Number(person.amount).toFixed(2) }}</b>
+                                </span>
+                            </div>
+                            <!-- Botones de selección de cuenta, Tipo de documento y Cliente en una sola fila -->
+                            <div class="row">
+                                <!-- Botón de selección de cuenta -->
+                                <div class="col-1 d-flex align-items-center justify-content-center">
+                                    <el-button :type="person.selected ? 'primary' : 'default'"
+                                        :icon="person.selected ? '' : ''" :disabled="splitByAmount == '1'"
+                                        @click="selectAccount(idx)"
+                                        style="font-size: 1em; padding: 10px 10px; min-width: 20px; min-height: 20px;">
+                                        <i v-if="person.selected" class="fas fa-hand-paper"></i>
+                                        <i v-else class="fas fa-hand-rock"></i>
+                                    </el-button>
+                                </div>
+                                <!-- Botones Tipo de documento -->
+                                <div class="col-4">
+                                    <label for="document_type_id">Tipo de documento</label>
+                                    <el-button-group v-model="person.document_type_id" filterable>
+                                        <el-button v-if="establishments.documents.invoice" value="01"
+                                            @click.native="person.document_type_id = '01'"
+                                            class="split-btn-group-btn btn-factura">
+                                            <i class="fas fa-file-invoice-dollar fa-sm" style="margin-right: 5px;"></i>
+                                            FACTURA
+                                        </el-button>
+                                        <el-button v-if="establishments.documents.receipt" value="03"
+                                            @click.native="person.document_type_id = '03'"
+                                            class="split-btn-group-btn btn-boleta">
+                                            <i class="fas fa-file-alt fa-sm" style="margin-right: 5px;"></i>
+                                            BOLETA
+                                        </el-button>
+                                        <el-button v-if="establishments.documents.sale_note" value="80"
+                                            @click.native="person.document_type_id = '80'"
+                                            class="split-btn-group-btn btn-nota">
+                                            <i class="fas fa-file-signature fa-sm" style="margin-right: 5px;"></i>
+                                            NOTA
+                                        </el-button>
+                                    </el-button-group>
+                                </div>
+                                <!-- Cliente -->
+                                <div class="col-7">
+                                    <label for="new_customer_id">
+                                        <a href="#" @click.prevent="openDialogNewPerson(idx)">Cliente [+ Nuevo]</a>
+                                    </label>
+                                    <el-select v-model="person.customer_id" filterable remote :class="{
+                                        pperson: person.selected
+                                    }" popper-class="el-select-customers"
+                                        placeholder="Escriba el nombre o número de documento del cliente"
+                                        :remote-method="searchRemoteCustomers" :loading="loading_search"
+                                        @change="changeCustomer(idx)" :ref="`customer_${idx}`">
+                                        <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                                            :label="option.description"></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <!-- Fila única para WhatsApp, Método de pago, Monto y N° de operación -->
+                            <div class="row w-100">
+
+                                <!-- Método de pago -->
+                                <div class="col-4">
+                                    <label for="payment_method_id">Método de pago</label>
+                                    <el-select v-model="person.payment_method" filterable
+                                        @change="onChangePaymentMethod(idx)">
+                                        <el-option v-for="option in paymentMethods" :key="option.value"
+                                            :value="option.value" :label="option.text"></el-option>
+                                    </el-select>
+                                </div>
+                                <!-- monto -->
+                                <!-- <div class="col-3">
+                                        <label for="amount">Monto</label>
+                                        <el-input v-model="person.amount" readonly></el-input>
+                                    </div> -->
+                                <!-- N° de operación -->
+                                <div class="col-3" v-if="['03', '04', '05', '06'].includes(person.payment_method)">
+                                    <label for="">N. Op.</label>
+                                    <el-input v-if="['03', '04', '05', '06'].includes(person.payment_method)"
+                                        v-model="person.operation_number"
+                                        :placeholder="`N° de operación ${idx + 1}`"></el-input>
+                                    <div class="col-3" v-else >
+                                        <!-- Sino cumple queda vacio -->
+                                    </div>
+                                </div>
+                                <!-- Nro de WhatsApp -->
+                                <div class="col-4">
+                                    <label for="" style="margin-bottom: 2px;">
+                                        <i class="fab fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i>
+                                        WhatsApp
+                                    </label>
+                                    <el-input v-model="person.customer_telephone"
+                                        :placeholder="`N° de WhatsApp ${idx + 1}`" @keyup.enter="sendPayments"
+                                        style="padding: 2px 6px; margin: 0;"></el-input>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 m-1" v-if="splitByAmount == '2' && person.products.length > 0">
+                            <div class="split-products-list" style="padding: 0; margin: 0;">
+                                <el-collapse
+                                    :value="[`products_${idx}`]"
+                                    class="split-products-collapse"
+                                    accordion
+                                >
+                                    <el-collapse-item
+                                        :name="`products_${idx}`"
+                                        :title="`Productos (${person.products.length})`"
+                                        :style="{
+                                            background: colorArray[idx % colorArray.length].background,
+                                            color: colorArray[idx % colorArray.length].color,
+                                            borderRadius: '6px',
+                                            marginBottom: '8px',
+                                            border: '1px solid #e0e0e0'
+                                        }"
+                                    >
+                                        <el-table
+                                            :data="person.products"
+                                            style="width: 100%; padding: 0; margin: 0;"
+                                            :header-cell-style="{
+                                                background: colorArray[idx % colorArray.length].background,
+                                                color: colorArray[idx % colorArray.length].color,
+                                                fontWeight: 'bold'
+                                            }"
+                                            :cell-style="{
+                                                background: '#fff'
+                                            }"
+                                            size="mini"
+                                            border
+                                        >
+                                            <el-table-column prop="quantity" label="Cantidad" width="90"></el-table-column>
+                                            <el-table-column prop="description" label="Descripción"></el-table-column>
+                                            <el-table-column label="Acciones" width="90">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                        size="mini"
+                                                        type="danger"
+                                                        @click="removeItem(scope.row.id, idx)"
+                                                        icon="el-icon-delete"
+                                                        circle
+                                                        :style="{ background: '#e53935', color: '#fff', border: 'none' }"
+                                                    ></el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-collapse-item>
+                                </el-collapse>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <el-divider></el-divider>
+        
+
+        <person-form :showDialog.sync="showDialogNewPerson" type="customers" :user_id="form.user_id" :external="true"
+            document_type_id="03" @reloadDataPersons="reloadDataCustomers"></person-form>
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
-                <el-button type="primary" @click="sendPayments"
-                    >Listo</el-button
-                >
+                <el-button  type="primary" @click="sendPayments">Listo</el-button>
             </div>
         </div>
     </el-dialog>
@@ -263,8 +268,109 @@
 .pperson .el-input--suffix .el-input__inner {
     color: #073f68;
 }
+
+.split-radio-group {
+    display: flex;
+    gap: 8px;
+}
+
+.split-radio-group .el-radio-button__inner.is-checked,
+.split-radio-group .el-radio-button.is-active .el-radio-button__inner {
+    background-color: #073f68 !important;
+    border-color: #073f68 !important;
+    color: #fff !important;
+}
+
+.split-input-number .el-input__inner {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+}
+
+.split-btn-group-btn {
+    margin-right: 6px;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 4px 10px;
+    font-weight: bold;
+    width: 90px;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.btn-factura {
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50 !important;
+    color: #fff !important;
+}
+
+.btn-boleta {
+    background-color: #FFC107 !important;
+    border-color: #FFC107 !important;
+    color: #fff !important;
+}
+
+.btn-nota {
+    background-color: #1E88E5 !important;
+    border-color: #1E88E5 !important;
+    color: #fff !important;
+}
+
+@media (max-width: 1024px) {
+    .split-btn-group-btn {
+        font-size: 9px;
+        padding: 2px 2px;
+        width: 65px;
+        height: 26px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .split-btn-group-btn {
+        font-size: 14px;
+        /* padding: 2px 2px; */
+        width: 100px;
+        height: 38px;
+    }
+}
+
+@media (max-width: 1280px) {
+    .split-input-number .el-input__inner {
+        font-size: 1.3em;
+        height: 32px;
+        /* Ajusta este valor si tu el-radio-button tiene otro alto */
+        line-height: 32px;
+        padding-left: 0.7em;
+        padding-right: 0.7em;
+        min-width: 0;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .split-input-number {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .split-input-number .el-input-number__increase,
+    .split-input-number .el-input-number__decrease {
+        font-size: 1.1em;
+        padding: 0 6px;
+    }
+
+    .split-radio-group .el-radio-button__inner {
+        height: 32px;
+        line-height: 32px;
+        box-sizing: border-box;
+    }
+}
 </style>
 <script>
+import Swal from 'sweetalert2';
 import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 export default {
     components: {
@@ -280,7 +386,7 @@ export default {
         "series",
         "establishments"
     ],
-    created() {},
+    created() { },
     data() {
         return {
             showDialogNewPerson: false,
@@ -319,7 +425,6 @@ export default {
             quantity: 0,
             documentTypes: [
                 { value: "01", text: "FACTURA" },
-
                 { value: "03", text: "BOLETA" },
                 { value: "80", text: "NOTA DE VENTA" }
             ],
@@ -357,6 +462,21 @@ export default {
             input_person: { number: null },
             payments: []
         };
+    },
+    computed: {
+        dialogWidth() {
+            return window.innerWidth <= 1280 ? '90%' : '75%';
+        },
+        dialogTop() {
+            // Puedes cambiar este valor según tu criterio, por ejemplo:
+            return window.innerWidth <= 768 ? '2vh' : '8vh';
+        }
+    },
+    mounted() {
+        window.addEventListener('resize', this.$forceUpdate);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.$forceUpdate);
     },
     created() {
         let payment = _.round(this.total / 2, 1);
@@ -444,6 +564,22 @@ export default {
                 );
                 return false;
             }
+
+            // Validar número de operación para métodos de pago específicos
+            let invalidOperation = this.persons.some(p => {
+                if (["03", "04", "05", "06"].includes(p.payment_method)) {
+                    return !p.operation_number || p.operation_number.trim() === '';
+                }
+                return false;
+            });
+            if (invalidOperation) {
+                this.$showSAlert(
+                    "Error",
+                    "Debe ingresar el número de operación para para poder realizar la operacion",
+                    "error"
+                );
+                return false;
+            }
             return true;
         },
         async sendDocument(form, resource) {
@@ -505,9 +641,9 @@ export default {
                         p.document_type_id == "80" ? "sale-notes" : "documents";
                     this.payments.push({
                         amount: p.amount,
-                        payment_method: this.paymentMethods.find(
-                            pm => pm.text == p.payment_method
-                        ).value
+                        payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
+                        customer_telephone: p.customer_telephone,
+                        operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -516,12 +652,18 @@ export default {
                     let items = JSON.parse(JSON.stringify(this.form.items));
                     let p = this.persons[i];
 
-                    // Filtrar los ítems correspondientes a la persona actual
-                    let personItems = items.filter(i =>
-                        p.products.some(product => {
-                            return product.id == i.id;
-                        })
-                    );
+                    // Filtrar y clonar los ítems correspondientes a la persona actual, ajustando la cantidad
+                    let personItems = p.products.map(product => {
+                        let original = items.find(i => i.id == product.id);
+                        if (original) {
+                            // Clonar el producto y asignar la cantidad que corresponde a la persona
+                            return {
+                                ...original,
+                                quantity: product.quantity
+                            };
+                        }
+                        return null;
+                    }).filter(Boolean);
 
                     let currentTotal = personItems.reduce(
                         (sum, i) => sum + i.sale_unit_price * i.quantity,
@@ -555,9 +697,9 @@ export default {
 
                     this.payments.push({
                         amount: p.amount,
-                        payment_method: this.paymentMethods.find(
-                            pm => pm.text == p.payment_method
-                        ).value
+                        payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
+                        customer_telephone: p.customer_telephone,
+                        operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -601,14 +743,14 @@ export default {
                     total_base_igv:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * adjustedQuantity) /
-                              (1 + percentage_igv / 100)
+                            (1 + percentage_igv / 100)
                             : i.sale_unit_price * adjustedQuantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * adjustedQuantity) /
-                                  (1 + percentage_igv / 100)) *
-                              (percentage_igv / 100)
+                                (1 + percentage_igv / 100)) *
+                            (percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -619,13 +761,13 @@ export default {
                     total_taxes:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * adjustedQuantity) /
-                                  (1 + percentage_igv / 100)) *
-                              (percentage_igv / 100)
+                                (1 + percentage_igv / 100)) *
+                            (percentage_igv / 100)
                             : 0,
                     total_value:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * adjustedQuantity) /
-                              (1 + percentage_igv / 100)
+                            (1 + percentage_igv / 100)
                             : adjustedQuantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -778,9 +920,7 @@ export default {
         },
         addItem(item) {
             if (item.quantity == 0) {
-                this.$toast.warning(
-                    "No quedan unidades disponibles para dividir el producto"
-                );
+                Swal.fire("No quedan unidades disponibles para dividir el producto");
                 return;
             }
             let itemIdx = this.items.findIndex(i => i.id == item.id);
@@ -791,30 +931,34 @@ export default {
                 );
 
                 if (indexItem > -1) {
+                    // Solo incrementa la cantidad asignada a esta persona
                     this.persons[idx].products[indexItem].quantity += 1;
                 } else {
+                    // Agrega el producto con cantidad 1, no la cantidad total
                     this.persons[idx].products.push({
                         price: item.price,
                         description: item.food.description,
                         id: item.id,
-                        quantity: 1,
+                        quantity: 1, // Solo 1 asignado
                         background:
                             itemIdx > 19
                                 ? "black"
                                 : this.colorArray[itemIdx].background,
                         color:
                             itemIdx > 19
-                                ? "white"
+                                ? "black"
                                 : this.colorArray[itemIdx].color
                     });
                 }
 
-                --item.quantity;
+                // Resta 1 a la cantidad disponible en la lista general
+                item.quantity -= 1;
+                // Calcula el total solo de los productos asignados a la persona
                 this.persons[idx].amount = this.totalItemSelected(
                     this.persons[idx].products
                 );
             } else {
-                this.$toast.warning("Seleccione una cuenta");
+                Swal.fire("Seleccione una cuenta");
             }
         },
 
@@ -917,12 +1061,26 @@ export default {
                 })
             );
         },
-        changeCustomer(idx) {
+        /* changeCustomer(idx) {
             let customer = this.customers.find(
                 c => c.id == this.persons[idx].customer_id
             );
             this.persons[idx].identity_document_type_id =
                 customer.identity_document_type_id;
+        }, */
+        changeCustomer(idx) {
+            let customer = this.customers.find(
+                c => c.id == this.persons[idx].customer_id
+            );
+            this.persons[idx].identity_document_type_id = customer.identity_document_type_id;
+            this.persons[idx].customer_telephone = customer.telephone;
+        },
+        onChangePaymentMethod(idx) {
+            // Limpiar número de operación si cambia a método que no lo requiere
+            const p = this.persons[idx];
+            if (!['03', '04', '05', '06'].includes(p.payment_method)) {
+                p.operation_number = '';
+            }
         },
         addPerson(amount = 0) {
             this.persons.push({
@@ -930,10 +1088,12 @@ export default {
                     .identity_document_type_id,
                 customer_id: this.customer_default_id,
                 amount: amount,
-                payment_method: "Efectivo",
+                payment_method: "01", // Default to 'Efectivo' value
                 selected: false,
                 document_type_id: "03",
-                products: []
+                products: [],
+                customer_telephone: '',
+                operation_number: ''
             });
         },
         open() {

@@ -19,6 +19,7 @@
 
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
+               
                 <div
                     class="card-header bg-primary d-flex align-items-center"
                     style="padding: 15px;"
@@ -45,15 +46,15 @@
                                 Restaurar Compra
                             </el-button> -->
                     <el-button
-                        class="btn_titulos_modal"
+                    type="primary"
+                        class="btn_buscar"
+                        style="margin-right: 5px;"
                         href="javascript:void(0)"
                         @click.prevent="clickNuevo()"
                     >
                         <i class="fas fa-plus"></i>
-                        <span
-                            style="color: #000; font-size: 1.25rem; font-weight: bold;"
-                            >Nuevo</span
-                        >
+                       
+                            Nuevo
                     </el-button>
                     <!-- <el-button
                         class="btn_titulos_modal"
