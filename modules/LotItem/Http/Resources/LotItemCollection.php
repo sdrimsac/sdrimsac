@@ -25,6 +25,7 @@ class LotItemCollection extends ResourceCollection
                 'lote'    => $row->lote ? $row->lote->code : null,
                 'has_sale'    => (bool)$row->has_sale,
                 'active'    => $row->state,
+                'code_lots' => $row->code_lots,
             ];
         });
     }

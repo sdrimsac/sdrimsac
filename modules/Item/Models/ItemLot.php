@@ -19,7 +19,8 @@ class ItemLot extends ModelTenant
         'item_loteable_id',
         'has_sale',
         'lote_id',
-        'state'
+        'state',
+        'code_lots'
     ];
 
     public function item()

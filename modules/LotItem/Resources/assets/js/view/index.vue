@@ -53,6 +53,7 @@
                                 <th class="text-white">Almacén</th>
                                 <th class="text-white">Vendido</th>
                                 <th class="text-white">Estado</th>
+                                <th class="text-white">Codigo de lote</th>
                                 <th class="text-white text-end">Opciones</th>
                             </tr>
 
@@ -67,6 +68,7 @@
                                 <td>{{ row.warehouse.description }}</td>
                                 <td>{{ row.has_sale ? "Sí" : "No" }}</td>
                                 <td>{{ row.active }}</td>
+                                <td>{{ row.code_lots }}</td>
                                 <td class="text-end">
                                    
                                     <button class="btn p-0" 

@@ -265,6 +265,9 @@ class PosController extends Controller
                                     ->orWhere('barcode', 'LIKE', '%' . $value . '%')
                                     ->orWhereHas('item_codes', function ($q2) use ($value) {
                                         $q2->where('code_barcode', 'LIKE', '%' . $value . '%');
+                                    })
+                                    ->orWhereHas('item_unit_types', function ($q) use ($value) {
+                                        $q->where('unique_code', 'LIKE', '%' . $value . '%');
                                     });
                                 if ($quality) {
                                     $query->orWhere('quality', 'LIKE', '%' . $value . '%');
@@ -280,6 +283,7 @@ class PosController extends Controller
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere('code', 'LIKE', '%' . $value . '%')
                             ->orWhereHas('item.item_unit_types', function ($q) use ($value) {
+                                dump($value);
                                 $q->where('unique_code', 'LIKE', '%' . $value . '%');
                             });
                         if ($search_by_second_name) {

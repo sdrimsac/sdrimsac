@@ -30,6 +30,10 @@
                     <el-option value="Inactivo">Inactivo</el-option>
                 </el-select>
             </div>
+            <div class="col-md-4">
+                <label for="serie">Codigo de lote relacionado</label>
+                <el-input class="w-100" v-model="form.code_lots"> </el-input>
+            </div>
         </div>
         <div class="row m-2"></div>
         <div slot="footer" class="dialog-footer">
