@@ -747,8 +747,12 @@ class SaleNoteController extends Controller
         $category_id = $request->category_id;
         $user_id = $request->user_id;
         $year = $request->year;
+        $establishment_id = $request->establishment_id;
         $records = SaleNote::query();
 
+        if ($establishment_id) {
+            $records = $records->where('establishment_id', $establishment_id);
+        }
         if ($user_id) {
             $records = $records->where("user_id", $user_id);
         }

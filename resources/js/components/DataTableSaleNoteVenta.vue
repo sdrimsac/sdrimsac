@@ -187,6 +187,27 @@
                             </el-select>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="form-group">
+                            <label class="control-label w-100"
+                                >Establecimiento</label
+                            >
+                            <el-select
+                                v-model="search.establishment_id"
+                                @change="getRecords"
+                                popper-class="el-select-establishment"
+                                filterable
+                                clearable
+                            >
+                                <el-option
+                                    v-for="option in establishments"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
                     <div class="col-md-6 col-sm-12">
                         <el-button
                             type="success"
@@ -284,12 +305,14 @@ export default {
                 end: null,
                 user_id: null,
                 year: null,
+                establishment_id: null,
             },
             totals: {
                 total_pen: 0,
                 total_paid_pen: 0,
                 total_pending_paid_pen: 0
             },
+            establishments: [],
             columns: [],
             records: [],
             pagination: {},
@@ -314,6 +337,7 @@ export default {
             this.categories = response.data.categories;
             this.state_types = response.data.state_types;
             this.users = response.data.users;
+            this.establishments = response.data.establishments;
         });
     },
     async mounted() {
