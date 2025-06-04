@@ -34,7 +34,7 @@
                             EMPEZAR
                         </span>
                         <span v-else-if="table.status == 2">
-                            EN LIMPIEZA
+                            {{ userType === 'mantenimiento' ? 'EN MANTENIMIENTO' : 'EN LIMPIEZA' }}
                         </span>
                         <span v-else>
                             TERMINAR
@@ -63,7 +63,7 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button 
-                    @click="showDialog = false" 
+                    @click="cancelDialog" 
                     style="background-color: #e74c3c; color: #fff; font-size: 18px; border-radius: 25px; padding: 10px 30px; border: none;"
                 >
                     Cancelar
@@ -114,7 +114,8 @@ export default {
                 finish_comment: null,
                 id: null
             },
-            currentTable: null
+            currentTable: null,
+            userType: 'limpieza' // Cambia esto dinámicamente según el usuario
         };
     },
     mounted() {
@@ -144,6 +145,7 @@ export default {
             } finally {
                 this.showDialog = false;
                 this.loading = false;
+                this.initForm();
             }
         },
         async changeState(table) {
@@ -167,6 +169,7 @@ export default {
                     });
                     if (result.isConfirmed) {
                         await this.sendState();
+                        this.initForm();
                     }
                 } else {
                     this.showFinishDialog();
@@ -177,6 +180,10 @@ export default {
         },
         showFinishDialog() {
             this.showDialog = true;
+        },
+        cancelDialog() {
+            this.showDialog = false;
+            this.initForm();
         },
         async getTables() {
             const response = await this.$http(`/caja/maintenance/records`);

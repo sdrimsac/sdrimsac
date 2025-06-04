@@ -7,7 +7,7 @@
             >
                 <div
                     v-for="(table, idx) in records"
-                    class=" btn-dirty col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
+                    :class="[table.status == 2 ? 'btn-black' : 'btn-dirty', 'col-2', 'btn', 'm-1', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center']"
                     :key="idx"
                     style="height: 150px; width: 135px;"
                     @click="changeState(table)"
@@ -18,13 +18,13 @@
                         <span style="font-size:45px;margin:5px;">
                             <i class="fas fa-door-closed"></i>
                         </span>
-                        <span
-                            class="text-center
-                        "
-                            >{{ table.name.toUpperCase() }}</span
-                        >
-
-                        <span v-if="table.status == 1">
+                        <span class="text-center">
+                            {{ table.name.toUpperCase() }}
+                        </span>
+                        <span v-if="table.status == 2">
+                            EN MANTENIMIENTO
+                        </span>
+                        <span v-else-if="table.status == 1">
                             EMPEZAR
                         </span>
                         <span v-else>
@@ -62,19 +62,27 @@
 <style>
 .btn-black {
     background-color: #000;
+    color: #fff;
 }
 .btn-free {
     background-color: #91d24c;
 }
 .btn-dirty {
     background-color: #a7a5a8;
+    color: #000;
 }
 .btn-reserve {
     background-color: #7030a0;
 }
+.btn-blue {
+    background-color: #007bff;
+    color: #fff;
+}
 </style>
 <script>
+import Swal from "sweetalert2";
 export default {
+    components: { Swal },
     props: ["configuration", "establishment"],
     data() {
         return {
@@ -115,6 +123,7 @@ export default {
             } finally {
                 this.showDialog = false;
                 this.loading = false;
+                this.initForm(); // Limpiar el formulario después de enviar
             }
         },
         async changeState(table) {
@@ -127,12 +136,17 @@ export default {
             }
             try {
                 if (table.status == 1) {
-                    await this.$confirm(message, "Confirmación", {
-                        confirmButtonText: "Aceptar",
-                        cancelButtonText: "Cancelar",
-                        type: "warning"
+                    const result = await Swal.fire({
+                        title: 'Confirmación',
+                        text: message,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Aceptar',
+                        cancelButtonText: 'Cancelar'
                     });
-                    await this.sendState();
+                    if (result.isConfirmed) {
+                        await this.sendState();
+                    }
                 } else {
                     this.showFinishDialog();
                 }
