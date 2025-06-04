@@ -399,7 +399,6 @@
                                                         type="text"
                                                         class="form-control"
                                                         id="checkin_date"
-                                                        
                                                         :value="
                                                             `${new Date(
                                                                 currentRoom.checkin_date +
@@ -594,6 +593,7 @@
                                     placement="top"
                                 >
                                     <button
+                                        v-if="!currentRoom.is_month_rent"
                                         type="button"
                                         class="btn btn-success btn-sm"
                                         @click="createOrden"
@@ -671,12 +671,9 @@
                                 <el-tooltip
                                     content="Desocupar la habitación antes de finalizar el periodo de alquiler"
                                     placement="top"
+                                    v-else
                                 >
                                     <button
-                                        v-if="
-                                            currentRoom &&
-                                                !currentRoom.is_month_rent
-                                        "
                                         @click="desocupiedRoom(currentRoom.id)"
                                         type="button"
                                         class="btn btn-warning btn-sm"
@@ -687,6 +684,23 @@
                                             style="margin-right: 5px;"
                                         ></i
                                         >Desocupar
+                                    </button>
+                                </el-tooltip>
+                                <el-tooltip
+                                    content="Hacer el pago completo de lo  que se ocupó y se ha consumido"
+                                    placement="top"
+                                >
+                                    <button
+                                        @click="payAll"
+                                        type="button"
+                                        class="btn btn-sm"
+                                        style="margin-top:20px; background-color: #073f68; color: white;"
+                                    >
+                                        <i
+                                            class="fas fa-credit-card"
+                                            style="margin-right: 5px;"
+                                        ></i
+                                        >Pagar
                                     </button>
                                 </el-tooltip>
 
@@ -736,19 +750,6 @@
                                         style="margin-right: 15px;"
                                     >
                                         <span class="fw-bold text-secondary h5"
-                                            >Órdenes:</span
-                                        >
-                                        <span class="text-dark h4">{{
-                                            Number(
-                                                currentRoom.total_orden
-                                            ).toFixed(2)
-                                        }}</span>
-                                    </div>
-                                    <div
-                                        class="d-flex flex-column align-items-start"
-                                        style="margin-right: 15px;"
-                                    >
-                                        <span class="fw-bold text-secondary h5"
                                             >Adelantos:</span
                                         >
                                         <span class="text-dark h4">{{
@@ -757,20 +758,6 @@
                                             )
                                         }}</span>
                                     </div>
-                                    <template v-if="extra_time > 0">
-                                        <div
-                                            class="d-flex flex-column align-items-start"
-                                            style="margin-right: 15px;"
-                                        >
-                                            <span
-                                                class="fw-bold text-secondary h5"
-                                                >Penalidad:</span
-                                            >
-                                            <span class="text-danger h4">{{
-                                                Number(extra_time).toFixed(2)
-                                            }}</span>
-                                        </div>
-                                    </template>
                                     <div
                                         class="d-flex flex-column align-items-start"
                                         style="margin-right: 15px;"
@@ -785,6 +772,34 @@
                                             ).toFixed(2)
                                         }}</span>
                                     </div>
+                                    <div
+                                        class="d-flex flex-column align-items-start"
+                                        style="margin-right: 15px;"
+                                    >
+                                        <span class="fw-bold text-secondary h5"
+                                            >Órdenes:</span
+                                        >
+                                        <span class="text-dark h4">{{
+                                            Number(
+                                                currentRoom.total_orden
+                                            ).toFixed(2)
+                                        }}</span>
+                                    </div>
+
+                                    <template v-if="extra_time > 0">
+                                        <div
+                                            class="d-flex flex-column align-items-start"
+                                            style="margin-right: 15px;"
+                                        >
+                                            <span
+                                                class="fw-bold text-secondary h5"
+                                                >Penalidad:</span
+                                            >
+                                            <span class="text-danger h4">{{
+                                                Number(extra_time).toFixed(2)
+                                            }}</span>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>

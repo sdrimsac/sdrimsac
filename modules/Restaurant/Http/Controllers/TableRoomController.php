@@ -1146,7 +1146,7 @@ class TableRoomController extends Controller
                 if ($advances = $hotel_rent_item->advances > 0) {
                     $concept = "Adelanto de Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
                 } else {
-                $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
+                    $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
                 }
             }
             $service->description = $concept;
@@ -1564,6 +1564,23 @@ class TableRoomController extends Controller
                 if ($is_payed) {
                     // $payment_status = "Pagado";
                     // $advances = $total;
+                }
+                // Validación: no permitir alquiler si hay reserva en el rango solicitado
+                $check = $this->check_reserve(new Request([
+                    'table_id' => $room['table_id'],
+                    'checkin_date' => $room['checkin_date'],
+                    'checkin_time' => $room['checkin_time'],
+                    'duration' => $room['duration'],
+                    'is_month_rent' => $room['is_month_rent'],
+                    // 'id' => null // si es edición, pasar el id
+                ]));
+                if (!$check['success']) {
+                    DB::connection('tenant')->rollBack();
+                    // Mensaje claro para el frontend
+                    return [
+                        'success' => false,
+                        'message' => $check['message']
+                    ];
                 }
                 $checkin_date = Carbon::parse($room['checkin_date'])
                     ->setTimezone('America/Lima')

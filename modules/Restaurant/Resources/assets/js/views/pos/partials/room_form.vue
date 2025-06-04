@@ -935,7 +935,7 @@ export default {
                         }
                     } else {
                         room.not_available = true;
-                        this.$showSAlert("ALERTA", message);
+                        this.$showSAlert("ALERTA", message, "warning");
                     }
                 }
             } catch (e) {
@@ -1235,6 +1235,12 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
+                    // Validar success del backend
+                    if (response.data && response.data.success === false) {
+                        this.$showSAlert("ALERTA", response.data.message, "warning");
+                        this.loading = false;
+                        return;
+                    }
                     this.$showSAlert(
                         "Éxito",
                         "Huesped ingresado correctamente"
@@ -1267,11 +1273,21 @@ export default {
         validate() {
             console.log("Validando formulario...");
             let pass = true;
-            let { customer_id, rooms } = this.form;
+            let { customer_id, rooms, advance, sub_total } = this.form;
             if (!customer_id) {
                 this.$showSAlert(
                     "ALERTA",
                     "Debe seleccionar un cliente",
+                    "warning"
+                );
+                pass = false;
+            }
+
+            // Validación de adelanto mayor al subtotal
+            if (Number(advance) > Number(sub_total)) {
+                this.$showSAlert(
+                    "ALERTA",
+                    "El adelanto no puede ser mayor al total",
                     "warning"
                 );
                 pass = false;
