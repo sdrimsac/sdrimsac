@@ -721,6 +721,8 @@ class SaleNoteController extends Controller
     }
     public function excelNota(Request $request)
     {
+        ini_set('memory_limit', '5500M');
+        ini_set('max_execution_time', '30000');
         $records = $this->get_recordsNota($request)->get();
         $company = Company::active();
         $establishment = Establishment::first();
