@@ -130,6 +130,7 @@ class DocumentInput
         // }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'affect_cash' => Functions::valueKeyInArray($inputs, 'affect_cash', false),
             'currentAppointment' => Functions::valueKeyInArray($inputs, 'currentAppointment', null),
             'due_date' => Functions::valueKeyInArray($inputs, 'due_date', null),
             'vehiculo_id' => Functions::valueKeyInArray($inputs, 'vehiculo_id'),

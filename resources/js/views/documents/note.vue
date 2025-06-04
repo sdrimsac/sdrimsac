@@ -81,6 +81,8 @@
                                         v-model="
                                             form.note_credit_or_debit_type_id
                                         "
+                                        clearable
+                                        filterable
                                     >
                                         <el-option
                                             v-for="option in note_debit_types"
@@ -477,6 +479,7 @@
 import DocumentFormItem from "./partials/item.vue";
 import DocumentOptions from "../documents/partials/options.vue";
 import { functions, exchangeRate } from "../../mixins/functions";
+import Swal from "sweetalert2";
 
 export default {
     components: { DocumentFormItem, DocumentOptions },
@@ -553,6 +556,7 @@ export default {
             this.errors = {};
             this.form = {
                 user_id: 1,
+                affect_cash: false,
                 afectar_caja: false,
                 additional_information: null,
                 establishment_id: this.document.establishment_id,
@@ -657,10 +661,28 @@ export default {
                         s.number.substr(0, 1) === firstChar
                     );
                 });
-            }
 
-            this.form.series_id =
-                this.series.length > 0 ? this.series[0].id : null;
+                // Autoselección de serie para nota de crédito
+                if (this.form.document_type_id == "07" && this.document.series) {
+                    let originalSeries = this.document.series;
+                    let prefix = originalSeries.substr(0, 1); // B o F
+                    let number = originalSeries.substr(1); // 043 o 001
+                    let targetSeries = "";
+                    if (prefix === "B") {
+                        targetSeries = `BC${number.substr(number.length - 2)}`;
+                    } else if (prefix === "F") {
+                        targetSeries = `FC${number.substr(number.length - 2)}`;
+                    }
+                    let found = this.series.find(s => s.number === targetSeries);
+                    if (found) {
+                        this.form.series_id = found.id;
+                    } else {
+                        this.form.series_id = this.series.length > 0 ? this.series[0].id : null;
+                    }
+                } else {
+                    this.form.series_id = this.series.length > 0 ? this.series[0].id : null;
+                }
+            }
 
             this.isCreditNote = this.form.document_type_id == "07";
         },
@@ -745,8 +767,23 @@ export default {
             this.form.total =
                 _.round(total, 2) + this.form.total_plastic_bag_taxes;
         },
-        validateHasDiscounts() {
+        async validateHasDiscounts() {
             console.log(this.isCreditNote, " ", this.hasDiscounts);
+            if (this.isCreditNote && this.hasDiscounts){
+                const result = await Swal.fire({
+                    title: "¿Desea afectar la caja origen donde fue emitido el documento?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                });
+                if (result.isConfirmed) {
+                    this.form.affect_cash = true;
+                } else {
+                    this.form.affect_cash = false;
+                }
+            }
             if (this.isCreditNote && this.hasDiscounts) {
                 this.$toast.error(
                     "El comprobante relacionado tiene descuentos, debe agregar los productos"
@@ -755,7 +792,20 @@ export default {
                 this.calculateTotal();
             }
         },
-        submit() {
+        async submit() {
+            // Preguntar si desea afectar la caja antes de continuar
+            if (this.isCreditNote) {
+                const result = await Swal.fire({
+                    title: "¿Desea afectar la caja origen donde fue emitido el documento?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                });
+                this.form.affect_cash = result.isConfirmed;
+            }
+
             if (
                 this.isCreditNote &&
                 this.hasDiscounts &&
@@ -785,6 +835,14 @@ export default {
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
+                        // Mostrar todos los mensajes de error en alertas
+                        if (error.response.data.errors) {
+                            Object.values(error.response.data.errors).forEach(messages => {
+                                messages.forEach(msg => {
+                                    this.$toast.error(msg);
+                                });
+                            });
+                        }
                     } else {
                         this.$toast.error(error.response.data.message);
                     }

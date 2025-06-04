@@ -475,7 +475,7 @@
                                                             style="height: 40px; background-color: #d2b48c;"
                                                             v-if="
                                                                 row.btn_note &&
-                                                                    !isAccountant
+                                                                    !isAccountant && !row.document_affected_notes || row.document_affected_notes.length === 0
                                                             "
                                                         >
                                                             <i

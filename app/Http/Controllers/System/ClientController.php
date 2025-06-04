@@ -1272,7 +1272,6 @@ class ClientController extends Controller
         ];
     }
 
-
     public function lockedEmission(Request $request)
     {
 

@@ -800,9 +800,11 @@ import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 ///mixins/deletable'
 import SeriesBillsDialog from "./series_bills.vue";
 import readXlsxFile from "read-excel-file";
+import Swal from "sweetalert2";
 export default {
     components: {
-        SeriesBillsDialog
+        SeriesBillsDialog,
+        Swal
     },
     mixins: [deletable],
     props: [
@@ -861,7 +863,7 @@ export default {
                     }
                 });
                 this.seriesBills = localSeries;
-                this.$toast.success("Series cargadas correctamente");
+                this.$showSAlert("EXITO", "Series cargadas correctamente");
                 event.target.value = "";
             });
         },
@@ -925,39 +927,20 @@ export default {
             this.difference = (this.totalSales - this.final_balance).toFixed(2);
         },
         async clickCloseCash() {
-            const h = this.$createElement;
-            this.$msgbox({
+            const result = await Swal.fire({
                 title: "Cerrar caja",
-                type: "warning",
-                message: h("p", null, [
-                    h(
-                        "p",
-                        { style: "text-align: justify; font-size:15px" },
-                        `${
-                            this.difference == 0
-                                ? "¿Está seguro de cerrar la caja?"
-                                : "¿Está seguro de cerrar la caja,  sin realizar el conteo en efectivo?"
-                        }`
-                    )
-                ]),
-
+                text: this.difference == 0
+                    ? "¿Está seguro de cerrar la caja?"
+                    : "¿Está seguro de cerrar la caja, sin realizar el conteo en efectivo?",
+                icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar",
-                beforeClose: async (action, instance, done) => {
-                    if (action === "confirm") {
-                        instance.confirmButtonLoading = true;
-                        instance.confirmButtonText = "Cerrando...";
-                        //  console.log(this.count);
-                        await this.createRegister(instance, done);
-                        instance.confirmButtonLoading = false;
-                    } else {
-                        done();
-                    }
-                }
-            })
-                .then(action => {})
-                .catch(action => {});
+                confirmButtonText: "Aceptar",
+                reverseButtons: true
+            });
+            if (result.isConfirmed) {
+                await this.createRegister({}, () => {});
+            }
         },
         async dateclosed() {
             console.log("dateclosed");
@@ -1006,7 +989,8 @@ export default {
                     });
                     this.$eventHub.$emit("reloadData");
                     this.open_cash = true;
-                    this.$toast.success(response.data.message);
+                    /* this.$toast.success(response.data.message); */
+                    this.$showSAlert("ÉXITO", response.data.message);
                     this.ocultarBoton();
                     if (this.fromBox) {
                         this.$emit("updateCashId", null);

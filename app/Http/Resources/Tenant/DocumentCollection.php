@@ -231,7 +231,13 @@ class DocumentCollection extends ResourceCollection
                 'user_email' => ($row->user) ? $row->user->email : '',
                 'external_id' => $row->external_id,
                 'observation' => $row->observation,
-                'balance' => $balance
+                'balance' => $balance,
+                'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                    ? [[
+                        'document_id' => $row->document_affected_note->document_id,
+                        'affected_document_id' => $row->document_affected_note->affected_document_id,
+                    ]]
+                    : [],
 
             ];
         });
@@ -263,9 +269,9 @@ class DocumentCollection extends ResourceCollection
     function get_last_document($row)
     {
         $last_register_movement = RegisterMovement::where('model', Document::class)
-            
+
             ->where('model_id', $row->id)
-            
+
             ->orderBy('id', 'desc')->first();
 
         $data = [
@@ -274,7 +280,7 @@ class DocumentCollection extends ResourceCollection
             'description' => '',
             'created_at' => ''
         ];
-        if ($last_register_movement) { 
+        if ($last_register_movement) {
             $date_time = $last_register_movement->created_at;
             $data = [
                 'user' => $last_register_movement->user->name,

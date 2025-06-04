@@ -127,6 +127,7 @@ use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
 use App\Models\Tenant\HotelRentPenalty;
+use App\Models\Tenant\Note;
 use App\Services\SunatService;
 use App\Traits\CheckTotalTrait;
 use App\Traits\CheckDuplicateTrait;
@@ -1451,6 +1452,8 @@ class DocumentController extends Controller
         DB::connection('tenant')->beginTransaction();
         $user_type = auth()->user()->type;
         $ids = [];
+        /* $affect_cash = $request->affect_cash; */
+
         $this->restoreOrderItems($request->all());
         if (key_exists('id', $request->all())) {
             $document_id = $request->id;
@@ -1500,6 +1503,20 @@ class DocumentController extends Controller
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $document = $facturalo->getDocument();
+
+            $affect_cash = $request->affect_cash;
+
+            if ($affect_cash) {
+                $note = Note::where('document_id', $document->id)->first();
+
+                if ($note && $note->affected_document_id) {
+                    $affected_document_id = $note->affected_document_id;
+                    Log::info("Eliminando Box para documento afectado: {$affected_document_id}");
+                    Box::where('document_id', $affected_document_id)->delete();
+                } else {
+                    Log::warning("No se encontró Note o affected_document_id para el nuevo documento: {$document->id}");
+                }
+            }
 
             if ($configuration->mod_renta && $request->hotel_rent_id) {
                 $hotel_rent_document = HotelRentDocument::create([
@@ -1586,6 +1603,22 @@ class DocumentController extends Controller
                 if ($cash_box) {
                     $cash_id_tmp = $cash_box->cash_id;
                     $request->merge(['cash_id' => $cash_id_tmp]);
+                }
+            }
+            if ($affect_cash && $document_id) {
+
+                $note = Note::where('document_id', $document_id)->first();
+
+                if ($note && $note->affected_document_id) {
+                    $affected_document_id = $note->affected_document_id;
+                    Log::info("no hay id: {$affected_document_id}");
+                } else {
+
+                    $affected_document_id = null;
+                    Log::info("es nulo: {$document_id}");
+                }
+                if ($affected_document_id) {
+                    Box::where('document_id', $affected_document_id)->delete();
                 }
             }
             Box::where('document_id', $document->id)->delete();
@@ -2642,9 +2675,9 @@ class DocumentController extends Controller
                 // ->where('establishment_id', auth()->user()->establishment_id)
                 ->where('state_type_id', 'like', '%' . $state_type_id . '%')
                 ->whereBetween('date_of_issue', [$d_start, $d_end])
-                ->OrderBy('id', 'desc')
+                /* ->OrderBy('id', 'desc')
                 ->OrderBy('number', 'desc')
-                ->latest();
+                ->latest() */;
         } else {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%')
                 // ->where('establishment_id', auth()->user()->establishment_id)
@@ -2653,9 +2686,9 @@ class DocumentController extends Controller
                 ->where('state_type_id', 'like', '%' . $state_type_id . '%')
                 ->where('series', 'like', '%' . $series . '%')
                 ->where('number', 'like', '%' . $number . '%')
-                ->OrderBy('id', 'desc')
+                /* ->OrderBy('id', 'desc')
                 ->OrderBy('number', 'desc')
-                ->latest();
+                ->latest() */;
         }
         $roleService = new RoleService;
 
@@ -2713,7 +2746,7 @@ class DocumentController extends Controller
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
             $records->load(['boxes' => function ($query) {
                 $query->select('id', 'amount', 'document_id')->without('document');
-            }, 'orden', 'sale_note_related']);
+            }, 'orden', 'sale_note_related', 'document_affected_note']);
         }
         return $records;
     }

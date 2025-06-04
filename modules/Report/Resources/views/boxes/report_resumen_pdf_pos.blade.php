@@ -312,7 +312,7 @@
                     <div>
 
                         <span style="font-size: 15px !important;">CODIGO DE APERTURA:
-                            {{ $cash->reference_number }}</span>
+                            {{ $cash->reference_number }} - {{$cash->id}}</span>
                     </div>
                 </td>
             </tr>
