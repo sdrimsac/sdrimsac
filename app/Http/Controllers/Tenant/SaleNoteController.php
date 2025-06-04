@@ -708,7 +708,8 @@ class SaleNoteController extends Controller
     public function excel(Request $request)
     {
         // asignar menoria para export el excel
-        ini_set('memory_limit', '212M');
+        ini_set('memory_limit', '5500M');
+        ini_set('max_execution_time', '30000');
         
         $records = $this->get_records($request)->get();
         $company = Company::active();
