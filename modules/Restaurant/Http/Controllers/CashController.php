@@ -756,7 +756,7 @@ class CashController extends Controller
             'message' => 'Reporte listo para descargar'
         ]);
     }
-    public function downloadReport($filename)
+    /* public function downloadReport($filename)
     {
 
         $website = app(Environment::class)->tenant();
@@ -765,6 +765,16 @@ class CashController extends Controller
         $full_path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$filename}";
 
         return Storage::download($full_path, $filename);
+    } */
+
+    public function downloadReport($filename)
+    {
+        $website = app(Environment::class)->tenant();
+        $tenant_uuid = $website->uuid;
+
+        $file_path = "reports/gains/{$filename}";
+
+        return Storage::disk('tenant')->download($file_path, $filename);
     }
 
 
@@ -2618,11 +2628,10 @@ class CashController extends Controller
         $cash->is_loading_report = true;
         $cash->save();
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
-        if ($configuration->yape_report){
+        if ($configuration->yape_report) {
             WhatsappSendCashYapeReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
-
         }
-        
+
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
         $configuration = Configuration::first();
         WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id, $fqdn);
