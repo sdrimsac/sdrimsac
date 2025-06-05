@@ -223,7 +223,6 @@
                                         type="button"
                                         class="btn btn-dirty"
                                         @click="isCleaned(t.id)"
-                                        
                                     >
                                         <span>{{ t.time_to_finish }}</span>
                                         <svg
@@ -435,7 +434,10 @@
                                         <div class="row">
                                             <!-- Series -->
                                             <div
-                                                v-if="configuration.search_series_pos" class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="
+                                                    configuration.search_series_pos
+                                                "
+                                                class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Envía a la lista de venta directamente (Imeis, Series)"
@@ -461,7 +463,8 @@
 
                                             <!-- Barcode -->
                                             <div
-                                                v-if="configuration.barcode" class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.barcode"
+                                                class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Habilitar búsqueda por código de barras"
@@ -487,7 +490,8 @@
 
                                             <!-- Calidad -->
                                             <div
-                                                v-if="configuration.quality" class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.quality"
+                                                class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Filtrar por calidad del producto"
@@ -513,7 +517,8 @@
 
                                             <!-- Modelo -->
                                             <div
-                                                v-if="configuration.model" class="col-3 d-flex align-items-center justify-content-center"
+                                                v-if="configuration.model"
+                                                class="col-3 d-flex align-items-center justify-content-center"
                                             >
                                                 <el-tooltip
                                                     content="Filtrar por modelo del producto"
@@ -2387,7 +2392,7 @@ export default {
         PromotionCanje,
         TablesRooms,
         SaleNoteCreditCash,
-        Swal,
+        Swal
     },
     mixins: [functions, exchangeRate],
 
@@ -3070,7 +3075,13 @@ export default {
             this.formVariation = {};
         },
         insertOrdenQuotation(quotation_id, identifier, item, customer_number) {
-            /*  */
+            console.log(
+                "insertOrdenQuotation como llega los items aqui",
+                quotation_id,
+                identifier,
+                item,
+                customer_number
+            );
             this.quotationId = quotation_id;
             this.cotIdentifier = identifier;
             this.form.quotation_customer_number = customer_number;
@@ -3081,6 +3092,11 @@ export default {
             }
             if (item.categoriaMadera) {
                 categoriaMadera = item.categoriaMadera;
+                console.log(
+                    "categoriaMadera ver si llegan los datos correctos",
+                    categoriaMadera,
+                    item.categoriaMadera
+                );
             }
             this.insertOrden(item, item.id, type, false, categoriaMadera);
         },
@@ -3233,7 +3249,8 @@ export default {
                     id: 74,
                     title: ["Venta del", "mes"],
                     icon: "fas fa-history ",
-                    visible: true && this.establishments.is_product && this.cashId
+                    visible:
+                        true && this.establishments.is_product && this.cashId
                 },
                 {
                     id: 63,
@@ -4661,10 +4678,18 @@ export default {
 
                     //y si no agregarla como nueva
                 } else if (categoriaMadera) {
-                    let indexFind = this.localOrden.findIndex(
+                    /* let indexFind = this.localOrden.findIndex(
                         orden =>
                             orden.categoriaMadera &&
                             orden.categoriaMadera.key == categoriaMadera.key
+                    ); */
+                    let indexFind = this.localOrden.findIndex(
+                        orden =>
+                            orden.categoriaMadera &&
+                            orden.categoriaMadera.key == categoriaMadera.key &&
+                            orden.categoriaMadera.medida ==
+                                categoriaMadera.medida &&
+                            orden.categoriaMadera.price == categoriaMadera.price
                     );
                     if (indexFind != -1) {
                         this.localOrden[indexFind].quantity =
@@ -4674,8 +4699,14 @@ export default {
                     } else {
                         // orden.quantity = Number(type.quantity_unit);
 
-                        if (categoriaMadera.price) {
+                        /* if (categoriaMadera.price) {
                             orden.quantity = categoriaMadera.quantity;
+                            orden.price = categoriaMadera.price;
+                            orden.categoriaMadera = categoriaMadera;
+                        } */
+
+                        if (categoriaMadera.price) {
+                            orden.quantity = Number(orden.quantity) || 1; // <-- BIEN: usa el quantity del item principal
                             orden.price = categoriaMadera.price;
                             orden.categoriaMadera = categoriaMadera;
                         }
@@ -6463,7 +6494,6 @@ export default {
                     });
                     this.listFoods = this.allLocalFoods;
                     this.allFoods = this.allLocalFoods;
-                    
 
                     this.pagination = meta;
 
@@ -7040,7 +7070,7 @@ export default {
                 this.currentIndex = index;
                 return;
             }
-            
+
             this.currentIndex = null;
             this.addingType = false;
 
@@ -7170,7 +7200,7 @@ export default {
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
         },
-        
+
         async processPrintQueue() {
             if (this.isPrinting || this.printQueue.length === 0) return;
 

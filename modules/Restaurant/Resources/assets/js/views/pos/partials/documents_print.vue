@@ -398,7 +398,7 @@ export default {
             this.getRecords();
         },
         insertOrden(item, id, identifier, customer_number) {
-            console.log(identifier);
+            console.log("que datos pasa por aqui", identifier, item, customer_number);
             this.$emit(
                 "insertOrdenQuotation",
                 id,
