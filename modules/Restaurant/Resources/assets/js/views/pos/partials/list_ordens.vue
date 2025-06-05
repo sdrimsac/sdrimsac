@@ -994,7 +994,7 @@
                             class="scroll-by-count os-host os-theme-dark os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition"
                             data-count="4"
                             id="checkboxTable"
-                            style="height: 71vh"
+                            style="height: 151vh"
                         >
                             <!-- calc(100vh - 8rem); -->
                             <div class="os-resize-observer-host observed">
@@ -5144,6 +5144,13 @@ export default {
             this.to_carry = false;
             this.foodDefaults = [];
             this.variation = false;
+            // Limpiar referencia después de cobrar la orden
+            if (this.clientTableData && this.clientTableData.ref) {
+                this.$emit("update:clientTableData", {
+                    ...this.clientTableData,
+                    ref: null
+                });
+            }
         },
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);

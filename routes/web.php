@@ -56,9 +56,9 @@ if ($hostname) {
 
             //para el excel con datos
             Route::get('report_cash/report_document/{type}', [CashController::class, 'report_cash_export_document']);
-            Route::get('report_cash/check-report-status',  [CashController::class, 'checkReportStatus']);
             //Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
             /* Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']); */
+            Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
             /* para reporte de madera  */
             Route::get('/madera', [MaderaController::class, 'index_madera'])->name('tenant.madera.index');
             Route::get('/report-madera', [MaderaController::class, 'report_madera'])->name('report_madera');
@@ -90,9 +90,9 @@ if ($hostname) {
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
                 Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
                 Route::get('/documents-salud/records', [App\Http\Controllers\Tenant\DocumentSaludController::class, 'records']);
-                Route::post('store_zip', [DocumentController::class, 'storeZip']);
-
-                Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
+                Route::post('store_zip', [DocumentController::class, 'storeZip']);  
+                
+                Route::get('report_cash/check-report-exists/{filename}',  [CashController::class, 'check_report_exists']);
 
                 Route::prefix('/digital-payments')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\PosController::class, 'digital_payments']);

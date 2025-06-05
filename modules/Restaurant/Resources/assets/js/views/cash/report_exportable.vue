@@ -131,7 +131,7 @@ export default {
             return queryString.stringify(this.form);
         },
 
-        clickDownload(type) {
+        /* clickDownload(type) {
             if (!this.form.date_start || !this.form.date_end) {
                 this.$toast.error("Debe seleccionar un rango de fechas");
                 return;
@@ -147,7 +147,7 @@ export default {
                 })
                 .then(response => {
                     if (response.data.success) {
-                        
+
                         window.location.href = `/${this.resource}/download-report/${response.data.filename}`;
                         this.$toast.success("Reporte generado correctamente");
                     } else {
@@ -159,6 +159,65 @@ export default {
                     this.$toast.error("Error al generar el reporte");
                 })
                 .finally(() => {
+                    this.loading_submit = false;
+                });
+        } */
+
+        clickDownload(type) {
+            if (!this.form.date_start || !this.form.date_end) {
+                this.$toast.error("Debe seleccionar un rango de fechas");
+                return;
+            }
+
+            this.loading_submit = true;
+            this.$toast.info("Generando reporte, por favor espere...");
+
+            this.$http
+                .get(`/${this.resource}/report_document/${type}`, {
+                    params: this.form
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        const filename = response.data.filename;
+                        const checkInterval = 3000; // 3 segundos
+
+                        const checkFileExists = () => {
+                            console.log('Verificando existencia:', `/${this.resource}/check-report-exists/${filename}`);
+                            this.$http
+                                .get(
+                                    `/${this.resource}/check-report-exists/${filename}`
+                                )
+                                .then(res => {
+                                    if (res.data.exists) {
+                                        this.loading_submit = false;
+                                        window.location.href = `/${this.resource}/download-report/${filename}`;
+                                        this.$toast.success(
+                                            "Reporte generado correctamente"
+                                        );
+                                    } else {
+                                        setTimeout(
+                                            checkFileExists,
+                                            checkInterval
+                                        );
+                                    }
+                                })
+                                .catch(() => {
+                                    this.loading_submit = false;
+                                    this.$toast.error(
+                                        "Error al verificar el reporte"
+                                    );
+                                });
+                        };
+
+                        setTimeout(checkFileExists, checkInterval);
+                    } else {
+                        this.$toast.error("Error al generar el reporte");
+                        this.loading_submit = false;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.$toast.error("Error al generar el reporte");
                     this.loading_submit = false;
                 });
         }

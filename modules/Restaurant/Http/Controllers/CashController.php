@@ -723,38 +723,15 @@ class CashController extends Controller
             'message' => 'El reporte ya fue generado y se encuentra en proceso de descarga',
         ];
     }
-    public function checkReportStatus()
+    public function check_report_exists($filename)
     {
-        $cached = Cache::get('excel_report_' . auth()->id());
-
-        if (!$cached) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Reporte en proceso'
-            ]);
-        }
-
-        // Obtener el tenant actual
         $website = app(Environment::class)->tenant();
         $tenant_uuid = $website->uuid;
+        $path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$filename}";
 
-        // Construir la ruta completa incluyendo el tenant
-        $full_path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$cached['filename']}";
+        $exists = Storage::exists($path);
 
-        if (!Storage::exists($full_path)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Archivo no encontrado'
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'download_url' => route('cash.download.report', [
-                'filename' => $cached['filename']
-            ]),
-            'message' => 'Reporte listo para descargar'
-        ]);
+        return response()->json(['exists' => $exists]);
     }
     /* public function downloadReport($filename)
     {

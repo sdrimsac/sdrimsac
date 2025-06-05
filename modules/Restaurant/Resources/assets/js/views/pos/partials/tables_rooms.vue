@@ -691,6 +691,7 @@
                                     placement="top"
                                 >
                                     <button
+                                    v-if="currentRoom.is_month_rent"
                                         @click="payAll"
                                         type="button"
                                         class="btn btn-sm"
