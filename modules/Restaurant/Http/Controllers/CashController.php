@@ -767,13 +767,32 @@ class CashController extends Controller
         return Storage::download($full_path, $filename);
     } */
 
-    public function downloadReport($filename)
+    /* public function downloadReport($filename)
     {
         $website = app(Environment::class)->tenant();
         $tenant_uuid = $website->uuid;
 
         $file_path = "reports/gains/{$filename}";
 
+        return Storage::disk('tenant')->download($file_path, $filename);
+    } */
+
+    public function downloadReport($filename)
+    {
+        $website = app(Environment::class)->tenant();
+
+        // Ruta relativa en el disco tenant
+        $file_path = "reports/gains/{$filename}";
+
+        // Verificar si el archivo existe
+        if (!Storage::disk('tenant')->exists($file_path)) {
+            Log::error('Archivo no encontrado en disco tenant', [
+                'path' => $file_path,
+            ]);
+            abort(404, 'Archivo no encontrado.');
+        }
+
+        // Descargar el archivo desde el disco tenant
         return Storage::disk('tenant')->download($file_path, $filename);
     }
 
