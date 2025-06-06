@@ -1318,7 +1318,7 @@ export default {
                 if (room.not_available) {
                     this.$showSAlert(
                         "ALERTA",
-                        `Habitación N° ${parseInt(idx) + 1} no está disponible`
+                        `Habitación N° ${parseInt(idx) + 1} no está disponible`, "warning"
                     );
                     pass = false;
                 }

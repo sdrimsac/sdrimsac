@@ -1509,7 +1509,7 @@ class TableRoomController extends Controller
             'checkout_time_estimated' => $checkout_time_estimated,
         ];
     }
-    public function delete_hotel_rent($id)
+    /* public function delete_hotel_rent($id)
     {
         $hotel_rent = HotelRent::findOrFail($id);
         $hotel_rent->items->each(function ($item) {
@@ -1522,6 +1522,43 @@ class TableRoomController extends Controller
             $item->delete();
         });
         $hotel_rent->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
+    } */
+    public function delete_hotel_rent($id)
+    {
+        $hotel_rent = HotelRent::findOrFail($id);
+
+        // Verifica si hay items y si alguno es reserva
+        $reserva = $hotel_rent->items->where('is_reserve', true)->sortByDesc('id')->first();
+
+        // Si hay reserva y la habitación está ocupada, solo elimina la reserva
+        if ($reserva && $reserva->table->status_table_id == 2) {
+            // Elimina servicios de la reserva
+            $reserva->services->each(function ($service) {
+                $service->delete();
+            });
+            $reserva->delete();
+
+            return [
+                'success' => true,
+                'message' => 'Reserva eliminada, la habitación sigue ocupada'
+            ];
+        }
+
+        // Si no, elimina todo normalmente
+        $hotel_rent->items->each(function ($item) {
+            $item->services->each(function ($service) {
+                $service->delete();
+            });
+            $item->table->status_table_id = 1;
+            $item->table->save();
+            $item->delete();
+        });
+        $hotel_rent->delete();
+
         return [
             'success' => true,
             'message' => 'Registro eliminado con éxito'
