@@ -856,7 +856,7 @@ class DocumentController extends Controller
         return compact('customers');
     }
 
-    /* public function validar_cpe($id)
+    public function validar_cpe($id)
     {
         try {
             $documents = Document::where('id', $id)->first();
@@ -907,8 +907,8 @@ class DocumentController extends Controller
         } catch (RequestException $exception) {
             return $exception->getResponse()->getBody();
         }
-    } */
-    public function validar_cpe($id)
+    }
+    /* public function validar_cpe($id)
     {
         try {
             $documents = Document::where('id', $id)->first();
@@ -974,7 +974,7 @@ class DocumentController extends Controller
         } catch (RequestException $exception) {
             return $exception->getResponse()->getBody();
         }
-    }
+    } */
     public function create($id = null)
     {
         if (auth()->user()->type == 'integrator')
