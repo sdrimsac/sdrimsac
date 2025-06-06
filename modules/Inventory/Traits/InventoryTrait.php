@@ -171,7 +171,7 @@ trait InventoryTrait
                 'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                 'lots_enabled' => (bool) $row->lots_enabled,
                 'series_enabled' => (bool) $row->series_enabled,
-                'has_color_size_enabled' => (bool) $row->has_color_size_enabled,
+                'has_color_size' => (bool) $row->has_color_size,
 
                 'warehouse' => collect($row->warehouses)->transform(function ($row) {
                     $decimal = 2; // Define the decimal places here

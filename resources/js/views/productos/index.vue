@@ -135,7 +135,7 @@
                                                 <th class="text-white">
                                                     PRECIO
                                                 </th>
-                                                <!-- <th class="text-white">STOCK</th> -->
+                                                <th class="text-white">CODIGO FAMILIA</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -146,6 +146,7 @@
                                                 <td>{{ color_size.color }}</td>
                                                 <td>{{ color_size.size }}</td>
                                                 <td>{{ color_size.price }}</td>
+                                                <td>{{ color_size.code }}</td>
                                                 
                                             </tr>
                                         </tbody>

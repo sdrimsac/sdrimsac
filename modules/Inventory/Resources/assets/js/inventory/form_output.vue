@@ -103,7 +103,7 @@
                             <label class="control-label">Cantidad</label>
                             <el-input
                                 v-model="form.quantity"
-                                :disabled="form.has_color_size"
+                                :disabled="form.has_color_size || form.series_enabled"
                             >
                                 <i
                                     slot="prefix"
@@ -415,7 +415,10 @@ export default {
             this.form.color_size = color_size;
             // Si hay color y talla, sumar la cantidad total y reflejar en el input
             if (this.form.has_color_size && Array.isArray(color_size)) {
-                const total = color_size.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+                const total = color_size.reduce(
+                    (sum, item) => sum + (Number(item.quantity) || 0),
+                    0
+                );
                 this.form.quantity = total;
             }
         },
@@ -595,6 +598,10 @@ export default {
         },
         addRowSelectLot(lots) {
             this.form.lots = lots;
+            // Si está habilitado el modo series, la cantidad es igual al número de series seleccionadas
+            if (this.form.series_enabled && Array.isArray(lots)) {
+                this.form.quantity = lots.length;
+            }
         }
     }
 };

@@ -67,12 +67,28 @@
                             <label class="control-label">
                                 <i class="fas fa-sort-numeric-up"></i> Cantidad
                             </label>
-                            <el-input v-model="form.quantity" :disabled="form.series_enabled || form.has_color_size">
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
+                            <template v-if="form.has_color_size || form.series_enabled">
+                                <el-input
+                                    v-model="form.quantity"
+                                    :disabled="true"
+                                >
+                                    <i
+                                        slot="prefix"
+                                        class="el-icon-edit-outline"
+                                    ></i>
+                                </el-input>
+                                <div class="text-muted small pt-1">
+                                    Cantidad total: {{ form.quantity }}
+                                </div>
+                            </template>
+                            <template v-else>
+                                <el-input v-model="form.quantity">
+                                    <i
+                                        slot="prefix"
+                                        class="el-icon-edit-outline"
+                                    ></i>
+                                </el-input>
+                            </template>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.quantity"
@@ -160,28 +176,28 @@
                         class="col-md-4"
                         v-if="form.warehouse_id && form.series_enabled"
                     >
-                        <a
-                            href="#"
-                            class="text-center font-weight-bold text-info"
+                        <el-button
+                            class="text-center font-weight-bold bg-primary text-white"
+                            style="border-radius: 8px; color: white !important;"
                             @click.prevent="clickLotcode"
                         >
-                            <i class="fas fa-list-ol"></i> [&#10004; Ingresar
-                            series]
-                        </a>
+                            <i class="fas fa-list-ol" style="color: white"></i>  Ingresar
+                            series
+                        </el-button>
                     </div>
                     <div
                         style="padding-top: 3%"
                         class="col-md-4"
                         v-if="form.warehouse_id && form.has_color_size"
                     >
-                        <a
-                            href="#"
-                            class="text-center font-weight-bold text-info"
+                        <el-button
+                            class="text-center font-weight-bold bg-primary text-white"
+                            style="border-radius: 8px; color: white !important;"
                             @click.prevent="clickColorSize"
                         >
-                            <i class="fas fa-palette"></i> [&#10004; Ingresar
-                            Color & Talla]
-                        </a>
+                            <i class="fas fa-palette" style="color: white"></i>
+                             Ingresar Color & Talla
+                        </el-button>
                     </div>
                     <div class="col-md-8">
                         <div
@@ -270,7 +286,6 @@
         <input-lots-form
             :showDialog.sync="showDialogLots"
             :stock="form.quantity"
-            :lots="form.lots"
             @addRowLot="addRowLot"
         >
         </input-lots-form>
@@ -298,9 +313,11 @@
 </style>
 
 <script>
-import InputLotsForm from "../../../../../../resources/js/views/items/partials/lots.vue";
+/* import InputLotsForm from "../../../../../../resources/js/views/items/partials/lots.vue"; */
+import InputLotsForm from "./partials/lots_input.vue";
 import OutputLotsForm from "./partials/lots.vue";
 import ColorSize from "./partials/color_size.vue";
+/* import lotsInput from "./partials/lots_input.vue"; */
 export default {
     components: { OutputLotsForm, InputLotsForm, ColorSize },
     props: ["showDialog", "recordId", "type"],
@@ -343,8 +360,11 @@ export default {
             console.log("Color y Talla seleccionados:", color_size);
             this.form.color_size = color_size;
             if (Array.isArray(color_size)) {
-                // Sumar la cantidad total de todas las tallas y colores
-                const total = color_size.reduce((acc, c) => acc + Number(c.quantity || 0), 0);
+                // Sumar la cantidad total de todas las tallas y colores (usando 'stock')
+                const total = color_size.reduce(
+                    (acc, c) => acc + Number(c.stock || 0),
+                    0
+                );
                 this.form.quantity = total;
                 // Forzar actualización del input si es necesario
                 this.$forceUpdate && this.$forceUpdate();
@@ -431,7 +451,7 @@ export default {
         },
         async changeItem() {
             let item = await _.find(this.items, { id: this.form.item_id });
-            console.log('Producto seleccionado:', item);
+            console.log("Producto seleccionado:", item);
             this.item = item;
             this.form.lots_enabled = item.lots_enabled;
             let lots = await _.filter(item.lots, {
@@ -448,6 +468,8 @@ export default {
         },
         addRowLot(lots) {
             this.form.lots = lots;
+            // Cada serie es 1 cantidad, así que la cantidad es igual al número de series
+            this.form.quantity = Array.isArray(lots) ? lots.length : 0;
         },
         clickLotcode() {
             this.showDialogLots = true;
