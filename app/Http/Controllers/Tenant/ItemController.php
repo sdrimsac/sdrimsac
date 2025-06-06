@@ -75,6 +75,7 @@ use App\Models\Tenant\BonusUnitType;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Imports\ItemsPriceRangeImport;
 use App\Imports\ItemsPriceRangeUnitTypeImport;
+use App\Imports\ItemsStockImportList;
 use App\Models\Tenant\ItemUnitTypePriceRange;
 use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\RegisterMovement;
@@ -132,6 +133,31 @@ class ItemController extends Controller
         if ($request->hasFile('file')) {
             try {
                 $import = new ItemsStockImport();
+                $import->setWarehouseId($request->warehouse_id);
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+    public function importStockList(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemsStockImportList();
                 $import->setWarehouseId($request->warehouse_id);
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();

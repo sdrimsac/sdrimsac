@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Imports;
+
+use Exception;
+use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Warehouse;
+use Modules\Item\Models\Brand;
+use Illuminate\Support\Collection;
+use Modules\Restaurant\Models\Area;
+use Modules\Restaurant\Models\Food;
+use Modules\Item\Models\CategoryItem;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Modules\Inventory\Models\Inventory;
+use Modules\Inventory\Traits\InventoryTrait;
+
+class ItemsStockImportList implements ToCollection
+{
+    use Importable;
+
+    protected $data;
+    protected $warehouse_id;
+
+    public function setWarehouseId($warehouse_id)
+    {
+        $this->warehouse_id = $warehouse_id;
+    }
+
+    public function collection(Collection $rows)
+    {
+        $warehouse_id = $this->warehouse_id;
+
+        if (is_null($warehouse_id)) {
+            throw new Exception('El campo almacen no puede estar vacío.');
+        }
+
+        $total = count($rows);
+
+        $registered = 0;
+        unset($rows[0]);
+        foreach ($rows as $row) {
+            $internal_id = $row[0];
+            $stock = $row[1];
+
+
+            /* $warehouse_id = request('warehouse_id'); */
+
+            if (is_null($warehouse_id)) {
+                throw new Exception('el campo almacen no puede estar estar nulo vacio');
+            }
+
+            if ($internal_id != null) {
+
+                $item = Item::where('internal_id', $internal_id)->first();
+
+                if ($item != null) {
+                    $item_warehouse = ItemWarehouse::where('item_id', $item->id)
+                        ->where('warehouse_id', $warehouse_id)
+                        ->first();
+                    if ($item_warehouse) {
+                        // Sumar el stock importado al stock actual
+                        $item_warehouse->stock += $stock;
+                        $item_warehouse->save();
+
+                        // Registrar el movimiento en el inventario
+                        $inventory = new Inventory();
+                        $inventory->type = 1; // 1 = ingreso
+                        $inventory->description = 'Ingreso por importación de stock';
+                        $inventory->item_id = $item->id;
+                        $inventory->warehouse_id = $warehouse_id;
+                        $inventory->detail = 'Ingreso por importación de stock';
+                        $inventory->quantity = $stock;
+                        $inventory->inventory_transaction_id = 28;
+                        $inventory->real_stock = $item_warehouse->stock;
+                        $inventory->system_stock = $item_warehouse->stock;
+                        $inventory->save();
+
+                        // Opcional: actualizar el stock general del ítem (suma de todos los almacenes)
+                        $item->stock = ItemWarehouse::where('item_id', $item->id)->sum('stock');
+                        $item->save();
+                    }
+
+                    $registered += 1;
+                }
+            }
+        }
+        $this->data = compact('total', 'registered');
+    }
+    function updateStock($old_quantity, $quantity)
+    {
+        $result = [];
+        if ($old_quantity > $quantity) {
+            $qty = $old_quantity - $quantity;
+            $result = [
+                'type' => 2,
+                'quantity' => $qty
+            ];
+        } else {
+            $qty = $quantity - $old_quantity;
+            $result = [
+                'type' => 1,
+                'quantity' => $qty
+            ];
+        }
+        return $result;
+    }
+    public function getData()
+    {
+        return $this->data;
+    }
+}

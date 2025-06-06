@@ -109,6 +109,14 @@
                                 Producto
                             </a>
                             <a
+                                class="dropdown-item text-danger"
+                                href="javascript:void(0)"
+                                @click.prevent="clickImportStockItem()"
+                            >
+                                <i class="fa fa-upload me-2"></i> Importar stock para cargar mas stock
+                                
+                            </a>
+                            <a
                                 class="dropdown-item"
                                 href="javascript:void(0)"
                                 @click.prevent="clickImportPointsValue()"
@@ -460,6 +468,9 @@
                 <items-import-stock-producto
                     :showDialog.sync="showImportStockProductoDialog"
                 ></items-import-stock-producto>
+                <items-import-list
+                    :showDialog.sync="showImportStockListDialog"
+                ></items-import-list>
             </div>
             <bonus-modal :showDialog.sync="showBonusDialog"></bonus-modal>
         </div>
@@ -480,6 +491,7 @@ import ItemsImportPointsValue from "./partials/import_points_value.vue";
 import ItemsImportListPrice from "./partials/import_list_price.vue";
 import DataTable from "../../components/DataTable.vue";
 import ItemsImportStockProducto from "./partials/stock_producto.vue";
+import ItemsImportList from "./partials/stock_item_list.vue";
 import BonusModal from "./partials/bonus_modal.vue";
 import SaleOffert from "./partials/sale_offert.vue";
 import ItemsImportListPriceRangeUnitType from "./partials/import_list_price_range_unit_type.vue";
@@ -491,6 +503,7 @@ export default {
     props: ["typeUser", "user"],
     mixins: [deletable],
     components: {
+        ItemsImportList,
         ItemsImportListPriceRangeUnitType,
         ItemsImportListPriceRange,
         ItemsImportPointsValue,
@@ -505,6 +518,7 @@ export default {
     },
     data() {
         return {
+            showImportStockListDialog: false,
             loading: false,
             selectedWarehousePrice: null,
             tables: [],
@@ -656,6 +670,9 @@ export default {
         },
         clickImportStockProducto() {
             this.showImportStockProductoDialog = true;
+        },
+        clickImportStockItem() {
+            this.showImportStockListDialog = true;
         },
         clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

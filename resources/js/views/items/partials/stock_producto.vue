@@ -113,7 +113,7 @@
                 }
             },
             create() {
-                this.titleDialog = 'Importar Stock de Productos Masivamentedsdsdsdsd'
+                this.titleDialog = 'Importar Stock de Productos Masivamente'
             },
             async submit() {
                 if (!this.form.warehouse_id) {

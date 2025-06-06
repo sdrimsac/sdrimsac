@@ -499,6 +499,7 @@ if ($hostname) {
                 Route::get('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'bonusUnitType']);
                 Route::post('items/bonus-unit-type', [App\Http\Controllers\Tenant\ItemController::class, 'storeBonusUnitType']);
                 Route::post('items/import_stock', [App\Http\Controllers\Tenant\ItemController::class, 'importStock']);
+                Route::post('items/import_stock_list', [App\Http\Controllers\Tenant\ItemController::class, 'importStockList']);
 
                 Route::get('items/ultima-venta/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_Venta']);
                 Route::get('items/ultima-compra/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'recordsUltima_compra']);
