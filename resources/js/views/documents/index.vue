@@ -149,9 +149,7 @@
                                     >
                                         Acciones
                                     </th>
-                                    <th
-                                        class="text-white"
-                                    >
+                                    <th class="text-white">
                                         Actividad
                                     </th>
                                     <th
@@ -175,6 +173,11 @@
                                         <span>Serie y Némro de CPE </span>
                                     </th>
                                     <!-- <th class="text-white">CPE Número</th> -->
+                                    <th class="text-white text-center">
+                                        <span>Nota de</span>
+                                        <br />
+                                        <span>Credito</span>
+                                    </th>
                                     <th
                                         class="text-white text-center"
                                         v-if="columns.sale_note.visible"
@@ -429,7 +432,8 @@
                                                             v-if="
                                                                 row.btn_voided &&
                                                                     !isAccountant &&
-                                                                    configuration.anulate_sunat
+                                                                    configuration.anulate_sunat &&
+                                                                    canVoidSunat(row)
                                                             "
                                                         >
                                                             <i
@@ -474,8 +478,13 @@
                                                             class="btn btn-light text-dark rounded w-100 d-flex align-items-center"
                                                             style="height: 40px; background-color: #d2b48c;"
                                                             v-if="
-                                                                row.btn_note &&
-                                                                    !isAccountant && !row.document_affected_notes || row.document_affected_notes.length === 0
+                                                                (row.btn_note &&
+                                                                    !isAccountant &&
+                                                                    !row.document_affected_notes) ||
+                                                                    row
+                                                                        .document_affected_notes
+                                                                        .length ===
+                                                                        0
                                                             "
                                                         >
                                                             <i
@@ -847,6 +856,47 @@
                                     </td> -->
 
                                     <!-- Vinculación con Notas de Venta -->
+                                    <!-- <td>
+                                        <div
+                                            v-for="(row,
+                                            index) in row.document_affected_notes"
+                                            :key="index"
+                                        >
+                                            <small
+                                                class="d-block"
+                                                style="color: brown; font-weight: bold; font-size: 0.9rem;"
+                                            >
+                                                {{ row.series }} -
+                                                {{ row.number }}
+                                            </small>
+                                        </div>
+                                    </td> -->
+                                    <td>
+                                        <div
+                                            v-for="(item,
+                                            index) in row.document_affected_notes"
+                                            :key="index"
+                                        >
+                                            <small
+                                                class="d-block"
+                                                style="color: brown; font-weight: bold; font-size: 0.9rem;"
+                                            >
+                                                <template
+                                                    v-if="
+                                                        row.document_type_id ==
+                                                            '07'
+                                                    "
+                                                >
+                                                    {{ item.affected_series }} -
+                                                    {{ item.affected_number }}
+                                                </template>
+                                                <template v-else>
+                                                    {{ item.series }} -
+                                                    {{ item.number }}
+                                                </template>
+                                            </small>
+                                        </div>
+                                    </td>
                                     <td v-if="columns.sale_note.visible">
                                         <div
                                             v-for="(row,
@@ -1634,6 +1684,17 @@ export default {
                 this.$set(row, "deleting", false);
                 this.$set(row, "isProcessing", false);
             });
+        },
+        canVoidSunat(row) {
+            // row.date_of_issue debe estar en formato 'YYYY-MM-DD'
+            if (!row.date_of_issue) return false;
+            const issueDate = new Date(row.date_of_issue + 'T00:00:00');
+            const now = new Date();
+            // Calcular diferencia en milisegundos
+            const diff = now - issueDate;
+            // 2 días en milisegundos
+            const twoDays = 2 * 24 * 60 * 60 * 1000;
+            return diff <= twoDays && diff >= 0;
         }
     },
     mounted() {
