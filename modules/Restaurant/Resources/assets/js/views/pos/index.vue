@@ -3132,7 +3132,15 @@ export default {
         },
         async roomCleaned(id) {
             const response = await this.$http(`/caja/rooms/cleaned/${id}`);
+            /* if (response.status == 200) {
+                this.tablesClean = this.tablesClean.filter(t => t.id != id);
+            } */
             if (response.status == 200) {
+                // Si el backend retorna success: false, mostramos el mensaje de error
+                if (response.data && response.data.success === false) {
+                    this.$showSAlert("ALERTA", response.data.message, "warning");
+                    return;
+                }
                 this.tablesClean = this.tablesClean.filter(t => t.id != id);
             }
         },

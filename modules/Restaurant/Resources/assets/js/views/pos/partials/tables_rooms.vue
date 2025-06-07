@@ -691,7 +691,10 @@
                                     placement="top"
                                 >
                                     <button
-                                    v-if="currentRoom.is_month_rent && currentRoom.toPay"
+                                        v-if="
+                                            currentRoom.is_month_rent &&
+                                                currentRoom.toPay
+                                        "
                                         @click="payAll"
                                         type="button"
                                         class="btn btn-sm"
@@ -2240,6 +2243,19 @@ export default {
                 this.getTables();
                 this.$emit("roomWasCleaned", id);
             }
+            if (response.status == 200) {
+                // Si el backend retorna success: false, mostramos el mensaje de error
+                if (response.data && response.data.success === false) {
+                    this.$showSAlert(
+                        "ALERTA",
+                        response.data.message,
+                        "warning"
+                    );
+                    return;
+                }
+                this.getTables();
+                this.$emit("roomWasCleaned", id);
+            }
         },
 
         async selectTable(table) {
@@ -2320,7 +2336,18 @@ export default {
                         `/caja/rooms/send_to_avaible/${table.id}`
                     );
 
+                    /* if (response.status == 200) {
+                        this.getTables();
+                    } */
                     if (response.status == 200) {
+                        if (response.data && response.data.success === false) {
+                            this.$showSAlert(
+                                "ALERTA",
+                                response.data.message,
+                                "warning"
+                            );
+                            return;
+                        }
                         this.getTables();
                     }
                 } catch (e) {

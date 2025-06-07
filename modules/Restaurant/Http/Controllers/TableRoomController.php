@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\TableImage;
 use App\Models\Tenant\HotelRentWhatsapp;
+use Modules\Restaurant\Models\TableUserMaintenance;
 
 class TableRoomController extends Controller
 {
@@ -685,7 +686,7 @@ class TableRoomController extends Controller
             ];
         }
     }
-    public function cleaned($id)
+    /* public function cleaned($id)
     {
         $table = Table::find($id);
         $table->is_cleaning = false;
@@ -698,8 +699,34 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación limpia'
         ];
+    } */
+    public function cleaned($id)
+    {
+        // Buscar el registro de mantenimiento con status = 3ta
+        $maintenance = TableUserMaintenance::where('table_id', $id)
+            ->where('status', 3)
+            ->first();
+
+        if (!$maintenance) {
+            return [
+                'success' => false,
+                'message' => 'No se puede  marcar como limpiada la habitación. el personal de limpieza debe confirmar que si realizo el trabajo atraves de su usuario asignado.'
+            ];
+        }
+
+        $table = Table::find($id);
+        $table->is_cleaning = false;
+        $table->cleaning_start_date = null;
+        if ($table->status_table_id == 5) {
+            $table->status_table_id = 1;
+        }
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación limpia'
+        ];
     }
-    public function sendToAvaible($id)
+    /* public function sendToAvaible($id)
     {
         $table = Table::find($id);
         //busca el último registro de mantenimiento que este activo
@@ -720,6 +747,42 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación disponible'
         ];
+    } */
+
+    public function sendToAvaible($id)
+    {
+        $table = Table::find($id);
+
+        // Busca el último registro de mantenimiento de la tabla correcta
+        $table_user_maintenance = TableUserMaintenance::where('table_id', $id)
+            ->orderBy('init_time', 'desc')
+            ->first();
+
+        if ($table_user_maintenance) {
+            if ($table_user_maintenance->status == 3) {
+                $table->status_table_id = $table_user_maintenance->state_table_id;
+                $table_user_maintenance->finish_time = Carbon::now()->format('Y-m-d H:i:s');
+                $table_user_maintenance->active = false;
+                $table_user_maintenance->save();
+                $table->save();
+                return [
+                    'success' => true,
+                    'message' => 'Habitación disponible'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede finalizar el mantenimiento. El usuario de mantenimiento debe confirmar que terminó el mantenimiento con su usuario asignado.'
+                ];
+            }
+        } else {
+            $table->status_table_id = 1;
+            $table->save();
+            return [
+                'success' => true,
+                'message' => 'Habitación disponible'
+            ];
+        }
     }
 
     public function sendToMaintenance($id)
@@ -2259,6 +2322,18 @@ class TableRoomController extends Controller
             $end_date = $start_date->copy()->addMonths($duration);
         } else {
             $end_date = $start_date->copy()->addDays($duration);
+        }
+
+        $maintenance = TableUserMaintenance::where('table_id', $table_id)
+            ->where('type', 'mantenimiento')
+            ->where('status', '<>', 3)
+            ->first();
+
+        if ($maintenance) {
+            return [
+                'success' => false,
+                'message' => 'La habitación seleccionada se encuentra en mantenimiento. Por favor, seleccione otra habitación disponible.'
+            ];
         }
 
 
