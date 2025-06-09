@@ -1506,4 +1506,19 @@ class ClientController extends Controller
 
         return $this->generalResponse(true, $client->{$column} ? 'Activado correctamente' : 'Desactivado correctamente');
     }
+
+    public function getVerificateDominan(){
+        // verificar si el dominio ya existe
+        $subdomain = request()->input('subdomain');
+        $fqdn = strtolower($subdomain) . '.' . config('tenant.app_url_base');
+        $website = Website::whereHas('hostnames', function ($query) use ($fqdn) {
+            $query->where('fqdn', $fqdn);
+        })->first();
+        if ($website) {
+            return [
+                'success' => false,
+                'message' => 'El subdominio esta disponible',
+            ];
+        }
+    }
 }
