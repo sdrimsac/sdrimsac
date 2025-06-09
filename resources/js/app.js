@@ -209,7 +209,7 @@ const getAreaPrinter = async () => {
         }
     } catch (e) {}
 };
-function limpiarcache(reload = true) {
+/* function limpiarcache(reload = true) {
     if ("caches" in window) {
         caches.keys().then(function(cacheNames) {
             console.log(cacheNames);
@@ -230,25 +230,44 @@ function limpiarcache(reload = true) {
             window.location.reload();
         }, 2000);
     }
+} */
+async function limpiarcache(reload = true) {
+    try {
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+        }
+
+        if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(reg => reg.unregister()));
+        }
+
+        if (reload) {
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?t=' + Date.now();
+            }, 1000);
+        }
+    } catch (error) {
+        console.error('Error limpiando caché o SW:', error);
+    }
 }
 axios.get("/commit/store").then(response => {
     let { data } = response;
     if (data.update) {
         Swal.fire({
-            title: "NUEVA ACTUALIZACION DISPONIBLE", // Título en mayúsculas y centrado
+            title: "NUEVA ACTUALIZACION DISPONIBLE",
             html: `<span style="font-weight: bold; font-size: 1.2rem;">la pagina se va a recargar espere por favor</span>
-    `, // Texto normal
-            timer: 1000, // Duración de 2 segundos
+    `,
+            timer: 1000,
             showConfirmButton: false,
             customClass: {
                 popup: "swal2-no-border"
 
-                // Clase personalizada
+            
             },
             didOpen: popup => {
-                // popup.style.zIndex = "2010"; // Ajusta este valor según necesites
                 const swalContainer = Swal.getPopup();
-                // let timerInterval;
 
                 swalContainer.addEventListener("mouseenter", () => {
                     Swal.stopTimer();
