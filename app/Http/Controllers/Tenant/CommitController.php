@@ -11,9 +11,8 @@ use Illuminate\Support\Facades\DB;
 class CommitController extends Controller
 {
 
-    public function store()
+    /* public function store()
     {
-        //$commit = exec('git rev-parse HEAD');
 
         $commit = exec('git rev-parse HEAD');
         $commit = substr($commit, 0, 7);
@@ -26,7 +25,6 @@ class CommitController extends Controller
         }
 
         $update = false;
-        /* $commit = substr($commit, 0, 7); */
 
         $existingCommit = DB::connection('tenant')->table('commits')->where('commit', $commit)->first();
 
@@ -40,7 +38,38 @@ class CommitController extends Controller
             'update' => $update,
             'message' => 'Commit capturado y guardado con éxito.',
         ]);
+    } */
+
+    public function store()
+    {
+        $versionFile = base_path('.version');
+
+        if (!file_exists($versionFile)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Archivo de versión no encontrado.',
+            ]);
+        }
+
+        $commit = trim(file_get_contents($versionFile)); // Lee el commit corto
+
+        $update = false;
+
+        $existingCommit = DB::connection('tenant')->table('commits')->where('commit', $commit)->first();
+
+        if (!$existingCommit) {
+            DB::connection('tenant')->table('commits')->insert(['commit' => $commit]);
+            $update = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'update' => $update,
+            'commit' => $commit,
+            'message' => 'Commit capturado y guardado con éxito.',
+        ]);
     }
+
     public function configuration()
     {
         $configuration  = Configuration::first();
