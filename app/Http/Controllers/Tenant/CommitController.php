@@ -13,8 +13,11 @@ class CommitController extends Controller
 
     public function store()
     {
+        //$commit = exec('git rev-parse HEAD');
+
         $commit = exec('git rev-parse HEAD');
-        
+        $commit = substr($commit, 0, 7);
+
         if (!$commit) {
             return response()->json([
                 'success' => false,
@@ -23,7 +26,7 @@ class CommitController extends Controller
         }
 
         $update = false;
-        $commit = substr($commit, 0, 7);
+        /* $commit = substr($commit, 0, 7); */
 
         $existingCommit = DB::connection('tenant')->table('commits')->where('commit', $commit)->first();
 
