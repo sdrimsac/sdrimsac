@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\CompanyController;
 use App\Http\Controllers\Tenant\ConfigurationController;
+use App\Http\Controllers\Tenant\StoreController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +48,7 @@ if ($hostname) {
         Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
         Route::get('whatsapp/notification', [WhatsappController::class, 'notification']);
         Route::post('/login', 'Api\MobileController@login');
-        Route::post('get_igv', [App\Http\Controllers\StoreController::class, 'getIgv']);
+        Route::post('get_igv', [StoreController::class, 'getIgv']);
         //   Route::get('users/create', 'UserController@create')->name('tenant.users.create');
         Route::post('perfil', 'Api\MobileController@perfil');
         Route::get('users/type', 'UserController@usertype');
@@ -252,6 +253,7 @@ if ($hostname) {
 } else {
     Route::domain(env('APP_URL_BASE'))->group(function () {
         Route::get('listclients/', 'System\ClientController@records');
+        Route::get('getVerificateDominan', 'System\ClientController@getVerificateDominan');
         //reseller
         // Route::post('reseller/detail', 'System\Api\ResellerController@resellerDetail');
         // Route::post('reseller/lockedAdmin', 'System\Api\ResellerController@lockedAdmin');
