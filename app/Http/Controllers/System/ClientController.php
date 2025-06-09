@@ -282,7 +282,7 @@ class ClientController extends Controller
         if (strpos(url()->current(), 'sdrimsac') !== false) {
             $canSee = true;
         }
-        
+
         $query = Client::query();
 
         if ($request->has('column') && $request->column === 'name' && $request->has('value') && $request->value) {
@@ -1507,7 +1507,8 @@ class ClientController extends Controller
         return $this->generalResponse(true, $client->{$column} ? 'Activado correctamente' : 'Desactivado correctamente');
     }
 
-    public function getVerificateDominan(){
+    /* public function getVerificateDominan()
+    {
         // verificar si el dominio ya existe
         $subdomain = request()->input('subdomain');
         $fqdn = strtolower($subdomain) . '.' . config('tenant.app_url_base');
@@ -1519,6 +1520,26 @@ class ClientController extends Controller
                 'success' => false,
                 'message' => 'El subdominio esta disponible',
             ];
+        }
+    } */
+    public function getVerificateDominan()
+    {
+        $subdomain = request()->input('subdomain');
+        $fqdn = strtolower($subdomain) . '.' . config('tenant.app_url_base');
+        $website = Website::whereHas('hostnames', function ($query) use ($fqdn) {
+            $query->where('fqdn', $fqdn);
+        })->first();
+
+        if ($website) {
+            // El subdominio existe
+            return response()->json([
+                'fqdn' => $fqdn
+            ]);
+        } else {
+            // El subdominio no existe
+            return response()->json([
+                'error' => 'No encontrado'
+            ], 404);
         }
     }
 }
