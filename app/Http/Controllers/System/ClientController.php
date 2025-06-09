@@ -1221,7 +1221,7 @@ class ClientController extends Controller
     //         return [
     //             'app_module_id' => $row->id,
     //             'user_id' => $user_id,
-    //         ];
+    //         };
     //     })->toArray();
 
     //     DB::connection('tenant')->table('app_module_user')->insert($all_app_modules);
@@ -1524,13 +1524,16 @@ class ClientController extends Controller
     } */
     public function getVerificateDominan()
     {
-        $subdomain = request()->input('subdomain');
-        $fqdn = strtolower($subdomain) . '.' . config('tenant.app_url_base');
-        $website = Website::whereHas('hostnames', function ($query) use ($fqdn) {
-            $query->where('fqdn', $fqdn);
-        })->first();
+        $fqdn = request()->input('fqdn');
+        if (!$fqdn) {
+            return response()->json([
+                'error' => 'FQDN no proporcionado'
+            ], 400);
+        }
+        $fqdn = strtolower($fqdn);
+        $hostname = Hostname::where('fqdn', $fqdn)->first();
 
-        if ($website) {
+        if ($hostname) {
             // El subdominio existe
             return response()->json([
                 'fqdn' => $fqdn
@@ -1538,7 +1541,7 @@ class ClientController extends Controller
         } else {
             // El subdominio no existe
             return response()->json([
-                'error' => 'No encontrado'
+                'error' => 'Subdominio no existe'
             ], 404);
         }
     }
