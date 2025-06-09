@@ -9,5 +9,8 @@ class Commit extends ModelTenant
     protected $table = 'commits';
     protected $fillable = [
         'commit',
+        'message',
+        'created_at',
+        'updated_at',
     ];
 }
