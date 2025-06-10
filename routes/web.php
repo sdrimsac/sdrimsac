@@ -138,6 +138,7 @@ if ($hostname) {
                         Route::get('/', [ItemColorSizeController::class, 'index'])->name('tenant.item_color_size.index');
                         Route::get('/columns', [ItemColorSizeController::class, 'columns']);
                         Route::get('/records', [ItemColorSizeController::class, 'records']);
+                        Route::get('/recordsCash', [ItemColorSizeController::class, 'recordsCash']);
                         Route::get('/record/{id}', [ItemColorSizeController::class, 'record']);
                         Route::post('/import', [ItemColorSizeController::class, 'import']);
                         Route::delete('/{id}', [ItemColorSizeController::class, 'delete']);

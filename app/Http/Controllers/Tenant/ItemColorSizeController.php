@@ -66,6 +66,12 @@ class ItemColorSizeController extends Controller
 
         return new ItemColorSizeCollection($records->paginate((int) config('tenant.items_per_page')));
     }
+    public function recordsCash(Request $request)
+    {
+        $records = $this->getRecordsCash($request);
+
+        return new ItemColorSizeCollection($records->paginate((int) config('tenant.items_per_page')));
+    }
 
     public function getRecords(Request $request)
     {
@@ -102,6 +108,50 @@ class ItemColorSizeController extends Controller
                 $records->where($column, 'like', "%{$value}%");
             }
         }
+        return $records;
+    }
+    public function getRecordsCash(Request $request)
+    {
+        $records = ItemColorSize::query()->where('stock', '>', 0); // Only get items with stock > 0
+
+        $item_id = $request->input('item_id');
+        $warehouse_id = $request->input('warehouse_id');
+        $status = $request->input('status');
+
+        if ($status) {
+            if ($status === 'Disponible') {
+                $records->where('stock', '>', 0);
+            }
+            // Removed 'Agotado' condition since we only want items with stock
+        }
+
+        if ($item_id) {
+            $records->where('item_id', $item_id);
+        }
+
+        if ($warehouse_id) {
+            $records->where('warehouse_id', $warehouse_id);
+        }
+
+        $column = $request->input('column');
+        $code = $request->input('code');
+        $value = $request->input('value');
+
+        if ($code) {
+            $records->where('code', 'like', "%{$code}%");
+        }
+
+        if ($column && $value) {
+            if ($column == 'description') {
+                $records->whereHas('item', function ($query) use ($value) {
+                    $query->where('description', 'like', "%{$value}%")
+                        ->orWhere('internal_id', 'like', "%{$value}%");
+                });
+            } else {
+                $records->where($column, 'like', "%{$value}%");
+            }
+        }
+
         return $records;
     }
     public function record($id)

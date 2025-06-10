@@ -972,7 +972,7 @@ export default {
                 // Si color_size no es array o está vacío, cargarlo desde el backend
                 if (!Array.isArray(this.form_add.color_size) || this.form_add.color_size.length === 0) {
                     console.log("PADRE: color_size vacío o no es array, debería estar con datos");                    // Usar la URL correcta para cargar tallas y colores
-                    this.$http.get(`/item-color-size/records?${this.getQueryParameters()}`)
+                    this.$http.get(`/item-color-size/recordsCash?${this.getQueryParameters()}`)
                         .then(response => {
                             // Inicializar con los datos del backend - ajustado para la estructura que viene del API
                             if (response.data) {

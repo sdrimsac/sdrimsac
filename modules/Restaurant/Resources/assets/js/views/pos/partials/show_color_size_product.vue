@@ -197,7 +197,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/item-color-size/records?${this.getQueryParameters()}`
+                    `/item-color-size/recordsCash?${this.getQueryParameters()}`
                 );
                 let { data, meta } = response.data;
 
