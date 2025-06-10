@@ -242,7 +242,7 @@
                                                 <a
                                                     v-if="
                                                         form_add.item_id &&
-                                                            hasColor_size
+                                                            has_color_size
                                                     "
                                                     href="#"
                                                     class="text-center font-weight-bold text-info"
@@ -327,7 +327,8 @@
                                                 </label>
                                                 <el-input
                                                     :disabled="
-                                                        hasLots || hasColor_size
+                                                        hasLots ||
+                                                            has_color_size
                                                     "
                                                     type="number"
                                                     v-model="form_add.quantity"
@@ -337,6 +338,14 @@
                                                         class="el-icon-edit-outline"
                                                     ></i>
                                                 </el-input>
+                                                <span
+                                                    v-if="has_color_size"
+                                                    class="text-info"
+                                                    style="font-weight:bold;"
+                                                >
+                                                    Total seleccionado:
+                                                    {{ form_add.quantity }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div
@@ -413,10 +422,9 @@
                                                             Color:
                                                             {{ tag.color }}
                                                             Talla:
-                                                            {{ tag.size }}
-                                                            Cantidad:
+                                                            {{ tag.size }}                                                            Cantidad:
                                                             {{
-                                                                tag.selectedQuantity
+                                                                tag.quantity
                                                             }}
                                                         </el-tag>
                                                     </template>
@@ -604,7 +612,7 @@ export default {
             isDisabled: false,
             sameEstablishment: false,
             hasLots: false,
-            hasColor_size: false,
+            has_color_size: false,
             loading_item: false,
             isDirect: false,
             loading_submit: false,
@@ -716,6 +724,8 @@ export default {
             this.form_add.quantity = qty;
         },
         sumColor_size(qty) {
+            console.log("cantidad total seleccionada", qty);
+            // Refleja la cantidad total seleccionada de talla/color en el input principal
             this.form_add.quantity = qty;
         },
         searchItem(input) {
@@ -788,8 +798,21 @@ export default {
         },
         //agregado para talla & color
         addRowOutputColor_size(color_size) {
+            console.log("color_size llegando por aqui", color_size);
             let row = this.items.find(x => x.id == this.form_add.item_id);
             row.color_size = color_size;
+            // Sumar la cantidad seleccionada en todas las tallas/color
+            let total = 0;
+            if (Array.isArray(color_size)) {
+                // Cambio: usar quantity en lugar de selectedQuantity para mantener consistencia
+                total = color_size.reduce(
+                    (a, b) => a + Number(b.quantity || 0),
+                    0
+                );
+            }
+            // ACTUALIZA TAMBIÉN form_add.color_size PARA QUE EL INPUT REFLEJE EL CAMBIO
+            this.form_add.color_size = color_size;
+            this.form_add.quantity = total;
         },
 
         clickCancel(index) {
@@ -825,16 +848,11 @@ export default {
             this.form_add.lots_enabled = row.lots_enabled;
             this.form_add.series_enabled = row.series_enabled;
 
-            /* this.form_add.quantity = this.form_add.lotes.reduce(
-                (total, lote) => total + (lote.quantity || 0),
-                0
-            ); */
-            this.haslotes = this.form_add.lots_enabled_enabled || this.form_add.lots_enabled_enabled;
+            // Corrección aquí: asignar has_color_size directamente del item
+            this.has_color_size = row.has_color_size;
 
             this.hasLots =
                 this.form_add.lots_enabled || this.form_add.series_enabled;
-            this.hasColor_size =
-                this.form_add.color_size && this.form_add.color_size.length > 0;
         },
         showUnits() {
             if (this.currentItem.unds) {
@@ -941,9 +959,8 @@ export default {
                     .map(m => ({
                         ...m,
                         quantity: m.selectedQuantity
-                    })),
-                color_size: this.form_add.color_size.filter(
-                    c => c.selectedQuantity != null
+                    })),                color_size: this.form_add.color_size.filter(
+                    c => c.quantity > 0
                 )
             });
 
@@ -951,8 +968,43 @@ export default {
             this.currentItem = null;
         },
         clickColorcodeOutput() {
-            if (this.hasColor_size) {
-                this.showDialogColorOutput = true;
+            if (this.has_color_size) {
+                // Si color_size no es array o está vacío, cargarlo desde el backend
+                if (!Array.isArray(this.form_add.color_size) || this.form_add.color_size.length === 0) {
+                    console.log("PADRE: color_size vacío o no es array, debería estar con datos");                    // Usar la URL correcta para cargar tallas y colores
+                    this.$http.get(`/item-color-size/records?${this.getQueryParameters()}`)
+                        .then(response => {
+                            // Inicializar con los datos del backend - ajustado para la estructura que viene del API
+                            if (response.data) {
+                                // Si response.data es un array, usarlo directamente
+                                if (Array.isArray(response.data)) {
+                                    this.form_add.color_size = response.data;
+                                } 
+                                // Si response.data.data es un array, usar ese (estructura mostrada en el ejemplo)
+                                else if (response.data.data && Array.isArray(response.data.data)) {
+                                    this.form_add.color_size = response.data.data;
+                                }
+                                // Si response.data.color_size es un array, usar ese (estructura anterior)
+                                else if (response.data.color_size && Array.isArray(response.data.color_size)) {
+                                    this.form_add.color_size = response.data.color_size;
+                                }
+                                
+                                console.log("PADRE: Datos recibidos de la API:", response.data);
+                                console.log("PADRE: color_size después de asignar:", this.form_add.color_size);
+                            }
+                            // Ahora inicializar quantity y abrir el modal
+                            this.initializeColorSizeQuantity();
+                            this.showDialogColorOutput = true;
+                        })
+                        .catch(error => {
+                            console.error("Error cargando tallas y colores:", error);
+                            this.showDialogColorOutput = true;
+                        });
+                } else {
+                    // Si ya hay datos, solo inicializar quantity y abrir modal
+                    this.initializeColorSizeQuantity();
+                    this.showDialogColorOutput = true;
+                }
             } else {
                 swal.fire({
                     title: "Este Producto no Tiene Talla && Color"
@@ -976,6 +1028,9 @@ export default {
                 description: null,
                 items: []
             };
+        },        getQueryParameters() {
+            // No necesitas queryString.stringify, puedes construir la query tú mismo
+            return `warehouse_id=${this.form.warehouse_id}&item_id=${this.form_add.item_id}`;
         },
         async submit() {
             if (!this.form.printer && !this.isDirect) {
@@ -1028,6 +1083,21 @@ export default {
             this.initForm();
             this.initFormAdd();
             this.$emit("update:showDialog", false);
+        },
+        initializeColorSizeQuantity() {
+            // Asegurarse que color_size sea un array
+            if (!Array.isArray(this.form_add.color_size)) {
+                this.form_add.color_size = [];
+            }
+            
+            // Para cada elemento en color_size, asegurarse que quantity sea un número
+            this.form_add.color_size.forEach(row => {
+                if (typeof row.quantity !== "number") {
+                    this.$set(row, "quantity", 0);
+                }
+            });
+            
+            console.log("PADRE: color_size inicializado:", this.form_add.color_size);
         }
     }
 };
