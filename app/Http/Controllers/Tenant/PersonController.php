@@ -303,6 +303,34 @@ class PersonController extends Controller
         );
     }
 
+    public function tablesMobile()
+    {
+        /* $users = User::orderBy('name')->get(); */
+       /*  $parent = PersonParient::all(); */
+        // $item_unit_types = ItemUnitType::
+        /* $item_unit_types = ItemUnitType::pluck('description')->unique()->values(); */
+        $countries = Country::whereActive()->orderByDescription()->get();
+        $departments = Department::whereActive()->orderByDescription()->get();
+        $provinces = Province::whereActive()->orderByDescription()->get();
+        $districts = District::whereActive()->orderByDescription()->get();
+        $identity_document_types = IdentityDocumentType::whereActive()->get();
+        /* $person_types = PersonType::get();
+        $social_media = SocialMedias::all(); */
+     /*    $zones = ClientZone::all(); */
+        /* $configuration = Configuration::first(); */
+        /* $locations = $this->getLocationCascade(); */
+        //$api_service_token = config('configuration.api_service_token');
+        //$api_factiliza_token = config('configuration.api_factiliza_token');
+        return compact(
+            'countries',
+            'departments',
+            'provinces',
+            'districts',
+            'identity_document_types',
+        );
+    }
+    
+
     public function record($id)
     {
         $record = new PersonResource(Person::findOrFail($id));

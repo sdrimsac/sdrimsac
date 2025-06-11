@@ -85,6 +85,7 @@ if ($hostname) {
             //Persons
             Route::get('persons/columns', '\App\Http\Controllers\Tenant\PersonController@columns');
             Route::get('persons/tables', '\App\Http\Controllers\Tenant\PersonController@tables');
+            Route::get('persons/tablesMobile', '\App\Http\Controllers\Tenant\PersonController@tablesMobile');
             Route::get('persons/{type}', '\App\Http\Controllers\Tenant\PersonController@index');
             Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
             Route::get('persons/record/{person}', '\App\Http\Controllers\Tenant\PersonController@record');
