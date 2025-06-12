@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\StoreController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\ApiPeruDev\Http\Controllers\ServiceController as ControllersServiceController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 
 
@@ -81,7 +82,7 @@ if ($hostname) {
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-            Route::get('service/dni/{number}',  [ServiceController::class, 'service']);
+            Route::get('service/dni/{number}',  [Modules\ApiPeruDev\Http\Controllers\ServiceController::class, 'service']);
             
             //Company
             Route::get('companies/record', 'CompanyController@record');
