@@ -2,6 +2,7 @@
 
 use App\CoreFacturalo\Services\Models\Person;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\CompanyController;
@@ -80,7 +81,7 @@ if ($hostname) {
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-            Route::get('service/dni/{number}', 'Modules\System\ServiceController@service');
+            Route::get('service/dni/{number}',  [ServiceController::class, 'service']);
             
             //Company
             Route::get('companies/record', 'CompanyController@record');
