@@ -79,10 +79,7 @@ if ($hostname) {
             
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
-            Route::get('services/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-
-            Route::get('services/dni/{number}', 'Modules\System\ServiceController@service');
             Route::get('service/dni/{number}', 'Modules\System\ServiceController@service');
             
             //Company
