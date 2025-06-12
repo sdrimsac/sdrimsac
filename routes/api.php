@@ -81,8 +81,8 @@ if ($hostname) {
             
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
-            Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
-            Route::get('service/dni/{number}',  [Modules\ApiPeruDev\Http\Controllers\ServiceController::class, 'service']);
+            //Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
+            Route::get('service/{type}/{number}',  [Modules\Services\Http\Controllers\ServiceController::class, 'service']);
             
             //Company
             Route::get('companies/record', 'CompanyController@record');
