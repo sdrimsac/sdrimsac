@@ -192,10 +192,12 @@ class PersonController extends Controller
     }
     public function recordsApp(Request $request)
     {
-        $records = Person::where('name', 'like', "%{$request->value}%")
-            ->orWhere('number', 'like', "%{$request->value}%")
-            ->orwhere('alias', 'like', "%{$request->value}")
-            ->where('type', 'customers');
+        $records = Person::where('type', 'customers')
+            ->where(function($query) use ($request) {
+                $query->where('name', 'like', "%{$request->value}%")
+                    ->orWhere('number', 'like', "%{$request->value}%")
+                    ->orWhere('alias', 'like', "%{$request->value}%");
+            });
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
