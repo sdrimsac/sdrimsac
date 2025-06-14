@@ -162,16 +162,31 @@ class CategoryController extends Controller
             'categories' => $categories
         ];
     }
-    public function records(Request $request)
+    /* public function records(Request $request)
     {
         $records = CategoryItem::where($request->column, 'like', "%{$request->value}%")
             ->orderBy('id', 'asc')
             ->latest();
 
         return new CategoryCollection($records->paginate(config('tenant.items_per_page')));
+    } */
+
+    public function records(Request $request)
+    {
+        $query = CategoryItem::query();
+
+        // Lista segura de columnas que puedes buscar
+        $allowedColumns = ['name', 'icono']; // Ajusta según tus columnas reales
+
+        if ($request->filled('column') && $request->filled('value') && in_array($request->column, $allowedColumns)) {
+            $query->where($request->column, 'like', "%{$request->value}%");
+        }
+
+        $query->orderBy('id', 'asc')->latest();
+
+        return new CategoryCollection($query->paginate(config('tenant.items_per_page')));
     }
-
-
+    
     public function update_category($category_id, $item_id)
     {
         $food = Food::findOrFail($item_id);
