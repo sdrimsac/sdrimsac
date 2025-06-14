@@ -30,23 +30,41 @@ class BrandController extends Controller
         ];
     }
 
-    public function records(Request $request)
+    /* public function records(Request $request)
     {
         $records = Brand::where($request->column, 'like', "%{$request->value}%")
                             ->latest();
 
         return new BrandCollection($records->paginate(config('tenant.items_per_page')));
+    } */
+
+    public function records(Request $request)
+    {
+        $query = Brand::query();
+
+
+        $allowedColumns = ['name', 'description']; 
+
+        if ($request->filled('column') && $request->filled('value') && in_array($request->column, $allowedColumns)) {
+            $query->where($request->column, 'like', "%{$request->value}%");
+        }
+
+        $query->latest();
+
+        return new BrandCollection($query->paginate(config('tenant.items_per_page')));
     }
+
+
     public function export(Request $request)
     {
         $company = Company::first();
         $records = Brand::where($request->column, 'like', "%{$request->value}%")
-                            ->get();
+            ->get();
 
-                            return (new BrandExport)
-                            ->records($records)
-                            ->company($company)
-                            ->download('Reporte_de_marcas_'.Carbon::now().'.xlsx');
+        return (new BrandExport)
+            ->records($records)
+            ->company($company)
+            ->download('Reporte_de_marcas_' . Carbon::now() . '.xlsx');
     }
 
 
@@ -68,7 +86,7 @@ class BrandController extends Controller
 
         return [
             'success' => true,
-            'message' => ($id)?'Marca editada con éxito':'Marca registrada con éxito',
+            'message' => ($id) ? 'Marca editada con éxito' : 'Marca registrada con éxito',
             'data' => $brand
         ];
     }
@@ -84,11 +102,9 @@ class BrandController extends Controller
                 'success' => true,
                 'message' => 'Marca eliminada con éxito'
             ];
-
         } catch (Exception $e) {
 
-            return ($e->getCode() == '23000') ? ['success' => false,'message' => "La Marca esta siendo usada por otros registros, no puede eliminar"] : ['success' => false,'message' => "Error inesperado, no se pudo eliminar la Marca"];
-
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => "La Marca esta siendo usada por otros registros, no puede eliminar"] : ['success' => false, 'message' => "Error inesperado, no se pudo eliminar la Marca"];
         }
     }
 }
