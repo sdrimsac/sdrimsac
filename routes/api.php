@@ -62,8 +62,8 @@ if ($hostname) {
         Route::post('users', 'UserController@store');
         Route::get('users/{type}/records', 'UserController@records');
         Route::delete('users/{user}', 'UserController@destroy');
-        
-        Route::get('info',[CompanyController::class,'info']);
+
+        Route::get('info', [CompanyController::class, 'info']);
         Route::get('categories/productsByCategory', [App\Http\Controllers\Tenant\ItemController::class, 'filterByCategory']);
         Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
         Route::get('services/dni/{number}', 'Api\ServiceController@dni');
@@ -72,18 +72,18 @@ if ($hostname) {
         Route::get('sale-notes/records', '\App\Http\Controllers\Tenant\SaleNoteController@records');
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
-        
+
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
-            
+
             Route::post('store_zip', [DocumentController::class, 'storeZip']);
-            Route::get('client-default',[PersonController::class,'client_default']);
-            
+            Route::get('client-default', [PersonController::class, 'client_default']);
+
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
 
             //Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/{type}/{number}',  [Modules\Services\Http\Controllers\ServiceController::class, 'service']);
-            
+
             //Company
             Route::get('companies/record', 'CompanyController@record');
             //Customer
@@ -102,6 +102,13 @@ if ($hostname) {
             Route::delete('persons/{person}', '\App\Http\Controllers\Tenant\PersonController@destroy');
             Route::post('persons/import', '\App\Http\Controllers\Tenant\PersonController@import');
             Route::get('persons/enabled/{type}/{person}', '\App\Http\Controllers\Tenant\PersonController@enabled');
+
+            //unidad de medida
+            Route::get('unit_types/records', [App\Http\Controllers\Tenant\UnitTypeController::class, 'records']);
+            Route::get('unit_types/columns', [App\Http\Controllers\Tenant\UnitTypeController::class, 'columns']);
+            Route::get('unit_types/record/{id}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'record']);
+            Route::post('unit_types', [App\Http\Controllers\Tenant\UnitTypeController::class, 'store']);
+            Route::delete('unit_types/{id}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'destroy']);
 
             //Orders
             Route::get('orders', 'OrderController@index');
