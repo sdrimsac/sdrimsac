@@ -4,31 +4,31 @@
             <h6 class="my-0 text-white">Reporte de cierre de cajas</h6>
         </div>
         <div class="tab-content p-3">
-            <template v-if="canOpen">
+            <template v-if="!canOpen">
                 <template v-if="!hasCash">
-                <div class="col-md- d-flex justify-content-end">
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                        @click.prevent="clickCreate()"
-                    >
-                        <i class="icofont-plus-circle"></i>
-                        <span>Abrir caja</span>
-                    </button>
-                </div>
-            </template>
-            <template v-else>
-                <div class="col-md- d-flex justify-content-end">
-                    <button
-                        v-if="!configuration.health_network"
-                        type="button"
-                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                        @click.prevent="clickClose()"
-                    >
-                        <span>Cerrar caja</span>
-                    </button>
-                </div>
-            </template>
+                    <div class="col-md- d-flex justify-content-end">
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            @click.prevent="clickCreate()"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Abrir caja</span>
+                        </button>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="col-md- d-flex justify-content-end">
+                        <button
+                            v-if="!configuration.health_network"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            @click.prevent="clickClose()"
+                        >
+                            <span>Cerrar caja</span>
+                        </button>
+                    </div>
+                </template>
             </template>
             <form autocomplete="off" @submit.prevent="submit">
                 <div class="form-body">
@@ -360,7 +360,7 @@
         </div>
         <cash-form
             :showDialog.sync="showDialogCash"
-            :configuration="configuration"  
+            :configuration="configuration"
             :recordId="cash_id"
             @updateCashId="updateCashId"
         ></cash-form>
@@ -380,7 +380,7 @@ const CloseCash = () => import("./partials/closecash.vue");
 import moment from "moment";
 import queryString from "query-string";
 export default {
-    props: ["configuration", "users", "hasCash", "cashId","canOpen"],
+    props: ["configuration", "users", "hasCash", "cashId", "canOpen"],
     components: {
         CashForm,
         CloseCash
@@ -435,7 +435,7 @@ export default {
     },
     created() {
         this.initForm();
-            console.log("🚀 ~ created ~ this.cashId:", this.cashId)
+        console.log("🚀 ~ created ~ this.cashId:", this.cashId);
         if (this.cashId != null) {
             this.cash_id = this.cashId;
             // this.hasCash = true;
