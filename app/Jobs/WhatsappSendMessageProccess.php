@@ -21,6 +21,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class WhatsappSendMessageProccess implements ShouldQueue
 {
@@ -57,12 +58,20 @@ class WhatsappSendMessageProccess implements ShouldQueue
         try {
             if ($number == null) {
                 $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
-                if ($configuration_establishments_numbers && $this->establishment_id) {
+                /* if ($configuration_establishments_numbers && $this->establishment_id) {
                     $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $this->establishment_id)->get()->transform(function ($row) {
                         return  (object)[
                             'number' => $row->getNumber(),
                         ];
                     });
+                } */
+                if ($configuration_establishments_numbers && $this->establishment_id) {
+                    $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', [$this->establishment_id])->get()
+                        ->transform(function ($row) {
+                            return  (object)[
+                                'number' => $row->getNumber(),
+                            ];
+                        });
                 } else {
                     $numbers = NumberActivity::all();
                 }
@@ -121,7 +130,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
                             $url = "https://" . $web_whatsapp . '/api/send-message';
                         }
                         $response = Http::withoutVerifying()->post($url, [
-                        // $response = Http::post($url, [
+                            // $response = Http::post($url, [
                             'number' => "51" . $number->number,
                             'sender' => $sender,
                             'message' => $message,
@@ -156,8 +165,12 @@ class WhatsappSendMessageProccess implements ShouldQueue
      *
      * @return void
      */
-    public function failed(Exception $exception)
+    /* public function failed(Exception $exception)
     {
         Log::error($exception->getMessage());
+    } */
+    public function failed(Throwable $exception)
+    {
+        Log::error("Error en WhatsappSendMessageProccess: " . $exception->getMessage());
     }
 }

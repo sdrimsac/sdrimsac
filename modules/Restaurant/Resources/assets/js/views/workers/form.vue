@@ -323,6 +323,7 @@
                             ></el-option>
                         </el-select>
                     </div>
+
                     <div
                         class="col-md-4"
                         v-if="configuration.user_series_independientes_caja"
@@ -349,15 +350,29 @@
                             <!-- <small class="form-control-feedback" v-if="errors.series" v-text="errors.series[0]"></small> -->
                         </div>
                     </div>
-                    <div class="col-md-4"
-                    v-if="isEstilista"
-                    >
-                    
-                        <label for="product"
-                            >Ver/Editar servicios
-                            
+                    <div class="col-md-4" v-if="configuration.health_network">
+                        <label for="arca_user">
+                            <i class="fas fa-cash-register"></i> ES usuario Famacia
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Permite al usuario especificar si pertenece a famacia"
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle"></i>
+                            </el-tooltip>
                         </label>
-                        <el-button type="primary" @click="openUserItems">Ver/Editar servicios</el-button>
+                        <el-checkbox
+                            v-model="form.is_pharmacy"
+                            id="is_pharmacy"
+                            label="ES famacia?"
+                        ></el-checkbox>
+                    </div>
+                    <div class="col-md-4" v-if="isEstilista">
+                        <label for="product">Ver/Editar servicios </label>
+                        <el-button type="primary" @click="openUserItems"
+                            >Ver/Editar servicios</el-button
+                        >
                     </div>
                     <div
                         class="row"
@@ -408,8 +423,10 @@
                     </div>
                 </div>
             </div>
-            <user-items :showDialog.sync="showUserItems" :userId="recordId"
-            @saveItems="saveItems"
+            <user-items
+                :showDialog.sync="showUserItems"
+                :userId="recordId"
+                @saveItems="saveItems"
             ></user-items>
 
             <!-- Botones -->
@@ -471,7 +488,8 @@ export default {
                 telephone: null, // Teléfono
                 can_accept_credit_sale_note: false, // Créditos en notas de venta
                 is_arca: false, // Usuario Arca
-                active: 1 // Estado activo
+                active: 1,
+                is_pharmacy: false,
             },
             errors: {}, // Almacena errores
             loading_submit: false,
@@ -489,9 +507,11 @@ export default {
     },
     computed: {
         isEstilista() {
-            let workerType = this.workersType.find(type => type.id === this.form.worker_type_id);
-            if(!workerType) return false;
-            return workerType.description === 'ESTILISTA';
+            let workerType = this.workersType.find(
+                type => type.id === this.form.worker_type_id
+            );
+            if (!workerType) return false;
+            return workerType.description === "ESTILISTA";
         }
     },
     /* watch: {
@@ -546,10 +566,10 @@ export default {
         }
     },
     methods: {
-        saveItems(items){
+        saveItems(items) {
             this.form.user_items = items;
         },
-        openUserItems(){
+        openUserItems() {
             this.showUserItems = true;
         },
         onSuccess(response, file, fileList) {
@@ -594,6 +614,7 @@ export default {
                 telephone: null,
                 can_accept_credit_sale_note: false,
                 is_arca: false,
+                is_pharmacy: false,
                 active: 1
             };
         },

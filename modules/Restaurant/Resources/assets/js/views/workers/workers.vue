@@ -77,20 +77,19 @@
                                         class="control-label fw-bold"
                                         for="user-name"
                                         >Buscar por Nombre de Usuario</label
-                                    >
-                                    <el-input
+                                    >                                    <el-input
                                         id="user-name"
                                         v-model="form.name"
                                         placeholder="Ingrese el nombre de usuario"
                                         clearable
-                                        @change="getData"
+                                        @input="getData"
                                         class="input-custom"
                                     ></el-input>
                                 </div>
                             </div>
 
                             <!-- Botón Buscar -->
-                            <div
+                            <!-- <div
                                 class="col-md-3 d-flex align-items-center justify-content-center"
                             >
                                 <el-button
@@ -102,7 +101,7 @@
                                     <i class="fas fa-search icon-style"></i>
                                     <span class="label-style">Buscar</span>
                                 </el-button>
-                            </div>
+                            </div> -->
                         </div>
                     </template>
 
@@ -110,14 +109,13 @@
                         <table
                             class="table table-striped table-hover custom-table"
                         >
-                            <thead>
-                                <tr class="bg-primary text-white">
+                            <thead>                                <tr class="bg-primary text-white">
                                     <th class="text-center">ITEM</th>
                                     <th class="text-center">NOMBRE</th>
                                     <th class="text-center">TIPO USUARIO</th>
                                     <th class="text-center">ÁREA</th>
                                     <th class="text-center">PIN</th>
-                                    <th class="text-center" v-if="authenticatedUser.type === 'superadmin'">TOKEN</th>
+                                    <th class="text-center" v-if="authenticatedUser && authenticatedUser.type === 'superadmin'">TOKEN</th>
                                     <th class="text-center">ACTIVIDAD</th>
                                     <th class="text-center">ESTABLECIMIENTO</th>
                                     <th class="text-center">SERIES</th>
@@ -167,9 +165,8 @@
                                             title="Editar PIN"
                                         >
                                             <i class="fas fa-edit"></i>
-                                        </button>
-                                        <el-button
-                                            v-if="authenticatedUser.type === 'superadmin'"
+                                        </button>                                        <el-button
+                                            v-if="authenticatedUser && authenticatedUser.type === 'superadmin'"
                                             class="btn btn-outline-success btn-sm mx-1"
                                             icon="el-icon-phone-outline"
                                             @click="whatsapp(row.id)"
@@ -177,7 +174,7 @@
                                         </el-button>
                                     </td>
                                     <!-- TOKEN -->
-                                    <td class="text-center" v-if="authenticatedUser.type === 'superadmin'">{{ row.api_token }}</td>    
+                                    <td class="text-center" v-if="authenticatedUser && authenticatedUser.type === 'superadmin'">{{ row.api_token }}</td>
                                     <!-- ACTIVIDAD -->
                                     <td class="text-center">
                                         <div

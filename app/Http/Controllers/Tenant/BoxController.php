@@ -940,24 +940,35 @@ class BoxController extends Controller
         return ["records" => $records_by_establishment, "columns" => $columns];
     } */
 
-    function global_get_records($date_open = null, $date_start = null, $date_end = null)
+    /* function global_get_records($date_open = null, $date_start = null, $date_end = null)
     {
-        $establishments = Establishment::select(['id', 'description'])->get();
+        //$establishments = Establishment::select(['id', 'description', 'is_service'])->get();
+        $establishments = Establishment::select(['id', 'description', 'is_service'])->get();
         $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         $columns = [];
         $diff_payments = [];
         $records_by_establishment = [];
 
+        $user = auth()->user();
+        $isPharmacyAdmin = $user->type === 'admin' && $user->is_pharmacy;
         foreach ($establishments as $establishment) {
-            $users_id = User::where('establishment_id', $establishment->id)->pluck('id');
+
+            if ($isPharmacyAdmin && $establishment->is_service == 1) {
+                continue;
+            }
+
+            //$users_id = User::where('establishment_id', $establishment->id)->pluck('id');
+            $userQuery = User::where('establishment_id', $establishment->id);
+
+            if ($isPharmacyAdmin) {
+                $userQuery->where('is_pharmacy', 1);
+            }
+            $users_id = $userQuery->pluck('id');
 
             $cash_query = Cash::select(['id', 'user_id', 'turn_id'])
-                /* ->where('date_opening', $date_open) */
+                /* ->where('date_opening', $date_open)
                 ->whereIn('user_id', $users_id);
 
-            /* if ($date_start && $date_end) {
-                    $cash_query->whereBetween('date_opening', [$date_start, $date_end]);
-                } */
             if ($date_open) {
                 $cash_query->where('date_opening', $date_open);
             } elseif ($date_start && $date_end) {
@@ -997,6 +1008,133 @@ class BoxController extends Controller
                                     } else {
                                         $total += $document->total;
                                     }
+                                }
+                            });
+
+                        $records[] = [
+                            'method' => $value,
+                            'amount' => $total
+                        ];
+                    }
+                }
+
+                $diff = $allMethods->diff($payments)->values()->all();
+                if (count($diff) > 0) {
+                    $diff_payments = array_merge($diff_payments, $diff);
+                }
+
+                foreach ($diff as $value) {
+                    $record = $row->boxes->where('method', $value)->sum('amount');
+                    $records[] = [
+                        'method' => $value,
+                        'amount' => $record
+                    ];
+                }
+
+                return [
+                    'id' => $row->id,
+                    'turn' => optional($row->turn)->turn_desc ?? "MAÑANA",
+                    'turn_id' => optional($row->turn)->id ?? 1,
+                    'records' => $records
+                ];
+            });
+
+            $records_by_establishment[] = [
+                'cash' => $cashes_establishment,
+                'establishment_id' => $establishment->id,
+                'establishment_description' => $establishment->description,
+            ];
+        }
+
+        $first_element = $payments[0];
+        $rest_elements = array_slice($payments, 1);
+        $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
+
+        $to_check = ["TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        foreach ($records_by_establishment as $value) {
+            foreach ($value['cash'] as $cash_entry) {
+                foreach ($to_check as $method) {
+                    $record = collect($cash_entry['records'])->where('method', $method)->first();
+                    if ($record && $record['amount'] > 0) {
+                        $to_check = array_diff($to_check, [$method]);
+                    }
+                }
+            }
+        }
+
+        if (count($to_check) > 0) {
+            $columns = array_diff($columns, $to_check);
+            $columns = array_values($columns);
+        }
+
+        return ["records" => $records_by_establishment, "columns" => $columns];
+    } */
+
+    function global_get_records($date_open = null, $date_start = null, $date_end = null)
+    {
+        $user = auth()->user();
+        $isPharmacyAdmin = $user->type === 'admin' && $user->is_pharmacy;
+
+        // Filtro a nivel de consulta: si es admin pharmacy, excluir servicios
+        $establishments = Establishment::select(['id', 'description', 'is_service'])
+            ->when($isPharmacyAdmin, function ($query) {
+                $query->where('is_service', 0); // solo almacenes
+            })
+            ->get();
+
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        $columns = [];
+        $diff_payments = [];
+        $records_by_establishment = [];
+
+        foreach ($establishments as $establishment) {
+
+            // Ya no se necesita este filtro porque se hace en la consulta:
+            // if ($isPharmacyAdmin && $establishment->is_service == 1) continue;
+
+            $userQuery = User::where('establishment_id', $establishment->id);
+
+            if ($isPharmacyAdmin) {
+                $userQuery->where('is_pharmacy', 1);
+            }
+
+            $users_id = $userQuery->pluck('id');
+
+            $cash_query = Cash::select(['id', 'user_id', 'turn_id'])
+                ->whereIn('user_id', $users_id);
+
+            if ($date_open) {
+                $cash_query->where('date_opening', $date_open);
+            } elseif ($date_start && $date_end) {
+                $cash_query->where(function ($query) use ($date_start, $date_end) {
+                    $query->whereBetween('date_opening', [$date_start, $date_end])
+                        ->orWhereBetween('date_closed', [$date_start, $date_end]);
+                });
+            }
+
+            $cashes_establishment = $cash_query->with('turn')->get()->map(function ($row) use ($payments, &$diff_payments) {
+                $allMethods = $row->boxes->pluck('method')->unique();
+                $records = [];
+
+                foreach ($payments as $value) {
+                    if ($value != "Efectivo") {
+                        $record = $row->boxes->where('method', $value)->sum('amount');
+                        $records[] = [
+                            'method' => $value,
+                            'amount' => $record
+                        ];
+                    } else {
+                        $total = 0;
+                        $row->boxes->where('type', '1')->where('method', 'Efectivo')
+                            ->where('expenses', 0)->where('incomes', 0)->where('state', 0)
+                            ->each(function ($box) use (&$total) {
+                                if ($box->sale_note_id) {
+                                    $sale_note = $box->salenote;
+                                    $total += min($box->amount, $sale_note->total);
+                                }
+                                if ($box->document_id) {
+                                    $document = $box->document;
+                                    $total += min($box->amount, $document->total);
                                 }
                             });
 

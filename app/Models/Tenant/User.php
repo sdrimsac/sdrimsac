@@ -48,6 +48,7 @@ class User extends Authenticatable
         'license',
         'category',
         'can_accept_credit_sale_note',
+        'is_pharmacy',
     ];
 
     /**

@@ -909,8 +909,6 @@ if ($hostname) {
                         Route::get('search/supliers', [App\Http\Controllers\Tenant\PurchaseController::class, 'searchSupliers']);
                     });
 
-
-
                 Route::prefix('download-files')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'index'])->name('tenant.download_files.index');
                     Route::post('/search', [App\Http\Controllers\Tenant\DownloadFilesController::class, 'searchFiles']);
@@ -986,7 +984,6 @@ if ($hostname) {
 
                 Route::get('sale-notes/tables', [App\Http\Controllers\Tenant\SaleNoteController::class, 'tables']);
                 Route::get('sale-notes/table/{table}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'table']);
-
 
                 Route::post('sale-notes/void-credit', [App\Http\Controllers\Tenant\SaleNoteController::class, 'voidCredit']);
                 Route::get('sale-notes/check-customer-line/{customer_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'checkCustomerLine']);
@@ -1140,7 +1137,6 @@ if ($hostname) {
                 Route::get('commit/store', [App\Http\Controllers\Tenant\CommitController::class, 'store']);
                 Route::delete('commit/{commit}', [App\Http\Controllers\Tenant\CommitController::class, 'destroy']);
                 Route::get('commit/configuration', [App\Http\Controllers\Tenant\CommitController::class, 'configuration']);
-
 
                 //Cuenta
                 Route::get('cuenta/payment_index', [App\Http\Controllers\Tenant\AccountController::class, 'paymentIndex'])->name('tenant.payment.index')->middleware('just.admin');

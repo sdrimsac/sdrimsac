@@ -886,12 +886,11 @@ class DocumentController extends Controller
                     }
                     $sales->state_type_id = $state_type;
                     $sales->save();
-                    
+
                     return [
                         "success" => true,
                         "message" => $this->document_state[$data["comprobante_estado_codigo"]]
                     ];
-                    
                 } else {
                     return [
                         "success" => false,
@@ -2656,6 +2655,11 @@ class DocumentController extends Controller
         }
         /** @var User $user */
         $user = auth()->user();
+        if ($user->type === 'admin' && $user->is_pharmacy) {
+            $records = $records->whereHas('establishment', function ($query) {
+                $query->where('is_service', 0);
+            });
+        }
         $type = $user->getUserTypeArca();
         if ($type) {
             $records = $records->whereHas('establishment', function ($query) use ($type) {
@@ -2666,6 +2670,7 @@ class DocumentController extends Controller
                 }
             });
         }
+    
         $payment_condition_id = $request->payment_condition_id;
         if ($d_start && $d_end) {
             $records = $records->where('document_type_id', 'like', '%' . $document_type_id . '%')

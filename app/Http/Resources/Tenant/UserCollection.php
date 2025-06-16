@@ -40,6 +40,7 @@ class UserCollection extends ResourceCollection
             }
 
             return [
+                'is_pharmacy' => (bool) $row->is_pharmacy,
                 'last_register' => $this->get_last_document($row),
                 'id' => $row->id,
                 'email' => $row->email,

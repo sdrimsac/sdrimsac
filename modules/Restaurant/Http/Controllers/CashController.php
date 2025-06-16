@@ -2536,7 +2536,6 @@ class CashController extends Controller
     }
     public function close(Request $request)
     {
-
         $id = $request->id;
         $final_balance = $request->final_balance;
         $configuration = Configuration::first();
@@ -2606,9 +2605,6 @@ class CashController extends Controller
                     return $sale_note->advances;
                 }
                 return $sale_note->total;
-                // $sale_note = SaleNote::whereDoesntHave('sale_note_credit')->find($item->sale_note_id);
-                // if (!$sale_note) return 0;
-                // return $sale_note->total - $sale_note->advances;
             }
         });
         $all_cash = $all_cash->sum();
@@ -2631,58 +2627,6 @@ class CashController extends Controller
         CashReportSmallProccess::dispatch($website->id, $cash->id, $fqdn);
         $configuration = Configuration::first();
         WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id, $fqdn);
-        // $number_activity = $configuration->number_activity;
-        // $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
-        // $request = new Request(
-        //     [
-        //         'from_server' => true,
-        //         'sender' => 'sdrimsac',
-        //         'number' => $number_activity,
-        //         'resource' => $resource,
-        //         'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
-        //         'message' => "Caja cerrada por " . $user_name
-        //     ]
-        // );
-        // if ($number_activity) {
-
-        //     (new WhatsappController)->sendHistorial($request);
-        // }
-        // $numbers = NumberActivity::all();
-        // foreach ($numbers as $number) {
-        //     $request['number'] = $number->number;
-        //     (new WhatsappController)->sendHistorial($request);
-        // }
-
-        // $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id."&cash_id=".$cash->id;
-        // $file = file_get_contents($resource);
-
-        // $file_name = $cash->id . "_" . "Stock_al_cerrar_caja_" . Carbon::now()->format("Y-m-d") . ".xlsx";
-
-        // $directory = 'public' . DIRECTORY_SEPARATOR . 'stock_excel_cierre_caja';
-        // Storage::disk('tenant')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file);
-
-        // $cash->stock_file = $file_name;
-        // $cash->save();
-
-
-        // $request = new Request(
-        //     [
-        //         'from_server' => true,
-        //         'sender' => 'sdrimsac',
-        //         'number' => $number_activity,
-        //         'resource' => $resource,
-        //         'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d") . ".xlsx",
-        //         'message' => "Caja cerrada por " . $user_name
-        //     ]
-        // );
-        // if ($number_activity) {
-        //     (new WhatsappController)->sendHistorial($request);
-        // }
-        // $numbers = NumberActivity::all();
-        // foreach ($numbers as $number) {
-        //     $request['number'] = $number->number;
-        //     (new WhatsappController)->sendHistorial($request);
-        // }
 
         $principal_cash =  $configuration->principal_cash;
         $health_network = $configuration->health_network;
@@ -2722,7 +2666,6 @@ class CashController extends Controller
                 $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";
                 if ($user_principal_telephone) {
                     WhatsappSendMessageProccess::dispatch($website->id, $message, $user_principal_telephone);
-                    // (new WhatsappController)->sendMessage($message, $user_principal_telephone);
                 }
             }
         }

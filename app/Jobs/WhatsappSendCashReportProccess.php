@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use ParagonIE\Sodium\Core\Curve25519\H;
+use Throwable;
 
 class WhatsappSendCashReportProccess implements ShouldQueue
 {
@@ -35,7 +36,7 @@ class WhatsappSendCashReportProccess implements ShouldQueue
     protected $fqdn;
 
 
-    public function __construct($website_id, $cash_id, $user_name,$fqdn)
+    public function __construct($website_id, $cash_id, $user_name, $fqdn)
     {
         $this->cash_id = $cash_id;
         $this->website_id = $website_id;
@@ -54,9 +55,9 @@ class WhatsappSendCashReportProccess implements ShouldQueue
             $configuration = Configuration::first();
             //caja/worker/cash/print-report?cash_id=1136
             $resource = "http://" . $this->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $this->cash_id;
-            
+
             $sender = 'sdrimsac';
-            if($configuration->whatsapp_client){
+            if ($configuration->whatsapp_client) {
                 $sender = $subdomain;
             }
             $company = Company::first();
@@ -72,30 +73,51 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                     'number' => null,
                     'resource' => $resource,
                     'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
-                    'message' => "*".$company_name."*: Caja cerrada por " . $this->user_name." en ".$establishment_name,
+                    'message' => "*" . $company_name . "*: Caja cerrada por " . $this->user_name . " en " . $establishment_name,
                 ]
             );
             // if ($number_activity) {
 
-                // (new WhatsappController)->sendHistorial($request);
+            // (new WhatsappController)->sendHistorial($request);
             // }else{
-                Http::get($resource);
+            Http::get($resource);
             // }
-            
-            
-            $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
-            if($configuration_establishments_numbers){
-                $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function($row){
+
+
+            /* $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
+            if ($configuration_establishments_numbers) {
+                $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()->transform(function ($row) {
                     return  (object)[
                         'number' => $row->getNumber(),
                         'establishment_id' => $row->establishment_id
                     ];
                 });
-            }else{
+            } else {
+                $numbers = NumberActivity::all();
+            } */
+
+            $configuration_establishments_numbers = $configuration->configuration_establishments_numbers;
+
+            // Si es JSON almacenado como texto
+            if (is_string($configuration_establishments_numbers)) {
+                $configuration_establishments_numbers = json_decode($configuration_establishments_numbers, true);
+            }
+
+            // Validación segura
+            if (is_array($configuration_establishments_numbers) && count($configuration_establishments_numbers) > 0) {
+                $numbers = EstablishmentNotificationNumber::whereIn('establishment_id', $configuration_establishments_numbers)->get()
+                    ->transform(function ($row) {
+                        return (object)[
+                            'number' => $row->getNumber(),
+                            'establishment_id' => $row->establishment_id,
+                        ];
+                    });
+            } else {
                 $numbers = NumberActivity::all();
             }
-            foreach ($numbers as $number) { 
-                if($number->number){
+
+            foreach ($numbers as $number) {
+                if ($number->number) {
                     $request['number'] = $number->number;
                     (new WhatsappController)->sendHistorial($request);
                 }
@@ -108,7 +130,7 @@ class WhatsappSendCashReportProccess implements ShouldQueue
         }
     }
 
-    
+
 
     /**
      * The job failed to process.
@@ -117,7 +139,11 @@ class WhatsappSendCashReportProccess implements ShouldQueue
      *
      * @return void
      */
-    public function failed(Exception $exception)
+    /* public function failed(Exception $exception)
+    {
+        Log::error($exception->getMessage());
+    } */
+    public function failed(Throwable $exception)
     {
         Log::error($exception->getMessage());
     }

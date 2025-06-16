@@ -192,6 +192,27 @@ class WorkerController extends Controller
         $name = $request->input('name');
         if ($user_type == 'admin') {
             $records = User::where('type', '<>', 'superadmin');
+
+            /* if ($user_type == 'admin') {
+                if ($user->is_pharmacy) {
+
+                    $records = User::whereIn('type', ['admin', 'seller'])
+                        ->where('is_pharmacy', 1)
+                        ->where('id', '<>', $user->id);
+                } else {
+
+                    $records = User::whereRaw('1 = 0');
+                }
+            } */
+            if ($user_type == 'admin') {
+                if ($user->is_pharmacy) {
+                   
+                    $records = User::whereIn('type', ['admin', 'seller'])
+                        ->where('is_pharmacy', 1);
+                } else {
+                    $records = User::whereRaw('1 = 0');
+                }
+            }
         } else {
             $records = User::query();
         }
@@ -397,7 +418,7 @@ class WorkerController extends Controller
         else {
             $pin =  $this->newPin();
             $user->pin = $pin;
-            $user->type = 'seller' ;
+            $user->type = 'seller';
             $user->fill($request->all());
             // $user->establishment_id = auth()->user()->establishment_id;
         }
