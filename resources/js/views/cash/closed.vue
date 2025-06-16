@@ -4,7 +4,7 @@
             <h6 class="my-0 text-white">Reporte de cierre de cajas</h6>
         </div>
         <div class="tab-content p-3">
-            <template v-if="!canOpen">
+            <template v-if="canOpen">
                 <template v-if="!hasCash">
                     <div class="col-md- d-flex justify-content-end">
                         <button
