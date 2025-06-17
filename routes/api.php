@@ -136,6 +136,8 @@ if ($hostname) {
             Route::get('items/enable/{item}', '\App\Http\Controllers\Tenant\ItemController@enable');
             Route::get('items/images/{item}', '\App\Http\Controllers\Tenant\ItemController@images');
             Route::get('items/images/delete/{id}', '\App\Http\Controllers\Tenant\ItemController@delete_images');
+
+            Route::get('items/recordsMobile', '\App\Http\Controllers\Tenant\ItemController@recordsMobile');
             //MOBILE
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', 'DownloadController@downloadExternal');
             Route::get('document/series', 'Api\MobileController@getSeries');

@@ -252,7 +252,7 @@ class ItemController extends Controller
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
         ini_set('max_execution_time', 0);
-        
+
         $categoria_id = $request->categoria_id;
         $item_id = $request->item_id;
         $establishment_id = $request->establishment_id;
@@ -871,6 +871,11 @@ class ItemController extends Controller
         $records = $this->getRecords($request);
         return new ItemCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function recordsMobile(Request $request)
+    {
+        $records = $this->getRecordMobile($request);
+        return new ItemCollection($records->paginate(config('tenant.items_per_page')));
+    }
 
     public function recordsCatalog(Request $request)
     {
@@ -1151,6 +1156,107 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
+    public function getRecordMobile($request, $services = true)
+    {
+        $datos = $request->value;
+        $textoIntoArray = explode(' ', $datos);
+        $warehouse_id = $request->warehouse_id;
+        $categoria_madera_id = $request->categoria_madera_id;
+        $area_id = $request->area_id;
+        $active = $request->active;
+
+        $records = Item::whereTypeUser()
+            ->whereNotIsSet();
+
+        /** @var User $user */
+        $user = auth()->user();
+        $type = $user->getUserTypeArca();
+
+        if (!$services) {
+            $records = $records->where('unit_type_id', '!=', 'ZZ');
+        }
+
+        if ($type) {
+            $records = $records->whereHas('warehouse', function ($query) use ($type) {
+                $query->whereHas('establishment', function ($query) use ($type) {
+                    if ($type == 'product') {
+                        $query->where('is_product', 1);
+                    } elseif ($type == 'service') {
+                        $query->where('is_service', 1);
+                    }
+                });
+            });
+        }
+
+        // 🔍 Filtros por descripción, código, etc.
+        if ($request->value) {
+            $records->where(function ($query) use ($request, $textoIntoArray) {
+                $query->where('internal_id', 'like', "%{$request->value}%")
+                    ->orWhere('second_name', 'like', "%{$request->value}%")
+                    ->orWhere('barcode', 'like', "%{$request->value}%");
+
+                if (count($textoIntoArray) === 1) {
+                    foreach ($textoIntoArray as $value) {
+                        $query->orWhere('description', 'like', '%' . $value . '%');
+                    }
+                } else {
+                    foreach ($textoIntoArray as $value) {
+                        $query->where('description', 'like', '%' . $value . '%');
+                    }
+                }
+            });
+
+            // Ordenamiento por coincidencia
+            $records->orderByRaw("description LIKE ? DESC", ["{$request->value}%"])
+                ->orderByRaw("description LIKE ? DESC", ["%{$request->value}%"]);
+        }
+
+        $records = $records->where('active', 1);
+
+        // 🔒 Filtrado por almacén y estado activo
+        if ($active !== null) {
+            $active = ($active === 'Habilitado') ? 1 : 0;
+
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id, $active) {
+                $query->where('warehouse_id', $warehouse_id)
+                    ->where('active', $active);
+            });
+        } elseif ($warehouse_id) {
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id)
+                    ->where('active', 1);
+            });
+        }
+
+        // 🪵 Filtrado por categoría madera (si aplica)
+        if ($categoria_madera_id) {
+            $records = $records->whereHas('categoria_madera', function ($query) use ($categoria_madera_id) {
+                $query->where('id', $categoria_madera_id);
+            });
+        }
+
+        // 🍽 Filtrado por área de comida (si aplica)
+        if ($area_id) {
+            $records = $records->whereHas('food', function ($query) use ($area_id) {
+                $query->where('area_id', $area_id);
+            });
+        }
+
+        // ⚙️ Cargar relaciones específicas del almacén
+        if ($warehouse_id) {
+            $records = $records->with([
+                'warehouses' => function ($query) use ($warehouse_id) {
+                    $query->where('warehouse_id', $warehouse_id);
+                },
+                'item_warehouse_prices' => function ($query) use ($warehouse_id) {
+                    $query->where('warehouse_id', $warehouse_id);
+                }
+            ]);
+        }
+
+        return $records->orderBy('description', 'ASC');
+    }
+
 
     public function getRecordsUltima_Venta($item_id)
     {
@@ -1717,11 +1823,11 @@ class ItemController extends Controller
     {
         try {
             $item = Item::findOrFail($id);
-            
+
             // Verificar si el item tiene registros en inventories
             $has_inventory = Inventory::where('item_id', $id)->exists();
-            
-            if($has_inventory) {
+
+            if ($has_inventory) {
                 return [
                     'success' => false,
                     'message' => 'No se puede eliminar el producto porque ya tiene stock cargado en inventario'
@@ -1742,8 +1848,8 @@ class ItemController extends Controller
             ];
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return ($e->getCode() == '23000') ? 
-                ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] : 
+            return ($e->getCode() == '23000') ?
+                ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] :
                 ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
         }
     }
