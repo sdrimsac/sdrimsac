@@ -9,6 +9,7 @@ use App\Traits\RegisterMovementTrait;
 use Exception;
 use Hyn\Tenancy\Traits\UsesTenantConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\BusinessTurn\Models\DocumentHotel;
 use Modules\Restaurant\Models\Orden;
@@ -22,6 +23,9 @@ class Document extends ModelTenant
         UsesTenantConnection;
 
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
+    
+    protected $hidden = ['qr'];
+    
     public $timestamps = true;
     protected $fillable = [
         'state_sunat',
@@ -555,36 +559,17 @@ class Document extends ModelTenant
     {
         return $this->belongsTo(Seller::class, 'seller_id');
     }
-    /* protected static function boot()
-    {
-        parent::boot();
-        //created
-        Document::created(function ($model) {
-            $request = Request::capture();
-            $description = "Documento creado";
-            $data = $model->toArray();
-            RegisterMovementTrait::registerCreate(
-                $model,
-                $request,
-                $description,
-                $data
-            );
-        });
     
-
-        Document::deleted(
-            function ($model) {
-                $request = Request::capture();
-                $description = "Documento Anulado";
-                $data = $model->toArray();
-                RegisterMovementTrait::registerDelete(
-                    $model,
-                    $request,
-                    $description,
-                    $data
-                );
-            }
-
-        );
-    } */
+    public function scopeWithoutRelations($query)
+    {
+        return $query->withoutGlobalScope('App\Scopes\WithScope');
+    }
+    
+    /**
+     * Scope to get documents without loading the QR code
+     */
+    public function scopeWithoutQr($query)
+    {
+        return $query->select(['*'])->addSelect(DB::raw('NULL as qr'));
+    }
 }

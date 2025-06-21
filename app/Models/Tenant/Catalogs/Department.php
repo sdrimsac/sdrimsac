@@ -7,8 +7,8 @@ namespace App\Models\Tenant\Catalogs;
 class Department extends ModelCatalog
 {
     
-
-    protected $with = ['provinces'];
+    // Removed eager loading of all provinces to optimize performance
+    // protected $with = ['provinces'];
     public $incrementing = false;
     public $timestamps = false;
 

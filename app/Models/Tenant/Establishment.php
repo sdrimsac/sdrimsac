@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 class Establishment extends ModelTenant
 {
     protected $with = [
-        'customer',
-        'country', 'department', 'province', 'district',
+        'customer.identity_document_type',
         'conf'
+        // Removed eager loading of location data to optimize performance
+        // 'country', 'department', 'province', 'district',
     ];
     protected $fillable = [
         'credit_warehouse',
@@ -88,11 +89,70 @@ class Establishment extends ModelTenant
     public function purchase ()
     {
         return $this->hasMany(Purchase::class, 'establishment_id');
-    }
-
-    public function getAddressFullAttribute()
+    }    public function getAddressFullAttribute()
     {
         $address = ($this->address != '-') ? $this->address . ' ,' : '';
-        return "{$address} {$this->department->description} - {$this->province->description} - {$this->district->description}";
+        
+        // Load only the specific location models we need without their relationships
+        if (!$this->relationLoaded('department')) {
+            $this->load(['department' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        if (!$this->relationLoaded('province')) {
+            $this->load(['province' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        if (!$this->relationLoaded('district')) {
+            $this->load(['district' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        $dept = $this->department ? $this->department->description : '';
+        $prov = $this->province ? $this->province->description : '';
+        $dist = $this->district ? $this->district->description : '';
+        
+        return "{$address} {$dept} - {$prov} - {$dist}";
+    }
+      /**
+     * Get location data in a structured way
+     *
+     * @return array Location data including country, department, province and district
+     */
+    public function getLocationDataAttribute()
+    {
+        // Load only necessary fields for each location entity
+        $locationEntities = ['country', 'department', 'province', 'district'];
+        
+        foreach ($locationEntities as $entity) {
+            if (!$this->relationLoaded($entity) && $this->{$entity.'_id'}) {
+                $this->load([$entity => function($query) {
+                    $query->select('id', 'description');
+                }]);
+            }
+        }
+        
+        return [
+            'country' => $this->country ? [
+                'id' => $this->country->id,
+                'description' => $this->country->description
+            ] : null,
+            'department' => $this->department ? [
+                'id' => $this->department->id,
+                'description' => $this->department->description
+            ] : null,
+            'province' => $this->province ? [
+                'id' => $this->province->id,
+                'description' => $this->province->description
+            ] : null,
+            'district' => $this->district ? [
+                'id' => $this->district->id,
+                'description' => $this->district->description
+            ] : null
+        ];
     }
 }

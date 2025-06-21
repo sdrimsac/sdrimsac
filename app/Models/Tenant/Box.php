@@ -13,7 +13,7 @@ use Modules\Restaurant\Models\BoxesDetail;
 class Box extends ModelTenant
 {
     use RegisterMovementTrait;
-    protected $with = ['groups', 'categories', 'subcategories', 'user', 'document', 'SaleNote', 'items']; //nombre tablas secundarias
+    protected $with = ['groups', 'categories', 'subcategories', 'user', 'SaleNote', 'items']; //nombre tablas secundarias - removed document from eager loading
     protected $table = "boxes";                                  //nombre tabla
     protected $primarykey = "id";
     // protected $hidden = ["created_at", "updated_at"];
@@ -173,7 +173,71 @@ class Box extends ModelTenant
     }
     public function document()
     {
-        return $this->belongsTo(Document::class, 'document_id', 'id');
+        return $this->belongsTo(Document::class, 'document_id', 'id')
+            ->select([
+                'id',
+                'document_type_id',
+                'series',
+                'number',
+                'date_of_issue',
+                'customer_id',
+                'total',
+                'state_type_id',
+                'currency_type_id',
+                'exchange_rate_sale',
+                'total_taxes',
+                'total_value',
+                'filename',
+                'total_exonerated',
+                'total_unaffected',
+                'total_free',
+                'total_taxed',
+                'establishment_id',
+                'soap_type_id',
+                'user_id',
+                'total_igv',
+                'total_discount',
+                'total_isc',
+                'payment_condition_id'
+            ]);
+    }
+
+    // Use this method when you need the document with its relationships
+    public function documentWithRelations()
+    {
+        return $this->belongsTo(Document::class, 'document_id', 'id')
+            ->select([
+                'id',
+                'document_type_id',
+                'series',
+                'number',
+                'date_of_issue',
+                'customer_id',
+                'total',
+                'state_type_id',
+                'currency_type_id',
+                'exchange_rate_sale',
+                'total_taxes',
+                'total_value',
+                'filename',
+                'total_exonerated',
+                'total_unaffected',
+                'total_free',
+                'total_taxed',
+                'establishment_id',
+                'soap_type_id',
+                'user_id',
+                'total_igv',
+                'total_discount',
+                'total_isc',
+                'payment_condition_id'
+            ])
+            ->with([
+                'user:id,name,email,type',
+                'document_type:id,description,short',
+                'currency_type:id,symbol,description',
+                'state_type:id,description'
+            ]);
     }
     public function SaleNote()
     {
@@ -211,5 +275,27 @@ class Box extends ModelTenant
     public function item()
     {
         return $this->belongsTo(Item::class, 'id');
+    }
+
+    /**
+     * Load document with minimal data for reports
+     * Avoids loading heavy data like QR codes
+     */
+    public function documentForReporting()
+    {
+        return $this->belongsTo(Document::class, 'document_id', 'id')
+            ->select([
+                'id',
+                'document_type_id',
+                'series',
+                'number',
+                'date_of_issue',
+                'total',
+                'state_type_id',
+                'currency_type_id'
+            ])
+            ->with([
+                'document_type:id,description,short'
+            ]);
     }
 }

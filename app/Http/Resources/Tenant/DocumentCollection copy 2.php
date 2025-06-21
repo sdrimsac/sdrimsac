@@ -1,0 +1,383 @@
+<?php
+
+namespace App\Http\Resources\Tenant;
+
+use App\Models\Tenant\Box;
+use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Document;
+use App\Models\Tenant\DocumentPayment;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Modules\Restaurant\Models\Orden;
+use Carbon\Carbon;
+use App\Models\Tenant\RegisterMovement;
+
+class DocumentCollection extends ResourceCollection
+{
+
+
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    public function toArray($request)
+    {
+        $configuration = Configuration::first();
+
+
+        return $this->collection->transform(function ($row, $key) use ($configuration) {
+
+            $has_xml = true;
+            $has_pdf = true;
+            $has_cdr = false;
+            $btn_note = false;
+            $btn_guide = true;
+            $btn_resend = false;
+            $btn_voided = false;
+            $btn_consult_cdr = false;
+            $btn_delete_doc_type_03 = false;
+            $btn_constancy_detraction = false;
+
+            $affected_document = null;
+            if ($row->state_type_id === '01') {
+                $btn_resend = true;
+            } else {
+                $btn_resend = false;
+            }
+            if ($row->group_id === '01') {
+
+                if ($row->state_type_id === '01' || $row->state_type_id === '03') {
+                    $btn_delete_doc_type_03 = true;
+                }
+                if ($row->state_type_id === '05') {
+                    $has_cdr = true;
+                    $btn_note = true;
+
+                    $btn_voided = true;
+                    $btn_consult_cdr = true;
+                }
+
+                if (in_array($row->document_type_id, ['07', '08'])) {
+                    $btn_note = false;
+                }
+            }
+            if ($row->group_id === '02') {
+                if ($row->state_type_id === '05') {
+                    $btn_note = true;
+                    $btn_voided = true;
+                }
+
+                if (in_array($row->document_type_id, ['07', '08'])) {
+                    $btn_note = false;
+                }
+                if ($row->state_type_id == '01' || $row->state_type_id == '03') {
+                    $btn_delete_doc_type_03 = true;
+                }
+
+                if ($row->document_type_id === '03' && $configuration->delete_document) {
+                }
+            }
+
+            if (in_array($row->document_type_id, ['01', '03'])) {
+                $btn_constancy_detraction = ($row->detraction) ? true : false;
+            }
+
+            $btn_guide = $btn_note;
+            if ($btn_guide === false && ($row->state_type_id === '01')) {
+                // #750
+                $btn_guide = true;
+            }
+            $btn_recreate_document = $configuration->recreat_document;
+
+            $btn_change_to_registered_status = false;
+            if ($row->state_type_id === '01') {
+                $btn_change_to_registered_status = config('tenant.change_to_registered_status');
+            }
+
+            $total_payments = $row->payments->sum('payment');
+            // if ($row->total_rounded==0){
+            $balance = number_format(($row->total - $row->total_rounded) - $total_payments, 2, ".", "");
+
+            // }else{
+            //    $balance = number_format(($row->tototal_paymenttal) - $total_payments,2, ".", "");
+
+            // }
+            // $boxes = Box::where('document_id', $row->id);
+            $boxes = $row->boxes;
+            $is_credit = $row->payment_condition_id == "02";
+            $paid = false;
+            $remain = 0;
+            if ($is_credit) {
+                $sum = $boxes->sum('amount');
+                if ($sum < $row->total) {
+                    $remain = $row->total - $sum;
+                    $paid = false;
+                } else {
+                    $row->canceled();
+                }
+            } else {
+                $payed = $boxes->sum('amount');
+                if ($payed >= $row->total) {
+                    $paid = true;
+                }
+            }
+
+            if ($configuration->health_network && !$paid && $row->payment_condition_id == "01") {
+                $row->total_canceled = true;
+                $paid = true;
+                $row->save();
+            }
+            // if($row->total_canceled){
+            //     $paid = true;
+            // }
+
+
+            $sale_note_related = $row->sale_note_related->transform(function ($sale_note) {
+                return [
+                    "number" => $sale_note->getNumberFullAttribute(),
+                ];
+            });
+            $orden = $row->orden;
+            // $orden = Orden::where('document_id', $row->id)->first();
+            $ordens_ref = $orden ? $orden->ref : null;
+
+            if ($sale_note_related->count() > 0 && !$paid) {
+                $paid = true;
+                $row->total_canceled = true;
+                $row->save();
+            }
+
+            $table_number = null;
+            $orden = $row->orden;
+            if ($orden) {
+                $table = $orden->mesa;
+                if ($table) {
+                    $table_number = $table->number;
+                }
+            }
+
+            return [
+                'state_sunat' => $row->state_sunat,
+                'internal_voided' => (bool) $row->internal_voided,
+                /* 'seller_id' => $row->seller_id, */
+                'last_register' => $this->get_last_document($row),
+                'ordens_ref' => $ordens_ref,
+                'table_number' => $table_number,
+                'sale_note_related' => $sale_note_related,
+                'remain' => $remain,
+                'paid' => $paid,
+                'is_credit' => $row->payment_condition_id == "02",
+                'dispatch_id' => $row->dispatch_id,
+                'boxes' => $boxes,
+                'id' => $row->id,
+                'group_id' => $row->group_id,
+                'soap_type_id' => $row->soap_type_id,
+                'soap_type_description' => $row->soap_type->description,
+                'date_of_issue' => $row->date_of_issue,
+                'time_of_issue' => $row->time_of_issue,
+                'from_consignment' => (bool) $row->from_consignment,
+                //    'date_of_due' => (in_array($row->document_type_id, ['01', '03'])) ? $row->invoice->date_of_due->format('Y-m-d') : null,
+                'number' => $row->number_full,
+                'payment' => $row->payments,
+                'customer_name' => $row->customer->name,
+                'customer_number' => $row->customer->number,
+                'customer_telephone' => $row->customer->telephone,
+                'currency_type_id' => $row->currency_type_id,
+                'total_exportation' => $row->total_exportation,
+                'total_free' => $row->total_free,
+                'total_unaffected' => $row->total_unaffected,
+                'total_exonerated' => $row->total_exonerated,
+                'total_taxed' => $row->total_taxed,
+                'total_taxes' => $row->total_taxes,
+                'total_igv' => $row->total_igv,
+                'total' => $row->total,
+                'total_rounded' => $row->total_rounded,
+                'total_payment' => $row->total_payment,
+                'state_type_id' => $row->state_type_id,
+                'state_type_description' => $row->state_type->description,
+                'document_type_description' => $row->document_type->description,
+                'document_type_id' => $row->document_type->id,
+                'has_xml' => $has_xml,
+                'has_pdf' => $has_pdf,
+                'has_cdr' => $has_cdr,
+                'download_xml' => $row->download_external_xml,
+                'download_pdf' => $row->download_external_pdf,
+                'download_cdr' => $row->download_external_cdr,
+                'btn_voided' => $btn_voided,
+                'btn_note' => $btn_note,
+                'btn_guide' => $btn_guide,
+                //                'btn_ticket' => $btn_ticket,
+                'dispatches' => $this->getDispatches($row),
+                'btn_resend' => $btn_resend,
+                'btn_consult_cdr' => $btn_consult_cdr,
+                'btn_constancy_detraction' => $btn_constancy_detraction,
+                'btn_recreate_document' => (bool) $btn_recreate_document,
+                'btn_change_to_registered_status' => $btn_change_to_registered_status,
+                'btn_delete_doc_type_03' => $btn_delete_doc_type_03,
+                'send_server' => (bool) $row->send_server,
+                //                'voided' => $voided,
+                'affected_document' => $affected_document,
+                //                'has_xml_voided' => $has_xml_voided,
+                //                'has_cdr_voided' => $has_cdr_voided,
+                //                'download_xml_voided' => $download_xml_voided,
+                //                'download_cdr_voided' => $download_cdr_voided,
+                'shipping_status' => json_decode($row->shipping_status),
+                'sunat_shipping_status' => json_decode($row->sunat_shipping_status),
+                'query_status' => json_decode($row->query_status),
+                //      'created_at' => $row->created_at->format('Y-m-d H:i:s'),
+                //       'updated_at' => $row->updated_at->format('Y-m-d H:i:s'),
+                'user_name' => ($row->user) ? $row->user->name : '',
+                'user_email' => ($row->user) ? $row->user->email : '',
+                'external_id' => $row->external_id,
+                'observation' => $row->observation,
+                'balance' => $balance,
+                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                    ? [[
+                        'document_id' => $row->document_affected_note->document_id,
+                        'affected_document_id' => $row->document_affected_note->affected_document_id,
+                        'number_full' => $row->number_full,
+
+                    ]]
+                    : [], */
+                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                    ? [[
+                        'document_id' => $row->document_affected_note->document_id,
+                        'affected_document_id' => $row->document_affected_note->affected_document_id,
+                        'series' => optional($row->document_affected_note->document)->series,
+                        'number' => optional($row->document_affected_note->document)->number,
+                    ]]
+                    : [], */
+                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                    ? [[
+                        'document_id' => $row->document_affected_note->document_id,
+                        'affected_document_id' => $row->document_affected_note->affected_document_id,
+                        'series' => optional($row->document_affected_note->document)->series,
+                        'number' => optional($row->document_affected_note->document)->number,
+                        'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
+                        'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
+                    ]]
+                    : [], */
+                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                    ? [[
+                        'document_id' => $row->document_affected_note->document_id,
+                        'affected_document_id' => $row->document_affected_note->affected_document_id,
+                        // Si es nota de crédito, mostrar datos del documento afectado
+                        'series' => $row->document_type_id == '07'
+                            ? optional(Document::find($row->document_affected_note->affected_document_id))->series
+                            : optional($row->document_affected_note->document)->series,
+                        'number' => $row->document_type_id == '07'
+                            ? optional(Document::find($row->document_affected_note->affected_document_id))->number
+                            : optional($row->document_affected_note->document)->number,
+                        // Puedes agregar ambos si quieres mostrar siempre ambos campos
+                        'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
+                        'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
+                    ]]
+                    : [], */
+
+                'document_affected_notes' =>
+                // Si es nota de crédito, buscar el documento afectado manualmente
+                $row->document_type_id == '07'
+                    ? (
+                        $row->note && $row->note->affected_document_id
+                        ? [[
+                            'document_id' => $row->id,
+                            'affected_document_id' => $row->note->affected_document_id,
+                            'series' => $row->series,
+                            'number' => $row->number,
+                            'affected_series' => optional(Document::find($row->note->affected_document_id))->series,
+                            'affected_number' => optional(Document::find($row->note->affected_document_id))->number,
+                        ]]
+                        : []
+                    )
+                    // Si no, usar la relación normal
+                    : (
+                        $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                        ? [[
+                            'document_id' => $row->document_affected_note->document_id,
+                            'affected_document_id' => $row->document_affected_note->affected_document_id,
+                            'series' => optional($row->document_affected_note->document)->series,
+                            'number' => optional($row->document_affected_note->document)->number,
+                            'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
+                            'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
+                        ]]
+                        : []
+                    ),
+
+            ];
+        });
+    }
+
+
+    private function getDispatches($row)
+    {
+
+        $dispatches = [];
+
+        if (in_array($row->document_type_id, ['01', '03'])) {
+
+            $dispatches = $row->reference_guides->transform(function ($row) {
+                return [
+                    'description' => $row->number_full,
+                ];
+            });
+
+            if ($row->dispatch) {
+                $dispatches = $dispatches->push([
+                    'description' => $row->dispatch->number_full,
+                ]);
+            }
+        }
+
+        return $dispatches;
+    }
+    function get_last_document($row)
+    {
+        $last_register_movement = RegisterMovement::where('model', Document::class)
+
+            ->where('model_id', $row->id)
+
+            ->orderBy('id', 'desc')->first();
+
+        $data = [
+            'user' => '',
+            'date_time' => '',
+            'description' => '',
+            'created_at' => ''
+        ];
+        if ($last_register_movement) {
+            $date_time = $last_register_movement->created_at;
+            $data = [
+                'user' => $last_register_movement->user->name,
+                'description' => $last_register_movement->description,
+                'date_time' => $this->get_date_difference($date_time),
+                'created_at' => $last_register_movement->created_at->format('Y-m-d H:i:s')
+
+            ];
+        }
+        return $data;
+    }
+    function get_date_difference($created_at)
+    {
+        $currentDay = Carbon::now();
+        $created_at = Carbon::parse($created_at);
+
+        $difference = $created_at->diff($currentDay);
+        $days = $difference->days;
+        $hours = $difference->h;
+        $minutes = $difference->i;
+        $seconds = $difference->s;
+        $is24Hours = false;
+        if ($days > 0) {
+            $is24Hours = true;
+        }
+        $data = [
+            'is24Hours' => $is24Hours,
+            'days' => $days,
+            'hours' => $hours,
+            'minutes' => $minutes,
+            'seconds' => $seconds
+        ];
+        return $data;
+    }
+}

@@ -2633,6 +2633,7 @@ class DocumentController extends Controller
 
         return $records;
     }
+
     public function getRecords($request, $detraction = false, $export = false)
     {
         $d_end = $request->d_end;
@@ -2653,7 +2654,6 @@ class DocumentController extends Controller
         if ($detraction) {
             $records = $records->whereNotNull('detraction');
         }
-        /** @var User $user */
         $user = auth()->user();
         if ($user->type === 'admin' && $user->is_pharmacy) {
             $records = $records->whereHas('establishment', function ($query) {
@@ -2670,8 +2670,17 @@ class DocumentController extends Controller
                 }
             });
         }
-    
+
         $payment_condition_id = $request->payment_condition_id;
+
+        $ver_todo = $request->ver_todo === "true";
+
+        if (!$ver_todo && !$d_start && !$d_end) {
+            // Limitar por defecto a últimos 6 meses
+            $six_months_ago = now()->subMonths(6)->toDateString();
+            $records = $records->where('date_of_issue', '>=', $six_months_ago);
+        }
+
         if ($d_start && $d_end) {
             $records = $records->where('document_type_id', 'like', '%' . $document_type_id . '%')
                 ->where('soap_type_id', '=', $soap_type_id)
@@ -2679,10 +2688,7 @@ class DocumentController extends Controller
                 ->where('number', 'like', '%' . $number . '%')
                 // ->where('establishment_id', auth()->user()->establishment_id)
                 ->where('state_type_id', 'like', '%' . $state_type_id . '%')
-                ->whereBetween('date_of_issue', [$d_start, $d_end])
-                /* ->OrderBy('id', 'desc')
-                ->OrderBy('number', 'desc')
-                ->latest() */;
+                ->whereBetween('date_of_issue', [$d_start, $d_end]);
         } else {
             $records = $records->where('date_of_issue', 'like', '%' . $date_of_issue . '%')
                 // ->where('establishment_id', auth()->user()->establishment_id)
@@ -2690,10 +2696,7 @@ class DocumentController extends Controller
                 ->where('document_type_id', 'like', '%' . $document_type_id . '%')
                 ->where('state_type_id', 'like', '%' . $state_type_id . '%')
                 ->where('series', 'like', '%' . $series . '%')
-                ->where('number', 'like', '%' . $number . '%')
-                /* ->OrderBy('id', 'desc')
-                ->OrderBy('number', 'desc')
-                ->latest() */;
+                ->where('number', 'like', '%' . $number . '%');
         }
         $roleService = new RoleService;
 
@@ -2748,7 +2751,7 @@ class DocumentController extends Controller
             $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
         } else {
 
-            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(20);
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(10);
             $records->load(['boxes' => function ($query) {
                 $query->select('id', 'amount', 'document_id')->without('document');
             }, 'orden', 'sale_note_related', 'document_affected_note']);

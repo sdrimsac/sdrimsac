@@ -83,15 +83,9 @@
 <body>
     @for ($i = 0; $i < $stock; $i += 2)
         <div>
-            <div class="" style="height: 60px;">
+            <div class="" style="height: 60px; width: 240px;">
                 <div style="height: 60px;float: left; width:110px; padding: 3px;">
                     <div>
-                        {{-- <div style="width: 100%;">
-                            <div class="text-center"
-                                style="width:100%;height:20px;font-size:6px;overflow:hidden;text-align: center;margin: 0 auto;">
-                                {{ substr($description, 0, 30) }}
-                            </div>
-                        </div> --}}
                         <div style="width: 100%;">
                             <div class="text-center"
                                 style="width:100%;height:20px;font-size:6px;overflow:hidden;text-align: center;margin: 8px auto 0;">
@@ -103,12 +97,11 @@
                         </div>
                     </div>
                     <div style="height:13px;width:100%;overflow:hidden;text-align:center;">
-                        <div style="overflow: hidden;height: 15px;text-align:center;">
+                        <div style="overflow: hidden;height: 18px;text-align:center;">
                             @php
                                 $colour = [0, 0, 0];
                                 $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-
-                                echo '<img style="height: 15px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
+                                echo '<img style="height: 18px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
                                             $barcode,
@@ -123,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="height: 60px;float: left; width:110px;">
+                <div style="height: 60px;float: left; width:110px; margin-left: 5px;">
                     <div style="padding: 5px">
                         <div style="width: 100%;">
                             <div class="text-center"
@@ -134,23 +127,25 @@
                                 {{ $sale_code }}
                             </div>
                         </div>
-                        <div style="overflow: hidden;height: 15px; text-align:center;width: 100%;">
-                            @php
-                                $colour = [0, 0, 0];
-                                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                        <div style="height:13px;width:100%;overflow:hidden;text-align:center;">
+                            <div style="overflow: hidden;height: 18px;text-align:center;">
+                                @php
+                                    $colour = [0, 0, 0];
+                                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
 
-                                echo '<img style="height: 15px; width: 90%; object-fit: contain; margin: 0 auto;"  src="data:image/png;base64,' .
-                                    base64_encode(
-                                        $generator->getBarcode(
-                                            $barcode,
-                                            $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
-                                        ),
-                                    ) .
-                                    '">';
-                            @endphp
-                        </div>
-                        <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
-                            {{ $barcode }}
+                                    echo '<img style="height: 18px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
+                                        base64_encode(
+                                            $generator->getBarcode(
+                                                $barcode,
+                                                $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
+                                            ),
+                                        ) .
+                                        '">';
+                                @endphp
+                            </div>
+                            <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
+                                {{ $barcode }}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,85 @@
+      async generate() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está apunto de imprimir ${this.quantity} stickers, si desea puede cambiar la cantidad de manera
+                        manual. En caso contrario de click en 'Continuar'.`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+                const config = { responseType: "blob" };
+                let endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&price1=${this.price1}&price2=${
+                    this.price2
+                }&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}
+                &type=${this.modelType || ""}
+                `;
+                console.log(endPoint);
+                
+                const response = await axios.get(endPoint, config);
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                
+                // Guardar configuración actual
+                this.saveConfig();
+                
+                // Comprobar si hay impresora etiquetadora configurada
+                let { etiquetadora } = this.establishment;
+                if (etiquetadora) {
+                    // Usar nuestro método Printer para manejar la impresión
+                    this.Printer(etiquetadora, url);
+                } else {
+                    // Si no hay configuración de impresora, descargar como antes
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", "etiquetas.pdf");
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    this.$toast.warning("No se ha configurado impresora de etiquetas, descargando PDF");
+                }
+
+                this.loading = false;
+            } catch (e) {
+                console.log(e);
+                if (e.response && e.response.data) {
+                    const { message } = e.response.data;
+                    this.$toast.error(message);
+                } else {
+                    this.$toast.error("Error al generar las etiquetas");
+                }
+                this.loading = false;
+            }
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        },

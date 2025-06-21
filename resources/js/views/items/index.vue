@@ -15,7 +15,7 @@
                             class="fas fa-box-open"
                             style="font-size: 2rem; margin-right: 0.5rem;"
                         ></i>
-                        Listado de Productos
+                        Listado de Productos Inventario
                     </h4>
                 </div>
 

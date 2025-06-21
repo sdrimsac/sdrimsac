@@ -1454,7 +1454,10 @@
                                         </div>
 
                                         <!-- Description below image -->
-                                        <span class="text-center mb-2" style="font-size: 12px;">
+                                        <span
+                                            class="text-center mb-2"
+                                            style="font-size: 12px;"
+                                        >
                                             {{
                                                 product.descripcion ||
                                                     "DESCRIPCION DEL PRODUCTO"
@@ -1474,7 +1477,9 @@
                                             class="d-flex w-100 justify-content-between"
                                             style="font-size: 12px;"
                                         >
-                                            <span>{{ product.location || "S/L" }}</span>
+                                            <span>{{
+                                                product.location || "S/L"
+                                            }}</span>
                                             <span
                                                 :style="
                                                     `color:${
@@ -1519,7 +1524,19 @@
                                                 class="fas fa-file-pdf"
                                                 style="margin-right: 8px;"
                                             ></i>
-                                            Exportar
+                                            IMPRESION PDF
+                                        </el-button>
+                                        <el-button
+                                            type="danger"
+                                            size="large"
+                                            style="padding: 15px 30px; font-size: 16px;"
+                                            @click="generatePdfDomload"
+                                        >
+                                            <i
+                                                class="fas fa-file-pdf"
+                                                style="margin-right: 8px;"
+                                            ></i>
+                                            Exportar pdf
                                         </el-button>
                                     </div>
                                 </div>
@@ -2813,7 +2830,7 @@ export default {
                 }
             }
         },
-        async generatePdf() {
+        /* async generatePdf() {
             if (this.quantity == 0 || this.quantity.length == 0) {
                 this.$toast.error("La cantidad es obligatoria.");
                 return;
@@ -2861,6 +2878,183 @@ export default {
                 const response = await axios.get(endPoint, config);
                 console.log(response);
                 console.log(this.configuration);
+                const blob = new Blob([response.data], {
+                    type: "application/pdf"
+                });
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un iframe oculto para imprimir sin abrir una nueva ventana
+                const printFrame = document.createElement("iframe");
+                printFrame.style.position = "fixed";
+                printFrame.style.right = "0";
+                printFrame.style.bottom = "0";
+                printFrame.style.width = "0";
+                printFrame.style.height = "0";
+                printFrame.style.border = "0";
+
+                // Agregamos este iframe al documento
+                document.body.appendChild(printFrame);
+
+                // Cuando el iframe cargue el documento, imprimirlo
+                printFrame.onload = () => {
+                    setTimeout(() => {
+                        try {
+                            // Mantenemos el iframe sin eliminarlo para que el diálogo de impresión permanezca abierto
+                            printFrame.contentWindow.print();
+
+                            // No eliminamos el iframe aquí para evitar que se cierre el diálogo de impresión
+                            // La limpieza ocurrirá cuando el usuario cierre el diálogo de impresión
+                        } catch (e) {
+                            console.error("Error al imprimir:", e);
+                            this.$toast.error(
+                                "Error al abrir el diálogo de impresión"
+                            );
+                            // En caso de error, sí eliminamos el iframe
+                            document.body.removeChild(printFrame);
+                        }
+                    }, 1000); // Aumentamos el tiempo de espera para asegurar que el PDF se cargue completamente
+                };
+
+                // Asignamos la URL al iframe
+                printFrame.src = url;
+
+                this.loading = false;
+            } catch (e) {
+                console.log(e);
+                const {
+                    data: { message }
+                } = e.response;
+                this.$toast.error(message);
+                this.loading = false;
+            }
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        }, */
+
+        async generatePdf() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está a punto de imprimir ${this.quantity} stickers...`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+
+                const endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&price1=${this.price1}&price2=${
+                    this.price2
+                }&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}&type=${this
+                    .modelType || ""}`;
+
+                // 1. Descargar el PDF generado por Laravel
+                const pdfResponse = await axios.get(endPoint, {
+                    responseType: "blob"
+                });
+
+                // 2. Enviar el blob al servidor de impresión Node.js
+                const formData = new FormData();
+                formData.append(
+                    "pdf",
+                    new Blob([pdfResponse.data], { type: "application/pdf" }),
+                    "etiqueta.pdf"
+                );
+
+                await axios.post("http://localhost:3000/print", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
+
+                this.$toast.success("Impresión enviada correctamente.");
+            } catch (e) {
+                console.error("Error:", e);
+                this.$toast.error("Fallo al imprimir el PDF.");
+            } finally {
+                this.loading = false;
+            }
+
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        },
+
+        async generatePdfDomload() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está apunto de imprimir ${this.quantity} stickers, si desea puede cambiar la cantidad de manera
+                        manual. En caso contrario de click en 'Continuar'.`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+                const config = { responseType: "blob" };
+                let endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&price1=${
+                    this.price1
+                }&price2=${this.price2}&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}
+                &type=${this.modelType || ""}
+                `;
+                console.log(endPoint);
+
+                const response = await axios.get(endPoint, config);
+                console.log(response);
+                console.log(this.configuration);
                 const url = window.URL.createObjectURL(
                     new Blob([response.data])
                 );
@@ -2885,6 +3079,7 @@ export default {
                 this.item_for_barcode = null;
             }
         },
+
         async generate() {
             if (this.quantity == 0 || this.quantity.length == 0) {
                 this.$toast.error("La cantidad es obligatoria.");

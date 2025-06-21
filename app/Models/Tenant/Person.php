@@ -18,7 +18,7 @@ class Person extends ModelTenant
     const DEFAULT_USER_IMAGE = 'user.png';
 
     protected $table = 'persons';
-    protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
+    protected $with = ['identity_document_type'];  // Removed duplicate eager loading of location tables
     protected $fillable = [
         'image_extra1',
         'image_extra2',
@@ -101,46 +101,20 @@ class Person extends ModelTenant
             if (!empty($temp) && $temp != $this->email) {
                 $optional_mail_send[] = $temp;
             }
-        }
-        /** @var \App\Models\Tenant\Catalogs\Department  $department */
-        $department = Department::find($this->department_id);
-        if (!empty($department)) {
-            $department = [
-                "id" => $department->id,
-                "description" => $department->description,
-                "active" => $department->active,
-            ];
-        }
-
+        }        // Get location data using our helper
+        $locationData = $this->getLocationData();
+        $department = $locationData['department'];
+        $province = $locationData['province'];
+        $district = $locationData['district'];
+        
         $location_id = [];
-        /** @var \App\Models\Tenant\Catalogs\Department  $department */
-        $department = Department::find($this->department_id);
         if (!empty($department)) {
-            $department = [
-                "id" => $department->id,
-                "description" => $department->description,
-                "active" => $department->active,
-            ];
             array_push($location_id, $department['id']);
         }
-        $province = Province::find($this->province_id);
-
         if (!empty($province)) {
-            $province = [
-                "id" => $province->id,
-                "description" => $province->description,
-                "active" => $province->active,
-            ];
             array_push($location_id, $province['id']);
         }
-        $district = District::find($this->district_id);
-
         if (!empty($district)) {
-            $district = [
-                "id" => $district->id,
-                "description" => $district->description,
-                "active" => $district->active,
-            ];
             array_push($location_id, $district['id']);
         }
         $seller = User::find($this->seller_id);
@@ -324,21 +298,82 @@ class Person extends ModelTenant
     public function district()
     {
         return $this->belongsTo(District::class);
+    }    /**
+     * Get location data with lazy loading if needed
+     *
+     * @return array Location data including country, department, province and district
+     */
+    public function getLocationData()
+    {
+        // Load relations if not already loaded, but only select the fields we need
+        $locationEntities = ['country', 'department', 'province', 'district'];
+        
+        foreach ($locationEntities as $entity) {
+            if (!$this->relationLoaded($entity) && $this->{$entity.'_id'}) {
+                $this->load([$entity => function($query) {
+                    $query->select('id', 'description', 'active');
+                }]);
+            }
+        }
+        
+        return [
+            'country' => $this->country ? [
+                'id' => $this->country->id,
+                'description' => $this->country->description
+            ] : null,
+            'department' => $this->department ? [
+                'id' => $this->department->id,
+                'description' => $this->department->description,
+                'active' => $this->department->active
+            ] : null,
+            'province' => $this->province ? [
+                'id' => $this->province->id,
+                'description' => $this->province->description,
+                'active' => $this->province->active
+            ] : null,
+            'district' => $this->district ? [
+                'id' => $this->district->id,
+                'description' => $this->district->description,
+                'active' => $this->district->active
+            ] : null
+        ];
     }
 
     public function scopeWhereType($query, $type)
     {
         return $query->where('type', $type);
-    }
-
-    public function getAddressFullAttribute()
+    }    public function getAddressFullAttribute()
     {
         $address = trim($this->address);
         $address = ($address === '-' || $address === '') ? '' : $address . ' ,';
         if ($address === '') {
             return '';
         }
-        return "{$address} {$this->department->description} - {$this->province->description} - {$this->district->description}";
+        
+        // Load only necessary fields for location models
+        if (!$this->relationLoaded('department') && $this->department_id) {
+            $this->load(['department' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        if (!$this->relationLoaded('province') && $this->province_id) {
+            $this->load(['province' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        if (!$this->relationLoaded('district') && $this->district_id) {
+            $this->load(['district' => function($query) {
+                $query->select('id', 'description');
+            }]);
+        }
+        
+        $dept = $this->department ? $this->department->description : '';
+        $prov = $this->province ? $this->province->description : '';
+        $dist = $this->district ? $this->district->description : '';
+        
+        return "{$address} {$dept} - {$prov} - {$dist}";
     }
 
     public function more_address()
