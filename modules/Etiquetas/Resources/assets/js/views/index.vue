@@ -2989,7 +2989,7 @@ export default {
                     "etiqueta.pdf"
                 );
 
-                await axios.post("http://localhost:3000/print", formData, {
+                await axios.post("http://localhost:3001/print", formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
 
