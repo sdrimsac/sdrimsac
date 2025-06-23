@@ -30,17 +30,15 @@
                                 <span class="font-weight-bold">{{
                                     company.name
                                 }}</span>
-                                <br />
-                                <div v-if="establishment.address != '-'">
+                                <br />                                <div v-if="establishment.address && establishment.address != '-'">
                                     {{ establishment.address }},
                                 </div>
-                                {{ establishment.district.description }},
-                                {{ establishment.province.description }},
-                                {{ establishment.department.description }} -
-                                {{ establishment.country.description }}
-                                <br />
-                                {{ establishment.email }} -
-                                <span v-if="establishment.telephone != '-'"
+                                {{ establishment.district && establishment.district.description ? establishment.district.description : '' }}{{ establishment.district && establishment.district.description ? ',' : '' }}
+                                {{ establishment.province && establishment.province.description ? establishment.province.description : '' }}{{ establishment.province && establishment.province.description ? ',' : '' }}
+                                {{ establishment.department && establishment.department.description ? establishment.department.description : '' }}
+                                {{ (establishment.country && establishment.country.description) ? '- ' + establishment.country.description : '' }}                                <br />
+                                {{ establishment.email ? establishment.email : '' }}{{ establishment.email ? ' - ' : '' }}
+                                <span v-if="establishment.telephone && establishment.telephone != '-'"
                                     >Telefonos:
                                     {{ establishment.telephone }}</span
                                 >
@@ -133,12 +131,10 @@
                                                     popper-class="el-select-document_type"
                                                     dusk="document_type_id"
                                                 >
-                                                    <el-option
-                                                        v-for="option in document_types"
+                                                    <el-option                                                        v-for="option in document_types || []"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="
-                                                            option.description
+                                                        :label="option && option.description ? option.description : ''
                                                         "
                                                     >
                                                     </el-option>
@@ -180,12 +176,10 @@
                                                         changeEstablishment
                                                     "
                                                 >
-                                                    <el-option
-                                                        v-for="option in establishments"
+                                                    <el-option                                                        v-for="option in establishments || []"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="
-                                                            option.description
+                                                        :label="option && option.description ? option.description : ''
                                                         "
                                                     >
                                                     </el-option>
@@ -254,12 +248,10 @@
                                                         changeOperationType
                                                     "
                                                 >
-                                                    <el-option
-                                                        v-for="option in operation_types"
+                                                    <el-option                                                        v-for="option in operation_types || []"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="
-                                                            option.description
+                                                        :label="option && option.description ? option.description : ''
                                                         "
                                                     >
                                                     </el-option>
@@ -362,12 +354,10 @@
                                                     "
                                                     @change="changeCurrencyType"
                                                 >
-                                                    <el-option
-                                                        v-for="option in currency_types"
+                                                    <el-option                                                        v-for="option in currency_types || []"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="
-                                                            option.description
+                                                        :label="option && option.description ? option.description : ''
                                                         "
                                                     >
                                                     </el-option>
@@ -864,13 +854,12 @@
                                             "
                                             @change="changeDetractionType"
                                             filterable
-                                        >
-                                            <el-option
-                                                v-for="option in detraction_types"
+                                        >                                            <el-option
+                                                v-for="option in detraction_types || []"
                                                 :key="option.id"
                                                 :value="option.id"
                                                 :label="
-                                                    `${option.description} - ${option.percentage}%`
+                                                    option && option.description ? `${option.description} - ${option.percentage}%` : ''
                                                 "
                                             ></el-option>
                                         </el-select>
@@ -892,13 +881,12 @@
                                                         .payment_method_id
                                                 "
                                                 filterable
-                                            >
-                                                <el-option
-                                                    v-for="option in cat_payment_method_types"
+                                            >                                                <el-option
+                                                    v-for="option in cat_payment_method_types || []"
                                                     :key="option.id"
                                                     :value="option.id"
                                                     :label="
-                                                        `${option.description}`
+                                                        option && option.description ? `${option.description}` : ''
                                                     "
                                                 ></el-option>
                                             </el-select>
@@ -1193,13 +1181,12 @@
                                                                 index
                                                             )
                                                         "
-                                                    >
-                                                        <el-option
-                                                            v-for="option in prepayment_documents"
+                                                    >                                                        <el-option
+                                                            v-for="option in prepayment_documents || []"
                                                             :key="option.id"
                                                             :value="option.id"
                                                             :label="
-                                                                option.description
+                                                                option && option.description ? option.description : ''
                                                             "
                                                         ></el-option>
                                                     </el-select>
