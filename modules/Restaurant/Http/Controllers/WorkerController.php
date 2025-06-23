@@ -190,23 +190,12 @@ class WorkerController extends Controller
         $user = auth()->user();
         $status = $request->input('qty_type');
         $name = $request->input('name');
-        if ($user_type == 'admin') {
+        /* if ($user_type == 'admin') {
             $records = User::where('type', '<>', 'superadmin');
 
-            /* if ($user_type == 'admin') {
-                if ($user->is_pharmacy) {
-
-                    $records = User::whereIn('type', ['admin', 'seller'])
-                        ->where('is_pharmacy', 1)
-                        ->where('id', '<>', $user->id);
-                } else {
-
-                    $records = User::whereRaw('1 = 0');
-                }
-            } */
             if ($user_type == 'admin') {
                 if ($user->is_pharmacy) {
-                   
+
                     $records = User::whereIn('type', ['admin', 'seller'])
                         ->where('is_pharmacy', 1);
                 } else {
@@ -215,7 +204,20 @@ class WorkerController extends Controller
             }
         } else {
             $records = User::query();
+        } */
+        if ($user_type == 'admin') {
+            if ($user->is_pharmacy) {
+                // Solo usuarios de tipo admin y seller que también son de farmacia
+                $records = User::whereIn('type', ['admin', 'seller'])
+                    ->where('is_pharmacy', 1);
+            } else {
+                // Admin sin farmacia: ver todos excepto superadmin
+                $records = User::where('type', '<>', 'superadmin');
+            }
+        } else {
+            $records = User::query();
         }
+
         if ($user_type == 'seller') {
             $records = $records->where('type', '<>', 'superadmin')
                 ->where('type', '<>', 'admin');
