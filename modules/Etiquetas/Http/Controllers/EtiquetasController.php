@@ -3,6 +3,7 @@
 namespace Modules\Etiquetas\Http\Controllers;
 
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use Exception;
@@ -77,6 +78,9 @@ class EtiquetasController extends Controller
             if ($type == '8' && $format == '1' && $paper == '1') {
                 $template = 'template20';
             }
+            if ($type == '9' && $format == '1' && $paper == '2') {
+                $template = 'template21';
+            }
             
             $record = Item::where('description', $description)->first();
             $company = Company::first();
@@ -124,6 +128,10 @@ class EtiquetasController extends Controller
             if ($template === "template20") {
                 $height = 25;
                 $width = 50;
+            }
+            if ($template === "template21") {
+                $height = 20;
+                $width = 60;
             }
 
             $pdf = new Mpdf([
@@ -242,6 +250,7 @@ class EtiquetasController extends Controller
         $palabras = MurcielagoPalabras::all();
         $codigos = Codigos::all();
         $company = Company::first();
+        $configuration = Configuration::first();
         $company_name = $company->name;
         $etiqueta = null;
         $establishment = Establishment::find(auth()->user()->establishment_id);
@@ -249,7 +258,7 @@ class EtiquetasController extends Controller
             $etiqueta = asset('storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . explode("/", $company->etiqueta)[2]);
         }
 
-        return compact('palabras', 'codigos', 'company_name', 'etiqueta', 'establishment');
+        return compact('palabras', 'codigos', 'company_name', 'etiqueta', 'establishment', 'configuration');
     }
     /* public function items(Request $request)
     {

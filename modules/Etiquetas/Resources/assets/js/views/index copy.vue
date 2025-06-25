@@ -601,6 +601,25 @@
                                                 ></i>
                                             </el-tooltip>
                                         </el-radio-button>
+                                        <el-radio-button
+                                            :label="9"
+                                            plain
+                                            class="mb-2 me-2"
+                                            style="font-size: 16px;"
+                                        >
+                                            60x20
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="La medida de la etiqueta de 60mm x 20mm solo esta disponible para 2 columnas x etiqueta no tiene codigo de barras solo tiene nombre del producto precio y precio de compra"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-radio-button>
+                                        
                                     </el-radio-group>
                                 </div>
                             </div>
@@ -1410,6 +1429,87 @@
                                 </div>
                                 <div
                                     v-if="modeloSeleccionado === 'Modelo8'"
+                                    class="d-flex flex-row justify-content-center preview-container"
+                                >
+                                    <div
+                                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white p-2"
+                                    >
+                                        <!-- Price at top -->
+                                        <!-- <span
+                                            :style="
+                                                `color:${
+                                                    type == 'Precio venta'
+                                                        ? '#E6A23C'
+                                                        : '#000'
+                                                }`
+                                            "
+                                            class="text-center mb-1"
+                                            style="font-size: 14px;"
+                                        >
+                                            S/. {{ sale_code || "N/D" }}
+                                        </span> -->
+
+                                        <!-- Image section immediately below price -->
+                                        <div class="mb-2">
+                                            <div
+                                                v-if="imageSaved"
+                                                class="d-flex justify-content-center"
+                                            >
+                                                <img
+                                                    :src="imageSaved"
+                                                    alt="imagen"
+                                                    class="img-thumbnail"
+                                                    style="width: 120px; height: 60px; object-fit: contain;"
+                                                />
+                                            </div>
+                                            <div
+                                                v-else
+                                                class="d-flex justify-content-center"
+                                            >
+                                                <el-empty
+                                                    :image-size="80"
+                                                ></el-empty>
+                                            </div>
+                                        </div>
+
+                                        <!-- Description below image -->
+                                        <span class="text-center mb-2" style="font-size: 12px;">
+                                            {{
+                                                product.descripcion ||
+                                                    "DESCRIPCION DEL PRODUCTO"
+                                            }}
+                                        </span>
+
+                                        <!-- Barcode at bottom -->
+                                        <img
+                                            v-show="product_id"
+                                            id="barcode"
+                                            alt="barcode"
+                                            class="mb-2"
+                                        />
+
+                                        <!-- Footer info -->
+                                        <div
+                                            class="d-flex w-100 justify-content-between"
+                                            style="font-size: 12px;"
+                                        >
+                                            <span>{{ product.location || "S/L" }}</span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type != 'Precio venta'
+                                                            ? '#409EFF'
+                                                            : '#000'
+                                                    }`
+                                                "
+                                            >
+                                                {{ purchase_code || "N/D" }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="modeloSeleccionado === 'Modelo9'"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -2418,6 +2518,8 @@ export default {
                     return "Modelo7";
                 case 8:
                     return "Modelo8";
+                case 9:
+                    return "Modelo9";
                 default:
                     return null;
             }

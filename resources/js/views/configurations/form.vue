@@ -11208,6 +11208,555 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_01
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 1 de etiquetas 50x25 una columna
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 1 de 50x25 de una columna disponible de una sola columna"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_01
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 1',
+                                                                                        form.credit_nv_show_pending,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_02
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 2 etiqueta modelo 60x20 con logo 
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 2 de 60x20 "
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_02
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 2',
+                                                                                        form.model_02,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_03
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 3 etiqueta 60x20 sin logo 
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 3"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_03
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 3',
+                                                                                        form.model_03,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_04
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 4 etiqueta de 2 columnas 60x20 
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 4"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_04
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 4',
+                                                                                        form.model_04,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_05
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 5 etiqueta de 100x25 2columnas para politica con precios 
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 5"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_05
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 5',
+                                                                                        form.model_05,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_06
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 6 etiqueta de 60x20 2columnas conn politica de precios
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 6"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_06
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 6',
+                                                                                        form.model_06,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_07
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 7 etiqueta de 60x20 2 clumnas
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 7"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_07
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 7',
+                                                                                        form.model_07,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_08
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 8 etiqueta 50x25 com logo 1 columna
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 8"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_08
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 8',
+                                                                                        form.model_08,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.model_09
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Modelo 9 etiqueta de 60x20 2 columnas sin codigo de barra
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="modelo 9"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="
+                                                                                form.model_09
+                                                                            "
+                                                                            active-text="SI"
+                                                                            inactive-text="NO"
+                                                                            :active-color="
+                                                                                '#28a745'
+                                                                            "
+                                                                            :inactive-color="
+                                                                                '#6c757d'
+                                                                            "
+                                                                            @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'modelo 9',
+                                                                                        form.model_09,
+                                                                                        'creditNvShowPendingIcon'
+                                                                                    )
+                                                                            "
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

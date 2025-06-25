@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'model_01',
+        'model_02',
+        'model_03',
+        'model_04',
+        'model_05',
+        'model_06',
+        'model_07',
+        'model_08',
+        'model_09',
         'text_sale',
         'unique_code_unit_types',
         'demo_pdf',
@@ -328,6 +337,15 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'model_01' => 'boolean',
+        'model_02' => 'boolean',
+        'model_03' => 'boolean',
+        'model_04' => 'boolean',
+        'model_05' => 'boolean',
+        'model_06' => 'boolean',
+        'model_07' => 'boolean',
+        'model_08' => 'boolean',
+        'model_09' => 'boolean',
         'text_sale' => 'string',
         'unique_code_unit_types' => 'boolean',
         'demo_pdf' => 'boolean',
@@ -599,6 +617,15 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'model_01' => (bool)$this->model_01,
+            'model_02' => (bool)$this->model_02,
+            'model_03' => (bool)$this->model_03,
+            'model_04' => (bool)$this->model_04,
+            'model_05' => (bool)$this->model_05,
+            'model_06' => (bool)$this->model_06,
+            'model_07' => (bool)$this->model_07,
+            'model_08' => (bool)$this->model_08,
+            'model_09' => (bool)$this->model_09,
             'text_sale' => $this->text_sale,
             'unique_code_unit_types' => $this->unique_code_unit_types,
             'demo_pdf' => (bool)$this->demo_pdf,
