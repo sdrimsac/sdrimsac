@@ -29,7 +29,8 @@
         'comercial_name',
         'warehouses_product',
         'pdf_origin_enabled',
-        'demo_pdf'
+        'demo_pdf',
+        'text_sale'
     ])->first();
     if (!function_exists('getUnitTypeId')) {
         function getUnitTypeId($id)
@@ -40,7 +41,6 @@
             return isset($item_unit_types->unit_type->symbol) ? $item_unit_types->unit_type->symbol : null;
         }
     }
-
 
     if (!function_exists('getUnitType')) {
         function getUnitType($id)
@@ -137,7 +137,7 @@ contain"
     @if ($company->soap_type_id == '01' && $configuration->demo_pdf)
         <div class="company_logo_box" style="position: absolute; text-align: center; top:350px; left: 40px;">
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png'))) }}"
-            alt="demo" class="" style="opacity: 0.6; transform: rotate(-45deg);">
+                alt="demo" class="" style="opacity: 0.6; transform: rotate(-45deg);">
         </div>
     @endif
     <table class="full-width">
@@ -276,38 +276,38 @@ contain"
             </tr>
         @endisset
         @isset($infor_consolidated)
-        <tr>
-            @if($infor_consolidated['plate_number'])
-            <td>
-                <p class="desc">Transporte:</p>
-            </td>
-            <td>
-                <p class="desc">{{ $infor_consolidated['plate_number'] }}</p>
-            </td>
-            @endif
+            <tr>
+                @if ($infor_consolidated['plate_number'])
+                    <td>
+                        <p class="desc">Transporte:</p>
+                    </td>
+                    <td>
+                        <p class="desc">{{ $infor_consolidated['plate_number'] }}</p>
+                    </td>
+                @endif
 
-        </tr>
-        <tr>
-            @if($infor_consolidated['brand'])   
-            <td>
-                <p class="desc">Marca:</p>
-            </td>
-            <td>
-                <p class="desc">{{ $infor_consolidated['brand'] }}</p>
-            </td>
-            @endif
-        </tr>
-        <tr>
-            @if($infor_consolidated['driver'])
-            <td>
-                <p class="desc">Conductor:</p>
-            </td>
-            <td>
-                <p class="desc">{{ $infor_consolidated['driver'] }}</p>
-            </td>
-            @endif
-        </tr>
-    @endisset
+            </tr>
+            <tr>
+                @if ($infor_consolidated['brand'])
+                    <td>
+                        <p class="desc">Marca:</p>
+                    </td>
+                    <td>
+                        <p class="desc">{{ $infor_consolidated['brand'] }}</p>
+                    </td>
+                @endif
+            </tr>
+            <tr>
+                @if ($infor_consolidated['driver'])
+                    <td>
+                        <p class="desc">Conductor:</p>
+                    </td>
+                    <td>
+                        <p class="desc">{{ $infor_consolidated['driver'] }}</p>
+                    </td>
+                @endif
+            </tr>
+        @endisset
         @isset($customer->sum_coins)
             <tr>
                 <td>
@@ -743,7 +743,7 @@ contain"
                 @else
                     {{ number_format($row->unit_price, 2) }}</td>
             @endif
-        
+
             <td class="text-right desc-9 align-top">{{ number_format($row->total, 2) }}</td>
             </tr>
             <tr>
@@ -841,7 +841,9 @@ contain"
                 <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
             </tr>
         @else
-            @if ($configuration->credit_nv_show_pending && $document->credit_cash ||$configuration->consolidated_quotation_details )
+            @if (
+                ($configuration->credit_nv_show_pending && $document->credit_cash) ||
+                    $configuration->consolidated_quotation_details)
                 <tr>
                     <td colspan="4" class="text-left font-bold desc">Saldo pendiente:
                         {{ $document->currency_type->symbol }}</td>
@@ -896,12 +898,26 @@ contain"
                 @endif
             </td>
         </tr>
+        <tr>
+            <td colspan="5" class="border-bottom"></td>
+        </tr>
         @if ($footer_text)
             <tr>
                 <td colspan="6" class="text-center desc pt-3 font-bold">{{ $footer_text }}</td>
             </tr>
         @endif
-    
+        <tr>
+            <td colspan="5" class="border-bottom"></td>
+        </tr>
+        @if ($text_sale)
+            <tr>
+                <td colspan="6" class="text-center desc pt-3 font-bold">{{ $text_sale }}</td>
+            </tr>
+        @endif
+        <tr>
+            <td colspan="5" class="border-bottom"></td>
+        </tr>
+
     </table>
 
 </body>

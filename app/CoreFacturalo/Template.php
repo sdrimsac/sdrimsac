@@ -124,6 +124,7 @@ class Template
                 $is_principal = $stablishment->id == 1;
             }
             $footer_text = $configuration->footer_text;
+            $text_sale = $configuration->text_sale;
             $detail_points = [];
             $detail_message = [];
             if ($document->document_type_id == '80' || $document->document_type_id == '03' || $document->document_type_id == '01') {
@@ -238,7 +239,7 @@ class Template
                     }
                 }
             }
-            return view($view, compact('company', 'detail_points', 'detail_message', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name', 'students', 'footer_text'))->render();
+            return view($view, compact('company', 'detail_points', 'detail_message', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name', 'students', 'footer_text', 'text_sale'))->render();
         }
 
 

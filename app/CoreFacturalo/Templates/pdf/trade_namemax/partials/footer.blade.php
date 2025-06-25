@@ -1,6 +1,7 @@
 @php
     $path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $footer_text = \App\Models\Tenant\Configuration::select('footer_text')->first()->footer_text;
+    $text_sale = \App\Models\Tenant\Configuration::select('text_sale')->first()->text_sale;
 @endphp
 <head>
     <link href="{{ $path_style }}" rel="stylesheet" />

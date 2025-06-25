@@ -11151,6 +11151,63 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div
+                                                            class="col-md-3 mb-4"
+                                                        >
+                                                            <div
+                                                                class="card h-100"
+                                                            >
+                                                                <div
+                                                                    class="card-body d-flex flex-column"
+                                                                >
+                                                                    <div
+                                                                        class="form-group text-left flex-grow-1"
+                                                                    >
+                                                                        <label
+                                                                            class="control-label w-100"
+                                                                            :style="{
+                                                                                color: form.text_sale
+                                                                                    ? '#28a745'
+                                                                                    : '#6c757d'
+                                                                            }"
+                                                                        >
+                                                                            <i
+                                                                                ref="footerTextIcon"
+                                                                                class="fas fa-quote-right tab-icon fa-lg"
+                                                                            ></i>
+                                                                            Imprimir
+                                                                            Texto
+                                                                            pie
+                                                                            de
+                                                                            página en Nota de Venta
+                                                                            <el-tooltip
+                                                                                class="item"
+                                                                                effect="dark"
+                                                                                content="Imprimir Texto que va en la parte inferior de las notas de venta"
+                                                                                placement="top-start"
+                                                                            >
+                                                                                <i
+                                                                                    class="fa fa-info-circle"
+                                                                                ></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-input
+                                                                            class="w-100"
+                                                                            v-model="
+                                                                                form.text_sale
+                                                                            "
+                                                                            placeholder="Pie de página"
+                                                                            size="normal"
+                                                                            type="textarea"
+                                                                            rows="3"
+                                                                            @input="
+                                                                                saveSubmitDebounce
+                                                                            "
+                                                                        ></el-input>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

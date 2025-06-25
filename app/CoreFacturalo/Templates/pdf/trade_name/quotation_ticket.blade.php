@@ -565,11 +565,22 @@
             <td class="desc pt-3"><strong>SALDO:</strong> {{ $document->currency_type->symbol }}
                 {{ number_format($document->total - $payment, 2) }}</td>
         </tr> --}}
-        @if ($footer_text)
+        {{-- @if ($footer_text)
             <tr>
                 <td class="text-center desc pt-5 font-bold">{{ $footer_text }}</td>
             </tr>
+        @endif --}}
+        <tr>
+            <td colspan="5" class="border-bottom"></td>
+        </tr>
+        @if ($text_sale)
+            <tr>
+                <td class="text-center desc pt-5 font-bold">{{ $text_sale }}</td>
+            </tr>
         @endif
+        <tr>
+            <td colspan="5" class="border-bottom"></td>
+        </tr>
         @if ($document->terms_condition)
             <tr>
                 <td class="text-center desc pt-5 font-bold">{{ $document->terms_condition }}</td>
