@@ -22,11 +22,11 @@
                             ></logo>
                         </div>
                         <div class="col-sm-6 text-left mt-3 mb-0">
-                            <address class="ib mr-2">
+                            <!-- <address class="ib mr-2">
                                 <span class="font-weight-bold d-block"
                                     >COTIZACIÓN</span
                                 >
-                                <!-- <span class="font-weight-bold d-block">COT-XXX</span> -->
+                        
                                 <span class="font-weight-bold">{{
                                     company.name
                                 }}</span>
@@ -43,7 +43,37 @@
                                 <span v-if="establishment.telephone != '-'">{{
                                     establishment.telephone
                                 }}</span>
-                            </address>
+                            </address> -->
+                            <address
+                                    class="ib mr-2"
+                                    v-if="
+                                        establishment &&
+                                            establishment.district &&
+                                            establishment.province &&
+                                            establishment.department &&
+                                            establishment.country
+                                    "
+                                >
+                                    <span class="font-weight-bold d-block"
+                                        >COTIZACIÓN</span
+                                    >
+                                    <span class="font-weight-bold">{{
+                                        company.name
+                                    }}</span>
+                                    <br />
+                                    <div v-if="establishment.address != '-'">
+                                        {{ establishment.address }},
+                                    </div>
+                                    {{ establishment.district.description }},
+                                    {{ establishment.province.description }},
+                                    {{ establishment.department.description }} -
+                                    {{ establishment.country.description }}
+                                    <br />
+                                    {{ establishment.email }} -
+                                    <span v-if="establishment.telephone != '-'">
+                                        {{ establishment.telephone }}
+                                    </span>
+                                </address>
                         </div>
                         <!-- <div class="col-sm-4">
                             <el-checkbox class="mt-3" v-model="form.active_terms_condition" @change="changeTermsCondition">Términos y condiciones del contrato</el-checkbox>

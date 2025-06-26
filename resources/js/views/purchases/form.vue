@@ -1060,7 +1060,7 @@
             @import-data="handleImportData"
         ></purchase-import>
 
-        <!-- <aparcado :showDialog.sync="showAparcado"></aparcado> -->
+        <!-- <aparcado :showDialog.sync="showAparcado> -->
 
         <el-dialog
             :visible="apartPurchases"
@@ -1486,101 +1486,43 @@ export default {
         calculateItem(index, quantity, unit_price) {
             this.form.items[index].quantity = quantity;
 
-            let total_venta = _.round(
-                Math.round(parseFloat(quantity) * parseFloat(unit_price) * 10) /
-                    10,
-                2
-            );
-
-            let discount = parseFloat(
-                this.form.items[index].total_discount || 0
-            );
+            let total_venta = _.round(quantity * unit_price, 2);
+            let discount = parseFloat(this.form.items[index].total_discount || 0);
             let charge = parseFloat(this.form.items[index].total_charge || 0);
-
             total_venta = _.round(total_venta - discount + charge, 2);
-
             this.form.items[index].total = total_venta;
 
             if (this.form.items[index].affectation_igv_type_id == "10") {
                 if (this.form.includes) {
-                    // Si incluye IGV: SIEMPRE usar el precio original con IGV para cálculos
-                    let unit_price_with_igv;
-                    
-                    // Si ya existe original_unit_price, usarlo; si no, usar unit_price como original
-                    if (this.form.items[index].original_unit_price) {
-                        unit_price_with_igv = this.form.items[index].original_unit_price;
-                    } else {
-                        unit_price_with_igv = unit_price;
-                        this.form.items[index].original_unit_price = unit_price_with_igv;
-                    }
-                    
-                    let unit_price_without_igv = _.round(
-                        unit_price_with_igv / (1 + this.percentage_igv / 100),
-                        2
-                    );
-
-                    // EL INPUT MUESTRA EL PRECIO SIN IGV: 16.95
+                    let unit_price_with_igv = this.form.items[index].original_unit_price;
+                    let unit_price_without_igv = _.round(unit_price_with_igv / (1 + this.percentage_igv / 100), 2);
                     this.form.items[index].unit_price = unit_price_without_igv;
-
-                    // Calcular unit_price_igv (IGV total por cantidad - basado en precio con IGV original)
-                    // IGV total = (precio_con_igv * cantidad) - (precio_sin_igv * cantidad)
-                    let total_with_igv = unit_price_with_igv * quantity;
-                    let total_without_igv = unit_price_without_igv * quantity;
-                    this.form.items[index].unit_price_igv = _.round(total_with_igv - total_without_igv, 2);
-                    this.form.items[index].unit_price_igv = parseFloat(this.form.items[index].unit_price_igv).toFixed(2);
-
-                    // Calcular valores (operación gravada): 16.95 * cantidad
-                    this.form.items[index].total_value = _.round(
-                        unit_price_without_igv * quantity,
-                        2
-                    );
-
-                    // Calcular IGV: usar el IGV calculado directamente
-                    this.form.items[index].total_igv = parseFloat(this.form.items[index].unit_price_igv);
-
-                    // El total: operación gravada + IGV
-                    this.form.items[index].total = _.round(
-                        this.form.items[index].total_value +
-                            this.form.items[index].total_igv,
-                        2
-                    );
-
-                    // Para cálculos internos, usar el precio sin IGV
-                    this.form.items[index].unit_value = unit_price_without_igv;
+                    
+                    // Calcular IGV unitario total
+                    let igv_unit_total = _.round((unit_price_with_igv - unit_price_without_igv) * quantity, 2);
+                    this.form.items[index].unit_price_igv = igv_unit_total.toFixed(2);
+                    
+                    // Usar el mismo valor para total_igv
+                    this.form.items[index].total_igv = igv_unit_total;
+                    
+                    this.form.items[index].total_value = _.round(unit_price_without_igv * quantity, 2);
+                    this.form.items[index].total = _.round(this.form.items[index].total_value + igv_unit_total, 2);
                 } else {
-                    // Si no incluye IGV: el precio ingresado (20) NO incluye IGV
-                    // el input muestra precio SIN IGV (20)
-                    this.form.items[index].unit_price = _.round(unit_price, 2); // Input muestra precio SIN IGV: 20
-                    this.form.items[index].original_unit_price = unit_price;
-
-                    // Calcular unit_price_igv (IGV total por cantidad)
-                    this.form.items[index].unit_price_igv = this.form.items[index].unit_price * (this.percentage_igv / 100) * quantity;
-                    this.form.items[index].unit_price_igv = parseFloat(this.form.items[index].unit_price_igv).toFixed(2);
-
-                    // El total_venta es sin IGV (operación gravada): 20.00
-                    this.form.items[index].total_value = total_venta;
-
-                    // Calcular IGV: 20 * porcentaje IGV dinámico
-                    this.form.items[index].total_igv = _.round(
-                        total_venta * (this.percentage_igv / 100),
-                        2
-                    );
-
-                    // El total final incluye IGV: 20 + 3.60 = 23.60
-                    this.form.items[index].total = _.round(
-                        total_venta + this.form.items[index].total_igv,
-                        2
-                    );
-
-                    this.form.items[index].unit_value = _.round(unit_price, 6);
+                    let unit_price_without_igv = unit_price;
+            
+                    // Calcular IGV unitario total
+                    let igv_unit_total = _.round(unit_price_without_igv * (this.percentage_igv / 100) * quantity, 2);
+                    this.form.items[index].unit_price_igv = igv_unit_total.toFixed(2);
+            
+                    // Usar el mismo valor para total_igv
+                    this.form.items[index].total_igv = igv_unit_total;
+            
+                    this.form.items[index].total_value = _.round(unit_price_without_igv * quantity, 2);
+                    this.form.items[index].total = _.round(this.form.items[index].total_value + igv_unit_total, 2);
                 }
 
-                this.form.items[index].total_taxes = this.form.items[
-                    index
-                ].total_igv;
-                this.form.items[index].total_base_igv = this.form.items[
-                    index
-                ].total_value;
+                this.form.items[index].total_taxes = this.form.items[index].total_igv;
+                this.form.items[index].total_base_igv = this.form.items[index].total_value;
             } else {
                 this.form.items[index].unit_price = _.round(unit_price, 2);
                 this.form.items[index].original_unit_price = unit_price;
@@ -2183,7 +2125,9 @@ export default {
                     row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
 
                     // IGV: precio sin IGV * porcentaje IGV dinámico
-                    row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                    //row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                    row.total_igv = _.round(parseFloat(row.unit_price_igv), 2);
+
 
                     // Total: operación gravada + IGV = 16.95 + 3.05 = 20.00
                     row.total = _.round(row.total_value + row.total_igv, 2);
@@ -2215,7 +2159,9 @@ export default {
                         row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
 
                     // IGV: precio sin IGV * porcentaje IGV dinámico
-                    row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                    //row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                    row.total_igv = _.round(parseFloat(row.unit_price_igv), 2);
+
 
                     // Total: operación gravada + IGV = 20 + 3.60 = 23.60
                     row.total = _.round(row.total_value + row.total_igv, 2);
@@ -2501,26 +2447,17 @@ export default {
                         );
                         row.unit_price = unit_price_without_igv;
 
-                        // Calcular unit_price_igv (IGV total por cantidad - basado en precio con IGV original)
-                        // IGV total = (precio_con_igv * cantidad) - (precio_sin_igv * cantidad)
-                        let total_with_igv = unit_price_with_igv * row.quantity;
-                        let total_without_igv = unit_price_without_igv * row.quantity;
-                        row.unit_price_igv = _.round(total_with_igv - total_without_igv, 2);
-                        row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
+                        // Calcular IGV una sola vez y usar el mismo valor
+                        let igv_unit_total = _.round((unit_price_with_igv - unit_price_without_igv) * row.quantity, 2);
+                        row.unit_price_igv = igv_unit_total.toFixed(2);
+                        row.total_igv = igv_unit_total; // Usar el mismo valor calculado
 
-                        // Operación gravada: precio sin IGV
-                        row.total_value = _.round(
-                            unit_price_without_igv * row.quantity,
-                            2
-                        );
+                        row.total_value = _.round(unit_price_without_igv * row.quantity, 2);
+                        
+                        // Ya no recalculamos el IGV aquí para evitar diferencias por redondeo
+                        // row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
 
-                        // IGV: precio sin IGV * porcentaje IGV dinámico
-                        row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
-
-                        // Total: operación gravada + IGV
                         row.total = _.round(row.total_value + row.total_igv, 2);
-
-                        // Para cálculos internos
                         row.unit_value = unit_price_without_igv;
                         row.total_taxes = row.total_igv;
                         row.total_base_igv = row.total_value;
@@ -2535,7 +2472,7 @@ export default {
                         let unit_price_without_igv = row.original_unit_price;
                         row.unit_price = _.round(unit_price_without_igv, 2);
 
-                        // Calcular unit_price_igv (IGV total por cantidad)
+                        // Calcular IGV unitario total
                         row.unit_price_igv = row.unit_price * (this.percentage_igv / 100) * row.quantity;
                         row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
 
@@ -2546,7 +2483,9 @@ export default {
                         );
 
                         // IGV: precio sin IGV * porcentaje IGV dinámico
-                        row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                        //row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+                        row.total_igv = _.round(parseFloat(row.unit_price_igv), 2);
+
 
                         // Total: operación gravada + IGV
                         row.total = _.round(row.total_value + row.total_igv, 2);

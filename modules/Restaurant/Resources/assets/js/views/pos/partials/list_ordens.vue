@@ -76,14 +76,17 @@
                          
                     </button> -->
                     <button
-  class="btn"
-  type="button"
-  title="Latencia de conexión a internet"
-  :style="{ backgroundColor: getPingBackground(), color: 'white' }"
->
-  <i class="fas fa-wifi"></i>
-  <span style="color: white;">{{ latencia }} ms</span>
-</button>
+                        class="btn"
+                        type="button"
+                        title="Latencia de conexión a internet"
+                        :style="{
+                            backgroundColor: getPingBackground(),
+                            color: 'white'
+                        }"
+                    >
+                        <i class="fas fa-wifi"></i>
+                        <span style="color: white;">{{ latencia }} ms</span>
+                    </button>
 
                     <el-button
                         class="btn-info"
@@ -3423,55 +3426,39 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
-        /* medirLatencia(url = "https://www.google.com/generate_204") {
-            const start = performance.now();
-            return fetch(url, {
-                method: "GET",
-                cache: "no-store",
-                mode: "no-cors"
-            })
-                .then(() => Math.round(performance.now() - start))
-                .catch(() => -1);
+        getPingBackground() {
+            if (this.latencia === -1) return "#6b7280"; // Gris: sin datos
+            if (this.latencia < 90) return "#22c55e"; // Verde
+            if (this.latencia < 150) return "#facc15"; // Amarillo
+            return "#ef4444"; // Rojo
         },
+
+        medirLatenciaConImagen(url = "https://i.imgur.com/ZKnb2Tt.png") {
+            return new Promise(resolve => {
+                const start = performance.now();
+                const img = new Image();
+
+                img.onload = () => {
+                    const end = performance.now();
+                    resolve(Math.round((end - start) / 2));
+                };
+
+                img.onerror = () => {
+                    resolve(-1);
+                };
+
+                // Prevenir caché
+                img.src = `${url}?_=${Date.now()}`;
+            });
+        },
+
         iniciarMedicionLatencia() {
             setInterval(async () => {
                 const valor = await this.medirLatencia();
                 this.latencia = valor;
-                console.log("Latencia actual:", valor, "ms");
-            }, 5000);
-        }, */
-        /* getPingColor() {
-    if (this.latencia === -1) return 'gray';
-    if (this.latencia < 80) return 'green';
-    if (this.latencia < 180) return 'orange';
-    return 'red';
-  }, */
-
-   getPingBackground() {
-    if (this.latencia === -1) return '#6b7280';    // Gris para sin conexión
-    if (this.latencia < 180) return '#22c55e';      // Verde
-    if (this.latencia < 360) return '#facc15';     // Amarillo
-    return '#ef4444';                              // Rojo
-  },
-
-        medirLatencia(url = 'https://i.imgur.com/ZKnb2Tt.png') {
-      const start = performance.now();
-      return fetch(url, {
-        method: 'GET',
-        cache: 'no-store',
-        mode: 'no-cors'
-      })
-        .then(() => Math.round(performance.now() - start))
-        .catch(() => -1);
-    },
-    iniciarMedicionLatencia() {
-      setInterval(async () => {
-        const valor = await this.medirLatencia();
-        this.latencia = valor;
-        console.log('Ping (simulado con imagen):', valor, 'ms');
-      }, 2000);
-    },
-
+                //console.log("⏱️ Latencia medida:", valor, "ms");
+            }, 2000); // Cada 2 segundos
+        },
 
         addItemToSelection(item) {
             // Agregar el elemento seleccionado al array
