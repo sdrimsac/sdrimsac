@@ -649,15 +649,12 @@
                                             <th class="text-white text-end">
                                                 Costo Unitario
                                             </th>
-                                            <th
-                                                class="text-end text-white"
-                                                v-if="form.includes == false"
-                                            >
+                                            <th class="text-end text-white">
                                                 IGV
                                             </th>
-                                            <th class="text-white text-end">
+                                            <!-- <th class="text-white text-end">
                                                 Descuento
-                                            </th>
+                                            </th> -->
                                             <!-- <th class="text-white text-end">
                                                 Cargo
                                             </th> -->
@@ -807,13 +804,10 @@
                                                     "
                                                 ></el-input-number>
                                             </td>
-                                            <td
-                                                class="text-end"
-                                                v-if="form.includes == false"
-                                            >
+                                            <td class="text-end">
                                                 {{ row.unit_price_igv }}
                                             </td>
-                                            <td class="text-end">
+                                            <!-- <td class="text-end">
                                                 {{ currency_type.symbol }}
 
                                                 <el-input-number
@@ -832,7 +826,7 @@
                                                         )
                                                     "
                                                 ></el-input-number>
-                                            </td>
+                                            </td> -->
 
                                             <td class="text-end">
                                                 {{ currency_type.symbol }}
@@ -1430,6 +1424,23 @@ export default {
         const response = await this.$http.post("/get_igv", form_data);
         this.percentage_igv = response.data;
     },
+    watch: {
+        "form.includes": {
+            handler(newValue, oldValue) {
+                console.log("=== WATCH: CAMBIO EN form.includes ===");
+                console.log("Valor anterior:", oldValue);
+                console.log("Valor nuevo:", newValue);
+
+                if (oldValue !== undefined && newValue !== oldValue) {
+                    console.log(
+                        "Detectado cambio real en includes, recalculando items..."
+                    );
+                    this.recalculateAllItems(newValue, oldValue);
+                }
+            },
+            immediate: false
+        }
+    },
     methods: {
         /* handleImportData(data) {
             console.log("Datos importados recibidos:", data);
@@ -1489,36 +1500,91 @@ export default {
             total_venta = _.round(total_venta - discount + charge, 2);
 
             this.form.items[index].total = total_venta;
+
             if (this.form.items[index].affectation_igv_type_id == "10") {
-                this.form.items[index].total_value = (
-                    this.form.items[index].total /
-                    (1 + this.percentage_igv / 100)
-                ).toFixed(2);
-                this.form.items[index].total_taxes = (
-                    (quantity * unit_price * (this.percentage_igv / 100)) /
-                    (1 + this.percentage_igv / 100)
-                ).toFixed(2);
-                this.form.items[index].total_base_igv = _.round(
-                    this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
-                    2
-                );
-                this.form.items[index].unit_value = (
-                    unit_price /
-                    (1 + this.percentage_igv / 100)
-                ).toFixed(6);
-                this.form.items[index].total_igv = _.round(
-                    (this.form.items[index].total /
-                        (1 + this.percentage_igv / 100)) *
-                        (this.percentage_igv / 100),
-                    2
-                );
-                this.form.items[index].total_base_igv = _.round(
-                    this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
-                    2
-                );
+                if (this.form.includes) {
+                    // Si incluye IGV: SIEMPRE usar el precio original con IGV para cálculos
+                    let unit_price_with_igv;
+                    
+                    // Si ya existe original_unit_price, usarlo; si no, usar unit_price como original
+                    if (this.form.items[index].original_unit_price) {
+                        unit_price_with_igv = this.form.items[index].original_unit_price;
+                    } else {
+                        unit_price_with_igv = unit_price;
+                        this.form.items[index].original_unit_price = unit_price_with_igv;
+                    }
+                    
+                    let unit_price_without_igv = _.round(
+                        unit_price_with_igv / (1 + this.percentage_igv / 100),
+                        2
+                    );
+
+                    // EL INPUT MUESTRA EL PRECIO SIN IGV: 16.95
+                    this.form.items[index].unit_price = unit_price_without_igv;
+
+                    // Calcular unit_price_igv (IGV total por cantidad - basado en precio con IGV original)
+                    // IGV total = (precio_con_igv * cantidad) - (precio_sin_igv * cantidad)
+                    let total_with_igv = unit_price_with_igv * quantity;
+                    let total_without_igv = unit_price_without_igv * quantity;
+                    this.form.items[index].unit_price_igv = _.round(total_with_igv - total_without_igv, 2);
+                    this.form.items[index].unit_price_igv = parseFloat(this.form.items[index].unit_price_igv).toFixed(2);
+
+                    // Calcular valores (operación gravada): 16.95 * cantidad
+                    this.form.items[index].total_value = _.round(
+                        unit_price_without_igv * quantity,
+                        2
+                    );
+
+                    // Calcular IGV: usar el IGV calculado directamente
+                    this.form.items[index].total_igv = parseFloat(this.form.items[index].unit_price_igv);
+
+                    // El total: operación gravada + IGV
+                    this.form.items[index].total = _.round(
+                        this.form.items[index].total_value +
+                            this.form.items[index].total_igv,
+                        2
+                    );
+
+                    // Para cálculos internos, usar el precio sin IGV
+                    this.form.items[index].unit_value = unit_price_without_igv;
+                } else {
+                    // Si no incluye IGV: el precio ingresado (20) NO incluye IGV
+                    // el input muestra precio SIN IGV (20)
+                    this.form.items[index].unit_price = _.round(unit_price, 2); // Input muestra precio SIN IGV: 20
+                    this.form.items[index].original_unit_price = unit_price;
+
+                    // Calcular unit_price_igv (IGV total por cantidad)
+                    this.form.items[index].unit_price_igv = this.form.items[index].unit_price * (this.percentage_igv / 100) * quantity;
+                    this.form.items[index].unit_price_igv = parseFloat(this.form.items[index].unit_price_igv).toFixed(2);
+
+                    // El total_venta es sin IGV (operación gravada): 20.00
+                    this.form.items[index].total_value = total_venta;
+
+                    // Calcular IGV: 20 * porcentaje IGV dinámico
+                    this.form.items[index].total_igv = _.round(
+                        total_venta * (this.percentage_igv / 100),
+                        2
+                    );
+
+                    // El total final incluye IGV: 20 + 3.60 = 23.60
+                    this.form.items[index].total = _.round(
+                        total_venta + this.form.items[index].total_igv,
+                        2
+                    );
+
+                    this.form.items[index].unit_value = _.round(unit_price, 6);
+                }
+
+                this.form.items[index].total_taxes = this.form.items[
+                    index
+                ].total_igv;
+                this.form.items[index].total_base_igv = this.form.items[
+                    index
+                ].total_value;
             } else {
+                this.form.items[index].unit_price = _.round(unit_price, 2);
+                this.form.items[index].original_unit_price = unit_price;
+                this.form.items[index].unit_price_igv = 0; // Sin IGV para items no gravados
                 this.form.items[index].total_value =
                     Math.round(
                         parseFloat(quantity) * parseFloat(unit_price) * 10
@@ -1720,8 +1786,12 @@ export default {
             }
         },
         incluye_igv() {
+            console.log("=== MÉTODO incluye_igv() EJECUTADO ===");
+            console.log("Estado actual form.includes:", this.form.includes);
+
+            // El watch se encargará del recálculo automáticamente
+            // Solo actualizamos la variable local
             this.includes = this.form.includes;
-            this.calculateTotal();
         },
 
         changeHasClient() {
@@ -2082,17 +2152,87 @@ export default {
         addRow(row) {
             console.log("🚀 ~ addRow ~ row:", row);
 
-            
-            if (this.form.includes) {
-                console.log("incluye igv", this.form.includes);
-                row.total_value = row.total;
-                row.total_igv = 0;
+            // Guardar el precio original tal como viene del formulario
+            row.original_unit_price = row.unit_price;
+            row.original_includes_state = this.form.includes; // Guardar el estado cuando se agregó
+
+            if (row.affectation_igv_type_id == "10") {
+                if (this.form.includes) {
+                    // INCLUDES = TRUE: El precio que viene (20) incluye IGV
+                    console.log("addRow - incluye igv", this.form.includes);
+                    let unit_price_with_igv = row.unit_price; // 20
+
+                    // EL INPUT DEBE MOSTRAR EL PRECIO SIN IGV: usar porcentaje IGV dinámico
+                    let unit_price_without_igv = _.round(
+                        unit_price_with_igv / (1 + this.percentage_igv / 100),
+                        2
+                    );
+                    row.unit_price = unit_price_without_igv; // 16.95
+
+                    // Operación gravada: precio sin IGV = 16.95
+                    row.total_value = _.round(
+                        unit_price_without_igv * row.quantity,
+                        2
+                    );
+
+                    // Calcular unit_price_igv (IGV total por cantidad - basado en precio con IGV original)
+                    // IGV total = (precio_con_igv * cantidad) - (precio_sin_igv * cantidad)
+                    let total_with_igv = unit_price_with_igv * row.quantity;
+                    let total_without_igv = unit_price_without_igv * row.quantity;
+                    row.unit_price_igv = _.round(total_with_igv - total_without_igv, 2);
+                    row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
+
+                    // IGV: precio sin IGV * porcentaje IGV dinámico
+                    row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+
+                    // Total: operación gravada + IGV = 16.95 + 3.05 = 20.00
+                    row.total = _.round(row.total_value + row.total_igv, 2);
+
+                    // Para cálculos internos
+                    row.unit_value = unit_price_without_igv;
+                    row.total_taxes = row.total_igv;
+                    row.total_base_igv = row.total_value;
+                } else {
+                    // INCLUDES = FALSE: El precio que viene (20) NO incluye IGV
+                    console.log("addRow - NO incluye igv", this.form.includes);
+
+                    // EL INPUT DEBE MOSTRAR EL PRECIO SIN IGV: 20
+                    let unit_price_without_igv = row.unit_price; // 20
+                    row.unit_price = _.round(unit_price_without_igv, 2); // 20
+
+                    // Operación gravada: precio sin IGV = 20
+                    row.total_value = _.round(
+                        unit_price_without_igv * row.quantity,
+                        2
+                    );
+                    
+                    /* row.unit_price_igv =
+                    row.unit_price * (this.percentage_igv / 100) * row.quantity;
+                    row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(
+                    2); */
+
+                    row.unit_price_igv = row.unit_price * (this.percentage_igv / 100) * row.quantity;
+                        row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
+
+                    // IGV: precio sin IGV * porcentaje IGV dinámico
+                    row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+
+                    // Total: operación gravada + IGV = 20 + 3.60 = 23.60
+                    row.total = _.round(row.total_value + row.total_igv, 2);
+
+                    row.unit_value = unit_price_without_igv;
+                    row.total_taxes = row.total_igv;
+                    row.total_base_igv = row.total_value;
+                }
             } else {
-                row.total_value = _.round(
-                    row.total / (1 + this.percentage_igv / 100),
-                    2
-                );
-                row.total_igv = _.round(row.total - row.total_value, 2);
+                // Para items no gravados (exonerados, inafectos, etc.)
+                row.unit_price_igv = 0; // Sin IGV para items no gravados
+                row.total_value = _.round(row.unit_price * row.quantity, 2);
+                row.total_igv = 0;
+                row.unit_value = row.unit_price;
+                row.total_taxes = 0;
+                row.total_base_igv = row.total_value;
+                row.total = row.total_value;
             }
 
             this.form.items.push(row);
@@ -2130,41 +2270,14 @@ export default {
             let total_igv = 0;
             let total_value = 0;
             let total = 0;
-            let unit_price_igv = 0;
-            if (this.form.includes == true) {
-                unit_price_igv = 0;
-            }
-            //
 
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount || 0);
                 total_charge += parseFloat(row.total_charge || 0);
 
                 if (row.affectation_igv_type_id == "10") {
-                    if (
-                        this.form.includes == 0 ||
-                        this.form.includes == false
-                    ) {
-                        console.log(row.unit_price_igv, "mk unit_price_igv");
-                        if (
-                            row.unit_price_igv === 0 ||
-                            row.unit_price_igv === undefined
-                        ) {
-                            let igv_item = row.unit_price * row.quantity;
-                            console.log(igv_item, " igv_item");
-                            row.unit_price_igv =
-                                igv_item * (this.percentage_igv / 100);
-                            console.log(row.unit_price_igv, " unit_price_igv");
-                        } else {
-                            unit_price_igv = 0;
-                        }
-                    }
-
-                    if (this.form.includes == false) {
-                        total_taxed += parseFloat(row.total);
-                    } else {
-                        total_taxed += parseFloat(row.total_value);
-                    }
+                    // Para items gravados, siempre usar total_value para operación gravada
+                    total_taxed += parseFloat(row.total_value);
                 }
                 if (row.affectation_igv_type_id === "20") {
                     total_exonerated += parseFloat(row.total_value);
@@ -2187,23 +2300,14 @@ export default {
                 total_value += parseFloat(row.total_value);
 
                 if (row.affectation_igv_type_id === "10") {
-                    if (this.form.includes == false) {
-                        total_igv += parseFloat(
-                            row.total * (this.percentage_igv / 100)
-                        );
-                    } else {
-                        total_igv += parseFloat(row.total_igv);
-                    }
+                    // Para items gravados, siempre usar el total_igv calculado
+                    total_igv += parseFloat(row.total_igv);
                 }
 
                 if (row.affectation_igv_type_id === "10") {
-                    if (this.form.includes == false) {
-                        total +=
-                            parseFloat(row.total) +
-                            parseFloat(row.unit_price_igv);
-                    } else {
-                        total += parseFloat(row.total);
-                    }
+                    // El total siempre es total_value + total_igv
+                    total +=
+                        parseFloat(row.total_value) + parseFloat(row.total_igv);
                 } else {
                     total += parseFloat(row.total);
                 }
@@ -2337,14 +2441,22 @@ export default {
                             this.showDialogOptions = true;
                         }
                     } else {
-                        this.$showSAlert("ALERTA", response.data.message, "error");
+                        this.$showSAlert(
+                            "ALERTA",
+                            response.data.message,
+                            "error"
+                        );
                     }
                 })
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
                     } else {
-                        this.$showSAlert("ALERTA", error.response.data.message, "error");
+                        this.$showSAlert(
+                            "ALERTA",
+                            error.response.data.message,
+                            "error"
+                        );
                     }
                 })
                 .then(() => {
@@ -2362,6 +2474,105 @@ export default {
                     this.all_suppliers = response.data;
                     this.filterSuppliers();
                 });
+        },
+        recalculateAllItems(newIncludesValue, oldIncludesValue) {
+            console.log("=== RECALCULANDO TODOS LOS ITEMS ===");
+            console.log("Estado anterior includes:", oldIncludesValue);
+            console.log("Estado nuevo includes:", newIncludesValue);
+            console.log("Cantidad de items:", this.form.items.length);
+
+            // Actualizar la variable local
+            this.includes = newIncludesValue;
+
+            // Recalcular todos los items existentes
+            this.form.items.forEach((row, index) => {
+                if (row.affectation_igv_type_id == "10") {
+                    if (this.form.includes) {
+                        // INCLUDES = TRUE: El precio original incluye IGV
+                        console.log("recalculate - incluye igv", this.form.includes);
+                        
+                        // Usar el precio original como precio con IGV
+                        let unit_price_with_igv = row.original_unit_price;
+
+                        // EL INPUT DEBE MOSTRAR EL PRECIO SIN IGV
+                        let unit_price_without_igv = _.round(
+                            unit_price_with_igv / (1 + this.percentage_igv / 100),
+                            2
+                        );
+                        row.unit_price = unit_price_without_igv;
+
+                        // Calcular unit_price_igv (IGV total por cantidad - basado en precio con IGV original)
+                        // IGV total = (precio_con_igv * cantidad) - (precio_sin_igv * cantidad)
+                        let total_with_igv = unit_price_with_igv * row.quantity;
+                        let total_without_igv = unit_price_without_igv * row.quantity;
+                        row.unit_price_igv = _.round(total_with_igv - total_without_igv, 2);
+                        row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
+
+                        // Operación gravada: precio sin IGV
+                        row.total_value = _.round(
+                            unit_price_without_igv * row.quantity,
+                            2
+                        );
+
+                        // IGV: precio sin IGV * porcentaje IGV dinámico
+                        row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+
+                        // Total: operación gravada + IGV
+                        row.total = _.round(row.total_value + row.total_igv, 2);
+
+                        // Para cálculos internos
+                        row.unit_value = unit_price_without_igv;
+                        row.total_taxes = row.total_igv;
+                        row.total_base_igv = row.total_value;
+                    } else {
+                        // INCLUDES = FALSE: El precio original NO incluye IGV
+                        console.log(
+                            "recalculate - NO incluye igv",
+                            this.form.includes
+                        );
+
+                        // EL INPUT DEBE MOSTRAR EL PRECIO ORIGINAL (sin IGV)
+                        let unit_price_without_igv = row.original_unit_price;
+                        row.unit_price = _.round(unit_price_without_igv, 2);
+
+                        // Calcular unit_price_igv (IGV total por cantidad)
+                        row.unit_price_igv = row.unit_price * (this.percentage_igv / 100) * row.quantity;
+                        row.unit_price_igv = parseFloat(row.unit_price_igv).toFixed(2);
+
+                        // Operación gravada: precio sin IGV
+                        row.total_value = _.round(
+                            unit_price_without_igv * row.quantity,
+                            2
+                        );
+
+                        // IGV: precio sin IGV * porcentaje IGV dinámico
+                        row.total_igv = _.round(row.total_value * (this.percentage_igv / 100), 2);
+
+                        // Total: operación gravada + IGV
+                        row.total = _.round(row.total_value + row.total_igv, 2);
+
+                        row.unit_value = unit_price_without_igv;
+                        row.total_taxes = row.total_igv;
+                        row.total_base_igv = row.total_value;
+                    }
+                } else {
+                    // Para items no gravados (exonerados, inafectos, etc.)
+                    // Restaurar al precio original
+                    row.unit_price = row.original_unit_price;
+                    row.unit_price_igv = 0; // Sin IGV para items no gravados
+                    row.total_value = _.round(row.unit_price * row.quantity, 2);
+                    row.total_igv = 0;
+                    row.unit_value = row.unit_price;
+                    row.total_taxes = 0;
+                    row.total_base_igv = row.total_value;
+                    row.total = row.total_value;
+                }
+            });
+
+            console.log("=== FIN RECÁLCULO DESDE WATCH ===");
+
+            // Recalcular totales al final (solo una vez)
+            this.calculateTotal();
         }
     }
 };

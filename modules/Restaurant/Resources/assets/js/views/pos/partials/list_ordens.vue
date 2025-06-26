@@ -66,6 +66,25 @@
                     <button class="btn btn-success" type="button">
                         <i class="fas fa-clock"></i> {{ formattedCountdown }}
                     </button>
+                    <!-- <button
+                        class="btn btn-white"
+                        type="button"
+                        title="Latencia de conexión a internet"
+                    >
+                        <i class="fas fa-wifi"></i>
+                        <span :style="{ color: getPingColor() }">{{ latencia }} ms</span>
+                         
+                    </button> -->
+                    <button
+  class="btn"
+  type="button"
+  title="Latencia de conexión a internet"
+  :style="{ backgroundColor: getPingBackground(), color: 'white' }"
+>
+  <i class="fas fa-wifi"></i>
+  <span style="color: white;">{{ latencia }} ms</span>
+</button>
+
                     <el-button
                         class="btn-info"
                         @click="openOrden"
@@ -3102,6 +3121,8 @@ export default {
             showDigitalPay: false,
             showOpenOrden: false,
             countdown: 0,
+            latencia: 0, // Variable para almacenar la latencia en ms
+            latenciaInterval: null, // Interval para medir latencia periódicamente
             num_orden: 0,
             isRestaurantWarehouse: true,
             showConsolidated: false,
@@ -3309,12 +3330,24 @@ export default {
             return `${minutes
                 .toString()
                 .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        },
+        formattedLatencia() {
+            if (this.latencia === -1) {
+                return "Sin conexión";
+            } else if (this.latencia === 0) {
+                return "Midiendo...";
+            } else {
+                return `${this.latencia}ms`;
+            }
         }
     },
     async mounted() {
         this.syncCountdown = setInterval(() => {
             this.countdown = window.globalCountdown || 0;
         }, 1000);
+
+        // Iniciar medición de latencia
+        this.iniciarMedicionLatencia();
 
         this.isRestaurantWarehouse = this.establishments.description.includes(
             "RESTAURANT"
@@ -3347,6 +3380,8 @@ export default {
     beforeDestroy() {
         // Limpia el intervalo para evitar fugas de memoria
         clearInterval(this.syncCountdown);
+        // Detener medición de latencia
+        this.detenerMedicionLatencia();
     },
     async created() {
         let printing = localStorage.getItem("cajaPrint");
@@ -3388,6 +3423,56 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        /* medirLatencia(url = "https://www.google.com/generate_204") {
+            const start = performance.now();
+            return fetch(url, {
+                method: "GET",
+                cache: "no-store",
+                mode: "no-cors"
+            })
+                .then(() => Math.round(performance.now() - start))
+                .catch(() => -1);
+        },
+        iniciarMedicionLatencia() {
+            setInterval(async () => {
+                const valor = await this.medirLatencia();
+                this.latencia = valor;
+                console.log("Latencia actual:", valor, "ms");
+            }, 5000);
+        }, */
+        /* getPingColor() {
+    if (this.latencia === -1) return 'gray';
+    if (this.latencia < 80) return 'green';
+    if (this.latencia < 180) return 'orange';
+    return 'red';
+  }, */
+
+   getPingBackground() {
+    if (this.latencia === -1) return '#6b7280';    // Gris para sin conexión
+    if (this.latencia < 180) return '#22c55e';      // Verde
+    if (this.latencia < 360) return '#facc15';     // Amarillo
+    return '#ef4444';                              // Rojo
+  },
+
+        medirLatencia(url = 'https://i.imgur.com/ZKnb2Tt.png') {
+      const start = performance.now();
+      return fetch(url, {
+        method: 'GET',
+        cache: 'no-store',
+        mode: 'no-cors'
+      })
+        .then(() => Math.round(performance.now() - start))
+        .catch(() => -1);
+    },
+    iniciarMedicionLatencia() {
+      setInterval(async () => {
+        const valor = await this.medirLatencia();
+        this.latencia = valor;
+        console.log('Ping (simulado con imagen):', valor, 'ms');
+      }, 2000);
+    },
+
+
         addItemToSelection(item) {
             // Agregar el elemento seleccionado al array
             if (!this.selectedItems.includes(item)) {
@@ -4123,6 +4208,17 @@ export default {
             );
             ordens[index].quantity = ordens[index].series.length;
             this.$emit("update:localOrden", ordens);
+        },
+
+        medirLatencia(url = "https://www.google.com/generate_204") {
+            const start = performance.now();
+            return fetch(url, {
+                method: "GET",
+                cache: "no-store",
+                mode: "no-cors"
+            })
+                .then(() => Math.round(performance.now() - start))
+                .catch(() => -1);
         },
 
         async updateColorSize(idx, color_size) {
