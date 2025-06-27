@@ -4,25 +4,26 @@
         <div class="card-header bg-primary">
             <h4 class="my-0 text-white">
                 <i class="fas fa-clipboard-list"></i>
-                 Nueva Cotización</h4>
+                Nueva Cotización
+            </h4>
         </div>
         <div class="card-body">
-        <div class="tab-content" v-if="loading_form">
-            <div class="invoice">
-                <header class="clearfix">
-                    <div class="row">
-                        <div class="col-sm-2 text-center mt-3 mb-0">
-                            <logo
-                                url="/"
-                                :path_logo="
-                                    company.logo != null
-                                        ? `/storage/uploads/logos/${company.logo}`
-                                        : ''
-                                "
-                            ></logo>
-                        </div>
-                        <div class="col-sm-6 text-left mt-3 mb-0">
-                            <!-- <address class="ib mr-2">
+            <div class="tab-content" v-if="loading_form">
+                <div class="invoice">
+                    <header class="clearfix">
+                        <div class="row">
+                            <div class="col-sm-2 text-center mt-3 mb-0">
+                                <logo
+                                    url="/"
+                                    :path_logo="
+                                        company.logo != null
+                                            ? `/storage/uploads/logos/${company.logo}`
+                                            : ''
+                                    "
+                                ></logo>
+                            </div>
+                            <div class="col-sm-6 text-left mt-3 mb-0">
+                                <!-- <address class="ib mr-2">
                                 <span class="font-weight-bold d-block"
                                     >COTIZACIÓN</span
                                 >
@@ -44,7 +45,7 @@
                                     establishment.telephone
                                 }}</span>
                             </address> -->
-                            <address
+                                <address
                                     class="ib mr-2"
                                     v-if="
                                         establishment &&
@@ -74,171 +75,210 @@
                                         {{ establishment.telephone }}
                                     </span>
                                 </address>
-                        </div>
-                        <!-- <div class="col-sm-4">
+                            </div>
+                            <!-- <div class="col-sm-4">
                             <el-checkbox class="mt-3" v-model="form.active_terms_condition" @change="changeTermsCondition">Términos y condiciones del contrato</el-checkbox>
                         </div> -->
-                    </div>
-                </header>
-                <form autocomplete="off" @submit.prevent="submit">
-
-                    <div class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <div class="form-group text-left flex-grow-1">
-                                <div class="row">
-                                    <!-- Cliente -->
-                                    <div class="col-lg-3 pb-2">
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.customer_id
-                                            }"
-                                        >
-                                            <label class="control-label font-weight-bold text-primary">
-                                                <i class="fas fa-user fa-lg"></i>
-                                                Cliente
-                                                <a
-                                                    href="#"
-                                                    @click.prevent="
-                                                        showDialogNewPerson = true
-                                                    "
-                                                    >[+ Nuevo]</a
-                                                >
-                                            </label>
-                                            <el-select
-                                                v-model="form.customer_id"
-                                                filterable
-                                                remote
-                                                class="border-left rounded-left border-info"
-                                                popper-class="el-select-customers"
-                                                dusk="customer_id"
-                                                placeholder="Escriba el nombre o número de documento del cliente"
-                                                :remote-method="searchRemoteCustomers"
-                                                :loading="loading_search"
+                        </div>
+                    </header>
+                    <form autocomplete="off" @submit.prevent="submit">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="form-group text-left flex-grow-1">
+                                    <div class="row">
+                                        <!-- Cliente -->
+                                        <div class="col-lg-3 pb-2">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.customer_id
+                                                }"
                                             >
-                                                <el-option
-                                                    v-for="option in customers"
-                                                    :key="option.id"
-                                                    :value="option.id"
-                                                    :label="option.description"
-                                                ></el-option>
-                                            </el-select>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.customer_id"
-                                                v-text="errors.customer_id[0]"
-                                            ></small>
+                                                <label
+                                                    class="control-label font-weight-bold text-primary"
+                                                >
+                                                    <i
+                                                        class="fas fa-user fa-lg"
+                                                    ></i>
+                                                    Cliente
+                                                    <a
+                                                        href="#"
+                                                        @click.prevent="
+                                                            showDialogNewPerson = true
+                                                        "
+                                                        >[+ Nuevo]</a
+                                                    >
+                                                </label>
+                                                <el-select
+                                                    v-model="selectedCustomer"
+                                                    filterable
+                                                    remote
+                                                    
+                                                    class="border-left rounded-left border-info"
+                                                    popper-class="el-select-customers"
+                                                    
+                                                    placeholder="Escriba el nombre o número de documento del cliente"
+                                                    :remote-method="
+                                                        searchRemoteCustomers
+                                                    "
+                                                    :loading="loading_search"
+                                                    @change="onCustomerChange"
+                                                >
+                                                    <el-option
+                                                        v-for="option in customers"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="option.description"
+                                                    >
+                                                        <span>{{ option.description }}</span>
+                                                    </el-option>
+                                                </el-select>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.customer_id"
+                                                    v-text="
+                                                        errors.customer_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Fecha de emisión -->
-                                    <div class="col-lg-3">
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.date_of_issue
-                                            }"
-                                        >
-                                            <label class="control-label">
-                                                <i class="fas fa-calendar-check red-icon fa-lg"></i>
-                                                Fec. Emisión
-                                            </label>
-                                            <el-date-picker
-                                                class="w-100"
-                                                v-model="form.date_of_issue"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :clearable="false"
-                                                @change="changeDateOfIssue"
-                                            ></el-date-picker>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.date_of_issue"
-                                                v-text="errors.date_of_issue[0]"
-                                            ></small>
+                                        <!-- Fecha de emisión -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.date_of_issue
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Fec. Emisión
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.date_of_issue"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="false"
+                                                    @change="changeDateOfIssue"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.date_of_issue"
+                                                    v-text="
+                                                        errors.date_of_issue[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Tiempo de Validez -->
-                                    <div class="col-lg-3">
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.date_of_due
-                                            }"
-                                        >
-                                            <label class="control-label">
-                                                <i class="fas fa-calendar-check red-icon fa-lg"></i>
-                                                Tiempo de Validez
-                                            </label>
-                                            <el-date-picker
-                                                class="w-100"
-                                                v-model="form.date_of_due"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :clearable="true"
-                                            ></el-date-picker>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.date_of_due"
-                                                v-text="errors.date_of_due[0]"
-                                            ></small>
+                                        <!-- Tiempo de Validez -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.date_of_due
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Tiempo de Validez
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.date_of_due"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="true"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.date_of_due"
+                                                    v-text="
+                                                        errors.date_of_due[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Tiempo de Entrega -->
-                                    <div class="col-lg-3">
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.delivery_date
-                                            }"
-                                        >
-                                            <label class="control-label">
-                                                <i class="fas fa-calendar-check red-icon fa-lg"></i>
-                                                Tiempo de Entrega
-                                            </label>
-                                            <el-date-picker
-                                                class="w-100"
-                                                v-model="form.delivery_date"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :clearable="true"
-                                            ></el-date-picker>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.delivery_date"
-                                                v-text="errors.delivery_date[0]"
-                                            ></small>
+                                        <!-- Tiempo de Entrega -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.delivery_date
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Tiempo de Entrega
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.delivery_date"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="true"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.delivery_date"
+                                                    v-text="
+                                                        errors.delivery_date[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Dirección de envío -->
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="control-label">
-                                                <i class="fas fa-map-marker-alt fa-lg"></i>
-                                                <i class="fas fa-flag-checkered fa-lg"></i>
-                                                Dirección de envío
-                                            </label>
-                                            <el-input 
-                                                class="w-100"
-                                                v-model="form.shipping_address">
-                                                <i
-                                                    slot="prefix"
-                                                    class="el-icon-edit-outline"
-                                                ></i>
-                                            </el-input>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.shipping_address"
-                                                v-text="errors.shipping_address[0]"
-                                            ></small>
+                                        <!-- Dirección de envío -->
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-map-marker-alt fa-lg"
+                                                    ></i>
+                                                    <i
+                                                        class="fas fa-flag-checkered fa-lg"
+                                                    ></i>
+                                                    Dirección de envío
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.shipping_address
+                                                    "
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.shipping_address
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .shipping_address[0]
+                                                    "
+                                                ></small>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Término de pago -->
-                                    <!-- <div class="col-lg-3">
+                                        <!-- Término de pago -->
+                                        <!-- <div class="col-lg-3">
                                         <div
                                             class="form-group"
                                             :class="{
@@ -272,8 +312,8 @@
                                         </div>
                                     </div> -->
 
-                                    <!-- Número de cuenta -->
-                                    <!-- <div class="col-lg-3">
+                                        <!-- Número de cuenta -->
+                                        <!-- <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="control-label">
                                                 <i class="fas fa-credit-card fa-lg"></i>
@@ -293,329 +333,489 @@
                                         </div>
                                     </div> -->
 
-                                    <!-- Moneda -->
-                                    <div class="col-lg-3">
-                                        <div
-                                            class="form-group"
-                                            :class="{
-                                                'has-danger': errors.currency_type_id
-                                            }"
-                                        >
-                                            <label class="control-label">Moneda</label>
-                                            <el-select
-                                                class="w-100"
-                                                v-model="form.currency_type_id"
-                                                @change="changeCurrencyType"
+                                        <!-- Moneda -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.currency_type_id
+                                                }"
                                             >
-                                                <el-option
-                                                    v-for="option in currency_types"
-                                                    :key="option.id"
-                                                    :value="option.id"
-                                                    :label="option.description"
-                                                ></el-option>
-                                            </el-select>
-                                            <small
-                                                class="form-control-feedback"
-                                                v-if="errors.currency_type_id"
-                                                v-text="errors.currency_type_id[0]"
-                                            ></small>
+                                                <label class="control-label"
+                                                    >Moneda</label
+                                                >
+                                                <el-select
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.currency_type_id
+                                                    "
+                                                    @change="changeCurrencyType"
+                                                >
+                                                    <el-option
+                                                        v-for="option in currency_types"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.currency_type_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .currency_type_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tipo de cambio -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.exchange_rate_sale
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-exchange-alt red-icon fa-lg"
+                                                    ></i>
+                                                    Tipo de cambio
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Tipo de cambio del día, extraído de SUNAT"
+                                                        placement="top-end"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.exchange_rate_sale
+                                                    "
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.exchange_rate_sale
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .exchange_rate_sale[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Vendedor -->
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-user-tie fa-lg"
+                                                    ></i>
+                                                    Vendedor
+                                                </label>
+                                                <el-select
+                                                    v-model="form.seller_id"
+                                                    filterable
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in sellers"
+                                                        :key="idx"
+                                                        :value="option.id"
+                                                        :label="option.name"
+                                                    ></el-option>
+                                                </el-select>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <!-- Tipo de cambio -->
-                                    <div class="col-lg-3">
+                                    <br />
+                                    <div class="col-lg-12">
                                         <div
                                             class="form-group"
                                             :class="{
-                                                'has-danger': errors.exchange_rate_sale
+                                                'has-danger':
+                                                    errors.exchange_rate_sale
                                             }"
                                         >
                                             <label class="control-label">
-                                                <i class="fas fa-exchange-alt red-icon fa-lg"></i>
-                                                Tipo de cambio
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Tipo de cambio del día, extraído de SUNAT"
-                                                    placement="top-end"
-                                                >
-                                                    <i class="fa fa-info-circle"></i>
-                                                </el-tooltip>
+                                                <i
+                                                    class="fas fa-comment fa-lg"
+                                                ></i>
+                                                Observaciones
                                             </label>
-                                            <el-input 
-                                                class="w-100"
-                                                v-model="form.exchange_rate_sale">
+                                            <el-input
+                                                type="textarea"
+                                                :rows="3"
+                                                v-model="form.description"
+                                            >
                                                 <i
                                                     slot="prefix"
                                                     class="el-icon-edit-outline"
-                                                ></i>
-                                            </el-input>
+                                                ></i
+                                            ></el-input>
                                             <small
                                                 class="form-control-feedback"
-                                                v-if="errors.exchange_rate_sale"
-                                                v-text="errors.exchange_rate_sale[0]"
+                                                v-if="errors.description"
+                                                v-text="errors.description[0]"
                                             ></small>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- Vendedor -->
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="control-label">
-                                                <i class="fas fa-user-tie fa-lg"></i>
-                                                Vendedor
-                                            </label>
-                                            <el-select
-                                                v-model="form.seller_id"
-                                                filterable
+                        <div class="form-body">
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr
+                                                    slot="heading"
+                                                    class="bg-primary"
+                                                >
+                                                    <th
+                                                        class="text-white text-white"
+                                                    >
+                                                        #
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-white font-weight-bold"
+                                                    >
+                                                        Descripción
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-center font-weight-bold"
+                                                    >
+                                                        Unidad
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Cantidad
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Precio Unitario
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Sub Total
+                                                    </th>
+                                                    <!--<th class="text-end font-weight-bold">Cargo</th>-->
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Total
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-outline-white"
+                                                            @click.prevent="
+                                                                showDialogAddItem = true
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-cart-plus fa-lg"
+                                                            ></i>
+                                                            Agregar Producto
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody v-if="form.items.length > 0">
+                                                <tr
+                                                    v-for="(row,
+                                                    index) in form.items"
+                                                    :key="index"
+                                                >
+                                                    <td>{{ index + 1 }}</td>
+                                                    <td>
+                                                        {{
+                                                            row.item.description
+                                                        }}
+                                                        {{
+                                                            row.item
+                                                                .presentation &&
+                                                            row.item.presentation.hasOwnProperty(
+                                                                "description"
+                                                            )
+                                                                ? row.item
+                                                                      .presentation
+                                                                      .description
+                                                                : ""
+                                                        }}<br /><small>{{
+                                                            row
+                                                                .affectation_igv_type
+                                                                .description
+                                                        }}</small>
+                                                        <template
+                                                            v-if="
+                                                                row.item.lots &&
+                                                                    row.item
+                                                                        .lots
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(lot,
+                                                                index) in row
+                                                                    .item.lots"
+                                                                :key="index"
+                                                            >
+                                                                <b>Serie:</b>
+                                                                {{ lot.series }}
+                                                            </small>
+                                                        </template>
+
+                                                        <template
+                                                            v-if="
+                                                                row.item
+                                                                    .lots_group &&
+                                                                    row.item
+                                                                        .lots_group
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(lot,
+                                                                index) in row
+                                                                    .item
+                                                                    .lots_group"
+                                                                :key="index"
+                                                            >
+                                                                <b>Lote:</b>
+                                                                {{ lot.code }}
+                                                            </small>
+                                                        </template>
+
+                                                        <template
+                                                            v-if="
+                                                                row.item
+                                                                    .color_size &&
+                                                                    row.item
+                                                                        .color_size
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(color,
+                                                                index) in row.item.color_size.filter(
+                                                                    i =>
+                                                                        i.selectedQuantity
+                                                                )"
+                                                                :key="index"
+                                                            >
+                                                                Talla:
+                                                                {{
+                                                                    color.size
+                                                                }}-{{
+                                                                    color.color
+                                                                }}
+                                                                <b>Cant:</b>
+                                                                {{
+                                                                    color.selectedQuantity
+                                                                }}
+                                                            </small>
+                                                        </template>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{
+                                                            row.item
+                                                                .unit_type_id
+                                                        }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ row.quantity }}
+                                                    </td>
+                                                    <!-- <td class="text-end">{{currency_type.symbol}} {{row.unit_price}}</td> -->
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{
+                                                            getFormatUnitPriceRow(
+                                                                row.unit_price
+                                                            )
+                                                        }}
+                                                    </td>
+
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{ row.total_value }}
+                                                    </td>
+                                                    <!--<td class="text-end">{{ currency_type.symbol }} {{ row.total_charge }}</td>-->
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{ row.total }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-xs btn-danger"
+                                                            @click.prevent="
+                                                                clickRemoveItem(
+                                                                    index
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash fa-lg"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="8"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Totales  -->
+                                <div
+                                    class="col-md-4 offset-md-8"
+                                    v-if="
+                                        form.total_exportation > 0 ||
+                                            form.total_free > 0 ||
+                                            form.total_unaffected > 0 ||
+                                            form.total_exonerated > 0 ||
+                                            form.total_taxed > 0 ||
+                                            form.total_igv > 0 ||
+                                            form.total > 0
+                                    "
+                                >
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p
+                                                class="text-end"
+                                                v-if="
+                                                    form.total_exportation > 0
+                                                "
                                             >
-                                                <el-option
-                                                    v-for="(option, idx) in sellers"
-                                                    :key="idx"
-                                                    :value="option.id"
-                                                    :label="option.name"
-                                                ></el-option>
-                                            </el-select>
+                                                OP.EXPORTACIÓN:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_exportation }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_free > 0"
+                                            >
+                                                OP.GRATUITAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_free }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_unaffected > 0"
+                                            >
+                                                OP.INAFECTAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_unaffected }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_exonerated > 0"
+                                            >
+                                                OP.EXONERADAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_exonerated }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_taxed > 0"
+                                            >
+                                                OP.GRAVADA:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_taxed }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_igv > 0"
+                                            >
+                                                IGV: {{ currency_type.symbol }}
+                                                {{ form.total_igv }}
+                                            </p>
+                                            <h6
+                                                class="text-end"
+                                                v-if="form.total > 0"
+                                            >
+                                                <b>TOTAL A PAGAR: </b
+                                                >{{ currency_type.symbol }}
+                                                {{ form.total }}
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
-                                <br>
-                                <div class="col-lg-12">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.exchange_rate_sale
-                                    }"
-                                >
-                                    <label class="control-label"
-                                        >
-                                        <i class="fas fa-comment fa-lg"></i>
-                                        Observaciones
-                                    </label>
-                                    <el-input
-                                        type="textarea"
-                                        :rows="3"
-                                        v-model="form.description"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i
-                                    ></el-input>
-                                    <small
-                                        class="form-control-feedback"
-                                        v-if="errors.description"
-                                        v-text="errors.description[0]"
-                                    ></small>
-                                </div>
-                            </div>
                             </div>
                         </div>
-                    </div>
 
-
-                    <div class="form-body">
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr slot="heading" class="bg-primary">
-                                                <th class="text-white text-white">#</th>
-                                                <th class="text-white text-white font-weight-bold">Descripción</th>
-                                                <th class="text-white text-center font-weight-bold">Unidad</th>
-                                                <th class="text-white text-end font-weight-bold">Cantidad</th>
-                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
-                                                <th class="text-white text-end font-weight-bold">Sub Total</th>
-                                                <!--<th class="text-end font-weight-bold">Cargo</th>-->
-                                                <th class="text-white text-end font-weight-bold">Total</th>
-                                                <th class="text-white text-end">
-                                                    <button
-                                                        type="button"
-                                                        class="btn waves-effect waves-light btn-outline-white"
-                                                        @click.prevent="
-                                                            showDialogAddItem = true
-                                                        "
-                                                    >
-                                                        <i class="fas fa-cart-plus fa-lg"></i>
-                                                        Agregar Producto
-                                                    </button></th>
-                                                </tr>
-                                        </thead>
-                                        <tbody v-if="form.items.length > 0">
-                                            <tr
-                                                v-for="(row,
-                                                index) in form.items"
-                                                :key="index"
-                                            >
-                                                <td>{{ index + 1 }}</td>
-                                                <td>
-                                                    {{ row.item.description }}
-                                                    {{    row.item.presentation &&
-                                                        row.item.presentation.hasOwnProperty(
-                                                            "description"
-                                                        )
-                                                            ? row.item
-                                                                  .presentation
-                                                                  .description
-                                                            : ""
-                                                    }}<br /><small>{{
-                                                        row.affectation_igv_type
-                                                            .description
-                                                    }}</small>
-                                                    <template v-if="row.item.lots && row.item.lots.length > 0">
-                                                           
-                                                           <br />
-                                                           <small class="text-primary" v-for="(lot, index) in row.item.lots" :key="index">
-                                                               <b>Serie:</b> {{ lot.series }} 
-                                                           </small>
-                                                       </template>
-   
-                                                       <template v-if="row.item.lots_group && row.item.lots_group.length > 0">
-                                                           <br />
-                                                           <small class="text-primary" v-for="(lot, index) in row.item.lots_group" :key="index">
-                                                               <b>Lote:</b> {{ lot.code }}
-                                                           </small>
-                                                       </template>
-   
-                                                       <template v-if="row.item.color_size &&  row.item.color_size.length > 0">
-                                                           <br />
-                                                           <small class="text-primary" v-for="(color, index) in row.item.color_size.filter(i=>i.selectedQuantity)" :key="index">
-                                                                Talla: {{color.size}}-{{ color.color }} 
-                                                                <b>Cant:</b>
-                                                                 {{ color.selectedQuantity }}
-                                                           </small>
-                                                       </template>
-                                                </td>
-
-                                                <td class="text-center">
-                                                    {{ row.item.unit_type_id }}
-                                                </td>
-                                                <td class="text-end">
-                                                    {{ row.quantity }}
-                                                </td>
-                                                <!-- <td class="text-end">{{currency_type.symbol}} {{row.unit_price}}</td> -->
-                                                <td class="text-end">
-                                                    {{ currency_type.symbol }}
-                                                    {{
-                                                        getFormatUnitPriceRow(
-                                                            row.unit_price
-                                                        )
-                                                    }}
-                                                </td>
-
-                                                <td class="text-end">
-                                                    {{ currency_type.symbol }}
-                                                    {{ row.total_value }}
-                                                </td>
-                                                <!--<td class="text-end">{{ currency_type.symbol }} {{ row.total_charge }}</td>-->
-                                                <td class="text-end">
-                                                    {{ currency_type.symbol }}
-                                                    {{ row.total }}
-                                                </td>
-                                                <td class="text-end">
-                                                    <button
-                                                        type="button"
-                                                        class="btn waves-effect waves-light btn-xs btn-danger"
-                                                        @click.prevent="
-                                                            clickRemoveItem(
-                                                                index
-                                                            )
-                                                        "
-                                                    >
-                                                    <i class="fa fa-trash fa-lg"></i>
-                                                    </button>
-                                                   
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="8"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-   
-                            <!-- Totales  -->
-                            <div 
-                                class="col-md-4 offset-md-8" 
-                                v-if="form.total_exportation > 0 || form.total_free > 0 || form.total_unaffected > 0 || form.total_exonerated > 0 || form.total_taxed > 0 || form.total_igv > 0 || form.total > 0"
+                        <div
+                            class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                        >
+                            <!-- Cancelar -->
+                            <el-button
+                                class="btn-cancel btn-cancel:hover"
+                                icon="fas fa-times fa-lg"
+                                @click.prevent="close()"
                             >
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p
-                                            class="text-end"
-                                            v-if="form.total_exportation > 0"
-                                        >
-                                            OP.EXPORTACIÓN: {{ currency_type.symbol }}
-                                            {{ form.total_exportation }}
-                                        </p>
-                                        <p class="text-end" v-if="form.total_free > 0">
-                                            OP.GRATUITAS: {{ currency_type.symbol }}
-                                            {{ form.total_free }}
-                                        </p>
-                                        <p
-                                            class="text-end"
-                                            v-if="form.total_unaffected > 0"
-                                        >
-                                            OP.INAFECTAS: {{ currency_type.symbol }}
-                                            {{ form.total_unaffected }}
-                                        </p>
-                                        <p
-                                            class="text-end"
-                                            v-if="form.total_exonerated > 0"
-                                        >
-                                            OP.EXONERADAS: {{ currency_type.symbol }}
-                                            {{ form.total_exonerated }}
-                                        </p>
-                                        <p class="text-end" v-if="form.total_taxed > 0">
-                                            OP.GRAVADA: {{ currency_type.symbol }}
-                                            {{ form.total_taxed }}
-                                        </p>
-                                        <p class="text-end" v-if="form.total_igv > 0">
-                                            IGV: {{ currency_type.symbol }}
-                                            {{ form.total_igv }}
-                                        </p>
-                                        <h6 class="text-end" v-if="form.total > 0">
-                                            <b>TOTAL A PAGAR: </b
-                                            >{{ currency_type.symbol }} {{ form.total }}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
+                                <span>Cancelar</span>
+                            </el-button>
+
+                            <el-button
+                                class="btn-save btn-save:hover"
+                                icon="fas fa-file-alt fa-lg"
+                                type="primary"
+                                native-type="submit"
+                                :loading="loading_submit"
+                                v-if="form.items.length > 0"
+                            >
+                                <span>Generar Cotización</span>
+                            </el-button>
                         </div>
-                    </div>
-
-                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                        <!-- Cancelar -->
-                        <el-button
-                            class="btn-cancel btn-cancel:hover"
-                            icon="fas fa-times fa-lg"
-                            @click.prevent="close()"
-                        >
-                            <span>Cancelar</span>
-                        </el-button>
-
-                        <el-button
-                            class="btn-save btn-save:hover"
-                            icon="fas fa-file-alt fa-lg"
-                            type="primary"
-                            native-type="submit"
-                            :loading="loading_submit"
-                             v-if="form.items.length > 0"
-                        >
-                            <span>Generar Cotización</span>
-                        </el-button>
-                    </div>
-
-                   
-                </form>
+                    </form>
+                </div>
             </div>
-        
         </div>
-    </div>
-        
-
 
         <quotation-form-item
             :showDialog.sync="showDialogAddItem"
@@ -670,7 +870,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
-            sellers:[],
+            sellers: [],
             resource: "quotations",
             showDialogTermsCondition: false,
             showDialogAddItem: false,
@@ -693,7 +893,8 @@ export default {
             quotationNewId: null,
             payment_destinations: [],
             activePanel: 0,
-            loading_search: false
+            loading_search: false,
+            selectedCustomer: null
         };
     },
     async created() {
@@ -759,12 +960,39 @@ export default {
                     .get(`/sale-opportunities/record/${this.saleOpportunityId}`)
                     .then(response => {
                         sale_opportunity = response.data.data.sale_opportunity;
-                        this.reloadDataCustomers(sale_opportunity.customer_id);
+                        if (sale_opportunity.customer) {
+                            // If customer data comes in the response, use it directly
+                            this.setCustomerFromResponse(sale_opportunity.customer);
+                        } else {
+                            // Otherwise fetch customer data
+                            this.reloadDataCustomers(sale_opportunity.customer_id);
+                        }
                     });
 
                 await this.assignDataSaleOpportunity(sale_opportunity);
             }
         },
+        setCustomerFromResponse(customerData) {
+            if (!customerData) return;
+            
+            const customer = {
+                id: customerData.id,
+                description: `${customerData.name || customerData.trade_name} - ${customerData.number}`,
+                name: customerData.name,
+                trade_name: customerData.trade_name,
+                number: customerData.number
+            };
+            
+            this.customers = [customer];
+            this.selectedCustomer = customer;
+            this.form.customer_id = customer.id;
+            
+            // Force update after setting customer
+            this.$nextTick(() => {
+                this.$forceUpdate();
+            });
+        },
+
         assignDataSaleOpportunity(sale_opportunity) {
             this.form.establishment_id = sale_opportunity.establishment_id;
             this.form.time_of_issue = moment().format("HH:mm:ss");
@@ -805,6 +1033,13 @@ export default {
                 // }
             }
         },
+        onCustomerChange(customer) {
+            if (customer) {
+                this.form.customer_id = customer.id;
+                this.selectedCustomer = customer;
+            }
+        },
+
         searchRemoteCustomers(input) {
             if (input.length > 0) {
                 this.loading_search = true;
@@ -813,16 +1048,44 @@ export default {
                 this.$http
                     .get(`/${this.resource}/search/customers?${parameters}`)
                     .then(response => {
-                        this.customers = response.data.customers;
-                        this.loading_search = false;
-                        if (this.customers.length == 0) {
-                            this.allCustomers();
+                        if (response.data.customers && response.data.customers.length > 0) {
+                            this.customers = response.data.customers.map(customer => ({
+                                id: customer.id,
+                                description: this.formatCustomerName(customer),
+                                name: customer.name, 
+                                trade_name: customer.trade_name,
+                                number: customer.number
+                            }));
                         }
+                        this.loading_search = false;
                     });
             } else {
                 this.allCustomers();
             }
         },
+
+        allCustomers() {
+            this.customers = this.all_customers.map(customer => ({
+                id: customer.id,
+                description: this.formatCustomerName(customer)
+            }));
+        },
+
+        formatCustomerName(customer) {
+            // Format customer name with number
+            if (customer.identity_document_type_id && customer.number) {
+                return `${customer.name || customer.trade_name} - ${
+                    customer.number
+                }`;
+            }
+            return (
+                customer.name ||
+                customer.trade_name ||
+                customer.description ||
+                ""
+            );
+        },
+
         initForm() {
             this.errors = {};
             this.form = {
@@ -905,9 +1168,6 @@ export default {
                     this.form.exchange_rate_sale = response;
                 }
             );
-        },
-        allCustomers() {
-            this.customers = this.all_customers;
         },
         addRow(row) {
             this.form.items.push(JSON.parse(JSON.stringify(row)));
@@ -1067,11 +1327,16 @@ export default {
             location.href = "/quotations";
         },
         reloadDataCustomers(customer_id) {
+            if (!customer_id) return;
+            
             this.$http
                 .get(`/${this.resource}/search/customer/${customer_id}`)
                 .then(response => {
-                    this.customers = response.data.customers;
-                    this.form.customer_id = customer_id;
+                    if (response.data.quotation && response.data.quotation.customer) {
+                        this.setCustomerFromResponse(response.data.quotation.customer);
+                    } else if (response.data.customers && response.data.customers.length > 0) {
+                        this.setCustomerFromResponse(response.data.customers[0]);
+                    }
                 });
         }
     }

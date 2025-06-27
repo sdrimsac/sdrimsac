@@ -105,17 +105,18 @@
                                             popper-class="el-select-customers"
                                             dusk="customer_id"
                                             placeholder="Escriba el nombre o número de documento del cliente"
-                                            :remote-method="
-                                                searchRemoteCustomers
-                                            "
+                                            :remote-method="searchRemoteCustomers"
                                             :loading="loading_search"
                                         >
                                             <el-option
                                                 v-for="option in customers"
                                                 :key="option.id"
                                                 :value="option.id"
-                                                :label="option.name"
-                                            ></el-option>
+                                                :label="option.name || option.description"
+                                            >
+                                                <span>{{ option.name }}</span>
+                                                <small v-if="option.number" class="text-muted"> - {{ option.number }}</small>
+                                            </el-option>
                                         </el-select>
                                         <small
                                             class="form-control-feedback"
@@ -928,9 +929,12 @@ export default {
                 .get(`/${this.resource}/record/${this.resourceId}`)
                 .then(response => {
                     let dato = response.data.data.quotation;
-                    //  console.log(dato)
                     this.form.id = dato.id;
                     this.form.customer_id = dato.customer_id;
+                    // Load customer data after setting customer_id
+                    if (dato.customer_id) {
+                        this.loadCustomerById(dato.customer_id);
+                    }
                     this.form.currency_type_id = dato.currency_type_id;
                     this.form.payment_method_type_id =
                         dato.payment_method_type_id;
@@ -949,6 +953,23 @@ export default {
                     this.form.payments = dato.payments;
                     this.calculateTotal();
                     //console.log(response.data)
+                });
+        },
+
+        loadCustomerById(customer_id) {
+            this.$http
+                .get(`/${this.resource}/search/customer/${customer_id}`)
+                .then(response => {
+                    if (response.data.customers && response.data.customers.length > 0) {
+                        // Add the customer to the customers array if not exists
+                        const existingCustomer = this.customers.find(c => c.id === customer_id);
+                        if (!existingCustomer) {
+                            this.customers = [...response.data.customers];
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading customer:', error);
                 });
         },
 
