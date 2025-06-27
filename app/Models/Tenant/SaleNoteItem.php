@@ -124,6 +124,10 @@ class SaleNoteItem extends ModelTenant
     {
         return $this->hasOne(ItemWarranty::class, 'sale_note_item_id');
     }
+    public function inventory_kardex()
+    {
+        return $this->belongsTo(InventoryKardex::class, 'inventory_kardex_id');
+    }
 
     public function scopeWhereDefaultDocumentType($query, $params)
     {
@@ -153,5 +157,4 @@ class SaleNoteItem extends ModelTenant
             ->select($db_raw)
             ->latest('id');
     }
-    
 }

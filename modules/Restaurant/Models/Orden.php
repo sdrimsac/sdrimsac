@@ -149,7 +149,7 @@ class Orden extends ModelTenant
     }
     public function document()
     {
-        return $this->belongsTo(Document::class);
+        return $this->belongsTo(Document::class, 'document_id', 'id');
     }
 
     public function salenote()
@@ -158,7 +158,7 @@ class Orden extends ModelTenant
     }
     public function table()
     {
-        return $this->belongsTo(Table::class);
+        return $this->belongsTo(Table::class, 'table_id');
     }
     public function mesa()
     {
