@@ -457,7 +457,8 @@
                                         v-model="modelType"
                                         size="large"
                                     >
-                                        <el-radio-button
+                                        <el-radio-button 
+                                         v-if="configuration.model_01"
                                             :label="1"
                                             plain
                                             class="mb-2 me-2"
@@ -476,6 +477,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_02"
                                             :label="2"
                                             plain
                                             class="mb-2 me-2"
@@ -494,6 +496,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_03"
                                             :label="3"
                                             plain
                                             class="mb-2 me-2"
@@ -512,6 +515,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_04"
                                             :label="4"
                                             plain
                                             class="mb-2 me-2"
@@ -530,6 +534,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_05"
                                             :label="5"
                                             plain
                                             class="mb-2 me-2"
@@ -548,6 +553,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_06"
                                             :label="6"
                                             plain
                                             class="mb-2 me-2"
@@ -566,6 +572,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_07"
                                             :label="7"
                                             plain
                                             class="mb-2 me-2"
@@ -584,6 +591,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_08"
                                             :label="8"
                                             plain
                                             class="mb-2 me-2"
@@ -602,6 +610,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                        v-if="configuration.model_09"
                                             :label="9"
                                             plain
                                             class="mb-2 me-2"
@@ -611,7 +620,7 @@
                                             <el-tooltip
                                                 class="item"
                                                 effect="dark"
-                                                content="La medida de la etiqueta de 60mm x 20mm solo esta disponible para 2 columnas x etiqueta no tiene codigo de barras solo tiene nombre del producto precio y precio de compra"
+                                                content="La medida de la etiqueta de 60mm x 20mm solo esta disponible para 2 columnas x etiqueta solo sale nombre y precio"
                                                 placement="top-start"
                                             >
                                                 <i
@@ -706,7 +715,7 @@
                             <div class="col-md-8">
                                 <br />
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo1'"
+                                    v-if="modeloSeleccionado === 'Modelo1' && configuration.model_01"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -783,7 +792,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo2'"
+                                    v-if="modeloSeleccionado === 'Modelo2' && configuration.model_02"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -996,7 +1005,7 @@
                                 </div>
 
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo3'"
+                                    v-if="modeloSeleccionado === 'Modelo3' && configuration.model_03"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1055,7 +1064,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo4'"
+                                    v-if="modeloSeleccionado === 'Modelo4' && configuration.model_04"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1140,7 +1149,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo5'"
+                                    v-if="modeloSeleccionado === 'Modelo5' && configuration.model_05"
                                     class="pdf-preview-container border d-flex preview-container"
                                     style="width: 600px; height: 150px; margin: 20px auto; background: white;"
                                 >
@@ -1253,7 +1262,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo6'"
+                                    v-if="modeloSeleccionado === 'Modelo6' && configuration.model_06"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1380,7 +1389,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo7'"
+                                    v-if="modeloSeleccionado === 'Modelo7' && configuration.model_07"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1427,7 +1436,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo8'"
+                                    v-if="modeloSeleccionado === 'Modelo8' && configuration.model_08"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1513,88 +1522,87 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo9'"
+                                    v-if="modeloSeleccionado === 'Modelo9' && configuration.model_09"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
-                                        class="border d-flex flex-column align-items-center h150 w300 overflow-hidden bg-white p-2"
+                                        class="border d-flex flex-row align-items-center h150 w300 overflow-hidden bg-white"
                                     >
-                                        <!-- Price at top -->
-                                        <!-- <span
-                                            :style="
-                                                `color:${
-                                                    type == 'Precio venta'
-                                                        ? '#E6A23C'
-                                                        : '#000'
-                                                }`
-                                            "
-                                            class="text-center mb-1"
-                                            style="font-size: 14px;"
-                                        >
-                                            S/. {{ sale_code || "N/D" }}
-                                        </span> -->
-
-                                        <!-- Image section immediately below price -->
-                                        <div class="mb-2">
-                                            <div
-                                                v-if="imageSaved"
-                                                class="d-flex justify-content-center"
-                                            >
-                                                <img
-                                                    :src="imageSaved"
-                                                    alt="imagen"
-                                                    class="img-thumbnail"
-                                                    style="width: 120px; height: 60px; object-fit: contain;"
-                                                />
-                                            </div>
-                                            <div
-                                                v-else
-                                                class="d-flex justify-content-center"
-                                            >
-                                                <el-empty
-                                                    :image-size="80"
-                                                ></el-empty>
-                                            </div>
-                                        </div>
-
-                                        <!-- Description below image -->
-                                        <span
-                                            class="text-center mb-2"
-                                            style="font-size: 12px;"
-                                        >
-                                            {{
-                                                product.descripcion ||
-                                                    "DESCRIPCION DEL PRODUCTO"
-                                            }}
-                                        </span>
-
-                                        <!-- Barcode at bottom -->
-                                        <img
-                                            v-show="product_id"
-                                            id="barcode"
-                                            alt="barcode"
-                                            class="mb-2"
-                                        />
-
-                                        <!-- Footer info -->
                                         <div
-                                            class="d-flex w-100 justify-content-between"
-                                            style="font-size: 12px;"
+                                            class="d-flex flex-column align-items-center p-2"
+                                            style="width: 50%;"
                                         >
-                                            <span>{{
-                                                product.location || "S/L"
-                                            }}</span>
+                                            <span
+                                                class="text-center"
+                                                style="font-size: 12px;"
+                                            >
+                                                {{
+                                                    product.descripcion ||
+                                                        "DESCRIPCION"
+                                                }}
+                                            </span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type == 'Precio venta'
+                                                            ? '#E6A23C'
+                                                            : '#000'
+                                                    }`
+                                                "
+                                                class="text-center"
+                                                >S/.
+                                                {{ sale_code || "N/D" }}</span
+                                            >
                                             <span
                                                 :style="
                                                     `color:${
                                                         type != 'Precio venta'
                                                             ? '#409EFF'
                                                             : '#000'
+                                                    }; margin-left: auto; display: block; text-align: right;`
+                                                "
+                                                >{{
+                                                    purchase_code || "N/D"
+                                                }}</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="d-flex flex-column align-items-center p-2"
+                                            style="width: 50%;"
+                                        >
+                                            <span
+                                                class="text-center"
+                                                style="font-size: 12px;"
+                                            >
+                                                {{
+                                                    product.descripcion ||
+                                                        "DESCRIPCION"
+                                                }}
+                                            </span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type == 'Precio venta'
+                                                            ? '#E6A23C'
+                                                            : '#000'
                                                     }`
                                                 "
+                                                class="text-center"
+                                                >S/.
+                                                {{ sale_code || "N/D" }}</span
                                             >
-                                                {{ purchase_code || "N/D" }}
-                                            </span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type != 'Precio venta'
+                                                            ? '#409EFF'
+                                                            : '#000'
+                                                    }; margin-left: auto; display: block; text-align: right;`
+                                                "
+                                                >{{
+                                                    purchase_code || "N/D"
+                                                }}</span
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -1618,7 +1626,7 @@
                                             Imprimir
                                         </el-button>
 
-                                        <el-button
+                                       <!--  <el-button
                                             type="danger"
                                             size="large"
                                             style="padding: 15px 30px; font-size: 16px;"
@@ -1628,7 +1636,19 @@
                                                 class="fas fa-file-pdf"
                                                 style="margin-right: 8px;"
                                             ></i>
-                                            Exportar
+                                            IMPRESION PDF
+                                        </el-button> -->
+                                        <el-button
+                                            type="danger"
+                                            size="large"
+                                            style="padding: 15px 30px; font-size: 16px;"
+                                            @click="generatePdfDomload"
+                                        >
+                                            <i
+                                                class="fas fa-file-pdf"
+                                                style="margin-right: 8px;"
+                                            ></i>
+                                            Exportar pdf
                                         </el-button>
                                     </div>
                                 </div>
@@ -2924,7 +2944,7 @@ export default {
                 }
             }
         },
-        async generatePdf() {
+        /* async generatePdf() {
             if (this.quantity == 0 || this.quantity.length == 0) {
                 this.$toast.error("La cantidad es obligatoria.");
                 return;
@@ -2968,59 +2988,196 @@ export default {
                 &type=${this.modelType || ""}
                 `;
                 console.log(endPoint);
+
                 const response = await axios.get(endPoint, config);
+                console.log(response);
+                console.log(this.configuration);
+                const blob = new Blob([response.data], {
+                    type: "application/pdf"
+                });
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un iframe oculto para imprimir sin abrir una nueva ventana
+                const printFrame = document.createElement("iframe");
+                printFrame.style.position = "fixed";
+                printFrame.style.right = "0";
+                printFrame.style.bottom = "0";
+                printFrame.style.width = "0";
+                printFrame.style.height = "0";
+                printFrame.style.border = "0";
+
+                // Agregamos este iframe al documento
+                document.body.appendChild(printFrame);
+
+                // Cuando el iframe cargue el documento, imprimirlo
+                printFrame.onload = () => {
+                    setTimeout(() => {
+                        try {
+                            // Mantenemos el iframe sin eliminarlo para que el diálogo de impresión permanezca abierto
+                            printFrame.contentWindow.print();
+
+                            // No eliminamos el iframe aquí para evitar que se cierre el diálogo de impresión
+                            // La limpieza ocurrirá cuando el usuario cierre el diálogo de impresión
+                        } catch (e) {
+                            console.error("Error al imprimir:", e);
+                            this.$toast.error(
+                                "Error al abrir el diálogo de impresión"
+                            );
+                            // En caso de error, sí eliminamos el iframe
+                            document.body.removeChild(printFrame);
+                        }
+                    }, 1000); // Aumentamos el tiempo de espera para asegurar que el PDF se cargue completamente
+                };
+
+                // Asignamos la URL al iframe
+                printFrame.src = url;
+
+                this.loading = false;
+            } catch (e) {
+                console.log(e);
+                const {
+                    data: { message }
+                } = e.response;
+                this.$toast.error(message);
+                this.loading = false;
+            }
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        }, */
+
+        /* async generatePdf() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está a punto de imprimir ${this.quantity} stickers...`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+
+                const endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&price1=${this.price1}&price2=${
+                    this.price2
+                }&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}&type=${this
+                    .modelType || ""}`;
+
+                // 1. Descargar el PDF generado por Laravel
+                const pdfResponse = await axios.get(endPoint, {
+                    responseType: "blob"
+                });
+
+                // 2. Enviar el blob al servidor de impresión Node.js
+                const formData = new FormData();
+                formData.append(
+                    "pdf",
+                    new Blob([pdfResponse.data], { type: "application/pdf" }),
+                    "etiqueta.pdf"
+                );
+
+                await axios.post("http://localhost:3001/print", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
+
+                this.$toast.success("Impresión enviada correctamente.");
+            } catch (e) {
+                console.error("Error:", e);
+                this.$toast.error("Fallo al imprimir el PDF.");
+            } finally {
+                this.loading = false;
+            }
+
+            if (this.lector_barcode) {
+                this.$refs.input_barcode.focus();
+                this.item_for_barcode = null;
+            }
+        }, */
+
+        async generatePdfDomload() {
+            if (this.quantity == 0 || this.quantity.length == 0) {
+                this.$toast.error("La cantidad es obligatoria.");
+                return;
+            }
+
+            if (this.quantity > 100) {
+                try {
+                    await this.$confirm(
+                        `Está apunto de imprimir ${this.quantity} stickers, si desea puede cambiar la cantidad de manera
+                        manual. En caso contrario de click en 'Continuar'.`,
+                        "Mensaje de Advertencia",
+                        {
+                            confirmButtonText: "Continuar",
+                            cancelButtonText: "Cambiar cantidad",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+            try {
+                this.loading = true;
+                this.quantity = this.quantityToPaper(this.quantity);
+                const config = { responseType: "blob" };
+                let endPoint = `${this.resource}/generate?stock=${
+                    this.quantity
+                }&salecode=${this.sale_code}&price1=${this.price1}&price2=${
+                    this.price2
+                }&purchasecode=${
+                    this.purchase_code
+                }&description=${encodeURIComponent(
+                    this.product.descripcion
+                )}&paper=${this.paperType}&format=${
+                    this.QSticker
+                }&barcode=${encodeURIComponent(
+                    this.product.barras
+                )}&type_barcode=${encodeURIComponent(
+                    this.typeBarcode
+                )}&location=${this.product.location || ""}
+                &type=${this.modelType || ""}
+                `;
+                console.log(endPoint);
+
+                const response = await axios.get(endPoint, config);
+                console.log(response);
+                console.log(this.configuration);
                 const url = window.URL.createObjectURL(
                     new Blob([response.data])
                 );
-
-                // Guardar configuración actual
-                this.saveConfig();
-
-                // Crear enlace para posible descarga
                 const link = document.createElement("a");
                 link.href = url;
+                console.log(url);
+                link.setAttribute("download", "file.pdf");
                 document.body.appendChild(link);
-
-                // Comprobar si hay impresora etiquetadora configurada
-                let { etiquetadora } = this.establishment;
-                if (etiquetadora) {
-                    // Crear un iframe invisible para imprimir
-                    const iframe = document.createElement("iframe");
-                    iframe.style.display = "none";
-                    iframe.src = url;
-                    document.body.appendChild(iframe);
-
-                    iframe.onload = () => {
-                        try {
-                            setTimeout(() => {
-                                iframe.contentWindow.print();
-                                this.$toast.success(
-                                    "Enviado a impresión. Por favor seleccione la impresora: " +
-                                        etiquetadora
-                                );
-
-                                // Eliminar el iframe después de un tiempo
-                                setTimeout(() => {
-                                    document.body.removeChild(iframe);
-                                }, 5000);
-                            }, 500);
-                        } catch (error) {
-                            console.error("Error al imprimir:", error);
-                            this.$toast.error(
-                                "Error al imprimir. Descargando PDF"
-                            );
-                            link.setAttribute("download", "file.pdf");
-                            link.click();
-                        }
-                    };
-                } else {
-                    // Si no hay configuración de impresora, descargar como antes
-                    link.setAttribute("download", "file.pdf");
-                    link.click();
-                    this.$toast.warning(
-                        "No se ha configurado impresora de etiquetas, descargando PDF"
-                    );
-                }
+                link.click();
 
                 this.loading = false;
             } catch (e) {
@@ -3036,6 +3193,7 @@ export default {
                 this.item_for_barcode = null;
             }
         },
+
         async generate() {
             if (this.quantity == 0 || this.quantity.length == 0) {
                 this.$toast.error("La cantidad es obligatoria.");
@@ -3080,57 +3238,13 @@ export default {
                 &type=${this.modelType || ""}
                 `;
                 console.log(endPoint);
-                const response = await axios.get(endPoint, config);
-                const url = window.URL.createObjectURL(
-                    new Blob([response.data])
-                );
-
-                // Guardar configuración actual
-                this.saveConfig();
-
-                // Usar la API de impresión nativa del navegador
-                const link = document.createElement("a");
-                link.href = url;
-                document.body.appendChild(link);
-
-                // Comprobar si hay impresora etiquetadora configurada
                 let { etiquetadora } = this.establishment;
+                this.saveConfig();
                 if (etiquetadora) {
-                    // Crear un iframe invisible para imprimir
-                    const iframe = document.createElement("iframe");
-                    iframe.style.display = "none";
-                    iframe.src = url;
-                    document.body.appendChild(iframe);
-
-                    iframe.onload = () => {
-                        try {
-                            setTimeout(() => {
-                                iframe.contentWindow.print();
-                                this.$toast.success(
-                                    "Enviado a impresión. Por favor seleccione la impresora: " +
-                                        etiquetadora
-                                );
-
-                                // Eliminar el iframe después de un tiempo
-                                setTimeout(() => {
-                                    document.body.removeChild(iframe);
-                                }, 5000);
-                            }, 500);
-                        } catch (error) {
-                            console.error("Error al imprimir:", error);
-                            this.$toast.error(
-                                "Error al imprimir. Descargando PDF"
-                            );
-                            link.setAttribute("download", "file.pdf");
-                            link.click();
-                        }
-                    };
+                    this.Printer(etiquetadora, endPoint);
                 } else {
-                    // Si no hay configuración de impresora, descargar como antes
-                    link.setAttribute("download", "file.pdf");
-                    link.click();
-                    this.$toast.warning(
-                        "No se ha configurado impresora de etiquetas, descargando PDF"
+                    this.$toast.error(
+                        "No se ha configurado la impresora de etiquetas."
                     );
                 }
 
@@ -3148,61 +3262,33 @@ export default {
                 this.item_for_barcode = null;
             }
         },
-        // Método nativo de impresión sin usar QZ
-        async Printer(printerName, pdfUrl) {
-            console.log(`Imprimiendo en: ${printerName}, URL: ${pdfUrl}`);
+        async Printer(Printer, linkpdf) {
+            // let paperConfig = {
+            //     scaleContent: false
+            // };
+            // let partsUrl = linkpdf.split("/");
+            // let document = partsUrl[partsUrl.length - 1];
 
-            try {
-                // Abrir el PDF en una nueva ventana/pestaña
-                const printWindow = window.open(pdfUrl, "_blank");
+            let config = qz.configs.create(Printer, this.config);
+            console.log(
+                "🚀 ~ file: index.vue:868 ~ Printer ~ linkpdf:",
+                linkpdf
+            );
 
-                if (printWindow) {
-                    // Esperar a que se cargue la página
-                    printWindow.addEventListener("load", () => {
-                        try {
-                            // Mostrar diálogo de impresión
-                            setTimeout(() => {
-                                printWindow.print();
-                                this.$toast.success(
-                                    `Seleccione la impresora "${printerName}" para imprimir las etiquetas`
-                                );
-
-                                // Cerrar la ventana después de imprimir o un tiempo
-                                setTimeout(() => {
-                                    try {
-                                        printWindow.close();
-                                    } catch (e) {}
-                                }, 5000);
-                            }, 1000);
-                        } catch (error) {
-                            console.error("Error al imprimir:", error);
-                            this.$toast.error(
-                                "Error al imprimir. Intente descargar el PDF manualmente."
-                            );
-                        }
-                    });
-
-                    // Si la página no se carga en 3 segundos, mostrar una advertencia
-                    setTimeout(() => {
-                        if (printWindow.document.readyState !== "complete") {
-                            this.$toast.warning(
-                                "El PDF está tardando en cargar. Por favor, espere..."
-                            );
-                        }
-                    }, 3000);
-                } else {
-                    this.$toast.error(
-                        "El navegador bloqueó la apertura del PDF. Verifique la configuración de ventanas emergentes."
-                    );
-                    return false;
-                }
-
-                return true;
-            } catch (error) {
-                console.error("Error al abrir ventana de impresión:", error);
-                this.$toast.error("Error al preparar la impresión");
-                return false;
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
             }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
         },
         changeFormat(quantity) {
             if (this.limitFormat && quantity != 1) {
@@ -3362,7 +3448,8 @@ export default {
                     palabras,
                     company_name,
                     etiqueta,
-                    establishment
+                    establishment,
+                    configuration,
                 } = response.data;
                 this.establishment = establishment;
                 this.codes = codigos;
