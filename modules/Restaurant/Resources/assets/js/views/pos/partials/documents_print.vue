@@ -1,62 +1,29 @@
 <template>
-    <el-dialog
-        :visible="showDialog"
-        append-to-body
-        @close="close"
-        @open="open"
-        width="85%"
-        v-loading="loading"
-        title="Comprobantes"
-        :close-on-click-modal="false"
-        :show-close="false"
-    >
+    <el-dialog :visible="showDialog" append-to-body @close="close" @open="open" width="85%" v-loading="loading"
+        title="Comprobantes" :close-on-click-modal="false" :show-close="false">
         <div class="data-table-visible-columns">
             <div class="d-flex align-items-center">
-                <el-button
-                    v-if="activeName == 'saleNotes'"
-                    type="button"
-                    class="btn_buscar"
-                    style="margin-right: 5px; font-size: 12px; padding: 5px 10px;"
-                    href="javascript:void(0)"
-                    @click.prevent="onOpenModalGenerateCPE"
-                >
-                    <i
-                        class="fas fa-exchange-alt fa-sm icon-style"
-                        title="Convertir documentos"
-                    ></i>
+                <el-button v-if="activeName == 'saleNotes'" type="button" class="btn_buscar"
+                    style="margin-right: 5px; font-size: 12px; padding: 5px 10px;" href="javascript:void(0)"
+                    @click.prevent="onOpenModalGenerateCPE">
+                    <i class="fas fa-exchange-alt fa-sm icon-style" title="Convertir documentos"></i>
                     CPE -A->> NV
                 </el-button>
 
-                <el-button
-                    v-if="config.health_network && establishment.is_product"
-                    type="button"
-                    class="btn_buscar"
-                    style="margin-right: 5px;"
-                    href="javascript:void(0)"
-                    @click.prevent="clickDocumentSalud()"
-                >
+                <el-button v-if="config.health_network && establishment.is_product" type="button" class="btn_buscar"
+                    style="margin-right: 5px;" href="javascript:void(0)" @click.prevent="clickDocumentSalud()">
                     <i class="icofont-plus-circle"></i>
                     Documentos Farmacia
                 </el-button>
-                <el-button
-                    v-if="config.dispatch && activeName === 'guides'"
-                    type="button"
-                    class="btn_buscar"
-                    style="margin-right: 5px;"
-                    href="javascript:void(0)"
-                    @click="createDispatch"
-                >
+                <el-button v-if="config.dispatch && activeName === 'guides'" type="button" class="btn_buscar"
+                    style="margin-right: 5px;" href="javascript:void(0)" @click="createDispatch">
                     <i class="icofont-plus-circle"></i>
                     Nueva guia
                 </el-button>
 
-                <el-button
-                    type="danger"
-                    icon="el-icon-close"
-                    circle
+                <el-button type="danger" icon="el-icon-close" circle
                     style="margin-left: auto; color: white; background-color: red; border-color: red;"
-                    @click="close"
-                ></el-button>
+                    @click="close"></el-button>
             </div>
         </div>
 
@@ -68,54 +35,24 @@
                         <div class="row">
                             <div class="col-12 col-md-4 mb-2 mb-md-0">
                                 <label for="typeSearch">Filtro</label>
-                                <el-select
-                                    id="typeSearch"
-                                    v-model="typeSearch"
-                                    class="w-100"
-                                >
-                                    <el-option
-                                        value="document"
-                                        label="N° Documento (CPE)"
-                                    ></el-option>
-                                    <el-option
-                                        value="client"
-                                        label="Nombre de Cliente/Empresa"
-                                    ></el-option>
-                                    <el-option
-                                        value="date"
-                                        label="Fecha de Emisión CPE"
-                                    ></el-option>
+                                <el-select id="typeSearch" v-model="typeSearch" class="w-100">
+                                    <el-option value="document" label="N° Documento (CPE)"></el-option>
+                                    <el-option value="client" label="Nombre de Cliente/Empresa"></el-option>
+                                    <el-option value="date" label="Fecha de Emisión CPE"></el-option>
                                 </el-select>
                             </div>
 
                             <div class="col-12 col-md-8">
-                                <label
-                                    for="argumentInput"
-                                    class="form-label fw-bold"
-                                >
+                                <label for="argumentInput" class="form-label fw-bold">
                                     Argumento
-                                    <span class="text-muted"
-                                        >(DNI/RUC - Fecha - Cliente)</span
-                                    >
+                                    <span class="text-muted">(DNI/RUC - Fecha - Cliente)</span>
                                 </label>
-                                <el-input
-                                    id="argumentInput"
-                                    v-if="typeSearch != 'date'"
-                                    v-model="value"
-                                    @input="getRecordsInput"
-                                    placeholder="Ingrese el argumento"
-                                    class="text-muted w-100"
-                                    clearable
-                                ></el-input>
-                                <el-date-picker
-                                    v-else
-                                    v-model="value"
-                                    @change="getRecordsInput"
-                                    value-format="yyyy-MM-dd"
-                                    placeholder="Seleccione una fecha"
-                                    class="w-100"
-                                    clearable
-                                ></el-date-picker>
+                                <el-input id="argumentInput" v-if="typeSearch != 'date'" v-model="value"
+                                    @input="getRecordsInput" placeholder="Ingrese el argumento" class="text-muted w-100"
+                                    clearable></el-input>
+                                <el-date-picker v-else v-model="value" @change="getRecordsInput"
+                                    value-format="yyyy-MM-dd" placeholder="Seleccione una fecha" class="w-100"
+                                    clearable></el-date-picker>
                             </div>
                         </div>
                     </div>
@@ -123,31 +60,21 @@
 
                 <!-- Right Column (30%) -->
                 <div class="col-12 col-md-5 d-flex align-items-stretch">
-                    <div class="card p-3 w-100">
+                    <div class=" p-3 w-100">
                         <div class="row">
                             <!-- Saldos Pendientes -->
                             <div class="col-4">
                                 <div>
                                     <div class="col-12">
-                                        <div
-                                            class="text-center"
-                                            v-if="activeName == 'documents'"
-                                        >
-                                            <el-checkbox
-                                                v-model="remain"
-                                                @change="getRecordsInput"
-                                                :style="{
-                                                    color: remain
-                                                        ? '#ffbf00 !important'
-                                                        : ''
-                                                }"
-                                            >
+                                        <div class="text-center" v-if="activeName == 'documents'">
+                                            <el-checkbox v-model="remain" @change="getRecordsInput" :style="{
+                                                color: remain
+                                                    ? '#ffbf00 !important'
+                                                    : ''
+                                            }">
                                                 Saldos
-                                                <i
-                                                    class="fas fa-exclamation-circle"
-                                                    style="color: red;"
-                                                    title="Saldos pendientes de cobro"
-                                                ></i>
+                                                <i class="fas fa-exclamation-circle" style="color: red;"
+                                                    title="Saldos pendientes de cobro"></i>
                                             </el-checkbox>
                                         </div>
                                     </div>
@@ -157,22 +84,14 @@
                             <!-- Ultimo CPE Emitido -->
                             <div class="col-5 d-flex justify-content-end">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <div
-                                        class="d-flex flex-column align-items-end"
-                                    >
-                                        <span
-                                            class="p-1 text-truncate w-100 text-end"
-                                        >
+                                    <div class="d-flex flex-column align-items-end">
+                                        <span class="p-1 text-truncate w-100 text-end">
                                             {{
                                                 lastDocument
                                                     ? lastDocument.numberPrint
                                                     : "No se encontró"
                                             }}
-                                            <i
-                                                class="fas fa-info-circle"
-                                                style="color: #007bff;"
-                                                title="Último Comprobante Emitido para este USUARIO/CAJERO"
-                                            ></i>
+                                            
                                         </span>
                                     </div>
                                 </div>
@@ -181,17 +100,16 @@
                             <!-- Boton de Imprimir -->
                             <div class="col-3 d-flex justify-content-center">
                                 <div class="col-12 text-center">
-                                    <el-button
-                                        type="primary"
-                                        @click="
+                                    <el-tooltip content="Imprimir el último CPE Emitido" placement="top">
+                                        <el-button class="btn_buscarsmall" type="primary" @click="
                                             printData(
                                                 lastDocument.external_id,
                                                 lastDocument.document_type_id
                                             )
-                                        "
-                                    >
-                                        <i class="fas fa-print"></i>
-                                    </el-button>
+                                            ">
+                                            <i class="fas fa-print"></i>
+                                        </el-button>
+                                    </el-tooltip>
                                 </div>
                             </div>
                         </div>
@@ -199,111 +117,44 @@
                 </div>
             </div>
 
-            <el-tabs
-                v-model="activeName"
-                @tab-click="handleClick"
-                style="padding-bottom: 0;"
-            >
+            <el-tabs v-model="activeName" @tab-click="handleClick" style="padding-bottom: 0;">
                 <!-- Notas de Venta -->
-                <el-tab-pane
-                    label="Notas de venta"
-                    name="saleNotes"
-                    class="fw-bold dark-label"
-                >
-                    <document-print-detail
-                        :configuration="config"
-                        :company="company"
-                        @getRecords="getRecords"
-                        @printData="printData"
-                        :records.sync="saleNotes"
-                        :pagination.sync="pagination.saleNotes"
-                        :type="'saleNotes'"
-                        :sender="sender"
-                        :establishment.sync="establishment"
-                        :cash_id.sync="cash_id"
-                    ></document-print-detail>
+                <el-tab-pane label="Notas de venta" name="saleNotes" class="fw-bold dark-label">
+                    <document-print-detail :configuration="config" :company="company" @getRecords="getRecords"
+                        @printData="printData" :records.sync="saleNotes" :pagination.sync="pagination.saleNotes"
+                        :type="'saleNotes'" :sender="sender" :establishment.sync="establishment"
+                        :cash_id.sync="cash_id"></document-print-detail>
                 </el-tab-pane>
                 <!-- Boletas Facturas -->
-                <el-tab-pane
-                    v-if="company.soap_type_id != '03'"
-                    label="Facturas - Boletas: CPE"
-                    name="documents"
-                >
-                    <document-print-detail
-                        :configuration="config"
-                        :sender="sender"
-                        :company="company"
-                        @getRecords="getRecords"
-                        @printData="printData"
-                        :records.sync="documents"
-                        :pagination.sync="pagination.documents"
-                        :type="'documents'"
-                        :establishment.sync="establishment"
-                        :cash_id.sync="cash_id"
-                    ></document-print-detail>
+                <el-tab-pane v-if="company.soap_type_id != '03'" label="Facturas - Boletas: CPE" name="documents">
+                    <document-print-detail :configuration="config" :sender="sender" :company="company"
+                        @getRecords="getRecords" @printData="printData" :records.sync="documents"
+                        :pagination.sync="pagination.documents" :type="'documents'" :establishment.sync="establishment"
+                        :cash_id.sync="cash_id"></document-print-detail>
                 </el-tab-pane>
                 <!-- Cotizaciones -->
-                <el-tab-pane
-                    v-if="config.quotation"
-                    label="Cotizaciones"
-                    name="quotations"
-                >
-                    <document-print-detail
-                        @sendOrdens="sendOrdens"
-                        @closeDialog="close"
-                        :configuration="config"
-                        :sender="sender"
-                        :company="company"
-                        @insertOrden="insertOrden"
-                        @getRecords="getRecords"
-                        @printData="printData"
-                        :records.sync="quotations"
-                        :pagination.sync="pagination.quotations"
-                        :type="'quotations'"
-                        :establishment.sync="establishment"
-                        :cash_id.sync="cash_id"
-                    ></document-print-detail>
+                <el-tab-pane v-if="config.quotation" label="Cotizaciones" name="quotations">
+                    <document-print-detail @sendOrdens="sendOrdens" @closeDialog="close" :configuration="config"
+                        :sender="sender" :company="company" @insertOrden="insertOrden" @getRecords="getRecords"
+                        @printData="printData" :records.sync="quotations" :pagination.sync="pagination.quotations"
+                        :type="'quotations'" :establishment.sync="establishment"
+                        :cash_id.sync="cash_id"></document-print-detail>
                 </el-tab-pane>
-                <el-tab-pane
-                    v-if="config.dispatch"
-                    label="Guias de Remision"
-                    name="guides"
-                >
-                    <document-print-detail
-                        @sendOrdens="sendOrdens"
-                        @closeDialog="close"
-                        :configuration="config"
-                        :sender="sender"
-                        :company="company"
-                        @insertOrden="insertOrden"
-                        @getRecords="getRecords"
-                        @printData="printData"
-                        :records.sync="guides"
-                        :pagination.sync="pagination.guides"
-                        :type="'guides'"
-                        :establishment.sync="establishment"
-                        :cash_id.sync="cash_id"
-                    ></document-print-detail>
+                <el-tab-pane v-if="config.dispatch" label="Guias de Remision" name="guides">
+                    <document-print-detail @sendOrdens="sendOrdens" @closeDialog="close" :configuration="config"
+                        :sender="sender" :company="company" @insertOrden="insertOrden" @getRecords="getRecords"
+                        @printData="printData" :records.sync="guides" :pagination.sync="pagination.guides"
+                        :type="'guides'" :establishment.sync="establishment"
+                        :cash_id.sync="cash_id"></document-print-detail>
                 </el-tab-pane>
                 <iframe ref="pdfFrame" style="display: none;"></iframe>
             </el-tabs>
 
-            <modal-generate-cpe
-                :show.sync="showModalGenerateCPE"
-                @sendItems="sendItems"
-                @close="closeCpe"
-            ></modal-generate-cpe>
-            <document-salud-modal
-                :showDialog.sync="showDialogDocumentSalud"
-            ></document-salud-modal>
-            <dispatch-create
-                @records="getRecords"
-                :showDialog.sync="showDialogGuides"
-                ref="dispatchCreate"
-                @closeDispatch="closeDispatch"
-                :configuration="config"
-                :pos="true"
-            ></dispatch-create>
+            <modal-generate-cpe :show.sync="showModalGenerateCPE" @sendItems="sendItems"
+                @close="closeCpe"></modal-generate-cpe>
+            <document-salud-modal :showDialog.sync="showDialogDocumentSalud"></document-salud-modal>
+            <dispatch-create @records="getRecords" :showDialog.sync="showDialogGuides" ref="dispatchCreate"
+                @closeDispatch="closeDispatch" :configuration="config" :pos="true"></dispatch-create>
         </div>
     </el-dialog>
 </template>
@@ -311,15 +162,20 @@
 .el-dialog__header {
     background-color: var(--primary) !important;
 }
+
 .el-dialog__title {
     color: var(--light-text) !important;
 }
+
 .el-dialog__headerbtn .el-dialog__close {
     color: white !important;
 }
+
 .el-tabs__item {
-    font-weight: bold; /* Cambia el grosor de la fuente */
-    color: #000; /* Cambia el color del texto a un color más oscuro */
+    font-weight: bold;
+    /* Cambia el grosor de la fuente */
+    color: #000;
+    /* Cambia el color del texto a un color más oscuro */
 }
 </style>
 <script>
@@ -485,7 +341,7 @@ export default {
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
-            } catch (e) {}
+            } catch (e) { }
         },
         async printData(external_id, type) {
             // console.log("🚀 ~ file: documents_print.vue:270 ~ printData ~ this.config:", this.config)

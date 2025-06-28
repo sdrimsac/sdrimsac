@@ -4,13 +4,16 @@
         append-to-body
         @close="close"
         @open="open"
-        width="60%"
-        title="Nueva Variacion de Concepto "
+        width="50%"
+        title="Nueva Variación de Concepto "
     >
         <div>
             <div class="row col-md-12 " style="  margin-top: 20px;">
                 <div class="col-md-4">
-                    <label class="control-label">Concepto Principal </label>
+                    <label class="control-label">
+                        <i class="fas fa-list-alt" style="margin-right: 4px;"></i>
+                        Concepto Principal
+                    </label>
                     <el-select
                         v-model="form.select"
                         placeholder="Seleccione Concepto principal"
@@ -26,9 +29,10 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="col-md-4">
-                    <label class="control-label"
-                        >Nombre Variacion del Concepto
+                <div class="col-md-5">
+                    <label class="control-label">
+                        <i class="fas fa-tag" style="margin-right: 4px;"></i>
+                        Nombre Variación del Concepto
                     </label>
                     <input
                         type="text"
@@ -36,17 +40,36 @@
                         v-model="form.nameVariacion"
                     />
                 </div>
-                <div class="col-md-4">
-                    <label class="control-label">Precio Variacion </label>
+                <div class="col-md-3">
+                    <label class="control-label">
+                        <i class="fas fa-dollar-sign" style="margin-right: 4px;"></i>
+                        Precio Variación
+                    </label>
                     <input
-                        type="text"
+                        type="number"
                         class="form-control text-center"
                         v-model="form.precioVariacion"
+                        step="0.01"
+                        min="0"
+                        @input="form.precioVariacion = formatDecimal(form.precioVariacion)"
                     />
                 </div>
             </div>
         </div>
-        <span slot="footer">
+        <div slot="footer" class="dialog-footer">
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <el-button class="btn_cancelarsmall" @click="close">
+                    <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
+                    Cancelar
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" :loading="loadingGuardarvariacion"
+                @click="guardarVariacionConcept">
+                    <i class="fas fa-save fa-lg" style="margin-right: 4px;"></i>
+                    Guardar
+                </el-button>
+            </div>
+        </div>
+        <!-- <span slot="footer">
             <el-button @click="close">Cancel</el-button>
             <el-button
                 :loading="loadingGuardarvariacion"
@@ -54,7 +77,7 @@
                 class="btn btn-primary"
                 >Guardar</el-button
             >
-        </span>
+        </span> -->
     </el-dialog>
 </template>
 

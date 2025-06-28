@@ -11,7 +11,8 @@ class InternetTech extends ModelTenant
     protected $table = "internet_techs";
     protected $with = ["person"];
     protected $fillable = [
-        'person_id'
+        'person_id',
+        'active'
     ];
 
     protected $casts = [

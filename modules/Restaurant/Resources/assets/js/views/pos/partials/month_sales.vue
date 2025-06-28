@@ -2,47 +2,50 @@
     <el-dialog
         append-to-body
         :visible="showDialog"
-        title="Ventas por mes"
+        title="Resumen Ventas por mes"
         @open="open"
         @close="close"
         v-loading="loading_search"
+        width="80%"
     >
-        <div class="row mt-2">
-            <div class="col-md-4">
-                <label for="month">Mes</label>
-                <el-date-picker
-                    v-model="month"
-                    type="month"
-                    placeholder="Selecciona un mes"
-                    format="yyyy-MM"
-                    value-format="yyyy-MM"
-                    clearable
-                    class="w-100"
-                    @change="changeMonth"
-                ></el-date-picker>
+        <div class="row mt-2 align-items-center">
+            <div class="col-4 text-end">
+            <label for="month" class="mb-0">Seleccione el mes a consultar</label>
+            </div>
+            <div class="col-4">
+            <el-date-picker
+                v-model="month"
+                type="month"
+                placeholder="Selecciona un mes"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
+                clearable
+                class="w-100"
+                @change="changeMonth"
+            ></el-date-picker>
             </div>
         </div>
         <div class="row mt-1" v-if="form.establishment">
             <div class="table-responsive">
                 <table class="table">
-                    <thead>
+                    <thead style="background-color: #073f68; color: #fff;">
                         <tr>
-                            <th class="celda">Doc</th>
-                            <th class="celda">Serie</th>
-                            <th class="celda">Nro_ini</th>
-                            <th class="celda">Nro_fin</th>
-                            <th class="celda">Anulados</th>
-                            <th class="celda">Rechazados</th>
-                            <th class="celda">Notas de crédito</th>
-                            <th class="celda_right">Importe total</th>
+                            <th class="celda text-center" style="color: #fff; width: 10%;">CPE</th>
+                            <th class="celda text-center" style="color: #fff; width: 7%;">Serie</th>
+                            <th class="celda text-center" style="color: #fff; width: 8%;">Inicio</th>
+                            <th class="celda text-center" style="color: #fff; width: 8%;">Final</th>
+                            <th class="celda text-center" style="color: #fff; width: 15%;">Anulados</th>
+                            <th class="celda text-center" style="color: #fff; width: 15%;">Rechazados</th>
+                            <th class="celda text-center" style="color: #fff; width: 15%;">NC</th>
+                            <th class="celda text-end" style="color: #fff; width: 20%;">Importe total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="form.has_ft_info">
-                            <td>
+                            <td class="text-center">
                                 Factura
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ form.first_ft ? form.first_ft.series : "" }}
                             </td>
                             <td class="text-end">
@@ -51,13 +54,13 @@
                             <td class="text-end">
                                 {{ form.last_ft ? form.last_ft.number : "" }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ form.anulates_voided_ft.join("-") }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ form.rejected_ft.join("-") }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ form.notes_ft.join("-") }}
                             </td>
                             <td class="text-end">
@@ -65,19 +68,19 @@
                             </td>
                         </tr>
                         <tr v-if="form.has_bv_info">
-                            <td>Boleta</td>
-                            <td>
+                            <td class="text-center">Boleta</td>
+                            <td class="text-center">
                                 {{ form.first_bv ? form.first_bv.series : "" }}
                             </td>
-                            <td class="text-end">
+                            <td class="text-center">
                                 {{ form.first_bv ? form.first_bv.number : "" }}
                             </td>
-                            <td class="text-end">
+                            <td class="text-center">
                                 {{ form.last_bv ? form.last_bv.number : "" }}
                             </td>
-                            <td>{{ form.anulates_voided_bv.join("-") }}</td>
-                            <td>{{ form.rejected_bv.join("-") }}</td>
-                            <td>{{ form.notes_bv.join("-") }}</td>
+                            <td class="text-center">{{ form.anulates_voided_bv.join("-") }}</td>
+                            <td class="text-center">{{ form.rejected_bv.join("-") }}</td>
+                            <td class="text-center">{{ form.notes_bv.join("-") }}</td>
                             <td class="text-end">
                                 {{ form.bv_total }}
                             </td>
@@ -85,7 +88,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7" class="text-right">Total mes</td>
+                            <td colspan="7" class="text-end">Total ventas del mes</td>
                             <td class="text-end font-bold">
                                 {{ total.toFixed(2) }}
                             </td>

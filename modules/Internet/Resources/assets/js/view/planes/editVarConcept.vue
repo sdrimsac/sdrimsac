@@ -1,52 +1,48 @@
 <template>
-    <el-dialog
-        @open="open"
-        :visible="showEditconceptVar"
-        append-to-body
-        @close="close"
-        width="60%"
-        title="Nueva Variacion de Planes "
-    >
-        <div>
+    <el-dialog @open="open" :visible="showEditconceptVar" append-to-body @close="close" width="50%"
+        title="Nueva Variación de Planes ">
+        <div class="mb-2">
             <div class="row col-md-12 " style="  margin-top: 20px;">
                 <div class="col-md-4">
-                    <label class="control-label">Plan Principal </label>
-                    <input
-                        type="text"
-                        disabled
-                        class="form-control text-center"
-                        v-model="conceptPrin.concept_description"
-                    />
-                </div>
-                <div class="col-md-4">
-                    <label class="control-label"
-                        >Nombre Variacion del Concepto
+                    <label class="control-label">
+                        <i class="fas fa-layer-group" style="margin-right: 4px;"></i>
+                        Plan Principal
                     </label>
-                    <input
-                        type="text"
-                        class="form-control text-center"
-                        v-model="formvarConcept.description"
-                    />
+                    <input type="text" disabled class="form-control text-center"
+                        v-model="conceptPrin.concept_description" />
                 </div>
-                <div class="col-md-4">
-                    <label class="control-label">Precio Variacion </label>
-                    <input
-                        type="text"
-                        class="form-control text-center"
-                        v-model="formvarConcept.price"
-                    />
+                <div class="col-md-5">
+                    <label class="control-label">
+                        <i class="fas fa-edit" style="margin-right: 4px;"></i>
+                        Nombre Variación del Concepto
+                    </label>
+                    <input type="text" class="form-control text-center" v-model="formvarConcept.description" />
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label">
+                        <i class="fas fa-dollar-sign" style="margin-right: 4px;"></i>
+                        Precio Variación
+                    </label>
+                    <input type="text" class="form-control text-center" v-model="formvarConcept.price" />
                 </div>
             </div>
         </div>
-        <span slot="footer">
+        <div slot="footer" class="dialog-footer">
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <el-button class="btn_cancelarsmall" @click="close">
+                    <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
+                    Cancelar
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" :loading="loadingGuardar" @click="GuardarEdit">
+                    <i class="fas fa-save fa-lg" style="margin-right: 4px;"></i>
+                    Guardar
+                </el-button>
+            </div>
+        </div>
+        <!-- <span slot="footer">
             <el-button @click="close">Cancel</el-button>
-            <el-button
-                class="btn btn-primary"
-                :loading="loadingGuardar"
-                @click="GuardarEdit"
-                >Guardar</el-button
-            >
-        </span>
+            <el-button class="btn btn-primary" :loading="loadingGuardar" @click="GuardarEdit">Guardar</el-button>
+        </span> -->
     </el-dialog>
 </template>
 

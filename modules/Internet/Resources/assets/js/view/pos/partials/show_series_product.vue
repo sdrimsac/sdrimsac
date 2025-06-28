@@ -1,19 +1,19 @@
 <template>
-    <el-dialog
-        @open="open"
-        @close="close"
-        :visible="showDialog"
-        title="Listado de series"
-    >
+    <el-dialog @open="open" @close="close" :visible="showDialog" title="Listado de series">
         <div class="p-1">
             <div class="row">
-                <div class="col-md-4">
-                    <el-input
-                        v-model="inputSearch"
-                        placeholder="Buscar por serie"
-                        @input="search"
-                    >
-                    </el-input>
+                <div class="col-md-6 mb-2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <el-input v-model="inputSearch" placeholder="Buscar Serie" @input="search">
+                            </el-input>
+                        </div>
+                        <div class="col-md-6">
+                            <el-button @click="close">Cerrar</el-button>
+                            <el-button type="primary" @click="save">Guardar</el-button>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- <div class="col-md-4">
                     <el-button
@@ -25,13 +25,13 @@
                 </div> -->
             </div>
             <table v-loading="loading" class="table">
-                <thead>
+                <thead style="background-color: #1e5a85; color: #fff;">
                     <tr>
-                        <th>#</th>
-                        <th>Serie</th>
-                        <th>Fecha</th>
-                        <th>Lote</th>
-                        <th>Seleccionar</th>
+                        <th style="color: #fff;">#</th>
+                        <th style="color: #fff;">Serie</th>
+                        <th style="color: #fff;">Fecha</th>
+                        <th style="color: #fff;">Lote</th>
+                        <th style="color: #fff;">Seleccionar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,23 +41,16 @@
                         <td>{{ serie.date }}</td>
                         <td>{{ serie.lote }}</td>
                         <td>
-                            <el-checkbox
-                                :disabled="serie.disabled"
-                                v-model="serie.selected"
-                                @change="saveSerie(serie)"
-                            >
+                            <el-checkbox :disabled="serie.disabled" v-model="serie.selected" @change="saveSerie(serie)">
                             </el-checkbox>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <el-pagination
-                @current-change="getSeries"
-                layout="total, prev, pager, next"
-                :total="pagination.total"
-                :current-page.sync="pagination.current_page"
-                :page-size="pagination.per_page"
-            >
+            <el-pagination background @current-change="handlePageChange" @size-change="handleSizeChange"
+                layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+                :current-page="pagination.current_page" :page-size="pagination.per_page"
+                :page-sizes="[10, 20, 50, 100]">
             </el-pagination>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="close">Cerrar</el-button>
@@ -82,6 +75,16 @@ export default {
         };
     },
     methods: {
+        handlePageChange(page) {
+            this.pagination.current_page = page;
+            this.getSeries();
+        },
+        handleSizeChange(size) {
+            this.pagination.per_page = size;
+            this.pagination.current_page = 1;
+            this.getSeries();
+        },
+
         checkSeries() {
             for (let i = 0; i < this.series.length; i++) {
                 let serie = this.seriesSelected.find(

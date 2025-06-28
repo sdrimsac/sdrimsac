@@ -146,7 +146,7 @@ class InternetController extends Controller
     public function tables()
     {
         $zones  = ClientZone::all();
-        $plans = InternetPlan::all();
+        $plans = InternetPlan::where('active', 1)->get();
         $concepts = InternetConcept::all();
         $techs = InternetTech::where('active', 1)->get();
         $items = Item::where('unit_type_id', '<>', 'ZZ')->get()->take(10);

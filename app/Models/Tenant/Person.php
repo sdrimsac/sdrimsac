@@ -18,7 +18,7 @@ class Person extends ModelTenant
     const DEFAULT_USER_IMAGE = 'user.png';
 
     protected $table = 'persons';
-    protected $with = ['identity_document_type'];  // Removed duplicate eager loading of location tables
+    protected $with = ['identity_document_type', 'country'];
     protected $fillable = [
         'image_extra1',
         'image_extra2',
@@ -97,16 +97,17 @@ class Person extends ModelTenant
         }
         $total_optional_mail = count($optional_mail);
         for ($i = 0; $i < $total_optional_mail; $i++) {
-            $temp = trim($optional_mail[$i]['email']);
+            $temp = isset($optional_mail[$i]['email']) ? trim($optional_mail[$i]['email']) : null;
             if (!empty($temp) && $temp != $this->email) {
                 $optional_mail_send[] = $temp;
             }
-        }        // Get location data using our helper
+        }
+        // Obtener datos de ubicación usando el helper
         $locationData = $this->getLocationData();
         $department = $locationData['department'];
         $province = $locationData['province'];
         $district = $locationData['district'];
-        
+
         $location_id = [];
         if (!empty($department)) {
             array_push($location_id, $department['id']);
@@ -117,11 +118,13 @@ class Person extends ModelTenant
         if (!empty($district)) {
             array_push($location_id, $district['id']);
         }
-        $seller = User::find($this->seller_id);
-        if (!empty($seller)) {
-            $seller = $seller->getCollectionData();
+        $seller = null;
+        if (!empty($this->seller_id)) {
+            $seller = User::find($this->seller_id);
+            if (!empty($seller)) {
+                $seller = $seller->getCollectionData();
+            }
         }
-
 
         $data = [
             'parient_id' => $this->parient_id,
@@ -140,33 +143,30 @@ class Person extends ModelTenant
             'name' => $this->name,
             'number' => $this->number,
             'identity_document_type_id' => $this->identity_document_type_id,
-            'identity_document_type_code' => $this->identity_document_type->code,
+            'identity_document_type_code' => $this->identity_document_type->code ?? null,
             'address' => $this->address,
-            'internal_code' => $this->internal_code,
-            'barcode' => $this->barcode,
-            'observation' => $this->observation,
+            'internal_code' => $this->internal_code ?? null,
+            'barcode' => $this->barcode ?? null,
+            'observation' => $this->observation ?? null,
             'seller' => $seller,
-            // 'zone' => $this->getZone(),
-            'zone' => null,
-            'zone_id' => $this->zone_id,
+            'zone' => null, // Puedes ajustar si necesitas traer la zona
+            'zone_id' => $this->zone_id ?? null,
             'seller_id' => $this->seller_id,
-            'website' => $this->website,
-            'document_type' => $this->identity_document_type->description,
+            'website' => $this->website ?? null,
+            'document_type' => $this->identity_document_type->description ?? null,
             'enabled' => (bool)$this->enabled,
             'created_at' => optional($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => optional($this->updated_at)->format('Y-m-d H:i:s'),
             'type' => $this->type,
             'trade_name' => $this->trade_name,
             'country_id' => $this->country_id,
-            'nationality_id' => $this->nationality_id,
+            'nationality_id' => $this->nationality_id ?? null,
             'department_id' => $department['id'] ?? null,
             'department' => $department,
-
             'province_id' => $province['id'] ?? null,
             'province' => $province,
             'district_id' => $district['id'] ?? null,
             'district' => $district,
-
             'telephone' => $this->telephone,
             'email' => $this->email,
             'perception_agent' => (bool)$this->perception_agent,
@@ -175,34 +175,34 @@ class Person extends ModelTenant
             'condition' => $this->condition,
             'person_type_id' => $this->person_type_id,
             'person_type' => $person_type_descripton,
-            'contact' => $this->contact,
+            'contact' => $this->contact ?? null,
             'comment' => $this->comment,
             'addresses' => $addresses,
             'parent_id' => $this->parent_id,
-            'credit_days' => (int)$this->credit_days,
+            'credit_days' => (int)($this->credit_days ?? 0),
             'optional_email' => $optional_mail,
             'optional_email_send' => implode(',', $optional_mail_send),
             'childrens' => [],
-            'accumulated_points' => $this->accumulated_points,
-            'has_discount' => $this->has_discount,
-            'discount_type' => $this->discount_type,
-            'discount_amount' => $this->discount_amount,
+            'accumulated_points' => $this->accumulated_points ?? null,
+            'has_discount' => $this->has_discount ?? null,
+            'discount_type' => $this->discount_type ?? null,
+            'discount_amount' => $this->discount_amount ?? null,
             'location_id' => $location_id
         ];
+        // Si existen relaciones de hijos y padres, agregarlas
         if ($childrens == true) {
-            $child = $this->children_person->transform(function ($row) {
-                return $row->getCollectionData();
-            });
-            $data['childrens'] = $child;
+            if (method_exists($this, 'children_person')) {
+                $child = $this->children_person->transform(function ($row) {
+                    return $row->getCollectionData();
+                });
+                $data['childrens'] = $child;
+            }
             $parent = null;
-            if ($this->parent_person) {
+            if (method_exists($this, 'parent_person') && $this->parent_person) {
                 $parent = $this->parent_person->getCollectionData();
             }
-
             $data['parent'] = $parent;
         }
-
-
         return $data;
     }
     public function document_type()

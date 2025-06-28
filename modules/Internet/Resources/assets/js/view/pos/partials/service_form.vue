@@ -1,186 +1,172 @@
 <template>
-    <div class="card bg-ligth" v-loading="loading">
-        <div class="row mt-2">
-            <div class="col-12">
+    <div class="" v-loading="loading" style="padding: 8px;">
+        <div class="row ">
+            <div class="col-4" style="padding-left: 8px; padding-right: 0px; padding-top: 0px; padding-bottom: 0px;">
                 <label class="label-control w-100">Plan Actual</label>
-                <el-input :readonly="true" :value="plan.name"> </el-input>
-                <label v-if="paymentDay" class="mt-2 label-control"
-                    >Vencimiento:
+                <el-input :readonly="true" :value="`${plan.name} -    Paga:   S/${plan.total}`"></el-input>
+                <label v-if="paymentDay" class="mt-2 label-control">Vencimiento:
                     <strong>
-                        {{ `${paymentDay.split("/")[0]} de cada mes` }}</strong
-                    ></label
-                >
-                <label
-                    v-if="currentPlan && currentPlan.days_extension != 0"
-                    class="text-primary"
-                    style="font-weight:bold"
-                >
+                        {{ `${paymentDay.split("/")[0]} de cada mes` }}</strong></label>
+                <label v-if="currentPlan && currentPlan.days_extension != 0" class="text-primary"
+                    style="font-weight:bold">
                     / Prorroga:
                     <strong> {{ currentPlan.days_extension }} días </strong>
                 </label>
             </div>
-        </div>
-        <template v-if="updatePlan">
-            <div class="row mt-2">
-                <div class="col-md-6">
-                    <label for="document type">Plan nuevo</label>
+            <template v-if="updatePlan">
+                <div class="col-md-4">
+                    <label for="document type">Nuevo Plan</label>
                     <el-select v-model="form.plan_id" @change="changePrice">
-                        <el-option
-                            v-for="(data, idx) in plans"
-                            :key="idx"
-                            :label="data.capacity"
-                            :value="data.id"
-                        >
+                        <el-option v-for="(data, idx) in plans" :key="idx" :label="data.capacity" :value="data.id">
                         </el-option>
                     </el-select>
                 </div>
-                <div class="col-md-6">
-                    <label for="document type">Precio</label>
-                    <el-select
-                        v-model="variationId"
-                        @change="updateNewPlanCost"
-                    >
-                        <el-option
-                            v-for="(data, idx) in planVariations"
-                            :key="idx"
-                            :label="`${data.description} S/.${data.price}`"
-                            :value="data.id"
-                        >
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-5">
-                    <label for="document type">Extras/Conceptos</label>
-                    <el-select v-model="concept.id" @change="changeConcept">
-                        <el-option
-                            v-for="(data, idx) in concepts"
-                            :key="idx"
-                            :label="data.description"
-                            :value="data.id"
-                        >
+                <div class="col-md-4">
+                    <label for="document type">Precio Nuevo Plan</label>
+                    <el-select v-model="variationId" @change="updateNewPlanCost">
+                        <el-option v-for="(data, idx) in planVariations" :key="idx"
+                            :label="`${data.description} S/.${data.price}`" :value="data.id">
                         </el-option>
                     </el-select>
                 </div>
 
-                <div class="col-md-5">
-                    <label for="document type">Precio</label>
-                    <el-select v-model="variationConceptId">
-                        <el-option
-                            v-for="(data, idx) in conceptVariations"
-                            :key="idx"
-                            :label="`${data.description} S/.${data.price}`"
-                            :value="data.id"
-                        >
-                        </el-option>
-                    </el-select>
+                <div class="row ">
+                    <div class="col-md-5">
+                        <label for="document type">Extras/Conceptos</label>
+                        <el-select v-model="concept.id" @change="changeConcept">
+                            <el-option v-for="(data, idx) in concepts" :key="idx" :label="data.description"
+                                :value="data.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label for="document type">Precio</label>
+                        <el-select v-model="variationConceptId">
+                            <el-option v-for="(data, idx) in conceptVariations" :key="idx"
+                                :label="`${data.description} S/.${data.price}`" :value="data.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-2 d-flex justify-content-center align-items-center">
+                        <el-button size="mini" type="primary" icon="el-icon-plus" circle
+                            @click="addConcept"></el-button>
+                    </div>
+                    <div class="col-md-12 mt-1 table-responsive" v-if="conceptsSelected.length != 0">
+                        <table class="table  table-striped table-hover">
+                            <thead style="background-color: #1e5a85; color: #fff;">
+                                <tr>
+                                    <th style="color: #fff;">#</th>
+                                    <th style="color: #fff;">Extra</th>
+                                    <th style="color: #fff;">Descripción</th>
+                                    <th style="color: #fff;">Total</th>
+                                    <th style="color: #fff;">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(concept, idx) in conceptsSelected" :key="idx">
+                                    <td>{{ idx + 1 }}</td>
+                                    <td>
+                                        {{ concept.generalConcept }}
+                                    </td>
+                                    <td>
+                                        {{ concept.description }}
+                                    </td>
+                                    <td>{{ concept.price }}</td>
+                                    <td>
+                                        <el-button @click="removeConcept(idx)" type="danger" icon="el-icon-delete"
+                                            circle></el-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-md-2 mt-sm-2  mb-sm-1 d-flex align-items-end">
-                    <el-button
-                        size="mini"
-                        type="primary"
-                        icon="el-icon-plus"
-                        circle
-                        @click="addConcept"
-                    ></el-button>
+
+            </template>
+            <template v-else>
+                <div class="row mt-1 justify-content-center">
+                    <div>
+                        <el-checkbox-group v-model="monthsToPay" disabled
+                            class="d-flex flex-wrap justify-content-center" @change="payMonth">
+                            <div v-for="(m, idx) in monthsPayed" :key="idx" class="">
+                                <el-checkbox-button class="mt-1 w-100" :class="m.isNew ? 'customcheck' : ''"
+                                    :label="m.start_date">
+                                    <span>{{ `${formatDate(m.start_date)} - ${formatDate(m.end_date)}` }}</span>
+                                </el-checkbox-button>
+                                 {{ monthText(m.start_date) }}
+                            </div>
+                        </el-checkbox-group>
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <div v-for="(m, idx) in monthsPayed" :key="'label-' + idx" class="month-label"
+                                style="min-width:180px;">
+                                {{ monthText(m.start_date) }}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div
-                    class="col-md-12 mt-1 table-responsive"
-                    v-if="conceptsSelected.length != 0"
-                >
-                    <table class="table  table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Extra</th>
-                                <th>Descripción</th>
-                                <th>Total</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(concept, idx) in conceptsSelected"
-                                :key="idx"
-                            >
-                                <td>{{ idx + 1 }}</td>
-                                <td>
-                                    {{ concept.generalConcept }}
-                                </td>
-                                <td>
-                                    {{ concept.description }}
-                                </td>
-                                <td>{{ concept.price }}</td>
-                                <td>
-                                    <el-button
-                                        @click="removeConcept(idx)"
-                                        type="danger"
-                                        icon="el-icon-delete"
-                                        circle
-                                    ></el-button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="mt-1 d-flex justify-content-end">
+
+                    <button class="btn_buscarsmall" type="primary" icon="el-icon-circle-plus" @click="addPayment">
+                        Agregar Pago
+                    </button>
+                    <span style="width: 8px; display: inline-block;"></span>
+                    <button class="btn_cancelarsmall" type="danger" @click="removePayment">
+                        Retirar Pago
+                        <i class="el-icon-delete el-icon-right"></i>
+                    </button>
+
                 </div>
-            </div>
-            <div class="row mt-2">
-                
-            </div>
-        </template>
-        <template v-else>
-            <div class="row mt-1 ">
-                <el-checkbox-group
-                    v-model="monthsToPay"
-                    disabled
-                    class=" d-flex flex-wrap justify-content-center"
-                    @change="payMonth"
-                >
-                    <el-checkbox-button
-                        class="mt-1"
-                        :class="m.isNew ? 'customcheck' : ''"
-                        v-for="(m, idx) in monthsPayed"
-                        :key="idx"
-                        :label="m.start_date"
-                        >{{
-                            `${formatDate(m.start_date)} - ${formatDate(
-                                m.end_date
-                            )}`
-                        }}</el-checkbox-button
-                    >
-                </el-checkbox-group>
-            </div>
-            <div class=" mt-1 d-flex justify-content-center">
-                <el-button-group>
-                    <el-button
-                        type="primary"
-                        icon="el-icon-circle-plus
-"
-                        @click="addPayment"
-                        >Agregar pago</el-button
-                    >
-                    <el-button type="danger" @click="removePayment"
-                        >Retirar Pago
-                        <i class="el-icon-delete el-icon-right"></i
-                    ></el-button>
-                </el-button-group>
-            </div>
-        </template>
+            </template>
+        </div>
+
     </div>
 </template>
+
 <style>
 .customcheck {
     background-color: #67c23a !important;
     border-color: #e1f3d8 !important;
 }
+
 .customcheck span {
     background-color: #67c23a !important;
     color: #ffffff !important;
 }
+
+.month-checkbox-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px 12px 16px 12px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(30, 90, 133, 0.07);
+    min-width: 180px;
+    position: relative;
+}
+
+.month-label {
+    margin-top: 4px;
+    font-size: 1em;
+    color: #0074d9 !important;
+    /* azul fuerte */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: transparent;
+}
 </style>
 <script>
 import moment from "moment";
+import Swal from 'sweetalert2';
 export default {
     props: ["registerId", "plan", "updatePlan"],
 
@@ -305,6 +291,13 @@ export default {
             // this.calculateTotal();
         },
         addPayment() {
+            // Limitar a 4 pagos nuevos
+            const maxPagos = 4;
+            const pagosNuevos = this.monthsPayed.filter(m => m.isNew).length;
+            if (pagosNuevos >= maxPagos) {
+                Swal.fire('Solo puede agregar hasta 4 pagos nuevos.');
+                return;
+            }
             let end_date;
             let amount;
             let monthsNew = [];
@@ -440,7 +433,7 @@ export default {
             return moment(date).format("DD/MM/YYYY");
         },
 
-        payMonth(x) {},
+        payMonth(x) { },
         changePlan() {
             this.paymentDay = null;
             this.penalties = [];
@@ -644,7 +637,7 @@ export default {
                 item.percentage_igv = 18;
                 item.descriptionInternet = name + " (Saldo plan anterior)";
                 items.push(item);
-                let observation = `CAMBIO DE PLAN: ${toPay} RESTA PAGAR DEL PLAN ANTERIOR`;
+                let observation = `Cambio de Plan : ${toPay} Resta pagar del Plan anterior`;
                 this.$emit("updateObservation", observation);
             }
             if (incomplete) {
@@ -746,7 +739,14 @@ export default {
             } finally {
                 this.loading = false;
             }
-        }
+        },
+        monthText(date) {
+            const mes = moment(date).locale('es').format('MMMM');
+            const anio = moment(date).format('YYYY');
+            const texto = mes.charAt(0).toUpperCase() + mes.slice(1) + ' ' + anio;
+            console.log('monthText:', texto); // depuración
+            return texto;
+        },
     }
 };
 </script>

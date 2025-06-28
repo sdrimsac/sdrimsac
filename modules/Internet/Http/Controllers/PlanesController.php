@@ -90,10 +90,10 @@ class PlanesController extends Controller
             $planData = InternetPlan::where('id', '=', $parametros['id'])->first();
             if ($planData['active'] == true) {
 
-                DB::update('update internet_plan set active = 0 where id = ?', [$parametros['id']]);
+                DB::connection('tenant')->update('update internet_plan set active = 0 where id = ?', [$parametros['id']]);
             } else {
 
-                DB::update('update internet_plan set active = 1 where id = ?', [$parametros['id']]);
+                DB::connection('tenant')->update('update internet_plan set active = 1 where id = ?', [$parametros['id']]);
             }
         }
         if ($parametros['tabla'] == 'conceptos') {
@@ -102,10 +102,10 @@ class PlanesController extends Controller
 
             if ($planConcept['active'] == true) {
 
-                DB::update('update internet_concept set active = 0 where id = ?', [$parametros['id']]);
+                DB::connection('tenant')->update('update internet_concept set active = 0 where id = ?', [$parametros['id']]);
             } else {
 
-                DB::update('update internet_concept set active = 1 where id = ?', [$parametros['id']]);
+                DB::connection('tenant')->update('update internet_concept set active = 1 where id = ?', [$parametros['id']]);
             }
         }
         return 'desactivando conceptos ';
@@ -188,10 +188,10 @@ class PlanesController extends Controller
             $planData = InternetPlanVariation::where('id', '=', $id)->first();
             if ($planData['active'] == true) {
 
-                DB::update('update internet_plan_variation set active = 0 where id = ?', [$id]);
+                DB::connection('tenant')->update('update internet_plan_variation set active = 0 where id = ?', [$id]);
             } else {
 
-                DB::update('update internet_plan_variation set active = 1 where id = ?', [$id]);
+                DB::connection('tenant')->update('update internet_plan_variation set active = 1 where id = ?', [$id]);
             }
         }
         if ($tipo == 'conceptos') {
@@ -200,10 +200,10 @@ class PlanesController extends Controller
 
             if ($planConcept['active'] == true) {
 
-                DB::update('update internet_concept_variation set active = 0 where id = ?', [$id]);
+                DB::connection('tenant')->update('update internet_concept_variation set active = 0 where id = ?', [$id]);
             } else {
 
-                DB::update('update internet_concept_variation set active = 1 where id = ?', [$id]);
+                DB::connection('tenant')->update('update internet_concept_variation set active = 1 where id = ?', [$id]);
             }
         }
 

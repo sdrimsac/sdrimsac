@@ -83,7 +83,7 @@
                                             title
                                             data-bs-original-title="Item Count"
                                             aria-label="Item Count"
-                                            >Menú De Acciones</span
+                                            >Menú de acciones</span
                                         >
                                     </button>
                                     <button class="btn p-0" type="button" @click="showFormRegisterSalon = true">

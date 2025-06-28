@@ -1,474 +1,235 @@
+<!-- Modulo de Internet en Caja -->
 <template>
     <div>
-        <div
-            v-loading.fullscreen="loading"
-            element-loading-text="Espere..."
-            class="row "
-        >
-            <div
-                class="d-flex flex-md-row flex-column-reverse justify-content-start card mb-2"
-            >
+        <div v-loading.fullscreen="loading" element-loading-text="Espere..." class="row ">
+            <div class="d-flex flex-md-row flex-column-reverse justify-content-start card mb-2">
                 <div class="col-sm-12 col-md-5 col-xl-7 col-xxl-7">
                     <div class="card-body p-2">
                         <div class="row">
-                            <div class="d-flex flex-wrap ">
-                                <div
-                                    v-for="(option, idx) in optionsMenu"
-                                    :key="idx"
-                                    v-show="option.visible"
-                                >
-                                    <div
-                                        v-if="option.visible && option.id != 8"
-                                        @click.prevent="
-                                            trigerFunction(option.id)
-                                        "
-                                        class="
-                                        buttons_
-                                        btn btn-light
-                                        m-1
-                                        rounded
-                                        d-flex
-                                        flex-column
-                                        align-items-center
-                                        justify-content-center
-                                        "
-                                    >
-                                        <div
-                                            class="text-center"
-                                            style="margin-bottom: 2px"
-                                        >
-                                            <p
-                                                style="margin: 0 !important; padding: 0 !important"
-                                                v-for="(title,
-                                                idx2) in option.title"
-                                                :key="idx2"
-                                            >
-                                                <span class="buttons_text_">{{
-                                                    title
-                                                }}</span>
+                            <div class="d-flex flex-wrap mb-2">
+                                <div v-for="(option, idx) in optionsMenu" :key="idx" v-show="option.visible"
+                                    class="me-2">
+                                    <div v-if="option.visible && option.id != 8"
+                                        @click.prevent="trigerFunction(option.id)" class="btn_menusmall">
+                                        <i :class="option.icon"></i>
+                                        <div class="text-center" style="margin-bottom: 2px">
+                                            <p style="margin: 0 !important; padding: 0 !important"
+                                                v-for="(title, idx2) in option.title" :key="idx2">
+                                                <span class="buttons_text_">{{ title }}</span>
                                             </p>
-                                        </div>
-                                        <div>
-                                            <i :class="option.icon"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="d-flex row align-items-center">
-                                <div class="col-12 col-md-4 p-2">
-                                    <h2 class="text-muted text-small">
-                                        Buscar
-                                    </h2>
-                                    <template>
-                                        <el-input
-                                            ref="input_items"
-                                            size="small"
-                                            v-model="input_item"
-                                            @input="search()"
-                                            @focus="clear_input()"
-                                            autofocus
-                                        >
-                                        </el-input>
-                                    </template>
-                                </div>
-                                <div class="col-12 col-md-4 p-2">
-                                    <template>
-                                        <h2 class="text-muted text-small">
-                                            Categorias
+                        <div class="card mb-3">
+                            <div class="card-body" :style="{ padding: screenWidth > 1280 ? '0.5rem' : '0.5rem' }">
+                                <div class="row">
+                                    <div :class="screenWidth > 1280 ? 'col-4' : 'col-12'">
+                                        <h2 class="text-small mb-2 d-flex align-items-center"
+                                            style="color: #073f68; font-weight: bold;">
+                                            <i class="fas fa-search me-1"></i>
+                                            Buscar
                                         </h2>
-                                        <el-select
-                                            v-model="category"
-                                            filterable
-                                            clearable
-                                            placeholder="Selecionar aqui...."
-                                            @change="search_register"
-                                        >
-                                            <el-option
-                                                v-for="(item,
-                                                idx) in categories"
-                                                :key="idx"
-                                                :label="item.name"
-                                                :value="item.id"
-                                            >
-                                            </el-option>
-                                        </el-select>
-                                    </template>
-                                </div>
-                                <div class="col-12 col-md-4 p-2">
-                                    <el-button
-                                        type="success"
-                                        plain
-                                        icon="fas fa-file-excel"
-                                        @click="exportRegister('excel')"
-                                    ></el-button>
-                                    <el-button
-                                        type="danger"
-                                        plain
-                                        icon="far fa-file-pdf"
-                                        @click="exportRegister('pdf')"
-                                        class="text-white"
-                                    ></el-button>
-                                    <el-button
-                                        @click="openWhatsapp"
-                                        type="default"
-                                        plain
-                                        icon="fab fa-whatsapp"
-                                    ></el-button>
+                                        <template>
+                                            <el-input ref="input_items" size="small" v-model="input_item"
+                                                placeholder="Buscar por nombre, número o código" @input="search()"
+                                                @focus="clear_input()" autofocus>
+                                            </el-input>
+                                        </template>
+                                    </div>
+                                    <div :class="screenWidth > 1280 ? 'col-4' : 'col-12'">
+                                        <template>
+                                            <h2 class="text-small mb-2 d-flex align-items-center"
+                                                style="color: #073f68; font-weight: bold;">
+                                                Estado de Cliente
+                                            </h2>
+                                            <el-select v-model="category" filterable clearable
+                                                placeholder="Selecionar aqui...." @change="search_register">
+                                                <el-option v-for="(item, idx) in categories" :key="idx"
+                                                    :label="item.name" :value="item.id">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                    </div>
+                                    <div :class="screenWidth > 1280 ? 'col-4' : 'col-12'">
+                                        <div class="d-flex align-items-center justify-content-center h-100 gap-2"
+                                            style="min-height: 40px;">
+                                            <el-tooltip content="Descargar Lista en Excel" placement="top">
+                                                <el-button type="success"
+                                                    class="btn_excelsmall d-flex align-items-center justify-content-center"
+                                                    plain icon="fas fa-file-excel" @click="exportRegister('excel')">
+                                                </el-button>
+                                            </el-tooltip>
+                                            <el-tooltip content="Descargar Lista en PDF" placement="top">
+                                                <el-button type="danger" plain
+                                                    class="btn_pdfsmall d-flex align-items-center justify-content-center"
+                                                    icon="far fa-file-pdf" @click="exportRegister('pdf')">
+                                                </el-button>
+                                            </el-tooltip>
+                                            <el-tooltip content="Enviar Archivo PDF o Excel directo al Whatsapp"
+                                                placement="top">
+                                                <el-button @click="openWhatsapp" class="btn_whatsappsmall"
+                                                    type="default" plain icon="fab fa-whatsapp">
+                                                </el-button>
+                                            </el-tooltip>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <table class="table table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha de pago</th>
-                                        <th class="d-none d-sm-table-cell">
-                                            Código
-                                        </th>
-                                        <th>Plan</th>
-
-                                        <th>Mensualidad</th>
-                                        <th>Deuda</th>
-                                        <th v-if="category == 2">Suspensión</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(record, idx) in records"
-                                        :key="idx"
-                                    >
-                                        <td>{{ customIndex(idx) }}</td>
-                                        <td
-                                            :class="
-                                                `${
-                                                    record.active
-                                                        ? ''
-                                                        : 'text-danger'
-                                                }`
-                                            "
-                                        >
-                                            {{ record.person.name }}
+                        <div class="card mb-3">
+                            <!-- <div class="card-body p-2"> -->
+                            <div style="overflow-x: auto; width: 100%;">
+                                <el-table :data="records" style="width: 100%" stripe border size="small"
+                                    :header-cell-style="{ background: '#073f68', color: '#fff', fontWeight: 'bold' }"
+                                    :cell-style="{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '14px' }">
+                                    <el-table-column label="#" width="50" align="center" type="index"
+                                        :index="customIndex" />
+                                    <el-table-column label="Cliente" min-width="180">
+                                        <template #default="{ row }">
+                                            <span :class="row.active ? '' : 'text-danger'"
+                                                style="color: #073f68; font-weight: bold; font-size: 1.1em;">
+                                                {{ row.person.name }}
+                                            </span>
                                             <br />
-                                            <small class="text-muted">{{
-                                                record.person.number
-                                            }}</small>
-                                        </td>
-                                        <td>
-                                            {{ record.date }}
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">
-                                            {{ record.identifier }}
-                                        </td>
-                                        <td>{{ record.plan.capacity }}</td>
-
-                                        <td>
-                                            {{ record.total.toFixed(2) }}
-                                        </td>
-
-                                        <td>
-                                            <template
-                                                v-if="
-                                                    record.last_payment &&
-                                                        record.last_payment
-                                                            .state ==
-                                                            'incomplete'
-                                                "
-                                            >
-                                                <span class="text-danger">
-                                                    {{
-                                                        record.last_payment.rest
-                                                    }}
-                                                </span>
-                                            </template>
-                                        </td>
-                                        <td v-if="category == 2">
-                                            <small>
-                                                {{
-                                                    record.suspension_description ||
-                                                        "-"
-                                                }}
+                                            <small style="color: #000;"> <strong>DNI/RUC: {{ row.person.number
+                                                    }}</strong> </small>
+                                            <br />
+                                            <small style="color: #000;">
+                                                <strong>Código de Precinto: {{ row.identifier }}</strong>
                                             </small>
-                                        </td>
-                                        <td class="text-end">
-                                            <div
-                                                class="btn-toolbar mb-2"
-                                                role="toolbar"
-                                            >
-                                                <div class="btn-group mb-1">
-                                                    <button
-                                                        class="btn btn-secondary btn-sm dropdown-toggle"
-                                                        type="button"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"
-                                                    >
-                                                        <i
-                                                            class="fas fa-ellipsis-v"
-                                                        ></i>
-                                                    </button>
-                                                    <div
-                                                        class="dropdown-menu dropdown-menu-sm"
-                                                    >
-                                                        <a
-                                                            v-if="record.active"
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                contractGenere(
-                                                                    record.id
-                                                                )
-                                                            "
-                                                            ><i
-                                                                class="fas fa-file-contract"
-                                                            ></i>
-                                                            Generar contrato
-                                                        </a>
-                                                        <a
-                                                            v-if="record.active"
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                updateData(
-                                                                    record
-                                                                )
-                                                            "
-                                                            ><i
-                                                                class="fas fa-file-contract"
-                                                            ></i>
-                                                            Actualizar datos
-                                                        </a>
-                                                        <a
-                                                            v-if="record.active"
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                openPaymentMonth(
-                                                                    record.id,
-                                                                    true
-                                                                )
-                                                            "
-                                                        >
-                                                            <i
-                                                                class="fas fa-file-excel"
-                                                            ></i>
-                                                            Cambiar plan
-                                                        </a>
-                                                        <a
-                                                            v-if="record.active"
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                openPaymentMonth(
-                                                                    record.id
-                                                                )
-                                                            "
-                                                        >
-                                                            <i
-                                                                class="fas fa-file-excel"
-                                                            ></i>
-                                                            Pagar mensualidad
-                                                        </a>
-                                                        <a
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                openImage(
-                                                                    record
-                                                                )
-                                                            "
-                                                            ><i
-                                                                class="fas fa-image"
-                                                            ></i>
-                                                            Ver Imagen
-                                                        </a>
-                                                        <a
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                openPayments(
-                                                                    record.id,
-                                                                    record.person
-                                                                )
-                                                            "
-                                                            ><i
-                                                                class="fas fa-print"
-                                                            ></i>
-                                                            Ver Pagos
-                                                        </a>
-                                                        <a
-                                                            href="!#"
-                                                            class="dropdown-item"
-                                                            @click.prevent="
-                                                                updateService(
-                                                                    record
-                                                                )
-                                                            "
-                                                            ><i
-                                                                class="fas fa-trash"
-                                                            ></i>
-                                                            {{
-                                                                record.active
-                                                                    ? "Suspender servicio"
-                                                                    : "Activar servicio"
-                                                            }}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <el-pagination
-                                @current-change="
-                                    getRecords(
-                                        `page=${pagination.current_page}`
-                                    )
-                                "
-                                layout="total, prev, pager, next"
-                                :total="pagination.total"
-                                :current-page.sync="pagination.current_page"
-                                :page-size="pagination.per_page"
-                            >
-                            </el-pagination>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Fecha de Pago" width="130" prop="date" align="center"
+                                        style="font-weight: bold;" />
+                                    <el-table-column label="Plan - Mensual" min-width="100">
+                                        <template #default="{ row }">
+                                            <strong>{{ row.plan.capacity }} - S/. {{ row.total.toFixed(2) }}</strong>
+
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column v-if="category == 2" label="Suspensión" min-width="100"
+                                        align="center">
+                                        <template #default="{ row }">
+                                            <small> <strong>{{ row.suspension_description || "-" }}</strong> </small>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Acciones" width="100" align="center" fixed="right">
+                                        <template #default="{ row }">
+                                            <el-dropdown trigger="click">
+                                                <span class="el-dropdown-link">
+                                                    <el-button icon="el-icon-more" size="mini"
+                                                        class="bg-primary text-white"></el-button>
+                                                </span>
+                                                <el-dropdown-menu slot="dropdown">
+                                                    <el-dropdown-item v-if="row.active"
+                                                        @click.native.prevent="contractGenere(row.id)">
+                                                        <i class="fas fa-file-signature" style="color:#007bff"></i>
+                                                        Generar contrato
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item v-if="row.active"
+                                                        @click.native.prevent="updateData(row)">
+                                                        <i class="fas fa-user-edit" style="color:#17a2b8"></i>
+                                                        Actualizar datos
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item v-if="row.active"
+                                                        @click.native.prevent="openPaymentMonth(row.id, true)">
+                                                        <i class="fas fa-exchange-alt" style="color:#ffc107"></i>
+                                                        Cambiar plan
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item v-if="row.active"
+                                                        @click.native.prevent="openPaymentMonth(row.id)">
+                                                        <i class="fas fa-money-bill-wave" style="color:#28a745"></i>
+                                                        Pagar mensualidad
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item @click.native.prevent="openImage(row)">
+                                                        <i class="fas fa-image" style="color:#6f42c1"></i> Ver Imagen
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item
+                                                        @click.native.prevent="openPayments(row.id, row.person)">
+                                                        <i class="fas fa-receipt" style="color:#20c997"></i> Ver Pagos
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item @click.native.prevent="updateService(row)">
+                                                        <i :class="row.active ? 'fas fa-user-slash' : 'fas fa-user-check'"
+                                                            :style="{ color: row.active ? '#dc3545' : '#28a745' }"></i>
+                                                        {{ row.active ? "Suspender servicio" : "Activar servicio" }}
+                                                    </el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </el-dropdown>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                            <!-- </div> -->
                         </div>
+                        <el-pagination @current-change="
+                            getRecords(
+                                `page=${pagination.current_page}`
+                            )
+                            " layout="total, prev, pager, next" :total="pagination.total"
+                            :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
+                        </el-pagination>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-7 col-xl-5">
                     <div class="card-body p-2">
-                        <register-form
-                            @getRecords="getRecords"
-                            :series="all_series"
-                            :company.sync="company"
-                            :customer_variation="customer_variation"
-                            :variationShow.sync="variation"
-                            :establishments="establishments"
-                            :itemDefault.sync="itemDefault"
-                            :cash_id.sync="cashId"
-                            :ordenId.sync="ordenId"
-                            :ordensPending.sync="ordensPending"
-                            :area_id="area_id"
-                            :isCreatingOrden.sync="isCreatingOrden"
-                            :blockCart.sync="blockCart"
-                            :total2.sync="form.total"
-                            :configuration.sync="configuration"
-                            :localOrden.sync="localOrden"
-                            :ordens.sync="ordensItems"
-                            @total_sales="total_sales"
-                            @updateOrdens="updateOrdens"
-                            @paymentsOrden="paymentsOrden"
-                            @deletedFood="deletedFood"
-                            @cancelOrden="cancelOrden"
-                            @ordenDeleted="createOrden"
-                            :identityDocuments.sync="documentsType"
-                            :clientTableData.sync="clientTableData"
-                        ></register-form>
+                        <register-form @getRecords="getRecords" :series="all_series" :company.sync="company"
+                            :customer_variation="customer_variation" :variationShow.sync="variation"
+                            :establishments="establishments" :itemDefault.sync="itemDefault" :cash_id.sync="cashId"
+                            :ordenId.sync="ordenId" :ordensPending.sync="ordensPending" :area_id="area_id"
+                            :isCreatingOrden.sync="isCreatingOrden" :blockCart.sync="blockCart"
+                            :total2.sync="form.total" :configuration.sync="configuration" :localOrden.sync="localOrden"
+                            :ordens.sync="ordensItems" @total_sales="total_sales" @updateOrdens="updateOrdens"
+                            @paymentsOrden="paymentsOrden" @deletedFood="deletedFood" @cancelOrden="cancelOrden"
+                            @ordenDeleted="createOrden" :identityDocuments.sync="documentsType"
+                            :clientTableData.sync="clientTableData"></register-form>
                     </div>
                 </div>
             </div>
         </div>
-        <DrawerOrdens
-            ref="ordenRef"
-            :configuration.sync="configuration"
-            :localOrden.sync="localOrden"
-            :ordens.sync="ordensItems"
-            @total_sales="total_sales"
-            @updateOrdens="updateOrdens"
-            @paymentsOrden="paymentsOrden"
-            @deletedFood="deletedFood"
-            @ordenDeleted="createOrden"
-        >
+        <DrawerOrdens ref="ordenRef" :configuration.sync="configuration" :localOrden.sync="localOrden"
+            :ordens.sync="ordensItems" @total_sales="total_sales" @updateOrdens="updateOrdens"
+            @paymentsOrden="paymentsOrden" @deletedFood="deletedFood" @ordenDeleted="createOrden">
         </DrawerOrdens>
-
         <template>
-            <payment-internet
-                :updatePlan.sync="updatePlan"
-                :all_series="all_series"
-                :paymentItems="paymentItems"
-                :is_payment.sync="is_payment"
-                :registerInternetId="registerId"
-                :isReconnection="isReconnection"
-                @getRegisters="getRecords"
-            >
+            <payment-internet :updatePlan.sync="updatePlan" :all_series="all_series" :paymentItems="paymentItems"
+                :is_payment.sync="is_payment" :registerInternetId="registerId" :isReconnection="isReconnection"
+                @getRegisters="getRecords">
             </payment-internet>
         </template>
         <template v-if="configuration.college">
-            <college-parents
-                :showDialog.sync="showDialogNewPerson"
-            ></college-parents>
+            <college-parents :showDialog.sync="showDialogNewPerson"></college-parents>
         </template>
         <template v-else>
-            <person-form
-                :external="false"
-                :showDialog.sync="showDialogNewPerson"
-            ></person-form>
+            <person-form :external="false" :showDialog.sync="showDialogNewPerson"></person-form>
         </template>
-        <cash-history
-            :cash_id.sync="cashId"
-            :showHistoryCash.sync="showHistoryCash"
-            :area_id="area_id"
-            :sender="personalWhatsapp ? sender : 'sdrimsac'"
-        >
+        <cash-history :cash_id.sync="cashId" :showHistoryCash.sync="showHistoryCash" :area_id="area_id"
+            :sender="personalWhatsapp ? sender : 'sdrimsac'">
         </cash-history>
-        <item-form
-            :showDialog.sync="showDialogNewItem"
-            :external="true"
-            :worker="worker"
-        ></item-form>
+        <item-form :showDialog.sync="showDialogNewItem" :external="true" :worker="worker"></item-form>
         <!-- <college
             :showDialog.sync="showDialogCollege"
             :configuration="configuration"
         >
         </college> -->
-        <warehouses-detail
-            :showDialog.sync="showWarehousesDetail"
-            :warehouses="warehousesDetail"
-            :unit_type="unittypeDetail"
-        >
+        <warehouses-detail :showDialog.sync="showWarehousesDetail" :warehouses="warehousesDetail"
+            :unit_type="unittypeDetail">
         </warehouses-detail>
-        <tables
-            @creatingOrden="creatingOrden"
-            @sendOrdens="sendOrdens"
-            :showTables.sync="showTables"
-        ></tables>
+        <tables @creatingOrden="creatingOrden" @sendOrdens="sendOrdens" :showTables.sync="showTables"></tables>
 
-        <documents-print
-            :sender="personalWhatsapp ? sender : 'sdrimsac'"
-            :company="company"
-            :showDialog.sync="showDocumentsPrint"
-            :config.sync="config"
-            :establishment.sync="establishment"
-        ></documents-print>
-        <payments-internet
-            :person.sync="currentPerson"
-            :establishment.sync="establishments"
-            :configuration="configuration"
-            :showDialog.sync="see_payments"
-            :registerId="registerId"
-        ></payments-internet>
-        <el-dialog
-            :visible.sync="showChangeDate"
-            @close="showChangeDate = false"
-            append-to-body
-            title="Cambiar fecha"
-            width="450px"
-        >
+        <documents-print :sender="personalWhatsapp ? sender : 'sdrimsac'" :company="company"
+            :showDialog.sync="showDocumentsPrint" :config.sync="config"
+            :establishment.sync="establishment"></documents-print>
+        <payments-internet :person.sync="currentPerson" :establishment.sync="establishments"
+            :configuration="configuration" :showDialog.sync="see_payments" :registerId="registerId"></payments-internet>
+        <el-dialog :visible.sync="showChangeDate" @close="showChangeDate = false" append-to-body title="Cambiar fecha"
+            width="450px">
             <div class="row m-2">
                 <label class="w-100">
                     Fecha de vencimiento / reinstalación
                 </label>
-                <el-date-picker
-                    class="w-100"
-                    format="dd/MM/yyyy"
-                    value-format="yyyy-MM-dd"
-                    v-model="currentDate"
-                >
+                <el-date-picker class="w-100" format="dd/MM/yyyy" value-format="yyyy-MM-dd" v-model="currentDate">
                 </el-date-picker>
             </div>
             <div class="row mb-3">
@@ -477,17 +238,9 @@
                 </el-button>
             </div>
         </el-dialog>
-        <image-modal
-            @getRecords="getRecords"
-            :showDialog.sync="dialogImage"
-            :record="currentRecord"
-        ></image-modal>
-        <el-dialog
-            :visible.sync="showSupensionModal"
-            @close="showSupensionModal = false"
-            append-to-body
-            title="Suspender servicio"
-        >
+        <image-modal @getRecords="getRecords" :showDialog.sync="dialogImage" :record="currentRecord"></image-modal>
+        <el-dialog :visible.sync="showSupensionModal" @close="showSupensionModal = false" append-to-body
+            title="Suspender servicio">
             <div v-if="formSuspension.register_id" class="row">
                 <div class="col-12 mt-2">
                     <span>
@@ -498,91 +251,93 @@
                     </span>
                 </div>
                 <div class="col-12">
-                    <el-input
-                        v-model="formSuspension.description"
-                        placeholder="Motivo de suspensión"
-                        type="textarea"
-                        :rows="3"
-                    >
+                    <el-input v-model="formSuspension.description" placeholder="Motivo de suspensión" type="textarea"
+                        :rows="3">
                     </el-input>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="showSupensionModal = false"
-                    >Cancelar</el-button
-                >
-                <el-button type="primary" @click="sendSuspend"
-                    >Suspender</el-button
-                >
+                <el-button @click="showSupensionModal = false">Cancelar</el-button>
+                <el-button type="primary" @click="sendSuspend">Suspender</el-button>
             </div>
         </el-dialog>
 
-        <el-dialog
-            title="Enviar archivos"
-            @close="registerWhatsapp = false"
-            :visible.sync="registerWhatsapp"
-            append-to-body
-        >
-            <div class="card ">
-                <div class="row d-flex align-items-center">
-                    <div class="col-8">
-                        <el-input v-model="number" placeholder="tlf: 999999999">
+        <el-dialog title="Enviar estado de Clientes" @close="registerWhatsapp = false" :visible.sync="registerWhatsapp"
+            append-to-body width="30%">
+            <div class="card " style="padding: 8px;">
+                <div class="row  align-items-center">
+                    <div class="col-6">
+                        <el-input
+                            v-model="number"
+                            placeholder="Nº de WhatsApp"
+                            style="width: 100%; margin-bottom: 8px;"
+                            type="number"
+                            maxlength="9"
+                            @input="number = number ? number.replace(/\D/g, '').slice(0, 9) : ''"
+                            @keyup.enter.native="sendFiles"
+                        >
                         </el-input>
                     </div>
-                    <div class="col-4">
-                        <el-switch
-                            v-model="fileType"
-                            active-text="PDF"
-                            inactive-text="Excel"
-                        >
+                    <div class="col-6 d-flex justify-content-center align-items-center">
+                        <el-switch v-model="fileType" active-text="PDF" inactive-text="Excel">
                         </el-switch>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end p-2">
-                    <el-button @click="sendFiles" type="primary"
-                        >Enviar</el-button
-                    >
+                <div slot="footer" class="dialog-footer">
+                    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                        <el-button class="btn_cancelarsmall" @click="registerWhatsapp = false">
+                            <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
+                            Cancelar
+                        </el-button>
+                        <el-button class="btn_whatsappsmall" type="primary" @click="sendFiles">
+                            <i class="fab fa-whatsapp fa-lg" style="margin-right: 4px;"></i>
+                            Enviar
+                        </el-button>
+                    </div>
+                </div>
+                <!-- <div class="d-flex justify-content-end p-2">
+                    <el-button @click="sendFiles" type="primary">Enviar</el-button>
                     <el-button @click="registerWhatsapp = false">
                         Cerrar
                     </el-button>
-                </div>
+                </div> -->
             </div>
         </el-dialog>
-        <el-dialog
-            width="90%"
-            class="hid-header"
-            :visible.sync="showPlans"
-            append-to-body
-            :show-close="false"
-            title="Planes y conceptos"
-        >
+        <el-dialog width="70%" class="hid-header" :visible.sync="showPlans" append-to-body :show-close="true"
+            title="Planes - Conceptos - Tarifas" :close-on-click-modal="true" :close-on-press-escape="true">
             <plans></plans>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="showPlans = false">Cancelar</el-button>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <el-button class="btn_cancelarsmall" @click="showPlans = false">
+                        <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
+                        Cancelar
+                    </el-button>
+
+                </div>
             </div>
+            <!-- <div slot="footer" class="dialog-footer">
+                <el-button @click="showPlans = false">Cancelar</el-button>
+            </div> -->
         </el-dialog>
 
-        <el-dialog
-            width="90%"
-            class="hid-header"
-            :visible.sync="showTechs"
-            append-to-body
-            :show-close="false"
-            title="Trabajadores / Técnicos"
-        >
+        <el-dialog width="50%" class="hid-header" :visible.sync="showTechs" append-to-body :show-close="true"
+            title="Técnicos">
             <techs :pos="true"></techs>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="showTechs = false">Cancelar</el-button>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <el-button class="btn_cancelarsmall" @click="showTechs = false">
+                    <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
+                    Cancelar
+                </el-button>
+
             </div>
+            <!-- <div slot="footer" class="dialog-footer">
+                <el-button @click="showTechs = false">Cancelar</el-button>
+            </div> -->
         </el-dialog>
 
         <zones :showDialog.sync="showZones"></zones>
 
-        <change-data-modal
-            @getRecords="getRecords"
-            :showDialog.sync="showChangeData"
-            :record="currentRecord"
-        >
+        <change-data-modal @getRecords="getRecords" :showDialog.sync="showChangeData" :record="currentRecord">
         </change-data-modal>
     </div>
 </template>
@@ -597,22 +352,26 @@
 .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
 }
+
 .buttons_ {
     min-width: 120px;
     min-height: 75px;
 }
+
 @media (max-width: 400px) {
     .buttons_ {
         min-width: 90px;
         min-height: 45px;
     }
 }
+
 @media (max-width: 400px) {
     .buttons_ {
         min-width: 90px;
         min-height: 45px;
     }
 }
+
 @media (max-width: 400px) {
     .buttons_text_ {
         display: none;
@@ -907,7 +666,7 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-      
+
         updateData(record) {
             this.currentRecord = record;
             this.showChangeData = true;
@@ -945,10 +704,9 @@ export default {
                 });
                 return;
             }
-            let url = `/internet/register/export?type=${
-                this.fileType ? "pdf" : "excel"
-            }&value=${this.input_item.toLowerCase() || ""}&category=${this
-                .category || ""}`;
+            let url = `/internet/register/export?type=${this.fileType ? "pdf" : "excel"
+                }&value=${this.input_item.toLowerCase() || ""}&category=${this
+                    .category || ""}`;
             //methods with async/await
             let formWhatsapp = {
                 resource: url,
@@ -1176,7 +934,7 @@ export default {
                     name +
                     " de *" +
                     this.company.name +
-                    "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                    "*, ha sido generado correctamente a través del facturador electrónico de " + "*" + this.$desarrollador + "*"
                 if (message) {
                     basicMessage += "\n" + message;
                 }
@@ -1394,14 +1152,14 @@ export default {
                 total_base_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
@@ -1412,13 +1170,13 @@ export default {
                 total_taxes:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_value:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: 0.0,
@@ -1524,14 +1282,14 @@ export default {
                 total_base_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
@@ -1542,13 +1300,13 @@ export default {
                 total_taxes:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_value:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: 0.0,
@@ -1980,7 +1738,7 @@ export default {
                 }
             }
         },
-        clickClose: function() {
+        clickClose: function () {
             this.$confirm("¿Desea Salir del Punto de Venta?", "Advertencia", {
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cerrar",
@@ -2100,7 +1858,7 @@ export default {
             if (this.form.items[index].item.calculate_quantity) {
                 let quantity = _.round(
                     parseFloat(this.form.items[index].total) /
-                        parseFloat(this.form.items[index].unit_price),
+                    parseFloat(this.form.items[index].unit_price),
                     4
                 );
 
@@ -2391,21 +2149,21 @@ export default {
                     unit_value:
                         i.sale_affectation_igv_type_id == 10
                             ? i.sale_unit_price /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -2416,13 +2174,13 @@ export default {
                     total_taxes:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_value:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -2502,7 +2260,7 @@ export default {
                 let unit_price = exist_item.item.has_igv
                     ? exist_item.item.sale_unit_price
                     : exist_item.item.sale_unit_price *
-                      (1 + this.percentage_igv / 100);
+                    (1 + this.percentage_igv / 100);
                 // exist_item.unit_price = unit_price
                 exist_item.item.unit_price = unit_price;
                 this.row = calculateRowItem(
@@ -2528,7 +2286,7 @@ export default {
                 let unit_price = this.form_item.has_igv
                     ? this.form_item.unit_price_value
                     : this.form_item.unit_price_value *
-                      (1 + this.percentage_igv / 100);
+                    (1 + this.percentage_igv / 100);
 
                 this.form_item.unit_price = unit_price;
                 this.form_item.item.unit_price = unit_price;
@@ -2590,7 +2348,7 @@ export default {
             let partsUrl = linkpdf.split("/");
             let document = partsUrl[partsUrl.length - 1];
             let isTicket = document.toLowerCase().includes("ticket");
-            if(!isTicket){
+            if (!isTicket) {
                 let print_service = linkpdf.includes("print_service");
                 isTicket = print_service;
             }
@@ -2736,7 +2494,7 @@ export default {
                 ).toFixed(2);
                 this.form.items[index].total_base_igv = _.round(
                     this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
+                    (1 + this.percentage_igv / 100),
                     2
                 );
                 this.form.items[index].unit_value = (
@@ -2746,12 +2504,12 @@ export default {
                 this.form.items[index].total_igv = _.round(
                     (this.form.items[index].total /
                         (1 + this.percentage_igv / 100)) *
-                        (this.percentage_igv / 100),
+                    (this.percentage_igv / 100),
                     2
                 );
                 this.form.items[index].total_base_igv = _.round(
                     this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
+                    (1 + this.percentage_igv / 100),
                     2
                 );
             } else {
@@ -2761,14 +2519,14 @@ export default {
                 this.form.items[index].total_taxes = 0.0;
                 this.form.items[index].total_base_igv = _.round(
                     Math.round(parseFloat(quantity) * parseFloat(price) * 10) /
-                        10,
+                    10,
                     2
                 );
                 this.form.items[index].unit_value = price;
                 this.form.items[index].total_igv = 0;
                 this.form.items[index].total_base_igv = _.round(
                     Math.round(parseFloat(quantity) * parseFloat(price) * 10) /
-                        10,
+                    10,
                     2
                 );
             }
@@ -2797,7 +2555,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -2852,7 +2610,7 @@ export default {
                     2
                 );
             });
-                    console.log("🚀 ~ file: index.vue:2851 ~ calculateTotal ~ total:", total)
+            console.log("🚀 ~ file: index.vue:2851 ~ calculateTotal ~ total:", total)
 
             //  total_igv = _.round((total / (1+(this.percentage_igv/100))) * (this.percentage_igv/100), 2);
 
@@ -2864,7 +2622,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -2971,7 +2729,7 @@ export default {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
-    this.products_to_due = response.data.products_to_due;
+                this.products_to_due = response.data.products_to_due;
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;
@@ -3028,7 +2786,7 @@ export default {
         },
 
         async limpiarForm() {
-      
+
             this.selectOption = 4;
             this.blockCart = false;
             this.variation = false;
@@ -3046,7 +2804,7 @@ export default {
             await this.calculateTotal();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.total_sales_pos = 0;
-       
+
         },
         typesearch() {
             this.ordens = [];
@@ -3284,13 +3042,13 @@ export default {
             }
         }
     },
-   
+
     mounted() {
 
         this.optionsMenu = [
             {
                 id: 1,
-                title: ["Reimprimir"],
+                title: ["Comprobantes"],
                 icon: "fas fa-print ",
                 visible: true
             },
@@ -3392,17 +3150,17 @@ export default {
             e => {
                 let num = Number(e.amount);
                 this.ordensPending = this.ordensPending + num;
-                if(num>0){
-    this.$notify({
-                    title: "Aviso",
-                    duration: 1500,
-                    iconClass:
-                      "el-icon-star-on" ,
-                    message: "Nueva orden",
-                    position: "bottom-left"
-                });
+                if (num > 0) {
+                    this.$notify({
+                        title: "Aviso",
+                        duration: 1500,
+                        iconClass:
+                            "el-icon-star-on",
+                        message: "Nueva orden",
+                        position: "bottom-left"
+                    });
                 }
-            
+
             }
         );
         Echo.channel("stock_orden").listen(
@@ -3446,7 +3204,7 @@ export default {
                 }
             }
         );
-    
+
     }
 };
 </script>

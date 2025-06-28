@@ -48,10 +48,10 @@ class InternetWorkersController extends Controller
 
         if ($Data['active'] == true) {
 
-            DB::update('update internet_techs set active = 0 where id = ?', [$parametros['id']]);
+            DB::connection('tenant')->update('update internet_techs set active = 0 where id = ?', [$parametros['id']]);
         } else {
 
-            DB::update('update internet_techs set active = 1 where id = ?', [$parametros['id']]);
+            DB::connection('tenant')->update('update internet_techs set active = 1 where id = ?', [$parametros['id']]);
         }
 
         return 'record actualizado con exito  ';

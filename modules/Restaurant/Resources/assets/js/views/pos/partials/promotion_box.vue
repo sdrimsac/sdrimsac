@@ -1,58 +1,29 @@
 <template>
-    <el-dialog
-        @open="open"
-        @close="close"
-        append-to-body
-        :visible="showDialog"
-        :title="titulo"
-        :close-on-click-modal="true"
-        width="70%"
-    >
+    <el-dialog @open="open" @close="close" append-to-body :visible="showDialog" :title="titulo"
+        :close-on-click-modal="true" width="70%">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="row">
-                        <div
-                            v-for="promotion in listPromotionItems"
-                            :key="promotion.id"
-                            class="col-md-3"
-                            style="margin-bottom: 20px;"
-                        >
-                            <div
-                                class="card"
-                                style="width: 100%; height: 100%; padding: 10px; position: relative;"
-                            >
+                        <div v-for="promotion in listPromotionItems" :key="promotion.id" class="col-md-3"
+                            style="margin-bottom: 20px;">
+                            <div class="card" style="width: 100%; height: 100%; padding: 10px; position: relative;">
                                 <div class="text-center">
-                                    <template
-                                        v-if="
-                                            promotion.item.image ==
-                                                'imagen-no-disponible.jpg'
-                                        "
-                                    >
-                                        <img
-                                            src="/images/imagen-no-disponible.jpg"
-                                            alt="User Img"
-                                            class="thumbail"
-                                            style="width: 100%; height: auto;"
-                                        />
+                                    <template v-if="
+                                        promotion.item.image ==
+                                        'imagen-no-disponible.jpg'
+                                    ">
+                                        <img src="/images/imagen-no-disponible.jpg" alt="User Img" class="thumbail"
+                                            style="width: 100%; height: auto;" />
                                     </template>
                                     <template v-else>
-                                        <img
-                                            :src="
-                                                formatUrlImage(
-                                                    promotion.item.image
-                                                )
-                                            "
-                                            class="thumbail"
-                                            style="width: 100%; height: auto;"
-                                        />
+                                        <img :src="formatUrlImage(
+                                            promotion.item.image
+                                        )
+                                            " class="thumbail" style="width: 100%; height: auto;" />
                                     </template>
-                                    <img
-                                        v-if="promotion.stock <= 0"
-                                        src="/status_images/agotado.png"
-                                        alt="Agotado"
-                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; pointer-events: none;"
-                                    />
+                                    <img v-if="promotion.stock <= 0" src="/status_images/agotado.png" alt="Agotado"
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; pointer-events: none;" />
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title text-center">
@@ -64,15 +35,11 @@
                                             {{ promotion.item.internal_id }}
                                         </p>
                                         <p class="card-text text-center"
-                                            :class="{'text-danger bold': Number(promotion.points_value) > remainingPoints}"
-                                        >
-                                             Puntos:
+                                            :class="{ 'text-danger bold': Number(promotion.points_value) > remainingPoints }">
+                                            Puntos:
                                             {{ promotion.points_value }}
                                         </p>
-                                        <p
-                                            class="card-text text-center"
-                                            v-if="promotion.stock > 0"
-                                        >
+                                        <p class="card-text text-center" v-if="promotion.stock > 0">
                                             Stock:
                                             {{
                                                 Number(
@@ -84,17 +51,9 @@
                                     <div class="text-center">
                                         <label for="num">Ingrese Cantidad:</label>
                                         <br />
-                                        <el-input
-                                            v-model="promotion.quantity"
-                                            :min="0"
-                                            :max="100"
-                                            @input="updatePoints(promotion)"
-                                            :disabled="
-                                                promotion.stock <= 0
-                                            "
-                                            type="number"
-                                            class="qquantity-promotion"
-                                        ></el-input>
+                                        <el-input v-model="promotion.quantity" :min="0" :max="100"
+                                            @input="updatePoints(promotion)" :disabled="promotion.stock <= 0
+                                                " type="number" class="qquantity-promotion"></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -104,14 +63,12 @@
                 <br />
             </div>
             <div style="margin-top: 10px; text-align: right;">
-                <el-button type="info" @click="close">
+                <el-button class="btn_cancelarsmall"  @click="close">
+                    <i class="fas fa-times me-1"></i>
                     Cerrar
                 </el-button>
-                <el-button
-                    type="primary"
-                    @click="submit"
-                    style="margin-left: 10px;"
-                >
+                <el-button class="btn_cajearsmall"  @click="submit" style="margin-left: 10px;">
+                    <i class="fas fa-gift me-1"></i>
                     Canjear
                 </el-button>
             </div>
@@ -210,7 +167,7 @@ export default {
             return points;
         },
         distributeRemainingPoints(points) {
-            const sortedPromotions = [...this.listPromotionItems].sort((a, b) => 
+            const sortedPromotions = [...this.listPromotionItems].sort((a, b) =>
                 parseInt(a.points_value) - parseInt(b.points_value)
             );
 
@@ -248,7 +205,7 @@ export default {
 
             const maxAllowedQuantity = Math.floor(
                 (this.hasPromotionText - otherPointsUsed) /
-                    promotion.points_value
+                promotion.points_value
             );
 
             if (promotion.quantity > maxAllowedQuantity) {

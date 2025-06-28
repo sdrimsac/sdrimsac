@@ -2534,6 +2534,8 @@ class CashController extends Controller
         $parts = explode('.', (string)$number);
         return isset($parts[1]) && strlen($parts[1]) == 2;
     }
+    
+
     public function close(Request $request)
     {
         $id = $request->id;

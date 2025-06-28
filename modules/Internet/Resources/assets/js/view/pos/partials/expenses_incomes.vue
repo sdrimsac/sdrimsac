@@ -4,18 +4,24 @@
         append-to-body
         @close="close"
         @open="open"
-        width="75%"
+        width="50%"
         v-loading="loading"
-        :title="`${activeName == 'expenses' ? 'GASTOS' : 'INGRESOS'}`"
     >
+        <template #title>
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <span>{{ activeName == 'expenses' ? 'Caja Chica - Gastos' : 'Caja Chica - Ingresos' }}</span>
+                <el-button
+                    @click="addExpenseIncome"
+                    type="primary"
+                    style="margin-left: auto; margin-right: 40px;"
+                    class="btn_guardarsmall"
+                >
+                    Nuevo {{ `${activeName == "expenses" ? "Gasto" : "Ingreso"}` }}
+                </el-button>
+            </div>
+        </template>
         <div>
-            <el-button
-                @click="addExpenseIncome"
-                type="primary"
-                style="margin:8px 0px;"
-            >
-                Crear {{ `${activeName == "expenses" ? "Gasto" : "Ingreso"}` }}
-            </el-button>
+            <!-- El botón fue movido al slot title -->
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="Gastos" name="expenses">
                     <expenses-incomes-detail

@@ -1,807 +1,365 @@
+<!-- Modulo de cobro de internet -->
 <template>
-    <el-dialog
-        :visible="is_payment"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :modal-append-to-body="true"
-        :show-close="false"
-        :append-to-body="true"
-        width="770px"
-        @open="open"
-        top="2vh"
-        :title="title || 'MODULO DE CAJA'"
-        class="algunaClase"
-    >
-        <div v-loading="loading" class="mb-0">
-            <div class="col-6 col-md-4 col-lg-4 pt-1">
-                <div class="form-group">
-                    <label class="control-label">Fecha de Emisión</label>
-                    <el-date-picker
-                        style="width:100%;"
-                        @change="changeDateOfIssue"
-                        v-model="form.date_of_issue"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        :clearable="false"
-                        format="dd-MM-yyyy"
-                    >
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="pt-1" v-loading="loading_submit">
-                <template v-if="data">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="name">Nombre</label>
-                            <el-input
-                                :readonly="true"
-                                :value="`${data.number} | ${data.name}`"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="phone">Celular</label>
-                            <el-input :readonly="true" v-model="data.phone">
-                            </el-input>
-                        </div>
-                        <div class="col-md-12">
-                            <label for="address">Dirección</label>
-                            <el-input :readonly="true" v-model="data.address">
-                            </el-input>
-                            <small
-                                v-if="data.address_reference"
-                                class="text-muted"
-                            >
-                                {{ data.address_reference }}</small
-                            >
-                        </div>
-                        <div class="col-md-6" v-if="data.install">
-                            <label for="name">Instalacion</label>
-                            <el-input
-                                :readonly="true"
-                                :value="`S/. ${data.install}`"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="name">Plan Actual</label>
-                            <el-input
-                                :readonly="true"
-                                :value="
-                                    `${data.plan.capacity} | ${data.plan_variation.description}`
-                                "
-                            >
-                            </el-input>
-                        </div>
-                        <div
-                            class="col-md-6"
-                            v-for="(concept, idx) in data.concepts"
-                            :key="idx"
-                        >
-                            <label for="name">Concepto {{ idx + 1 }}</label>
-                            <el-input
-                                :readonly="true"
-                                :value="
-                                    `${concept.generalConcept} | ${concept.description}`
-                                "
-                            >
-                            </el-input>
+    <el-dialog :visible.sync="is_payment" :close-on-click-modal="false" :close-on-press-escape="false"
+        :modal-append-to-body="true" :show-close="true" :append-to-body="true" width=60% @open="open" top="2vh"
+        :title="title || 'Módulo de Cobro'" class="algunaClase">
+        <div>
+            <div v-loading="loading" class="mb-0">
+                <div class="row">
+
+                    <div class="col-12 d-flex justify-content-end">
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <label class="mr-2" style="margin-right: 16px;">Fecha de Emisión : </label>
+                                <el-date-picker style="margin-left: 8px;" @change="changeDateOfIssue"
+                                    v-model="form.date_of_issue" type="date" value-format="yyyy-MM-dd"
+                                    :clearable="false" format="dd-MM-yyyy">
+                                </el-date-picker>
+                            </div>
                         </div>
                     </div>
-                </template>
-                <template v-if="registerInternetId">
-                    <service-form
-                        ref="internet"
-                        :updatePlan.sync="updatePlan"
-                        :registerId="registerInternetId"
-                        :plan.sync="plan"
-                        @updateTotal="updateTotal"
-                        @updateItems="updateItems"
-                        @updateObservation="updateObservation"
-                        @updateCustomer="updateCustomer"
-                        @createFormRegister="createFormService"
-                        :member.sync="member"
-                    ></service-form>
-                </template>
-                <div class="row pt-2">
-                    <div class="col-lg-12">
-                        <div class="m-2">
-                            <div class="card bg-light">
+                </div>
+
+                <div class="pt-1" v-loading="loading_submit">
+                    <div class="card p-2 mb-3">
+                        <template v-if="data">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="name">Nombre</label>
+                                    <el-input :readonly="true" :value="`${data.number} | ${data.name}`">
+                                    </el-input>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone">Celular</label>
+                                    <el-input :readonly="true" v-model="data.phone">
+                                    </el-input>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="address">Dirección</label>
+                                    <el-input :readonly="true" v-model="data.address">
+                                    </el-input>
+                                    <small v-if="data.address_reference" class="text-muted">
+                                        {{ data.address_reference }}</small>
+                                </div>
+                                <div class="col-md-6" v-if="data.install">
+                                    <label for="name">Instalacion</label>
+                                    <el-input :readonly="true" :value="`S/. ${data.install}`">
+                                    </el-input>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="name">Plan Actual</label>
+                                    <el-input :readonly="true" :value="`${data.plan.capacity} | ${data.plan_variation.description}`
+                                        ">
+                                    </el-input>
+                                </div>
+                                <div class="col-md-6" v-for="(concept, idx) in data.concepts" :key="idx">
+                                    <label for="name">Concepto {{ idx + 1 }}</label>
+                                    <el-input :readonly="true" :value="`${concept.generalConcept} | ${concept.description}`
+                                        ">
+                                    </el-input>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-if="registerInternetId">
+                            <service-form ref="internet" :updatePlan.sync="updatePlan" :registerId="registerInternetId"
+                                :plan.sync="plan" @updateTotal="updateTotal" @updateItems="updateItems"
+                                @updateObservation="updateObservation" @updateCustomer="updateCustomer"
+                                @createFormRegister="createFormService" :member.sync="member"></service-form>
+                        </template>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col-lg-12">
+                            <div class="card p-1 mb-2" style="padding-left: 3px;">
                                 <div class="row">
-                                    <div class="col-md-4" v-if="isReconnection">
-                                        <label for="reconnection"
-                                            >Fecha de reconexión</label
-                                        >
-                                        <el-date-picker
-                                            class="w-100"
-                                            @change="updateReconexionDate"
-                                            v-model="form.reconnection_date"
-                                            value-format="yyyy-MM-dd"
-                                            format="dd/MM/yyyy"
-                                        >
-                                        </el-date-picker>
+                                    <div class="col-md-6" v-if="isReconnection">
+                                        <div class="d-flex align-items-center">
+                                            <label for="reconnection" class="mr-2">Fecha de Reconexión</label>
+                                            <el-date-picker class="w-100 ml-2" @change="updateReconexionDate"
+                                                v-model="form.reconnection_date" value-format="yyyy-MM-dd"
+                                                format="dd/MM/yyyy">
+                                            </el-date-picker>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4" v-if="isReconnection">
-                                        <label for="reconnection"
-                                            >Precio de reconexión</label
-                                        >
-                                        <el-input
-                                            type="number"
-                                            :min="0"
-                                            class="w-100 to_rigth"
-                                            @input="updateReconexion"
-                                            v-model="form.reconnection"
-                                        >
+                                    <div class="col-md-6" v-if="isReconnection">
+                                        <label for="reconnection">Precio de Reconexión</label>
+                                        <el-input type="number" :min="0" class="w-100 to_rigth"
+                                            @input="updateReconexion" v-model="form.reconnection">
                                         </el-input>
                                     </div>
                                 </div>
-                                <div class="row col-lg-6 col-xl-12">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Detalles</label
-                                        >
-                                        <el-input
-                                            type="textarea"
-                                            autosize
-                                            readonly
-                                            :value="details"
-                                        ></el-input>
+                                <div class="row col-lg-12 col-xl-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label">Detalles</label>
+                                        <el-input type="textarea" autosize readonly :value="details"></el-input>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label">Observaciones</label>
+                                        <el-input type="textarea" :rows="1" v-model="observation"></el-input>
                                     </div>
                                 </div>
-                                <div class="row col-lg-6 col-xl-12">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Observaciones</label
-                                        >
-                                        <el-input
-                                            type="textarea"
-                                            :rows="2"
-                                            v-model="observation"
-                                        ></el-input>
+                            </div>
+
+                        </div>
+                        <!-- <div class="col-lg-2 col-md-5 col-xl-6">
+                            <label class="control-label text-left d-flex align-items-start justify-content-start">
+                                Ingrese Nro Celular
+                            </label>
+                            <el-input v-model="form.customer_telephone
+                                ">
+                                <template slot="prepend"><i class="fab fa-whatsapp fa-2x" style="color: #25D366;"></i>
+                                </template>
+                            </el-input>
+                        </div> -->
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card p-2 mb-3">
+                                    <label class="control-label w-100 text-center">Medios de Pago</label>
+                                    <div class="radio-tile-group2 flex-wrap">
+                                        <div style="width: 70px; height: 35px; padding: 2px; margin: 2px;" v-for="(meth,
+                                            idx) in paymentMethods" :key="idx"
+                                            class="input-container2 border rounded-sm">
+                                            <input id="cash" v-model="method_payments" class="radio-button2"
+                                                type="radio" name="method_payment" :value="meth.value" @change="
+                                                    method_payment(
+                                                        meth.text
+                                                    )
+                                                    " />
+                                            <div class="radio-tile2"
+                                                :style="`background-image: url('../../images/${meth.img}');background-size: contain;background-repeat: no-repeat;`">
+                                                <!-- <div class="icon walk-icon"></div>
+                                                <label for="cash" class="radio-tile-label2"></label> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="col-xl-12" v-if="form_payment.payment_method_type_id == '01'">
+                                    <div class="
+                                                    btn-group btn-group-square
+                                                    m-0
+                                                    flex-wrap
+                                                    justify-content-around
+                                                    " role="group" style="padding-top: 12px">
+                                        <label class="control-label">Ingrese monto</label>
+                                        <div class="row col-12 justify-content-center align-items-center mb-2"
+                                            style="gap: 4px;">
+                                            <div class="d-flex flex-row w-100" style="gap: 4px;">
+                                                <div v-for="amount in [10, 20, 50, 100, 200]" :key="amount" class="px-1"
+                                                    style="flex: 0 0 auto;">
+                                                    <button class="btn btn-outline-primary btn-sm"
+                                                        style="min-width: 30px; font-size: 0.8em; padding: 4px 8px;"
+                                                        @click="setAmountCash(amount)">
+                                                        {{ currencyTypeActive.symbol }}{{ amount }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center align-items-center">
+                                            <div class="col-6 ">
+                                                <el-input id="inputTotal" ref="enter_amount" :disabled="form.total == 0"
+                                                    v-model="form.enter_amount" @blur="diferen()" @input="enterAmount()"
+                                                    @keyup.enter.native="
+                                                        sendPayment();
+                                                    inputAmount(form.enter_amount);
+                                                    ">
+                                                    <template slot="prepend">
+                                                        {{ currencyTypeActive.symbol }}
+                                                    </template>
+                                                </el-input>
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-center">
+                                                <el-button class="btn_buscarsmall" type="primary"
+                                                    @click="addPayment">Agregar</el-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card p-2 mb-3">
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <label class="control-label h1 mb-0">Total a cobrar:</label>
+                                        <span class="h2 mb-0 ml-2">
+                                            S/ {{ " " + form.total }}
+                                        </span>
+                                    </div>
+                                    <span class="text-muted">______________________________________________________</span>
+                                    <div class="d-flex align-items-center justify-content-between w-100"
+                                        :class="{ 'has-danger': form.difference < 0 }">
+                                        <label class="control-label h1 mb-0" v-text="form.difference < 0
+                                            ? 'A cuenta: '
+                                            : isCredit
+                                                ? 'Adelanto'
+                                                : 'Vuelto : '
+                                            "></label>
+                                        <span class="h2 mb-0 ml-2">
+                                            {{ currencyTypeActive.symbol }}
+                                            {{ form.difference.toFixed(2) }}
+                                        </span>
+
+                                    </div>
+                                    <div>
+                                        <el-checkbox v-if="registerInternetId" v-model="emit_sale_note">
+                                            Nota de venta
+                                        </el-checkbox>
+                                        <el-checkbox v-if="form.difference > 0 && data" @change="changeIsCredit"
+                                            v-model="isCredit">
+                                            Adelanto
+                                        </el-checkbox>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <table class="table" v-if="
+                                    currentPayments.length != 0
+                                ">
+                                    <thead>
+                                        <tr style="background-color: #1e5a85; color: #fff;">
+                                            <th colspan="4" class="text-left" style="color: #fff;">
+                                                Pagos
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(paymnt,
+                                            idx) in currentPayments" :key="idx">
+                                            <td>{{ idx + 1 }}</td>
+                                            <td>
+                                                {{ paymnt.method }}
+                                            </td>
+                                            <td>
+                                                <strong>{{
+                                                    paymnt.amount
+                                                }}</strong>
+                                            </td>
+                                            <td>
+                                                <label for="" role="button" @click="
+                                                    removePayment(
+                                                        paymnt.id
+                                                    )
+                                                    " class="text-danger">
+                                                    <i class="fa fa-trash"></i></label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex flex-row justify-content-center align-items-center"
+                                    style="gap: 8px;">
+                                    <button :class="[
+                                        'btn',
+                                        'btn-sm',
+                                        printerOn == '1' ? 'btn-success text-white shadow active' : 'btn-outline-secondary'
+                                    ]" @click="printerOn = '1'"
+                                        style="width: 140px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: bold; border-width: 2px; font-size: 0.85em;">
+                                        <i class="fa fa-print"></i>
+                                        <span
+                                            :style="{ textDecoration: printerOn == '1' ? 'underline' : 'none' }">Imprimir</span>
+                                        <span v-if="printerOn == '1'" class="ml-1" style="font-size: 1em;">✔</span>
+                                    </button>
+                                    <button :class="[
+                                        'btn',
+                                        'btn-sm',
+                                        printerOn == '0' ? 'btn-danger text-white shadow active' : 'btn-outline-secondary'
+                                    ]" @click="printerOn = '0'"
+                                        style="width: 140px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: bold; border-width: 2px; font-size: 0.85em;">
+                                        <i class="fa fa-print"></i>
+                                        <span :style="{ textDecoration: printerOn == '0' ? 'underline' : 'none' }">No
+                                            Imprimir</span>
+                                        <span v-if="printerOn == '0'" class="ml-1" style="font-size: 1em;">✔</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div class="btn-group btn-group-square" role="group">
+                                        <button class="btn_buscarsmall" @click="sendPayment" :disabled="button_payment">
+                                            <i class="fas fa-money-bill-alt"></i>
+                                            Pagar
+                                        </button>
+                                        <span style="display:inline-block;width:12px;"></span>
+                                        <button class="btn_cancelarsmall" @click="back(false)">
+                                            <i class="fa fa-reply"></i> Cerrar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-12">
-                        <div class="mb-2">
-                            <div class="text-center text-dark card bg-light">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="align-items-start">
-                                            <label class="control-label"
-                                                >Medios de Pago</label
-                                            >
-                                            <label
-                                                role="button"
-                                                class="text-primary control-label"
-                                            ></label>
-                                        </div>
-                                        <div
-                                            class="radio-tile-group2 flex-wrap"
-                                        >
-                                            <div
-                                                v-for="(meth,
-                                                idx) in paymentMethods"
-                                                :key="idx"
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    id="cash"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    :value="meth.value"
-                                                    @change="
-                                                        method_payment(
-                                                            meth.text
-                                                        )
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    :style="
-                                                        `background-image: url('../../images/${meth.img}');background-size: contain;background-repeat: no-repeat;`
-                                                    "
-                                                >
-                                                    <div
-                                                        class="icon walk-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="cash"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row col-md-12">
-                                            <div class="row">
-                                                <label
-                                                    class="control-label text-center"
-                                                    >Emision de
-                                                    comprobante</label
-                                                >
-                                            </div>
-                                            <div class="row">
-                                                <div
-                                                    class="col-lg-2 col-md-5 col-xl-6"
-                                                >
-                                                    <label
-                                                        class="
-                              control-label
-                              text-left
-                              d-flex
-                              align-items-start
-                              justify-content-start
-                            "
-                                                    >
-                                                        Ingrese Nro Celular
-                                                    </label>
-                                                    <el-input
-                                                        v-model="
-                                                            form.customer_telephone
-                                                        "
-                                                    >
-                                                        <template slot="prepend"
-                                                            ><i
-                                                                class="fab fa-whatsapp fa-2x"
-                                                            ></i>
-                                                        </template>
-                                                    </el-input>
-                                                </div>
-                                                <div
-                                                    class="radio-tile-group2 col-lg-6 col-xl-6 d"
-                                                    style="padding-top: 12px"
-                                                >
-                                                    <div
-                                                        class="input-container2 border rounded-sm col-lg-3"
-                                                    >
-                                                        <input
-                                                            id="imprimir"
-                                                            v-model="printerOn"
-                                                            class="radio-button2"
-                                                            type="radio"
-                                                            name="imprimir"
-                                                            value="1"
-                                                        />
-                                                        <div
-                                                            class="radio-tile2"
-                                                        >
-                                                            <div
-                                                                class="icon walk-icon"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-print"
-                                                                ></i>
-                                                            </div>
-                                                            <label
-                                                                for="cash"
-                                                                class="radio-tile-label2"
-                                                                >Imprimir</label
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="input-container2 border rounded-sm col-lg-3"
-                                                    >
-                                                        <input
-                                                            id="noimprimir"
-                                                            v-model="printerOn"
-                                                            class="radio-button2"
-                                                            type="radio"
-                                                            name="noimprimir"
-                                                            value="0"
-                                                        />
-                                                        <div
-                                                            class="radio-tile2"
-                                                        >
-                                                            <div
-                                                                class="icon bike-icon"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-print"
-                                                                ></i>
-                                                            </div>
-                                                            <label
-                                                                for="Tarjeta"
-                                                                class="radio-tile-label2"
-                                                                >No
-                                                                Imprimir</label
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div
-                                                class="col-lg-8 d-flex flex-row align-items-end"
-                                            ></div>
-                                            <div
-                                                class="d-flex flex-column"
-                                            ></div>
-                                        </div>
-                                        <div
-                                            class="row d-flex justify-content-start"
-                                        >
-                                            <table
-                                                class="table"
-                                                v-if="
+                        <!-- <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <div class="card p-1">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Columna 1</h5>
+                                        <div class="col-4">
+                                            <div class="row d-flex justify-content-start">
+                                                <table class="table" v-if="
                                                     currentPayments.length != 0
-                                                "
-                                            >
-                                                <thead>
-                                                    <tr>
-                                                        <th
-                                                            colspan="4"
-                                                            class="text-left"
-                                                        >
-                                                            Pagos
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr
-                                                        v-for="(paymnt,
-                                                        idx) in currentPayments"
-                                                        :key="idx"
-                                                    >
-                                                        <td>{{ idx + 1 }}</td>
-                                                        <td>
-                                                            {{ paymnt.method }}
-                                                        </td>
-                                                        <td>
-                                                            <strong>{{
-                                                                paymnt.amount
-                                                            }}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <label
-                                                                for=""
-                                                                role="button"
-                                                                @click="
+                                                ">
+                                                    <thead>
+                                                        <tr style="background-color: #1a237e; color: #fff;">
+                                                            <th colspan="4" class="text-left" style="color: #fff;">
+                                                                Pagos
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(paymnt,
+                                                            idx) in currentPayments" :key="idx">
+                                                            <td>{{ idx + 1 }}</td>
+                                                            <td>
+                                                                {{ paymnt.method }}
+                                                            </td>
+                                                            <td>
+                                                                <strong>{{
+                                                                    paymnt.amount
+                                                                }}</strong>
+                                                            </td>
+                                                            <td>
+                                                                <label for="" role="button" @click="
                                                                     removePayment(
                                                                         paymnt.id
                                                                     )
-                                                                "
-                                                                class="text-danger"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-trash"
-                                                                ></i
-                                                            ></label>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-2">
-                                <div class="card bg-light">
-                                    <div class="row">
-                                        <div
-                                            class="col-xl-4 d-flex flex-column justify-content-center align-items-start"
-                                            :class="{
-                                                'has-danger':
-                                                    form.difference < 0
-                                            }"
-                                        >
-                                            <label
-                                                v-if="credit > 0"
-                                                class="control-label h1
-                                                text-success
-                                                "
-                                                >Crédito:
-                                            </label>
-                                            <span
-                                                v-if="credit > 0"
-                                                class="
-                                                d-block
-                          control-label
-                          font-weight-semibold
-                          text-center
-                          text-success
-                          h3
-                        "
-                                            >
-                                                S/ {{ " " + credit }}
-                                            </span>
-                                            <label class="control-label h1"
-                                                >Total a cobrar:
-                                            </label>
-                                            <span
-                                                class="
-                                                d-block
-                          control-label
-                          font-weight-semibold
-                          text-center
-                          h3
-                        "
-                                            >
-                                                S/ {{ " " + form.total }}
-                                            </span>
-                                        </div>
-                                        <div
-                                            class="col-xl-8"
-                                            v-if="
-                                                form_payment.payment_method_type_id ==
-                                                    '01'
-                                            "
-                                        >
-                                            <div
-                                                class="
-                          btn-group btn-group-square
-                          m-0
-                          flex-wrap
-                          justify-content-around
-                        "
-                                                role="group"
-                                                style="padding-top: 12px"
-                                            >
-                                                <label class="control-label"
-                                                    >Ingrese monto</label
-                                                >
-                                                <div class="row col-12">
-                                                    <div
-                                                        class="col-2 col-md-2 col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    10
-                                                                )
-                                                            "
-                                                        >
-                                                            {{
-                                                                currencyTypeActive.symbol
-                                                            }}10
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-2 col-md-2 col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    20
-                                                                )
-                                                            "
-                                                        >
-                                                            {{
-                                                                currencyTypeActive.symbol
-                                                            }}20
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-2 col-md-2 col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    50
-                                                                )
-                                                            "
-                                                        >
-                                                            {{
-                                                                currencyTypeActive.symbol
-                                                            }}50
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-2 col-md-2 col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    100
-                                                                )
-                                                            "
-                                                        >
-                                                            {{
-                                                                currencyTypeActive.symbol
-                                                            }}100
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-2 col-md-2 col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    200
-                                                                )
-                                                            "
-                                                        >
-                                                            {{
-                                                                currencyTypeActive.symbol
-                                                            }}200
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="row col-xl-12 col-12"
-                                                >
-                                                    <div class="col-xl-6 col-3">
-                                                        <el-input
-                                                            id="inputTotal"
-                                                            ref="enter_amount"
-                                                            :disabled="
-                                                                form.total == 0
-                                                            "
-                                                            v-model="
-                                                                form.enter_amount
-                                                            "
-                                                            @blur="diferen()"
-                                                            @input="
-                                                                enterAmount()
-                                                            "
-                                                            @keyup.enter.native="
-                                                                sendPayment();
-                                                                inputAmount(
-                                                                    form.enter_amount
-                                                                );
-                                                            "
-                                                        >
-                                                            <template
-                                                                slot="prepend"
-                                                                >{{
-                                                                    currencyTypeActive.symbol
-                                                                }}
-                                                            </template>
-                                                        </el-input>
-                                                    </div>
-                                                    <div class="col-xl-2 col-2">
-                                                        <el-button
-                                                            type="primary"
-                                                            @click="addPayment"
-                                                            >Agregar</el-button
-                                                        >
-                                                    </div>
-                                                    <!-- <div
-                                                        class="m-2 col-xl-3 col-3 "
-                                                    >
-                                                        <el-button
-                                                            type="success"
-                                                            @click="
-                                                                showSplitPayment = true
-                                                            "
-                                                            >Dividir
-                                                            pago</el-button
-                                                        >
-                                                    </div> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row col-xl-4">
-                                            <div
-                                                class="col-xl-5"
-                                                style="margin-bottom: 10px"
-                                            ></div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div
-                                            class="col-md-12 col-12 d-flex justify-content-end"
-                                        >
-                                            <div
-                                                class="form-group d-flex flex-row align-items-end"
-                                                :class="{
-                                                    'has-danger':
-                                                        form.difference < 0
-                                                }"
-                                            >
-                                                <div>
-                                                    <el-checkbox
-                                                        v-if="
-                                                            registerInternetId
-                                                        "
-                                                        v-model="emit_sale_note"
-                                                        >Nota de
-                                                        venta</el-checkbox
-                                                    ><br />
-                                                    <el-checkbox
-                                                        v-if="
-                                                            form.difference >
-                                                                0 && data
-                                                        "
-                                                        @change="changeIsCredit"
-                                                        v-model="isCredit"
-                                                        >Adelanto</el-checkbox
-                                                    >
-                                                </div>
-                                                <label
-                                                    style="margin-left: 10px"
-                                                    class="control-label display-4 "
-                                                    v-text="
-                                                        form.difference < 0
-                                                            ? 'A cuenta: '
-                                                            : isCredit
-                                                            ? 'Adelanto'
-                                                            : 'Vuelto: '
-                                                    "
-                                                ></label>
-                                                <span
-                                                    class="
-                            control-label
-                            font-weight-semibold
-                            text-center
-                            display-3
-                          "
-                                                >
-                                                    {{
-                                                        currencyTypeActive.symbol
-                                                    }}
-                                                    {{
-                                                        form.difference.toFixed(
-                                                            2
-                                                        )
-                                                    }}
-                                                </span>
+                                                                    " class="text-danger">
+                                                                    <i class="fa fa-trash"></i></label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    v-if="splitPayments.length != 0"
-                    class="row m-1 p-2 bg-light rounded"
-                >
-                    <span style="margin-bottom: 5px">Pagos divididos</span>
-                    <div class="d-flex flex-wrap">
-                        <div
-                            v-for="(payment, idx) in splitPayments"
-                            :key="idx"
-                            class="col-2"
-                        >
-                            Pago {{ idx + 1 }}:
-                            <strong>S/. {{ payment.amount }}</strong>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    v-if="splitProducts.length != 0"
-                    class="row m-1 p-2 bg-light rounded"
-                >
-                    <span style="margin-bottom: 5px"
-                        >Pagos divididos por producto</span
-                    >
-                    <div class="d-flex flex-wrap">
-                        <div
-                            v-for="(payment, idx) in splitProducts"
-                            :key="idx"
-                            class="col-3 m-1"
-                        >
-                            <table
-                                v-if="
-                                    payment.products &&
-                                        payment.products.length > 0
-                                "
-                                class="col-12"
-                            >
-                                <thead>
-                                    <tr
-                                        role="button"
-                                        @click="selectAccount(idx)"
-                                        :class="
-                                            'bg-primary text-white border rounded-top'
-                                        "
-                                    >
-                                        <th class="text-center" colspan="3">
-                                            <b> CUENTA {{ idx + 1 }} </b>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody
-                                    class="border rounded-top"
-                                    v-if="
-                                        payment.products &&
-                                            payment.products.length > 0
-                                    "
-                                >
-                                    <tr
-                                        v-for="(product,
-                                        idx) in payment.products"
-                                        :key="idx"
-                                    >
-                                        <td>
-                                            <h3 class="text-muted text-small">
-                                                {{ product.quantity }}
-                                            </h3>
-                                        </td>
-                                        <td>
-                                            <h3 class="text-muted text-small">
-                                                {{ product.description }}
-                                            </h3>
-                                        </td>
-                                        <td style="text-align: right">
-                                            <h3 class="text-muted text-small">
-                                                {{
-                                                    product.price *
-                                                        product.quantity
-                                                }}
-                                            </h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            colspan="2"
-                                            class="text-muted text-small"
-                                            style="text-align: right"
-                                        >
-                                            <b> Total</b>
-                                        </td>
-                                        <td class="text-muted text-small">
-                                            S/.
-                                            {{
-                                                totalItemSelected(
-                                                    payment.products
-                                                )
-                                            }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody v-else class="border">
-                                    <tr>
-                                        <td colspan="3" class="text-center">
-                                            <h3 class="text-muted text-small">
-                                                Sin productos seleccionados
-                                            </h3>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-3">
-                    <div class="row">
-                        <!-- <div class="col-md-4 col-12">
-                            <label class="label-control"> Elija Caja </label>
-                            <el-select v-model="cash_id">
-                                <el-option
-                                    v-for="(cash, idx) in cashes"
-                                    :key="idx"
-                                    :value="cash.id"
-                                    :label="cash.reference_number"
-                                ></el-option>
-                            </el-select>
+                            <div class="col-lg-4">
+
+                                <div class="d-flex align-items-center justify-content-center h-100"
+                                    style="min-height: 100px;">
+                                    <span>Columna 2</span>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card p-1">
+                                    <div class="card-body">
+
+                                    </div>
+                                </div>
+                            </div>
                         </div> -->
-                        <div class="col-md-6 col-12 d-flex align-items-end">
-                            <div
-                                class="btn-group btn-group-square"
-                                role="group"
-                            >
-                                <button
-                                    class="btn btn-block btn-primary mr-3"
-                                    @click="sendPayment"
-                                    :disabled="button_payment"
-                                >
-                                    <i class="fas fa-money-bill-alt"></i>
-                                    PAGAR
-                                </button>
-                                <button
-                                    class="btn btn-block btn-dark"
-                                    @click="back(false)"
-                                >
-                                    <i class="fa fa-reply"></i> Cerrar
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -813,20 +371,24 @@
 .algunaClase .el-dialog .el-dialog__header .el-dialog__title {
     font-size: 35px !important;
 }
+
 .el-scrollbar {
     z-index: 2000 !important;
 }
+
 .c-width {
     width: 80px !important;
     padding: 0 !important;
     margin-right: 0 !important;
 }
+
 .control-label,
 h4,
 h5,
 label {
     color: #000;
 }
+
 .to_rigth .el-input__inner {
     text-align: right;
 }
@@ -1030,34 +592,18 @@ export default {
             paymentMethods: [
                 { value: "01", text: "Efectivo", img: "botonEfectivo.png" },
                 { value: "02", text: "Culqui", img: "CulquiIcon.png" },
-                {
-                    value: "05",
-                    text: "TARJETA: IZYPAY",
-                    img: "botonIzipay.png"
-                },
-                {
-                    value: "06",
-                    text: "TARJETA: NIUBIZ",
-                    img: "botonNiubiz.png"
-                },
-                {
-                    value: "03",
-                    text: "Yape",
-                    img: "yape-logo-3E473EE7E5-seeklogo.com.png"
-                },
-                {
-                    value: "04",
-                    text: "PLIN",
-                    img: "plin-logo-0C4106153C-seeklogo.com.png"
-                },
-                { value: "07", text: "BBVA", img: "bbva-logo.png" },
+                { value: "05", text: "TARJETA: IZYPAY", img: "botonIzipay.png" },
+                // { value: "06", text: "TARJETA: NIUBIZ", img: "botonNiubiz.png"},
+                { value: "03", text: "Yape", img: "yape-logo-3E473EE7E5-seeklogo.com.png" },
+                { value: "04", text: "PLIN", img: "plin-logo-0C4106153C-seeklogo.com.png" },
+                // s
                 { value: "08", text: "BCP", img: "bcp-logo.png" },
-                { value: "09", text: "Scotiabank", img: "scotiabank-logo.png" },
+                // { value: "09", text: "Scotiabank", img: "scotiabank-logo.png" },
                 { value: "10", text: "BCO NACION", img: "nacion-logo.png" }
             ]
         };
     },
-    mounted() {},
+    mounted() { },
     async created() {
         await this.getTables();
         this.loading = true;
@@ -1545,8 +1091,8 @@ export default {
             }
             this.showDialogNewPerson = true;
         },
-        add_customer(value) {},
-        reloadDataPersons() {},
+        add_customer(value) { },
+        reloadDataPersons() { },
         keyupCustomer(e) {
             //buscar
             if (this.time) {
@@ -2353,21 +1899,21 @@ export default {
                     unit_value:
                         i.sale_affectation_igv_type_id == 10
                             ? i.sale_unit_price /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -2378,13 +1924,13 @@ export default {
                     total_taxes:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_value:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -2534,9 +2080,9 @@ export default {
                     this.loading_submit = true;
                     this.$alert(
                         "<strong>Ocurrio un error </strong>" +
-                            response.statusCode +
-                            "<br>" +
-                            this.resource_documents,
+                        response.statusCode +
+                        "<br>" +
+                        this.resource_documents,
                         "HTML String",
                         {
                             dangerouslyUseHTMLString: true
@@ -2577,6 +2123,7 @@ export default {
                     }
                 ];
                 qz.print(config, data).catch(e => {
+
                     this.$toast.error(e.message);
                 });
             } catch (e) {

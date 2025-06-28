@@ -1,90 +1,95 @@
 <template>
-    <el-dialog
-        @open="open"
-        @close="close"
-        :visible="showDialog"
-        width="60%"
-        append-to-body
-        title="Documentos farmacia"
-    >
-        <div class="row mt-2">
-            <!-- un boton para subir un archivo de tipo zip -->
-            <div class="col-md-12 text-center m-2">
-                <el-upload
-                    :headers="headers"
-                    class="upload-demo"
-                    action="/store_zip"
-                    :onSuccess="handleSuccess"
-                    :onError="handleError"
-                    :auto-upload="true"
-                    :on-exceed="handleExceed"
-                    :limit="1"
-                    :on-change="handleChange"
-                    :before-upload="beforeUpload"
-                >
-                    <el-button size="small" type="primary"
-                        >Seleccionar archivo zip</el-button
-                    >
-                </el-upload>
+    <el-dialog @open="open" @close="close" :visible="showDialog" width="65%" append-to-body
+        title="Documentos migrados de Farmacia">
+
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <el-select v-model="form.column" placeholder="Seleccione un estado" clearable>
+                                    <el-option v-for="item in columns" :key="item.value" :label="item.label"
+                                        :value="item.value"></el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-md-5">
+                                <template v-if="form.column == 'status'">
+                                    <el-select v-model="form.value" placeholder="Seleccione un estado" clearable>
+                                        <el-option v-for="item in statuses" :key="item.value" :label="item.label"
+                                            :value="item.value"></el-option>
+                                    </el-select>
+                                </template>
+                                <template v-else-if="
+                                    form.column == 'date_of_charge' ||
+                                    form.column == 'date_of_issue'
+                                ">
+                                    <el-date-picker v-model="form.value" type="date" placeholder="Seleccione una fecha"
+                                        value-format="yyyy-MM-dd" format="yyyy-MM-dd" clearable></el-date-picker>
+                                </template>
+                                <template v-else>
+                                    <el-input v-model="form.value" clearable></el-input>
+                                </template>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                <el-button type="primary" class="btn_buscar" icon="el-icon-search" @click="getRecords"></el-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <el-upload :headers="headers" class="upload-demo" action="/store_zip" :onSuccess="handleSuccess"
+                                :onError="handleError" :auto-upload="true" :on-exceed="handleExceed" :limit="1"
+                                :on-change="handleChange" :before-upload="beforeUpload">
+                                <el-button size="small" class="btn_buscar" type="primary">Seleccionar Zip</el-button>
+                            </el-upload>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row mt-2">
+            <div class="col-md-12 text-center m-2">
+                <el-upload :headers="headers" class="upload-demo" action="/store_zip" :onSuccess="handleSuccess"
+                    :onError="handleError" :auto-upload="true" :on-exceed="handleExceed" :limit="1"
+                    :on-change="handleChange" :before-upload="beforeUpload">
+                    <el-button size="small" type="primary">Seleccionar archivo zip</el-button>
+                </el-upload>
+            </div>
+        </div> -->
+        <!-- <div class="row">
             <div class="col-md-4">
-                <el-select
-                    v-model="form.column"
-                    placeholder="Seleccione un estado"
-                    clearable
-                >
-                    <el-option
-                        v-for="item in columns"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
+                <el-select v-model="form.column" placeholder="Seleccione un estado" clearable>
+                    <el-option v-for="item in columns" :key="item.value" :label="item.label"
+                        :value="item.value"></el-option>
                 </el-select>
             </div>
             <div class="col-md-4">
                 <template v-if="form.column == 'status'">
-                    <el-select
-                        v-model="form.value"
-                        placeholder="Seleccione un estado"
-                        clearable
-                    >
-                        <el-option
-                            v-for="item in statuses"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        ></el-option>
+                    <el-select v-model="form.value" placeholder="Seleccione un estado" clearable>
+                        <el-option v-for="item in statuses" :key="item.value" :label="item.label"
+                            :value="item.value"></el-option>
                     </el-select>
                 </template>
-                <template
-                    v-else-if="
-                        form.column == 'date_of_charge' ||
-                            form.column == 'date_of_issue'
-                    "
-                >
-                    <el-date-picker
-                        v-model="form.value"
-                        type="date"
-                        placeholder="Seleccione una fecha"
-                        value-format="yyyy-MM-dd"
-                        format="yyyy-MM-dd"
-                        clearable
-                    ></el-date-picker>
+                <template v-else-if="
+                    form.column == 'date_of_charge' ||
+                    form.column == 'date_of_issue'
+                ">
+                    <el-date-picker v-model="form.value" type="date" placeholder="Seleccione una fecha"
+                        value-format="yyyy-MM-dd" format="yyyy-MM-dd" clearable></el-date-picker>
                 </template>
                 <template v-else>
                     <el-input v-model="form.value" clearable></el-input>
                 </template>
             </div>
             <div class="col-md-4">
-                <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    @click="getRecords"
-                ></el-button>
+                <el-button type="primary" icon="el-icon-search" @click="getRecords"></el-button>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <el-pagination
                 @current-change="getRecords"
@@ -97,26 +102,52 @@
         <div class="row">
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead>
+                    <thead style="background-color: #073f68; color: #fff;">
                         <tr>
-                            <th>#</th>
-                            <th>Identificador</th>
-                            <th>Archivo</th>
-                            <th>Fecha subida</th>
-                            <th>Fecha emisión</th>
-                            <th>Estado</th>
-                            <th width="30%">Error</th>
+                            <th width="8%" style="color: #fff; text-align: center;">#</th>
+                            <th width="20%" style="color: #fff;  text-align: center;">CPE</th>
+                            <!-- <th width="20%" style="color: #fff; text-align: center;">Archivo</th> -->
+                            <th width="15%" style="color: #fff; text-align: center;">Subido</th>
+                            <th width="18%" style="color: #fff; text-align: center;">Emitido</th>
+                            <th width="15%" style="color: #fff; text-align: center;">Estado</th>
+                            <th width="30%" style="color: #fff; text-align: center;">Mensaje</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(record, idx) in records" :key="record.id">
-                            <td>{{ customIndex(idx) }}</td>
-                            <td>{{ record.identifier }}</td>
-                            <td>{{ record.file_name }}</td>
-                            <td>{{ record.date_of_charge }}</td>
-                            <td>{{ record.date_of_issue }}</td>
-                            <td>{{ record.status }}</td>
-                            <td class="text-danger">{{ record.error }}</td>
+                            <td style="text-align: center;">{{ customIndex(idx) }}</td>
+                            <td style="text-align: center;">
+                                {{
+                                    record.identifier
+                                        ? record.identifier
+                                                .replace(/-TEST$/, '')
+                                                .replace(/-000/g, '-')
+                                        : ''
+                                }}
+                            </td>
+                            <!-- <td>{{ record.file_name }}</td> -->
+                            <td style="text-align: center;">
+                                {{
+                                    record.date_of_charge
+                                        ? (() => {
+                                                const date = new Date(record.date_of_charge);
+                                                const day = date.getDate();
+                                                const dayStr = (day < 10 && day !== 0) ? '0' + day : day.toString();
+                                                const monthStr = date.toLocaleString('es-PE', { month: 'long' });
+                                                return `${dayStr} ${monthStr}`;
+                                            })()
+                                        : ''
+                                }}
+                            </td>
+                            <td style="text-align: center;">{{ record.date_of_issue }}</td>
+                            <td style="text-align: center;">
+                                <span
+                                    :style="record.status === 'Aceptado' ? 'color: green; font-weight: bold;' : ''"
+                                >
+                                    {{ record.status }}
+                                </span>
+                            </td>
+                            <td class="text-danger" style="text-align: center;">{{ record.error }}</td>
                         </tr>
                     </tbody>
                 </table>

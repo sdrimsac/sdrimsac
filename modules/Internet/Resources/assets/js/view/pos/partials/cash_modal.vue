@@ -1,5 +1,15 @@
+<!-- Resumen de Cierre de Caja internet -->
 <template>
-<el-dialog v-loading="loading" :visible="showDetail" append-to-body @close="close" width="30%" @open="open" title="Detalle de caja">
+<el-dialog 
+    v-loading="loading" 
+    :visible="showDetail" 
+    append-to-body 
+    @close="close" 
+    width="30%" 
+    @open="open" 
+    title="Resumen de Cierre de Caja"
+    :close-on-click-modal="false"
+>
     <div v-loading="loadingPrint" element-loading-text="Imprimiendo...">
         <br>
         <div class="d-flex justify-content-end">

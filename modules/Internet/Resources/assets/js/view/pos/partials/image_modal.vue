@@ -5,7 +5,8 @@
         @close="close"
         :visible="showDialog"
         v-loading="loading"
-        title="Imagen de la casa"
+        title="Imagen del domicilio - Referencia"
+        width="400px"
     >
         <div
             class=" d-flex flex-column justify-content-center align-items-center"
@@ -20,7 +21,7 @@
             <div v-else>
                 <el-empty :image-size="350"></el-empty>
             </div>
-            <el-button class="m-2" type="success" @click="$refs.file.click()">
+            <el-button class="btn_politicasmall" type="success" @click="$refs.file.click()">
                 Subir imagen
             </el-button>
             <p><em>JPG, PNG, JPEG </em></p>
