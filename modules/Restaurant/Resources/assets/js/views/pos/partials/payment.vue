@@ -18,8 +18,8 @@
             <div class=" mb-0">
                 <div class="pt-1">
                     <!-- Cabecera del Modal de Cobro -->
-                    <div class="">
-                        <div class="card bg-light" style="margin-top: 2px; margin-bottom: 5px;">
+                    <div class="mb-1">
+                        <div class="card bg-light">
                             <div class="card-body">
                                 <div class="row" v-if="configuration.college">
                                     <el-checkbox
@@ -206,8 +206,10 @@
                                                     ></i>
                                                     Serie
                                                 </label>
-                                                <el-select v-model="form.series_id"
-                                                    class="custom-select responsive-series-select" :style="{
+                                                <el-select
+                                                    v-model="form.series_id"
+                                                    class="custom-select responsive-series-select"
+                                                    :style="{
                                                         backgroundColor:
                                                             form.document_type_id ===
                                                             '01'
@@ -295,767 +297,1407 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Clientes y Whatsapp -->
-                        <div class="card" style="margin-bottom: 5px;">
-                            <div class="card-body">
-                                <div class="row mb-2">
-                                    <div class="col-lg-6">
-                                        <div class="d-flex align-items-center justify-content-between mb-1">
-                                            <label class="mb-0">
-                                                <i class="fas fa-user me-2"></i> Cliente
-                                            </label>
-                                            <div class="d-flex align-items-center gap-2 ms-auto">
-                                                <!-- Botón Nuevo -->
-                                                <el-tooltip content="Crear Cliente" placement="top">
-                                                    <el-button v-if="!configuration.college || notRegister"
-                                                        @click="createClient" class="btn_buscarsmall me-2"
-                                                        type="primary" size="small">
-                                                        <i class="fas fa-user fa-lg"></i>
-                                                        Nuevo
-                                                    </el-button>
-                                                </el-tooltip>
-                                                <!-- Botón Editar -->
-                                                <el-tooltip content="Editar Cliente" placement="top">
-                                                    <el-button
-                                                        v-if="configuration.edit_clients && value && !isClientesVarios()"
-                                                        @click="openDialogPerson" class="btn_excelsmall" type="success"
-                                                        size="small">
-                                                        <i class="fas fa-edit fa-lg"></i>
-                                                        Editar
-                                                    </el-button>
-                                                </el-tooltip>
+                                <br />
+
+                                <!-- Clientes y Whatsapp -->
+                                <div class="row">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <!-- Columna 1: Botones Nuevo y Editar -->
+                                                <!-- <div class="col-lg-4 d-flex align-items-center gap-2">
+                                                    
+                                                        
+                                                        <el-tooltip content="Crear Cliente" placement="top">
+                                                            <el-button v-if="!configuration.college || notRegister"
+                                                                @click="createClient"
+                                                                class="btn_buscarsmall me-2"
+                                                                type="primary"
+                                                                size="small">
+                                                                <i class="fas fa-user fa-lg"></i>
+                                                                Nuevo
+                                                            </el-button>
+                                                        </el-tooltip>
+                                                       
+                                                        <el-tooltip content="Editar Cliente" placement="top">
+                                                            <el-button
+                                                                v-if="configuration.edit_clients && value && !isClientesVarios()"
+                                                                @click="openDialogPerson"
+                                                                class="btn_excelsmall"
+                                                                type="success"
+                                                                size="small"
+                                                            >
+                                                                <i class="fas fa-edit fa-lg"></i>
+                                                                Editar
+                                                            </el-button>
+                                                        </el-tooltip>
+                                                    
+                                                </div> -->
+
+                                                <div class="col-lg-4">
+                                                    <div
+                                                        class="d-flex align-items-center justify-content-between w-100 mb-1"
+                                                    >
+                                                        <label class="mb-0">
+                                                            <i
+                                                                class="fas fa-user me-2"
+                                                            ></i>
+                                                            Cliente
+                                                        </label>
+                                                        <div
+                                                            class="d-flex align-items-center gap-2"
+                                                        >
+                                                            <!-- Botón Nuevo -->
+                                                            <el-tooltip
+                                                                content="Crear Cliente"
+                                                                placement="top"
+                                                            >
+                                                                <el-button
+                                                                    v-if="
+                                                                        !configuration.college ||
+                                                                            notRegister
+                                                                    "
+                                                                    @click="
+                                                                        createClient
+                                                                    "
+                                                                    class="btn_buscarsmall me-2"
+                                                                    type="primary"
+                                                                    size="small"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-user fa-lg"
+                                                                    ></i>
+                                                                    Nuevo
+                                                                </el-button>
+                                                            </el-tooltip>
+                                                            <!-- Botón Editar -->
+                                                            <el-tooltip
+                                                                content="Editar Cliente"
+                                                                placement="top"
+                                                            >
+                                                                <el-button
+                                                                    v-if="
+                                                                        configuration.edit_clients &&
+                                                                            value &&
+                                                                            !isClientesVarios()
+                                                                    "
+                                                                    @click="
+                                                                        openDialogPerson
+                                                                    "
+                                                                    class="btn_excelsmall"
+                                                                    type="success"
+                                                                    size="small"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-edit fa-lg"
+                                                                    ></i>
+                                                                    Editar
+                                                                </el-button>
+                                                            </el-tooltip>
+                                                        </div>
+                                                    </div>
+                                                    <el-select
+                                                        class="w-100"
+                                                        ref="select_person"
+                                                        :loading="loading"
+                                                        v-model="value"
+                                                        filterable
+                                                        clearable
+                                                        size="small"
+                                                        placeholder="Cliente"
+                                                        :disabled="loading"
+                                                        @change="changeCustomer"
+                                                        @keyup.native="
+                                                            keyupCustomer
+                                                        "
+                                                    >
+                                                        <el-option
+                                                            v-for="(option,
+                                                            idx) in customers"
+                                                            :key="idx"
+                                                            :label="
+                                                                option.description
+                                                            "
+                                                            :value="option.id"
+                                                        ></el-option>
+                                                    </el-select>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <label for="whatsapp"
+                                                        >WhatsApp</label
+                                                    >
+                                                    <el-input
+                                                        v-model="
+                                                            form.customer_telephone
+                                                        "
+                                                        type="text"
+                                                        class="w-100"
+                                                        placeholder="Número de WhatsApp"
+                                                        size="large"
+                                                        maxlength="9"
+                                                        show-word-limit
+                                                    ></el-input>
+                                                </div>
                                             </div>
                                         </div>
-                                        <el-select class="w-100" ref="select_person" :loading="loading" v-model="value"
-                                            filterable clearable size="small" placeholder="Cliente" :disabled="loading"
-                                            @change="changeCustomer" @keyup.native="keyupCustomer">
-                                            <el-option v-for="(option, idx) in customers" :key="idx"
-                                                :label="option.description" :value="option.id"></el-option>
-                                        </el-select>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <label for="whatsapp">WhatsApp</label>
-                                        <el-input v-model="form.customer_telephone" type="text" class="w-100"
-                                            placeholder="Número de WhatsApp" size="large" maxlength="9" show-word-limit>
-                                        </el-input>
-                                    </div>
-                                </div>
 
-                                <div class="row ">
-                                    <div class="col-lg-6">
-                                        <div class="flex-fill">
-                                            <!-- <label for="observations">Observaciones</label> -->
-                                            <el-input v-model="form.observation" type="text" class="w-100"
-                                                placeholder="Observaciones" size="large"></el-input>
+                                    <!-- Observaciones y Vendedor -->
+                                    <div
+                                        class="form-row d-flex align-items-center justify-content-between flex-wrap"
+                                    >
+                                        <!-- Observaciones -->
+                                        <div class="col-6">
+                                            <label for="observations"
+                                                >Observaciones</label
+                                            >
+                                            <el-input
+                                                v-model="form.observation"
+                                                type="text"
+                                                class="w-100"
+                                                placeholder="Observaciones"
+                                                size="large"
+                                            ></el-input>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <el-select v-model="form.seller_id" class="w-100"
-                                            placeholder="Seleccionar Vendedor" size="large">
-                                            <el-option v-for="(option, idx) in sellers" :key="idx" :label="option.name"
-                                                :value="option.id"></el-option>
-                                        </el-select>
-                                    </div>
-                                    <!-- Estudiante -->
-                                    <div v-if="students.length != 0" class="col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label w-100">
-                                                Estudiante
-                                            </label>
-                                            <el-select @change="changeStudent" v-model="form.student_id">
-                                                <el-option v-for="(student,
-                                                    idx) in students" :key="idx" :label="`${student.name} - ${student.class}`
-                                                        " :value="student.id">
-                                                </el-option>
+
+                                        <!-- Vendedor -->
+                                        <div class="col-6">
+                                            <label for="seller">Vendedor</label>
+                                            <el-select
+                                                v-model="form.seller_id"
+                                                class="w-100"
+                                                placeholder="Seleccionar Vendedor"
+                                                size="large"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in sellers"
+                                                    :key="idx"
+                                                    :label="option.name"
+                                                    :value="option.id"
+                                                ></el-option>
                                             </el-select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="padding: 0; margin-bottom: 5px;">
-                        <div class="col-lg-3">
-                            <div class="card  h-100" style="background-color: #4CAF50 !important;">
-                                <div class="card-body d-flex flex-column justify-content-center"
-                                    style="padding: 4px 4px;">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <label class="control-label text-primary fw-bold mb-0">
-                                            Total Venta
+
+                                <!-- Estudiante -->
+                                <div
+                                    v-if="students.length != 0"
+                                    class="row col-lg-6 col-xl-12"
+                                >
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Estudiante
                                         </label>
-                                        <span class="control-label text-primary fw-bold mb-0 text-right">
-                                            {{
-                                                currencyIdChoice == "PEN"
-                                                    ? "S/ "
-                                                    : "$ "
-                                            }}
-                                            {{ " " + Number(form.total).toFixed(2) }}
-                                        </span>
+                                        <el-select
+                                            @change="changeStudent"
+                                            v-model="form.student_id"
+                                        >
+                                            <el-option
+                                                v-for="(student,
+                                                idx) in students"
+                                                :key="idx"
+                                                :label="
+                                                    `${student.name} - ${student.class}`
+                                                "
+                                                :value="student.id"
+                                            >
+                                            </el-option>
+                                        </el-select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 d-flex align-items-center justify-content-center" style="padding: 0;">
-                            <div class="h-100 w-100" style="padding: 0; margin: 0;">
-                                <div class="card-body d-flex justify-content-center align-items-center"
-                                    :style="{ padding: 0, height: '100%' }">
-                                    <div v-if="conf.show_discounts_payment" class="w-100">
-                                        <div class="d-flex align-items-center justify-content-center mb-1">
-                                            <label class="control-label fw-bold me-2">
-                                                Descuento:
-                                            </label>
-                                            <input
-                                                class="form-control w-25 text-right"
-                                                v-model="discount_amount"
-                                                @input="validateAndProcess"
-                                                maxlength="8"
-                                                placeholder="Descuento"
-                                                style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none; height: 20px;" 
-                                            />
-                                            <el-checkbox v-model="discountTotal" @change="reCalculateTotal"
-                                                class="is-success ms-3"
-                                                :style="{
-                                                    transform: 'scale(0.8)',
-                                                    marginLeft: '10px',
-                                                    color: discountTotal ? '#388e3c' : '#1976d2',
-                                                    fontWeight: 'bold'
-                                                }">
-                                                <span :style="{ color: discountTotal ? '#388e3c' : '#1976d2' }">
-                                                    {{
-                                                        discountTotal
-                                                            ? "del total"
-                                                            : "a la base"
-                                                    }}
-                                                </span>
-                                            </el-checkbox>
+                    </div>
+                    <!-- Operaciones de Pago -->
+
+                    <div
+                        class="container-fluid"
+                        style="background-color: lightgray;"
+                    >
+                        <div class="row g-2 align-items-stretch">
+                            <!-- Column 1: Total Venta -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div
+                                    class="d-flex justify-content-between align-items-center p-3"
+                                    style="background-color: #f8f9fa; border-radius: 5px; height: 100%;"
+                                >
+                                    <label
+                                        class="control-label text-primary fs-5 fw-bold mb-0"
+                                    >
+                                        Total Venta
+                                    </label>
+                                    <!-- <label>Total Venta</label> -->
+                                    <span
+                                        class="control-label text-primary fs-2 fw-bold mb-0 text-right"
+                                    >
+                                        <!-- S/ {{ " " + form.total }} -->
+
+                                        {{
+                                            currencyIdChoice == "PEN"
+                                                ? "S/ "
+                                                : "$ "
+                                        }}
+                                        {{ " " + form.total }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Descuento -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div
+                                    v-if="conf.show_discounts_payment"
+                                    class="p-2"
+                                    style="background-color: #e9ecef; border-radius: 5px; height: auto; min-height: 50px;"
+                                >
+                                    <!-- Fila 1: Título "Desc. S/" e input -->
+                                    <div
+                                        class="d-flex align-items-center justify-content-start mb-2"
+                                    >
+                                        <label
+                                            class="control-label text-success fs-5 fw-bold me-2"
+                                        >
+                                            Desc. S/
+                                        </label>
+                                        <input
+                                            class="form-control w-50 text-right"
+                                            v-model="discount_amount"
+                                            @input="validateAndProcess"
+                                            maxlength="8"
+                                            placeholder="0.00"
+                                            style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
+                                        />
+                                    </div>
+
+                                    <!-- Fila 2: Checkboxes alineados al lado derecho -->
+                                    <div class="d-flex justify-content-end">
+                                        <el-checkbox
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                            class="is-success text-success"
+                                            style="transform: scale(0.8); margin-right: 10px;"
+                                        >
+                                            {{
+                                                discountTotal
+                                                    ? "del total"
+                                                    : "a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div>
+                                    <!-- <div class="d-flex justify-content-end">
+                                        <el-checkbox
+                                            v-if="
+                                                configuration.affectation_igv_type_id ==
+                                                    '10'
+                                            "
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                            class="is-success text-success"
+                                            style="transform: scale(0.8); margin-right: 10px;"
+                                        >
+                                            {{
+                                                discountTotal
+                                                    ? "del total"
+                                                    : "a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div> -->
+                                </div>
+                            </div>
+
+                            <!-- Column 3: Faltante/Vuelto -->
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <div
+                                    class="d-flex justify-content-between align-items-center p-3"
+                                    style="border-radius: 5px; height: 100%;"
+                                    :class="{
+                                        'bg-danger text-white':
+                                            form.difference < 0,
+                                        'bg-primary text-white':
+                                            form.difference >= 0
+                                    }"
+                                >
+                                    <label
+                                        class="control-label fs-5 fw-bold text-white mb-0"
+                                        v-text="
+                                            form.difference < 0
+                                                ? 'Faltante: '
+                                                : 'Vuelto: '
+                                        "
+                                    ></label>
+                                    <span
+                                        v-if="is_payment == true"
+                                        class="control-label fs-5 fw-bold text-white"
+                                    >
+                                        {{ currencySymbol }}
+                                        {{
+                                            form.difference
+                                                .toFixed(2)
+                                                .replace("-", "")
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medios de Pago / Operaciones y Cargos por tarjeta Transferencias -->
+                    <div class="row">
+                        <!-- Column 1: Medios de Pago -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <div
+                                class="text-center text-dark card bg-light"
+                                v-if="conf.show_payment_method"
+                            >
+                                <div class="align-items-start mb-2">
+                                    <label class="control-label"
+                                        >Medios de Pago</label
+                                    >
+                                </div>
+                                <div class="radio-tile-group2 flex-wrap">
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="cash"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="01"
+                                            @change="method_payment('Efectivo')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon walk-icon"></div>
+                                            <label
+                                                for="cash"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.culqi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="culqui"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="02"
+                                            @change="method_payment('Culqui')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.izipay"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="05"
+                                            @change="
+                                                method_payment(
+                                                    'TARJETA: IZYPAY'
+                                                )
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.openpay"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="07"
+                                            @change="
+                                                method_payment(
+                                                    'TARJETA: OPENPAY'
+                                                )
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.nubiz"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="06"
+                                            @change="
+                                                method_payment(
+                                                    'TARJETA: NIUBIZ'
+                                                )
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonNiubiz.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.yape"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="yape"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="03"
+                                            @change="method_payment('Yape')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat"
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.plin"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="04"
+                                            @change="method_payment('PLIN')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.didi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="08"
+                                            @change="
+                                                method_payment('DIDI FOOD')
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonDidi.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.pedidosya"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="09"
+                                            @change="
+                                                method_payment('PEDIDOS YA')
+                                            "
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonPedidosYa.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="input-container2 border rounded-sm"
+                                        v-if="configuration.rappi"
+                                    >
+                                        <input
+                                            :disabled="form_payment.is_bank"
+                                            id="plin"
+                                            v-model="method_payments"
+                                            class="radio-button2"
+                                            type="radio"
+                                            name="method_payment"
+                                            value="10"
+                                            @change="method_payment('RAPPI')"
+                                        />
+                                        <div
+                                            class="radio-tile2"
+                                            style="background-image: url('../../images/botonRappi.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                        >
+                                            <div class="icon bike-icon"></div>
+                                            <label
+                                                for="Tarjeta"
+                                                class="radio-tile-label2"
+                                            ></label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="card bg-light h-100">
 
-                                <div class="card-body d-flex flex-column justify-content-center" :style="{
-                                    borderRadius: '5px',
-                                    height: '100%',
-                                    backgroundColor: form.difference < 0 ? '#dc3545' : '#073f68',
-                                    color: '#fff',
-                                    padding: '4px 4px'
-                                }">
-                                    <div class="d-flex justify-content-between align-items-center"
-                                        style="height: 100%;">
-                                        <label class="control-label fw-bold text-white mb-0" v-text="form.difference < 0
-                                            ? 'Faltante: '
-                                            : 'Vuelto: '
-                                            "></label>
-                                        <span v-if="is_payment == true" class="control-label fw-bold text-white">
-                                            {{ currencySymbol }}
-                                            {{
-                                                form.difference
-                                                    .toFixed(2)
-                                                    .replace("-", "")
-                                            }}
-                                        </span>
+                        <!-- Column 2: N° de Operación and Cargos de Tarjeta -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <div class="row">
+                                <!-- N° de Operación -->
+
+                                <div
+                                    class=""
+                                    v-if="
+                                        methodsValidate.includes(
+                                            form.method_pay
+                                        )
+                                    "
+                                >
+                                    <!-- <label
+                                        class="control-label font-weight-bold text-muted mr-2"
+                                        style="font-size: 0.9em; white-space: nowrap;"
+                                        >Nº Op. :</label
+                                    > -->
+                                    <label class="control-label"
+                                        >N° De Operacion</label
+                                    >
+                                    <div class="d-flex align-items-center">
+                                        <el-input
+                                            type="number"
+                                            v-model="operation_number"
+                                            size="mini"
+                                            class="d-inline-flex"
+                                        >
+                                        </el-input>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-
-                <!-- Medios de Pago / Operaciones y Cargos por tarjeta Transferencias -->
-                <div class="row">
-                    <!-- Column 1: Medios de Pago -->
-                    <div class="col-lg-6 col-md-12 mb-2">
-                        <div class="text-center text-dark card bg-light" v-if="conf.show_payment_method">
-                            <div class="align-items-start mb-2">
-                                <label class="control-label">Medios de Pago</label>
-                            </div>
-                            <div class="btn-group flex-wrap radio-tile-group2" role="group" aria-label="Métodos de pago"
-                                style="gap: 10px; display: flex; flex-wrap: wrap;">
-                                <button type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '01' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonEfectivo.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '01'; method_payment('Efectivo')"></button>
-                                <button v-if="configuration.culqi" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '02' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/CulquiIcon.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '02'; method_payment('Culqui')"></button>
-                                <button v-if="configuration.izipay" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '05' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonIzipay.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '05'; method_payment('TARJETA: IZYPAY')"></button>
-                                <button v-if="configuration.openpay" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '07' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonOpenpay.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '07'; method_payment('TARJETA: OPENPAY')"></button>
-                                <button v-if="configuration.nubiz" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '06' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonNiubiz.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '06'; method_payment('TARJETA: NIUBIZ')"></button>
-                                <button v-if="configuration.yape" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '03' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/yape-logo-3E473EE7E5-seeklogo.com.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '03'; method_payment('Yape')"></button>
-                                <button v-if="configuration.plin" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '04' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/plin-logo-0C4106153C-seeklogo.com.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '04'; method_payment('PLIN')"></button>
-                                <button v-if="configuration.didi" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '08' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonDidi.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '08'; method_payment('DIDI FOOD')"></button>
-                                <button v-if="configuration.pedidosya" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '09' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonPedidosYa.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '09'; method_payment('PEDIDOS YA')"></button>
-                                <button v-if="configuration.rappi" type="button" class="btn payment-btn-size"
-                                    :class="['input-container2', 'border', 'rounded-sm', method_payments === '10' ? 'active' : '', form_payment.is_bank ? 'disabled' : '']"
-                                    :style="{ backgroundImage: 'url(../../images/botonRappi.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }"
-                                    :disabled="form_payment.is_bank"
-                                    @click="method_payments = '10'; method_payment('RAPPI')"></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-12 mb-2">
-                        <div class="row">
-                            <div class="" v-if="
-                                methodsValidate.includes(
-                                    form.method_pay
-                                )
-                            ">
-
-                                <div class="d-flex align-items-center">
-                                    <el-input type="number" v-model="operation_number" size="mini"
-                                        placeholder="Nº Operación" class="d-inline-flex">
-                                    </el-input>
-                                </div>
-                            </div>
-
-                            <!-- Cargos de Tarjeta -->
-                            <div class="col-12 mt-3" v-if="
-                                hasCreditCardCharge &&
-                                configuration.credit_mode
-                            ">
-                                <!-- Label "Porcentaje" o "Monto" alineado a la izquierda -->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label class="font-weight-bold mb-1" style="text-align: left;">
+                                <!-- Cargos de Tarjeta -->
+                                <div
+                                    class="col-12 mt-3"
+                                    v-if="
+                                        hasCreditCardCharge &&
+                                            configuration.credit_mode
+                                    "
+                                >
+                                    <!-- Label "Porcentaje" o "Monto" alineado a la izquierda -->
+                                    <label
+                                        class="font-weight-bold mb-1"
+                                        style="text-align: left;"
+                                    >
                                         {{
                                             chargeCredit.credit_type == "1"
                                                 ? "Porcentaje"
                                                 : "Monto"
                                         }}
                                     </label>
-                                    <span class="h6 font-weight-bold" style="margin-left: auto;" v-if="
-                                        chargeCredit.total_charge !==
-                                        0 && chargeCredit.amount">
-                                        {{ chargeCredit.total_charge.toFixed(2) }}
-                                    </span>
-                                </div>
 
-                                <!-- Fila para el Input, Radio Group y Total Calculado -->
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <el-input type="number" @input="calculateCharge"
-                                        style="max-width: 100px; font-weight: bold;" v-model="chargeCredit.amount"
-                                        size="mini">
-                                    </el-input>
-                                    <div class="d-flex justify-content-center mx-3">
-                                        <el-radio-group class="radio-buttons-group" @change="calculateCharge"
-                                            v-model="chargeCredit.credit_type" size="mini"
-                                            style="color: #004085; display: flex; flex-direction: row; align-items: center; gap: 0;">
-                                            <el-tooltip
-                                                content="Agrega en porcentaje (%) la comisión por pago con tarjeta"
-                                                placement="top">
-                                                <el-radio-button label="1"
-                                                    style="color: white; border-top-right-radius: 0; border-bottom-right-radius: 0; margin-right: 0;">
-                                                    <i class="fas fa-percent"></i>
-                                                </el-radio-button>
-                                            </el-tooltip>
-                                            <el-tooltip
-                                                content="Agrega un monto específico de comisión por pago con tarjeta"
-                                                placement="top">
-                                                <el-radio-button label="2"
-                                                    style="color: white; border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: 0;">
-                                                    <i class="fas fa-money-bill-wave"></i>
-                                                </el-radio-button>
-                                            </el-tooltip>
-                                        </el-radio-group>
-                                    </div>
+                                    <!-- Fila para el Input, Radio Group y Total Calculado -->
+                                    <div
+                                        class="d-flex align-items-center justify-content-between"
+                                    >
+                                        <!-- Input de Monto/Porcentaje alineado a la izquierda, más grande y en negrita -->
+                                        <el-input
+                                            type="number"
+                                            @input="calculateCharge"
+                                            style="max-width: 100px; font-weight: bold;"
+                                            v-model="chargeCredit.amount"
+                                            size="mini"
+                                        ></el-input>
 
-                                    <!-- Total Calculado alineado a la derecha -->
-                                    <!-- <span class="h6 font-weight-bold" style="margin-left: auto;" v-if="
-                                            chargeCredit.total_charge !==
-                                            0 && chargeCredit.amount
-                                        ">
+                                        <!-- Radio Group centrado en la fila, en azul oscuro -->
+                                        <div
+                                            class="d-flex justify-content-center mx-3"
+                                        >
+                                            <el-radio-group
+                                                @change="calculateCharge"
+                                                v-model="
+                                                    chargeCredit.credit_type
+                                                "
+                                                size="mini"
+                                                style="color: #004085;"
+                                            >
+                                                <el-radio-button
+                                                    label="1"
+                                                    style="background-color: #004085; color: white;"
+                                                    >%</el-radio-button
+                                                >
+                                                <el-radio-button
+                                                    label="2"
+                                                    style="background-color: #004085; color: white;"
+                                                    >S/</el-radio-button
+                                                >
+                                            </el-radio-group>
+                                        </div>
+
+                                        <!-- Total Calculado alineado a la derecha -->
+                                        <span
+                                            class="h6 font-weight-bold"
+                                            style="margin-left: auto;"
+                                            v-if="
+                                                chargeCredit.total_charge !==
+                                                    0 && chargeCredit.amount
+                                            "
+                                        >
                                             S/
                                             {{
                                                 chargeCredit.total_charge.toFixed(
                                                     2
                                                 )
                                             }}
-                                        </span> -->
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Transferencia / Depósitos -->
-                    <div class="col-lg-3 col-md-12 mb-2">
-                        <template v-if="bank_accounts.length != 0">
-                            <div class="d-flex align-items-center">
-                                <el-checkbox @change="transferPayment" v-model="form_payment.is_bank"></el-checkbox>
-                                <label for="banks" class="mb-0 ms-2">
-                                    Transferencia / Depósitos
-                                </label>
-                            </div>
-                            <el-select :disabled="!form_payment.is_bank" v-model="form.bank_account_id"
-                                @change="changeBankAccount">
-                                <el-option v-for="bank in bank_accounts" :key="bank.id" :label="`${bank.description}-${bank.number}`
-                                    " :value="bank.id">
-                                </el-option>
-                            </el-select>
-                            <el-input :disabled="!form_payment.is_bank" class="mt-1" placeholder="Nro Operación"
-                                v-model="form.reference_number"></el-input>
-                        </template>
-                        <template v-else>
-                            <span class="text-danger">Sin cuentas registradas</span>
-                        </template>
+                        <!-- Column 3: Transferencia / Depósitos -->
+                        <div class="col-lg-4 col-md-12 mb-2">
+                            <template v-if="bank_accounts.length != 0">
+                                <!-- <el-checkbox
+                                        @change="transferPayment"
+                                        v-model="form_payment.is_bank"
+                                    ></el-checkbox>
+                                    <label for="banks">
+                                    Transferencia / Depositos
+                                    </label> -->
+                                <div class="d-flex align-items-center">
+                                    <el-checkbox
+                                        @change="transferPayment"
+                                        v-model="form_payment.is_bank"
+                                    ></el-checkbox>
+                                    <label for="banks" class="mb-0 ms-2">
+                                        Transferencia / Depositos
+                                    </label>
+                                </div>
+                                <el-select
+                                    :disabled="!form_payment.is_bank"
+                                    v-model="form.bank_account_id"
+                                    @change="changeBankAccount"
+                                >
+                                    <el-option
+                                        v-for="bank in bank_accounts"
+                                        :key="bank.id"
+                                        :label="
+                                            `${bank.description}-${bank.number}`
+                                        "
+                                        :value="bank.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                                <el-input
+                                    :disabled="!form_payment.is_bank"
+                                    class="mt-1"
+                                    placeholder="Nro Operación"
+                                    v-model="form.reference_number"
+                                ></el-input>
+                            </template>
+                            <template v-else>
+                                <span class="text-danger"
+                                    >No hay cuentas bancarias registradas</span
+                                >
+                            </template>
+                        </div>
                     </div>
-                </div>
-                <!-- Ingreso de pagos/dividir pagos / pagos con metodo de pago/promocion -->
-                <div class="row">
-                    <div class="col-6" v-if="form_payment.payment_method_type_id == '01'">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <label class="control-label fw-bold mb-0">Ingrese Monto</label>
-                            <el-tooltip
-                                :content="form.payment_condition_id == '01' ? 'Agregar Pago' : 'Agregar Cuota(s)'"
-                                placement="top">
-                                <el-button class="btn_buscarsmall ms-2" type="primary" @click="addPayment"
-                                    :disabled="disabledAddPayment()">
-                                    <span v-if="form.payment_condition_id == '01'">Agregar Pago</span>
-                                    <span v-else>Agregar Cuota(s)</span>
+                    <!-- Ingreso de pagos/dividir pagos / pagos con metodo de pago/promocion -->
+                    <div class="row">
+                        <!-- Columna 1: Ingreso de Montos -->
+                        <div
+                            class="col-xl-4 col-lg-4 col-md-12 mb-4"
+                            v-if="form_payment.payment_method_type_id == '01'"
+                        >
+                            <label class="control-label fw-bold"
+                                >Ingrese Monto</label
+                            >
+                            <div class="d-flex justify-content-center">
+                                <el-input
+                                    id="inputTotal"
+                                    ref="enter_amount"
+                                    v-model="form.enter_amount"
+                                    @blur="diferen()"
+                                    @input="enterAmount()"
+                                    class="me-3"
+                                >
+                                    <template slot="prepend">
+                                        {{ currencyTypeActive.symbol }}
+                                    </template>
+                                </el-input>
+                                <el-button
+                                    type="primary"
+                                    @click="addPayment"
+                                    :disabled="disabledAddPayment()"
+                                >
+                                    <span
+                                        v-if="form.payment_condition_id == '01'"
+                                        >Agregar</span
+                                    >
+                                    <span v-else>Agregar cuota</span>
                                 </el-button>
-                            </el-tooltip>
-                        </div>
-
-                        <div class="mb-1">
-                            <el-input id="inputTotal" ref="enter_amount" v-model="form.enter_amount" @blur="diferen()"
-                                @input="enterAmount()" class="me-3 flex-grow-1 w-100"
-                                style="margin-right: 0px; min-width: 0; width: 100%;">
-                                {{ currencyTypeActive.symbol }}
-                            </el-input>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mb-2" style="padding:0;">
-                            <div class="quick-cash-btns d-flex justify-content-between align-items-center w-100"
-                                style="gap: 8px; padding:0;" v-if="method_payments == '01'">
-                                <button class="btn_buscarsmall"
-                                    style="background-color: #1976d2; color: #fff; width: 50px;"
-                                    @click="setAmountCash(10)">10</button>
-                                <button class="btn_buscarsmall"
-                                    style="background-color: #388e3c; color: #fff; width: 50px;"
-                                    @click="setAmountCash(20)">20</button>
-                                <button class="btn_buscarsmall"
-                                    style="background-color: #fbc02d; color: #fff; width: 50px;"
-                                    @click="setAmountCash(50)">50</button>
-                                <button class="btn_buscarsmall"
-                                    style="background-color: #d32f2f; color: #fff; width: 50px;"
-                                    @click="setAmountCash(100)">100</button>
-                                <button class="btn_buscarsmall"
-                                    style="background-color: #7b1fa2; color: #fff; width: 50px;"
-                                    @click="setAmountCash(200)">200</button>
+                            </div>
+                            <br />
+                            <div class="mb-3 d-flex justify-content-center">
+                                <button
+                                    style="padding: 14px;"
+                                    type="button"
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(10)"
+                                >
+                                    10
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(20)"
+                                >
+                                    20
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(50)"
+                                >
+                                    50
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(100)"
+                                >
+                                    100
+                                </button>
+                                <button
+                                    class="btn btn-outline-primary fw-bold btn-lg me-2"
+                                    @click="setAmountCash(200)"
+                                >
+                                    200
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <!-- Pagos  y Cuotas con método de pago -->
-                    <div class="col-6">
-                        <table class="table" v-if="currentPayments.length != 0">
-                            <thead>
-                                <tr>
-                                    <th colspan="5" class="text-left">
+
+                        <div class="col-xl-4 col-lg-4 col-md-12 mb-2"></div>
+
+                        <!-- Columna 3: Promoción / Imprimir No imprimir -->
+                        <div class="col-xl-4 col-lg-4 col-md-12 mb-4">
+                            <!-- Sección Promoción -->
+                            <div
+                                class=""
+                                v-if="
+                                    configuration.is_promotion_document ||
+                                        configuration.promotions_by_points
+                                "
+                            >
+                                <!-- </div> -->
+                                <div
+                                    class="d-flex align-items-center justify-content-between"
+                                >
+                                    <span class="text-white"
+                                        >Puntos Acumulados:
                                         {{
-                                            form.payment_condition_id !== "01"
-                                                ? "Cuotas"
-                                                : "Pagos"
-                                        }}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(paymnt, idx) in currentPayments" :key="idx"
-                                    :class="{ 'table-secondary': idx % 2 === 0 }">
-                                    <td>{{ idx + 1 }}</td>
-                                    <td v-if="form.payment_condition_id !== '01'"
-                                        style="min-width: 120px; max-width: 150px;">
-                                        <el-date-picker :clearable="false" v-model="paymnt.date"
-                                            style="width: 120px;"></el-date-picker>
-                                    </td>
-                                    <td>{{ paymnt.method }}</td>
-                                    <td>
-                                        <strong v-if="!isNaN(paymnt.amount)">{{
-                                            Number(paymnt.amount).toFixed(2)
-                                            }}</strong>
-                                    </td>
-                                    <td>
-                                        <el-tooltip content="Eliminar pago" placement="top">
-                                            <el-button type="danger" icon="el-icon-delete" circle
-                                                @click="removePayment(paymnt.id)"></el-button>
-                                        </el-tooltip>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            Number(pointsMessage || 0).toFixed(
+                                                2
+                                            )
+                                        }}</span
+                                    >
+                                    <span class="text-white"
+                                        >Puntos Ganados Venta:
+                                        {{
+                                            Number(ventalista || 0).toFixed(2)
+                                        }}</span
+                                    >
+                                </div>
+                                <label for="promotion" class="w-100 fw-bold"
+                                    >Promoción</label
+                                >
+                                <div class="d-flex justify-content-center">
+                                    <el-select
+                                        :disabled="isClientesVarios()"
+                                        v-model="form.promotion_id"
+                                        filterable
+                                        clearable
+                                        placeholder="Promoción"
+                                        @change="changePromotion"
+                                    >
+                                        <el-option
+                                            v-for="(option,
+                                            idx) in promotions_document"
+                                            :key="idx"
+                                            :label="option.description"
+                                            :value="option.id"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                                <div
+                                    class="col-md-12 form-group"
+                                    v-if="promotionDocument && hasPromotionText"
+                                >
+                                    <br />
+                                    <el-checkbox
+                                        @change="receivePromotion"
+                                        v-model="form.receive_promotion"
+                                    >
+                                    </el-checkbox>
+                                    Aplicar promoción |
+                                    {{ hasPromotionText }}
+                                </div>
+                                <br />
+                                <div
+                                    class="col-md-2 form-group text-center"
+                                    v-if="
+                                        promotionByPoints &&
+                                            hasPromotionText &&
+                                            listPromotionItems.length > 0
+                                    "
+                                >
+                                    <el-button
+                                        @click="Promotion()"
+                                        type="primary"
+                                        size="small"
+                                    >
+                                        Canjear
+                                    </el-button>
+                                </div>
+                            </div>
+                            <br />
+                            <div
+                                class="radio-tile-group2 d-flex mb-3 justify-content-end me-4"
+                            >
+                                <div
+                                    class="input-container2 border rounded-sm me-2"
+                                    :class="{ selected: printerOn === '1' }"
+                                >
+                                    <input
+                                        id="imprimir"
+                                        v-model="printerOn"
+                                        @change="updateConfigutation"
+                                        class="radio-button2"
+                                        type="radio"
+                                        name="imprimir"
+                                        value="1"
+                                    />
+                                    <div class="radio-tile2">
+                                        <div class="icon">
+                                            <i class="fa fa-print"></i>
+                                        </div>
+                                        <label
+                                            for="imprimir"
+                                            class="radio-tile-label2"
+                                            >Imprimir</label
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="input-container2 border rounded-sm"
+                                    :class="{ selected: printerOn === '0' }"
+                                >
+                                    <input
+                                        id="noimprimir"
+                                        v-model="printerOn"
+                                        @change="updateConfigutation"
+                                        class="radio-button2"
+                                        type="radio"
+                                        name="imprimir"
+                                        value="0"
+                                    />
+                                    <div class="radio-tile2">
+                                        <div class="icon">
+                                            <i class="fa fa-ban"></i>
+                                        </div>
+                                        <label
+                                            for="noimprimir"
+                                            class="radio-tile-label2"
+                                            >No Imprimir</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Desocupar habitación -->
+                            <template v-if="form.is_room">
+                                <div class="mb-3 d-flex justify-content-end">
+                                    <div>
+                                        <label for="vacate"
+                                            >Desocupar habitación</label
+                                        >
+                                        <el-checkbox
+                                            v-model="form.vacate"
+                                        ></el-checkbox>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-                <div class="row" v-if="configuration.is_promotion_document || configuration.promotions_by_points">
-                    <div class="col-6">
-                        <div class="promotion-points-box text-center flex-fill me-1 mb-1"
-                            style="min-width: 140px; padding: 4px 4px;">
-                            <span class="fw-bold text-primary" style="font-size: 0.9rem;">
-                                Puntos Acumulados :
-                            </span>
-                            {{ Number(pointsMessage || 0) }}
+                <!-- Pagos con método de pago (Tabla) -->
+                <div class="mb-3 d-flex align-items-center">
+                    <table class="table" v-if="currentPayments.length != 0">
+                        <thead>
+                            <tr>
+                                <th colspan="5" class="text-left">
+                                    {{
+                                        form.payment_condition_id !== "01"
+                                            ? "Cuotas"
+                                            : "Pagos"
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(paymnt, idx) in currentPayments"
+                                :key="idx"
+                                :class="{ 'table-secondary': idx % 2 === 0 }"
+                            >
+                                <td>{{ idx + 1 }}</td>
+                                <td v-if="form.payment_condition_id !== '01'">
+                                    <el-date-picker
+                                        :clearable="false"
+                                        v-model="paymnt.date"
+                                    ></el-date-picker>
+                                </td>
+                                <td>{{ paymnt.method }}</td>
+                                <td>
+                                    <strong v-if="!isNaN(paymnt.amount)">{{
+                                        Number(paymnt.amount).toFixed(2)
+                                    }}</strong>
+                                </td>
+                                <td>
+                                    <el-tooltip
+                                        content="Eliminar pago"
+                                        placement="top"
+                                    >
+                                        <el-button
+                                            type="danger"
+                                            icon="el-icon-delete"
+                                            circle
+                                            @click="removePayment(paymnt.id)"
+                                        ></el-button>
+                                    </el-tooltip>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--Billetes y Monedas a recibir por delivery -->
+                <template v-if="configuration.show_coins_to_receive">
+                    <div
+                        class="m-2 p-3"
+                        style="background-color: #f5f7fa; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+                    >
+                        <!-- Leyenda o Suma de Monedas -->
+                        <div
+                            class="text-center mb-2"
+                            style="font-size: 1rem; font-weight: bold; color: #004085;"
+                        >
+                            <template v-if="sumCoins.length == 0">
+                                Billetes/Monedas a Recibir
+                            </template>
+                            <template v-else>
+                                {{ formatSumCoins }}
+                            </template>
                         </div>
-                        <div class="col-md-12 d-flex justify-content-center align-items-center">
-                            <el-select :disabled="isClientesVarios()" v-model="form.promotion_id" filterable clearable
-                                placeholder="Promoción" @change="changePromotion" style="width: 100%;">
-                                <el-option v-for="(option, idx) in promotions_document" :key="idx"
-                                    :label="option.description" :value="option.id"></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="promotion-points-box text-center flex-fill ms-1 mb-1"
-                            style="min-width: 140px; padding: 4px 4px;">
-                            <span class="fw-bold text-primary" style="font-size: 0.9rem;">
-                                Puntos Ganados
-                            </span>
-                            {{ Math.floor(ventalista || 0) }}
-                        </div>
-                        <div class="col-md-12 d-flex flex-column ">
-                            <div v-if="promotionDocument && hasPromotionText"
-                                class="mb-1 d-flex align-items-center justify-content-center">
-                                <el-checkbox @change="receivePromotion" v-model="form.receive_promotion"
-                                    class="me-2"></el-checkbox>
-                                <span class="fw-bold">Aplicar PROMO</span>
-                                <span class="ms-2 text-success" style="font-size: 0.8rem;"> | {{
-                                    hasPromotionText
-                                }}</span>
-                            </div>
-                            <div v-if="promotionByPoints && hasPromotionText && listPromotionItems.length > 0"
-                                class="d-flex ">
-                                <el-button class="btn_canjearsmall" @click="Promotion()" type="">
-                                    <i class="fas fa-gift me-1"></i> Canjear
+
+                        <!-- Grupo de Botones de Monedas/Billetes -->
+                        <div
+                            class="d-flex justify-content-center align-items-center"
+                        >
+                            <el-button-group
+                                class="d-flex flex-wrap justify-content-center"
+                            >
+                                <el-button
+                                    v-for="(coin, idx) in coins"
+                                    type="primary"
+                                    :key="idx"
+                                    @click="addCoin(coin.id)"
+                                    size="small"
+                                    style="background-color: #007bff; border-color: #007bff; color: white; margin: 0 5px 5px 0;"
+                                    round
+                                >
+                                    {{ coin.id }}
                                 </el-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-
-
-
-            </div>
-            <!-- Pagos con método de pago (Tabla) -->
-            <!-- <div class="mb-3 d-flex align-items-center">
-                <table class="table" v-if="currentPayments.length != 0">
-                    <thead>
-                        <tr>
-                            <th colspan="5" class="text-left">
-                                {{
-                                    form.payment_condition_id !== "01"
-                                        ? "Cuotas"
-                                        : "Pagos"
-                                }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(paymnt, idx) in currentPayments" :key="idx"
-                            :class="{ 'table-secondary': idx % 2 === 0 }">
-                            <td>{{ idx + 1 }}</td>
-                            <td v-if="form.payment_condition_id !== '01'">
-                                <el-date-picker :clearable="false" v-model="paymnt.date"></el-date-picker>
-                            </td>
-                            <td>{{ paymnt.method }}</td>
-                            <td>
-                                <strong v-if="!isNaN(paymnt.amount)">{{
-                                    Number(paymnt.amount).toFixed(2)
-                                }}</strong>
-                            </td>
-                            <td>
-                                <el-tooltip content="Eliminar pago" placement="top">
-                                    <el-button type="danger" icon="el-icon-delete" circle
-                                        @click="removePayment(paymnt.id)"></el-button>
-                                </el-tooltip>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
-            <!--Billetes y Monedas a recibir por delivery -->
-            <template v-if="configuration.show_coins_to_receive">
-                <div class="m-2 p-0"
-                    style="background-color: #f5f7fa; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <!-- Leyenda o Suma de Monedas -->
-                    <div class="text-center mb-2" style="font-size: 1rem; font-weight: bold; color: #004085;">
-                        <template v-if="sumCoins.length == 0">
-                            Billetes/Monedas a Recibir
-                        </template>
-                        <template v-else>
-                            {{ formatSumCoins }}
-                        </template>
-                    </div>
-
-                    <!-- Grupo de Botones de Monedas/Billetes -->
-                    <div class="d-flex justify-content-center align-items-center">
-                        <el-button-group class="d-flex flex-wrap justify-content-center">
-                            <el-button v-for="(coin, idx) in coins" type="primary" :key="idx" @click="addCoin(coin.id)"
-                                size="small"
-                                style="background-color: #007bff; border-color: #007bff; color: white; margin: 0 5px 5px 0; width: 60px; height: 40px; display: flex; align-items: center; justify-content: center;"
-                                round>
-                                {{ coin.id }}
-                            </el-button>
-
-                            <!-- Botón de Limpiar -->
-                            <el-tooltip content="Limpiar el conteo de monedas y billetes" placement="top">
-                                <el-button type="danger" @click="clearSumCoins" size="small"
-                                    style="background-color: #dc3545; border-color: #dc3545; color: white; margin: 0 0 5px 5px; width: 60px; height: 40px; display: flex; align-items: center; justify-content: center;"
-                                    round>
+                                <!-- Botón de Limpiar -->
+                                <el-button
+                                    type="danger"
+                                    @click="clearSumCoins"
+                                    size="small"
+                                    style="background-color: #dc3545; border-color: #dc3545; color: white; margin: 0 0 5px 5px;"
+                                    round
+                                >
                                     <i class="fas fa-trash"></i>
                                 </el-button>
-                            </el-tooltip>
-                        </el-button-group>
+                            </el-button-group>
+                        </div>
                     </div>
-                </div>
-            </template>
+                </template>
 
-            <div class="col-lg-12">
-                <div class="card bg-light text-dark p-2" style="padding-bottom: 0 !important;">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <!-- Modo de Pago Contado/Crédito/Crédito a Cuotas -->
-                            <div class="mb-0 w-100"
-                                :class="{ 'disabled': !(form.document_type_id == '01' || form.document_type_id == '03') }">
-                                <label class="fw-bold">Modo de Pago</label>
-                                <el-select v-model="form.payment_condition_id"
-                                    :disabled="!(form.document_type_id == '01' || form.document_type_id == '03')">
-                                    <el-option value="01" label="Contado"></el-option>
-                                    <el-option value="02" label="Crédito"></el-option>
-                                    <el-option value="03" label="Crédito a cuotas"></el-option>
-                                </el-select>
+                <div class="col-lg-12">
+                    <div class="card bg-light text-dark p-3">
+                        <div class="row">
+                            <!-- Columna 1 -->
+                            <div class="col-lg-4">
+                                <!-- Modo de Pago Contado/Crédito/Crédito a Cuotas -->
+                                <div
+                                    class="mb-3 w-100"
+                                    v-if="
+                                        form.document_type_id == '01' ||
+                                            form.document_type_id == '03'
+                                    "
+                                >
+                                    <label class="fw-bold">Modo de Pago</label>
+                                    <el-select
+                                        v-model="form.payment_condition_id"
+                                    >
+                                        <el-option
+                                            value="01"
+                                            label="Contado"
+                                        ></el-option>
+                                        <el-option
+                                            value="02"
+                                            label="Crédito"
+                                        ></el-option>
+                                        <el-option
+                                            value="03"
+                                            label="Crédito a cuotas"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+
+                                <!-- Afectación IGV -->
+                                <!-- <template > -->
+                                <template
+                                    v-if="configuration.affectation_optional"
+                                >
+                                    <div class="mb-3">
+                                        <label>
+                                            Afectación IGV para el documento
+                                        </label>
+                                        <el-select
+                                            v-model="affectation_optional_id"
+                                            clearable
+                                            filterable
+                                        >
+                                            <el-option
+                                                v-for="option in affectation_igv_types.filter(
+                                                    affectation =>
+                                                        affectation.id == '10'
+                                                )"
+                                                :key="option.id"
+                                                :label="option.description"
+                                                :value="option.id"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                    </div>
+                                </template>
+                                <!-- </template> -->
                             </div>
 
-                            <!-- Afectación IGV -->
-                            <template v-if="configuration.affectation_optional">
-                                <div class="mb-3">
-                                    <label>
-                                        Afectación IGV
-                                    </label>
-                                    <el-select v-model="affectation_optional_id" clearable filterable>
-                                        <el-option v-for="option in affectation_igv_types.filter(
-                                            affectation =>
-                                                affectation.id == '10'
-                                        )" :key="option.id" :label="option.description" :value="option.id">
-                                        </el-option>
-                                    </el-select>
+                            <!-- Columna 2 -->
+                            <div class="col-lg-4">
+                                <!-- Detracción -->
+                                <div
+                                    v-if="hasDetraction"
+                                    class="p-3 border rounded bg-light mb-3"
+                                >
+                                    <h6 class="fw-bold mb-2">Detracción</h6>
+
+                                    <!-- Cta Bancaria y botón "Más..." -->
+                                    <div class="mb-2 d-flex align-items-center">
+                                        <label
+                                            for="account"
+                                            class="fw-bold me-2"
+                                            >Cta Bancaria</label
+                                        >
+                                        <el-input
+                                            class="flex-grow-1 me-2"
+                                            v-model="company.detraction_account"
+                                            readonly
+                                        ></el-input>
+                                        <button
+                                            @click="
+                                                showDialogDocumentDetraction = true
+                                            "
+                                            class="btn btn-outline-primary"
+                                        >
+                                            Más...
+                                        </button>
+                                    </div>
+
+                                    <!-- Monto en la misma fila -->
+                                    <div class="d-flex align-items-center">
+                                        <label for="amount" class="fw-bold me-2"
+                                            >Monto</label
+                                        >
+                                        <el-input
+                                            v-model="form.detraction.amount"
+                                            readonly
+                                            class="flex-shrink-1"
+                                            style="width: 70px;"
+                                        ></el-input>
+                                    </div>
                                 </div>
-                            </template>
-                            <!-- Si NO cumple la condición, todo debe estar habilitado (enabled) -->
-                            <template v-else>
-                                <div class="mb-3">
-                                    <label>
-                                        Afectación IGV
-                                    </label>
-                                    <el-select v-model="affectation_optional_id" clearable filterable :disabled="false">
-                                        <el-option v-for="option in affectation_igv_types" :key="option.id"
-                                            :label="option.description" :value="option.id">
-                                        </el-option>
-                                    </el-select>
+                            </div>
+
+                            <!-- Columna 3 -->
+                            <div class="col-lg-4">
+                                <!-- Botón Dividir Pago -->
+                                <div
+                                    class="mb-3"
+                                    v-if="
+                                        form.payment_condition_id == '01' &&
+                                            configuration.split_payments_pos
+                                    "
+                                >
+                                    <el-button
+                                        type="success"
+                                        icon="el-icon-scissors"
+                                        size="large"
+                                        @click="handleDividirPagos"
+                                        class="w-100"
+                                    >
+                                        Dividir pago
+                                    </el-button>
                                 </div>
-                            </template>
-                        </div>
-
-
-                        <div class="col-lg-4">
-                            <!-- Detracción -->
-                            <div class="p-3 border rounded bg-light mb-0" :class="{ 'opacity-50': !hasDetraction }">
-                                <h6 class="fw-bold mb-2">Detracción</h6>
-
-                                <!-- Cta Bancaria y botón "Más..." -->
-                                <div class="mb-2 d-flex align-items-center">
-                                    <label for="account" class="fw-bold me-2">Cta Bancaria</label>
-                                    <el-input class="flex-grow-1 me-2" v-model="company.detraction_account"
-                                        :readonly="!hasDetraction" :disabled="!hasDetraction"></el-input>
-                                    <button @click="showDialogDocumentDetraction = true" class="btn btn-outline-primary"
-                                        :disabled="!hasDetraction">
-                                        Más...
+                                <br />
+                                <!-- Pagar y Cerrar -->
+                                <div
+                                    class="d-flex justify-content-between mb-3"
+                                >
+                                    <button
+                                        class="btn btn-primary w-100 me-2"
+                                        @click="handleOneClick"
+                                        :disabled="isLocked"
+                                    >
+                                        <i class="fas fa-money-bill-alt"></i>
+                                        PAGAR
+                                    </button>
+                                    <button
+                                        class="btn btn-dark w-100"
+                                        @click="back(false)"
+                                    >
+                                        <i class="fa fa-reply"></i> Cerrar
                                     </button>
                                 </div>
 
-                                <!-- Monto en la misma fila -->
-                                <div class="d-flex align-items-center">
-                                    <label for="amount" class="fw-bold me-2">Monto</label>
-                                    <el-input v-model="form.detraction.amount" :readonly="!hasDetraction"
-                                        :disabled="!hasDetraction" class="flex-shrink-1"
-                                        style="width: 70px;"></el-input>
-                                </div>
+                                <!-- Mensaje de Exceso de Monto (Bancarización) -->
+                                <!-- <div
+                                    v-if="hasExceedBank"
+                                    class="text-center text-danger"
+                                >
+                                    <span>
+                                        Recuerde que debido al monto deberá hacer
+                                        esta operación mediante Bancarización.
+                                        Ingrese en el campo "Observaciones" el
+                                        número de voucher o número de operación.
+                                    </span>
+                                </div> -->
                             </div>
                         </div>
+                    </div>
+                </div>
 
-
-                        <div class="col-lg-4">
-                            <br />
-                            <div class="d-flex mb-0 justify-content-center">
-                                <el-button :type="printerOn === 1 || printerOn === '1' ? 'primary' : 'default'"
-                                    icon="fa fa-print" class="btn_buscarsmall"
-                                    @click="printerOn = 1; updateConfigutation()" style="min-width: 120px;"
-                                    :style="{ opacity: !printerOn ? 0.5 : 1 }">
-                                    Imprimir
-                                </el-button>
-                                <el-button :type="printerOn === 0 || printerOn === '0' ? 'danger' : 'default'"
-                                    icon="fa fa-ban" class="btn_noimprimirsmall"
-                                    @click="printerOn = 0; updateConfigutation()" style="min-width: 120px;"
-                                    :style="{ opacity: printerOn === 1 || printerOn === '1' ? 0.5 : 1 }">
-                                    No Imprimir
-                                </el-button>
-                            </div>
-                            <!-- Botón Dividir Pago -->
-                            <!-- <div class="mb-3 d-flex justify-content-center" v-if="
-                                form.payment_condition_id == '01' &&
-                                configuration.split_payments_pos
-                            ">
-                                <el-button type="success" icon="el-icon-split" size="large" @click="handleDividirPagos"
-                                    class="btn_dividirpagossmall ">
-                                    Dividir Pago
-                                </el-button>
-                            </div> -->
-                            <br />
-
-                            <!-- Pagar y Cerrar -->
-                            <div class="d-flex justify-content-between mb-3">
-                                <button class="btn_buscarsmall" @click="handleOneClick" :disabled="isLocked">
-                                    <i class="fas fa-money-bill-alt"></i>
-                                    Pagar
-                                </button>
-                                <el-button v-if="
-                                    form.payment_condition_id == '01' &&
-                                    configuration.split_payments_pos
-                                " type="success" size="large" @click="handleDividirPagos"
-                                    class="btn_dividirpagossmall ">
-                                    <i class="fas fa-cut me-1"></i>
-                                    Dividir Pago
-                                </el-button>
-                                <button class="btn_noimprimirsmall" @click="back(false)">
-                                    <i class="fa fa-reply"></i> Cerrar
-                                </button>
-                            </div>
-
-                            <!-- Mensaje de Exceso de Monto (Bancarización) -->
-
+                <div
+                    v-if="splitPayments.length != 0"
+                    class="row m-1 p-2  bg-light rounded"
+                >
+                    <span style="margin-bottom:5px;">Pagos divididos</span>
+                    <div class="d-flex flex-wrap ">
+                        <div
+                            v-for="(payment, idx) in splitPayments"
+                            :key="idx"
+                            class="col-2"
+                        >
+                            Pago {{ idx + 1 }}:
+                            <strong
+                                >{{ currencyIdChoice }}
+                                {{ payment.amount }}</strong
+                            >
                         </div>
                     </div>
-                    <div v-if="hasExceedBank" class="text-center text-danger">
-                        <span class="blinking">
-                            El Monto a cobrar Requiere Bancarización, Desea ingresar Numero de Operación "Observaciones"
-                        </span>
-                    </div>
                 </div>
-            </div>
 
-            <div v-if="splitPayments.length != 0" class="row m-1 p-2  bg-light rounded">
-                <span style="margin-bottom:5px;">Pagos divididos</span>
-                <div class="d-flex flex-wrap ">
-                    <div v-for="(payment, idx) in splitPayments" :key="idx" class="col-2">
-                        Pago {{ idx + 1 }}:
-                        <strong>{{ currencyIdChoice }}
-                            {{ payment.amount }}</strong>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="splitProducts.length != 0" class="row m-1 p-2  bg-light rounded">
-                <span style="margin-bottom:5px;">Pagos divididos por producto</span>
-                <div class="d-flex flex-wrap ">
-                    <div v-for="(payment, idx) in splitProducts" :key="idx" class="col-3 m-1">
-                        <table v-if="
-                            payment.products &&
-                            payment.products.length > 0
-                        " class="col-12">
-                            <thead>
-                                <tr role="button" @click="selectAccount(idx)" :class="'bg-primary text-white border rounded-top'
-                                    ">
-                                    <th class="text-center" colspan="3">
-                                        <b> CUENTA {{ idx + 1 }} </b>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="border rounded-top " v-if="
-                                payment.products &&
-                                payment.products.length > 0
-                            ">
-                                <tr v-for="(product,
-                                    idx) in payment.products" :key="idx">
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.quantity }}
-                                        </h3>
-                                    </td>
-                                    <td>
-                                        <h3 class="text-muted text-small">
-                                            {{ product.description }}
-                                        </h3>
-                                    </td>
-                                    <td style="text-align:right">
-                                        <h3 class="text-muted text-small">
+                <div
+                    v-if="splitProducts.length != 0"
+                    class="row m-1 p-2  bg-light rounded"
+                >
+                    <span style="margin-bottom:5px;"
+                        >Pagos divididos por producto</span
+                    >
+                    <div class="d-flex flex-wrap ">
+                        <div
+                            v-for="(payment, idx) in splitProducts"
+                            :key="idx"
+                            class="col-3 m-1"
+                        >
+                            <table
+                                v-if="
+                                    payment.products &&
+                                        payment.products.length > 0
+                                "
+                                class="col-12"
+                            >
+                                <thead>
+                                    <tr
+                                        role="button"
+                                        @click="selectAccount(idx)"
+                                        :class="
+                                            'bg-primary text-white border rounded-top'
+                                        "
+                                    >
+                                        <th class="text-center" colspan="3">
+                                            <b> CUENTA {{ idx + 1 }} </b>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    class="border rounded-top "
+                                    v-if="
+                                        payment.products &&
+                                            payment.products.length > 0
+                                    "
+                                >
+                                    <tr
+                                        v-for="(product,
+                                        idx) in payment.products"
+                                        :key="idx"
+                                    >
+                                        <td>
+                                            <h3 class="text-muted text-small">
+                                                {{ product.quantity }}
+                                            </h3>
+                                        </td>
+                                        <td>
+                                            <h3 class="text-muted text-small">
+                                                {{ product.description }}
+                                            </h3>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <h3 class="text-muted text-small">
+                                                {{
+                                                    product.price *
+                                                        product.quantity
+                                                }}
+                                            </h3>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            colspan="2"
+                                            class="text-muted text-small"
+                                            style="text-align:right"
+                                        >
+                                            <b> Total</b>
+                                        </td>
+                                        <td class="text-muted text-small">
+                                            {{ currencySymbol }}
                                             {{
-                                                product.price *
-                                                product.quantity
+                                                totalItemSelected(
+                                                    payment.products
+                                                )
                                             }}
-                                        </h3>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="text-muted text-small" style="text-align:right">
-                                        <b> Total</b>
-                                    </td>
-                                    <td class="text-muted text-small">
-                                        {{ currencySymbol }}
-                                        {{
-                                            totalItemSelected(
-                                                payment.products
-                                            )
-                                        }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tbody v-else class="border">
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        <h3 class="text-muted text-small">
-                                            Sin productos seleccionados
-                                        </h3>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else class="border">
+                                    <tr>
+                                        <td colspan="3" class="text-center">
+                                            <h3 class="text-muted text-small">
+                                                Sin productos seleccionados
+                                            </h3>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div class="p-3"></div>
             </div>
-            <!-- <div class="p-3"></div> -->
         </div>
 
         <multiple-payment-form
@@ -1069,12 +1711,23 @@
                                     :recordId="saleNotesNewId"
                                     :showClose="true"></sale-notes-options>  -->
 
-        <card-brands-form :showDialog.sync="showDialogNewCardBrand" :external="true"
-            :recordId="null"></card-brands-form>
-        <person-form v-if="showDialogNewPerson" :showDialog.sync="showDialogNewPerson" type="customers"
-            :input_person="input_person" :external="true" :user_id.sync="form.user_id"
-            :document_type_id.sync="form.document_type_id" @add_customer="add_customer" :recordId="form.customer_id"
-            :fromPos="true">
+        <card-brands-form
+            :showDialog.sync="showDialogNewCardBrand"
+            :external="true"
+            :recordId="null"
+        ></card-brands-form>
+        <person-form
+            v-if="showDialogNewPerson"
+            :showDialog.sync="showDialogNewPerson"
+            type="customers"
+            :input_person="input_person"
+            :external="true"
+            :user_id.sync="form.user_id"
+            :document_type_id.sync="form.document_type_id"
+            @add_customer="add_customer"
+            :recordId="form.customer_id"
+            :fromPos="true"
+        >
         </person-form>
         <show-split-payment-form
             :form="form"
@@ -1120,39 +1773,7 @@
     </el-dialog>
 </template>
 
-<style scoped>
-.custom-image-btn:focus {
-    outline: 2px solid #1976d2;
-}
-
-.promotion-section {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #e0e0e0;
-}
-
-.promotion-points-box {
-    background: #f5f7fa;
-    border-radius: 8px;
-    padding: 12px 8px;
-    min-width: 120px;
-    margin-bottom: 0;
-}
-
-@media (max-width: 992px) {
-    .promotion-section {
-        padding: 10px 5px;
-    }
-
-    .promotion-points-box {
-        font-size: 1rem;
-        padding: 8px 4px;
-    }
-}
-
-
-
+<style>
 .input-container2 {
     width: 100px;
     /* Ancho del botón */
@@ -1177,42 +1798,18 @@
     /* Sombra más pronunciada */
 }
 
-
-
 .radio-tile2 {
-    background-size: 80% 80%;
+    background-size: cover;
+    /* Asegura que la imagen cubra todo el espacio */
     background-position: center;
-    background-repeat: no-repeat;
-    width: 80%;
-    height: 80%;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10), 0 1.5px 3px rgba(0, 0, 0, 0.07);
-    transition: box-shadow 0.2s, transform 0.2s, border 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    cursor: pointer;
+    /* Centra la imagen */
+    width: 100%;
+    /* Ocupa todo el ancho del contenedor */
+    height: 100%;
+    /* Ocupa todo el alto del contenedor */
+    border-radius: 8px;
+    /* Coincide con el contenedor */
 }
-
-.input-container2:has(.radio-button2:checked) .radio-tile2,
-.input-container2.active .radio-tile2 {
-    border: 2px solid #1976d2;
-    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
-    transform: scale(1.04);
-}
-
-.input-container2:hover .radio-tile2 {
-    border: 2px solid #90caf9;
-    box-shadow: 0 6px 18px rgba(25, 118, 210, 0.18);
-    transform: scale(1.03);
-}
-
-.radio-tile-label2 {
-    display: none;
-    /* Oculta el label por defecto */
-}
-
 
 .container-fluid {
     width: 100%;
@@ -1317,7 +1914,6 @@ label {
 .responsive-btn {
     transition: all 0.2s;
 }
-
 @media (max-width: 1280px) {
     .responsive-btn {
         font-size: 12px !important;
@@ -1325,53 +1921,6 @@ label {
         width: 90px !important;
         height: 36px !important;
     }
-}
-
-.blinking {
-    animation: blinkingText 1.2s infinite;
-}
-
-@keyframes blinkingText {
-    0% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    90% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Tamaño personalizado para los botones de medios de pago */
-.payment-btn-size {
-    width: 20px;
-    height: 40px;
-    min-width: 20px;
-    min-height: 40px;
-    background-position: center;
-}
-
-.payment-btn-size.active {
-    background-color: #077927 !important;
-    /* Si el botón tiene imagen, puedes agregar un overlay si lo deseas */
-    /* box-shadow: 0 0 0 2px #073f68; */
-}
-
-.tile-unselected {
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-.radio-tile2 {
-    opacity: 1;
-    transition: opacity 0.2s;
 }
 </style>
 
@@ -1481,11 +2030,11 @@ export default {
             hasDetraction: false,
             methodsValidate: [
                 "Yape",
-                "Plin",
-                "TARJETA: Izipay",
-                "TARJETA: Culqui",
-                "TARJETA: Niubiz",
-                "TARJETA: Openpay"
+                "PLIN",
+                "TARJETA: IZYPAY",
+                "Culqui",
+                "TARJETA: NIUBIZ",
+                "TARJETA: OPENPAY"
             ],
             notRegister: false,
             sumCoins: [],
@@ -1921,9 +2470,9 @@ export default {
             // Cambiar el ancho según el tamaño de la pantalla
             if (window.innerWidth <= 1280) {
                 // Si la pantalla es pequeña
-                this.dialogWidth = "85%"; // Ajustar a 90% en pantallas pequeñas
+                this.dialogWidth = "98%"; // Ajustar a 90% en pantallas pequeñas
             } else {
-                this.dialogWidth = "60%"; // Mantener 70% en pantallas grandes
+                this.dialogWidth = "70%"; // Mantener 70% en pantallas grandes
             }
         },
         sendAjustment(amount) {
@@ -1977,7 +2526,6 @@ export default {
         },
         addDocumentDetraction(detraction) {
             //si  detraction no es objecto vacio
-
             if (Object.keys(detraction).length === 0) {
                 return;
             }
@@ -2449,22 +2997,6 @@ export default {
                 : 0.0;
         },
         disabledAddPayment() {
-            // No permitir más de 5 métodos de pago
-            /* if (this.currentPayments.length >= 5) {
-                return true;
-            }
-            // No permitir más de un pago en efectivo
-            if (
-                this.method_payments === "01" &&
-                this.currentPayments.some(p => p.method_payment_id === "01")
-            ) {
-                return true;
-            }
-            // No permitir que la suma de pagos supere el total
-            let totalPagos = this.currentPayments.reduce((a, b) => a + Number(b.amount), 0);
-            if (Number(this.form.enter_amount) + totalPagos > Number(this.form.total)) {
-                return true;
-            } */
             if (this.form.payment_condition_id == "03") {
                 return this.checkPaymentTotal() == 0.0;
             }
@@ -2474,24 +3006,6 @@ export default {
             return false;
         },
         addPayment() {
-            if (this.currentPayments.length >= 5) {
-                this.$toast.error("Solo se pueden agregar hasta 5 métodos de pago.");
-                return;
-            }
-            // No permitir más de un pago en efectivo
-            if (
-                this.method_payments === "01" &&
-                this.currentPayments.some(p => p.method_payment_id === "01")
-            ) {
-                this.$toast.error("Solo se puede agregar un pago en efectivo.");
-                return;
-            }
-            // No permitir que la suma de pagos supere el total
-            let totalPagos = this.currentPayments.reduce((a, b) => a + Number(b.amount), 0);
-            if (Number(this.form.enter_amount) + totalPagos > Number(this.form.total)) {
-                this.$toast.error("El monto total de los pagos no puede superar el total a cobrar.");
-                return;
-            }
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
@@ -3372,9 +3886,15 @@ export default {
                 ) {
                     this.form.total = this.form.total_value;
                     if (this.discount_amount >= this.form.total)
-                        return this.$toast.error(
-                            "El monto de descuento debe ser menor al total de venta"
-                        );
+                        return Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text:
+                                "El monto de descuento debe ser menor al total de venta",
+                            timer: 3000,
+                            showConfirmButton: false,
+                            toast: true
+                        });
 
                     this.reCalculateTotal();
                     this.enterAmount();
@@ -3405,7 +3925,7 @@ export default {
             });
             return total_exonerated;
         },
-        // para calcular el descuento global que se puede canjear a toda la venta
+        // para calcular el descuento global que se puede aplicar a toda la venta
         /* discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
@@ -3595,7 +4115,60 @@ export default {
         discountGlobal3() {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
+            if (global_discount > total) {
+                this.discount_amount = 0;
+                this.$forceUpdate();
+                return this.$toast.error(
+                    "El descuento no puede ser mayor al total"
+                );
+            }
+            let amount = parseFloat(global_discount);
+            let discounts = this.splitDiscount(amount, this.form.items.length);
+            this.setDiscountItems(discounts);
+        },
+        setDiscountItems(discounts) {
+            for (let index = 0; index < this.form.items.length; index++) {
+                const item = this.form.items[index];
+                const discount = discounts[index];
+                if (item.originalTotal == undefined) {
+                    item.originalTotal = item.total;
+                    item.originalTotalValue = item.total_value;
+                }
+                item.discounts = [
+                    {
+                        discount_type_id: "01",
+                        discount_type: {
+                            id: "01",
+                            active: 1,
+                            base: 0,
+                            level: "item",
+                            type: "discount",
+                            description:
+                                "Descuentos que no afectan la base imponible del IGV/IVAP"
+                        },
+                        is_amount: true,
+                        description: "Dscto",
+                        factor: _.round(discount / item.originalTotalValue, 4),
+                        amount: discount,
+                        base: item.originalTotalValue
+                    }
+                ];
+
+                item.total_discount = discount;
+                item.total = item.originalTotal - discount;
+                item.total_value = item.originalTotalValue - discount;
+            }
+        },
+        splitDiscount(amount, n) {
+            let parts = new Array(n).fill(Math.floor(amount / n));
+            for (let i = 0; i < amount % n; i++) {
+                parts[i]++;
+            }
+            return parts;
+        },
+        discountGlobal2() {
+            let global_discount = parseFloat(this.discount_amount);
+            let base = parseFloat(this.form.total);
             let amount = parseFloat(global_discount);
             let factor = _.round(amount / base, 4);
 
@@ -3652,7 +4225,6 @@ export default {
                 }
             }
         },
-
         // aqui es donde se considera todo los metodos de pago
         method_payment(method_pay) {
             this.hasCreditCardCharge = false;
@@ -4188,6 +4760,594 @@ export default {
                 console.log("no envio variation");
             }
         },
+        checkPaymentsIsOk() {
+            let total = 0;
+            this.currentPayments.forEach(p => {
+                total += parseFloat(p.amount);
+            });
+            return total == this.form.total;
+        },
+        checkBankAccount() {
+            let pass = true;
+            let { is_bank } = this.form_payment;
+            if (is_bank) {
+                if (!this.form.bank_account_id) {
+                    this.$toast.error("Debe seleccionar una cuenta bancaria");
+                    this.isLocked = false;
+                    pass = false;
+                }
+                if (!this.form.reference_number) {
+                    this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
+                    pass = false;
+                }
+            }
+
+            return pass;
+        },
+        verifyHasOperationNumber() {
+            //itera sobre this.currentPayments si el method es "Yape" o "PLIN" verifica que tengan el operation_number, en caso que no regresa un error
+            let pass = true;
+
+            this.currentPayments.forEach(p => {
+                if (this.methodsValidate.includes(p.method)) {
+                    if (!p.operation_number) {
+                        this.$toast.error(
+                            "Debe ingresar el número de operación"
+                        );
+                        this.isLocked = false;
+                        pass = false;
+                    }
+                }
+            });
+            return pass;
+        },
+        async validOperationNumber(form) {
+            let { payments } = form;
+            for (let i = 0; i < payments.length; i++) {
+                let { operation_number } = payments[i];
+                if (!operation_number) {
+                    this.$toast.error("Debe ingresar el número de operación");
+                    this.isLocked = false;
+                    return false;
+                }
+            }
+
+            const response = await this.$http.post(
+                "/caja/boxes/validation",
+                form
+            );
+            const { success, message } = response.data;
+            if (success) {
+                return true;
+            } else {
+                this.$toast.error(message);
+                return false;
+            }
+        },
+        // realzia la peticon y validacion para cobrar y liberar las mesas
+        async clickPayment(form) {
+            let boxes = this.currentPayments.reduce(
+                (a, b) => a + Number(b.amount),
+                0
+            );
+            let amount1 = Number(this.form.enter_amount);
+            let amount2 = Number(this.form.total);
+            if (
+                this.configuration.sale_note_credit_cash &&
+                boxes + amount1 < amount2 &&
+                this.form.document_type_id == "80"
+            ) {
+                try {
+                    await this.$confirm(
+                        "¿Desear realizar la nota de venta al crédito?",
+                        "Advertencia",
+                        {
+                            confirmButtonText: "Sí",
+                            cancelButtonText: "No",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    this.button_payment = false;
+                    return;
+                }
+            }
+
+            if (this.configuration.auth_discount && this.discount_amount > 0) {
+                this.loading_submit = true;
+                //con async y await deten el flujo por 5 segundos
+                this.loadingText =
+                    "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
+                await this.sleep(3000);
+                this.loadingText = "DESCUENTO AUTORIZADO";
+                await this.sleep(2000);
+                this.loadingText = "CARGANDO...";
+                this.loading_submit = false;
+            }
+            if (this.form.promotion_sale) {
+                this.form.document_type_id = "80";
+                this.setSeries();
+            }
+            if (!this.checkBankAccount()) {
+                this.button_payment = false;
+                return;
+            }
+
+            let how_is;
+            this.reCalculateTotal();
+            // return;
+            if (
+                (!this.form.series_id && this.conf.pos_quick_sale) ||
+                this.ordens_all_table
+            ) {
+                this.setSeries();
+            }
+            if (
+                this.configuration.college &&
+                !this.conf.pos_quick_sale &&
+                !this.notRegister
+            ) {
+                if (!this.form.student_id) {
+                    this.$toast.error("El alumno es obligatorio");
+                    this.isLocked = false;
+
+                    return;
+                }
+            }
+            if (
+                (form.document_type_id == "01" ||
+                    form.document_type_id == "03") &&
+                form.total <= 0
+            ) {
+                this.$toast.error(
+                    "El monto total no puede ser menor o igual a 0"
+                );
+                this.isLocked = false;
+                return;
+            }
+            if (form.total + 200 <= form.enter_amount) {
+                this.$toast.error(
+                    "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
+                );
+                this.isLocked = false;
+                return;
+            }
+
+            let customer = this.customers.find(c => c.id == form.customer_id);
+
+            if (customer == undefined) {
+                await this.reloadDataCustomers(form.customer_id);
+                customer = this.customers.find(c => c.id == form.customer_id);
+            }
+
+            if (
+                form.customer_telephone != null &&
+                form.customer_telephone != ""
+            ) {
+                if (!this.existNumber()) {
+                    this.$toast.error("Número para envío whatsapp inválido");
+                    this.isLocked = false;
+                    return;
+                }
+            }
+            if (form.customer_id == null || form.customer_id == "") {
+                this.isLocked = false;
+                return this.$toast.error("Elija un cliente");
+            }
+            if (
+                customer.identity_document_type_id == "1" &&
+                form.document_type_id == "01"
+            ) {
+                this.isLocked = false;
+                return this.$toast.error("No puede emitir Factura con DNI");
+            }
+            if (!form.series_id) {
+                this.isLocked = false;
+                return this.$toast.warning(
+                    "El establecimiento no tiene series disponibles para el comprobante"
+                );
+            }
+            // form.date_of_issue = moment().format("YYYY-MM-DD");
+            if (form.document_type_id === "80") {
+                form.prefix = "NV";
+                form.paid = this.form.total == this.form.enter_amount;
+                this.resource_documents = "sale-notes";
+                this.resource_payments = "sale_note_payments";
+                this.resource_options = this.resource_documents;
+            } else {
+                form.prefix = null;
+                this.resource_documents = "documents";
+                this.resource_payments = "document_payments";
+                this.resource_options = this.resource_documents;
+            }
+            if (this.orden != null) {
+                form.additional_information = `Orden N°${this.orden}`;
+            }
+            form.advances = 0.0;
+            form.total_advances = 0.0;
+            form.total_payment = form.total - (amount2 - amount1);
+
+            // {
+            //     payment_method_type_id: "01",
+            //     date_of_payment: form.date_of_issue,
+            //     payment: this.form.enter_amount,
+            // }
+            form.cash_id = this.cash_id;
+            if (this.form.payment_condition_id == "01") {
+                form.boxes = this.currentPayments;
+                if (this.form_payment.is_bank) {
+                    this.changeBankAccount();
+                }
+            } else {
+                let isOk = this.checkPaymentsIsOk();
+                if (!isOk) {
+                    this.$toast.error("Las cuotas no coinciden con el total");
+                    this.isLocked = false;
+                    return;
+                }
+            }
+
+            if (this.form.payment_condition_id !== "01") {
+                form.fee = this.currentPayments.map(b => ({
+                    id: null,
+                    currency_type_id: "PEN",
+                    amount: b.amount,
+                    date: b.date
+                }));
+                form.payment_condition_id = "02";
+            } else {
+                this.addPayment();
+                if (this.configuration.require_code) {
+                    if (!this.verifyHasOperationNumber()) {
+                        this.currentPayments.pop();
+                        this.enterAmount();
+                        return;
+                    } else {
+                        if (
+                            this.currentPayments
+                                .filter(p =>
+                                    this.methodsValidate.includes(p.method)
+                                )
+                                .map(p => ({
+                                    method: p.method,
+                                    operation_number: p.operation_number
+                                })).length > 0
+                        ) {
+                            if (
+                                !(await this.validOperationNumber({
+                                    payments: this.currentPayments
+                                        .filter(p =>
+                                            this.methodsValidate.includes(
+                                                p.method
+                                            )
+                                        )
+                                        .map(p => ({
+                                            method: p.method,
+                                            operation_number: p.operation_number
+                                        }))
+                                }))
+                            ) {
+                                this.currentPayments.pop();
+                                this.method_payment("Efectivo");
+                                if (this.currentPayments.length == 0) {
+                                    this.form.enter_amount = this.form.total;
+                                }
+                                this.enterAmount();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.checkLimitReceipt()) {
+                this.$toast.error(
+                    "Las boletas mayores a 699 deben tener un dni o ruc válido."
+                );
+                this.isLocked = false;
+                return;
+            }
+            this.verifyBoxesDuplicate();
+            if (this.form.boxes) {
+                form.payments = this.form.boxes.map(p => ({
+                    payment_method_type_id: p.method_payment_id,
+                    date_of_payment: form.date_of_issue,
+                    payment: p.amount
+                }));
+            }
+            if (this.quotationId) {
+                form.quotation_id = this.quotationId;
+            }
+            this.loading_submit = true;
+            this.button_payment = true;
+
+            this.form.items = this.form.items.filter(
+                item => Number(item.quantity) > 0
+            );
+            if (this.isConsignment) {
+                this.form.from_consignment = true;
+            }
+
+            try {
+                let ordenId = this.idOrden;
+
+                let hotels = this.configuration.hotels;
+                let printOrdenHotel = true;
+
+                if (hotels) {
+                    let resultado =
+                        this.form.is_room !== undefined &&
+                        this.form.promotion_sale !== undefined
+                            ? this.form.is_room && this.form.promotion_sale
+                            : false;
+                    printOrdenHotel = resultado;
+                }
+                /* let isBrazalete = form.food?.description?.trim().toUpperCase().includes("BRAZALETE"); */
+                if (
+                    (ordenId == undefined || ordenId == null) &&
+                    (form.variation == undefined ||
+                        form.variation == null ||
+                        form.variation == false) &&
+                    !this.conf.pos_quick_sale &&
+                    !this.ordens_all_table &&
+                    printOrdenHotel
+                ) {
+                    const responses = await this.$http.post(
+                        "/caja/worker/send-orden",
+                        this.orden_items
+                    );
+                    if (!responses.data.success) {
+                        // Mostrar mensaje de error del servidor
+                        this.$showSAlert(
+                            "ALERTA",
+                            responses.data.message,
+                            "error"
+                        );
+                        this.ordenLoading = false;
+                        this.loading_submit = false;
+                        this.button_payment = false;
+                        this.isLocked = false;
+                        this.$emit("update:is_payment", false);
+                        this.isLocked = false;
+                        return;
+                    }
+                    ordenId = responses.data.id;
+                    if (responses.status != 200) {
+                        return;
+                    }
+                }
+                form.orden_id = ordenId;
+                if (this.ordens_all_table) {
+                    form.all_ordens = true;
+                }
+                if (this.sumCoins.length > 0) {
+                    form.sumCoins = this.sumCoins;
+                }
+                /* if (this.configuration.split_payments_pos){
+                    message = "Venta realizada";
+                } else {
+                    const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                } */
+                const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                let { data } = response;
+                if (response.status == 200 && data.data) {
+                    let format = null;
+                    let data = response.data.data;
+                    switch (data.format_printer) {
+                        case 1:
+                            format = data.print_a4;
+                            break;
+                        case 2:
+                            format = data.print_a5;
+                            break;
+                        default:
+                            format = data.print_ticket;
+                            break;
+                    }
+
+                    this.operation_number = null;
+                    if (response.data.success == true) {
+                        let document_id = 0;
+
+                        if (form.document_type_id === "80") {
+                            this.number = response.data.data.number;
+                            document_id = response.data.data.id;
+                            this.form_cash_document.sale_note_id =
+                                response.data.data.id;
+                        } else {
+                            document_id = response.data.data.id;
+                            this.form_cash_document.document_id =
+                                response.data.data.id;
+                            this.number = response.data.data.number;
+                        }
+                        this.documentNewId = response.data.data.id;
+
+                        if (response.data.success == true) {
+                            if (this.configuration.all_items_pos) {
+                                this.$emit("reloadItems");
+                            }
+
+                            if (ordenId) {
+                                // Convertir llamadas await en promesas
+                                const promises = [];
+
+                                if (
+                                    this.configuration.college &&
+                                    this.form.student_id
+                                ) {
+                                    promises.push(
+                                        this.$http.post(
+                                            "/college/registers/sale",
+                                            {
+                                                is_sale_note:
+                                                    form.document_type_id ==
+                                                    "80",
+                                                document_id: this.documentNewId,
+                                                detail: {
+                                                    items: this.form.items.map(
+                                                        s => s.item
+                                                    )
+                                                },
+                                                student_id: this.form.student_id
+                                            }
+                                        )
+                                    );
+                                }
+
+                                if (
+                                    this.configuration.consignment &&
+                                    this.consignment_id &&
+                                    this.isConsignment
+                                ) {
+                                    promises.push(
+                                        this.$http
+                                            .post(`/consignment/liquidated`, {
+                                                id: this.consignment_id,
+                                                items: this.form.items.map(
+                                                    i => ({
+                                                        consignment_item_id:
+                                                            i.consignment_item_id,
+                                                        toWarehouse:
+                                                            i.toWarehouse,
+                                                        quantity: i.quantity
+                                                    })
+                                                ),
+                                                document_id: this.documentNewId,
+                                                document_type_id:
+                                                    form.document_type_id
+                                            })
+                                            .then(response => {
+                                                if (response.status == 200) {
+                                                    this.$toast.success(
+                                                        "Liquidación de consignación realizada."
+                                                    );
+                                                }
+                                            })
+                                    );
+                                }
+
+                                // Agregar promesa de orden_payment
+                                promises.push(
+                                    this.$http.post("pos/orden_payment", {
+                                        id: ordenId,
+                                        customer_id: customer.id,
+                                        document: {
+                                            isNoteSale:
+                                                form.document_type_id === "80",
+                                            id: this.documentNewId
+                                        }
+                                    })
+                                );
+
+                                if (this.configuration.promotions_sell) {
+                                    how_is = this.all_customers.find(
+                                        c => c.id == form.customer_id
+                                    );
+                                    if (!how_is.name.includes("VARIOS")) {
+                                        let itemspromo = form.items;
+                                        promises.push(
+                                            axios.post(`pos/processPromo`, {
+                                                itemspromo,
+                                                how_is
+                                            })
+                                        );
+                                    }
+                                }
+
+                                // Ejecutar todas las promesas en paralelo
+                                Promise.all(promises).then(responses => {
+                                    const response2 =
+                                        responses[promises.length - 1]; // orden_payment response
+                                    if (response2.data.success == true) {
+                                        if (this.form.customer_telephone) {
+                                            if (this.personalWhatsapp) {
+                                                this.$emit("getFile", {
+                                                    total: this.form.total,
+                                                    documentId: this
+                                                        .documentNewId,
+                                                    documentTypeId:
+                                                        form.document_type_id,
+                                                    number: this.form
+                                                        .customer_telephone,
+                                                    message: this.form.message
+                                                });
+                                            } else {
+                                                this.clickSendWhatsapp(
+                                                    form.document_type_id,
+                                                    this.documentNewId,
+                                                    this.number,
+                                                    form
+                                                );
+                                            }
+                                        }
+                                        if (!this.variation) {
+                                            this.$emit("limpiarForm");
+                                        }
+                                        this.$emit("removeConsignment");
+                                        this.loading_submit = false;
+                                        this.back(true);
+                                    }
+                                });
+                            } else {
+                                if (this.conf.pos_quick_sale) {
+                                    this.$toast.success("Venta realizada.");
+                                }
+                                if (this.form.customer_telephone) {
+                                    if (this.personalWhatsapp) {
+                                        this.$emit("getFile", {
+                                            total: this.form.total,
+                                            documentId: this.documentNewId,
+                                            documentTypeId:
+                                                form.document_type_id,
+                                            number: this.form
+                                                .customer_telephone,
+                                            message: this.form.message
+                                        });
+                                    } else {
+                                        this.clickSendWhatsapp(
+                                            form.document_type_id,
+                                            this.documentNewId,
+                                            this.number,
+                                            form
+                                        );
+                                    }
+                                }
+                                if (!this.variation) {
+                                    this.$emit("limpiarForm");
+                                }
+                                this.$emit("removeConsignment");
+                                this.loading_submit = false;
+                                this.back(true);
+                            }
+                        }
+                    }
+                } else {
+                    let {
+                        data: { message }
+                    } = response;
+                    this.$toast.error(message || "Ocurrió un error");
+                }
+            } catch (error) {
+                console.log(error);
+                const response = error.response;
+                let {
+                    data: { message }
+                } = response;
+
+                this.$toast.error(message || "Ocurrió un error");
+            } finally {
+                /* this.loading_submit = false;
+                this.loading = false; */
+                this.button_payment = false;
+                /* this.isLocked = false; */
+            }
+        },
         unlockButton() {
             this.isLocked = false;
         },
@@ -4317,7 +5477,6 @@ export default {
         setSeries() {
             this.form.series_id = null;
             this.series = _.filter(this.all_series, {
-
                 document_type_id: this.form.document_type_id
             });
             this.series.forEach(s => {
@@ -4400,8 +5559,6 @@ export default {
             //     return;
             // }
             // this.started = false;
-
-
 
             if (this.form.document_type_id == "01") {
                 this.currentDocumentsType = [
@@ -4608,49 +5765,17 @@ export default {
 }
 
 .radio-tile2 {
-    background-size: 80% 80%;
+    background-size: cover;
+    /* Asegura que la imagen cubra todo el espacio */
     background-position: center;
-    background-repeat: no-repeat;
-    width: 80%;
-    height: 80%;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10), 0 1.5px 3px rgba(0, 0, 0, 0.07);
-    transition: box-shadow 0.2s, transform 0.2s, border 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    cursor: pointer;
+    /* Centra la imagen */
+    width: 100%;
+    /* Ocupa todo el ancho del contenedor */
+    height: 100%;
+    /* Ocupa todo el alto del contenedor */
+    border-radius: 8px;
+    /* Coincide con el contenedor */
 }
-
-.input-container2:has(.radio-button2:checked) .radio-tile2,
-.input-container2.active .radio-tile2 {
-    border: 2px solid #1976d2;
-    box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
-    transform: scale(1.04);
-}
-
-.input-container2:hover .radio-tile2 {
-    border: 2px solid #90caf9;
-    box-shadow: 0 6px 18px rgba(25, 118, 210, 0.18);
-    transform: scale(1.03);
-}
-
-.radio-tile-label2 {
-    display: none;
-    /* Oculta el label por defecto */
-}
-
-.tile-unselected {
-    opacity: 0.5;
-    transition: opacity 0.2s;
-}
-
-.radio-tile2 {
-    opacity: 1;
-    transition: opacity 0.2s;
-}
-
 
 .container-fluid {
     width: 100%;
@@ -4755,7 +5880,6 @@ label {
 .responsive-btn {
     transition: all 0.2s;
 }
-
 @media (max-width: 1280px) {
     .responsive-btn {
         font-size: 12px !important;
@@ -4763,42 +5887,5 @@ label {
         width: 90px !important;
         height: 36px !important;
     }
-}
-
-.blinking {
-    animation: blinkingText 1.2s infinite;
-}
-
-@keyframes blinkingText {
-    0% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    90% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Tamaño personalizado para los botones de medios de pago */
-.payment-btn-size {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-    min-height: 80px;
-    background-position: center;
-}
-
-.payment-btn-size.active {
-    background-color: #073f68 !important;
-    /* Si el botón tiene imagen, puedes agregar un overlay si lo deseas */
-    /* box-shadow: 0 0 0 2px #073f68; */
 }
 </style>
