@@ -94,7 +94,6 @@ class OptionController extends Controller
     }
     function delete_items()
     {
-
         Document::where('id', '<>', null)->update(['orden_id' => null]);
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
         DB::connection('tenant')->table('hotel_rent_documents')->delete();

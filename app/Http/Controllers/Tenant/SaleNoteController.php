@@ -710,7 +710,7 @@ class SaleNoteController extends Controller
         // asignar menoria para export el excel
         ini_set('memory_limit', '5500M');
         ini_set('max_execution_time', '30000');
-        
+
         $records = $this->get_records($request)->get();
         $company = Company::active();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
@@ -776,8 +776,7 @@ class SaleNoteController extends Controller
             $endOfYear = Carbon::createFromFormat('Y', $year)->endOfYear()->toDateString();
 
             $records = $records->whereBetween('date_of_issue', [$startOfYear, $endOfYear]);
-        }
-         elseif ($date_end && preg_match('/^\d{4}-\d{2}$/', $date_end)) {
+        } elseif ($date_end && preg_match('/^\d{4}-\d{2}$/', $date_end)) {
             $startOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->startOfMonth()->toDateString();
             $endOfMonth = \Carbon\Carbon::createFromFormat('Y-m', $date_end)->endOfMonth()->toDateString();
 
@@ -836,7 +835,7 @@ class SaleNoteController extends Controller
         if ($number) {
             $records = $records->where("number", $number);
         }
-        
+
         if ($date_start || $date_end) {
             if ($date_start && $date_end) {
                 $records = $records->whereBetween('date_of_issue', [$date_start, $date_end]);
@@ -1488,7 +1487,7 @@ class SaleNoteController extends Controller
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
                 if ($request->orden_id) {
-                
+
                     Orden::where('id', $request->orden_id)
                         ->update([
                             'sale_note_id' => $this->sale_note->id,
@@ -1957,7 +1956,6 @@ class SaleNoteController extends Controller
                                 }
                             }
                         }
-                        
                     } else {
                         $this->dumpWithTime("boxes 1.2");
                         if (!$configuration->sale_note_credit_cash) {
@@ -2124,7 +2122,7 @@ class SaleNoteController extends Controller
             if ($this->sale_note->creditPayments) {
                 $this->sale_note->calculatePenalties();
             }
-            if($request->currentAppointment){
+            if ($request->currentAppointment) {
                 $currentAppointment = $request->currentAppointment;
                 $id = $currentAppointment['id'];
                 $user_appointment = UserScheduleAppointment::find($id);
@@ -2147,7 +2145,7 @@ class SaleNoteController extends Controller
             if ($configuration->sale_edit) {
                 $this->checkEditAndSendMessage($this->sale_note);
             }
-            
+
             return [
                 'success' => true,
                 'data' => [
@@ -3040,7 +3038,7 @@ class SaleNoteController extends Controller
             ];
         }
 
-        DB::connection('tenant')->transaction(function () use ($id, $request, $motivo) { // Added $motivo to use()
+        DB::connection('tenant')->transaction(function () use ($id, $request, $motivo) {
 
             $obj =  SaleNote::find($id);
             $obj->state_type_id = 11;
@@ -3070,7 +3068,7 @@ class SaleNoteController extends Controller
 
                 // 📦 Stock del ítem principal (el "plato")
                 $wr = ItemWarehouse::where([
-                    ['item_id', $item->item_id], 
+                    ['item_id', $item->item_id],
                     ['warehouse_id', $item->warehouse_id ?? $warehouse->id]
                 ])->first();
 
@@ -3130,6 +3128,22 @@ class SaleNoteController extends Controller
 
                 // habilitar series/lotes
                 $this->voidedLots($item);
+
+                if ($item->item->has_color_size && isset($item->item->color_size)) {
+
+                    foreach ($item->item->color_size as $cs) {
+
+                        if (!isset($cs->id) || !isset($cs->quantity)) {
+                            continue; // seguridad por si falta info
+                        }
+
+                        DB::connection('tenant')
+                            ->table('item_colors_sizes')
+                            ->where('id', $cs->id)
+                            ->increment('stock', $cs->quantity);
+                    }
+                }
+
 
                 // Anulación de crédito (igual que antes)
                 $is_credit = count($obj->credit_payments) > 0;

@@ -571,11 +571,11 @@ class PurchaseController extends Controller
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {
                             // Validar que el code sea único en toda la tabla
-                            $code_exists = ItemColorSize::where('code', $color_size['code'])->exists();
+                            /* $code_exists = ItemColorSize::where('code', $color_size['code'])->exists();
                             if ($code_exists) {
                                 $message = "El código {$color_size['code']} ya existe para otra combinación de color/talla. Debe ser único.";
                                 throw new \Exception($message);
-                            }
+                            } */
                             $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
                                 ->where('warehouse_id', $row['warehouse_id'])
                                 ->where('code', $color_size['code'])

@@ -1819,7 +1819,7 @@ class ItemController extends Controller
             'item_unit_type' => $item_unit_type
         ];
     }
-    public function destroy($id)
+    /* public function destroy($id)
     {
         try {
             $item = Item::findOrFail($id);
@@ -1852,8 +1852,62 @@ class ItemController extends Controller
                 ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] :
                 ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
         }
-    }
+    } */
 
+    public function destroy($id)
+    {
+        try {
+            $item = Item::findOrFail($id);
+
+            // Verificar los movimientos de inventario
+            $inventory_movements = Inventory::where('item_id', $id)->get();
+
+            if ($inventory_movements->count() > 1) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede eliminar el producto porque ya tiene movimientos en inventario'
+                ];
+            }
+
+            // Si hay solo un movimiento, validar que sea 0
+            if ($inventory_movements->count() === 1) {
+                $inv = $inventory_movements->first();
+
+                // Puedes ajustar aquí si usas campo tipo (ej. 'initial')
+                if ($inv->quantity != 0) {
+                    return [
+                        'success' => false,
+                        'message' => 'No se puede eliminar el producto porque ya tiene stock cargado en inventario'
+                    ];
+                }
+
+                // En este caso, sí podemos eliminar el único movimiento inicial
+                $inv->delete();
+            }
+
+            // Eliminar asociaciones
+            ItemUnitType::where('item_id', $id)->delete();
+            ItemLotsGroup::where('item_id', $id)->delete();
+
+            if ($item) {
+                Food::where('item_id', $id)->delete();
+            }
+
+            $this->deleteRecordInitialKardex($item);
+            $item->delete();
+
+            return [
+                'success' => true,
+                'message' => 'Producto eliminado con éxito'
+            ];
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return ($e->getCode() == '23000') ?
+                ['success' => false, 'message' => 'El producto está siendo usado por otros registros, no puede eliminar'] :
+                ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
+        }
+    }
+    
     public function exportBarCode(Request $request)
     {
         ini_set("pcre.backtrack_limit", "50000000");

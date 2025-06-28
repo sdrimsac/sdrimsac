@@ -8,6 +8,8 @@ use Modules\Order\Models\OrderNote;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Modules\Inventory\Traits\InventoryTrait;
 use Modules\Item\Models\ItemLot;
@@ -92,6 +94,15 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                         $item = Item::find($detail['item_id']);
                         $item_sets = $item->sets;
 
+                        $item_data = is_string($detail['item'])
+                            ? json_decode($detail['item'], true)
+                            : (array) $detail['item'];
+
+                        /* dump($item_data); */
+
+                        $item_data = json_decode(json_encode($detail['item']), true);
+                        /* dump($item_data); */
+
                         $quantity = $detail['quantity'];
                         if (isset($detail['item']->has_unit_type)) {
                             $unit_type = ItemUnitType::where('item_id', $detail['item_id'])
@@ -130,6 +141,39 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             $this->createInventoryKardex($document, $item->id, $total_quantity, $warehouse_id);
 
                             // ⛔ Saltar el resto de la lógica
+                            continue;
+                        }
+
+
+                        /* if (isset($item_data['has_color_size']) && $item_data['has_color_size'] == 1) {
+
+                            $color_sizes = $item_data['color_size'] ?? [];
+                            //dump($color_sizes);
+
+                            foreach ($color_sizes as $cs) {
+                                if (!isset($cs['id']) || !isset($cs['stock'])) continue;
+
+                                DB::connection('tenant')
+                                    ->table('item_colors_sizes')
+                                    ->where('id', $cs['id'])
+                                    ->increment('stock', $cs['stock']);
+                            }
+                            continue;
+                        } */
+
+                        if (isset($item_data['color_size']) && is_array($item_data['color_size'])) {
+
+                            $color_sizes = $item_data['color_size'];
+
+                            foreach ($color_sizes as $cs) {
+                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
+
+                                DB::connection('tenant')
+                                    ->table('item_colors_sizes')
+                                    ->where('id', $cs['id'])
+                                    ->increment('stock', $cs['quantity']);
+                            }
+
                             continue;
                         }
 
