@@ -139,13 +139,14 @@ if ($hostname) {
 
             Route::get('items/recordsMobile', '\App\Http\Controllers\Tenant\ItemController@recordsMobile');
             //MOBILE
-            Route::get('downloads/{model}/{type}/{external_id}/{format?}', 'DownloadController@downloadExternal');
+            Route::get('downloads/{model}/{type}/{external_id}/{format?}', '\App\Http\Controllers\Tenant\DownloadController@downloadExternal');
             Route::get('document/series', 'Api\MobileController@getSeries');
             Route::get('document/tables', 'Api\MobileController@tables');
             Route::get('document/customers', 'Api\MobileController@customers');
             Route::post('document/email', 'Api\MobileController@document_email');
             Route::get('sale-note/record/{salenote}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
             Route::post('sale-note', '\App\Http\Controllers\Tenant\SaleNoteController@store');
+
             //--------------------------------------------------------------------------------------------------
             Route::get('quotations', 'QuotationController@index')->middleware('redirect.level');
             Route::get('quotations/columns', 'QuotationController@columns');
