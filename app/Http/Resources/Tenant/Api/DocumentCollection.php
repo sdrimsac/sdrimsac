@@ -26,6 +26,7 @@ class DocumentCollection extends ResourceCollection
                 'customer_number' => $row->customer->number,
                 'customer_name' => $row->customer->name,
                 'date_of_issue' => $row->date_of_issue,
+                'time_of_issue' => $row->time_of_issue,
                 'full_number' => $row->series . '-' . $row->number,
                 'state_type_description' => $row->state_type->description,
                 'user_name' => ($row->user) ? $row->user->name : '',
