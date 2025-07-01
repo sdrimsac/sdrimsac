@@ -1771,7 +1771,6 @@ class BoxesController extends Controller
         $company = Company::first();
         $items = [];
 
-
         $min_01_document_id = null;
         $max_01_document_id = null;
         $min_07_document_id = null;
@@ -1789,7 +1788,7 @@ class BoxesController extends Controller
 
         ) {
             foreach ($documents as $document) {
-                $document = Document::select(['id', 'document_type_id', 'total'])
+                $document = Document::select(['id', 'document_type_id', 'total', 'state_type_id'])
                     ->with('items')
                     ->find($document->id);
 
