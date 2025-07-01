@@ -2013,6 +2013,7 @@ class BoxesController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
+
     public function cashes_salud(Request $request)
     {
         $cash_id = $request->cash_id;
@@ -2062,6 +2063,9 @@ class BoxesController extends Controller
                 $document = Document::select(['id', 'document_type_id', 'total'])
                     ->with('items')
                     ->find($document->id);
+                if (!$document || $document->state_type_id === '11') {
+                    continue;
+                }
                 if ($document->document_type_id == '01') {
                     if ($min_01_document_id == null) {
                         $min_01_document_id = $document->id;
