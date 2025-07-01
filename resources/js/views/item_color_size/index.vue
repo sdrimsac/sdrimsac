@@ -10,13 +10,13 @@
                     Colores & Tallas
                 </h4>
             </div>
-            <!-- <div class="data-table-visible-columns">
+            <div class="data-table-visible-columns">
                 <el-button type="" class="btn_buscar" href="javascript:void(0)"
                     @click.prevent="clickImportColorSize()">
                     <i class="fa fa-upload"></i>
                     Importar
                 </el-button>
-            </div> -->
+            </div>
             <div class="card-body">
                 <data-table class="table-striped" ref="datatable" :resource="resource">
                     <tr slot="heading" width="100%" class="bg-primary">
@@ -60,11 +60,11 @@
                                 >
                                     Editar
                                 </button> -->
-                                <button type="button" class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
+                                <!-- <button type="button" class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
                                 
                                     @click.prevent="clickDelete(row.id)">
                                     Eliminar
-                                </button>
+                                </button> -->
                             </template>
                         </td>
                     </tr>

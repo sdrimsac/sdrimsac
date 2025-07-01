@@ -22,7 +22,7 @@
                             <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4">
+                    <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.method }"
@@ -42,10 +42,9 @@
                                 v-text="errors.method[0]"
                             ></small>
                         </div>
-                    </div> -->
+                    </div>
 
-
-                    <!-- <template v-if="activeName == 'expenses'">
+                    <template v-if="activeName == 'expenses'">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="item">
@@ -186,7 +185,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </template> -->
+                    </template>
 
                 </div>
 
