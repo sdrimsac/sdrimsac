@@ -1756,7 +1756,7 @@ class BoxesController extends Controller
             "message" => "Se guardo con exito"
         ];
     }
-    public function cashes_salud_single(Request $request)
+    /* public function cashes_salud_single(Request $request)
     {
         $cash_id = $request->cash_id;
         $generate = $request->generate;
@@ -2003,7 +2003,149 @@ class BoxesController extends Controller
         }
 
         return $pdf->stream('pdf_file.pdf');
+    } */
+
+    public function cashes_salud_single(Request $request)
+    {
+        $cash_id = $request->cash_id;
+        $generate = $request->generate;
+        $cash = Cash::find($cash_id);
+        $reference_formate = str_replace(['-', ':'], '_', $cash->reference_number);
+        $name = $cash->user_id . '_' . $reference_formate . '_' . $cash->turn_id;
+        $user = $cash->user;
+        $establishment = $user->establishment;
+        $company = Company::first();
+        $items = [];
+
+        $min_01_document_id = $max_01_document_id = null;
+        $min_03_document_id = $max_03_document_id = null;
+        $min_07_document_id = $max_07_document_id = null;
+        $total_01_document = $total_03_document = $total_07_document = 0;
+
+        // Procesar documentos anulados para ignorarlos
+        $anulated_ids = Document::where('cash_id', $cash_id)
+            ->where('state_type_id', '11')
+            ->pluck('id')
+            ->toArray();
+
+        Box::select(['document_id', 'sale_note_id'])
+            ->where('cash_id', $cash_id)
+            ->where('incomes', 0)
+            ->where('expenses', 0)
+            ->orderBy('date', 'asc')
+            ->chunk(50, function ($boxes) use (
+                &$items,
+                &$min_01_document_id,
+                &$max_01_document_id,
+                &$min_03_document_id,
+                &$max_03_document_id,
+                &$min_07_document_id,
+                &$max_07_document_id,
+                &$total_01_document,
+                &$total_03_document,
+                &$total_07_document,
+                &$anulated_ids
+            ) {
+                foreach ($boxes as $box) {
+                    $document = null;
+
+                    if ($box->document_id) {
+                        $document = Document::with('items', 'document_affected_note')
+                            ->select(['id', 'document_type_id', 'total', 'state_type_id'])
+                            ->find($box->document_id);
+
+                        if (!$document || $document->state_type_id == '11') continue;
+
+                        if ($document->document_affected_note) {
+                            $affected = Document::select(['id', 'document_type_id', 'total'])
+                                ->find($document->document_affected_note->document_id);
+
+                            if ($affected && $affected->document_type_id == '07') {
+                                $min_07_document_id = is_null($min_07_document_id) ? $affected->id : min($min_07_document_id, $affected->id);
+                                $max_07_document_id = is_null($max_07_document_id) ? $affected->id : max($max_07_document_id, $affected->id);
+                                $total_07_document += $affected->total;
+                            }
+                        }
+
+                        if (in_array($document->id, $anulated_ids)) continue;
+
+                        if ($document->document_type_id == '01') {
+                            $total_01_document += $document->total;
+                            $min_01_document_id = is_null($min_01_document_id) ? $document->id : min($min_01_document_id, $document->id);
+                            $max_01_document_id = is_null($max_01_document_id) ? $document->id : max($max_01_document_id, $document->id);
+                        }
+
+                        if ($document->document_type_id == '03' && !$document->document_affected_note) {
+                            $total_03_document += $document->total;
+                            $min_03_document_id = is_null($min_03_document_id) ? $document->id : min($min_03_document_id, $document->id);
+                            $max_03_document_id = is_null($max_03_document_id) ? $document->id : max($max_03_document_id, $document->id);
+                        }
+
+                        foreach ($document->items as $item) {
+                            $original = Item::select(['barcode', 'category_id'])->find($item->item_id);
+                            $description = $item->item->description;
+                            $internal_id = $item->item->internal_id;
+                            $key = $description . '-' . $internal_id;
+                            $quantity = floatval($item->quantity);
+                            $total = floatval($item->total);
+
+                            if (isset($items[$key])) {
+                                $items[$key]['quantity'] += $quantity;
+                                $items[$key]['total'] += $total;
+                            } else {
+                                $items[$key] = [
+                                    'quantity' => $quantity,
+                                    'barcode' => $original->barcode,
+                                    'category_id' => $original->category_id,
+                                    'price' => floatval($item->unit_price),
+                                    'total' => $total,
+                                    'description' => $description
+                                ];
+                            }
+                        }
+                    }
+                }
+            });
+
+        $category_ids = array_unique(array_column($items, 'barcode'));
+        $categories = PrincipalCategory::select(['id', 'name', 'identifier'])
+            ->whereIn('identifier', $category_ids)->get();
+
+        $items_by_category = [];
+        foreach ($categories as $category) {
+            $items_by_category[$category->name] = array_filter($items, function ($item) use ($category) {
+                return $item['barcode'] == $category->identifier;
+            });
+        }
+
+        $info_documents = [];
+        if ($min_01_document_id) $info_documents['min_01'] = Document::select(['series', 'number'])->find($min_01_document_id);
+        if ($max_01_document_id) $info_documents['max_01'] = Document::select(['series', 'number'])->find($max_01_document_id);
+        if ($min_03_document_id) $info_documents['min_03'] = Document::select(['series', 'number'])->find($min_03_document_id);
+        if ($max_03_document_id) $info_documents['max_03'] = Document::select(['series', 'number'])->find($max_03_document_id);
+        if ($min_07_document_id) $info_documents['min_07'] = Document::select(['series', 'number'])->find($min_07_document_id);
+        if ($max_07_document_id) $info_documents['max_07'] = Document::select(['series', 'number'])->find($max_07_document_id);
+
+        $info_documents['total_01'] = $total_01_document;
+        $info_documents['total_03'] = $total_03_document;
+        $info_documents['total_07'] = $total_07_document;
+
+        try {
+            $pdf = PDF::loadView('report::boxes.cashes_salud', compact(
+                'company',
+                'items_by_category',
+                'user',
+                'cash',
+                'info_documents',
+                'establishment'
+            ))->setPaper('a4');
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_file.pdf');
     }
+
 
     public function cashes_salud(Request $request)
     {
