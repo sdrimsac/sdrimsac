@@ -1844,9 +1844,14 @@ class BoxesController extends Controller
                     }
                     if ($box->document_id) {
 
-                        $document = Document::select(['id', 'document_type_id', 'total'])
+                        $document = Document::select(['id', 'document_type_id', 'total', 'state_type_id'])
                             ->with('items')
                             ->find($box->document_id);
+
+                        if (!$document || $document->state_type_id === '11') {
+                            continue;
+                        }
+
 
                         if ($document->document_affected_note) {
                             $affected_document = Document::select(['id', 'document_type_id', 'total'])
