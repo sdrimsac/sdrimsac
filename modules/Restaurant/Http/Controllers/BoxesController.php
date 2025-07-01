@@ -1802,6 +1802,9 @@ class BoxesController extends Controller
                     ->with('items')
                     ->find($document->id);
 
+                if (!$document || $document->state_type_id === '11') {
+                    continue;
+                }
 
                 if ($document->document_type_id == '01') {
                     if ($min_01_document_id == null) {
