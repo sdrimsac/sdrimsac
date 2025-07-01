@@ -2046,7 +2046,7 @@ class BoxesController extends Controller
             &$max_07_document_id
         ) {
             foreach ($documents as $document) {
-                $document = Document::select(['id', 'document_type_id', 'total'])
+                $document = Document::select(['id', 'document_type_id', 'total', 'state_type_id'])
                     ->with('items')
                     ->find($document->id);
                 if (!$document || $document->state_type_id === '11') {
