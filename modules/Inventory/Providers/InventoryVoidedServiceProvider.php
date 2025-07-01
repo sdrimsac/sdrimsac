@@ -100,7 +100,7 @@ class InventoryVoidedServiceProvider extends ServiceProvider
 
                         /* dump($item_data); */
 
-                        $item_data = json_decode(json_encode($detail['item']), true);
+                        //$item_data = json_decode(json_encode($detail['item']), true);
                         /* dump($item_data); */
 
                         $quantity = $detail['quantity'];
@@ -144,24 +144,7 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             continue;
                         }
 
-
-                        /* if (isset($item_data['has_color_size']) && $item_data['has_color_size'] == 1) {
-
-                            $color_sizes = $item_data['color_size'] ?? [];
-                            //dump($color_sizes);
-
-                            foreach ($color_sizes as $cs) {
-                                if (!isset($cs['id']) || !isset($cs['stock'])) continue;
-
-                                DB::connection('tenant')
-                                    ->table('item_colors_sizes')
-                                    ->where('id', $cs['id'])
-                                    ->increment('stock', $cs['stock']);
-                            }
-                            continue;
-                        } */
-
-                        if (isset($item_data['color_size']) && is_array($item_data['color_size'])) {
+                        /* if (isset($item_data['color_size']) && is_array($item_data['color_size'])) {
 
                             $color_sizes = $item_data['color_size'];
 
@@ -175,7 +158,28 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             }
 
                             continue;
+                        } */
+
+                        if (isset($item_data['color_size']) && is_array($item_data['color_size']) && count($item_data['color_size']) > 0) {
+
+                            $stockRestored = false;
+
+                            foreach ($item_data['color_size'] as $cs) {
+                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
+
+                                DB::connection('tenant')
+                                    ->table('item_colors_sizes')
+                                    ->where('id', $cs['id'])
+                                    ->increment('stock', $cs['quantity']);
+
+                                $stockRestored = true;
+                            }
+
+                            if ($stockRestored) {
+                                continue;
+                            }
                         }
+
 
                         // Lotes
                         $lots = isset($detail['item']->lots) ? $detail['item']->lots : [];
