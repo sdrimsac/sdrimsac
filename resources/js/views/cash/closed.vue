@@ -54,6 +54,7 @@
                                 <el-select
                                     v-model="form.user_id"
                                     clearable
+                                    filterable
                                     @change="date_start()"
                                 >
                                     <el-option

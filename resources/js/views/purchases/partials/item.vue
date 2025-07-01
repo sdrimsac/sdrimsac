@@ -9,6 +9,7 @@
         :close-on-click-modal="false"
         width="70%"
     >
+    
         <form
             autocomplete="off"
             @submit.prevent="clickAddItem"
@@ -17,75 +18,6 @@
             <div class="form-body">
                 <!-- Fila 1 -->
                 <div class="row">
-                    <!-- <div class="col-md-8">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.item_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-box"></i> Producto/Servicios
-                                <a href="#" @click.prevent="showDialogNewItem = true">[+ Nuevo]</a> -
-                            </label>
-                            <div class="row">
-                                <div class="col-md-11">
-                                    <div
-                                        class="el-input el-input-group el-input-group--append"
-                                        style="display: flex;"
-                                    >
-                                        <el-select
-                                            v-if="!barcode_lector"
-                                            v-model="form.item_id"
-                                            :loading="loading_search"
-                                            :remote-method="searchRemoteItems"
-                                            filterable
-                                            placeholder="Buscar"
-                                            remote
-                                            @change="changeItem"
-                                            style="flex: 1;"
-                                        >
-                                            <el-option
-                                                v-for="option in items"
-                                                :key="option.id"
-                                                :value="option.id"
-                                                :label="option.full_description"
-                                            ></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Agregar Nuevo Producto o Servicio"
-                                        placement="top"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn btn-primary btn-sm"
-                                            @click.prevent="
-                                                showDialogNewItem = true
-                                            "
-                                            style="margin-left: 5px; height: 100%;"
-                                        >
-                                            <i class="fas fa-plus fa-xs"></i>
-                                        </button>
-                                    </el-tooltip>
-                                </div>
-                            </div>
-                        </div>
-                        <el-input
-                            ref="input_barcode"
-                            v-if="barcode_lector"
-                            v-model="input_barcode"
-                            placeholder="Buscar"
-                            @input="searchItemsDebounce"
-                        >
-                        </el-input>
-                        <el-checkbox v-model="barcode_lector">
-                            Lector de código de barras
-                        </el-checkbox>
-                    </div> -->
-
                     <div class="col-md-8">
                         <div
                             class="form-group"
