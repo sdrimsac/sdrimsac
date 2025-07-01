@@ -1,33 +1,23 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" append-to-body width="50%"
-        v-loading="loading">
+    <el-dialog
+        :title="titleDialog"
+        :visible="showDialog"
+        @close="close"
+        @open="create"
+        append-to-body
+        width="50%"
+        v-loading="loading"
+    >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
-
+                <div class="row"></div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group" :class="{ 'has-danger': errors.date }">
-                            <label class="control-label">Fecha</label>
-                            <el-date-picker :disabled="true" style="width:100%;" v-model="form.date" format="dd-MM-yyyy"
-                                value-format="yyyy-MM-dd" type="date">
-                            </el-date-picker>
-                            <small class="text-danger" v-if="errors.date" v-text="errors.date[0]"></small>
-                        </div>
-                    </div>
-                    <div class="col-md-8 p-2">
-                        <div class="form-group" :class="{ 'has-danger': errors.description }">
-                            <label class="control-label">Detalle - Concepto</label>
-                            <el-input type="textarea" v-model="form.description">
-                                <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                            <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
-                        </div>
-                    </div>
                     <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.method }"
                         >
-                            <label class="control-label">Metodo de Pago </label>
+                            <label class="control-label">Metodo de Pgo </label>
                             <el-select disabled v-model="form.method" clearable>
                                 <el-option
                                     v-for="option in payment_methods"
@@ -43,7 +33,48 @@
                             ></small>
                         </div>
                     </div>
-
+                    <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.amount }"
+                        >
+                            <label class="control-label">Efectivo</label>
+                            <el-input-number
+                                :disabled="hasDetails"
+                                v-model.number="form.amount"
+                                :precision="2"
+                                :controls="false"
+                                class="w-100"
+                            ></el-input-number>
+                            <small
+                                class="text-danger"
+                                v-if="errors.amount"
+                                v-text="errors.amount[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.date }"
+                        >
+                            <label class="control-label">Fecha</label>
+                            <el-date-picker
+                                :disabled="true"
+                                style="width:100%;"
+                                v-model="form.date"
+                                format="dd-MM-yyyy"
+                                value-format="yyyy-MM-dd"
+                                type="date"
+                            >
+                            </el-date-picker>
+                            <small
+                                class="text-danger"
+                                v-if="errors.date"
+                                v-text="errors.date[0]"
+                            ></small>
+                        </div>
+                    </div>
                     <template v-if="activeName == 'expenses'">
                         <div class="row">
                             <div class="col-md-4">
@@ -186,42 +217,48 @@
                             </table>
                         </div>
                     </template>
-
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <div class="form-group" :class="{ 'has-danger': errors.amount }" style="text-align: right;">
-                            <label class="control-label">Efectivo</label>
-                            <el-input-number :disabled="hasDetails" v-model.number="form.amount" :precision="2"
-                                :controls="false" class="w-100"></el-input-number>
-                            <small class="text-danger" v-if="errors.amount" v-text="errors.amount[0]"></small>
+                    <div class="col-md-12 p-2">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.description }"
+                        >
+                            <label class="control-label"
+                                >Detalle - Concepto</label
+                            >
+                            <el-input
+                                type="textarea"
+                                v-model="form.description"
+                            >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                            <small
+                                class="text-danger"
+                                v-if="errors.description"
+                                v-text="errors.description[0]"
+                            ></small>
                         </div>
                     </div>
                 </div>
-
             </div>
-            <br />
-            <div slot="footer" class="dialog-footer">
-                <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                    <el-button class="btn_cancelarsmall" @click.prevent="close()">
-                        <i class="fas fa-times fa-lg" style="margin-right: 4px;"></i>
-                        Cancelar
-                    </el-button>
-                    <el-button class="btn_guardarsmall" type="primary" :loading="loading_submit">
-                        <i class="fas fa-save fa-lg" style="margin-right: 4px;"></i>
-                        Guardar
-                    </el-button>
-                </div>
-            </div>
-            <!-- <div class="form-actions text-end pt-2 pb-2">
+            <div class="form-actions text-end pt-2 pb-2">
                 <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
-            </div> -->
+                <el-button
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                    >Guardar</el-button
+                >
+            </div>
         </form>
-        <el-dialog v-loading="loading" width="50%" append-to-body :visible.sync="showCreateItem">
+        <el-dialog
+            v-loading="loading"
+            width="50%"
+            append-to-body
+            :visible.sync="showCreateItem"
+        >
             <div class="row p-2">
                 <div class="col-md-8">
                     <label for="product">
@@ -234,12 +271,18 @@
                         Unidad de medida
                     </label>
                     <el-select v-model="newItem.unitTypeId">
-                        <el-option v-for="(type, idx) in unitTypes" :key="idx" :value="type.id"
-                            :label="type.description"></el-option>
+                        <el-option
+                            v-for="(type, idx) in unitTypes"
+                            :key="idx"
+                            :value="type.id"
+                            :label="type.description"
+                        ></el-option>
                     </el-select>
                 </div>
                 <div class="col-12 text-right " style="margin-top:15px;">
-                    <el-button type="primary" @click="saveUnitType">Guardar</el-button>
+                    <el-button type="primary" @click="saveUnitType"
+                        >Guardar</el-button
+                    >
                 </div>
             </div>
         </el-dialog>
@@ -387,7 +430,7 @@ export default {
                 this.$emit("getItemsDetail", input);
             }
         },
-        loadDataUtilities() { },
+        loadDataUtilities() {},
         initGroup() {
             this.form_group = {
                 id: null,

@@ -19,6 +19,7 @@ use Modules\Internet\Http\Controllers\InternetRegisterController;
 use Modules\Internet\Http\Controllers\InternetSuspensionController;
 use Modules\Internet\Http\Controllers\PlanesController;
 use Modules\Internet\Http\Controllers\InternetWorkersController;
+use Modules\Restaurant\Http\Controllers\BoxesDetailController;
 
 Route::get('/internet/register/export', [InternetRegisterController::class, 'export']);
 Route::get('/payments_print/{register_id}', [InternetRegisterController::class, "print_payments"]);
@@ -69,5 +70,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/workersadm/getAllRecords', [InternetWorkersController::class, 'getAllRecords']);
         Route::post('/workersadm/saveRecord', [InternetWorkersController::class, 'saveRecord']);
         Route::post('/workersadm/changeStatus', [InternetWorkersController::class, 'changeStatus']);
+
+        Route::get('items_detail', [BoxesDetailController::class, 'items_detail']);
+        Route::post('save_item', [BoxesDetailController::class, 'save_item']);
     });
 });
