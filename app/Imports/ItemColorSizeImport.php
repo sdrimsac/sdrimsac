@@ -6,6 +6,7 @@ use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Models\Tenant\ItemColorSize;
@@ -19,98 +20,137 @@ class ItemColorSizeImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        //try {
         $total = count($rows);
-
         $registered = 0;
-        unset($rows[0]);
+        unset($rows[0]);  // Skip header row
         $warehouse_id = request('warehouse_id');
         $duplicados = [];
+        $grouped_items = [];
+
+        /* Log::info('Iniciando importación', [
+            'total_rows' => $total,
+            'warehouse_id' => $warehouse_id
+        ]); */
+
         foreach ($rows as $row) {
+            // Skip empty rows
+            if (!$row || $row->filter()->isEmpty()) {
+                continue;
+            }
 
+            $rowValues = $row->toArray();
+           /*  Log::info('Procesando fila', ['row_values' => $rowValues]); */
 
-            $internal_id = $row[0];
-            $code = $row[1];
-            $color = strtoupper($row[2]);
-            $size = strtoupper($row[3]);
-            $stock = $row[4];
-            $price = $row[5];
+            // Get values using index access since row is now an array
+            $internal_id = $rowValues[0] ?? null;
+            $code = $rowValues[1] ?? null;
+            $color = isset($rowValues[2]) ? strtoupper($rowValues[2]) : null;
+            $size = isset($rowValues[3]) ? strtoupper($rowValues[3]) : null;
+            $stock = isset($rowValues[4]) ? (float)$rowValues[4] : 0;
+            $price = isset($rowValues[5]) ? (float)$rowValues[5] : 0;
 
+            /* Log::info('Datos extraídos', [
+                'internal_id' => $internal_id,
+                'code' => $code,
+                'color' => $color,
+                'size' => $size,
+                'stock' => $stock,
+                'price' => $price
+            ]); */
 
-
-
-            if ($internal_id != null) {
-
+            if ($internal_id) {
                 $item = Item::where('internal_id', $internal_id)->first();
+                Log::info('Búsqueda de item', [
+                    'internal_id' => $internal_id,
+                    'item_encontrado' => $item ? true : false,
+                    'item_id' => $item ? $item->id : null
+                ]);
 
-
-                if ($item !== null) {
+                if ($item) {
                     $item->has_color_size = true;
                     $item->save();
+                    
                     $item_id = $item->id;
-                    $item_warehouse = ItemWarehouse::where('item_id', $item_id)
-                        ->where('warehouse_id', $warehouse_id)
-                        ->first();
-                    if ($item_warehouse == null) {
-                        $item_warehouse = ItemWarehouse::create([
+                    $item_key = $item_id . '_' . $warehouse_id;
+
+                    if (!isset($grouped_items[$item_key])) {
+                        $grouped_items[$item_key] = [
+                            'type' => 'input',
                             'item_id' => $item_id,
                             'warehouse_id' => $warehouse_id,
-                            'stock' => $stock,
-                        ]);
-                        $item_warehouse->save();
-                    } else {
-                        $item_warehouse->stock = $item_warehouse->stock + $stock;
-                        $item_warehouse->save();
-                    }
-                    $color_size_id = null;
-                    $color_size_exits = ItemColorSize::where('item_id', $item_id)
-                        ->where('color', $color)
-                        ->where('code', $code)
-                        ->where('size', $size)
-                        ->where('warehouse_id', $warehouse_id)
-                        ->first();
-                    if ($color_size_exits == null) {
-                        $item_color_size = ItemColorSize::create([
-                            'item_id' => $item_id,
-                            'color' => $color,
-                            'size' => $size,
-                            'stock' => $stock,
-                            'code' => $code,
-                            'price' => $price,
-                            'warehouse_id' => $warehouse_id,
-                        ]);
-                        $item_color_size->save();
-                        $color_size_id = $item_color_size->id;
-                        
-                        $inventory =    InventoryKardex::create([
-                            'date_of_issue' => date('Y-m-d'),
-                            'item_id' => $item_id,
-                            'warehouse_id' => $warehouse_id,
-                            'inventory_kardexable_type' => 'App\\Models\\Tenant\\ItemColorSize',
-                            'inventory_kardexable_id' => $color_size_id,
-                            'quantity' => $stock,
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'updated_at' => date('Y-m-d H:i:s'),
-                            'is_import_excel' => true,
-                            'user_id' => optional(auth()->user())->id
-                        ]);
-                        $detail = "Color: $color, Talla: $size";
-                        InventoryKardexDetail::create([
-                            'inventory_kardex_id' => $inventory->id,
-                            'detail' => $detail,
-                        ]);
-                        $registered += 1;
-                    } else {
-                        // Si ya existe, guardar el código duplicado
-                        $duplicados[] = $code;
-                        continue;
+                            'inventory_transaction_id' => "02",
+                            'quantity' => 0,
+                            'color_size' => []
+                        ];
+                        /* Log::info('Creando nuevo grupo para item', [
+                            'item_key' => $item_key,
+                            'group' => $grouped_items[$item_key]
+                        ]); */
                     }
 
+                    // Check for duplicates
+                    $exists_in_group = false;
+                    foreach ($grouped_items[$item_key]['color_size'] as $cs) {
+                        if ($cs['color'] === $color && $cs['size'] === $size && $cs['code'] === $code) {
+                            $exists_in_group = true;
+                            $duplicados[] = [
+                                'internal_id' => $internal_id,
+                                'code' => $code,
+                                'color' => $color,
+                                'size' => $size
+                            ];
+                            /* Log::info('Combinación duplicada encontrada', [
+                                'item_key' => $item_key,
+                                'color' => $color,
+                                'size' => $size,
+                                'code' => $code
+                            ]); */
+                            break;
+                        }
+                    }
+
+                    if (!$exists_in_group) {
+                        $grouped_items[$item_key]['color_size'][] = [
+                            'stock' => $stock,
+                            'color' => $color,
+                            'size' => $size,
+                            'price' => $price,
+                            'code' => $code
+                        ];
+                        
+                        $grouped_items[$item_key]['quantity'] += $stock;
+                        $registered++;
+
+                        /* Log::info('Nueva combinación agregada', [
+                            'item_key' => $item_key,
+                            'registered' => $registered,
+                            'current_group' => $grouped_items[$item_key]
+                        ]); */
+                    }
                 }
             }
         }
-        $this->data = compact('total', 'registered', 'duplicados');
-    }
+
+        // Ensure we only keep items that have color_size entries
+        $grouped_items = array_filter($grouped_items, function($item) {
+            return count($item['color_size']) > 0;
+        });
+
+        /* Log::info('Resultado final', [
+            'total' => $total,
+            'registered' => $registered,
+            'duplicados' => $duplicados,
+            'items_count' => count($grouped_items),
+            'grouped_items' => $grouped_items
+        ]); */
+
+        $this->data = [
+            'total' => $total,
+            'registered' => $registered,
+            'duplicados' => $duplicados,
+            'items' => array_values($grouped_items)
+        ];
+    } 
 
     public function getData()
     {

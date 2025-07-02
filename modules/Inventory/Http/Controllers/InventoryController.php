@@ -23,10 +23,13 @@ use Modules\Inventory\Http\Requests\InventoryRequest;
 use Modules\Inventory\Http\Resources\InventoryResource;
 use Modules\Inventory\Http\Resources\InventoryCollection;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Imports\ItemColorSizeImport;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\SaleNoteItem;
+use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
+use Illuminate\Support\Facades\Log;
 
 class InventoryController extends Controller
 {
@@ -202,7 +205,7 @@ class InventoryController extends Controller
                 'series_enabled' => (bool) $row->series_enabled,
                 'has_color_size' => (bool) $row->has_color_size,
                 'color_size' => collect($row->color_size),
-                'warehouse' => $row->itemwarehouses ? $row->itemwarehouses->transform(function($itemwarehouse) {
+                'warehouse' => $row->itemwarehouses ? $row->itemwarehouses->transform(function ($itemwarehouse) {
                     return [
                         'id' => $itemwarehouse->warehouse_id,
                         'warehouse_description' => $itemwarehouse->warehouse->description ?? 'N/A',
@@ -472,14 +475,6 @@ class InventoryController extends Controller
                 }
                 foreach ($lots as $lot) {
 
-                    /*$inventory->lots()->create([
-                        'date' => $lot['date'],
-                        'series' => $lot['series'],
-                        'item_id' => $item_id,
-                        'warehouse_id' => $warehouse_id,
-                        'has_sale' => false
-                    ]);*/
-
                     $inventory->lots()->create([
                         'date' => $lot['date'],
                         'series' => $lot['series'],
@@ -546,6 +541,52 @@ class InventoryController extends Controller
         return $result;
     }
 
+    public function importColorZise(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemColorSizeImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                
+               /*  Log::info('Datos importados:', ['data' => $data]); */
+                
+                if (isset($data['items']) && count($data['items']) > 0) {
+                    DB::connection('tenant')->transaction(function() use ($data) {
+                        foreach ($data['items'] as $row) {
+                            /* Log::info('Procesando item:', ['row' => $row]); */
+                            
+                            $newRequest = new Request();
+                            $newRequest->merge($row);
+                            
+                            $inventoryRequest = InventoryRequest::createFrom($newRequest);
+                            /* Log::info('InventoryRequest creado:', ['request' => $inventoryRequest->all()]); */ 
+                            
+                            $this->store_transaction($inventoryRequest);
+                        }
+                    });
+                }
+
+                return [
+                    'success' => true,
+                    'message' => __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                /* Log::error('Error en importación:', ['error' => $e->getMessage()]); */ 
+                return [
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' => __('app.actions.upload.error'),
+        ];
+    }
 
     public function move(Request $request)
     {

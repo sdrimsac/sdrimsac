@@ -11,11 +11,11 @@
                 </h4>
             </div>
             <div class="data-table-visible-columns">
-                <el-button type="" class="btn_buscar" href="javascript:void(0)"
+                <!-- <el-button type="" class="btn_buscar" href="javascript:void(0)"
                     @click.prevent="clickImportColorSize()">
                     <i class="fa fa-upload"></i>
                     Importar
-                </el-button>
+                </el-button> -->
             </div>
             <div class="card-body">
                 <data-table class="table-striped" ref="datatable" :resource="resource">

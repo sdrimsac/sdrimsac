@@ -603,7 +603,7 @@
                                     <i class="fas fa-plus"></i> Cargar talla
                                     color
                                 </button> -->
-                                <el-button
+                                <!-- <el-button
                                     type="button"
                                     class="btn btn-add-product"
                                     @click.prevent="clickImportColorSize()"
@@ -611,7 +611,7 @@
                                 >
                                     <i class="fa fa-upload"></i>
                                     Importar Talla color
-                                </el-button>
+                                </el-button> -->
                             </div>
                         </div>
 

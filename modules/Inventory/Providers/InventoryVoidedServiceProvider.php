@@ -98,11 +98,6 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             ? json_decode($detail['item'], true)
                             : (array) $detail['item'];
 
-                        /* dump($item_data); */
-
-                        //$item_data = json_decode(json_encode($detail['item']), true);
-                        /* dump($item_data); */
-
                         $quantity = $detail['quantity'];
                         if (isset($detail['item']->has_unit_type)) {
                             $unit_type = ItemUnitType::where('item_id', $detail['item_id'])

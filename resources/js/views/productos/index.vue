@@ -34,6 +34,15 @@
                         type="primary"
                         class="btn_titulos_modal"
                         href="javascript:void(0)"
+                        @click.prevent="clickImportColorSize()"
+                    >
+                        <i class="fa fa-arrow-circle-down fa-lg"></i>
+                        Importar talla color 
+                    </el-button>
+                    <el-button
+                        type="primary"
+                        class="btn_titulos_modal"
+                        href="javascript:void(0)"
                         @click.prevent="clickCreate('input')"
                     >
                         <i class="fa fa-arrow-circle-down fa-lg"></i>
@@ -136,6 +145,7 @@
                                                     PRECIO
                                                 </th>
                                                 <th class="text-white">CODIGO FAMILIA</th>
+                                                <th class="text-white">STOCK TALLA COLOR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -147,6 +157,7 @@
                                                 <td>{{ color_size.size }}</td>
                                                 <td>{{ color_size.price }}</td>
                                                 <td>{{ color_size.code }}</td>
+                                                <td>{{ color_size.stock }}</td>
                                                 
                                             </tr>
                                         </tbody>
@@ -259,6 +270,9 @@
             :type.sync="typeTransaction" 
             :configuration="configuration">
         </form-pdf>
+        <import-color-size
+            :showDialog.sync="showImportColorSizeDialog"
+        ></import-color-size>
 
     </div>
 </template>
@@ -277,6 +291,7 @@ import InventoriesFormOutput from "../../../../modules/Inventory/Resources/asset
 import InventoriesMove from "../../../../modules/Inventory/Resources/assets/js/inventory/move.vue";
 import InventoriesRemove from "../../../../modules/Inventory/Resources/assets/js/inventory/remove.vue";
 import FormPdf from "./form_pdf.vue";
+import ImportColorSize from "./importColorZise.vue";
 
 import Swal from "sweetalert2";
 export default {
@@ -289,10 +304,12 @@ export default {
         InventoriesRemove,
         InventoriesFormOutput,
         Swal,
-        FormPdf
+        FormPdf,
+        ImportColorSize
     },
     data() {
         return {
+            showImportColorSizeDialog: false,
             showDialogRePrint: false,
             title: null,
             showDialog: false,
@@ -347,6 +364,9 @@ export default {
         /* console.log("dsadasd2"); */
     },
     methods: {
+        clickImportColorSize() {
+            this.showImportColorSizeDialog = true;
+        },
         RePrint(id){
             this.recordId = id;
             this.showDialogRePrint = true;

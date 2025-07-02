@@ -19,7 +19,6 @@
 
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
-               
                 <div
                     class="card-header bg-primary d-flex align-items-center"
                     style="padding: 15px;"
@@ -36,25 +35,35 @@
                     </h4>
                 </div>
 
-                <div class="data-table-visible-columns">
+                <div
+                    class="data-table-visible-columns d-flex align-items-center"
+                >
                     <!-- <el-button
-                                type="primary"
-                                class=""
-                                href="javascript:void(0)"
-                                @click.prevent="clickRestaurar()"
-                            >
-                                Restaurar Compra
-                            </el-button> -->
+                        type="primary"
+                        class="me-2"
+                        href="javascript:void(0)"
+                        @click.prevent="clickRestaurar()"
+                    >
+                        Importar talla y color
+                    </el-button> -->
                     <el-button
-                    type="primary"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
+                        type="button"
+                        class="btn btn-add-product"
+                        @click.prevent="clickImportColorSize()"
+                        data-toggle="tooltip"
+                    >
+                        <i class="fa fa-upload"></i>
+                        Importar Talla color
+                    </el-button>
+
+                    <el-button
+                        type="primary"
+                        class="btn_buscar me-2"
                         href="javascript:void(0)"
                         @click.prevent="clickNuevo()"
                     >
                         <i class="fas fa-plus"></i>
-                       
-                            Nuevo
+                        Nuevo
                     </el-button>
                     <!-- <el-button
                         class="btn_titulos_modal"
@@ -136,7 +145,7 @@
                         <tr class="text-center" slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td class="">
-                                <strong>{{ row.user_name }}</strong> : 
+                                <strong>{{ row.user_name }}</strong> :
                                 <br />
                                 {{ row.date_of_issue }}
                                 <br />
@@ -162,7 +171,11 @@
                                 {{ row.state_type_payment_description }}
                             </td>
                             <td>
-                                <template v-if="row.document_type_description === 'GUÍA'">
+                                <template
+                                    v-if="
+                                        row.document_type_description === 'GUÍA'
+                                    "
+                                >
                                     {{ row.number_full }}<br /><small
                                         v-text="row.document_type_description"
                                     ></small>
@@ -314,7 +327,7 @@
                                             Acciones
                                         </span>
                                     </button>
-                                    
+
                                     <div
                                         class="dropdown-menu dropdown-menu-end custom-dropdown"
                                     >
@@ -387,6 +400,9 @@
             :showFacturarDialog.sync="showFacturarDialog"
             :data.sync="data"
         ></FacturarModal>
+        <import-color-size
+            :showDialog.sync="showImportColorSizeDialog"
+        ></import-color-size>
     </div>
 </template>
 
@@ -631,6 +647,7 @@ import PurchaseImport from "./import.vue";
 import PurchasePayments from "@viewsModulePurchase/purchase_payments/payments.vue";
 import FacturarModal from "./partials/facturar.vue";
 import queryString from "query-string";
+import ImportColorSize from "./partials/importTallaColor.vue";
 
 export default {
     mixins: [deletable],
@@ -641,10 +658,12 @@ export default {
         PurchaseImport,
         PurchasePayments,
         FacturarModal,
-        DocumentOptions
+        DocumentOptions,
+        ImportColorSize
     },
     data() {
         return {
+            showImportColorSizeDialog: false,
             total: 0,
             showDialogVoided: false,
             resource: "purchases",
@@ -691,6 +710,9 @@ export default {
         this.getAvaibleCash();
     },
     methods: {
+        clickImportColorSize() {
+            this.showImportColorSizeDialog = true;
+        },
         getAvaibleCash() {
             this.$http("/caja/cash-transfer/available?with_all=1").then(
                 response => {
@@ -789,7 +811,7 @@ export default {
         clickFacturar(row) {
             this.showFacturarDialog = true;
             this.data = row;
-        },
+        }
         /* clickImport() {
             this.showImportDialog = true;
         } */

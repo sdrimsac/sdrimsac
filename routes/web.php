@@ -894,6 +894,7 @@ if ($hostname) {
                 Route::get('purchases/delete/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'delete']);
                 Route::post('purchases/import', [App\Http\Controllers\Tenant\PurchaseController::class, 'import']);
                 Route::post('purchases/facturar', [App\Http\Controllers\Tenant\PurchaseController::class, 'updatefacturar']);
+                Route::post('purchases/importColorZise', [App\Http\Controllers\Tenant\PurchaseController::class, 'importColorZise']);
 
 
                 // para ver los productos comprados
