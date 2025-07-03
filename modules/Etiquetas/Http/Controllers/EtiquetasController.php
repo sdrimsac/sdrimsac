@@ -371,6 +371,12 @@ class EtiquetasController extends Controller
                 }
 
                 $stock = $row->getStockByWarehouse($establishment_id);
+                
+                // Calculate purchase price with IGV if needed
+                $purchase_price = $row->purchase_unit_price;
+                if ($row->purchase_affectation_igv_type_id === "10") {
+                    $purchase_price = $purchase_price * 1.18;
+                }
 
                 return [
                     "id" => $row->id,
@@ -379,7 +385,7 @@ class EtiquetasController extends Controller
                     "tipo_barras" => $row->barcode_type, 
                     "stock" => $stock,
                     "price" => $row->sale_unit_price,
-                    "purchase" => $row->purchase_unit_price,
+                    "purchase" => $purchase_price,
                     "location" => $row->location,
                     "item_unit_types" => $row->item_unit_types,
                     'max_quantity' => $row->max_quantity
