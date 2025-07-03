@@ -91,36 +91,50 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                         }
 
                         if (isset($item_data['color_size']) && is_array($item_data['color_size']) && count($item_data['color_size']) > 0) {
-
                             $stockRestored = false;
 
-                            /* foreach ($item_data['color_size'] as $cs) {
-                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
-
-                                DB::connection('tenant')
-                                    ->table('item_colors_sizes')
-                                    ->where('id', $cs['id'])
-                                    ->increment('stock', $cs['quantity']);
-
-                                $stockRestored = true;
-                            } */
-
                             foreach ($item_data['color_size'] as $cs) {
-                                $cs = (array)$cs; // <-- 🔑 convierte el stdClass a array aquí
+                                $cs = (array)$cs;
 
-                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
+                                if (!isset($cs['id']) || !isset($cs['quantity'])) {
+                                    Log::warning("Color/Size item skipped due to missing id or quantity", ['cs' => $cs]);
+                                    continue;
+                                }
 
-                                DB::connection('tenant')
-                                    ->table('item_colors_sizes')
-                                    ->where('id', $cs['id'])
-                                    ->increment('stock', $cs['quantity']);
-                                
-                                $stockRestored = true;
+                                try {
+                                    // Actualizar el stock en item_colors_sizes
+                                    DB::connection('tenant')
+                                        ->table('item_colors_sizes')
+                                        ->where('id', $cs['id'])
+                                        ->increment('stock', $cs['quantity']);
+                                    
+                                    // Crear kardex para este color/talla específico
+                                    $this->createInventoryKardex(
+                                        $document, 
+                                        $detail['item_id'], 
+                                        $cs['quantity'], 
+                                        $warehouse_id,
+                                        "Devolución de stock - Color/Talla ID: {$cs['id']}"
+                                    );
+                                    
+                                    $stockRestored = true;
+                                } catch (\Exception $e) {
+                                    Log::error("Error restoring stock for color/size", [
+                                        'error' => $e->getMessage(),
+                                        'cs' => $cs,
+                                        'item_id' => $detail['item_id']
+                                    ]);
+                                }
                             }
 
-
                             if ($stockRestored) {
+                                // Si se restauró el stock de color/talla, continuamos con el siguiente item
                                 continue;
+                            } else {
+                                Log::warning("No stock was restored for any color/size", [
+                                    'item_id' => $detail['item_id'],
+                                    'color_size' => $item_data['color_size']
+                                ]);
                             }
                         }
 
