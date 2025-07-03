@@ -26,55 +26,6 @@ class InventoryVoidedServiceProvider extends ServiceProvider
         // $this->voided_order_note();
     }
 
-    /* private function voided()
-    {
-        //Revisar los tipos de documentos, ello varia el control de stock en las anulaciones.
-        Document::updated(function ($document) {
-            if ($document['document_type_id'] == '01' || $document['document_type_id'] == '03') {
-                if (in_array($document['state_type_id'], ['09', '11'], true)) {
-                    $warehouse = $this->findWarehouse($document['establishment_id']);
-                    if ($document['state_type_id'] == '09') {
-                        $company = Company::first();
-                        $company_name = $company->name;
-                        $message = "El documento con serie {$document['series']} y número {$document['number']} de la empresa {$company_name} ha sido rechazado";
-                        (new WhatsappController)->sendMessageAllSupprot($message);
-                    }
-                    foreach ($document['items'] as $detail) {
-                        $lots = isset($detail['item']->lots) ? $detail['item']->lots : [];
-
-                        foreach ($lots as $lot) {
-                            $has_sale_note = $document->sale_note_id != null;
-                            if (!$has_sale_note) {
-                                ItemLot::find($lot->id)->update(["has_sale" => 0]);
-                            }
-                        }
-                        $quantity = $detail['quantity'];
-                        if (isset($detail['item']->has_unit_type)) {
-                            $unit_type = ItemUnitType::where('item_id', $detail['item_id'])
-                                ->where('description', $detail['item']->has_unit_type)->first();
-                            if ($unit_type) {
-
-                                $quantity = $quantity * $unit_type->quantity_unit;
-                            }
-                        }
-                        $warehouse_id = isset($detail['warehouse_id']) ? $detail['warehouse_id'] : null;
-                        // dd($detail['item']->presentation);
-                        $presentationQuantity = (!empty($detail['item']->presentation)) ? $detail['item']->presentation->quantity_unit : 1;
-
-                        $this->createInventoryKardex($document, $detail['item_id'], $detail['quantity'] * $presentationQuantity,  $warehouse_id ?? $warehouse->id);
-                        $has_sale_note = $document->sale_note_id != null;
-                        if (!$has_sale_note) {
-                            $this->updateStock($detail['item_id'], $detail['quantity'] * $presentationQuantity, $warehouse_id ?? $warehouse->id);
-                            $this->updateDataLots($detail);
-                        }
-                    }
-
-                    $this->voidedWasDeductedPrepayment($document);
-                }
-            }
-        });
-    } */
-
     private function voided()
     {
         Document::updated(function ($document) {
@@ -139,27 +90,11 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             continue;
                         }
 
-                        /* if (isset($item_data['color_size']) && is_array($item_data['color_size'])) {
-
-                            $color_sizes = $item_data['color_size'];
-
-                            foreach ($color_sizes as $cs) {
-                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
-
-                                DB::connection('tenant')
-                                    ->table('item_colors_sizes')
-                                    ->where('id', $cs['id'])
-                                    ->increment('stock', $cs['quantity']);
-                            }
-
-                            continue;
-                        } */
-
                         if (isset($item_data['color_size']) && is_array($item_data['color_size']) && count($item_data['color_size']) > 0) {
 
                             $stockRestored = false;
 
-                            foreach ($item_data['color_size'] as $cs) {
+                            /* foreach ($item_data['color_size'] as $cs) {
                                 if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
 
                                 DB::connection('tenant')
@@ -168,7 +103,21 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                                     ->increment('stock', $cs['quantity']);
 
                                 $stockRestored = true;
+                            } */
+
+                            foreach ($item_data['color_size'] as $cs) {
+                                $cs = (array)$cs; // <-- 🔑 convierte el stdClass a array aquí
+
+                                if (!isset($cs['id']) || !isset($cs['quantity'])) continue;
+
+                                DB::connection('tenant')
+                                    ->table('item_colors_sizes')
+                                    ->where('id', $cs['id'])
+                                    ->increment('stock', $cs['quantity']);
+                                
+                                $stockRestored = true;
                             }
+
 
                             if ($stockRestored) {
                                 continue;
