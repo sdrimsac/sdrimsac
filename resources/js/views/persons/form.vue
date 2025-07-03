@@ -302,6 +302,7 @@
                             <el-select
                                 v-model="form.department_id"
                                 filterable
+                                clearable
                                 @change="filterProvince"
                                 popper-class="el-select-departments"
                                 dusk="department_id"
@@ -331,6 +332,7 @@
                             <el-select
                                 v-model="form.province_id"
                                 filterable
+                                clearable
                                 @change="filterDistrict"
                                 popper-class="el-select-provinces"
                                 dusk="province_id"
@@ -360,6 +362,7 @@
                             <el-select
                                 v-model="form.district_id"
                                 filterable
+                                clearable
                                 popper-class="el-select-districts"
                                 dusk="district_id"
                             >

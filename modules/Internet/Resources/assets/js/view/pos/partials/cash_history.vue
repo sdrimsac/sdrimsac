@@ -65,10 +65,19 @@
                                     </el-button>
                                 </el-tooltip>
                                 <el-tooltip content="Descargar A4" placement="top">
-                                    <el-button class="btn_guardarsmall" type="primary" size="mini" @click="openA4(box)">
+                                    <!-- <el-button class="btn_guardarsmall" type="primary" size="mini" @click="openA4(box)">
                                         A4
-                                    </el-button>
+                                    </el-button> -->
                                 </el-tooltip>
+                                <el-button
+                                    class="margin-left:10px;"
+                                    :type="
+                                        `${box.has_a4 ? 'primary' : 'danger'}`
+                                    "
+                                    @click="openA4(box)"
+                                >
+                                    A4
+                                </el-button>
                             </div>
                         </td>
                     </tr>
