@@ -259,6 +259,12 @@ if ($hostname) {
 
             Route::post('documents_server', 'Api\DocumentController@storeServer');
             Route::get('document_check_server/{external_id}', 'Api\DocumentController@documentCheckServer');
+
+            Route::post('dispatches', 'Api\DispatchController@store');
+            Route::get('dispatches/records', 'Api\DispatchController@records');
+
+
+
         });
         Route::get('documents/search/customers', '\App\Http\Controllers\Tenant\DocumentController@searchCustomers');
 

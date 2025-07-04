@@ -28,7 +28,7 @@
                                 ></logo>
                             </div>
                             <div class="col-sm-7 text-left mt-3 mb-0">
-                                <address class="ib mr-2">
+                                <!-- <address class="ib mr-2">
                                     <span class="font-weight-bold d-block"
                                         >NOTA DE VENTA</span
                                     >
@@ -48,6 +48,36 @@
                                         v-if="establishment.telephone != '-'"
                                         >{{ establishment.telephone }}</span
                                     >
+                                </address> -->
+                                <address
+                                    class="ib mr-2"
+                                    v-if="
+                                        establishment &&
+                                            establishment.district &&
+                                            establishment.province &&
+                                            establishment.department &&
+                                            establishment.country
+                                    "
+                                >
+                                    <span class="font-weight-bold d-block"
+                                        >NOTA DE VENTA</span
+                                    >
+                                    <span class="font-weight-bold">{{
+                                        company.name
+                                    }}</span>
+                                    <br />
+                                    <div v-if="establishment.address != '-'">
+                                        {{ establishment.address }},
+                                    </div>
+                                    {{ establishment.district.description }},
+                                    {{ establishment.province.description }},
+                                    {{ establishment.department.description }} -
+                                    {{ establishment.country.description }}
+                                    <br />
+                                    {{ establishment.email }} -
+                                    <span v-if="establishment.telephone != '-'">
+                                        {{ establishment.telephone }}
+                                    </span>
                                 </address>
                             </div>
                         </div>

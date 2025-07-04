@@ -277,7 +277,7 @@ class DocumentInput
                 $item = Item::find($row['item_id']);
                 $type_id = Functions::valueKeyInArray($row, "from_unit_type_id", null);
                 $from_unit_type_id = null;
-                if ($quotation_id) {
+                if($quotation_id){
                     $from_unit_type_id = Functions::valueKeyInArray($row['item'], "from_unit_type_id", null);
                 }
                 $type_desc = null;
@@ -287,7 +287,7 @@ class DocumentInput
                         $type_desc = $unit_type->description;
                     }
                 }
-
+            
                 if (isset($row['item']['warehouses'])) {
                     $warehouses = $row['item']['warehouses'];
                     foreach ($warehouses as $warehouse) {
@@ -296,6 +296,7 @@ class DocumentInput
                             break;
                         }
                     }
+                    
                 }
                 $items[] = [
                     'toWarehouse' => Functions::valueKeyInArray($row, 'toWarehouse', 0),

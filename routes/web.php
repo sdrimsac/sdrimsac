@@ -881,7 +881,7 @@ if ($hostname) {
                 Route::get('purchases', [App\Http\Controllers\Tenant\PurchaseController::class, 'index'])->name('tenant.purchases.index')->middleware('just.admin');
                 Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
                 Route::get('purchases/ne76/correlative', [App\Http\Controllers\Tenant\PurchaseController::class, 'ne76_correlative']);
-                Route::get('purchases/records', [App\Http\Controllers\Tenant\PurchaseController::class, 'records']);
+                Route::get('purchases/records', [AppHttp\Controllers\Tenant\PurchaseController::class, 'records']);
                 Route::get('purchases/export/{type}', [App\Http\Controllers\Tenant\PurchaseController::class, 'exports']);
                 Route::get('purchases/create/{purchase_order_id?}', [App\Http\Controllers\Tenant\PurchaseController::class, 'create'])->name('tenant.purchases.create')->middleware('just.admin');;
                 Route::get('purchases/tables', [App\Http\Controllers\Tenant\PurchaseController::class, 'tables']);
@@ -980,7 +980,7 @@ if ($hostname) {
                 Route::get('sale-notes/excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excel']);
                 Route::get('sale-notes/credit_pending', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getCreditPending']);
                 Route::get('sale-notes/totals', [App\Http\Controllers\Tenant\SaleNoteController::class, 'totals']);
-                // Route::get('sale-notes/create', [App\Http\Controllers\Tenant\SaleNoteController::class, 'create'])->name('tenant.sale_notes.create']);
+                // Route::get('sale-notes/create', [App\Http\Controllers\Tenant\SaleNoteController::class, 'create'])->name('tenant.sale_notes.create');
                 Route::get('sale-notes/create/{salenote?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'create'])->name('tenant.sale_notes.create')->middleware('just.admin')->middleware('redirect.level');
 
                 Route::get('sale-notes/tables', [App\Http\Controllers\Tenant\SaleNoteController::class, 'tables']);

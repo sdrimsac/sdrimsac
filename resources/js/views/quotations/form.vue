@@ -111,28 +111,26 @@
                                                     >
                                                 </label>
                                                 <el-select
-                                                    v-model="selectedCustomer"
+                                                    v-model="form.customer_id"
                                                     filterable
                                                     remote
-                                                    
                                                     class="border-left rounded-left border-info"
                                                     popper-class="el-select-customers"
-                                                    
+                                                    dusk="customer_id"
                                                     placeholder="Escriba el nombre o número de documento del cliente"
                                                     :remote-method="
                                                         searchRemoteCustomers
                                                     "
                                                     :loading="loading_search"
-                                                    @change="onCustomerChange"
                                                 >
                                                     <el-option
                                                         v-for="option in customers"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="option.description"
-                                                    >
-                                                        <span>{{ option.description }}</span>
-                                                    </el-option>
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    ></el-option>
                                                 </el-select>
                                                 <small
                                                     class="form-control-feedback"
@@ -962,10 +960,14 @@ export default {
                         sale_opportunity = response.data.data.sale_opportunity;
                         if (sale_opportunity.customer) {
                             // If customer data comes in the response, use it directly
-                            this.setCustomerFromResponse(sale_opportunity.customer);
+                            this.setCustomerFromResponse(
+                                sale_opportunity.customer
+                            );
                         } else {
                             // Otherwise fetch customer data
-                            this.reloadDataCustomers(sale_opportunity.customer_id);
+                            this.reloadDataCustomers(
+                                sale_opportunity.customer_id
+                            );
                         }
                     });
 
@@ -974,19 +976,20 @@ export default {
         },
         setCustomerFromResponse(customerData) {
             if (!customerData) return;
-            
+
             const customer = {
                 id: customerData.id,
-                description: `${customerData.name || customerData.trade_name} - ${customerData.number}`,
+                description: `${customerData.name ||
+                    customerData.trade_name} - ${customerData.number}`,
                 name: customerData.name,
                 trade_name: customerData.trade_name,
                 number: customerData.number
             };
-            
+
             this.customers = [customer];
             this.selectedCustomer = customer;
             this.form.customer_id = customer.id;
-            
+
             // Force update after setting customer
             this.$nextTick(() => {
                 this.$forceUpdate();
@@ -1048,14 +1051,21 @@ export default {
                 this.$http
                     .get(`/${this.resource}/search/customers?${parameters}`)
                     .then(response => {
-                        if (response.data.customers && response.data.customers.length > 0) {
-                            this.customers = response.data.customers.map(customer => ({
-                                id: customer.id,
-                                description: this.formatCustomerName(customer),
-                                name: customer.name, 
-                                trade_name: customer.trade_name,
-                                number: customer.number
-                            }));
+                        if (
+                            response.data.customers &&
+                            response.data.customers.length > 0
+                        ) {
+                            this.customers = response.data.customers.map(
+                                customer => ({
+                                    id: customer.id,
+                                    description: this.formatCustomerName(
+                                        customer
+                                    ),
+                                    name: customer.name,
+                                    trade_name: customer.trade_name,
+                                    number: customer.number
+                                })
+                            );
                         }
                         this.loading_search = false;
                     });
@@ -1328,14 +1338,24 @@ export default {
         },
         reloadDataCustomers(customer_id) {
             if (!customer_id) return;
-            
+
             this.$http
                 .get(`/${this.resource}/search/customer/${customer_id}`)
                 .then(response => {
-                    if (response.data.quotation && response.data.quotation.customer) {
-                        this.setCustomerFromResponse(response.data.quotation.customer);
-                    } else if (response.data.customers && response.data.customers.length > 0) {
-                        this.setCustomerFromResponse(response.data.customers[0]);
+                    if (
+                        response.data.quotation &&
+                        response.data.quotation.customer
+                    ) {
+                        this.setCustomerFromResponse(
+                            response.data.quotation.customer
+                        );
+                    } else if (
+                        response.data.customers &&
+                        response.data.customers.length > 0
+                    ) {
+                        this.setCustomerFromResponse(
+                            response.data.customers[0]
+                        );
                     }
                 });
         }
