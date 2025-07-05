@@ -573,6 +573,7 @@ export default {
                 attributes: [],
                 has_igv: null,
                 item_unit_types: [],
+                color_size: [],
                 has_plastic_bag_taxes: false,
                 warehouse_id: null,
                 lots_group: [],
@@ -818,7 +819,6 @@ export default {
                     this.agregar_item = true;
                 }
             }
-            /* this.agregar_item = true; */
         },
         updateprice() {
             if (this.configuration.refresh_price_sales == true) {
@@ -864,11 +864,9 @@ export default {
             this.form.unit_price = unit_price;
             this.form.item.unit_price = unit_price;
             this.form.item.presentation = this.item_unit_type;
-            this.form.affectation_igv_type = _.find(
-                this.affectation_igv_types, {
-                    id: this.form.affectation_igv_type_id
-                }
-            );
+            this.form.affectation_igv_type = _.find(this.affectation_igv_types, {
+                id: this.form.affectation_igv_type_id
+            });
 
             let IdLoteSelected = this.form.IdLoteSelected;
 
