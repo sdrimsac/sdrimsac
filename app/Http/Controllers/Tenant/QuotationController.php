@@ -1144,6 +1144,38 @@ class QuotationController extends Controller
         return $records;
     }
 
+
+    public function recordsMobile(Request $request)
+    {
+        $records = $this->getRecordsMobile($request);
+
+        return new QuotationCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    private function getRecordsMobile($request)
+    {
+        $records = Quotation::query()
+            ->whereTypeUser()
+            ->latest();
+
+        if (!empty($request->column) && !empty($request->value)) {
+
+            if ($request->column === 'user_name') {
+                $records->whereHas('user', function ($query) use ($request) {
+                    $query->where('name', 'like', "%{$request->value}%");
+                });
+            } else {
+                $records->where($request->column, 'like', "%{$request->value}%");
+            }
+        }
+
+        return $records;
+    }
+
+
+
+
+
     public function searchCustomers(Request $request)
     {
 

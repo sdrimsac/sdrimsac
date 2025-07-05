@@ -150,7 +150,7 @@ if ($hostname) {
             //--------------------------------------------------------------------------------------------------
             Route::get('quotations', 'QuotationController@index')->middleware('redirect.level');
             Route::get('quotations/columns', 'QuotationController@columns');
-            Route::get('quotations/records', '\App\Http\Controllers\Tenant\QuotationController@records');
+            Route::get('quotations/recordsMobile', '\App\Http\Controllers\Tenant\QuotationController@recordsMobile');
             Route::get('quotations/create/{saleOpportunityId?}', 'QuotationController@create')->middleware('redirect.level');
             Route::get('quotations/edit/{id}', 'QuotationController@edit')->middleware('redirect.level');
 
