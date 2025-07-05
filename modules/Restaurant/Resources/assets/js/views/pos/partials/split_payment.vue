@@ -1,27 +1,58 @@
 <template>
-    <el-dialog append-to-body @open="open" @close="close" v-loading="loading" :visible="showSplitPayment"
-        :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`" :width="dialogWidth" :top="dialogTop">
+    <el-dialog
+        append-to-body
+        @open="open"
+        @close="close"
+        v-loading="loading"
+        :visible="showSplitPayment"
+        :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`"
+        :width="dialogWidth"
+        :top="dialogTop"
+    >
         <div class="row">
             <div class="col-2">
                 <div class="col-md-12">
                     <label for="">Entre:</label>
-                    <el-input-number class="w-100 split-input-number" :min="2" :max="5" @input="updatePayments"
-                        v-model="number" size="mini"></el-input-number>
+                    <el-input-number
+                        class="w-100 split-input-number"
+                        :min="2"
+                        :max="5"
+                        @input="updatePayments"
+                        v-model="number"
+                        size="mini"
+                    ></el-input-number>
                 </div>
                 <div class="col-md-12">
                     <label for="type" style="display: flex; ">Cuentas</label>
-                    <el-radio-group v-model="splitByAmount" @change="updatePayments" size="mini"
-                        class="split-radio-group">
-                        <el-tooltip content="Dividir la cuenta en partes iguales" placement="top">
+                    <el-radio-group
+                        v-model="splitByAmount"
+                        @change="updatePayments"
+                        size="mini"
+                        class="split-radio-group"
+                    >
+                        <el-tooltip
+                            content="Dividir la cuenta en partes iguales"
+                            placement="top"
+                        >
                             <el-radio-button label="1">
-                                <span style="display: flex; align-items: center; justify-content: center;">
+                                <span
+                                    style="display: flex; align-items: center; justify-content: center;"
+                                >
                                     <i class="fas fa-equals"></i>
                                 </span>
                             </el-radio-button>
                         </el-tooltip>
-                        <el-tooltip content="Dividir cuenta por productos consumidos" placement="top">
-                            <el-radio-button label="2" :disabled="quantity == 1">
-                                <span style="display: flex; align-items: center; justify-content: center;">
+                        <el-tooltip
+                            content="Dividir cuenta por productos consumidos"
+                            placement="top"
+                        >
+                            <el-radio-button
+                                label="2"
+                                :disabled="quantity == 1"
+                            >
+                                <span
+                                    style="display: flex; align-items: center; justify-content: center;"
+                                >
                                     <i class="el-icon-goods"></i>
                                 </span>
                             </el-radio-button>
@@ -35,16 +66,26 @@
                         <thead style="background-color: #073f68; color: #fff;">
                             <tr>
                                 <th style="color: #fff;">Producto</th>
-                                <th style="color: #fff; text-align: right;">P/U</th>
+                                <th style="color: #fff; text-align: right;">
+                                    P/U
+                                </th>
                                 <th
-                                    style="color: #fff; width: 55px; min-width: 55px; max-width: 200px; text-align: center;">
-                                    Cant</th>
+                                    style="color: #fff; width: 55px; min-width: 55px; max-width: 200px; text-align: center;"
+                                >
+                                    Cant
+                                </th>
                                 <th
-                                    style="color: #fff; width: 60px; min-width: 60px; max-width: 200px; text-align: center;">
-                                    Resta</th>
+                                    style="color: #fff; width: 60px; min-width: 60px; max-width: 200px; text-align: center;"
+                                >
+                                    Resta
+                                </th>
                                 <th
-                                    style="color: #fff; width: 50px; min-width: 50px; max-width: 200px; text-align: center;">
-                                    <i class="fas fa-bolt" style="color: yellow;"></i>
+                                    style="color: #fff; width: 50px; min-width: 50px; max-width: 200px; text-align: center;"
+                                >
+                                    <i
+                                        class="fas fa-bolt"
+                                        style="color: yellow;"
+                                    ></i>
                                 </th>
                             </tr>
                         </thead>
@@ -53,17 +94,36 @@
                                 <td>
                                     {{ item.food.description }}
                                 </td>
-                                <td :style="{ width: '80px', minWidth: '80px', maxWidth: '200px', textAlign: 'right' }">
-                                    {{ item.price }}</td>
-                                <td class="text-primary font-weight-bold" style="text-align: center;">
+                                <td
+                                    :style="{
+                                        width: '80px',
+                                        minWidth: '80px',
+                                        maxWidth: '200px',
+                                        textAlign: 'right'
+                                    }"
+                                >
+                                    {{ item.price }}
+                                </td>
+                                <td
+                                    class="text-primary font-weight-bold"
+                                    style="text-align: center;"
+                                >
                                     {{ item.originalQuantity }}
                                 </td>
-                                <td style="text-align: center;">{{ item.quantity }}</td>
+                                <td style="text-align: center;">
+                                    {{ item.quantity }}
+                                </td>
                                 <td>
-                                    <el-tooltip content="Enviar producto a la cuenta seleccionada" placement="top">
-                                        <el-button icon="el-icon-s-promotion" :disabled="item.quantity == 0"
+                                    <el-tooltip
+                                        content="Enviar producto a la cuenta seleccionada"
+                                        placement="top"
+                                    >
+                                        <el-button
+                                            icon="el-icon-s-promotion"
+                                            :disabled="item.quantity == 0"
                                             @click="addItem(item)"
-                                            style="background-color: #073f68; color: #fff; border-color: #073f68;">
+                                            style="background-color: #073f68; color: #fff; border-color: #073f68;"
+                                        >
                                         </el-button>
                                     </el-tooltip>
                                 </td>
@@ -73,188 +133,402 @@
                 </div>
             </div>
         </div>
-        
 
-            <div class="row" v-for="(person, idx) in persons" :key="idx" style="width: 103%;">
-                <div class="row" :class="{ 'mt-2': idx == 0 }">
-                    <div class="col-12 mb-2">
-                        <div class="card" :style="{
-                            background: colorArray[idx % colorArray.length].background,
+        <div
+            class="row"
+            v-for="(person, idx) in persons"
+            :key="idx"
+            style="width: 103%;"
+        >
+            <div class="row" :class="{ 'mt-2': idx == 0 }">
+                <div class="col-12 mb-2">
+                    <div
+                        class="card"
+                        :style="{
+                            background:
+                                colorArray[idx % colorArray.length].background,
                             color: colorArray[idx % colorArray.length].color,
                             borderRadius: '8px',
                             padding: '12px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-                        }">
-                            <!-- Título de la cuenta -->
-                            <div class="d-flex align-items-center">
-                                <span style="font-weight: bold; font-size: 1.1em;">
-                                    Cuenta #{{ idx + 1 }}
-                                </span>
-                                <span v-if="person.amount" class="ml-3"
-                                    style="font-size: 1em; margin-left: auto; display: flex; align-items: center;">
-                                    Monto: <b>S/. {{ Number(person.amount).toFixed(2) }}</b>
-                                </span>
+                        }"
+                    >
+                        <!-- Título de la cuenta -->
+                        <div class="d-flex align-items-center">
+                            <span style="font-weight: bold; font-size: 1.1em;">
+                                Cuenta #{{ idx + 1 }}
+                            </span>
+                            <span
+                                v-if="person.amount"
+                                class="ml-3"
+                                style="font-size: 1em; margin-left: auto; display: flex; align-items: center;"
+                            >
+                                Monto:
+                                <b
+                                    >S/.
+                                    {{ Number(person.amount).toFixed(2) }}</b
+                                >
+                            </span>
+                        </div>
+                        <!-- Botones de selección de cuenta, Tipo de documento y Cliente en una sola fila -->
+                        <div class="row">
+                            <!-- Botón de selección de cuenta -->
+                            <div
+                                class="col-1 d-flex align-items-center justify-content-center"
+                            >
+                                <el-button
+                                    :type="
+                                        person.selected ? 'primary' : 'default'
+                                    "
+                                    :icon="person.selected ? '' : ''"
+                                    :disabled="splitByAmount == '1'"
+                                    @click="selectAccount(idx)"
+                                    style="font-size: 1em; padding: 10px 10px; min-width: 20px; min-height: 20px;"
+                                >
+                                    <i
+                                        v-if="person.selected"
+                                        class="fas fa-hand-paper"
+                                    ></i>
+                                    <i v-else class="fas fa-hand-rock"></i>
+                                </el-button>
                             </div>
-                            <!-- Botones de selección de cuenta, Tipo de documento y Cliente en una sola fila -->
-                            <div class="row">
-                                <!-- Botón de selección de cuenta -->
-                                <div class="col-1 d-flex align-items-center justify-content-center">
-                                    <el-button :type="person.selected ? 'primary' : 'default'"
-                                        :icon="person.selected ? '' : ''" :disabled="splitByAmount == '1'"
-                                        @click="selectAccount(idx)"
-                                        style="font-size: 1em; padding: 10px 10px; min-width: 20px; min-height: 20px;">
-                                        <i v-if="person.selected" class="fas fa-hand-paper"></i>
-                                        <i v-else class="fas fa-hand-rock"></i>
+                            <!-- Botones Tipo de documento -->
+                            <!-- <div class="col-4">
+                                <label for="document_type_id"
+                                    >Tipo de documento</label
+                                >
+                                <el-button-group
+                                    v-model="person.document_type_id"
+                                    filterable
+                                >
+                                    <el-button
+                                        v-if="establishments.documents.invoice"
+                                        value="01"
+                                        @click.native="
+                                            person.document_type_id = '01'
+                                        "
+                                        class="split-btn-group-btn btn-factura"
+                                    >
+                                        <i
+                                            class="fas fa-file-invoice-dollar fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        FACTURA
                                     </el-button>
-                                </div>
-                                <!-- Botones Tipo de documento -->
-                                <div class="col-4">
-                                    <label for="document_type_id">Tipo de documento</label>
-                                    <el-button-group v-model="person.document_type_id" filterable>
-                                        <el-button v-if="establishments.documents.invoice" value="01"
-                                            @click.native="person.document_type_id = '01'"
-                                            class="split-btn-group-btn btn-factura">
-                                            <i class="fas fa-file-invoice-dollar fa-sm" style="margin-right: 5px;"></i>
-                                            FACTURA
-                                        </el-button>
-                                        <el-button v-if="establishments.documents.receipt" value="03"
-                                            @click.native="person.document_type_id = '03'"
-                                            class="split-btn-group-btn btn-boleta">
-                                            <i class="fas fa-file-alt fa-sm" style="margin-right: 5px;"></i>
-                                            BOLETA
-                                        </el-button>
-                                        <el-button v-if="establishments.documents.sale_note" value="80"
-                                            @click.native="person.document_type_id = '80'"
-                                            class="split-btn-group-btn btn-nota">
-                                            <i class="fas fa-file-signature fa-sm" style="margin-right: 5px;"></i>
-                                            NOTA
-                                        </el-button>
-                                    </el-button-group>
-                                </div>
-                                <!-- Cliente -->
-                                <div class="col-7">
-                                    <label for="new_customer_id">
-                                        <a href="#" @click.prevent="openDialogNewPerson(idx)">Cliente [+ Nuevo]</a>
-                                    </label>
-                                    <el-select v-model="person.customer_id" filterable remote :class="{
-                                        pperson: person.selected
-                                    }" popper-class="el-select-customers"
-                                        placeholder="Escriba el nombre o número de documento del cliente"
-                                        :remote-method="searchRemoteCustomers" :loading="loading_search"
-                                        @change="changeCustomer(idx)" :ref="`customer_${idx}`">
-                                        <el-option v-for="option in customers" :key="option.id" :value="option.id"
-                                            :label="option.description"></el-option>
-                                    </el-select>
-                                </div>
-                            </div>
-                            <!-- Fila única para WhatsApp, Método de pago, Monto y N° de operación -->
-                            <div class="row w-100">
+                                    <el-button
+                                        v-if="establishments.documents.receipt"
+                                        value="03"
+                                        @click.native="
+                                            person.document_type_id = '03'
+                                        "
+                                        class="split-btn-group-btn btn-boleta"
+                                    >
+                                        <i
+                                            class="fas fa-file-alt fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        BOLETA
+                                    </el-button>
+                                    <el-button
+                                        v-if="
+                                            establishments.documents.sale_note
+                                        "
+                                        value="80"
+                                        @click.native="
+                                            person.document_type_id = '80'
+                                        "
+                                        class="split-btn-group-btn btn-nota"
+                                    >
+                                        <i
+                                            class="fas fa-file-signature fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        NOTA
+                                    </el-button>
+                                </el-button-group>
+                            </div> -->
 
-                                <!-- Método de pago -->
-                                <div class="col-4">
-                                    <label for="payment_method_id">Método de pago</label>
-                                    <el-select v-model="person.payment_method" filterable
-                                        @change="onChangePaymentMethod(idx)">
-                                        <el-option v-for="option in paymentMethods" :key="option.value"
-                                            :value="option.value" :label="option.text"></el-option>
-                                    </el-select>
-                                </div>
-                                <!-- monto -->
-                                <!-- <div class="col-3">
+                            <div class="col-4">
+                                <label for="document_type_id"
+                                    >Tipo de documento</label
+                                >
+                                <el-button-group>
+                                    <el-button
+                                        v-if="establishments.documents.invoice"
+                                        :class="[
+                                            'split-btn-group-btn',
+                                            {
+                                                'btn-factura':
+                                                    person.document_type_id ===
+                                                    '01'
+                                            }
+                                        ]"
+                                        @click.native="
+                                            person.document_type_id = '01'
+                                        "
+                                    >
+                                        <i
+                                            class="fas fa-file-invoice-dollar fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        FACTURA
+                                    </el-button>
+
+                                    <el-button
+                                        v-if="establishments.documents.receipt"
+                                        :class="[
+                                            'split-btn-group-btn',
+                                            {
+                                                'btn-boleta':
+                                                    person.document_type_id ===
+                                                    '03'
+                                            }
+                                        ]"
+                                        @click.native="
+                                            person.document_type_id = '03'
+                                        "
+                                    >
+                                        <i
+                                            class="fas fa-file-alt fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        BOLETA
+                                    </el-button>
+
+                                    <el-button
+                                        v-if="
+                                            establishments.documents.sale_note
+                                        "
+                                        :class="[
+                                            'split-btn-group-btn',
+                                            {
+                                                'btn-nota':
+                                                    person.document_type_id ===
+                                                    '80'
+                                            }
+                                        ]"
+                                        @click.native="
+                                            person.document_type_id = '80'
+                                        "
+                                    >
+                                        <i
+                                            class="fas fa-file-signature fa-sm"
+                                            style="margin-right: 5px;"
+                                        ></i>
+                                        NOTA
+                                    </el-button>
+                                </el-button-group>
+                            </div>
+
+                            <!-- Cliente -->
+                            <div class="col-7">
+                                <label for="new_customer_id">
+                                    <a
+                                        href="#"
+                                        @click.prevent="
+                                            openDialogNewPerson(idx)
+                                        "
+                                        >Cliente [+ Nuevo]</a
+                                    >
+                                </label>
+                                <el-select
+                                    v-model="person.customer_id"
+                                    filterable
+                                    remote
+                                    :class="{
+                                        pperson: person.selected
+                                    }"
+                                    popper-class="el-select-customers"
+                                    placeholder="Escriba el nombre o número de documento del cliente"
+                                    :remote-method="searchRemoteCustomers"
+                                    :loading="loading_search"
+                                    @change="changeCustomer(idx)"
+                                    :ref="`customer_${idx}`"
+                                >
+                                    <el-option
+                                        v-for="option in customers"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <!-- Fila única para WhatsApp, Método de pago, Monto y N° de operación -->
+                        <div class="row w-100">
+                            <!-- Método de pago -->
+                            <div class="col-4">
+                                <label for="payment_method_id"
+                                    >Método de pago</label
+                                >
+                                <el-select
+                                    v-model="person.payment_method"
+                                    filterable
+                                    @change="onChangePaymentMethod(idx)"
+                                >
+                                    <el-option
+                                        v-for="option in paymentMethods"
+                                        :key="option.value"
+                                        :value="option.value"
+                                        :label="option.text"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                            <!-- monto -->
+                            <!-- <div class="col-3">
                                         <label for="amount">Monto</label>
                                         <el-input v-model="person.amount" readonly></el-input>
                                     </div> -->
-                                <!-- N° de operación -->
-                                <div class="col-3" v-if="['03', '04', '05', '06'].includes(person.payment_method)">
-                                    <label for="">N. Op.</label>
-                                    <el-input v-if="['03', '04', '05', '06'].includes(person.payment_method)"
-                                        v-model="person.operation_number"
-                                        :placeholder="`N° de operación ${idx + 1}`"></el-input>
-                                    <div class="col-3" v-else >
-                                        <!-- Sino cumple queda vacio -->
-                                    </div>
-                                </div>
-                                <!-- Nro de WhatsApp -->
-                                <div class="col-4">
-                                    <label for="" style="margin-bottom: 2px;">
-                                        <i class="fab fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i>
-                                        WhatsApp
-                                    </label>
-                                    <el-input v-model="person.customer_telephone"
-                                        :placeholder="`N° de WhatsApp ${idx + 1}`" @keyup.enter="sendPayments"
-                                        style="padding: 2px 6px; margin: 0;"></el-input>
+                            <!-- N° de operación -->
+                            <div
+                                class="col-3"
+                                v-if="
+                                    ['03', '04', '05', '06'].includes(
+                                        person.payment_method
+                                    )
+                                "
+                            >
+                                <label for="">N. Op.</label>
+                                <el-input
+                                    v-if="
+                                        ['03', '04', '05', '06'].includes(
+                                            person.payment_method
+                                        )
+                                    "
+                                    v-model="person.operation_number"
+                                    :placeholder="`N° de operación ${idx + 1}`"
+                                ></el-input>
+                                <div class="col-3" v-else>
+                                    <!-- Sino cumple queda vacio -->
                                 </div>
                             </div>
-
-                        </div>
-
-                        <div class="col-12 m-1" v-if="splitByAmount == '2' && person.products.length > 0">
-                            <div class="split-products-list" style="padding: 0; margin: 0;">
-                                <el-collapse
-                                    :value="[`products_${idx}`]"
-                                    class="split-products-collapse"
-                                    accordion
-                                >
-                                    <el-collapse-item
-                                        :name="`products_${idx}`"
-                                        :title="`Productos (${person.products.length})`"
-                                        :style="{
-                                            background: colorArray[idx % colorArray.length].background,
-                                            color: colorArray[idx % colorArray.length].color,
-                                            borderRadius: '6px',
-                                            marginBottom: '8px',
-                                            border: '1px solid #e0e0e0'
-                                        }"
-                                    >
-                                        <el-table
-                                            :data="person.products"
-                                            style="width: 100%; padding: 0; margin: 0;"
-                                            :header-cell-style="{
-                                                background: colorArray[idx % colorArray.length].background,
-                                                color: colorArray[idx % colorArray.length].color,
-                                                fontWeight: 'bold'
-                                            }"
-                                            :cell-style="{
-                                                background: '#fff'
-                                            }"
-                                            size="mini"
-                                            border
-                                        >
-                                            <el-table-column prop="quantity" label="Cantidad" width="90"></el-table-column>
-                                            <el-table-column prop="description" label="Descripción"></el-table-column>
-                                            <el-table-column label="Acciones" width="90">
-                                                <template slot-scope="scope">
-                                                    <el-button
-                                                        size="mini"
-                                                        type="danger"
-                                                        @click="removeItem(scope.row.id, idx)"
-                                                        icon="el-icon-delete"
-                                                        circle
-                                                        :style="{ background: '#e53935', color: '#fff', border: 'none' }"
-                                                    ></el-button>
-                                                </template>
-                                            </el-table-column>
-                                        </el-table>
-                                    </el-collapse-item>
-                                </el-collapse>
+                            <!-- Nro de WhatsApp -->
+                            <div class="col-4">
+                                <label for="" style="margin-bottom: 2px;">
+                                    <i
+                                        class="fab fa-whatsapp"
+                                        style="color: #25D366; margin-right: 4px;"
+                                    ></i>
+                                    WhatsApp
+                                </label>
+                                <el-input
+                                    v-model="person.customer_telephone"
+                                    :placeholder="`N° de WhatsApp ${idx + 1}`"
+                                    @keyup.enter="sendPayments"
+                                    style="padding: 2px 6px; margin: 0;"
+                                ></el-input>
                             </div>
                         </div>
-
                     </div>
 
-
-
+                    <div
+                        class="col-12 m-1"
+                        v-if="
+                            splitByAmount == '2' && person.products.length > 0
+                        "
+                    >
+                        <div
+                            class="split-products-list"
+                            style="padding: 0; margin: 0;"
+                        >
+                            <el-collapse
+                                :value="[`products_${idx}`]"
+                                class="split-products-collapse"
+                                accordion
+                            >
+                                <el-collapse-item
+                                    :name="`products_${idx}`"
+                                    :title="
+                                        `Productos (${person.products.length})`
+                                    "
+                                    :style="{
+                                        background:
+                                            colorArray[idx % colorArray.length]
+                                                .background,
+                                        color:
+                                            colorArray[idx % colorArray.length]
+                                                .color,
+                                        borderRadius: '6px',
+                                        marginBottom: '8px',
+                                        border: '1px solid #e0e0e0'
+                                    }"
+                                >
+                                    <el-table
+                                        :data="person.products"
+                                        style="width: 100%; padding: 0; margin: 0;"
+                                        :header-cell-style="{
+                                            background:
+                                                colorArray[
+                                                    idx % colorArray.length
+                                                ].background,
+                                            color:
+                                                colorArray[
+                                                    idx % colorArray.length
+                                                ].color,
+                                            fontWeight: 'bold'
+                                        }"
+                                        :cell-style="{
+                                            background: '#fff'
+                                        }"
+                                        size="mini"
+                                        border
+                                    >
+                                        <el-table-column
+                                            prop="quantity"
+                                            label="Cantidad"
+                                            width="90"
+                                        ></el-table-column>
+                                        <el-table-column
+                                            prop="description"
+                                            label="Descripción"
+                                        ></el-table-column>
+                                        <el-table-column
+                                            label="Acciones"
+                                            width="90"
+                                        >
+                                            <template slot-scope="scope">
+                                                <el-button
+                                                    size="mini"
+                                                    type="danger"
+                                                    @click="
+                                                        removeItem(
+                                                            scope.row.id,
+                                                            idx
+                                                        )
+                                                    "
+                                                    icon="el-icon-delete"
+                                                    circle
+                                                    :style="{
+                                                        background: '#e53935',
+                                                        color: '#fff',
+                                                        border: 'none'
+                                                    }"
+                                                ></el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-            <el-divider></el-divider>
-        
+        </div>
+        <el-divider></el-divider>
 
-        <person-form :showDialog.sync="showDialogNewPerson" type="customers" :user_id="form.user_id" :external="true"
-            document_type_id="03" @reloadDataPersons="reloadDataCustomers"></person-form>
+        <person-form
+            :showDialog.sync="showDialogNewPerson"
+            type="customers"
+            :user_id="form.user_id"
+            :external="true"
+            document_type_id="03"
+            @reloadDataPersons="reloadDataCustomers"
+        ></person-form>
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
-                <el-button  type="primary" @click="sendPayments">Listo</el-button>
+                <el-button type="primary" @click="sendPayments"
+                    >Listo</el-button
+                >
             </div>
         </div>
     </el-dialog>
@@ -302,20 +576,20 @@
 }
 
 .btn-factura {
-    background-color: #4CAF50 !important;
-    border-color: #4CAF50 !important;
+    background-color: #4caf50 !important;
+    border-color: #4caf50 !important;
     color: #fff !important;
 }
 
 .btn-boleta {
-    background-color: #FFC107 !important;
-    border-color: #FFC107 !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
     color: #fff !important;
 }
 
 .btn-nota {
-    background-color: #1E88E5 !important;
-    border-color: #1E88E5 !important;
+    background-color: #1e88e5 !important;
+    border-color: #1e88e5 !important;
     color: #fff !important;
 }
 
@@ -370,7 +644,7 @@
 }
 </style>
 <script>
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 export default {
     components: {
@@ -386,7 +660,7 @@ export default {
         "series",
         "establishments"
     ],
-    created() { },
+    created() {},
     data() {
         return {
             showDialogNewPerson: false,
@@ -465,18 +739,18 @@ export default {
     },
     computed: {
         dialogWidth() {
-            return window.innerWidth <= 1280 ? '90%' : '75%';
+            return window.innerWidth <= 1280 ? "90%" : "75%";
         },
         dialogTop() {
             // Puedes cambiar este valor según tu criterio, por ejemplo:
-            return window.innerWidth <= 768 ? '2vh' : '8vh';
+            return window.innerWidth <= 768 ? "2vh" : "8vh";
         }
     },
     mounted() {
-        window.addEventListener('resize', this.$forceUpdate);
+        window.addEventListener("resize", this.$forceUpdate);
     },
     beforeDestroy() {
-        window.removeEventListener('resize', this.$forceUpdate);
+        window.removeEventListener("resize", this.$forceUpdate);
     },
     created() {
         let payment = _.round(this.total / 2, 1);
@@ -568,7 +842,9 @@ export default {
             // Validar número de operación para métodos de pago específicos
             let invalidOperation = this.persons.some(p => {
                 if (["03", "04", "05", "06"].includes(p.payment_method)) {
-                    return !p.operation_number || p.operation_number.trim() === '';
+                    return (
+                        !p.operation_number || p.operation_number.trim() === ""
+                    );
                 }
                 return false;
             });
@@ -653,17 +929,19 @@ export default {
                     let p = this.persons[i];
 
                     // Filtrar y clonar los ítems correspondientes a la persona actual, ajustando la cantidad
-                    let personItems = p.products.map(product => {
-                        let original = items.find(i => i.id == product.id);
-                        if (original) {
-                            // Clonar el producto y asignar la cantidad que corresponde a la persona
-                            return {
-                                ...original,
-                                quantity: product.quantity
-                            };
-                        }
-                        return null;
-                    }).filter(Boolean);
+                    let personItems = p.products
+                        .map(product => {
+                            let original = items.find(i => i.id == product.id);
+                            if (original) {
+                                // Clonar el producto y asignar la cantidad que corresponde a la persona
+                                return {
+                                    ...original,
+                                    quantity: product.quantity
+                                };
+                            }
+                            return null;
+                        })
+                        .filter(Boolean);
 
                     let currentTotal = personItems.reduce(
                         (sum, i) => sum + i.sale_unit_price * i.quantity,
@@ -743,14 +1021,14 @@ export default {
                     total_base_igv:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * adjustedQuantity) /
-                            (1 + percentage_igv / 100)
+                              (1 + percentage_igv / 100)
                             : i.sale_unit_price * adjustedQuantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * adjustedQuantity) /
-                                (1 + percentage_igv / 100)) *
-                            (percentage_igv / 100)
+                                  (1 + percentage_igv / 100)) *
+                              (percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -761,13 +1039,13 @@ export default {
                     total_taxes:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * adjustedQuantity) /
-                                (1 + percentage_igv / 100)) *
-                            (percentage_igv / 100)
+                                  (1 + percentage_igv / 100)) *
+                              (percentage_igv / 100)
                             : 0,
                     total_value:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * adjustedQuantity) /
-                            (1 + percentage_igv / 100)
+                              (1 + percentage_igv / 100)
                             : adjustedQuantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -920,7 +1198,9 @@ export default {
         },
         addItem(item) {
             if (item.quantity == 0) {
-                Swal.fire("No quedan unidades disponibles para dividir el producto");
+                Swal.fire(
+                    "No quedan unidades disponibles para dividir el producto"
+                );
                 return;
             }
             let itemIdx = this.items.findIndex(i => i.id == item.id);
@@ -1072,14 +1352,15 @@ export default {
             let customer = this.customers.find(
                 c => c.id == this.persons[idx].customer_id
             );
-            this.persons[idx].identity_document_type_id = customer.identity_document_type_id;
+            this.persons[idx].identity_document_type_id =
+                customer.identity_document_type_id;
             this.persons[idx].customer_telephone = customer.telephone;
         },
         onChangePaymentMethod(idx) {
             // Limpiar número de operación si cambia a método que no lo requiere
             const p = this.persons[idx];
-            if (!['03', '04', '05', '06'].includes(p.payment_method)) {
-                p.operation_number = '';
+            if (!["03", "04", "05", "06"].includes(p.payment_method)) {
+                p.operation_number = "";
             }
         },
         addPerson(amount = 0) {
@@ -1092,8 +1373,8 @@ export default {
                 selected: false,
                 document_type_id: "03",
                 products: [],
-                customer_telephone: '',
-                operation_number: ''
+                customer_telephone: "",
+                operation_number: ""
             });
         },
         open() {

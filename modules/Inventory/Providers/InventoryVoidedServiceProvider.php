@@ -72,19 +72,29 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                                 if ($item_warehouse) {
                                     $item_warehouse->stock += $component_total;
                                     $item_warehouse->save();
+                                    /* Log::info("Stock actualizado", [
+                                        'item_id' => $component_item->id,
+                                        'warehouse_id' => $warehouse->id,
+                                        'nuevo_stock' => $item_warehouse->stock
+                                    ]); */
                                 }
 
                                 $this->createInventoryKardex($document, $component_item->id, $component_total, $warehouse->id);
                             }
 
                             // 🍽 También devolver stock al ítem principal (plato)
-                            $item_warehouse = $item->warehouses()->where('warehouse_id', $warehouse_id)->first();
+                            $item_warehouse = $item->warehouses()->where('warehouse_id', $warehouse->id)->first();
                             if ($item_warehouse) {
                                 $item_warehouse->stock += $total_quantity;
                                 $item_warehouse->save();
+                                /* Log::info("Stock actualizado", [
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $warehouse->id,
+                                    'nuevo_stock' => $item_warehouse->stock
+                                ]); */
                             }
 
-                            $this->createInventoryKardex($document, $item->id, $total_quantity, $warehouse_id);
+                            $this->createInventoryKardex($document, $item->id, $total_quantity, $warehouse->id);
 
                             // ⛔ Saltar el resto de la lógica
                             continue;
@@ -92,6 +102,7 @@ class InventoryVoidedServiceProvider extends ServiceProvider
 
                         if (isset($item_data['color_size']) && is_array($item_data['color_size']) && count($item_data['color_size']) > 0) {
                             $stockRestored = false;
+                            $totalColorSizeQuantity = 0;
 
                             foreach ($item_data['color_size'] as $cs) {
                                 $cs = (array)$cs;
@@ -107,16 +118,18 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                                         ->table('item_colors_sizes')
                                         ->where('id', $cs['id'])
                                         ->increment('stock', $cs['quantity']);
-                                    
+
+                                    $totalColorSizeQuantity += $cs['quantity'];
+
                                     // Crear kardex para este color/talla específico
                                     $this->createInventoryKardex(
-                                        $document, 
-                                        $detail['item_id'], 
-                                        $cs['quantity'], 
+                                        $document,
+                                        $detail['item_id'],
+                                        $cs['quantity'],
                                         $warehouse_id,
                                         "Devolución de stock - Color/Talla ID: {$cs['id']}"
                                     );
-                                    
+
                                     $stockRestored = true;
                                 } catch (\Exception $e) {
                                     Log::error("Error restoring stock for color/size", [
@@ -128,13 +141,20 @@ class InventoryVoidedServiceProvider extends ServiceProvider
                             }
 
                             if ($stockRestored) {
+                                // Actualizar el stock en item_warehouse
+                                $item_warehouse = $item->warehouses()->where('warehouse_id', $warehouse_id)->first();
+                                if ($item_warehouse) {
+                                    $item_warehouse->stock += $totalColorSizeQuantity;
+                                    $item_warehouse->save();
+                                    /* Log::info("Stock general actualizado", [
+                                        'item_id' => $item->id,
+                                        'warehouse_id' => $warehouse_id,
+                                        'nuevo_stock' => $item_warehouse->stock
+                                    ]); */
+                                }
+                                
                                 // Si se restauró el stock de color/talla, continuamos con el siguiente item
                                 continue;
-                            } else {
-                                Log::warning("No stock was restored for any color/size", [
-                                    'item_id' => $detail['item_id'],
-                                    'color_size' => $item_data['color_size']
-                                ]);
                             }
                         }
 

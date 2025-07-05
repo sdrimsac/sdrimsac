@@ -43,7 +43,7 @@
                                 controls-position="right"
                                 @input="saveColorSize(colorsize)"
                                 :min="0"
-                                :max="50"
+                                :max="colorsize.stock"
                             ></el-input-number>
                         </td>
                     </tr>
