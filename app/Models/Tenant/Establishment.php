@@ -46,6 +46,7 @@ class Establishment extends ModelTenant
         'logo',
         'document_logo',
         'documents',
+        'image_yape',
     ];
     protected $casts = [
         'credit_warehouse' => 'boolean',

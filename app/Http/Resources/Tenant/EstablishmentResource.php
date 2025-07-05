@@ -47,7 +47,8 @@ class EstablishmentResource extends JsonResource
             'document_default' => $this->document_default,
             'customer_id' => $this->customer_id,
             'has_igv_31556' => $this->has_igv_31556,
-            'documents' => $this->documents
+            'documents' => $this->documents,
+            'image_yape' => $this->image_yape,
         ];
     }
 }

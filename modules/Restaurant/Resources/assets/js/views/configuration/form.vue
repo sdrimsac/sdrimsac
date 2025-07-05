@@ -15,7 +15,7 @@
                 <br />
                 <div class="row">
                     <div
-                        v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
+                        v-if="type === 'caja/observations'"
                         class="col-md-12"
                     >
                         <div

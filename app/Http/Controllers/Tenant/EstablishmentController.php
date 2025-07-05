@@ -260,6 +260,8 @@ class EstablishmentController extends Controller
             $file->storeAs(($type === 'logo_store') ? 'public/uploads/logos' : 'certificates', $name);
             if (($type === 'document_logo')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);
             $file->storeAs(($type === 'document_logo') ? 'public/uploads/logos' : 'certificates', $name);
+            if (($type === 'image_yape')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);
+            $file->storeAs(($type === 'image_yape') ? 'public/uploads/logos' : 'certificates', $name);
             $establishment->$type = $name;
             $establishment->save();
             return [

@@ -691,7 +691,7 @@
                             class="btn btn-light mt-2"
                             type="button"
                             @click="printOrden()"
-                            style="max-height: 45px ; max-width: 60px;"
+                            style="max-height: 45px ; max-width: 65px;"
                         >
                             <i
                                 class="fas fa-print"
@@ -700,7 +700,7 @@
                             <br />
                             <span
                                 style="display: flex; justify-content: center;"
-                                >Imprimir</span
+                                >Precuenta</span
                             >
                         </button>
                         <button

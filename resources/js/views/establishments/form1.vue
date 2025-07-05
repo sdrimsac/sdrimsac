@@ -387,21 +387,24 @@
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label w-100">Imprimir comandas</label
+                        <label class="control-label w-100"
+                            >Imprimir comandas</label
                         >
                         <el-checkbox v-model="conf.print_command">
                             {{ conf.print_command ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label w-100">Descuentos en caja</label
+                        <label class="control-label w-100"
+                            >Descuentos en caja</label
                         >
                         <el-checkbox v-model="conf.show_discounts_payment">
                             {{ conf.show_discounts_payment ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label w-100">Metodos de pago</label
+                        <label class="control-label w-100"
+                            >Metodos de pago</label
                         >
                         <el-checkbox v-model="conf.show_payment_method">
                             {{ conf.show_payment_method ? "Si" : "No" }}
@@ -417,8 +420,8 @@
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
                         <label class="control-label w-100"
-                            >Credito Nota de Venta </label
-                        >
+                            >Credito Nota de Venta
+                        </label>
                         <el-checkbox v-model="form.credit_warehouse">
                             {{ form.credit_warehouse ? "Si" : "No" }}
                         </el-checkbox>
@@ -596,6 +599,28 @@
                             </label>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">QR yape</label>
+                    <el-input v-model="form.image_yape" :readonly="true">
+                        <el-upload
+                            slot="append"
+                            :headers="headers"
+                            :data="{
+                                type: 'image_yape',
+                                id: form.id
+                            }"
+                            :action="action"
+                            :show-file-list="false"
+                            :on-success="successUpload"
+                        >
+                            <el-button
+                                :disabled="!form.id"
+                                type="primary"
+                                icon="el-icon-upload"
+                            ></el-button>
+                        </el-upload>
+                    </el-input>
                 </div>
             </div>
 
