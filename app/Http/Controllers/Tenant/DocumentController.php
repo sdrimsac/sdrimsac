@@ -1129,7 +1129,7 @@ class DocumentController extends Controller
 
     public function item_tables()
     {
-        $items = $this->table('items');
+        $items = Item::where('active', 1)->get();
         $categories = []; //Category::cascade();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $system_isc_types = SystemIscType::whereActive()->get();

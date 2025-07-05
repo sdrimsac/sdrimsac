@@ -15,42 +15,73 @@
 
                         <template v-if="!search_item_by_barcode" id="select-append">
                             <div class="el-input el-input-group el-input-group--append">
-                                <el-select :disabled="recordItem != null" @focus="$event.target.select()" ref="producto" v-model="form.item_id" @change="changeItem" filterable remote placeholder="Buscar" popper-class="el-select-items" @visible-change="focusTotalItem" slot="prepend" id="select-width" :remote-method="searchRemoteItems" :loading="loading_search">
-                                    <el-option v-for="option in items" :key="option.id" :value="option.id" :label="option.full_description"></el-option>
+                                <el-select :disabled="!!recordItem" 
+                                         @focus="$event.target.select()" 
+                                         ref="producto" 
+                                         v-model="form.item_id" 
+                                         @change="changeItem" 
+                                         filterable remote 
+                                         placeholder="Buscar" 
+                                         popper-class="el-select-items" 
+                                         @visible-change="focusTotalItem" 
+                                         slot="prepend" 
+                                         id="select-width" 
+                                         :remote-method="searchRemoteItems" 
+                                         :loading="loading_search">
+                                    <el-option v-for="option in items" 
+                                             :key="option.id" 
+                                             :value="option.id" 
+                                             :label="option.description || option.full_description">
+                                    </el-option>
                                 </el-select>
-                                <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="recordItem != null">
+                                <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="!!recordItem">
                                     <div class="el-input-group__append">
-                                        <el-button style="display: flex; align-items: center; justify-content: center;" :disabled="isEditItemNote" @click.prevent="
-                                                    clickWarehouseDetail()
-                                                ">
+                                        <el-button style="display: flex; align-items: center; justify-content: center;" 
+                                                 :disabled="!!isEditItemNote" 
+                                                 @click.prevent="clickWarehouseDetail()">
                                             <i class="fa fa-eye fa-lg" style="color: green;"></i>
                                         </el-button>
                                     </div>
                                 </el-tooltip>
-
                             </div>
 
                         </template>
 
                         <template v-else>
                             <div class="el-input el-input-group el-input-group--append">
-                                <el-select :disabled="recordItem != null" v-model="form.item_id" @change="changeItem" filterable ref="productos" placeholder="Buscar" popper-class="el-select-items" dusk="item_id" @visible-change="focusTotalItem" slot="prepend" id="select-width" remote :remote-method="searchRemoteItems" :loading="loading_search">
-                                    <el-option v-for="option in items" :key="option.id" :value="option.id" :label="option.full_description"></el-option>
+                                <el-select :disabled="!!recordItem" 
+                                         v-model="form.item_id" 
+                                         @change="changeItem" 
+                                         filterable ref="productos" 
+                                         placeholder="Buscar" 
+                                         popper-class="el-select-items" 
+                                         dusk="item_id" 
+                                         @visible-change="focusTotalItem" 
+                                         slot="prepend" 
+                                         id="select-width" 
+                                         remote 
+                                         :remote-method="searchRemoteItems" 
+                                         :loading="loading_search">
+                                    <el-option v-for="option in items" 
+                                             :key="option.id" 
+                                             :value="option.id" 
+                                             :label="option.description || option.full_description">
+                                    </el-option>
                                 </el-select>
-                                <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="recordItem != null">
+                                <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto" placement="bottom" :disabled="!!recordItem">
                                     <div class="el-input-group__append">
-                                        <el-button :disabled="isEditItemNote" @click.prevent="
-                                                    clickWarehouseDetail()
-                                                "><i class="fa fa-search"></i></el-button>
+                                        <el-button :disabled="!!isEditItemNote" @click.prevent="clickWarehouseDetail()">
+                                            <i class="fa fa-search"></i>
+                                        </el-button>
                                     </div>
                                 </el-tooltip>
                             </div>
                         </template>
 
                         <template v-if="!is_client">
-                            <el-checkbox v-model="search_item_by_barcode" :disabled="recordItem != null">Buscar por código de barras</el-checkbox><br />
+                            <el-checkbox v-model="search_item_by_barcode" :disabled="!!recordItem">Buscar por código de barras</el-checkbox><br />
                         </template>
-                        <el-checkbox v-model="form.has_plastic_bag_taxes" :disabled="isEditItemNote">Impuesto a la Bolsa Plástica</el-checkbox>
+                        <el-checkbox v-model="form.has_plastic_bag_taxes" :disabled="!!isEditItemNote">Impuesto a la Bolsa Plástica</el-checkbox>
                         <small class="form-control-feedback" v-if="errors.item_id" v-text="errors.item_id[0]"></small>
                     </div>
                 </div>
@@ -67,15 +98,25 @@
                         </div>
                     </div> -->
                 <div class="col-md-5">
-                    <div class="form-group" :class="{
-                                'has-danger': errors.affectation_igv_type_id
-                            }">
+                    <div class="form-group" :class="{'has-danger': errors.affectation_igv_type_id}">
                         <label class="control-label">Afectación Igv</label>
-                        <el-select v-model="form.affectation_igv_type_id" :disabled="!change_affectation_igv_type_id" filterable>
-                            <el-option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
+                        <el-select v-model="form.affectation_igv_type_id" 
+                                 :disabled="!change_affectation_igv_type_id" 
+                                 filterable>
+                            <el-option v-for="option in affectation_igv_types" 
+                                     :key="option.id" 
+                                     :value="option.id" 
+                                     :label="option.description">
+                            </el-option>
                         </el-select>
-                        <el-checkbox :disabled="recordItem != null" v-model="change_affectation_igv_type_id">Editar</el-checkbox>
-                        <small class="form-control-feedback" v-if="errors.affectation_igv_type_id" v-text="errors.affectation_igv_type_id[0]"></small>
+                        <el-checkbox :disabled="!!recordItem" 
+                                   v-model="change_affectation_igv_type_id">
+                            Editar
+                        </el-checkbox>
+                        <small class="form-control-feedback" 
+                               v-if="errors.affectation_igv_type_id" 
+                               v-text="errors.affectation_igv_type_id[0]">
+                        </small>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-3">
@@ -83,34 +124,40 @@
                     <div class="form-group" :class="{ 'has-danger': errors.quantity }">
                         <label class="control-label">Cantidad</label>
 
-                        <el-input-number @focus="$event.target.select()" ref="cantidad" v-model="form.quantity" :min="0.00" :disabled="form.item.has_color_size || form.item.series_enabled" :precision="4" @keyup.enter.native="
-                                    focusPrecio();
-                                    calculateQuantity();
-                                " @input="calculateQuantity()"></el-input-number>
+                        <el-input-number @focus="$event.target.select()" 
+                                       ref="cantidad" 
+                                       v-model="form.quantity" 
+                                       :min="0.00" 
+                                       :disabled="!!(form.item.has_color_size || form.item.series_enabled)" 
+                                       :precision="4" 
+                                       @keyup.enter.native="focusPrecio(); calculateQuantity();" 
+                                       @input="calculateQuantity()">
+                        </el-input-number>
                         <small class="form-control-feedback" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-3">
                     <div class="form-group" :class="{ 'has-danger': errors.unit_price_value }">
                         <label class="control-label">Precio Unitario</label>
-                        <el-input ref="precio" v-model="form.unit_price_value" :disabled="form.item.has_color_size" @focus="$event.target.select()" @keyup.enter.native="
-                                    clickAddItem();
-                                    focusProducto();
-                                " :readonly="typeUser === ''">
-                            <template slot="prepend">{{
-                                    form.item.currency_type_symbol
-                                }}</template>
-                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                        <el-input ref="precio" 
+                                 v-model="form.unit_price_value" 
+                                 :disabled="!!(form.item.has_color_size)" 
+                                 @focus="$event.target.select()" 
+                                 @keyup.enter.native="clickAddItem(); focusProducto();" 
+                                 :readonly="!!typeUser">
+                            <template slot="prepend">{{ form.item.currency_type_symbol }}</template>
+                            <i slot="prefix" class="el-icon-edit-outline"></i>
+                        </el-input>
                         <small class="form-control-feedback" v-if="errors.unit_price_value" v-text="errors.unit_price[0]"></small>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-3">
                     <div class="form-group" :class="{ 'has-danger': errors.amount }">
                         <label class="control-label">Importe Total</label>
-                        <el-input v-model="form.amount" :disabled="form.item.has_color_size" :readonly="typeUser === ''">
-                            <template slot="prepend">{{
-                                    form.item.currency_type_symbol
-                                }}</template>
+                        <el-input v-model="form.amount" 
+                                 :disabled="!!(form.item.has_color_size)" 
+                                 :readonly="!!typeUser">
+                            <template slot="prepend">{{ form.item.currency_type_symbol }}</template>
                             <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                     </div>
                 </div>
@@ -573,7 +620,6 @@ export default {
                 attributes: [],
                 has_igv: null,
                 item_unit_types: [],
-                color_size: [],
                 has_plastic_bag_taxes: false,
                 warehouse_id: null,
                 lots_group: [],
@@ -819,6 +865,7 @@ export default {
                     this.agregar_item = true;
                 }
             }
+            /* this.agregar_item = true; */
         },
         updateprice() {
             if (this.configuration.refresh_price_sales == true) {
@@ -864,9 +911,11 @@ export default {
             this.form.unit_price = unit_price;
             this.form.item.unit_price = unit_price;
             this.form.item.presentation = this.item_unit_type;
-            this.form.affectation_igv_type = _.find(this.affectation_igv_types, {
-                id: this.form.affectation_igv_type_id
-            });
+            this.form.affectation_igv_type = _.find(
+                this.affectation_igv_types, {
+                    id: this.form.affectation_igv_type_id
+                }
+            );
 
             let IdLoteSelected = this.form.IdLoteSelected;
 
