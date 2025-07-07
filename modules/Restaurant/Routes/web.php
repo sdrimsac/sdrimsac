@@ -14,6 +14,7 @@
 use Illuminate\Support\Str;
 use App\Events\MessageEvent;
 use App\Http\Controllers\Tenant\DocumentController;
+use App\Http\Controllers\Tenant\GenerateController;
 use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
@@ -402,6 +403,8 @@ Route::prefix('caja')->group(function () {
         Route::get('boxes', 'BoxesController@index')->name('restaurant.boxes');
         Route::get('items_detail', [BoxesDetailController::class, 'items_detail']);
         Route::post('save_item', [BoxesDetailController::class, 'save_item']);
+        Route::post('generateYapeQR/{amount}', [GenerateController::class, 'generateYapeQR']);
+
 
         Route::get('search_customers', [RestaurantController::class, 'search_customer']);
         Route::get('search_customer_by_id/{id}', [RestaurantController::class, 'search_customer_by_id']);

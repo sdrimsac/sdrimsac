@@ -311,6 +311,7 @@ export default {
         this.listFoods = Array.isArray(this.foods)
             ? this.foods.map(f => ({
                   ...f,
+                  price: f.price ? Number(f.price) : 0,
                   select: false
               }))
             : [];
@@ -319,7 +320,12 @@ export default {
     },
     watch: {
         foods(newFoods, _) {
-            this.listFoods = Array.isArray(newFoods) ? newFoods : [];
+            this.listFoods = Array.isArray(newFoods) 
+                ? newFoods.map(f => ({
+                    ...f,
+                    price: f.price ? Number(f.price) : 0
+                })) 
+                : [];
         },
         listFoods(newVal) {
             if (newVal === null) {
@@ -447,13 +453,17 @@ export default {
                 }
             }
 
+            let selectedPrice = Number(this.selectedFood.price);
+            // Convertir a entero si no tiene decimales
+            selectedPrice = selectedPrice % 1 === 0 ? parseInt(selectedPrice) : selectedPrice;
+
             this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
                 observation: null,
-                price: this.selectedFood.price,
+                price: selectedPrice,
                 quantity: 1,
-                will_be_divided: this.divided_items // Mark as divided if needed
+                will_be_divided: this.divided_items
             };
             
             this.orden.push(this.currentFood);
@@ -560,8 +570,10 @@ export default {
                 console.error("Producto inválido recibido:", producto);
                 return;
             }
-            const cleanProducto = producto.food;
-            //console.log("Lista de productos antes de agregar:", this.listFoods);
+            const cleanProducto = {
+                ...producto.food,
+                price: producto.food.price ? Number(producto.food.price) : 0
+            };
             if (!Array.isArray(this.listFoods)) {
                 console.error(
                     "🚨 Error: listFoods es undefined o no es un array. Reinicializando..."
@@ -573,9 +585,7 @@ export default {
             );
 
             if (productoIndex === -1) {
-                //console.log("Antes de push:", this.listFoods);
                 this.$set(this.listFoods, this.listFoods.length, cleanProducto);
-                //console.log("Después de push:", this.listFoods);
                 productoIndex = this.listFoods.length - 1;
             }
 

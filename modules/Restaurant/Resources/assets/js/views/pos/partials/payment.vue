@@ -790,6 +790,13 @@
                                                 for="Tarjeta"
                                                 class="radio-tile-label2"
                                             ></label>
+                                            <!-- <el-button 
+                                                class="btn_yape"
+                                                type="primary"
+                                                size="mini"
+                                                @click="GenerateQr(form.total)">yape
+
+                                            </el-button> -->
                                         </div>
                                     </div>
                                     <div
@@ -1740,6 +1747,11 @@
             @submit="handleSubmit"
         >
         </Promotion-Box>
+        <GenerateQr
+            :showDialog.sync="showDialogGenerateQr"
+            :initialAmount="selectedTotal"
+        >
+        </GenerateQr>
     </el-dialog>
 </template>
 
@@ -1906,6 +1918,8 @@ import printjs from "print-js";
 //import MultiplePaymentForm from "./multiple_payment.vue";
 //import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 //import ShowSplitPaymentForm from "./split_payment.vue";
+import GenerateQr from './GenerateQr.vue';  // Ajusta la ruta según donde esté
+
 const PromotionBox = () => import("./promotion_box.vue");
 const ListItems = () => import("./list_items.vue");
 const CardBrandsForm = () =>
@@ -1932,7 +1946,8 @@ export default {
         MultiplePaymentForm,
         PersonForm,
         ShowSplitPaymentForm,
-        DocumentDetraction
+        DocumentDetraction,
+        GenerateQr
     },
 
     props: [
@@ -1984,6 +1999,8 @@ export default {
 
     data() {
         return {
+            selectedTotal: 0,
+            showDialogGenerateQr: false,
             isLocked: false,
             all_series: [],
             listPromotionItems: [],
@@ -2315,6 +2332,10 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
+        GenerateQr(total) {
+            this.selectedTotal = total;
+            this.showDialogGenerateQr = true;
+        },
         async handleOneClick() {
             if (this.isLocked) return;
 
