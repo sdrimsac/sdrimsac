@@ -615,7 +615,7 @@ export default {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
                 observation: null,
-                price: this.selectedFood.price,
+                price: Number(this.selectedFood.price),
                 quantity: 1
             };
 
@@ -690,17 +690,20 @@ export default {
         },
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
-            let currentPriceIndx =
-                listPricesDescription[type.price_default - 1];
+            let currentPriceIndx = listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
+            
             if (type.total == null) {
                 this.$toast.error(
                     "Politica de precio sin total: Tomando precio unitario.."
                 );
+                price = Number(type[currentPriceIndx]);
             } else {
                 price = Number(type.total);
             }
-            return price;
+            
+            // Convertir a entero si no tiene decimales
+            return price % 1 === 0 ? parseInt(price) : price;
         },
         insertOrden(orden, food_id, type) {
             let ordenAdded = this.localOrden.filter(ord => ord.id == food_id);
@@ -715,9 +718,9 @@ export default {
                 
                 if (type) {
                     orden.quantity = 1;
-                    orden.price = this.getDefaultPrice(type);
+                    orden.price = Number(this.getDefaultPrice(type));
                 } else {
-                    orden.price = orden.food.price;
+                    orden.price = Number(orden.food.price);
                 }
                 if (this.configuration.divided_items) {
                     if (this.divided_items) {
@@ -745,12 +748,9 @@ export default {
                         orden.lotes = [];
                         orden.type_quantity = type
                             ? Number(type.quantity_unit)
-                            : 0;
-                        if (this.configuration.divided_items) {
-                            if (this.divided_items) {
-                                orden.will_be_divided = true;
-                            }
-                        }
+                            : 0;                if (this.configuration.divided_items && this.divided_items) {
+                    orden.will_be_divided = true;
+                }
                         this.localOrden.push(orden);
                     }
                 } else {
