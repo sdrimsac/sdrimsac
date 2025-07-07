@@ -51,7 +51,7 @@ class CommitController extends Controller
             ]);
         }
 
-        $commit = trim(file_get_contents($versionFile)); // Lee el commit corto
+        $commit = trim(file_get_contents($versionFile));
 
         $update = false;
 

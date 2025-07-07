@@ -84,7 +84,7 @@ Route::prefix('caja')->group(function () {
         Route::get('appointment-comment/{uuid}', [UserScheduleAppointmentController::class, 'appointmentCommentIndex'])->name('estilista.appointment-comment');
         Route::post('appointment-comment', [UserScheduleAppointmentController::class, 'appointmentCommentStore'])->name('estilista.appointment-comment.store');
     });
-    Route::middleware(['auth', 'locked.tenant'])->group(function () {
+    Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
         Route::get('logoutget', 'RestaurantController@logout');
 
@@ -408,7 +408,7 @@ Route::prefix('caja')->group(function () {
     });
     //VISTA TRABAJADORES
 
-    Route::middleware(['auth', 'locked.tenant'])->group(function () {
+    Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
         //**** MESAS */
         Route::prefix('worker')->group(function () {
 
