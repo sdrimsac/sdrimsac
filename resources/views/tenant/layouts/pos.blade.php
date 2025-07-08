@@ -85,14 +85,11 @@
                 <!-- Logo End -->
 
                 <!-- User Menu Start -->
-                <div class="user-container d-flex" style="max-width: 350px ;max-height: 120px;">
-                    {{-- llama a la fecha y hora --}}
-                    {{-- <div class="text-center date-time-container" style="color: var(--light-text); line-height: 1;">
-                        <span id="current-date"></span><br>
-                        <span id="current-time"></span>
-                    </div> --}}
-                    {{-- La imagen del Usuario --}}
-                    <div class="name user-image-container">
+                <div class="user-container d-flex flex-row align-items-center justify-content-between" style="width: 100%; max-width: {{ $userWidth ?? '350px' }}; max-height: 120px; gap: 10px;">
+                    {{-- Puedes pasar $userWidth desde el controlador para modificar el ancho dinámicamente --}}
+
+                    {{-- Imagen del Usuario --}}
+                    <div class="user-image-container flex-shrink-0">
                         @php
                             $config = DB::connection('tenant')->table('configurations')->first();
                             $user = auth()->user();
@@ -105,7 +102,7 @@
                                     $imageData = base64_encode(file_get_contents($imagePath));
                                     $mimeType = mime_content_type($imagePath);
                             @endphp
-                                    <img src="data:{{ $mimeType }};base64, {{ $imageData }}" 
+                                    <img src="data:{{ $mimeType }};base64,{{ $imageData }}" 
                                          alt="{{ $user->image }}"
                                          class="profile-image"
                                          loading="lazy">
@@ -127,11 +124,8 @@
                         @endif
                     </div>
 
-                    <span></span>
-
-                    {{-- Nombre del usuario  y Tipo--}}
-                    
-                    <div class="" style="color: var(--light-text); line-height: 1; width: auto; max-width: 300px; overflow-wrap: break-word;">
+                    {{-- Nombre del usuario y Tipo --}}
+                    <div class="flex-grow-1" style="color: var(--light-text); line-height: 1; min-width: 0; max-width: 300px; overflow-wrap: break-word;">
                         @if (strpos($vc_user->name, ' - ') !== false)
                             @php
                                 $nameParts = explode(' - ', $vc_user->name);
@@ -142,81 +136,60 @@
                             {{ $vc_user->name }}
                         @endif
                         <br>
-
                         @if ($vc_company->soap_type_id == '01')
-                            {{-- <span style="margin-top:10px !important;font-weight: 900;">DEMO</span> --}}
                             <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
                                 src="{{ asset('acorn/img/profile/demo.png') }}" />
                         @elseif($vc_company->soap_type_id == '02')
-                        <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
                                 src="{{ asset('acorn/img/profile/produccion.png') }}" />
-                            {{-- <span style="margin-top:10px !important;color: #28a745 !important;font-weight: 900;">PRODUCCIÓN</span> --}}
                         @else
-                            {{-- <span style="margin-top:10px !important;">INTERNO</span> --}}
                             <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
                                 src="{{ asset('acorn/img/profile/interno.png') }}" />
                         @endif
                     </div>
 
-                    {{-- Logo del Distribuidor 700 x 300 --}}
-                    <div style="width: 100%; max-width: 200px; margin: auto;">
-                            {{-- Imagen del Logo sdrimsac --}}
-                            <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
+                    {{-- Logo del Distribuidor --}}
+                    <div class="flex-shrink-0" style="width: 100px; max-width: 200px; margin: auto;">
+                        <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false" style="width: 100px; height: auto;">
-                            <img style="width: 150%; height: 100%;" class="profile" alt="profile"
+                            <img style="width: 100%; height: auto; object-fit: contain;" class="profile" alt="profile"
                                 src="{{ asset('acorn/img/profile/store.png') }}" />
-                            </a>
-                            {{-- Menu de usuario Logout y cambio de contraseña  --}}
-                            <div class="dropdown-menu dropdown-menu-end user-menu p-2" style="background-color: #444a50; margin: 0; width: auto; min-width: fit-content;">
-                                <div class="row ms-0 me-0">
-                                    <div class="col-12 pe-1 ps-1">
-                                        <ul class="list-unstyled mb-0">
-                                            @if ($config->user_edit)
-                                                <li class="mb-2">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#changePasswordModal"
-                                                        class="btn btn-info align-items-center text-white"
-                                                        style="background-color: #22d7c5; border-color: #109184; padding: 5px 8px; border-radius: 5px;">
-                                                        <i class="fas fa-key me-2"></i>
-                                                        <span class="">Cambiar PIN</span>
-                                                    </a>
-                                                </li>
-                                            @endif
-
-                                            <li>
-                                                <a href="{{ route('logout') }}"
-                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                                    class="btn btn-danger align-items-center text-white"
-                                                    style="background-color: #dc3545; border-color: #dc3545; padding: 5px 8px; border-radius: 5px;">
-                                                    <i class="fas fa-sign-out-alt me-2"></i>
-                                                    <span class="">Cerrar Sesión</span>
+                        </a>
+                        {{-- Menu de usuario Logout y cambio de contraseña --}}
+                        <div class="dropdown-menu dropdown-menu-end user-menu p-2" style="background-color: #444a50; margin: 0; width: auto; min-width: fit-content;">
+                            <div class="row ms-0 me-0">
+                                <div class="col-12 pe-1 ps-1">
+                                    <ul class="list-unstyled mb-0">
+                                        @if ($config->user_edit)
+                                            <li class="mb-2">
+                                                <a href="#" data-bs-toggle="modal"
+                                                    data-bs-target="#changePasswordModal"
+                                                    class="btn btn-info align-items-center text-white"
+                                                    style="background-color: #22d7c5; border-color: #109184; padding: 5px 8px; border-radius: 5px;">
+                                                    <i class="fas fa-key me-2"></i>
+                                                    <span class="">Cambiar PIN</span>
                                                 </a>
-                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                    style="display: none;">
-                                                    @csrf
-                                                </form>
                                             </li>
-                                        </ul>
-                                    </div>
+                                        @endif
+
+                                        <li>
+                                            <a href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                                class="btn btn-danger align-items-center text-white"
+                                                style="background-color: #dc3545; border-color: #dc3545; padding: 5px 8px; border-radius: 5px;">
+                                                <i class="fas fa-sign-out-alt me-2"></i>
+                                                <span class="">Cerrar Sesión</span>
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-
+                        </div>
                     </div>
-                    
-
-                    
-                    <script>
-                        function resizeElement() {
-                            const newWidth = prompt("Enter new width (e.g., 100px, 50%):", "100px");
-                            const newHeight = prompt("Enter new height (e.g., 100px, 50%):", "100px");
-
-                            if (newWidth && newHeight) {
-                                document.getElementById('resizeButton').style.width = newWidth;
-                                document.getElementById('resizeButton').style.height = newHeight;
-                            }
-                        }
-                    </script>
-                    
                 </div>
 
                 {{-- modal para cambiar la contraseñpa del usario caja  --}}
@@ -841,7 +814,7 @@
                         body: JSON.stringify({
                             pin: pin
                         })
-                    })
+                    )
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {

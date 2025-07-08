@@ -4,7 +4,7 @@ $path[1] = (array_key_exists(1, $path)> 0)?$path[1]:'';
 $path[2] = (array_key_exists(2, $path)> 0)?$path[2]:'';
 $path[0] = ($path[0] === '')?'documents':$path[0];
 @endphp
-<aside id="sidebar-left" class="sidebar-left" style="z-index: 900">
+{{-- <aside id="sidebar-left" class="sidebar-left" style="z-index: 900">
     <div class="nano">
         <div class="nano-content">
             <nav id="menu" class="nav-main" role="navigation">
@@ -25,7 +25,7 @@ $path[0] = ($path[0] === '')?'documents':$path[0];
                     </li>
                 </ul>
             </nav>
-            {{-- <nav id="menu" class="nav-main" role="navigation">
+            <nav id="menu" class="nav-main" role="navigation">
                 <ul class="nav nav-main">
                     <li class="{{ ($path[0] === 'accounting')?'nav-active':'' }}">
             <a class="nav-link" href="{{route('system.accounting.index')}}">
@@ -33,7 +33,7 @@ $path[0] = ($path[0] === '')?'documents':$path[0];
             </a>
             </li>
             </ul>
-            </nav> --}}
+            </nav>
             <nav id="menu" class="nav-main" role="navigation">
                 <ul class="nav nav-main">
                     <li class="{{ ($path[0] === 'configurations')?'nav-active':'' }}">
@@ -98,4 +98,4 @@ $path[0] = ($path[0] === '')?'documents':$path[0];
                 </ul>
             </nav>
         </div>
-</aside>
+</aside> --}}

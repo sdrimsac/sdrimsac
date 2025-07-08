@@ -13,7 +13,8 @@
             </ol>
         </header> -->
         <div class="row">
-            <div class="col-lg-8">
+            
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body p-0">
                         <div class="row">
@@ -37,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="row">
                     <div class="col-md-12">
                         <section class="card card-horizontal">
@@ -46,16 +47,16 @@
                                     <i class="fas fa-users"></i>
                                 </div>
                             </header>
-                            <div class="card-body p-4 text-center">
+                            <div class="card-body p-1 text-center">
                                 <p class="font-weight-semibold mb-0 mx-4">
                                     Total Clientes
                                 </p>
                                 <h2 class="font-weight-semibold mt-0">
                                     {{ records.length }}
                                 </h2>
-                                <div class="summary-footer">
+                                <!-- <div class="summary-footer">
                                     <a class="text-muted text-uppercase" href="#client-list">Ver todos</a>
-                                </div>
+                                </div> -->
                             </div>
                         </section>
                     </div>
@@ -66,7 +67,7 @@
                                     <i class="fas fa-file-alt"></i>
                                 </div>
                             </header>
-                            <div class="card-body p-4 text-center">
+                            <div class="card-body p-1 text-center">
                                 <p class="font-weight-semibold mb-0 mt-3">
                                     Total Comprobantes
                                 </p>
@@ -78,9 +79,84 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3">
+                <section class="card card-featured-left card-featured-primary mb-4">
+                    <div class="card-body">
+                        <div class="widget-summary widget-summary-md">
+                            <div class="widget-summary-col widget-summary-col-icon">
+                                <div class="summary-icon text-secondary">
+                                    <div :data-value="discUsed" class="progress1 mx-auto">
+                                        <span class="progress1-left">
+                                            <span class="progress1-bar border-primary"></span>
+                                        </span>
+                                        <span class="progress1-right">
+                                            <span class="progress1-bar border-primary"></span>
+                                        </span>
+                                        <div
+                                            class="progress1-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                            <div class="font-weight-bold">
+                                                {{ discUsed
+                                                }}<small class="small"></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="widget-summary-col">
+                                <div class="summary">
+                                    <h4 class="title">
+
+                                    </h4>
+                                    <div class="info">
+                                        <strong class="amount">Disco Duro</strong><br />
+                                        <span class="text-warning" v-if="discUsed == 0">no se pudo obtener</span>
+                                    </div>
+                                </div>
+                                <!-- <div class="summary-footer d-block">
+                                    <a class="text-muted text-uppercase"
+                                        href="https://docs.google.com/document/d/1hpEQUs9OFha_35yyLb1cMKeluD-dEku5lQsQ3TJFib8/edit"
+                                        target="BLANK">Incrementar</a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="card card-featured-left card-featured-primary mb-4">
+                    <div class="card-body">
+                        <div class="widget-summary widget-summary-md">
+                            <div class="">
+                                <!-- <img :src="imageUrl" alt="Store" style="width:40px; height:40px; object-fit:contain; border-radius:50%;" />
+                                this.imageUrl = "/acorn/img/profile/store.png" -->
+                                <img src="/acorn/img/profile/store.png" alt="Logo" style="width:40px; height:40px; object-fit:contain; border-radius:50%;" />
+                                <!-- <div class="summary-icon" style="background-color: #292961">
+                                    
+                                    <i class="fab fa-gitlab"></i>
+                                </div> -->
+                            </div>
+                            <div class="widget-summary-col">
+                                <div class="summary">
+                                    <h4 class="title">
+
+                                    </h4>
+                                    <div class="info">
+                                        <strong class="amount">Versión</strong><br />
+                                        <span class="text-primary">{{
+                                            version
+                                        }}</span>
+                                          070725-3
+                                    </div>
+                                </div>
+                                <div class="summary-footer">
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-xl-3 col-lg-6">
                 <section class="card card-featured-left card-featured-primary mb-4">
                     <div class="card-body">
@@ -238,7 +314,7 @@
                     </div>
                 </section>
             </div>
-        </div>
+        </div> -->
 
 
         <div id="client-list" class="card mb-0">
@@ -248,64 +324,63 @@
                     Listado de Clientes
                 </h4>
             </div>
-
+            <!-- v-if="canSee" -->
             <div class="data-table-visible-columns">
-                <el-tooltip class="item" content="Eviar toda las tareas programadas manualmente" effect="dark"
-                    placement="top-start">
-                    <vs-button v-if="canSee" :loading="buttonLoading" :disabled="buttonLoading"
-                        @click.prevent="clickResetProgramn" class="mr-2 same-size-btn"
-                        style="background-color: #ffc107; color: #fff; border-color: #ffc107;">
-                        <i class="fas fa-tasks btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Tareas</span>
-                        <i class="fas fa-clock btn-icon"></i>
-                    </vs-button>
-                </el-tooltip>
-                <el-tooltip class="item" content="Enviar mensajes de cobro a los clientes" effect="dark"
-                    placement="top-start">
-                    <vs-button v-if="canSee" :active="active == 4" :loading="loading" :disabled="loading"
-                        @click.prevent="
+                <div class="d-flex flex-row align-items-center flex-wrap">
+                    <el-tooltip class="item" content="Eviar toda las tareas programadas manualmente" effect="dark"
+                        placement="top-start">
+                        <vs-button :loading="buttonLoading" :disabled="buttonLoading"
+                            @click.prevent="clickResetProgramn" class="mr-2 same-size-btn"
+                            style="background-color: #ffc107; color: #fff; border-color: #ffc107;">
+                            <i class="fas fa-tasks btn-icon"></i>
+                            <span class="btn-label" style="margin: 0 8px;">Tareas</span>
+                            <i class="fas fa-clock btn-icon"></i>
+                        </vs-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" content="Enviar mensajes de cobro a los clientes" effect="dark"
+                        placement="top-start">
+                        <vs-button :active="active == 4" :loading="loading" :disabled="loading" @click.prevent="
                             active = 4;
                         clickSendPaymentsMessages();
                         " class="mr-2 same-size-btn"
-                        style="background-color: #28a745; color: #fff; border-color: #28a745;">
-                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Cobros</span>
-                        <i class="fas fa-bell fa-lg btn-icon"></i>
-                    </vs-button>
-                </el-tooltip>
-                <el-tooltip class="item" content="Enviar reportes de documentos pendientes" effect="dark"
-                    placement="top-start">
-                    <vs-button v-if="canSee" :active="active == 5" :loading="loading" :disabled="loading"
-                        @click.prevent="
+                            style="background-color: #28a745; color: #fff; border-color: #28a745;">
+                            <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                            <span class="btn-label" style="margin: 0 8px;">Cobros</span>
+                            <i class="fas fa-bell fa-lg btn-icon"></i>
+                        </vs-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" content="Enviar reportes de documentos pendientes" effect="dark"
+                        placement="top-start">
+                        <vs-button :active="active == 5" :loading="loading" :disabled="loading" @click.prevent="
                             active = 5;
                         clickSendPendingDocuments();
                         " class="mr-2 same-size-btn"
-                        style="background-color: #17a2b8; color: #fff; border-color: #17a2b8;">
-                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Pendientes</span>
-                        <i class="fas fa-file fa-lg btn-icon"></i>
-                    </vs-button>
-                </el-tooltip>
-                <el-tooltip class="item" content="Reiniciar Whatsapp y enviar mensajes" effect="dark"
-                    placement="top-start">
-                    <vs-button v-if="canSee" :active="active == 6" :loading="loading" :disabled="loading"
-                        @click.prevent="
+                            style="background-color: #17a2b8; color: #fff; border-color: #17a2b8;">
+                            <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                            <span class="btn-label" style="margin: 0 8px;">Pendientes</span>
+                            <i class="fas fa-file fa-lg btn-icon"></i>
+                        </vs-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" content="Reiniciar Whatsapp y enviar mensajes" effect="dark"
+                        placement="top-start">
+                        <vs-button :active="active == 6" :loading="loading" :disabled="loading" @click.prevent="
                             active = 6;
                         clickRestartWhatsapp();
                         " class="mr-2 same-size-btn"
-                        style="background-color: #007bff; color: #fff; border-color: #007bff;">
-                        <i class="fab fa-whatsapp fa-lg btn-icon"></i>
-                        <span class="btn-label" style="margin: 0 8px;">Reiniciar</span>
-                        <i class="fa fa-sync btn-icon"></i>
+                            style="background-color: #007bff; color: #fff; border-color: #007bff;">
+                            <i class="fab fa-whatsapp fa-lg btn-icon"></i>
+                            <span class="btn-label" style="margin: 0 8px;">Reiniciar</span>
+                            <i class="fa fa-sync btn-icon"></i>
+                        </vs-button>
+                    </el-tooltip>
+                    <vs-button :active="active == 1" @click.prevent="
+                        active = 1;
+                    clickCreate();
+                    " class="same-size-btn" style="background-color: #007bff; color: #fff; border-color: #007bff;">
+                        <i class="fa fa-plus-circle btn-icon"></i>
+                        <span class="btn-label" style="margin: 0 8px;">Nueva APP</span>
                     </vs-button>
-                </el-tooltip>
-                <vs-button :active="active == 1" @click.prevent="
-                    active = 1;
-                clickCreate();
-                " class="same-size-btn" style="background-color: #007bff; color: #fff; border-color: #007bff;">
-                    <i class="fa fa-plus-circle btn-icon"></i>
-                    <span class="btn-label" style="margin: 0 8px;">Nueva APP</span>
-                </vs-button>
+                </div>
                 <!-- <el-tooltip class="item" content="Eviar toda las tareas programadas mnaualmente" effect="dark"
                     placement="top-start">
                     <el-button type="secondary" class="" :loading="buttonLoading" :disabled="buttonLoading"
@@ -348,7 +423,7 @@
                     </button> -->
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-1">
                     <div class="table-responsive">
                         <data-table :resource="resource" ref="dataTable"
                             class="table table-hover table-striped table-bordered shadow-sm rounded">
@@ -368,7 +443,7 @@
                                     Registro</th>
                                 <!-- <th class="text-white text-center border align-middle" style="width: 130px;">Fecha de vencimiento</th> -->
                                 <!-- <th class="text-white text-center border align-middle" style="width: 170px;">Hostname</th> -->
-                                <th class="text-white text-center border align-middle" style="width: 200px;">Cliente
+                                <th class="text-white text-center border align-middle" style="width: 300px;">Cliente
                                 </th>
                                 <!-- <th class="text-white text-center border align-middle" style="width: 200px;">Nombre</th> -->
                                 <!-- <th class="text-white text-center border align-middle" style="width: 120px;">Inicio
@@ -380,7 +455,7 @@
                                         <i class="fas fa-info-circle"></i>
                                     </el-tooltip>
                                 </th> -->
-                                <th class="text-white text-center border align-middle" style="width: 110px;">
+                                <th class="text-white text-center border align-middle" style="width: 80px;">
                                     <i class="fas fa-store" title="Establecimiento"></i>
 
                                 </th>
@@ -390,7 +465,7 @@
                                 </th>
                                 <th class="text-white text-center border align-middle" style="width: 150px;">
                                     Establecimientos</th> -->
-                                <th class="text-white text-center border align-middle" style="width: 150px;">Ventas S/
+                                <th class="text-white text-center border align-middle" style="width: 90px;">Ventas S/
                                     (Mes)</th>
                                 <!-- <th class="text-white text-center border align-middle" style="width: 120px;">F.Creación
                                 </th>
@@ -409,30 +484,27 @@
                                             <i class="el-icon-arrow-down el-icon--right"></i>
                                         </el-button>
                                         <el-dropdown-menu slot="dropdown" class="custom-dropdown-menu">
-                                            <el-dropdown-item :command="['clickPassword', row.id]"
+                                            <!-- <el-dropdown-item :command="['clickPassword', row.id]"
                                                 class="dropdown-item-password">
                                                 <i class="fas fa-key mr-2 text-warning"></i>
                                                 <span class="text-dark">Resetear clave</span>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item :command="['clickDelete', row]"
-                                                class="dropdown-item-delete">
-                                                <i class="fas fa-trash-alt mr-2 text-danger"></i>
-                                                <span class="text-danger font-weight-bold">Eliminar</span>
-                                            </el-dropdown-item>
+                                            </el-dropdown-item> -->
+                                            
                                             <el-dropdown-item :command="['clickPayments', row.id]"
                                                 class="dropdown-item-payments">
                                                 <i class="fas fa-money-check-alt mr-2 text-success"></i>
                                                 <span class="text-success">Pagos</span>
                                             </el-dropdown-item>
-                                            <el-dropdown-item :command="['clickAccountStatus', row.id]"
+                                            <!-- <el-dropdown-item :command="['clickAccountStatus', row.id]"
                                                 class="dropdown-item-account">
                                                 <i class="fas fa-file-invoice-dollar mr-2 text-info"></i>
                                                 <span class="text-info">E. Cuenta</span>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item :command="['clickEdit', row.id]"
-                                                class="dropdown-item-edit">
-                                                <i class="fas fa-edit mr-2 text-primary"></i>
-                                                <span class="text-primary">Editar</span>
+                                            </el-dropdown-item> -->
+                                            
+                                            <el-dropdown-item :command="['clickDelete', row]"
+                                                class="dropdown-item-delete">
+                                                <i class="fas fa-trash-alt mr-2 text-danger"></i>
+                                                <span class="text-danger font-weight-bold">Eliminar</span>
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
@@ -563,7 +635,8 @@
                                     </span>
                                     <br />
                                     <a :href="`http://${row.hostname}`" class="text-primary font-weight-bold"
-                                        target="_blank">{{ row.hostname }}</a>
+                                        target="_blank">{{
+                                        row.hostname }}</a>
                                     <br />
                                     RUC: {{ row.number }}
                                     <div class="row">
@@ -572,7 +645,7 @@
                                             <br />
                                             <template v-if="row.start_billing_cycle">
                                                 <span class="badge badge-info px-2 py-1">{{ row.start_billing_cycle
-                                                }}</span>
+                                                    }}</span>
                                             </template>
                                             <template v-else>
                                                 <el-date-picker v-model="row.select_date_billing" placeholder="..."
@@ -580,8 +653,9 @@
                                                     @change="setStartBillingCycle($event, row.id)"></el-date-picker>
                                             </template>
                                         </div>
-                                        <div class="col-6 d-flex justify-content-center align-items-center">
-                                            <span style="color: #155724;">S/ :</span>
+                                        <div class="col-6 text-center">
+                                            <br />
+                                            <span style="color: #155724;">Límite S/</span>
                                             <el-input style="width: 100px;" :min="0"
                                                 @input="changeLimitMonthAmount(row)" v-model="row.limit_month_amount"
                                                 type="number" placeholder="Monto">
@@ -805,6 +879,7 @@ table.dataTable.dataTable_width_auto {
     font-size: 2.2rem;
 }
 </style>
+
 
 <script>
 import CompaniesForm from "./form.vue";
