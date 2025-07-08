@@ -166,7 +166,7 @@ if ($hostname) {
             Route::get('quotations/option/tables', 'QuotationController@option_tables');
             Route::get('quotations/search/customers', 'QuotationController@searchCustomers');
             Route::get('quotations/search/customer/{id}', 'QuotationController@searchCustomerById');
-            Route::get('quotations/download/{external_id}/{format?}', 'QuotationController@download');
+            Route::get('quotations/download/{external_id}/{format?}', '\App\Http\Controllers\Tenant\QuotationController@download');
             Route::get('quotations/print/{external_id}/{format?}', 'QuotationController@toPrint');
             Route::post('quotations/email', 'QuotationController@email');
             Route::post('quotations/duplicate', 'QuotationController@duplicate');
