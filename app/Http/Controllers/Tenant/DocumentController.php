@@ -1127,9 +1127,10 @@ class DocumentController extends Controller
         );
     }
 
+
     public function item_tables()
     {
-        $items = Item::where('active', 1)->get();
+        $items = $this->table('items');
         $categories = []; //Category::cascade();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $system_isc_types = SystemIscType::whereActive()->get();
@@ -1283,6 +1284,164 @@ class DocumentController extends Controller
         return [];
     }
 
+
+
+    /* public function item_tables()
+    {
+        $items = Item::where('active', 1)->get();
+        $categories = []; //Category::cascade();
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
+        $system_isc_types = SystemIscType::whereActive()->get();
+        $price_types = PriceType::whereActive()->get();
+        $operation_types = OperationType::whereActive()->get();
+        $discount_types = ChargeDiscountType::whereType('discount')->whereLevel('item')->get();
+        $charge_types = ChargeDiscountType::whereType('charge')->whereLevel('item')->get();
+        $attribute_types = AttributeType::whereActive()->orderByDescription()->get();
+        $is_client = $this->getIsClient();
+        $row_rest = InventoryConfiguration::first();
+        $restringir_stock = (bool)$row_rest->stock_control;
+        return compact(
+            'items',
+            'categories',
+            'affectation_igv_types',
+            'system_isc_types',
+            'price_types',
+            'operation_types',
+            'discount_types',
+            'charge_types',
+            'attribute_types',
+            'is_client',
+            'restringir_stock'
+        );
+    } */
+
+    /* public function table($table)
+    {
+        if ($table === 'customers') {
+            $customers = Person::with('addresses')->whereType('customers')->whereIsEnabled()->orderBy('name')->get()->transform(function ($row) {
+
+                return [
+                    'id' => $row->id,
+                    'description' => $row->number . ' - ' . $row->name,
+                    'name' => $row->name,
+                    'number' => $row->number,
+                    'identity_document_type_id' => $row->identity_document_type_id,
+                    'identity_document_type_code' => $row->identity_document_type->code,
+                    'addresses' => $row->addresses,
+                    'address' =>  $row->address,
+                    'seller_id' =>  $row->seller_id,
+                ];
+            });
+            return $customers;
+        }
+
+        if ($table === 'prepayment_documents') {
+            $prepayment_documents = Document::whereHasPrepayment()->get()->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->series . '-' . $row->number,
+                    'series' => $row->series,
+                    'number' => $row->number,
+                    'document_type_id' => ($row->document_type_id == '01') ? '02' : '03',
+                    'amount' => $row->total_value,
+                    'total' => $row->total,
+
+                ];
+            });
+            return $prepayment_documents;
+        }
+
+        if ($table === 'items') {
+            $user = auth()->user();
+            $type = $user->type;
+            $establishment_id = auth()->user()->establishment_id;
+            $warehouse = ModuleWarehouse::where('establishment_id', $establishment_id)->first();
+            if ($type == 'admin') {
+                $items_u = Item::whereIsActive()->whereNotIsSet()->orderBy('description')->take(20)->get();
+            } else {
+                $items_u = Item::whereWarehouse()->whereIsActive()->whereNotIsSet()->orderBy('description')->take(20)->get();
+            }
+            $items_s = Item::where('unit_type_id', 'ZZ')->whereIsActive()->orderBy('description')->take(10)->get();
+            $items = $items_u->merge($items_s);
+
+            return collect($items)->transform(function ($row) use ($warehouse) {
+                $detail = $this->getFullDescription($row, $warehouse);
+                return [
+                    'max_quantity' => $row->max_quantity,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'id' => $row->id,
+                    'full_description' => $detail['full_description'],
+                    'brand' => $detail['brand'],
+                    'category' => $detail['category'],
+                    'stock' => $detail['stock'],
+                    'internal_id' => $row->internal_id,
+                    'description' => $row->description,
+                    'currency_type_id' => $row->currency_type_id,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'sale_unit_price' => round($row->sale_unit_price, 2),
+                    'purchase_unit_price' => $row->purchase_unit_price,
+                    'unit_type_id' => $row->unit_type_id,
+                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'has_igv' => (bool) $row->has_igv,
+                    'is_set' => (bool) $row->is_set,
+                    'is_stock' => $row->is_stock,
+                    'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                    'item_unit_types' => collect($row->item_unit_types)->transform(function ($row) {
+                        return [
+                            'id' => $row->id,
+                            'description' => "{$row->description}",
+                            'item_id' => $row->item_id,
+                            'unit_type_id' => $row->unit_type_id,
+                            'quantity_unit' => $row->quantity_unit,
+                            'price1' => $row->price1,
+                            'price2' => $row->price2,
+                            'price3' => $row->price3,
+                            'price_default' => $row->price_default,
+                        ];
+                    }),
+                    'warehouses' => collect($row->warehouses)->transform(function ($row) use ($warehouse) {
+                        return [
+                            'warehouse_description' => $row->warehouse->description,
+                            'stock' => $row->stock,
+                            'warehouse_id' => $row->warehouse_id,
+                            'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
+                        ];
+                    }),
+                    'attributes' => $row->attributes ? $row->attributes : [],
+                    'lots_group' => collect($row->lots_group)->transform(function ($row) {
+                        return [
+                            'id'  => $row->id,
+                            'code' => $row->code,
+                            'quantity' => $row->quantity,
+                            'date_of_due' => $row->date_of_due,
+                            'checked'  => false
+                        ];
+                    }),
+                    'lots' => $row->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function ($row) {
+                        return [
+                            'id' => $row->id,
+                            'series' => $row->series,
+                            'date' => $row->date,
+                            'item_id' => $row->item_id,
+                            'warehouse_id' => $row->warehouse_id,
+                            'has_sale' => (bool)$row->has_sale,
+                            'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                        ];
+                    }),
+                    'lots_enabled' => (bool) $row->lots_enabled,
+                    'series_enabled' => (bool) $row->series_enabled,
+                    'origin' => $row->origin,
+
+                ];
+            });
+            //            return $items;
+        }
+
+        return [];
+    }
+ */
     public function getFullDescription($row, $warehouse)
     {
 
