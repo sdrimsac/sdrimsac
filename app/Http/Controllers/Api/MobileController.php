@@ -137,7 +137,7 @@ class MobileController extends Controller
                             'has_igv' => (bool) $row->has_igv,
                             'is_set' => (bool) $row->is_set,
                             'aux_quantity' => 1,
-
+                            'image_url' => $row->image_url,
                         ];
                     });
 
