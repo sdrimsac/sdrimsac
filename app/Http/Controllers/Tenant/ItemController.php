@@ -89,7 +89,7 @@ class ItemController extends Controller
     {
         $this->all_models = [
 
-            "Item" => "App\Models\Item",
+            "Item" => "App\Models\Tenant\Item",
         ];
     }
     public function getSaleOffert()
