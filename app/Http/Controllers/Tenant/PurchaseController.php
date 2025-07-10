@@ -228,6 +228,32 @@ class PurchaseController extends Controller
         return $records;
     }
 
+    public function recordsMobile(Request $request)
+    {
+
+        $records = $this->getRecordsMobile($request);
+
+        return new PurchaseCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function getRecordsMobile($request)
+    {
+        $records = Purchase::query();
+
+        if ($request->date_of_issue) {
+            $records->where('date_of_issue', $request->date_of_issue);
+        }
+
+        $records->whereTypeUser()
+            ->orderBy('id', 'desc')
+            ->latest();
+
+        return $records;
+    }
+
+
+
+
     public function getRecordsShopping(Request $request)
     {
         $records = Purchase::query();

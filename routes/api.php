@@ -136,7 +136,6 @@ if ($hostname) {
             Route::get('items/enable/{item}', '\App\Http\Controllers\Tenant\ItemController@enable');
             Route::get('items/images/{item}', '\App\Http\Controllers\Tenant\ItemController@images');
             Route::get('items/images/delete/{id}', '\App\Http\Controllers\Tenant\ItemController@delete_images');
-
             Route::get('items/recordsMobile', '\App\Http\Controllers\Tenant\ItemController@recordsMobile');
             //MOBILE
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', '\App\Http\Controllers\Tenant\DownloadController@downloadExternal');
@@ -173,6 +172,25 @@ if ($hostname) {
             Route::get('quotations/record2/{quotation}', 'QuotationController@record2');
             Route::get('quotations/changed/{quotation}', 'QuotationController@changed');
             //--------------------------------------------------------------------------------------------------
+
+            //purchases
+            Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
+            Route::get('purchases/ne76/correlative', [App\Http\Controllers\Tenant\PurchaseController::class, 'ne76_correlative']);
+            Route::get('purchases/recordsMobile', [App\Http\Controllers\Tenant\PurchaseController::class, 'recordsMobile']);
+            Route::get('purchases/export/{type}', [App\Http\Controllers\Tenant\PurchaseController::class, 'exports']);
+            Route::get('purchases/create/{purchase_order_id?}', [App\Http\Controllers\Tenant\PurchaseController::class, 'create'])->name('tenant.purchases.create')->middleware('just.admin');;
+            Route::get('purchases/tables', [App\Http\Controllers\Tenant\PurchaseController::class, 'tables']);
+            Route::get('purchases/table/{table}', [App\Http\Controllers\Tenant\PurchaseController::class, 'table']);
+            Route::post('purchases', [App\Http\Controllers\Tenant\PurchaseController::class, 'store']);
+            Route::post('purchases/update', [App\Http\Controllers\Tenant\PurchaseController::class, 'update']);
+            Route::get('purchases/record/{document}', [App\Http\Controllers\Tenant\PurchaseController::class, 'record']);
+            Route::get('purchases/edit/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'edit']);
+            Route::get('purchases/anular/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'anular']);
+            Route::get('purchases/delete/{id}', [App\Http\Controllers\Tenant\PurchaseController::class, 'delete']);
+            Route::post('purchases/import', [App\Http\Controllers\Tenant\PurchaseController::class, 'import']);
+            Route::post('purchases/facturar', [App\Http\Controllers\Tenant\PurchaseController::class, 'updatefacturar']);
+            Route::post('purchases/importColorZise', [App\Http\Controllers\Tenant\PurchaseController::class, 'importColorZise']);
+
             //grupos//
             Route::get('groups', 'GroupController@index');
             Route::get('groups/create', 'GroupController@create');
@@ -262,9 +280,6 @@ if ($hostname) {
 
             Route::post('dispatches', 'Api\DispatchController@store');
             Route::get('dispatches/records', 'Api\DispatchController@records');
-
-
-
         });
         Route::get('documents/search/customers', '\App\Http\Controllers\Tenant\DocumentController@searchCustomers');
 
