@@ -153,7 +153,7 @@ Route::prefix('caja')->group(function () {
             Route::put('appointments/{id}', [UserScheduleAppointmentController::class, 'update'])->name('estilista.appointments.update');
             Route::delete('appointments/{id}', [UserScheduleAppointmentController::class, 'destroy'])->name('estilista.appointments.destroy');
             Route::get('appointments/by-day/{date}', [UserScheduleAppointmentController::class, 'getByDay'])->name('estilista.appointments.by-day');
-            Route::put('appointments/{id}/status', [UserScheduleAppointmentController::class, 'changeStatus'])->name('estilista.appointments.change-status');
+            Route::put('appointments/{id}/status', [UserScheduleAppointmentController::class, 'changeStatus'])->name('api.estilista.appointments.change-status');
         });
         Route::get('test', function () {
             $configuration = Configuration::first();
