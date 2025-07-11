@@ -108,8 +108,7 @@ class MobileController extends Controller
             ];
         });*/
 
-        $items = Item::with('warehouses')
-                    ->whereWarehouse()
+        $items = Item::whereWarehouse('warehouse')
                     ->whereHasInternalId()
                     ->whereNotIsSet()
                     ->whereIsActive()
@@ -139,25 +138,23 @@ class MobileController extends Controller
                             'is_set' => (bool) $row->is_set,
                             'aux_quantity' => 1,
                             'image_url' => $row->image_url,
-                            'warehouse' => $row->item_warehouse ? $row->item_warehouse->map(function($warehouse) {
+                            'warehouse' => $row->item_warehouse->map(function($warehouse) {
                                 return [
                                     'id' => $warehouse->id,
-                                    'description' => $warehouse->description,
+                                    'name' => $warehouse->name,
                                     'quantity' => $warehouse->quantity,
                                     'stock' => $warehouse->stock
                                 ];
-                            })->toArray() : []
+                            })->toArray()
+                            
                         ];
                     });
-
-
         return [
             'success' => true,
             'data' => array('items' => $items, 'affectation_types' => $affectation_igv_types)
         ];
 
     }
-
 
     public function getSeries(){
 
