@@ -108,7 +108,7 @@ class MobileController extends Controller
             ];
         });*/
 
-        $items = Item::with('item_warehouse')
+        $items = Item::with('warehouses')
                     ->whereWarehouse()
                     ->whereHasInternalId()
                     ->whereNotIsSet()
