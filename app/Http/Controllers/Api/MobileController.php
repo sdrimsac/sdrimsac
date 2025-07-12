@@ -128,15 +128,14 @@ class MobileController extends Controller
                             'is_set' => (bool) $row->is_set,
                             'aux_quantity' => 1,
                             'image_url' => $row->image_url,
-                            'warehouse' => $row->item_warehouse ? $row->item_warehouse->map(function($warehouse) {
+                            'warehouse' => $row->warehouses->map(function($warehouse) {
                                 return [
-                                    'id' => $warehouse->id,
-                                    'name' => $warehouse->name,
-                                    'quantity' => $warehouse->quantity,
-                                    'stock' => $warehouse->stock
+                                    'id' => $warehouse->warehouse_id,
+                                    'name' => $warehouse->warehouse_description,
+                                    'stock' => $warehouse->stock,
+                                    'checked' => (bool) $warehouse->checked
                                 ];
-                            })->toArray() : []
-                            
+                            })->toArray()
                         ];
                     });
         return [
