@@ -238,7 +238,7 @@ class MobileController extends Controller
                             'checked' => (bool) $lot->checked
                         ];
                     })->toArray(),
-                    'warehouses' => $row->warehouses->map(function ($warehouse) {
+                    'warehouse' => $row->warehouses->map(function ($warehouse) {
                         return [
                             'warehouse_id' => $warehouse->warehouse_id,
                             'warehouse_description' => $warehouse->warehouse_description,
