@@ -38,6 +38,7 @@ use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use App\Models\Tenant\SaleNotePromotion;
 use Exception;
+use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Report\Exports\BoxesExport;
@@ -54,6 +55,7 @@ use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\Table;
+use Hyn\Tenancy\Environment;
 
 class BoxesController extends Controller
 {
@@ -1644,40 +1646,6 @@ class BoxesController extends Controller
         return implode(' | ', $result);
     }
 
-    /* function formatDifference($difference)
-    {
-        $difference = round($difference, 3);
-
-        $wholeChickens = floor($difference);
-        $remaining = $difference - $wholeChickens;
-
-        $fractions = [
-            '1/2' => 0.500,
-            '1/4' => 0.250,
-            '1/8' => 0.125,
-        ];
-
-        $fractionText = [];
-
-        foreach ($fractions as $label => $value) {
-            if (abs($remaining - $value) < 0.01) {
-                $fractionText[] = $label;
-                break;
-            }
-        }
-
-        $result = [];
-
-        if ($wholeChickens > 0) {
-            $result[] = $wholeChickens;
-        }
-
-        if (!empty($fractionText)) {
-            $result[] = implode(' | ', $fractionText);
-        }
-
-        return implode(' | ', $result) ?: '0';
-    } */
     function purchasesBox($ingresos)
     {
 
@@ -2176,7 +2144,6 @@ class BoxesController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
-
 
     public function cashes_salud(Request $request)
     {
@@ -3088,10 +3055,13 @@ class BoxesController extends Controller
         $cash_id = $request->cash_id;
         $configuration = Configuration::first();
         $socket_channel = $configuration->socket_channel;
+        //$hostname = Website::query();
+        $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn;
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $fqdn . '_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if ($cash_id == 565) {
             Log::info($path);
         }
@@ -3628,9 +3598,11 @@ class BoxesController extends Controller
         }
         $company = Company::first();
         $company_number = $company->number;
+        $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn;
         //duardar el pdf 
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $fqdn . '_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
 
         return $pdf->stream('pdf_file.pdf');
