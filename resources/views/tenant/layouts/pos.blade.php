@@ -60,36 +60,58 @@
         <div id="nav" class="nav-container d-flex">
             <div class="nav-content d-flex justify-content-between">
                 <!-- Logo Start -->
-                <div class="fix-logo">
-                    <div class="logo position-relative">
-                        <a href="javascript:void(0)">
-                            <!-- Logo can be added directly -->
-                            <!-- <img src="img/logo/logo-white.svg" alt="logo" /> -->
-
-                            <!-- Or added via css to provide different ones for different color themes -->
-                            <div class="img">
+                <div class="fix-logo" style="display: flex; align-items: center; height: 100%; margin-right: 24px;">
+                    <div class="logo position-relative" style="height: 75px; width: 130px; display: flex; align-items: center;">
+                        <a href="javascript:void(0)" style="display: flex; align-items: center; height: 100%; width: 100%;">
+                            <div class="img" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                 @if (isset($vc_establishment->logo))
-                                    <img src="{{ asset('storage/uploads/logos/' . $vc_establishment->logo) }}" />
+                                    <img src="{{ asset('storage/uploads/logos/' . $vc_establishment->logo) }}"
+                                         style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
                                 @else
                                     @if ($vc_company->logo)
-                                        <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}" />
+                                        <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}"
+                                             style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
                                     @else
-                                        <img style="max-width: 180px  ; max-height: 75px "
-                                            src="{{ asset('logo/logo.png') }}" class="icono" />
+                                        <img style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;"
+                                             src="{{ asset('logo/logo.png') }}" class="icono" />
                                     @endif
                                 @endif
                             </div>
                         </a>
                     </div>
                 </div>
+                <style>
+                    .fix-logo .logo {
+                        aspect-ratio: 180/75;
+                        width: 180px;
+                        max-width: 100vw;
+                        height: 75px;
+                        max-height: 100px;
+                    }
+                    .fix-logo .logo .img img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                        aspect-ratio: 180/75;
+                        display: block;
+                    }
+                    @media (max-width: 600px) {
+                        .fix-logo .logo {
+                            width: 120px;
+                            height: 50px;
+                        }
+                    }
+                </style>
                 <!-- Logo End -->
-
+                <div>
+                    
+                </div>
                 <!-- User Menu Start -->
                 <div class="user-container d-flex flex-row align-items-center justify-content-between" style="width: 100%; max-width: {{ $userWidth ?? '350px' }}; max-height: 120px; gap: 10px;">
                     {{-- Puedes pasar $userWidth desde el controlador para modificar el ancho dinámicamente --}}
 
                     {{-- Imagen del Usuario --}}
-                    <div class="user-image-container flex-shrink-0">
+                    <div class="user-image-container ">
                         @php
                             $config = DB::connection('tenant')->table('configurations')->first();
                             $user = auth()->user();
@@ -125,38 +147,46 @@
                     </div>
 
                     {{-- Nombre del usuario y Tipo --}}
-                    <div class="flex-grow-1" style="color: var(--light-text); line-height: 1; min-width: 0; max-width: 300px; overflow-wrap: break-word;">
+                    <div class="" style="color: var(--light-text); line-height: 1; min-width: 0; max-width: 200px; overflow-wrap: break-word;">
                         @if (strpos($vc_user->name, ' - ') !== false)
                             @php
                                 $nameParts = explode(' - ', $vc_user->name);
                             @endphp
-                            <span style="font-weight: bold; font-size: 1.2rem; margin-top:5px">{{ $nameParts[0] }}</span><br>
+                            <br/>
+                            <span style="font-weight: bold; font-size: 1rem; margin-top:5px">{{ $nameParts[0] }}</span><br/>
                             <span>{{ $nameParts[1] }}</span>
                         @else
                             {{ $vc_user->name }}
                         @endif
-                        <br>
+                       
                         @if ($vc_company->soap_type_id == '01')
-                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                            <img 
+                                style="width: 90px; height: 30px; object-fit: contain; display: block;" 
+                                class="profile" 
+                                alt="profile"
                                 src="{{ asset('acorn/img/profile/demo.png') }}" />
                         @elseif($vc_company->soap_type_id == '02')
-                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                            <img style="width: 90px; height: 30px; object-fit: contain; display: block;" 
+                            class="profile" 
+                            alt="profile"
                                 src="{{ asset('acorn/img/profile/produccion.png') }}" />
                         @else
-                            <img style="width: 65%; height: 60%; margin-top:5px" class="profile" alt="profile"
+                            <img style="width: 90px; height: 30px; object-fit: contain; display: block;" 
+                            class="profile" 
+                            alt="profile"
                                 src="{{ asset('acorn/img/profile/interno.png') }}" />
                         @endif
                     </div>
 
                     {{-- Logo del Distribuidor --}}
-                    <div class="flex-shrink-0" style="width: 100px; max-width: 200px; margin: auto;">
+                    <div class="" style="">
                         <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false" style="width: 100px; height: auto;">
-                            <img style="width: 100%; height: auto; object-fit: contain;" class="profile" alt="profile"
+                            aria-haspopup="true" aria-expanded="false" style="width: 100px; height: 60px; min-width: 100px; min-height: 60px; max-width: 100px; max-height: 40px; padding: 0; overflow: hidden; align-items: center; justify-content: center;">
+                            <img style="width: 100%; height: 100%; object-fit: contain; display: block;" class="profile" alt="profile"
                                 src="{{ asset('acorn/img/profile/store.png') }}" />
                         </a>
                         {{-- Menu de usuario Logout y cambio de contraseña --}}
-                        <div class="dropdown-menu dropdown-menu-end user-menu p-2" style="background-color: #444a50; margin: 0; width: auto; min-width: fit-content;">
+                        <div class="dropdown-menu dropdown-menu-end user-menu p-2" style="background-color: #889199; margin: 0; width: auto; min-width: fit-content;">
                             <div class="row ms-0 me-0">
                                 <div class="col-12 pe-1 ps-1">
                                     <ul class="list-unstyled mb-0">
@@ -165,7 +195,7 @@
                                                 <a href="#" data-bs-toggle="modal"
                                                     data-bs-target="#changePasswordModal"
                                                     class="btn btn-info align-items-center text-white"
-                                                    style="background-color: #22d7c5; border-color: #109184; padding: 5px 8px; border-radius: 5px;">
+                                                    style="background-color: #1ca497; border-color: #109184; padding: 5px 8px; border-radius: 5px;">
                                                     <i class="fas fa-key me-2"></i>
                                                     <span class="">Cambiar PIN</span>
                                                 </a>
@@ -200,25 +230,26 @@
                             <div class="modal-content">
                                 <form id="changePasswordForm" action="{{ route('update_code') }}" method="POST">
                                     @csrf
-                                    <div class="modal-header" style="background-color: #003366; ">
+                                    <div class="modal-header" style="background-color: #073f68; ">
                                         <h5 class="modal-title" id="changePasswordModalLabel" style="color: white;">Cambiar PIN</h5>
                                         <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" style="filter: invert(1);"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="input-group">
-                                            <input type="pin" placeholder="Ingrese el PIN de 4 dígitos"
-                                                class="form-control bg-white" id="pin" name="pin" required>
-                                            <button class="btn btn-outline-secondary" type="button"
+                                            <input type="number" placeholder="Ingrese el PIN de 4 dígitos"
+                                                class="form-control bg-white" id="pin" name="pin" required maxlength="4" pattern="\d{4}" inputmode="numeric" autocomplete="off"
+                                                oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);" min="0" max="9999" />
+                                            {{-- <button class="btn btn-outline-secondary" type="button"
                                                 id="showPasswordButton">
                                                 Mostrar
-                                            </button>
+                                            </button> --}}
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-info"
+                                        <button type="button" class="btn_cancelarsmall"
                                             data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                        <button type="submit" class="btn_buscarsmall">Aceptar</button>
                                     </div>
                                 </form>
                             </div>
@@ -288,7 +319,6 @@
                                             style="display: none;">
                                             @csrf
                                         </form>
-
                                     </li>
                                 </ul>
                             </div>
@@ -301,30 +331,7 @@
             </div>
         </div>
         <div></div>
-        {{-- Nuevo Card --}}
-        {{-- <div    class="card" 
-            style="background-color: rgb(13, 13, 128); 
-            color: white; 
-            padding: 30px; 
-            margin: 20px; 
-            border-radius: 10px; 
-            position: relative; 
-           
-            top: 30px;  
-           
-            z-index: 100; 
-            
-            ">
-          
-           
-                    <div class="text-end date-time-container" style="color: var(--light-text); line-height: 1; position: absolute; bottom: 10px; right: 10px;">
-                        <span id="current-day"></span> 
-                        <span id="current-date"></span> 
-                        <span id="current-month"></span> 
-                        <span id="current-year"></span>
-                        <span id="current-time"></span>
-                    </div>
-        </div>  --}}
+       
 
         <main>
             <div id="main">
@@ -617,8 +624,60 @@
         @endif --}}
        
         <footer style="margin-top: 0; margin-bottom: 0;">
-            <div class="footer-content">
-                <div class="container">
+            
+
+                   
+                        <div class="col-2 d-flex align-items-center justify-content-center">
+                            <img 
+                                style="max-width: 100%; max-height: 60px; width: auto; height: auto; object-fit: contain; display: block;" 
+                                class="profile" 
+                                alt="profile"
+                                src="{{ asset('acorn/img/profile/store.png') }}" 
+                            />
+                        </div>
+                        <div class="col-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="https://www.youtube.com/" target="_blank" rel="noopener" title="YouTube" style="font-size: 2rem;">
+                                    <svg width="1em" height="1em" viewBox="0 0 576 512" fill="#FF0000" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M549.655 124.083c-6.281-23.65-24.84-42.208-48.49-48.49C458.281 64 288 64 288 64s-170.281 0-213.165 11.593c-23.65 6.282-42.209 24.84-48.49 48.49C16 166.967 16 256 16 256s0 89.033 10.345 131.917c6.281 23.65 24.84 42.208 48.49 48.49C117.719 448 288 448 288 448s170.281 0 213.165-11.593c23.65-6.282 42.209-24.84 48.49-48.49C560 345.033 560 256 560 256s0-89.033-10.345-131.917zM232 336V176l142.857 80L232 336z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://www.facebook.com/" target="_blank" rel="noopener" title="Facebook" style="font-size: 2rem;">
+                                    <svg width="1em" height="1em" viewBox="0 0 320 512" fill="#1877F3" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M279.14 288l14.22-92.66h-88.91V127.91c0-25.35 12.42-50.06 52.24-50.06H293V6.26S259.5 0 225.36 0c-73.22 0-121.09 44.38-121.09 124.72V195.3H22.89V288h81.38v224h100.2V288z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://www.tiktok.com/" target="_blank" rel="noopener" title="TikTok" style="font-size: 2rem;">
+                                    <svg width="1em" height="1em" viewBox="0 0 448 512" fill="#000000" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M448,209.9v125.1c0,97.2-78.8,176-176,176S96,432.2,96,335c0-97.2,78.8-176,176-176c12.1,0,24,1.2,35.5,3.5v-59.6h-59.5V0h59.5v59.5h59.5v59.5h-59.5v59.5c-11.5-2.3-23.4-3.5-35.5-3.5c-70.7,0-128,57.3-128,128s57.3,128,128,128s128-57.3,128-128V209.9H448z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://www.instagram.com/" target="_blank" rel="noopener" title="Instagram" style="font-size: 2rem;">
+                                    <svg width="1em" height="1em" viewBox="0 0 448 512" fill="#E4405F" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9 114.9-51.3 114.9-114.9S287.7 141 224.1 141zm0 186c-39.5 0-71.5-32-71.5-71.5s32-71.5 71.5-71.5 71.5 32 71.5 71.5-32 71.5-71.5 71.5zm146.4-194.3c0 14.9-12 26.9-26.9 26.9s-26.9-12-26.9-26.9 12-26.9 26.9-26.9 26.9 12 26.9 26.9zm76.1 27.2c-1.7-35.3-9.9-66.7-36.2-92.9S388.6 1.7 353.3 0C317.5-1.7 130.5-1.7 94.7 0 59.4 1.7 28 9.9 1.7 36.2S1.7 123.4 0 158.7C-1.7 194.5-1.7 381.5 0 417.3c1.7 35.3 9.9 66.7 36.2 92.9s57.6 34.5 92.9 36.2c35.8 1.7 222.8 1.7 258.6 0 35.3-1.7 66.7-9.9 92.9-36.2s34.5-57.6 36.2-92.9c1.7-35.8 1.7-222.8 0-258.6zM398.8 388c-7.8 19.6-22.9 34.7-42.5 42.5-29.4 11.7-99.2 9-132.2 9s-102.8 2.6-132.2-9c-19.6-7.8-34.7-22.9-42.5-42.5-11.7-29.4-9-99.2-9-132.2s-2.6-102.8 9-132.2c7.8-19.6 22.9-34.7 42.5-42.5C121.2 9 191 11.6 224 11.6s102.8-2.6 132.2 9c19.6 7.8 34.7 22.9 42.5 42.5 11.7 29.4 9 99.2 9 132.2s2.6 102.8-9 132.2z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-7 d-flex align-items-center justify-content-end">
+                            @php
+                                $commit = exec('git rev-parse HEAD');
+                                $commit = substr($commit, 0, 7);
+                            @endphp
+                            <div class="text-end">
+                                <p class="mb-0 text-medium" style="font-size: 1.2rem;">
+                                    @if ($commit)
+                                        <span style="font-size: 1rem; margin-right: 35px;">Commit: {{ $commit }}</span>
+                                    @endif
+                                    <br/>
+                                    <span style="font-size: 1rem;">&copy; {{ date('Y') }} <strong>Sdrimsac Solutions</strong>. Todos los derechos reservados.</span>
+                                </p>
+                            </div>
+                        </div>
+                   
+
+                 
+                 {{-- <div class="container">
                     <div class="row">
                         <div style="color: rgb(9, 9, 57);">
                             @php
@@ -635,8 +694,8 @@
                             </p>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> --}}
+            
         </footer>
     </div>
 
@@ -679,7 +738,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 800px) {
             .user-image-container {
                 width: 50px;
                 height: 50px;
@@ -688,12 +747,12 @@
             }
         }
 
-        @media screen and (max-width: 800px) {
+        /* @media screen and (max-width: 800px) {
             .date-time-container,
             .user-image-container {
                 display: none !important;
             }
-        }
+        } */
         .user-image-container {
             aspect-ratio: 1/1; /* Fuerza una relación de aspecto 1:1 (cuadrado) */
             width: 60px; /* Ancho fijo */
@@ -833,6 +892,53 @@
                     });
             });
         });
+
+        // --- Configuración de colores y rangos ---
+    function getPingBackground(latencia) {
+        if (latencia === -1) return "#6b7280"; // Gris: sin datos
+        if (latencia < 90) return "#22c55e";   // Verde
+        if (latencia < 150) return "#facc15";  // Amarillo
+        return "#ef4444";                      // Rojo
+    }
+
+    // --- Medición de latencia usando una imagen pequeña y confiable ---
+    function medirLatenciaConImagen(url = "https://www.cloudflare.com/favicon.ico") {
+        return new Promise(resolve => {
+            const start = performance.now();
+            const img = new Image();
+            img.onload = () => {
+                const end = performance.now();
+                const latency = Math.round(end - start);
+                console.log('[Latencia] Medida:', latency, 'ms');
+                resolve(latency);
+            };
+            img.onerror = () => {
+                console.warn('[Latencia] Error al cargar la imagen para medir latencia');
+                resolve(-1);
+            };
+            img.src = `${url}?_=${Date.now()}`;
+        });
+    }
+
+    async function actualizarLatenciaBtn() {
+        const btn = document.getElementById('latency-btn');
+        const text = document.getElementById('latency-btn-text');
+        if (!btn || !text) {
+            console.warn('[Latencia] No se encontró el botón o el texto');
+            return;
+        }
+        text.textContent = '...';
+        btn.style.background = "#6b7280";
+        const latencia = await medirLatenciaConImagen();
+        text.textContent = latencia >= 0 ? `${latencia} ms` : '-- ms';
+        btn.style.background = getPingBackground(latencia);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setInterval(actualizarLatenciaBtn, 2000);
+        actualizarLatenciaBtn();
+    });
+        
         
     </script>
     <!-- Page Specific Scripts End -->

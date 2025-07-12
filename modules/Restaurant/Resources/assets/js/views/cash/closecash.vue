@@ -3,796 +3,204 @@
     <div>
         <div class="row">
             <el-dialog
-                title="Cierra de Caja - Contador de dinero"
+                title="Cierre de Caja - Contador de dinero"
                 :visible.sync="showDialogClose"
                 @open="dateclosed"
                 :before-close="closeDialog"
                 v-loading="loading"
-                width="60%"
+                width="600px"
             >
-                <!-- Encabezado de la caja -->
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card-body">
-                                <div
-                                    class="form-group"
-                                    :class="{
-                                        'has-danger': errors.date_closed
-                                    }"
-                                >
-                                    <label class="control-label disabled w-100"
-                                        >Fecha:
-                                        <strong
-                                            style="font-size: 1.2em; color: #000000;"
-                                            >{{ date_closed }}</strong
-                                        >
-                                    </label>
-                                    <!-- <h3>{{ date_closed }}</h3> -->
-                                </div>
+                <!-- Encabezado -->
+                <el-row :gutter="10" style="margin-bottom: 1px;">
+                    <el-col :span="12">
+                        <div>
+                            <label>Fecha:</label>
+                            <strong style="font-size: 1.2em; color: #000;">{{ date_closed }}</strong>
+                        </div>
+                    </el-col>
+                    <el-col :span="12" class="text-right">
+                        <div v-if="configuration.view_daily_cash || configuration.view_daily_cash_pin">
+                            <label style="color: darkgreen;">Total Ventas en Efectivo</label>
+                            <div v-if="configuration.view_daily_cash_pin">
+                                <h3>{{ returnTextObfuscated(totalSales.toString()) }}</h3>
+                            </div>
+                            <div v-else>
+                                <h2 style="color: darkgreen; font-size: 2em;">
+                                    <strong>{{ totalSales.toFixed(2) }}</strong>
+                                </h2>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card-body">
-                                <div
-                                    class="row"
-                                    v-if="
-                                        configuration.view_daily_cash ||
-                                            configuration.view_daily_cash_pin
-                                    "
-                                >
-                                    <!-- <div class="col-md-7">
-                                        <label
-                                            class="control-label disabled w-100"
-                                            style="color: darkgreen;"
-                                            >Total Ventas en Efectivo</label
-                                        >
-                                    </div> -->
-                                    <div class="col-md-12">
-                                        <template
-                                            v-if="
-                                                configuration.view_daily_cash_pin
-                                            "
-                                        >
-                                            <label
-                                                class="control-label disabled w-100"
-                                                style="color: darkgreen;"
-                                                >Total Ventas en Efectivo</label
-                                            >
-                                            <h3 style="text-align: right;">
-                                                {{
-                                                    returnTextObfuscated(
-                                                        totalSales.toString()
-                                                    )
-                                                }}
-                                            </h3>
-                                        </template>
-                                        <template v-else>
-                                            <label
-                                                class="control-label disabled w-100"
-                                                style="color: darkgreen;"
-                                                >Total Ventas en Efectivo</label
-                                            >
-                                            <h2
-                                                style="text-align: right; color: darkgreen; font-size: 2em;"
-                                            >
-                                                <strong>{{
-                                                    totalSales.toFixed(2)
-                                                }}</strong>
-                                            </h2>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <!-- Cuerpor del conteo de dinero -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <!-- Encabezado de Billetes -->
-                            <div
-                                class="card-header d-flex justify-content-between align-items-center"
-                                style="background-color: #073f68; color: white; padding: 5px;"
-                            >
-                                <h6
-                                    class="card-title mb-0"
-                                    style="color: white; font-size: 1.2em;"
-                                >
-                                    Billetes
-                                </h6>
-                                <el-button
-                                    type="text"
-                                    style="
-                                    border-radius: 5px;
-                                    padding: 0;
-                                    width: 50px;
-                                    height: 35px;
-                                "
-                                >
-                                    <img
-                                        width="50px"
-                                        height="35px"
-                                        src="/billetes.png"
-                                        alt="billete"
-                                        style="border-radius: 5px;"
-                                    />
-                                </el-button>
-                            </div>
-                            <div class="card-body">
-                                <table class="table-responsive table">
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 5ch;"
-                                            ></th>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 6ch;"
-                                            >
-                                                Cantidad
-                                            </th>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 10ch;"
-                                            >
-                                                S/
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3>10</h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['10']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['10'],
-                                                            10
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["10"] || 0) *
-                                                            10
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3>20</h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['20']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['20'],
-                                                            20
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["20"] || 0) *
-                                                            20
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3>50</h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['50']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['50'],
-                                                            50
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["50"] || 0) *
-                                                            50
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3>100</h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['100']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['100'],
-                                                            100
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["100"] ||
-                                                                0) * 100
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3>200</h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['200']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['200'],
-                                                            200
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["200"] ||
-                                                                0) * 200
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <!-- Solo un espacio hacia abajo -->
-                                        <tr>
-                                            <td class="text-center">
-                                                <h3 style="visibility: hidden;">
-                                                    200
-                                                </h3>
-                                            </td>
-                                            <td>
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['200']"
-                                                    style="visibility: hidden;"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['200'],
-                                                            200
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td class="text-center">
-                                                <h6 style="visibility: hidden;">
-                                                    {{
-                                                        (
-                                                            (count["200"] ||
-                                                                0) * 200
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h6><strong>Total</strong></h6>
-                                            </td>
-                                            <td></td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{ totalBills.toFixed(2) }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <!-- <tfoot>
-                                        <tr v-if="configuration.health_network">
-                                            <td colspan="3">
-                                                <el-button
-                                                    type="primary"
-                                                    style="border-radius: 5px; padding: 5px 10px; margin-right: 10px;"
-                                                    icon="el-icon-document"
-                                                    @click="showSeriesBills"
-                                                >
-                                                    Ingresar Series
-                                                </el-button>
-                                                <el-button
-                                                    style="border-radius: 5px; padding: 5px 10px; background-color: #28a745; color: white;"
-                                                    icon="el-icon-folder-opened"
-                                                    @click.prevent="$refs.file.click()"
-                                                >
-                                                    Subir Excel
-                                                </el-button>
-                                                <input
-                                                    type="file"
-                                                    @change="uploadExcelBillsSeries"
-                                                    style="visibility:hidden;"
-                                                    ref="file"
-                                                    accept=".xlsx,.xls"
-                                                />
-                                            </td>
-                                        </tr>
+                    </el-col>
+                </el-row>
 
-                                    </tfoot> -->
-                                </table>
+                <!-- Billetes y Monedas -->
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        <el-card shadow="hover" style="padding:1px;">
+                            <div class="header">
+                                <span>Billetes</span>
+                                <!-- <img src="/billetes.png" width="30" height="20" /> -->
                             </div>
-                        </div>
-                    </div>
-                    <!-- Encabezado de Monedas -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div
-                                class="card-header d-flex justify-content-between align-items-center"
-                                style="background-color: #073f68; color: white; padding: 5px;"
-                            >
-                                <h6
-                                    class="card-title mb-0"
-                                    style="color: white; font-size:1.2em;"
-                                >
-                                    Monedas
-                                </h6>
-                                <el-button
-                                    type="text"
-                                    style="
-                                    border-radius: 5px;
-                                    padding: 0;
-                                    width: 50px;
-                                    height: 35px;
-                                "
-                                >
-                                    <img
-                                        width="50px"
-                                        height="35px"
-                                        src="/monedas.png"
-                                        alt="monedas"
-                                        style="border-radius: 5px;"
-                                    />
-                                </el-button>
+                            <el-row v-for="b in [10,20,50,100,200]" :key="b" align="middle" style="margin-bottom:5px;">
+                                <el-col :span="8"><strong>S/ {{ b }}</strong></el-col>
+                                <el-col :span="8">
+                                    <el-input size="mini" v-model="count[b]" placeholder="0"
+                                        @input="updateFinalBalance(count[b], b)" />
+                                </el-col>
+                                <el-col :span="8" class="text-right">
+                                    <span>{{ ((count[b]||0)*b).toFixed(2) }}</span>
+                                </el-col>
+                            </el-row>
+                            <br>
+                            <br>
+                            <div class="total-row">
+                                <span>Total:</span>
+                                <span class="float-right"><strong>{{ totalBills.toFixed(2) }}</strong></span>
                             </div>
-                            <div class="card-body">
-                                <table class="table-responsive table">
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 5ch;"
-                                            ></th>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 6ch;"
-                                            >
-                                                Cantidad
-                                            </th>
-                                            <th
-                                                style="vertical-align:bottom;text-align:center; width: 10ch;"
-                                            >
-                                                S/
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>0.10</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['0.1']"
-                                                    maxlength="6"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['0.1'],
-                                                            0.1,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["0.1"] ||
-                                                                0) * 0.1
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>0.20</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['0.2']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['0.2'],
-                                                            0.2,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["0.2"] ||
-                                                                0) * 0.2
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>0.50</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['0.5']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['0.5'],
-                                                            0.5,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["0.5"] ||
-                                                                0) * 0.5
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>1.00</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['1']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['1'],
-                                                            1,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["1"] || 0) *
-                                                            1
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>2.00</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['2']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['2'],
-                                                            2,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["2"] || 0) *
-                                                            2
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                class="text-center"
-                                                style="width: 5ch;"
-                                            >
-                                                <h3>5.00</h3>
-                                            </td>
-                                            <td style="width: 6ch;">
-                                                <el-input
-                                                    placeholder="0"
-                                                    v-model="count['5']"
-                                                    @input="
-                                                        updateFinalBalance(
-                                                            count['5'],
-                                                            5,
-                                                            true
-                                                        )
-                                                    "
-                                                >
-                                                </el-input>
-                                            </td>
-                                            <td
-                                                class="text-center"
-                                                style="width: 10ch;"
-                                            >
-                                                <h6>
-                                                    {{
-                                                        (
-                                                            (count["5"] || 0) *
-                                                            5
-                                                        ).toFixed(2)
-                                                    }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td class="text-center">
-                                                <h6><strong>Total</strong></h6>
-                                            </td>
-                                            <td></td>
-                                            <td class="text-center">
-                                                <h6>
-                                                    {{ totalCoins.toFixed(2) }}
-                                                </h6>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-card shadow="hover" style="padding:10px;">
+                            <div class="header">
+                                <span>Monedas</span>
+                                <!-- <img src="/monedas.png" width="30" height="20" /> -->
                             </div>
-                        </div>
-                    </div>
-                    <!-- Resumen de dinero -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="col-md-12 text-center">
-                                    <div class="col-md-12">
-                                        <label class="w-100">
-                                            Total Efectivo Contado
-                                        </label>
-                                        <el-input
-                                            :value="final_balance.toFixed(2)"
-                                            readonly
-                                        >
-                                        </el-input>
-                                    </div>
-                                    <div
-                                        v-if="
-                                            configuration.view_daily_cash ||
-                                                configuration.view_daily_cash_pin
-                                        "
-                                        class="col-md-12"
-                                    >
-                                        <label class="w-100">
-                                            Diferencia del Conteo de Dinero
-                                        </label>
-                                        <template
-                                            v-if="
-                                                configuration.view_daily_cash_pin
-                                            "
-                                        >
-                                            <el-input
-                                                :value="
-                                                    returnTextObfuscated(
-                                                        '123456'
-                                                    )
-                                                "
-                                                readonly
-                                            >
-                                            </el-input>
-                                        </template>
-                                        <template v-else>
-                                            <el-input
-                                                :class="
-                                                    `${
-                                                        difference < 0
-                                                            ? 'text-danger-difference'
-                                                            : ''
-                                                    }`
-                                                "
-                                                :value="difference"
-                                                readonly
-                                            >
-                                            </el-input>
-                                        </template>
-                                    </div>
+                            <el-row v-for="m in [0.1,0.2,0.5,1,2,5]" :key="m" align="middle" style="margin-bottom:5px;">
+                                <el-col :span="8"><strong>S/ {{ m }}</strong></el-col>
+                                <el-col :span="8">
+                                    <el-input size="mini" v-model="count[m]" placeholder="0"
+                                        @input="updateFinalBalance(count[m], m, true)" />
+                                </el-col>
+                                <el-col :span="8" class="text-right">
+                                    <span>{{ ((count[m]||0)*m).toFixed(2) }}</span>
+                                </el-col>
+                            </el-row>
+                            <div class="total-row">
+                                <span>Total:</span>
+                                <span class="float-right"><strong>{{ totalCoins.toFixed(2) }}</strong></span>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+                <br>
+                <!-- Resumen y acciones -->
+                <el-row :gutter="10" style="margin-top:5px; align-items: center;">
+                    <el-col :span="8" style="display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">Conteo:</span>
+                        <el-input :value="final_balance.toFixed(2)" readonly size="mini" style="flex: 1;"></el-input>
+                    </el-col>
+                    <el-col :span="8" v-if="configuration.view_daily_cash || configuration.view_daily_cash_pin" style="display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">Diferencia:</span>
+                        <el-input
+                            :class="difference < 0 ? 'text-danger-difference' : ''"
+                            :value="configuration.view_daily_cash_pin ? returnTextObfuscated(difference) : difference"
+                            readonly
+                            size="mini"
+                            style="flex: 1;"
+                        ></el-input>
+                    </el-col>
+                    <el-col :span="8" class="text-right" style="display: flex; align-items: right; justify-content: center;">
+                        <el-button class="btn_guardarsmall" size="mini" type="primary" @click="clickCloseCash">
+                            <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
+                            Cerrar Caja
+                        </el-button>
+                    </el-col>
+                </el-row>
+                <!-- <el-row :gutter="10" style="margin-top:15px;">
+                    <el-col :span="16">
+                        <el-card shadow="never" style="padding:10px;">
+                            <div>
+                                
+                            </div>
+                            <div v-if="configuration.view_daily_cash || configuration.view_daily_cash_pin" style="margin-top:10px;">
+                                <label>Diferencia del Conteo de Dinero</label>
+                                <el-input
+                                    :class="difference < 0 ? 'text-danger-difference' : ''"
+                                    :value="configuration.view_daily_cash_pin ? returnTextObfuscated(difference) : difference"
+                                    readonly
+                                    size="mini"
+                                ></el-input>
+                            </div>
+                        </el-card>
+                    </el-col>
+                    <el-col :span="8" class="text-right">
+                        <el-button size="mini" @click="closeDialog">
+                            <i class="el-icon-close" style="margin-right: 5px;"></i>
+                            Cancelar
+                        </el-button>
+                        <el-button size="mini" type="primary" @click="clickCloseCash">
+                            <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
+                            Cerrar Caja
+                        </el-button>
+                    </el-col>
+                </el-row> -->
 
-                                    <br />
-                                    <tfoot>
-                                        <tr v-if="configuration.health_network">
-                                            <div class="card">
-                                                <div
-                                                    class="card-header"
-                                                    style="background-color: #073f68; color: white;"
-                                                >
-                                                    <h6
-                                                        class="card-title mb-0"
-                                                        style="color: white; font-weight: bold;"
-                                                    >
-                                                        Serie de Billetes
-                                                    </h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <td colspan="4">
-                                                        <el-button
-                                                            type="primary"
-                                                            style="border-radius: 5px; padding: 10px 20px; margin-right: 5px; font-size: 1em;"
-                                                            icon="el-icon-document"
-                                                            @click="
-                                                                showSeriesBills
-                                                            "
-                                                        >
-                                                            Ingresar
-                                                        </el-button>
-                                                        <el-button
-                                                            style="border-radius: 5px; padding: 10px 20px; background-color: #28a745; color: white; font-size: 1em;"
-                                                            icon="el-icon-folder-opened"
-                                                            @click.prevent="
-                                                                $refs.file.click()
-                                                            "
-                                                        >
-                                                            Subir Excel
-                                                        </el-button>
-                                                        <input
-                                                            type="file"
-                                                            @change="
-                                                                uploadExcelBillsSeries
-                                                            "
-                                                            style="visibility:hidden;"
-                                                            ref="file"
-                                                            accept=".xlsx,.xls"
-                                                        />
-                                                    </td>
-                                                </div>
-                                            </div>
-                                        </tr>
-                                    </tfoot>
-                                    <!-- <div class="col-md-12 text-center">
-                                        <div class="row"></div>
-                                    </div> -->
-                                </div>
+                <!-- Serie de Billetes (solo si health_network) -->
+                <el-row v-if="configuration.health_network" style="margin-top:15px;">
+                    <el-col :span="24">
+                        <el-card shadow="never" style="padding:10px;">
+                            <div class="header">
+                                <span>Serie de Billetes</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6" style="margin-top: 20px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-end" style="flex-wrap: wrap; gap: 10px;">
-                                    <el-button
-                                        @click="closeDialog()"
-                                        class="btn-cancel"
-                                        style="font-size: 0.9em; min-width: fit-content;"
-                                    >
-                                        <i class="el-icon-close" style="margin-right: 5px;"></i>
-                                        Cancelar
-                                    </el-button>
-                                    <el-button
-                                        type="primary"
-                                        @click="clickCloseCash"
-                                        class="btn-agregar"
-                                        style="font-size: 0.9em; min-width: fit-content;"
-                                    >
-                                        <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
-                                        Cerrar Caja
-                                    </el-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <el-button
+                                type="primary"
+                                style="border-radius: 5px; padding: 5px 10px; margin-right: 10px;"
+                                icon="el-icon-document"
+                                @click="showSeriesBills"
+                            >
+                                Ingresar
+                            </el-button>
+                            <el-button
+                                style="border-radius: 5px; padding: 5px 10px; background-color: #28a745; color: white;"
+                                icon="el-icon-folder-opened"
+                                @click.prevent="$refs.file.click()"
+                            >
+                                Subir Excel
+                            </el-button>
+                            <input
+                                type="file"
+                                @change="uploadExcelBillsSeries"
+                                style="visibility:hidden;"
+                                ref="file"
+                                accept=".xlsx,.xls"
+                            />
+                        </el-card>
+                    </el-col>
+                </el-row>
+                <br>
+
+                <series-bills-dialog
+                    :showDialog.sync="showSeriesBillsDialog"
+                    :seriesBills.sync="seriesBills"
+                ></series-bills-dialog>
             </el-dialog>
         </div>
-        <series-bills-dialog
-            :showDialog.sync="showSeriesBillsDialog"
-            :seriesBills.sync="seriesBills"
-        ></series-bills-dialog>
     </div>
 </template>
 
 <style>
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.total-row {
+    border-top: 1px solid #eee;
+    margin-top: 8px;
+    padding-top: 5px;
+    font-weight: bold;
+}
+.text-right {
+    text-align: right;
+}
+.float-right {
+    float: right;
+}
 .text-danger-difference .el-input__inner {
     color: red !important;
 }
-/* .el-input__inner {
-    padding: 0 25px !important;
-} */
 </style>
 <script>
 //'../../../../components/DataTable.vue'

@@ -4,12 +4,12 @@
         @open="open"
         :visible="showPendingOrdens"
         title="Ordenes Pendientes"
-        width="80%"
+        width="60%"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
     >
 
-    <div class="card mb-3 p-3">
+    <div class=" mb-2 p-0">
         <div class="row align-items-center">
             <div class="col-md-6 mb-2">
                 <label for="order-number">Ingresar el número de orden</label>
@@ -117,7 +117,7 @@
             <el-dialog
                 :visible.sync="showDialog"
                 title="Listado de ordenes"
-                width="60%"
+                width="35%"
                 append-to-body
                 @open="getOrdenItems"
                 @close="showDialog = false"
@@ -125,15 +125,15 @@
                 <div class="row">
                     <div class="table-responsive">
                         <table class="table table striped">
-                            <thead>
+                            <thead style="background-color: #1e5a85;">
                                 <tr>
-                                    <th>
+                                    <th class="text-white">
                                         #
                                     </th>
-                                    <th>
+                                    <th class="text-white">
                                         Pedido
                                     </th>
-                                    <th>
+                                    <th class="text-white">
                                         Cantidad
                                     </th>
                                 </tr>
@@ -150,7 +150,7 @@
                                         {{ item.food.description }}
                                     </td>
                                     <td>
-                                        {{ item.quantity }}
+                                        {{ Number(item.quantity).toFixed(2) }}
                                     </td>
                                 </tr>
                             </tbody>

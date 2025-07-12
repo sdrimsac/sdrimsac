@@ -4,20 +4,25 @@
         append-to-body
         @close="close"
         @open="open"
-        width="75%"
+        width="60%"
         v-loading="loading"
-        :title="`${activeName == 'expenses' ? 'GASTOS' : 'INGRESOS'}`"
     >
+        <template #title>
+            <div style="display: flex; align-items: center; width: 100%; position: relative;">
+                <span style="flex:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ activeName == 'expenses' ? 'Listado de Gastos' : 'Listado de Ingresos' }}</span>
+                <el-button
+                    :class="['btn_excelsmall', activeName == 'expenses' ? 'btn-expenses' : 'btn-incomes']"
+                    @click="addExpenseIncome"
+                    type="primary"
+                    style="margin-left: 8px; margin-right: 40px;"
+                >
+                    Generar {{ `${activeName == 'expenses' ? 'Gasto' : 'Ingreso'}` }}
+                </el-button>
+            </div>
+        </template>
         <div>
-            <el-button
-                @click="addExpenseIncome"
-                type="primary"
-                style="margin:8px 0px;"
-            >
-                Crear {{ `${activeName == "expenses" ? "Gasto" : "Ingreso"}` }}
-            </el-button>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="Gastos" name="expenses">
+            <el-tabs v-model="activeName" @tab-click="handleClick" :class="['custom-tabs', activeName == 'expenses' ? 'tab-expenses' : 'tab-incomes']">
+                <el-tab-pane label="Gastos" name="expenses" style="padding-top: 1px; padding-bottom: 1px;">
                     <expenses-incomes-detail
                         :company="company"
                         @getRecords="getRecords"
@@ -29,7 +34,7 @@
                     >
                     </expenses-incomes-detail>
                 </el-tab-pane>
-                <el-tab-pane label="Ingresos" name="incomes">
+                <el-tab-pane label="Ingresos" name="incomes" style="padding-top: 1px; padding-bottom: 1px;">
                     <expenses-incomes-detail
                         :company="company"
                         @getRecords="getRecords"
@@ -265,3 +270,54 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.btn-expenses {
+  background: #e53935 !important;
+  border-color: #e53935 !important;
+  color: #fff !important;
+}
+.btn-incomes {
+  background: #43a047 !important;
+  border-color: #43a047 !important;
+  color: #fff !important;
+}
+.tab-expenses >>> .el-tabs__item.is-active {
+  background: #e53935 !important;
+  color: #fff !important;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 4px 12px rgba(229,57,53,0.15);
+}
+.tab-expenses >>> .el-tabs__active-bar {
+  background: #e53935 !important;
+}
+.tab-incomes >>> .el-tabs__item.is-active {
+  background: #43a047 !important;
+  color: #fff !important;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 4px 12px rgba(67,160,71,0.15);
+}
+.tab-incomes >>> .el-tabs__active-bar {
+  background: #17821c !important;
+}
+.custom-tabs >>> .el-tabs__nav {
+  background: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.custom-tabs >>> .el-tabs__item {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #606266;
+  transition: background 0.3s, color 0.3s;
+  padding: 18px 32px 18px 32px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-tabs >>> .el-tab-pane {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+</style>

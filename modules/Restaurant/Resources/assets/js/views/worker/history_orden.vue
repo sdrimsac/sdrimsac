@@ -122,15 +122,15 @@
                 <div class="row">
                     <div class="table-responsive">
                         <table class="table table striped">
-                            <thead>
+                            <thead style="background-color: #1e5a85; color: white;">
                                 <tr>
-                                    <th>
+                                    <th style="color: white;">
                                         #
                                     </th>
-                                    <th>
+                                    <th style="color: white;">
                                         Pedido
                                     </th>
-                                    <th>
+                                    <th style="color: white;">
                                         Cantidad
                                     </th>
                                 </tr>

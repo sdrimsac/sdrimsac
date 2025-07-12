@@ -6,11 +6,11 @@
 @endphp
 
 <div class="menu-container ">
-    <ul>
+    {{-- <ul>
         <li class="modulo-caja">
             <h1 style=" color: white; font-size: 250%; font-weight: bold; margin-top: 21px ">CAJA</h1>
         </li>
-    </ul>
+    </ul> --}}
 </div>
 <style>
     @media (max-width: 850px) {

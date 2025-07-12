@@ -1,15 +1,7 @@
 <!-- Apertura de Caja en Módulo de Ventas -->
 <template>
-  <el-dialog
-    :title="titleDialog"   
-    :visible="showDialog"
-    @close="close"
-    @open="create"
-    :data-keyboard="false"
-    :closeOnPressEscape="dontClose"
-    :closeOnClickModal="dontClose"
-    width="35%"
-  >
+  <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" :data-keyboard="false"
+    :closeOnPressEscape="dontClose" :closeOnClickModal="dontClose" width="45%">
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
         <div class="row">
@@ -18,32 +10,49 @@
               <label class="control-label">Cajero</label>
               <!--<el-input v-model="form.user" readonly> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
               <el-select :disabled="disableUser" v-model="form.user_id">
-                <el-option
-                  v-for="option in users"
-                  :key="option.id"
-                  :value="option.id"
-                  :label="option.name"
-                ></el-option>
+                <el-option v-for="option in users" :key="option.id" :value="option.id" :label="option.name"></el-option>
               </el-select>
               <small class="form-control-feedback" v-if="errors.user" v-text="errors.user[0]"></small>
             </div>
           </div>
-          <div class="col-md-6">
+
+          <div class="col-md-6 mb-2">
+            <div class="form-group" :class="{ 'has-danger': errors.reference_number }">
+              <label class="control-label">Turno de Apertura Detectado</label>
+              <el-input v-model="turnName" readonly placeholder="Turno detectado automáticamente"></el-input>
+              <el-select v-model="form.turn_id" style="display:none">
+                <el-option v-for="option in turnsTable" :key="option.id" :value="option.id" :label="option.turn_desc"></el-option>
+              </el-select>
+              <small class="form-control-feedback" v-if="errors.reference_number"
+                v-text="errors.reference_number[0]"></small>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-2">
             <div class="form-group" :class="{ 'has-danger': errors.beginning_balance }">
-              <label class="control-label">Saldo inicial de Apertura</label>
+              <label class="control-label">Saldo inicial</label>
               <el-input v-model="form.beginning_balance">
                 <i slot="prefix" class="el-icon-edit-outline"></i>
               </el-input>
-              <small
-                class="form-control-feedback"
-                v-if="errors.beginning_balance"
-                v-text="errors.beginning_balance[0]"
-              ></small>
+              <small class="form-control-feedback" v-if="errors.beginning_balance"
+                v-text="errors.beginning_balance[0]"></small>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 mb-2" v-if="configuration.health_network == 1">
+            <div class="form-group" :class="{ 'has-danger': errors.cash_type_id }">
+              <label class="control-label">
+                Tipo de Turno
+              </label>
+              <el-select v-model="form.cash_type_id">
+                <el-option v-for="option in turnsHealthNetwork" :key="option.id" :value="option.value"
+                  :label="option.description"></el-option>
+              </el-select>
+              <small class="form-control-feedback" v-if="errors.cash_type_id" v-text="errors.cash_type_id[0]"></small>
+            </div>
+          </div>
+          <!-- <div class="col-md-6">
             <div class="form-group" :class="{ 'has-danger': errors.reference_number }">
-              <label class="control-label">Seleccionar Turno de Apertura</label>
+              <label class="control-label">Turno de Apertura</label>
               <el-select v-model="form.turn_id">
                 <el-option
                   v-for="option in turnsTable"
@@ -59,78 +68,60 @@
                 v-text="errors.reference_number[0]"
               ></small>
             </div>
-          </div>
-          <div class="col-md-6" v-if="configuration.health_network == 1">
-            <div class="form-group" :class="{ 'has-danger': errors.cash_type_id }">
-              <label class="control-label">
-                Seleccionar Tipo de Turno
-                <el-tooltip class="item" effect="dark" placement="top">
-                  <div slot="content">
-                    <p>
-                      <strong>INICIO:</strong> Turno de
-                      apertura
-                      <br />Normalmente Noche | Mañana, si no se
-                      trabajó en la noche
-                    </p>
-                    <p>
-                      <strong>INTERMEDIO:</strong> Turno
-                      intermedio
-                      <br />Normalmente Mañana | Turno entre el
-                      inicio y el fin
-                    </p>
-                    <p>
-                      <strong>FIN:</strong> Turno de
-                      cierre
-                      <br />Normalmente Tarde | Mañana, si se
-                      trabaja doble turno (Mañana - Tarde)
-                    </p>
-                    <p>
-                      <strong>UNICO:</strong> Turno unico
-                      <br />Turno unico para el dia: Mañana -
-                      Tarde (Si noche no se trabajó)
-                    </p>
-                  </div>
-                  <i class="el-icon-info"></i>
-                </el-tooltip>
-              </label>
-              <el-select v-model="form.cash_type_id">
-                <el-option
-                  v-for="option in turnsHealthNetwork"
-                  :key="option.id"
-                  :value="option.value"
-                  :label="option.description"
-                ></el-option>
-              </el-select>
-
-              <small
-                class="form-control-feedback"
-                v-if="errors.cash_type_id"
-                v-text="errors.cash_type_id[0]"
-              ></small>
+          </div> -->
+          <div class="row" v-if="configuration.health_network == 1">
+            <div class="card mb-2" style="padding: 10px; margin: 8px 8px;">
+              <div class="card-body">
+                <h5 class="card-title" style="text-align: center; color: red;">Importante</h5>
+                <ul class="mb-0" style="list-style: none; padding-left: 0; margin: 0;">
+                  <li class="mb-3" style="margin-bottom: 12px; padding: 0;">
+                    <strong style="color: #1976d2;">INICIO:</strong> Turno de apertura<br>
+                    <small class="text-muted"
+                      style="display:block; text-align:justify; word-break:break-word; line-height:1;">
+                      Normalmente Noche | Mañana, si no se trabajó en la noche.
+                    </small>
+                  </li>
+                  <li class="mb-3" style="margin-bottom: 12px; padding: 0;">
+                    <strong style="color: #388e3c;">INTERMEDIO:</strong> Turno intermedio<br>
+                    <small class="text-muted"
+                      style="display:block; text-align:justify; word-break:break-word; line-height:1;">
+                      Normalmente Mañana | Turno entre el inicio y el fin.
+                    </small>
+                  </li>
+                  <li class="mb-3" style="margin-bottom: 12px; padding: 0;">
+                    <strong style="color: #fbc02d;">FIN:</strong> Turno de cierre<br>
+                    <small class="text-muted"
+                      style="display:block; text-align:justify; word-break:break-word; line-height:1;">
+                      Normalmente Tarde | Mañana, si se trabaja doble turno (Mañana - Tarde).
+                    </small>
+                  </li>
+                  <li style="padding: 0;">
+                    <strong style="color: #7b1fa2;">ÚNICO:</strong> Turno único<br>
+                    <small class="text-muted"
+                      style="display:block; text-align:justify; word-break:break-word; line-height:1;">
+                      Turno único para el día: Mañana - Tarde (Si noche no se trabajó).
+                    </small>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+
+
+          
         </div>
       </div>
       <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                <!-- Cancelar -->
-                <el-button
-                    class="btn-cancel btn-cancel:hover"
-                    icon="fas fa-times fa-lg"
-                    @click.prevent="close()"
-                >
-                    <span>Cancelar</span>
-                </el-button>
+        <!-- Cancelar -->
+        <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">
+          <span>Cancelar</span>
+        </el-button>
 
-                <el-button
-                    class="btn-save btn-save:hover"
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                >
-                    <span>Guardar</span>
-                </el-button>
-            </div>
+        <el-button class="btn_guardarsmall" icon="fas fa-save fa-lg" type="primary" native-type="submit"
+          :loading="loading_submit">
+          <span>Guardar</span>
+        </el-button>
+      </div>
       <!-- <div class="form-actions text-end pt-2 pb-2">
         <el-button @click.prevent="close()">Cancelar</el-button>
         <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
@@ -149,22 +140,26 @@ export default {
         {
           id: 1,
           description: "INICIO",
-          value: 3
+          value: 3,
+          info: "Turno de apertura. Normalmente Noche | Mañana, si no se trabajó en la noche."
         },
         {
           id: 2,
           description: "INTERMEDIO",
-          value: 1
+          value: 1,
+          info: "Turno intermedio. Normalmente Mañana | Turno entre el inicio y el fin."
         },
         {
           id: 3,
           description: "FIN",
-          value: 2
+          value: 2,
+          info: "Turno de cierre. Normalmente Tarde | Mañana, si se trabaja doble turno (Mañana - Tarde)."
         },
         {
           id: 4,
-          description: "UNICO",
-          value: 4
+          description: "ÚNICO",
+          value: 4,
+          info: "Turno único para el día: Mañana - Tarde (Si noche no se trabajó)."
         }
       ],
       configuration: {},
@@ -204,6 +199,32 @@ export default {
         return false;
       }
       return true;
+    },
+    turnName() {
+      // Detecta el turno automáticamente según la hora actual y lo asigna a form.turn_id
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      let label = '';
+      let id = null;
+      if (hour >= 6 && (hour < 12 || (hour === 11 && minute <= 59))) {
+        label = "Mañana (06:00am - 11:59am)";
+        const turno = this.turnsTable.find(t => t.turn_desc.toLowerCase().includes('mañana'));
+        id = turno ? turno.id : null;
+      } else if (hour >= 12 && (hour < 18 || (hour === 17 && minute <= 59))) {
+        label = "Tarde (12:00pm - 5:59pm)";
+        const turno = this.turnsTable.find(t => t.turn_desc.toLowerCase().includes('tarde'));
+        id = turno ? turno.id : null;
+      } else if (hour >= 18 || hour < 6) {
+        label = "Noche (6:00pm - 5:59am)";
+        const turno = this.turnsTable.find(t => t.turn_desc.toLowerCase().includes('noche'));
+        id = turno ? turno.id : null;
+      }
+      // Asigna el turno detectado al select oculto
+      if (id && this.form.turn_id !== id) {
+        this.form.turn_id = id;
+      }
+      return label;
     }
   },
   methods: {
@@ -229,7 +250,7 @@ export default {
       };
     },
     create() {
-      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
+      this.titleDialog = this.recordId ? "Editar Caja" : "Apertura de Caja";
       if (this.recordId) {
         this.$http
           .get(`/${this.resource}/record/${this.recordId}`)
@@ -250,9 +271,9 @@ export default {
       return cash ? true : false;
     },
     async submit() {
-        if (this.newCash == true ){
-            return;
-        }
+      if (this.newCash == true) {
+        return;
+      }
       if (
         this.configuration.health_network == 1 &&
         this.form.cash_type_id == undefined
@@ -268,7 +289,7 @@ export default {
         /* this.$toast.warning(
           `La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion`
         ); */
-        this.$showSAlert("warning","La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion", "warning");
+        this.$showSAlert("warning", "La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion", "warning");
 
         return false;
       }
@@ -278,7 +299,7 @@ export default {
             "No puede crear caja, porfavor cierre caja para el usuario definido"
           ); */
           this.$showSAlert("warning", "No puede crear caja, porfavor cierre caja para el usuario definido", "warning");
-        this.newCash = false;
+          this.newCash = false;
           return false;
         }
       }
@@ -406,8 +427,8 @@ export default {
       );
       this.$confirm(
         "¿Está seguro de que desea aperturar la caja con el turno " +
-          cash_type.description +
-          "?",
+        cash_type.description +
+        "?",
         "Apertura de Caja",
         {
           confirmButtonText: "Sí",
@@ -419,9 +440,9 @@ export default {
         .catch(() => {
           this.loading_submit = false;
 
-        }).finally(() => { this.newCash = false})
+        }).finally(() => { this.newCash = false })
 
-    }, 
+    },
     close() {
       this.$emit("update:showDialog", false);
       this.initForm();

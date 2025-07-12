@@ -7,53 +7,60 @@
         title="Ventas Aparcadas"
         @close="close"
         @open="open"
+        :width="'700px'"
     >
         <div class="">
-            <table v-if="ordenInBox.length > 0" class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            #
-                        </th>
-                        <th class="text-center">
-                            DNI / Referencia
-                        </th>
-                        <th class="text-center">
-                            Cantidad
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(aparted, idx) in ordenInBox" :key="idx">
-                        <td>{{ idx + 1 }}</td>
-                        <td class="text-center">{{ aparted.ref }}</td>
-                        <td class="text-center">{{ aparted.ordens.length }}</td>
-                        <td class="text-center">
-                            <el-button
-                                type="success"
-                                @click="restoreOrden(aparted)"
-                            >
-                                Restaurar
-                            </el-button>
-
-                            <el-button
-                                type="danger"
-                                @click="removeApart(aparted.ref)"
-                            >
-                                Eliminar
-                            </el-button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div v-if="ordenInBox.length > 0" class="table-responsive">
+                <table class="table table-hover align-middle shadow-sm rounded">
+                    <thead style="background: #1e5a85; color: #fff;">
+                        <tr>
+                            <th style="color: #fff;">#</th>
+                            <th class="text-center" style="color: #fff;">DNI / Referencia</th>
+                            <th class="text-center" style="color: #fff;">Cantidad</th>
+                            <th class="text-center" style="color: #fff; width: 180px;">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(aparted, idx) in ordenInBox" :key="idx" style="background: #f9fbfc;">
+                            <td class="fw-bold">{{ idx + 1 }}</td>
+                            <td class="text-center">{{ aparted.ref }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary fs-6">{{ aparted.ordens.length }}</span>
+                            </td>
+                            <td class="text-center">
+                                <el-tooltip content="Restaurar Venta" placement="top">
+                                    <el-button
+                                        type="success"
+                                        size="small"
+                                        circle
+                                        @click="restoreOrden(aparted)"
+                                        style="margin-right: 8px;"
+                                    >
+                                        <i class="el-icon-refresh"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-tooltip content="Eliminar Venta Aparcada" placement="top">
+                                    <el-button
+                                        type="danger"
+                                        size="small"
+                                        circle
+                                        @click="removeApart(aparted.ref)"
+                                    >
+                                        <i class="el-icon-delete"></i>
+                                    </el-button>
+                                </el-tooltip>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="d-flex justify-content-center" v-else>
                 <span>Sin ventas aparcadas</span>
             </div>
         </div>
         <div class="p-2 d-flex justify-content-end">
-            <button type="button" class="btn btn-light" @click="close">
-                CERRAR
+            <button type="button" class="btn_cancelarsmall" @click="close">
+                Cerrar
             </button>
         </div>
     </el-dialog>

@@ -1,39 +1,37 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @close="close"
-        @open="create"
-        append-to-body
-        width="50%"
-        v-loading="loading"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" append-to-body width="50%"
+        v-loading="loading">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
-                <div class="row"></div>
                 <div class="row">
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.method }"
-                        >
-                            <label class="control-label">Metodo de Pgo </label>
+                        <div class="form-group" :class="{ 'has-danger': errors.method }">
+                            <label class="control-label">Pago en: </label>
                             <el-select disabled v-model="form.method" clearable>
                                 <el-option
                                     v-for="option in payment_methods"
                                     :key="option.id"
                                     :value="option.description"
-                                    :label="option.description"
-                                ></el-option>
+                                    :label="option.description">
+                                </el-option>
                             </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.method"
-                                v-text="errors.method[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.method" v-text="errors.method[0]"></small>
                         </div>
                     </div>
                     <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" :class="{ 'has-danger': errors.date }">
+                            <label class="control-label">Fecha</label>
+                            <el-date-picker :disabled="true" style="width:100%;" v-model="form.date" format="dd-MM-yyyy"
+                                value-format="yyyy-MM-dd" type="date">
+                            </el-date-picker>
+                            <small class="text-danger" v-if="errors.date" v-text="errors.date[0]"></small>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.amount }"
@@ -51,98 +49,42 @@
                                 v-if="errors.amount"
                                 v-text="errors.amount[0]"
                             ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.date }"
-                        >
-                            <label class="control-label">Fecha</label>
-                            <el-date-picker
-                                :disabled="true"
-                                style="width:100%;"
-                                v-model="form.date"
-                                format="dd-MM-yyyy"
-                                value-format="yyyy-MM-dd"
-                                type="date"
-                            >
-                            </el-date-picker>
-                            <small
-                                class="text-danger"
-                                v-if="errors.date"
-                                v-text="errors.date[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <template v-if="activeName == 'expenses'">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="item">
-                                    Gasto
-                                    <a
-                                        href="#"
-                                        class="control-label font-weight-bold text-info"
-                                        @click="openCreateItem"
-                                    >
-                                        [ + Nuevo]</a
-                                    >
-                                </label>
-                                <el-select
-                                    v-if="form.item_add == false"
-                                    v-model="detail.item_detail_id"
-                                    filterable
-                                    remote
-                                    popper-class="el-select-customers"
-                                    clearable
-                                    placeholder="Buscar producto"
-                                    :remote-method="searchRemoteItems"
-                                    @change="loadDataUtilities"
-                                    class="w-100"
-                                >
-                                    <el-option
-                                        v-for="option in items_detail"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="
-                                            `${option.detail} ${option.unit_id}`
-                                        "
-                                    ></el-option>
-                                </el-select>
-                                <el-input
-                                    placeholder="Buscar producto"
-                                    class="w-100"
-                                    v-model="detail.item_detail_id"
-                                    v-else
-                                >
-                                </el-input>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="qty">
-                                    Cantidad
-                                </label>
+                        </div> -->
+            </div>
 
-                                <el-input-number
-                                    controls-position="right"
-                                    :controls="false"
-                                    :precision="2"
-                                    class="w-100"
-                                    v-model.number="detail.quantity"
-                                ></el-input-number>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="price">
-                                    Precio
-                                </label>
-                                <el-input-number
-                                    controls-position="right"
-                                    :precision="2"
-                                    :controls="false"
-                                    class="w-100"
-                                    v-model.number="detail.price"
-                                ></el-input-number>
-                            </div>
-                            <div class="col-md-2">
+            <template v-if="activeName == 'expenses'">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="item">
+                            Gasto
+                            <a href="#" class="control-label font-weight-bold text-success" style="color: #145A32;" @click="openCreateItem">
+                                [ + Nuevo]</a>
+                        </label>
+                        <el-select v-if="form.item_add == false" v-model="detail.item_detail_id" filterable remote
+                            popper-class="el-select-customers" clearable placeholder="Buscar Gasto"
+                            :remote-method="searchRemoteItems" @change="loadDataUtilities" class="w-100">
+                            <el-option v-for="option in items_detail" :key="option.id" :value="option.id" :label="`${option.detail} ${option.unit_id}`
+                                "></el-option>
+                        </el-select>
+                        <el-input placeholder="Buscar producto" class="w-100" v-model="detail.item_detail_id" v-else>
+                        </el-input>
+                    </div>
+                    <div class="col-md-2" style="display:none;">
+                        <label for="qty">
+                            Cantidad
+                        </label>
+
+                        <el-input-number controls-position="right" :controls="false" :precision="2" class="w-100"
+                            v-model.number="detail.quantity"></el-input-number>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="price">
+                            Precio
+                        </label>
+                        <el-input-number controls-position="right" :precision="2" :controls="false" class="w-100"
+                            v-model.number="detail.price"></el-input-number>
+                    </div>
+                    <!-- <div class="col-md-2">
                                 <label for="price">
                                     Precio adicional
                                 </label>
@@ -154,112 +96,86 @@
                                     id="extra_price"
                                     v-model.number="detail.extra_price"
                                 ></el-input-number>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-end">
-                                <el-button type="primary" @click="addDetail">
-                                    <i
-                                        class="fa fa-plus"
-                                        aria-hidden="true"
-                                    ></i>
-                                    Agregar
-                                </el-button>
-                            </div>
+                            </div> -->
+                    <div class="col-md-3 d-flex justify-content-center align-items-center">
+                        <el-button class="btn_guardarsmall" type="primary" @click="addDetail">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            Agregar Gasto
+                        </el-button>
+                    </div>
+                </div>
+                <div>
+                    <div class="row" style="margin-top:25px;" v-if="details != 0">
+                        <table class="table">
+                            <thead style="background-color: #1e5a85; color: #fff;">
+                                <tr>
+                                    <th style="color: #fff; width: 200px; text-align: center;">Descripción</th>
+                                    <th style="color: #fff; text-align: center;">Unidad</th>
+                                    <th style="color: #fff; text-align: center;">Cantidad</th>
+                                    <!-- <th style="color: #fff; text-align: center;">S/</th> -->
+                                    <!-- <th style="color: #fff; text-align: center;">PRECIO ADICIONAL</th> -->
+                                    <th style="color: #fff; text-align: center;">TOTAL</th>
+                                    <th style="color: #fff; text-align: center;">ELIMINAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(dt, idx) in details" :key="idx">
+                                    <td style="text-align: center;">{{ dt.item.detail }}</td>
+                                    <td style="text-align: center;">{{ dt.item.unit_id }}</td>
+                                    <td style="text-align: center;">{{ dt.quantity }}</td>
+                                    <!-- <td style="text-align: center;">{{ Number(dt.price).toFixed(2) }}</td> -->
+                                    <!-- <td>{{ dt.extra_price }}</td> -->
+                                    <td style="text-align: center;">
+                                        {{ ((dt.price * dt.quantity).toFixed(2)) }}
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <el-button type="danger" size="mini" @click="deleteDetail(dt.item_detail_id)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </el-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </template>
+            <template v-if="activeName == 'incomes'">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Valor</label>
+                            <el-input-number v-model.number="form.amount" :precision="2" :controls="false"
+                                class="w-100"></el-input-number>
                         </div>
-                        <div
-                            class="row"
-                            style="margin-top:25px;"
-                            v-if="details != 0"
-                        >
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>DESCP.</th>
-                                        <th>CANT.</th>
-                                        <th>PRECIO UNIT</th>
-                                        <th>PRECIO ADICIONAL</th>
-                                        <th>PRECIO TOTAL</th>
-                                        <th>ELIMINAR</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(dt, idx) in details" :key="idx">
-                                        <td>{{ dt.item.detail }}</td>
-                                        <td>
-                                            {{ dt.quantity }}
-                                            {{ dt.item.unit_id }}
-                                        </td>
-                                        <td>{{ dt.price }}</td>
-                                        <td>{{ dt.extra_price }}</td>
-                                        <td>
-                                            {{
-                                                dt.price * dt.quantity +
-                                                    dt.extra_price
-                                            }}
-                                        </td>
-                                        <td>
-                                            <el-button
-                                                type="danger"
-                                                size="mini"
-                                                @click="
-                                                    deleteDetail(
-                                                        dt.item_detail_id
-                                                    )
-                                                "
-                                            >
-                                                <i
-                                                    class="fa fa-trash"
-                                                    aria-hidden="true"
-                                                ></i>
-                                            </el-button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </template>
-                    <div class="col-md-12 p-2">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.description }"
-                        >
-                            <label class="control-label"
-                                >Detalle - Concepto</label
-                            >
-                            <el-input
-                                type="textarea"
-                                v-model="form.description"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.description"
-                                v-text="errors.description[0]"
-                            ></small>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="control-label">Motivo</label>
+                            <el-input type="textarea" v-model="form.description">
+                                <i slot="prefix" class="el-icon-edit-outline"></i>
+                            </el-input>
                         </div>
                     </div>
                 </div>
+            </template>
+            <div class="col-md-12 p-2" style="display:none;">
+                <div class="form-group">
+                    <label class="control-label">Detalle - Concepto</label>
+                    <el-input type="textarea" v-model="form.description">
+                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                    </el-input>
+                </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    >Guardar</el-button
-                >
+            <el-divider></el-divider>
+
+            <div class="form-actions d-flex justify-content-end pt-2 pb-2">
+                <el-button class="btn_cancelarsmall" @click.prevent="close()">Cancelar</el-button>
+                <el-button class="btn_guardarsmall" type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
             </div>
         </form>
-        <el-dialog
-            v-loading="loading"
-            width="50%"
-            append-to-body
-            :visible.sync="showCreateItem"
-            title="Crear detalle de concepto"
-        >
+        <el-dialog v-loading="loading" width="50%" append-to-body :visible.sync="showCreateItem"
+            title="Crear detalle de concepto">
             <div class="row p-2">
                 <div class="col-md-8">
                     <label for="product">
@@ -272,18 +188,12 @@
                         Unidad de medida
                     </label>
                     <el-select v-model="newItem.unitTypeId">
-                        <el-option
-                            v-for="(type, idx) in unitTypes"
-                            :key="idx"
-                            :value="type.id"
-                            :label="type.description"
-                        ></el-option>
+                        <el-option v-for="(type, idx) in unitTypes" :key="idx" :value="type.id"
+                            :label="type.description"></el-option>
                     </el-select>
                 </div>
                 <div class="col-12 text-right " style="margin-top:15px;">
-                    <el-button type="primary" @click="saveUnitType"
-                        >Guardar</el-button
-                    >
+                    <el-button type="primary" @click="saveUnitType">Guardar</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -294,7 +204,7 @@
 //import { EventBus } from "../../../helpers/bus";
 
 export default {
-    props: ["cashid", "showDialog", "activeName", "items_detail", "unitTypes","recordId"],
+    props: ["cashid", "showDialog", "activeName", "items_detail", "unitTypes", "recordId"],
     data() {
         return {
             hasDetails: false,
@@ -330,6 +240,7 @@ export default {
     created() {
         console.log(this.recordId);
         this.initForm();
+        this.detail.quantity = 1;
         this.$http.get(`/${this.resource}/tables`).then(response => {
             this.array_group = response.data.gruop;
             this.array_categorias = response.data.category;
@@ -420,6 +331,7 @@ export default {
 
             this.detail = {};
             this.detail.extra_price = 0;
+            this.detail.quantity = 1;
             let total = this.details.reduce(
                 (a, b) => a + (b.price * b.quantity + b.extra_price),
                 0
@@ -433,7 +345,7 @@ export default {
                 this.$emit("getItemsDetail", input);
             }
         },
-        loadDataUtilities() {},
+        loadDataUtilities() { },
         initGroup() {
             this.form_group = {
                 id: null,
@@ -459,6 +371,7 @@ export default {
             this.details = [];
             this.errors = {};
             this.detail = {};
+            this.detail.quantity = 1;
             this.form = {
                 id: null,
                 user_id: this.userid,
@@ -569,27 +482,27 @@ export default {
             this.initForm();
             this.titleDialog =
                 this.activeName == "expenses"
-                    ? "Nuevo Egreso Caja"
-                    : "Nuevo Ingreso Caja";
+                    ? "Registro de Egreso a Caja"
+                    : "Registro de Ingreso a Caja";
             if (this.recordId) {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
                         this.form.item_add = false;
-                        if(this.activeName == 'expenses'){
-                            this.details = this.form.items.map(i=>{
+                        if (this.activeName == 'expenses') {
+                            this.details = this.form.items.map(i => {
 
                                 return {
                                     ...i,
-                                    price:Number(i.price||0),
-                                    quantity:Number(i.quantity||1),
-                                    extra_price:Number(i.extra_price||0.0)
+                                    price: Number(i.price || 0),
+                                    quantity: Number(i.quantity || 1),
+                                    extra_price: Number(i.extra_price || 0.0)
                                 }
                             });
                         }
-                        });
-                    this.form.method = this.payment_methods[0].description;
+                    });
+                this.form.method = this.payment_methods[0].description;
             } else {
                 this.form.method = this.payment_methods[0].description;
             }
@@ -608,6 +521,15 @@ export default {
             }
             this.form.cashid = this.cashid;
             this.form.items = this.details;
+            // Si es egreso, asignar el nombre del gasto; si es ingreso, dejar el motivo escrito por el usuario
+            if (this.activeName == 'expenses') {
+                if (this.details.length > 0 && this.details[0].item && this.details[0].item.detail) {
+                    this.form.description = this.details[0].item.detail;
+                } else {
+                    this.form.description = '';
+                }
+            }
+            // Para ingresos, no modificar description
             this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)

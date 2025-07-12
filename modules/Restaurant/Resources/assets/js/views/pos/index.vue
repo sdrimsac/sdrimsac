@@ -2,34 +2,78 @@
 <template>
     <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
         <!-- Hora y Fecha del sistema -->
-        <div class="container-fluid">
-            <div class="card-body bg-primary rounded" style="padding: 0.3rem 0.3rem !important; 
-                    z-index: 1;">
-                <div class="text-white text-end">
-                    {{
-                        new Date()
-                            .toLocaleDateString("es-ES", {
+        <div class="container-fluid pos-header-bar mb-0" style="
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            z-index: 10;
+            border-radius: 8px;
+            
+            padding: 0.5rem 1.2rem;
+            margin-top: 10px;
+            ">
+            <div class="card-body bg-tertiary rounded w-100"
+                style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;">
+                <div class="row align-items-center">
+                    <!-- límite de monto para venta de CPE -->
+                    <div class="col-5">
+                        <div class="col-12" v-if="limitAmount">
+                            <div :class="[
+                                `alert alert-${limitAmount.color}`,
+                                'pos-alert-warning',
+                                
+                            ]"
+                                style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;">
+                                <i class="fas fa-exclamation-triangle me-2"
+                                    style="font-size: 1.3em; color: #ff9800;"></i>
+                                <p style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;"
+                                    :class="{ 'blink-alert-text': limitAmount.tipo === 'critico' }">
+                                    {{ limitAmount.mensaje }}
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 text-white text-end">
+                        <el-tooltip content="Tiempo restante para refrescar la pantalla" placement="top">
+                            <button class="btn btn-success" type="button">
+                                <i class="fas fa-clock"></i>
+                             
+                                {{ formattedCountdown }}
+                            </button>
+                        </el-tooltip>
+                    </div>
+                    <div class="col-2 text-white text-center">
+                        <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
+                            <button class="btn" type="button"  :style="{
+                                backgroundColor: getPingBackground(),
+                                color: 'white'
+                            }">
+                                Internet 
+                                
+                                <i class="fas fa-wifi"></i>
+                                <span style="color: white;">{{ latencia }} ms</span>
+                            </button>
+                        </el-tooltip>
+                    </div>
+                    <div class="col-3 text-white text-end">
+                        {{
+                            new Date().toLocaleDateString("es-ES", {
                                 weekday: "long",
                                 day: "numeric",
-                                month: "long",
-                                year: "numeric"
+                                month: "long"
                             })
                             .replace(/^\w/, c => c.toUpperCase())
-                    }}
-                    <span>
-                        Hora:
-                    </span>
-                    {{
-                        new Date().toLocaleTimeString("es-ES", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit"
-                        })
-                    }}
+                        }}
+                        {{ new Date().getFullYear() }}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row" v-if="limitAmount">
+        <!-- Alerta de límite de monto para venta de CPE -->
+        <!-- <div class="row" v-if="limitAmount">
             <div class="col-12">
                 <div :class="`alert alert-${limitAmount.color}`">
                     <h6>Atención</h6>
@@ -38,16 +82,15 @@
                     </p>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <!-- <a href="../../../../../../../public/status_images/credito.jpg" target="_blank">
-                <img src="../../../../../../../public/status_images/credito.jpg" alt="Descripción de la imagen" class="img-fluid">
-             </a>-->
+        </div> -->
+        <div class="row" style="margin-top: 50px;">
+            
             <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
                 <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
                     <div class="card-body p-2">
                         <div class="row">
                             <div class="d-flex flex-wrap">
+                                
                                 <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span">
                                     <button class="btn p-0" type="button" id="menu-actions" data-bs-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
@@ -69,8 +112,8 @@
                                         ">
                                             <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables"
                                                 :title="isHotelArea
-                                                        ? '[F2] Cuartos para Alquilar'
-                                                        : '[F2] Mesas de Atención'
+                                                    ? '[F2] Cuartos para Alquilar'
+                                                    : '[F2] Mesas de Atención'
                                                     ">
                                                 <i v-if="isHotelArea" class="fas fa-hotel"
                                                     style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
@@ -167,8 +210,8 @@
                                     </button>
                                     <button v-for="(t, xd) in tablesLeave" :key="`${xd}t`" @click="tableOpen(t.id)"
                                         style="margin-right: 2px;margin-left: 2px;" type="button" :class="`btn ${t.timer
-                                                ? 'warning-color'
-                                                : 'btn-danger'
+                                            ? 'warning-color'
+                                            : 'btn-danger'
                                             }`
                                             ">
                                         <span>{{ t.timer }}</span>
@@ -206,9 +249,9 @@
                                                             category ===
                                                             null
                                                     }" @click="
-                                                            category = null;
-                                                        search_items(null);
-                                                        ">
+                                                        category = null;
+                                                    search_items(null);
+                                                    ">
                                                         <div class="category-circle">
                                                             <i class="fas fa-th text-primary"
                                                                 style="font-size: 24px;"></i>
@@ -231,7 +274,7 @@
                                                             <img v-if="
                                                                 item.icono
                                                             " :src="`/storage/uploads/category/${item.icono}`
-                                                                    " alt=""
+                                                                " alt=""
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;" />
                                                             <img v-else src="/logo/imagen-no-disponible.jpg"
                                                                 alt="Imagen no disponible"
@@ -239,7 +282,7 @@
                                                         </div>
                                                         <span class="category-name">{{
                                                             item.name
-                                                        }}</span>
+                                                            }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -281,8 +324,8 @@
                                                 <el-checkbox v-if="
                                                     configuration.search_series_pos
                                                 " v-model="searchSeries" @change="
-                                                            saveInLocalStorageSearchSeries
-                                                        " class="d-flex align-items-center">
+                                                    saveInLocalStorageSearchSeries
+                                                " class="d-flex align-items-center">
                                                     <i class="fas fa-list-alt me-2"></i>
                                                     <span>Series</span>
                                                 </el-checkbox>
@@ -297,8 +340,8 @@
                                                 <el-checkbox v-if="
                                                     configuration.barcode
                                                 " v-model="barcode" @change="
-                                                            saveInLocalStorageBarcode
-                                                        " class="d-flex align-items-center">
+                                                    saveInLocalStorageBarcode
+                                                " class="d-flex align-items-center">
                                                     <i class="fas fa-barcode me-2"></i>
                                                     <span>Barcode</span>
                                                 </el-checkbox>
@@ -312,25 +355,25 @@
                                                 <el-checkbox v-if="
                                                     configuration.quality
                                                 " v-model="quality" @change="
-                                                            saveInLocalStorageQuality
-                                                        " class="d-flex align-items-center">
+                                                    saveInLocalStorageQuality
+                                                " class="d-flex align-items-center">
                                                     <i class="fas fa-star me-2"></i>
                                                     <span>Calidad</span>
                                                 </el-checkbox>
                                             </el-tooltip>
                                         </div>
 
-                                            <!-- Modelo -->
+                                        <!-- Modelo -->
 
-                                        
+
                                         <div v-if="configuration.model"
                                             class="col-3 d-flex align-items-center justify-content-center">
                                             <el-tooltip content="Filtrar por modelo del producto" placement="top">
                                                 <el-checkbox v-if="
                                                     configuration.model
                                                 " v-model="model" @change="
-                                                            saveInLocalStorageModel
-                                                        " class="d-flex align-items-center">
+                                                    saveInLocalStorageModel
+                                                " class="d-flex align-items-center">
                                                     <i class="fas fa-cube me-2"></i>
                                                     <span>Modelo</span>
                                                 </el-checkbox>
@@ -378,7 +421,7 @@
                                                                 <el-option v-for="item in categories" :key="item.id
                                                                     " :label="item.name
                                                                         " :value="item.id
-                                                                        "></el-option>
+                                                                            "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
@@ -398,7 +441,7 @@
                                                                 <el-option v-for="item in brands" :key="item.id
                                                                     " :label="item.name
                                                                         " :value="item.id
-                                                                        "></el-option>
+                                                                            "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
@@ -488,18 +531,18 @@
                                                         <template>
                                                             <el-input-number :disabled="disableCantidad
                                                                 " :min="1" size="mini" v-model="row.food
-                                                                        .item
-                                                                        .quantity
+                                                                    .item
+                                                                    .quantity
                                                                     " controls-position="right" @change="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price_sale
-                                                                    )
-                                                                    "></el-input-number>
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price_sale
+                                                                        )
+                                                                        "></el-input-number>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -534,18 +577,18 @@
                                                     <div class="text-alternate">
                                                         <span>
                                                             <el-input v-model="row.food
-                                                                    .price
+                                                                .price
                                                                 " :disabled="disableCantidad
                                                                     " size="mini" @input="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price
-                                                                    )
-                                                                    ">
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price
+                                                                        )
+                                                                        ">
                                                                 <template slot="prepend">S/.</template>
                                                             </el-input>
                                                         </span>
@@ -595,8 +638,8 @@
                             <div class="col-12 col-lg-6 col-xxl-2 mb-2" v-for="(row, index) in listar_tables"
                                 :key="index">
                                 <div class="card hover-border-secondary" :class="selecttables == row.id
-                                        ? 'border-secondary'
-                                        : ''
+                                    ? 'border-secondary'
+                                    : ''
                                     " @click="selectTable(row, index)" data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                     <div class="h-100 row g-0 card-body align-items-center">
@@ -722,10 +765,10 @@
                                                                 data.status_id ==
                                                                 1
                                                             " :class="data.status_id ==
-                                                                        0
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
-                                                                    ">
+                                                                0
+                                                                ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                : ''
+                                                                ">
                                                                 <div
                                                                     class="col-12 d-flex align-items-center mb-2 mb-md-0 p-2 font-weight-bold">
                                                                     ORDEN Nº
@@ -740,9 +783,9 @@
                                                             <div v-for="(ordersItem,
                                                                 indexx) in data.orden_items" :key="indexx">
                                                                 <div class="card mb-1 pt-2 pb-2 border" :class="data.status_orden_id ==
-                                                                        3
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
+                                                                    3
+                                                                    ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                    : ''
                                                                     " v-if="
                                                                         ordersItem.status_orden_id ==
                                                                         1
@@ -786,9 +829,9 @@
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input" :value="ordersItem.id
                                                                                             " v-model="selectedCatIds
-                                                                                            " @click="
-                                                                                            select
-                                                                                        " />
+                                                                                                " @click="
+                                                                                                    select
+                                                                                                " />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -913,7 +956,7 @@
                                             <div class="col-12 p-1" v-for="(data,
                                                 index) in allFoods" :key="index">
                                                 <el-tooltip effect="dark" :disabled="data.item.warehouses
-                                                        .length == 1 ||
+                                                    .length == 1 ||
                                                     !configuration.show_stock_establishment_box
                                                     ">
                                                     <div slot="content">
@@ -1111,7 +1154,7 @@
                                                                     <el-dropdown-item v-for="(type,
                                                                         idx) in data.types" :key="idx
                                                                             " :command="type
-                                                                            ">
+                                                                                ">
                                                                         {{
                                                                             formatDescriptionType(
                                                                                 type
@@ -1269,7 +1312,7 @@
                 <div class="col-12 d-flex flex-wrap justify-content-center">
                     <el-button v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="num" class="m-2"
                         @click="generatePin(num)">{{
-                        num }}</el-button>
+                            num }}</el-button>
                     <el-button @click="pin = ''" class="m-2" type="danger" icon="el-icon-delete"></el-button>
                 </div>
             </div>
@@ -1553,6 +1596,9 @@ export default {
 
     data() {
         return {
+            countdown: 0,
+            latencia: 0,
+            latenciaInterval: null,
             showDialogStockMin: false,
             showDialog: false,
             recordId: null,
@@ -1749,6 +1795,9 @@ export default {
     },
 
     async created() {
+
+        this.iniciarMedicionLatencia();
+
         console.log("this.establishments", this.establishments);
         this.area_id = this.worker.area_id;
         this.getExchange();
@@ -1964,6 +2013,23 @@ export default {
     },
     sockets: {},
     computed: {
+        formattedCountdown() {
+            // Convierte los segundos a minutos y segundos
+            const minutes = Math.floor(this.countdown / 60);
+            const seconds = this.countdown % 60;
+            return `${minutes
+                .toString()
+                .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        },
+        formattedLatencia() {
+            if (this.latencia === -1) {
+                return "Sin conexión";
+            } else if (this.latencia === 0) {
+                return "Midiendo...";
+            } else {
+                return `${this.latencia}ms`;
+            }
+        },
         canShowHistory() {
             return (
                 !this.isSeller &&
@@ -1984,14 +2050,14 @@ export default {
             if (porcentaje >= 70 && porcentaje < 100) {
                 return {
                     tipo: "advertencia",
-                    mensaje: `¡Atención! Estás cerca de alcanzar el límite mensual permitido del monto de facturación.`,
+                    mensaje: `¡Facturación casi al tope!`,
                     color: "warning"
                 };
             }
 
             return {
                 tipo: "critico",
-                mensaje: `¡ALERTA! Has superado el límite mensual permitido de facturación.`,
+                mensaje: `¡Límite mensual superado!`,
                 color: "danger"
             };
         },
@@ -2024,6 +2090,49 @@ export default {
     },
 
     methods: {
+        iniciarMedicionLatencia() {
+            setInterval(async () => {
+                const valor = await this.medirLatencia();
+                this.latencia = valor;
+                //console.log("⏱️ Latencia medida:", valor, "ms");
+            }, 2000); // Cada 2 segundos
+        },
+        async medirLatencia() {
+            // Usa la función existente para medir la latencia con una imagen
+            return await this.medirLatenciaConImagen();
+        },
+        getPingBackground() {
+            if (this.latencia === -1) return "#6b7280"; // Gris: sin datos
+            if (this.latencia < 90) return "#22c55e"; // Verde
+            if (this.latencia < 150) return "#facc15"; // Amarillo
+            return "#ef4444"; // Rojo
+        },
+        medirLatenciaConImagen(url = "https://i.imgur.com/ZKnb2Tt.png") {
+            return new Promise(resolve => {
+                const start = performance.now();
+                const img = new Image();
+
+                img.onload = () => {
+                    const end = performance.now();
+                    resolve(Math.round((end - start) / 2));
+                };
+
+                img.onerror = () => {
+                    resolve(-1);
+                };
+
+                // Prevenir caché
+                img.src = `${url}?_=${Date.now()}`;
+            });
+        },
+
+        iniciarMedicionLatencia() {
+            setInterval(async () => {
+                const valor = await this.medirLatencia();
+                this.latencia = valor;
+                //console.log("⏱️ Latencia medida:", valor, "ms");
+            }, 2000); // Cada 2 segundos
+        },
         async ItemNew(productId) {
             try {
                 const response = await this.$http.get(
@@ -3848,7 +3957,7 @@ export default {
                             orden.categoriaMadera &&
                             orden.categoriaMadera.key == categoriaMadera.key &&
                             orden.categoriaMadera.medida ==
-                                categoriaMadera.medida &&
+                            categoriaMadera.medida &&
                             orden.categoriaMadera.price == categoriaMadera.price
                     );
                     if (indexFind != -1) {
@@ -6400,6 +6509,10 @@ export default {
         document.removeEventListener("keydown", this.handleKeydown);
     },
     mounted() {
+        this.syncCountdown = setInterval(() => {
+            this.countdown = window.globalCountdown || 0;
+        }, 1000);
+        this
         document.addEventListener("keydown", this.handleKeydown);
 
         this.screenWidth = window.innerWidth;

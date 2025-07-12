@@ -190,7 +190,7 @@ class TransferPlaceController extends Controller
         if ($pin != $user->pin && !$configuration->translate_direct) {
             return [
                 "success" => false,
-                "message" => "El pin no corresponde al usuario actual"
+                "message" => "El PIN no corresponde al usuario actual"
             ];
         }
         $code = $request->code;
@@ -198,7 +198,7 @@ class TransferPlaceController extends Controller
         if ($transfer == null) {
             return [
                 "success" => false,
-                "message" => "No se encontró algun traslado con ese código"
+                "message" => "No se encontró traslado(s) con ese código"
             ];
         }
         $transfer->status = 2;

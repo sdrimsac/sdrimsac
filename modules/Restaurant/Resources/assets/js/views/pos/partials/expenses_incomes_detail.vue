@@ -1,20 +1,14 @@
 <template>
     <div v-loading="loading">
         <table class="table">
-            <thead>
+            <thead style="background-color: #1e5a85; color: #fff;">
                 <tr>
-                    <th>
-                        #
-                    </th>
-                    <th>
-                        Motivo
-                    </th>
-                    <th>Detalle</th>
-                    <th>Fecha</th>
-                    <th>
-                        Total
-                    </th>
-                    <th></th>
+                    <th style="color: #fff;">  #</th>
+                    <th style="color: #fff; width: 500px;">Motivo</th>
+                    <th style="color: #fff; width: 100px;">Detalle</th>
+                    <th style="color: #fff;width:  250px;">Fecha</th>
+                    <th style="color: #fff; width: 100px; text-align: right;">Total</th>
+                    <th style="color: #fff;"></th>
                 </tr>
             </thead>
             <tbody>
@@ -29,45 +23,35 @@
                             </el-button>
                         </template>
                     </td>
-                    <td>{{ data.date }}</td>
-                    <td>{{ data.amount }} <br /></td>
                     <td>
-                        <el-button
-                        rounded
-                            size="mini"
-                            type="success"
-                            @click="Printer(data)"
-                        >
-                            <i class="fa fa-print" aria-hidden="true"></i>
-                        </el-button>
-                        <el-button
-                            rounded
-                            size="mini"
-                            type="danger"
-                            @click="deleteRecord(data.id)"
-                        >
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </el-button>
-                        <el-button
-                            rounded
-                            size="mini"
-                            type="info"
-                            @click="editRecord(data.id)"
-                        >
-                            <i class="fa fa-edit" aria-hidden="true"></i>
-                        </el-button>
+                        <div>{{ data.date.split(' ')[0] }}</div>
+                        <div style="color: #1e5a85;">{{ data.date.split(' ')[1] }}</div>
+                    </td>
+                    <td style="text-align: right;">{{ data.amount }}</td>
+                    <td>
+                        <el-dropdown trigger="click">
+                            <el-button class="btn_guardarsmall" type="primary" size="mini">
+                                Acciones <i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item @click.native="Printer(data)">
+                                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir
+                                </el-dropdown-item>
+                                <el-dropdown-item @click.native="editRecord(data.id)">
+                                    <i class="fa fa-edit" aria-hidden="true"></i> Editar
+                                </el-dropdown-item>
+                                <el-dropdown-item divided @click.native="deleteRecord(data.id)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <el-pagination
-            @current-change="getRecords"
-            layout="total, prev, pager, next"
-            :total="pagination.total"
-            :current-page.sync="pagination.current_page"
-            :page-size="pagination.per_page"
-        ></el-pagination>
-        <el-dialog append-to-body :visible.sync="showDetails">
+        <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+            :current-page.sync="pagination.current_page" :page-size="pagination.per_page"></el-pagination>
+        <el-dialog append-to-body :visible.sync="showDetails" :width="dialogWidth">
             <div class="p-5">
                 <table class="table">
                     <thead>
@@ -116,8 +100,15 @@ export default {
             currentType: null,
             currentNumber: null,
             currentItems: [],
-            showDetails: false
+            showDetails: false,
+            dialogWidth: window.innerWidth <= 800 ? '90%' : '50%'
         };
+    },
+    created() {
+        window.addEventListener('resize', this.updateDialogWidth);
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.updateDialogWidth);
     },
     methods: {
         editRecord(id) {
@@ -126,7 +117,7 @@ export default {
         async Printer(box) {
             console.log(box);
             let linkpdf = `/caja/worker/expenses/print-box?box_id=${box.id}`
-            
+
             let Printer = this.establishments.printer;
             let paperConfig = {
                 scaleContent: false
@@ -179,6 +170,9 @@ export default {
         },
         getRecords() {
             this.$emit("getRecords", this.pagination.current_page);
+        },
+        updateDialogWidth() {
+            this.dialogWidth = window.innerWidth <= 800 ? '90%' : '50%';
         }
     }
 };
