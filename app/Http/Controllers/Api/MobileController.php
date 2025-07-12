@@ -98,7 +98,11 @@ class MobileController extends Controller
     {
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
 
-        $items = Item::whereWarehouse('warehouse')
+        $items = Item::with(['warehouses' => function($query) {
+                        $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
+                              ->select('item_warehouse.*', 'w.description as warehouse_description');
+                    }])
+                    ->whereWarehouse('warehouse')
                     ->whereHasInternalId()
                     ->whereNotIsSet()
                     ->whereIsActive()
