@@ -22,10 +22,12 @@ use App\Http\Requests\PersonRequest;
 use App\Http\Requests\PerfilRequest;
 use Modules\Item\Http\Requests\ItemRequest;
 use Illuminate\Support\Facades\Validator;
+
 class MobileController extends Controller
 {
-    public function perfil(PerfilRequest $request){
-       
+    public function perfil(PerfilRequest $request)
+    {
+
         $user = User::findOrFail($request->id);
         $user->name = $request->name;
         $user->number = $request->number;
@@ -35,14 +37,15 @@ class MobileController extends Controller
         $user->email = $request->email;
         $user->license = $request->license;
         $user->password = bcrypt($request->password);
-        
+
         $user->save();
         return [
             'success' => true,
-            'message'=> 'Datos del Usuario Actualizados correctamente.'
+            'message' => 'Datos del Usuario Actualizados correctamente.'
         ];
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials)) {
             return [
@@ -57,7 +60,7 @@ class MobileController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'type' => $user->type,
-            'identity_document_type_id'=> $user->identity_document_type_id,
+            'identity_document_type_id' => $user->identity_document_type_id,
             'number' => $user->number,
             'address' => $user->address,
             'telephone' => $user->telephone,
@@ -65,15 +68,14 @@ class MobileController extends Controller
             'token' => $user->api_token,
             'license' => $user->license,
         ];
-
     }
 
     public function customers()
     {
-        $customers = Person::whereType('customers')->orderBy('name')->take(20)->get()->transform(function($row) {
+        $customers = Person::whereType('customers')->orderBy('name')->take(20)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
-                'description' => $row->number.' - '.$row->name,
+                'description' => $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -91,77 +93,191 @@ class MobileController extends Controller
             'success' => true,
             'data' => array('customers' => $customers)
         ];
-
     }
+
+    /* public function tables()
+    {
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
+
+        $items = Item::with(['warehouses' => function ($query) {
+            $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
+                ->select('item_warehouse.*', 'w.description as warehouse_description');
+        }])
+            ->whereWarehouse('warehouse')
+            ->whereHasInternalId()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->orderBy('description')
+            ->take(20)
+            ->get()
+            ->transform(function ($row) {
+                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
+
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->id,
+                    'name' => $row->name,
+                    'full_description' => $full_description,
+                    'description' => $row->description,
+                    'currency_type_id' => $row->currency_type_id,
+                    'internal_id' => $row->internal_id,
+                    'item_code' => $row->item_code,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'sale_unit_price' => floatval($row->sale_unit_price),
+                    'purchase_unit_price' => $row->purchase_unit_price,
+                    'unit_type_id' => $row->unit_type_id,
+                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'has_igv' => (bool) $row->has_igv,
+                    'is_set' => (bool) $row->is_set,
+                    'aux_quantity' => 1,
+                    'image_url' => $row->image_url,
+                    'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                    'brand' => $row->brand,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'category' => $row->category,
+                    'is_stock' => (bool) $row->is_stock,
+                    'max_quantity' => $row->max_quantity,
+                    'origin' => $row->origin,
+                    'series_enabled' => (bool) $row->series_enabled,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'stock' => $row->warehouses->sum('stock'),
+                    'item_unit_types' => $row->item_unit_types->map(function ($item_unit_type) {
+                        return [
+                            'id' => $item_unit_type->id,
+                            'unit_type_id' => $item_unit_type->unit_type_id,
+                            'unit_type_description' => $item_unit_type->unit_type->description,
+                            'conversion_factor' => $item_unit_type->conversion_factor,
+                            'selected' => (bool) $item_unit_type->selected
+                        ];
+                    })->toArray(),
+                    'lots_enabled' => (bool) $row->lots_enabled,
+                    'lots_group' => $row->lots_group,
+                    'lots' => $row->lots->map(function ($lot) {
+                        return [
+                            'id' => $lot->id,
+                            'lot' => $lot->lot,
+                            'expiration_date' => $lot->expiration_date ? Carbon::parse($lot->expiration_date)->format('Y-m-d') : null,
+                            'stock' => $lot->stock,
+                            'checked' => (bool) $lot->checked
+                        ];
+                    })->toArray(),
+                    'warehouse' => $row->warehouses->map(function ($warehouse) {
+                        return [
+                            'id' => $warehouse->warehouse_id,
+                            'warehouse_description' => $warehouse->warehouse_description,
+                            'stock' => $warehouse->stock,
+                            'checked' => (bool) $warehouse->checked
+                        ];
+                    })->toArray(),
+
+                ];
+            });
+        return [
+            'success' => true,
+            'data' => array('items' => $items, 'affectation_types' => $affectation_igv_types)
+        ];
+    } */
 
     public function tables()
     {
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
 
-        $items = Item::with(['warehouses' => function($query) {
-                        $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
-                              ->select('item_warehouse.*', 'w.description as warehouse_description');
-                    }])
-                    ->whereWarehouse('warehouse')
-                    ->whereHasInternalId()
-                    ->whereNotIsSet()
-                    ->whereIsActive()
-                    ->orderBy('description')
-                    ->take(20)
-                    ->get()
-                    ->transform(function($row){
-                        $full_description = ($row->internal_id)?$row->internal_id.' - '.$row->description:$row->description;
+        $items = Item::with(['warehouses' => function ($query) {
+            $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
+                ->select('item_warehouse.*', 'w.description as warehouse_description');
+        }])
+            ->whereWarehouse('warehouse')
+            ->whereHasInternalId()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->orderBy('description')
+            ->take(20)
+            ->get()
+            ->transform(function ($row) {
+                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
 
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->id,
+                    'name' => $row->name,
+                    'full_description' => $full_description,
+                    'description' => $row->description,
+                    'currency_type_id' => $row->currency_type_id,
+                    'internal_id' => $row->internal_id,
+                    'item_code' => $row->item_code,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'sale_unit_price' => floatval($row->sale_unit_price),
+                    'purchase_unit_price' => $row->purchase_unit_price,
+                    'unit_type_id' => $row->unit_type_id,
+                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'has_igv' => (bool) $row->has_igv,
+                    'is_set' => (bool) $row->is_set,
+                    'is_stock' => $row->is_stock ? 'Si' : 'No',
+                    'aux_quantity' => 1,
+                    'image_url' => $row->image_url,
+                    'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                    'brand' => $row->brand ?? '',
+                    'category' => $row->category,
+                    'max_quantity' => $row->max_quantity,
+                    'origin' => $row->origin,
+                    'series_enabled' => (bool) $row->series_enabled,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'stock' => number_format($row->warehouses->sum('stock'), 4, '.', ''),
+                    'lots_enabled' => (bool) $row->lots_enabled,
+                    'lots_group' => $row->lots_group ?? [],
+                    'lots' => $row->lots->map(function ($lot) {
                         return [
-                            'id' => $row->id,
-                            'item_id' => $row->id,
-                            'name' => $row->name,
-                            'full_description' => $full_description,
-                            'description' => $row->description,
-                            'currency_type_id' => $row->currency_type_id,
-                            'internal_id' => $row->internal_id,
-                            'item_code' => $row->item_code,
-                            'currency_type_symbol' => $row->currency_type->symbol,
-                            'sale_unit_price' => floatval($row->sale_unit_price),
-                            'purchase_unit_price' => $row->purchase_unit_price,
-                            'unit_type_id' => $row->unit_type_id,
-                            'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
-                            'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
-                            'calculate_quantity' => (bool) $row->calculate_quantity,
-                            'has_igv' => (bool) $row->has_igv,
-                            'is_set' => (bool) $row->is_set,
-                            'aux_quantity' => 1,
-                            'image_url' => $row->image_url,
-                            'warehouse' => $row->warehouses->map(function($warehouse) {
-                                return [
-                                    'id' => $warehouse->warehouse_id,
-                                    'warehouse_description' => $warehouse->warehouse_description,
-                                    'stock' => $warehouse->stock,
-                                    'checked' => (bool) $warehouse->checked
-                                ];
-                            })->toArray()
+                            'id' => $lot->id,
+                            'lot' => $lot->lot,
+                            'expiration_date' => $lot->expiration_date ? Carbon::parse($lot->expiration_date)->format('Y-m-d') : null,
+                            'stock' => $lot->stock,
+                            'checked' => (bool) $lot->checked
                         ];
-                    });
+                    })->toArray(),
+                    'warehouses' => $row->warehouses->map(function ($warehouse) {
+                        return [
+                            'warehouse_id' => $warehouse->warehouse_id,
+                            'warehouse_description' => $warehouse->warehouse_description,
+                            'stock' => number_format($warehouse->stock, 4, '.', ''),
+                            'checked' => (bool) $warehouse->checked
+                        ];
+                    })->toArray(),
+                    'attributes' => [],
+                    'item_unit_types' => $row->item_unit_types->map(function ($item_unit_type) {
+                        return [
+                            'id' => $item_unit_type->id,
+                            'unit_type_id' => $item_unit_type->unit_type_id,
+                            'unit_type_description' => $item_unit_type->unit_type->description,
+                            'conversion_factor' => $item_unit_type->conversion_factor,
+                            'selected' => (bool) $item_unit_type->selected
+                        ];
+                    })->toArray(),
+                ];
+            });
+
         return [
             'success' => true,
             'data' => array('items' => $items, 'affectation_types' => $affectation_igv_types)
         ];
-
     }
 
-    public function getSeries(){
+    public function getSeries()
+    {
 
         return Series::where('establishment_id', auth()->user()->establishment_id)
-                    ->whereIn('document_type_id', ['01', '03'])
-                    ->get()
-                    ->transform(function($row) {
-                        return [
-                            'id' => $row->id,
-                            'document_type_id' => $row->document_type_id,
-                            'number' => $row->number
-                        ];
-                    });
-                    
+            ->whereIn('document_type_id', ['01', '03'])
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'document_type_id' => $row->document_type_id,
+                    'number' => $row->number
+                ];
+            });
     }
 
     public function document_email(Request $request)
@@ -174,7 +290,7 @@ class MobileController extends Controller
 
         return [
             'success' => true,
-            'message'=> 'Email enviado correctamente.'
+            'message' => 'Email enviado correctamente.'
         ];
     }
 
@@ -188,7 +304,7 @@ class MobileController extends Controller
         $row->image = 'imagen-no-disponible.jpg';
         $row->save();
 
-        $full_description = ($row->internal_id)?$row->internal_id.' - '.$row->description:$row->description;
+        $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
 
         return [
             'success' => true,
@@ -214,7 +330,6 @@ class MobileController extends Controller
                 'aux_quantity' => 1,
             ],
         ];
-
     }
 
     public function person(PersonRequest $request)
@@ -228,7 +343,7 @@ class MobileController extends Controller
             'msg' => ($request->type == 'customers') ? 'Cliente registrado con éxito' : 'Proveedor registrado con éxito',
             'data' => (object)[
                 'id' => $row->id,
-                'description' => $row->number.' - '.$row->name,
+                'description' => $row->number . ' - ' . $row->name,
                 'name' => $row->name,
                 'number' => $row->number,
                 'identity_document_type_id' => $row->identity_document_type_id,
@@ -245,43 +360,43 @@ class MobileController extends Controller
 
     public function searchItems(Request $request)
     {
-        $items = Item::where(function($query) use($request) {
-                    $query->where('description', 'like', "%{$request->input}%")
-                          ->orWhere('internal_id', 'like', "%{$request->input}%");
-                })
-                ->whereHasInternalId()
-                ->whereWarehouse()
-                ->whereNotIsSet()
-                ->where('active', 1)
-                ->whereHas('item_warehouse', function($query) {
-                    $query->where('active', 1);
-                })
-                ->orderBy('description')
-                ->get()
-                ->transform(function($row){
-                    $full_description = ($row->internal_id) ? $row->internal_id.' - '.$row->description : $row->description;
+        $items = Item::where(function ($query) use ($request) {
+            $query->where('description', 'like', "%{$request->input}%")
+                ->orWhere('internal_id', 'like', "%{$request->input}%");
+        })
+            ->whereHasInternalId()
+            ->whereWarehouse()
+            ->whereNotIsSet()
+            ->where('active', 1)
+            ->whereHas('item_warehouse', function ($query) {
+                $query->where('active', 1);
+            })
+            ->orderBy('description')
+            ->get()
+            ->transform(function ($row) {
+                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
 
-                    return [
-                        'id' => $row->id,
-                        'item_id' => $row->id,
-                        'name' => $row->name,
-                        'full_description' => $full_description,
-                        'description' => $row->description,
-                        'currency_type_id' => $row->currency_type_id,
-                        'internal_id' => $row->internal_id,
-                        'item_code' => $row->item_code,
-                        'currency_type_symbol' => $row->currency_type->symbol,
-                        'sale_unit_price' => floatval($row->sale_unit_price),
-                        'purchase_unit_price' => $row->purchase_unit_price,
-                        'unit_type_id' => $row->unit_type_id,
-                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
-                        'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
-                        'calculate_quantity' => (bool) $row->calculate_quantity,
-                        'has_igv' => (bool) $row->has_igv,
-                        'is_set' => (bool) $row->is_set,
-                        'aux_quantity' => 1,
-                    ];
-                });
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->id,
+                    'name' => $row->name,
+                    'full_description' => $full_description,
+                    'description' => $row->description,
+                    'currency_type_id' => $row->currency_type_id,
+                    'internal_id' => $row->internal_id,
+                    'item_code' => $row->item_code,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'sale_unit_price' => floatval($row->sale_unit_price),
+                    'purchase_unit_price' => $row->purchase_unit_price,
+                    'unit_type_id' => $row->unit_type_id,
+                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'has_igv' => (bool) $row->has_igv,
+                    'is_set' => (bool) $row->is_set,
+                    'aux_quantity' => 1,
+                ];
+            });
 
         return [
             'success' => true,
@@ -294,28 +409,28 @@ class MobileController extends Controller
 
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
 
-        $customers = Person::where('name', 'like', "%{$request->input}%" )
-                            ->orWhere('number','like', "%{$request->input}%")
-                            ->whereType('customers')
-                            ->whereIn('identity_document_type_id', $identity_document_type_id)
-                            ->orderBy('name')
-                            ->get()
-                            ->transform(function($row) {
-                                return [
-                                    'id' => $row->id,
-                                    'description' => $row->number.' - '.$row->name,
-                                    'name' => $row->name,
-                                    'number' => $row->number,
-                                    'identity_document_type_id' => $row->identity_document_type_id,
-                                    'identity_document_type_code' => $row->identity_document_type->code,
-                                    'address' => $row->address,
-                                    'telephone' => $row->telephone,
-                                    'email' => $row->email,
-                                    'country_id' => $row->country_id,
-                                    'district_id' => $row->district_id,
-                                    'selected' => false
-                                ];
-                            });
+        $customers = Person::where('name', 'like', "%{$request->input}%")
+            ->orWhere('number', 'like', "%{$request->input}%")
+            ->whereType('customers')
+            ->whereIn('identity_document_type_id', $identity_document_type_id)
+            ->orderBy('name')
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->number . ' - ' . $row->name,
+                    'name' => $row->name,
+                    'number' => $row->number,
+                    'identity_document_type_id' => $row->identity_document_type_id,
+                    'identity_document_type_code' => $row->identity_document_type->code,
+                    'address' => $row->address,
+                    'telephone' => $row->telephone,
+                    'email' => $row->email,
+                    'country_id' => $row->country_id,
+                    'district_id' => $row->district_id,
+                    'selected' => false
+                ];
+            });
 
         return [
             'success' => true,
@@ -324,13 +439,9 @@ class MobileController extends Controller
     }
 
 
-    public function getIdentityDocumentTypeId($document_type_id){
+    public function getIdentityDocumentTypeId($document_type_id)
+    {
 
-        return ($document_type_id == '01') ? [6] : [1,4,6,7,0];
-        
+        return ($document_type_id == '01') ? [6] : [1, 4, 6, 7, 0];
     }
-
-
-
 }
-

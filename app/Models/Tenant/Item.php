@@ -2,13 +2,13 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use App\Models\Tenant\Catalogs\UnitType;
-/* use GuzzleHttp\Psr7\Request; */
-use Illuminate\Database\Eloquent\Model;
 use Modules\Format\Models\Account;
 use Modules\Item\Models\CategoryItem;
 use Modules\Item\Models\Brand;

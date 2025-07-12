@@ -581,11 +581,22 @@ class BoxesController extends Controller
                                         $description_item = $item->item->description;
                                     } else {
                                         $description_item = $item_db->description;
+
+                                        if (isset($item->item->categoriaMadera)) {
+                                            $cat = $item->item->categoriaMadera;
+
+                                            if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                $medidas = "{$cat->selectedAncho}x{$cat->selectedLargo}x{$cat->selectedGrosor}";
+                                                $description_item .= " - {$medidas}";
+                                            }
+                                        }
+
                                         if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                             $description_item .= " - Media tarifa";
                                         }
                                     }
                                     $key = $description_item . "-" . $item->unit_price;
+
                                     $id_exist = array_search($key, array_column($all_items, 'key'));
 
                                     if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
@@ -651,6 +662,16 @@ class BoxesController extends Controller
                                             $description_item = $item->item->description;
                                         } else {
                                             $description_item = $item_db->description;
+
+                                            if (isset($item->item->categoriaMadera)) {
+                                                $cat = $item->item->categoriaMadera;
+
+                                                if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                    $medidas = "{$cat->selectedAncho}x{$cat->selectedLargo}x{$cat->selectedGrosor}";
+                                                    $description_item .= " - {$medidas}";
+                                                }
+                                            }
+
                                             if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                                 $description_item .= " - Media tarifa";
                                             }
@@ -692,6 +713,16 @@ class BoxesController extends Controller
                                             $categories[$category_name] = $item->total;
                                         }
                                         $description_item = $item_db->description;
+
+                                        if (isset($item->item->categoriaMadera)) {
+                                            $cat = $item->item->categoriaMadera;
+
+                                            if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                $medidas = "{$cat->selectedAncho}x{$cat->selectedLargo}x{$cat->selectedGrosor}";
+                                                $description_item .= " - {$medidas}";
+                                            }
+                                        }
+
                                         if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                             $description_item .= " - Media tarifa";
                                         }
