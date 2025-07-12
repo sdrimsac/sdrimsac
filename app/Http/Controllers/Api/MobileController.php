@@ -221,7 +221,7 @@ class MobileController extends Controller
                     'image_url' => $row->image_url,
                     'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
                     'brand' => $row->brand ?? '',
-                    'category' => $row->category,
+                    'category' => $row->category->name ?? '',
                     'max_quantity' => $row->max_quantity,
                     'origin' => $row->origin,
                     'series_enabled' => (bool) $row->series_enabled,
