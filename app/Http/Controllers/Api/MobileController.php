@@ -131,7 +131,7 @@ class MobileController extends Controller
                             'warehouse' => $row->warehouses->map(function($warehouse) {
                                 return [
                                     'id' => $warehouse->warehouse_id,
-                                    'warehouse_description' => $warehouse->description,
+                                    'warehouse_description' => $warehouse->warehouse_description,
                                     'stock' => $warehouse->stock,
                                     'checked' => (bool) $warehouse->checked
                                 ];
