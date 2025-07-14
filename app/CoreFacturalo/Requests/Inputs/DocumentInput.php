@@ -240,6 +240,7 @@ class DocumentInput
 
     private static function items($inputs)
     {
+        Log::info("items", $inputs);
         $configuration = Configuration::first();
         $establishment_id = Functions::valueKeyInArray($inputs, 'establishment_id');
         $quotation_id = Functions::valueKeyInArray($inputs, 'quotation_id', null);
