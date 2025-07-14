@@ -16,6 +16,7 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Offline\Models\OfflineConfiguration;
@@ -25,6 +26,7 @@ class DocumentInput
 
     public static function set($inputs)
     {
+        Log::debug('DocumentInput::set', $inputs);
 
         if (array_key_exists('id', $inputs)) {
             $id = $inputs['id'];
