@@ -26,7 +26,7 @@ class DocumentInput
 
     public static function set($inputs)
     {
-        Log::debug('DocumentInput::set', $inputs);
+        Log::info("message", $inputs);
 
         if (array_key_exists('id', $inputs)) {
             $id = $inputs['id'];
