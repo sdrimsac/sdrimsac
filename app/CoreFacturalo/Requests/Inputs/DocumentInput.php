@@ -213,6 +213,7 @@ class DocumentInput
             'affectation_type_prepayment' => Functions::valueKeyInArray($inputs, 'affectation_type_prepayment'),
             'was_deducted_prepayment' => Functions::valueKeyInArray($inputs, 'was_deducted_prepayment', 0),
             'items' => self::items($inputs),
+            Log::info("items", self::items($inputs)),
             'charges' => self::charges($inputs),
             'discounts' => self::discounts($inputs),
             'prepayments' => self::prepayments($inputs),
