@@ -438,7 +438,7 @@ class MobileController extends Controller
         ];
     } */
 
-    public function searchCustomers(Request $request)
+    /* public function searchCustomers(Request $request)
     {
         $input = trim($request->input);
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
@@ -490,8 +490,60 @@ class MobileController extends Controller
             //'data' => ['customers' => $customers],
             'data' => array('customers' => $customers)
         ];
+    } */
 
+    public function searchCustomers(Request $request)
+    {
+        $input = trim($request->input);
+        $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
+
+        $query = Person::query()
+            ->whereType('customers')
+            ->whereIn('identity_document_type_id', $identity_document_type_id)
+            ->where(function ($q) use ($input) {
+                if (is_numeric($input)) {
+                    if (strlen($input) >= 8) {
+                        // RUC o DNI exacto
+                        $q->where('number', $input);
+                    } else {
+                        // Búsqueda parcial por número
+                        $q->where('number', 'like', "%$input%");
+                    }
+                } else {
+                    // Búsqueda exacta si es nombre largo, parcial si es corto
+                    if (strlen($input) >= 5) {
+                        $q->whereRaw("REPLACE(UPPER(name), ' ', '') = ?", [strtoupper(str_replace(' ', '', $input))]);
+                    } else {
+                        $q->where('name', 'like', "%$input%");
+                    }
+                }
+            });
+
+        $customers = $query->orderBy('name')
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->number . ' - ' . $row->name,
+                    'name' => $row->name,
+                    'number' => $row->number,
+                    'identity_document_type_id' => $row->identity_document_type_id,
+                    'identity_document_type_code' => optional($row->identity_document_type)->code,
+                    'address' => $row->address,
+                    'telephone' => $row->telephone,
+                    'email' => $row->email,
+                    'country_id' => $row->country_id,
+                    'district_id' => $row->district_id,
+                    'selected' => false
+                ];
+            });
+
+        return [
+            'success' => true,
+            'data' => ['customers' => $customers]
+        ];
     }
+
 
 
 
