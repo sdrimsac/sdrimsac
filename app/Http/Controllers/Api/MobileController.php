@@ -494,7 +494,7 @@ class MobileController extends Controller
         ];
     } */
 
-    /* public function searchCustomers(Request $request)
+    public function searchCustomers(Request $request)
     {
         $input = trim($request->input);
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
@@ -544,10 +544,10 @@ class MobileController extends Controller
             'success' => true,
             'data' => ['customers' => $customers]
         ];
-    } */
+    }
 
 
-    public function searchCustomers(Request $request)
+    /* public function searchCustomers(Request $request)
     {
         $configuration = Configuration::first();
         $value = $request->value;
@@ -611,7 +611,7 @@ class MobileController extends Controller
         });
 
         return compact('persons');
-    }
+    } */
 
 
 
