@@ -346,7 +346,7 @@ class DocumentInput
                     'total_base_igv' => $row['total_base_igv'],
                     'percentage_igv' => Functions::valueKeyInArray($row, 'percentage_igv', 18),
                     'total_igv' => $row['total_igv'],
-                    'system_isc_type_id' => $row['system_isc_type_id'],
+                    'system_isc_type_id' => $row['system_isc_type_id'] ?? null,
                     'total_base_isc' => Functions::valueKeyInArray($row, 'total_base_isc', 0),
                     'percentage_isc' => Functions::valueKeyInArray($row, 'percentage_isc', 0),
                     'total_isc' => Functions::valueKeyInArray($row, 'total_isc', 0),
