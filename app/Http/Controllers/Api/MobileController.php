@@ -200,6 +200,8 @@ class MobileController extends Controller
             ->transform(function ($row) {
                 $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
 
+                $image_url = $this->getImageUrl($row->image, 'items');
+
                 return [
                     'id' => $row->id,
                     'item_id' => $row->id,
@@ -220,7 +222,8 @@ class MobileController extends Controller
                     'is_set' => (bool) $row->is_set,
                     'is_stock' => $row->is_stock ? 'Si' : 'No',
                     'aux_quantity' => 1,
-                    'image_url' => $row->image_url,
+                    //'image_url' => $row->image_url,
+                    'image_url' => $image_url,
                     'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
                     'brand' => $row->brand ?? '',
                     'category' => $row->category->name ?? '',
@@ -265,6 +268,15 @@ class MobileController extends Controller
             'success' => true,
             'data' => array('items' => $items, 'affectation_types' => $affectation_igv_types)
         ];
+    }
+
+    private function getImageUrl($image, $folder)
+    {
+        if ($image !== 'imagen-no-disponible.jpg') {
+            return asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $image);
+        }
+        
+        return asset("/logo/{$image}");
     }
 
     public function getSeries()
@@ -405,94 +417,6 @@ class MobileController extends Controller
             'data' => array('items' => $items)
         ];
     }
-
-    /* public function searchCustomers(Request $request)
-    {
-
-        $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
-
-        $customers = Person::where('name', 'like', "%{$request->input}%")
-            ->orWhere('number', 'like', "%{$request->input}%")
-            ->whereType('customers')
-            ->whereIn('identity_document_type_id', $identity_document_type_id)
-            ->orderBy('name')
-            ->get()
-            ->transform(function ($row) {
-                return [
-                    'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
-                    'name' => $row->name,
-                    'number' => $row->number,
-                    'identity_document_type_id' => $row->identity_document_type_id,
-                    'identity_document_type_code' => $row->identity_document_type->code,
-                    'address' => $row->address,
-                    'telephone' => $row->telephone,
-                    'email' => $row->email,
-                    'country_id' => $row->country_id,
-                    'district_id' => $row->district_id,
-                    'selected' => false
-                ];
-            });
-
-        return [
-            'success' => true,
-            'data' => array('customers' => $customers)
-        ];
-    } */
-
-    /* public function searchCustomers(Request $request)
-    {
-        $input = trim($request->input);
-        $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
-
-        $query = Person::whereType('customers')
-            ->whereIn('identity_document_type_id', $identity_document_type_id);
-
-        // Si es número (DNI/RUC)
-        if (is_numeric($input)) {
-            if (strlen($input) >= 8) {
-                // Coincidencia exacta
-                $query->where('number', $input);
-            } else {
-                // Coincidencia parcial
-                $query->where('number', 'like', "%$input%");
-            }
-        } else {
-            // Si es texto (nombre)
-            if (strlen($input) >= 5) {
-                // Coincidencia exacta por nombre completo
-                $query->whereRaw("REPLACE(UPPER(name), ' ', '') = ?", [strtoupper(str_replace(' ', '', $input))]);
-            } else {
-                // Coincidencia parcial por nombre
-                $query->where('name', 'like', "%$input%");
-            }
-        }
-
-        $customers = $query->orderBy('name')
-            ->get()
-            ->transform(function ($row) {
-                return [
-                    'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
-                    'name' => $row->name,
-                    'number' => $row->number,
-                    'identity_document_type_id' => $row->identity_document_type_id,
-                    'identity_document_type_code' => $row->identity_document_type->code ?? null,
-                    'address' => $row->address,
-                    'telephone' => $row->telephone,
-                    'email' => $row->email,
-                    'country_id' => $row->country_id,
-                    'district_id' => $row->district_id,
-                    'selected' => false,
-                ];
-            });
-
-        return [
-            'success' => true,
-            //'data' => ['customers' => $customers],
-            'data' => array('customers' => $customers)
-        ];
-    } */
 
     public function searchCustomers(Request $request)
     {
