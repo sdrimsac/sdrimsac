@@ -537,6 +537,13 @@ class MobileController extends Controller
         return compact('persons');
     } */
 
+    public function configurations()
+    {
+        $configurations = Configuration::first();
+
+        return compact('configurations');
+    }
+
 
 
 

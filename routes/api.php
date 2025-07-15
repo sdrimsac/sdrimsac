@@ -55,6 +55,7 @@ if ($hostname) {
         Route::post('perfil', 'Api\MobileController@perfil');
         Route::get('users/type', 'UserController@usertype');
         Route::get('users/filter', 'UserController@filter');
+        Route::get('configurations', 'Api\MobileController@configurations');
         //Users
         Route::get('users', 'UserController@index');
         Route::get('users/tables', 'UserController@tables');
@@ -251,7 +252,7 @@ if ($hostname) {
             Route::get('document/search-items', 'Api\MobileController@searchItems');
             Route::get('document/search-customers', 'Api\MobileController@searchCustomers');
             Route::post('documents/generar_documents', '\App\Http\Controllers\Tenant\DocumentController@store');
-            Route::post('documents/{id}', 'Api\DocumentController@store');
+            //Route::post('documents/{id}', 'Api\DocumentController@store');
             Route::get('documents/validate/{id}', '\App\Http\Controllers\Tenant\DocumentController@validar_cpe');
             // Route::post('documents', 'Api\DocumentController@store');
             Route::post('documents', '\App\Http\Controllers\Tenant\DocumentController@store');
