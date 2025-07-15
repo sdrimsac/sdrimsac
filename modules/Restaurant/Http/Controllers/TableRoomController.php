@@ -2145,6 +2145,8 @@ class TableRoomController extends Controller
     {
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent_item->was_cancel = true;
+        $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
+        $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
         $hotel_rent_item->save();
 
         return [

@@ -26,8 +26,6 @@ class DocumentInput
 
     public static function set($inputs)
     {
-        Log::info("message", $inputs);
-
         if (array_key_exists('id', $inputs)) {
             $id = $inputs['id'];
         }
@@ -213,7 +211,6 @@ class DocumentInput
             'affectation_type_prepayment' => Functions::valueKeyInArray($inputs, 'affectation_type_prepayment'),
             'was_deducted_prepayment' => Functions::valueKeyInArray($inputs, 'was_deducted_prepayment', 0),
             'items' => self::items($inputs),
-            Log::info("items", self::items($inputs)),
             'charges' => self::charges($inputs),
             'discounts' => self::discounts($inputs),
             'prepayments' => self::prepayments($inputs),
@@ -241,7 +238,6 @@ class DocumentInput
 
     private static function items($inputs)
     {
-        Log::info("items", $inputs);
         $configuration = Configuration::first();
         $establishment_id = Functions::valueKeyInArray($inputs, 'establishment_id');
         $quotation_id = Functions::valueKeyInArray($inputs, 'quotation_id', null);
