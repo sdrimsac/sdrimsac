@@ -20,8 +20,10 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Series;
 use App\Http\Requests\PersonRequest;
 use App\Http\Requests\PerfilRequest;
+use App\Models\Tenant\PromotionDocumentCustomer;
 use Modules\Item\Http\Requests\ItemRequest;
 use Illuminate\Support\Facades\Validator;
+use Modules\College\Models\CollegeStudent;
 
 class MobileController extends Controller
 {
@@ -492,7 +494,7 @@ class MobileController extends Controller
         ];
     } */
 
-    public function searchCustomers(Request $request)
+    /* public function searchCustomers(Request $request)
     {
         $input = trim($request->input);
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id);
@@ -542,6 +544,73 @@ class MobileController extends Controller
             'success' => true,
             'data' => ['customers' => $customers]
         ];
+    } */
+
+
+    public function searchCustomers(Request $request)
+    {
+        $configuration = Configuration::first();
+        $value = $request->value;
+        $parents = $request->parents;
+
+        $persons = Person::query();
+
+        $persons = $persons
+            ->where('name', 'like', '%' . $value . '%')
+            ->orWhere('alias', 'like', '%' . $value . '%')
+            ->orWhere('number', 'like', '%' . $value . '%')
+            ->orWhere('address', 'like', '%' . $value . '%')
+            ->whereType('customers')->orderBy('name')
+            ->whereIsEnabled();
+
+        if ($parents && $configuration->college) {
+            $persons = $persons->whereIn('id', function ($query) {
+
+                $query->select('parent_id')
+                    ->from('parents');
+            });
+        }
+        $persons = $persons->take(20)->get()->transform(function ($row) use ($configuration) {
+            $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
+                $query->whereHas('parent', function ($query) use ($row) {
+                    $query->where('parent_id', $row->id);
+                });
+            })
+
+                ->where('active', 1)
+                ->get()->transform(function ($student) {
+                    return [
+                        'id' => $student->id,
+                        'name' => $student->person->name,
+                        'class' => mb_strtoupper($student->classroom->description),
+                    ];
+                });
+            $promotion_active_id = null;
+            if ($configuration->promotions_by_points || $configuration->is_promotion_document) {
+                $promotion_customer = PromotionDocumentCustomer::where('customer_id', $row->id)
+                    ->where('active', true)
+                    ->first();
+                if ($promotion_customer) {
+                    $promotion_active_id = $promotion_customer->promotion_document_id;
+                }
+            }
+            return [
+                'promotion_active_id' => $promotion_active_id,
+                'students' => $students,
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'addresses' => $row->addresses,
+                'address' =>  $row->address,
+                'seller_id' =>  $row->seller_id,
+                'phone' => $row->telephone,
+            ];
+        });
+
+        return compact('persons');
     }
 
 
