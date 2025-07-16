@@ -21,9 +21,9 @@ class RegisterController extends Controller
             "area" => "Modules\Restaurant\Models\Area",
             "food" => "Modules\Restaurant\Models\Food",
             "ordenItem" => "Modules\Restaurant\Models\OrdenItem",
-            "document" => "App\Models\Document",
-            "saleNote" => "App\Models\SaleNote",
-            "purchase" => "App\Models\Purchase",
+            "document" => "App\Models\Tenant\Document",
+            "saleNote" => "App\Models\Tenant\SaleNote",
+            "purchase" => "App\Models\Tenant\Purchase",
             "box" => "App\Models\Box",
         ];
     }

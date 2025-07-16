@@ -275,7 +275,7 @@ class MobileController extends Controller
         if ($image !== 'imagen-no-disponible.jpg') {
             return asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $image);
         }
-        
+
         return asset("/logo/{$image}");
     }
 
@@ -372,23 +372,29 @@ class MobileController extends Controller
         ];
     }
 
-    public function searchItems(Request $request)
+    /* public function searchItems(Request $request)
     {
-        $items = Item::where(function ($query) use ($request) {
-            $query->where('description', 'like', "%{$request->input}%")
-                ->orWhere('internal_id', 'like', "%{$request->input}%");
-        })
+        
+        $items = Item::with(['warehouses' => function ($query) {
+            $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
+                ->select('item_warehouse.*', 'w.description as warehouse_description')
+                ])->where(function ($query) use ($request) {
+                    $query->where('description', 'like', "%{$request->input}%")
+                        ->orWhere('internal_id', 'like', "%{$request->input}%")
+                        ->orWhere('barcode', 'like', "%{$request->input}%")
+                        ;
+        }])
+            ->whereWarehouse('warehouse')
             ->whereHasInternalId()
-            ->whereWarehouse()
             ->whereNotIsSet()
-            ->where('active', 1)
-            ->whereHas('item_warehouse', function ($query) {
-                $query->where('active', 1);
-            })
+            ->whereIsActive()
             ->orderBy('description')
+            ->take(20)
             ->get()
             ->transform(function ($row) {
                 $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
+
+                $image_url = $this->getImageUrl($row->image, 'items');
 
                 return [
                     'id' => $row->id,
@@ -408,13 +414,151 @@ class MobileController extends Controller
                     'calculate_quantity' => (bool) $row->calculate_quantity,
                     'has_igv' => (bool) $row->has_igv,
                     'is_set' => (bool) $row->is_set,
+                    'is_stock' => $row->is_stock ? 'Si' : 'No',
                     'aux_quantity' => 1,
+                    //'image_url' => $row->image_url,
+                    'image_url' => $image_url,
+                    'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                    'brand' => $row->brand ?? '',
+                    'category' => $row->category->name ?? '',
+                    'max_quantity' => $row->max_quantity,
+                    'origin' => $row->origin,
+                    'series_enabled' => (bool) $row->series_enabled,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'stock' => number_format($row->warehouses->sum('stock'), 4, '.', ''),
+                    'lots_enabled' => (bool) $row->lots_enabled,
+                    'lots_group' => $row->lots_group ?? [],
+                    'lots' => $row->lots->map(function ($lot) {
+                        return [
+                            'id' => $lot->id,
+                            'lot' => $lot->lot,
+                            'expiration_date' => $lot->expiration_date ? Carbon::parse($lot->expiration_date)->format('Y-m-d') : null,
+                            'stock' => $lot->stock,
+                            'checked' => (bool) $lot->checked
+                        ];
+                    })->toArray(),
+                    'warehouse' => $row->warehouses->map(function ($warehouse) {
+                        return [
+                            'warehouse_id' => $warehouse->warehouse_id,
+                            'warehouse_description' => $warehouse->warehouse_description,
+                            'stock' => number_format($warehouse->stock, 4, '.', ''),
+                            'checked' => (bool) $warehouse->checked
+                        ];
+                    })->toArray(),
+                    'attributes' => [],
+                    'item_unit_types' => $row->item_unit_types->map(function ($item_unit_type) {
+                        return [
+                            'id' => $item_unit_type->id,
+                            'unit_type_id' => $item_unit_type->unit_type_id,
+                            'unit_type_description' => $item_unit_type->unit_type->description,
+                            'conversion_factor' => $item_unit_type->conversion_factor,
+                            'selected' => (bool) $item_unit_type->selected
+                        ];
+                    })->toArray(),
                 ];
             });
 
         return [
             'success' => true,
             'data' => array('items' => $items)
+        ];
+    } */
+
+    public function searchItems(Request $request)
+    {
+        $items = Item::with([
+            'warehouses' => function ($query) {
+                $query->join('warehouses as w', 'w.id', '=', 'item_warehouse.warehouse_id')
+                    ->select('item_warehouse.*', 'w.description as warehouse_description');
+            }
+        ])
+            ->where(function ($query) use ($request) {
+                $query->where('description', 'like', "%{$request->input}%")
+                    ->orWhere('internal_id', 'like', "%{$request->input}%")
+                    ->orWhere('barcode', 'like', "%{$request->input}%");
+            })
+            ->whereWarehouse('warehouse')
+            ->whereHasInternalId()
+            ->whereNotIsSet()
+            ->whereIsActive()
+            ->orderBy('description')
+            ->take(20)
+            ->get()
+            ->transform(function ($row) {
+                $full_description = $row->internal_id
+                    ? $row->internal_id . ' - ' . $row->description
+                    : $row->description;
+
+                $image_url = $this->getImageUrl($row->image, 'items');
+
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->id,
+                    'name' => $row->name,
+                    'full_description' => $full_description,
+                    'description' => $row->description,
+                    'currency_type_id' => $row->currency_type_id,
+                    'internal_id' => $row->internal_id,
+                    'item_code' => $row->item_code,
+                    'currency_type_symbol' => $row->currency_type->symbol,
+                    'sale_unit_price' => floatval($row->sale_unit_price),
+                    'purchase_unit_price' => $row->purchase_unit_price,
+                    'unit_type_id' => $row->unit_type_id,
+                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                    'calculate_quantity' => (bool) $row->calculate_quantity,
+                    'has_igv' => (bool) $row->has_igv,
+                    'is_set' => (bool) $row->is_set,
+                    'is_stock' => $row->is_stock ? 'Si' : 'No',
+                    'aux_quantity' => 1,
+                    'image_url' => $image_url,
+                    'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                    'brand' => $row->brand ?? '',
+                    'category' => $row->category->name ?? '',
+                    'max_quantity' => $row->max_quantity,
+                    'origin' => $row->origin,
+                    'series_enabled' => (bool) $row->series_enabled,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'stock' => number_format($row->warehouses->sum('stock'), 4, '.', ''),
+                    'lots_enabled' => (bool) $row->lots_enabled,
+                    'lots_group' => $row->lots_group ?? [],
+                    'lots' => $row->lots->map(function ($lot) {
+                        return [
+                            'id' => $lot->id,
+                            'lot' => $lot->lot,
+                            'expiration_date' => $lot->expiration_date
+                                ? Carbon::parse($lot->expiration_date)->format('Y-m-d')
+                                : null,
+                            'stock' => $lot->stock,
+                            'checked' => (bool) $lot->checked,
+                        ];
+                    })->toArray(),
+                    'warehouse' => $row->warehouses->map(function ($warehouse) {
+                        return [
+                            'warehouse_id' => $warehouse->warehouse_id,
+                            'warehouse_description' => $warehouse->warehouse_description,
+                            'stock' => number_format($warehouse->stock, 4, '.', ''),
+                            'checked' => (bool) $warehouse->checked,
+                        ];
+                    })->toArray(),
+                    'attributes' => [],
+                    'item_unit_types' => $row->item_unit_types->map(function ($item_unit_type) {
+                        return [
+                            'id' => $item_unit_type->id,
+                            'unit_type_id' => $item_unit_type->unit_type_id,
+                            'unit_type_description' => $item_unit_type->unit_type->description,
+                            'conversion_factor' => $item_unit_type->conversion_factor,
+                            'selected' => (bool) $item_unit_type->selected,
+                        ];
+                    })->toArray(),
+                ];
+            });
+
+        return [
+            'success' => true,
+            'data' => [
+                'items' => $items,
+            ],
         ];
     }
 
