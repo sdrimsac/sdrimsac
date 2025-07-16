@@ -283,7 +283,7 @@ class DocumentController extends Controller
         if ($domain == null) {
             $domain = "SITE";
         }
-        $number = [995764963,  987828697, 972053723, 902717302, 935921640];
+        $number = [995764963,  987828697, 902717302, 935921640];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
         $file_name = 'Tenant_Procesos_Caidos_' . $domain . "_" . Carbon::now() . '.xlsx';
@@ -1610,7 +1610,6 @@ class DocumentController extends Controller
         DB::connection('tenant')->beginTransaction();
         $user_type = auth()->user()->type;
         $ids = [];
-        /* $affect_cash = $request->affect_cash; */
 
         $this->restoreOrderItems($request->all());
         if (key_exists('id', $request->all())) {

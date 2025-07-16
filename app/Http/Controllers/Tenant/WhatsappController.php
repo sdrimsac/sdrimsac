@@ -37,7 +37,7 @@ class WhatsappController extends Controller
     protected $client;
     public function sendSupportMessage($message)
     {
-        $numbers = ["972053723", "995764963", "987828697"];
+        $numbers = ["935921640", "995764963", "987828697", "902717302"];
         foreach ($numbers as $value) {
             $this->sendMessage($message, $value);
         }
