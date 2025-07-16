@@ -281,6 +281,23 @@ if ($hostname) {
 
             Route::post('dispatches', 'Api\DispatchController@store');
             Route::get('dispatches/records', 'Api\DispatchController@records');
+
+            //bancos y cuentas bancarias
+            Route::get('bank_accounts/records', [App\Http\Controllers\Tenant\BankAccountController::class, 'records']);
+            Route::get('bank_accounts/create', [App\Http\Controllers\Tenant\BankAccountController::class, 'create']);
+            Route::get('bank_accounts/tables', [App\Http\Controllers\Tenant\BankAccountController::class, 'tables']);
+            Route::get('bank_accounts/record/{bank_account}', [App\Http\Controllers\Tenant\BankAccountController::class, 'record']);
+            Route::post('bank_accounts', [App\Http\Controllers\Tenant\BankAccountController::class, 'store']);
+            Route::get('bank_accounts/update_accounts/{bank_accounts_id}', [App\Http\Controllers\Tenant\BankAccountController::class, 'update_accounts']);
+            Route::delete('bank_accounts/{bank_account}', [App\Http\Controllers\Tenant\BankAccountController::class, 'destroy']);
+
+            //bancos
+            Route::get('banks/records', [App\Http\Controllers\Tenant\BankController::class, 'records']);
+            Route::post('banks/{bank_id}/upload-image', [App\Http\Controllers\Tenant\BankController::class, 'UploadImage']);
+            Route::get('banks/record/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'record']);
+            Route::post('banks', [App\Http\Controllers\Tenant\BankController::class, 'store']);
+            Route::delete('banks/{bank_id}/delete-image', [App\Http\Controllers\Tenant\BankController::class, 'deleteImage']);
+            Route::delete('banks/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'destroy']);
         });
         Route::get('documents/search/customers', '\App\Http\Controllers\Tenant\DocumentController@searchCustomers');
 
