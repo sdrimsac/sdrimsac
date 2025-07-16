@@ -2991,7 +2991,9 @@ class BoxesController extends Controller
                 $processed_transactions[] = [
                     'type' => 'Comprobante',
                     'number' => $box->document->number_full,
-                    'customer' => $box->document->customer->name,
+                    //'customer' => $box->document->customer->name,
+                    'customer' => optional($box->document->customer)->name,
+
                     'date_of_issue' => Carbon::parse($box->document->date_of_issue)->format('d/m/Y'),
                     'time_of_issue' => Carbon::parse($box->document->time_of_issue)->format('H:i:s'),
                     'amount' => number_format($box->amount, 2)
@@ -3056,12 +3058,12 @@ class BoxesController extends Controller
         $configuration = Configuration::first();
         $socket_channel = $configuration->socket_channel;
         //$hostname = Website::query();
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_' . $fqdn . '_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if ($cash_id == 565) {
             Log::info($path);
         }
@@ -3598,11 +3600,11 @@ class BoxesController extends Controller
         }
         $company = Company::first();
         $company_number = $company->number;
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
         //duardar el pdf 
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $fqdn . '_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
 
         return $pdf->stream('pdf_file.pdf');

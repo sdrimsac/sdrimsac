@@ -1497,9 +1497,9 @@ class CashController extends Controller
         ini_set('max_execution_time', '30000');
         $company = Company::first();
         $company_number = $company->number;
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $fqdn . '_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -1764,11 +1764,11 @@ class CashController extends Controller
             return ['m' => $e->getMessage()];
         }
         $company = Company::first();
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
         $company_number = $company->number;
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $fqdn . '_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
         return $pdf->stream('pdf_file.pdf');
     }
@@ -1783,10 +1783,10 @@ class CashController extends Controller
         ini_set('memory_limit', '10096M');
         ini_set('max_execution_time', '30000');
         $company = Company::first();
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
         $company_number = $company->number;
-        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $fqdn . '_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
+        $path = storage_path('app/public/report_resumen_pdf_pos_small_' . $cash_id . '_' . $company_number . '_' . $socket_channel . '.pdf');
         if (file_exists($path) && $cash->state == 0) {
             return response()->file($path);
         }
@@ -2050,10 +2050,10 @@ class CashController extends Controller
         }
         $company = Company::first();
         $company_number = $company->number;
-        $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn;
+        /* $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn; */
         if ($cash->state == 0) {
-            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $fqdn . '_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
+            $pdf->save(storage_path('app/public/report_resumen_pdf_pos_small_' . $cash->id . '_' . $company_number . '_' . $socket_channel . '.pdf'));
         }
         return $pdf->stream('pdf_file.pdf');
     }
