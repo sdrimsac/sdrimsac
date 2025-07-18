@@ -86,7 +86,7 @@ if ($hostname) {
             Route::get('service/{type}/{number}',  [Modules\Services\Http\Controllers\ServiceController::class, 'service']);
 
             //Company
-            Route::get('companies/record', 'CompanyController@record');
+            Route::get('companies/record', '\App\Http\Controllers\Tenant\CompanyController@record');
             //Customer
             //Persons
             Route::get('persons/columns', '\App\Http\Controllers\Tenant\PersonController@columns');
@@ -119,6 +119,7 @@ if ($hostname) {
             Route::post('orders/status/update', 'OrderController@StatusOrders');
             Route::get('orders/record/{id}', 'OrderController@record');
             Route::get('items/columns', '\App\Http\Controllers\Tenant\ItemController@columns');
+            
             //Items
             Route::get('items', '\App\Http\Controllers\Tenant\ItemController@index')->middleware('redirect.level');
             Route::get('items/columns', '\App\Http\Controllers\Tenant\ItemController@columns');
@@ -138,6 +139,7 @@ if ($hostname) {
             Route::get('items/images/{item}', '\App\Http\Controllers\Tenant\ItemController@images');
             Route::get('items/images/delete/{id}', '\App\Http\Controllers\Tenant\ItemController@delete_images');
             Route::get('items/recordsMobile', '\App\Http\Controllers\Tenant\ItemController@recordsMobile');
+
             //MOBILE
             Route::get('downloads/{model}/{type}/{external_id}/{format?}', '\App\Http\Controllers\Tenant\DownloadController@downloadExternal');
             Route::get('document/series', 'Api\MobileController@getSeries');
