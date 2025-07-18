@@ -160,7 +160,7 @@ if ($hostname) {
             Route::get('quotations/filter', 'QuotationController@filter');
             Route::get('quotations/tables', 'QuotationController@tables');
             Route::get('quotations/table/{table}', 'QuotationController@table');
-            Route::post('quotations', 'QuotationController@store');
+            Route::post('quotations', '\App\Http\Controllers\Tenant\QuotationController@store');
             Route::post('quotations/update', 'QuotationController@update');
             Route::get('quotations/record/{quotation}', 'QuotationController@record');
             Route::get('quotations/anular/{id}', 'QuotationController@anular');
