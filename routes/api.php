@@ -70,7 +70,7 @@ if ($hostname) {
         Route::get('services/dni/{number}', 'Api\ServiceController@dni');
         Route::get('services/numberletter/{number}', 'Api\ServiceController@numberletter');
         Route::get('sale-notes/downloadExternal/{external_id}', '\App\Http\Controllers\Tenant\SaleNoteController@downloadExternal');
-        Route::get('sale-notes/records', '\App\Http\Controllers\Tenant\SaleNoteController@records');
+        Route::get('sale-notes/recordsMobile', '\App\Http\Controllers\Tenant\SaleNoteController@recordsMobile');
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
 

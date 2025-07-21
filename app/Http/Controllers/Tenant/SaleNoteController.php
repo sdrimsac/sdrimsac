@@ -102,6 +102,7 @@ use Modules\Workshop\Models\Historial;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
+use App\Http\Resources\Tenant\SaleNoteMobileCollection;
 use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
@@ -875,6 +876,13 @@ class SaleNoteController extends Controller
 
         // if($request->)
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function recordsMobile(Request $request)
+    {
+        $records = $this->get_records($request);
+
+        // if($request->)
+        return new SaleNoteMobileCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function recordsNota(Request $request)
     {
