@@ -216,6 +216,12 @@ class PersonController extends Controller
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function recordsMobile($type, Request $request)
+    {
+        $records = $this->getRecordsMobile($type, $request);
+
+        return new PersonCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function getRecords($type, Request $request)
     {
         $has_credit_line = $request->credit === 'true';
@@ -241,6 +247,31 @@ class PersonController extends Controller
 
         if ($has_credit_line) {
             $records = $records->where('has_credit_line', $has_credit_line);
+        }
+
+        return $records;
+    }
+
+
+    public function getRecordsMobile($type, Request $request)
+    {
+        $user = auth()->user();
+
+        $records = Person::where('type', $type);
+        
+        if (!$user || $user->type !== 'superadmin') {
+            $records = $records->whereNotIn('name', ['CLIENTES VARIOS', 'CLIENTES VARIOS-MODIFICADO']);
+        }
+
+        if ($request->has('value')) {
+            $records = $records->where(function($query) use ($request) {
+                $query->where('name', 'like', "%{$request->value}%")
+                      ->orWhere('number', 'like', "%{$request->value}%");
+            });
+        }
+
+        if ($request->credit === 'true') {
+            $records = $records->where('has_credit_line', true);
         }
 
         return $records;
