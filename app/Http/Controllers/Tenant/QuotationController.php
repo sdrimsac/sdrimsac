@@ -254,6 +254,7 @@ class QuotationController extends Controller
             ->first();
         return $series->id;
     }
+
     function itemsWithStock($items, $establishment_id, &$stocks)
     {
         $items_with_stock = [];
@@ -267,11 +268,17 @@ class QuotationController extends Controller
 
                     // $quantity = $quantity * collect($item_unit_types)->where('id', $from_unit_type_id)->first()->quantity_unit;
                     $item_unit_type = ItemUnitType::find($from_unit_type_id);
-                    $quantity = $quantity * $item_unit_type->quantity_unit;
+                    if ($item_unit_type) {
+                        $quantity = $quantity * $item_unit_type->quantity_unit;
+                    }
+                    //$quantity = $quantity * $item_unit_type->quantity_unit;
                 } else if ($from_unit_type_id_desc) {
                     // $quantity = $quantity * collect($item_unit_types)->where('description', $from_unit_type_id_desc)->first()->quantity_unit;
                     $item_unit_type = ItemUnitType::where('description', $from_unit_type_id_desc)->first();
-                    $quantity = $quantity * $item_unit_type->quantity_unit;
+                    if ($item_unit_type) {
+                        $quantity = $quantity * $item_unit_type->quantity_unit;
+                    }
+                    //$quantity = $quantity * $item_unit_type->quantity_unit;
                 }
             }
             if (!isset($stocks[$item->item_id])) {
@@ -434,8 +441,6 @@ class QuotationController extends Controller
                 'message' => 'Se requiere la cotización'
             ];
         }
-
-
 
         try {
             DB::beginTransaction();
@@ -625,6 +630,8 @@ class QuotationController extends Controller
             'documents' => $documents
         ];
     }
+
+    //para la impresion
     public function consolidatedsPrint($id)
     {
         $consolidated = Consolidated::find($id);
@@ -635,7 +642,6 @@ class QuotationController extends Controller
                 'message' => 'No se encontraron cotizaciones'
             ];
         }
-
 
         $documents = [];
         $to_print = [];
