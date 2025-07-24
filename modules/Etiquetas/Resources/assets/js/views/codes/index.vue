@@ -3514,7 +3514,7 @@ export default {
                 let parameters = `input=${input}`;
                 try {
                     let response = await this.$http.get(
-                        `/${this.resource}/items/?${parameters}`
+                        `/codes/items/?${parameters}`
                     );
                     let { items } = response.data;
                     this.items = items;
