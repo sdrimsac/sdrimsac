@@ -281,7 +281,7 @@ class DocumentController extends Controller
         $infoCompleta = [];
         $domain = $request->domain;
         if ($domain == null) {
-            $domain = "SITE";
+            $domain = "PRO";
         }
         $number = [995764963,  987828697, 902717302, 935921640];
         // $number = 
