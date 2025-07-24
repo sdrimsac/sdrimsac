@@ -27,6 +27,7 @@ use App\Imports\ItemColorSizeImport;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\SaleNoteItem;
+use App\Services\ItemCodeService;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 use Illuminate\Support\Facades\Log;
@@ -494,6 +495,12 @@ class InventoryController extends Controller
                         'warehouse_id' => $warehouse_id
                     ]);
                 }
+
+                $item = Item::findOrFail($item_id);
+                if ((bool) $item->codes_family) {
+                    Log::info('Generando códigos para item_id ' . $item_id . ' en almacén ' . $warehouse_id);
+                    ItemCodeService::generateCodesForItemWarehouse($item_id, $warehouse_id);
+                }
             } else {
                 foreach ($color_size as $row) {
                     if (isset($row["quantity"]) && $row["quantity"] > 0) {
@@ -550,20 +557,20 @@ class InventoryController extends Controller
                 $import = new ItemColorSizeImport();
                 $import->import($request->file('file'), null, Excel::XLSX);
                 $data = $import->getData();
-                
-               /*  Log::info('Datos importados:', ['data' => $data]); */
-                
+
+                /*  Log::info('Datos importados:', ['data' => $data]); */
+
                 if (isset($data['items']) && count($data['items']) > 0) {
-                    DB::connection('tenant')->transaction(function() use ($data) {
+                    DB::connection('tenant')->transaction(function () use ($data) {
                         foreach ($data['items'] as $row) {
                             /* Log::info('Procesando item:', ['row' => $row]); */
-                            
+
                             $newRequest = new Request();
                             $newRequest->merge($row);
-                            
+
                             $inventoryRequest = InventoryRequest::createFrom($newRequest);
-                            /* Log::info('InventoryRequest creado:', ['request' => $inventoryRequest->all()]); */ 
-                            
+                            /* Log::info('InventoryRequest creado:', ['request' => $inventoryRequest->all()]); */
+
                             $this->store_transaction($inventoryRequest);
                         }
                     });
@@ -575,7 +582,7 @@ class InventoryController extends Controller
                     'data' => $data
                 ];
             } catch (Exception $e) {
-                /* Log::error('Error en importación:', ['error' => $e->getMessage()]); */ 
+                /* Log::error('Error en importación:', ['error' => $e->getMessage()]); */
                 return [
                     'success' => false,
                     'message' => $e->getMessage()

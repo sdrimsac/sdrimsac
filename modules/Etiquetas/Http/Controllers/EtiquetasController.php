@@ -184,6 +184,193 @@ class EtiquetasController extends Controller
             return response($e, 500);
         }
     }
+
+    /* public function generate(Request $request)
+    {
+        ini_set("pcre.backtrack_limit", "500000");
+
+        try {
+            $is_code_128 = true;
+            $type_barcode = $request->type_barcode;
+            if (str_contains($type_barcode, "EAN")) {
+                $is_code_128 = false;
+            }
+            $sale_code = $request->salecode;
+            $type = $request->type;
+            $purchase_code = $request->purchasecode;
+            $description = $request->description;
+            $murcielagoCode = $request->murcielagoCode;
+            $price1 = $request->price1;
+            $price2 = $request->price2;
+            $format = $request->format;
+            $paper = $request->paper;
+            $location = $request->location;
+            $barcode = $request->barcode;
+            $barcodes = !empty($barcode) ? explode(',', $barcode) : [];
+            if (empty($barcodes)) {
+                throw new Exception('No se proporcionaron códigos de barras');
+            }
+
+            $template = $format == '1' ? 'template' : ($format == '2' ? 'template2' : 'template4');
+            if ($format == '1' && $paper == '2') {
+                $template = 'template_format_1_template_2';
+            }
+            if ($type == '3' && $format == '1' && $paper == '2') {
+                $template = 'template8';
+            }
+            if ($type == '3' && $format == '1' && $paper == '1') {
+                $template = 'template9';
+            }
+            if ($type == '4' && $format == '1' && $paper == '2') {
+                $template = 'template10';
+            }
+            if ($type == '5' && $format == '1' && $paper == '2') {
+                $template = 'template14';
+            }
+            if ($type == '6' && $format == '1' && $paper == '2') {
+                $template = 'template16';
+            }
+            if ($type == '7' && $format == '1' && $paper == '2') {
+                $template = 'template18';
+            }
+            if ($type == '8' && $format == '1' && $paper == '1') {
+                $template = 'template20';
+            }
+            if ($type == '9' && $format == '1' && $paper == '2') {
+                $template = 'template21';
+            }
+
+            $record = Item::where('description', $description)->first();
+            $company = Company::first();
+            $price = $record->sale_unit_price;
+            $price = number_format($price, 0, ".", "");
+
+            $margin_top = 0;
+            $margin_left = 0;
+            $margin_right = 0;
+            $margin_bottom = 0;
+
+            $stock = $request->stock ?? 0;
+            if ($company->etiqueta != null) {
+                $image = asset('storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . explode("/", $company->etiqueta)[2]);
+            } else {
+                $image = null;
+            }
+
+            $width = $paper == 1 ? 50 : 65;
+            $height = $paper == 1 ? 25 : 23;
+
+            if ($template === "template_format_1_template_2") {
+                $height = 20;
+                $width = 65;
+            }
+            if ($template === "template14") {
+                $height = 25;
+                $width = 100;
+            }
+            if ($template === "template16") {
+                $height = 20;
+                $width = 60;
+            }
+            if ($template === "template18") {
+                $height = 20;
+                $width = 60;
+            }
+            if ($template === "template20") {
+                $height = 25;
+                $width = 50;
+            }
+            if ($template === "template21") {
+                $height = 20;
+                $width = 60;
+            }
+
+            $pdf = new Mpdf([
+                'mode' => 'utf-8',
+                'format' => [$width, $height],
+                'margin_top' => $margin_top,
+                'margin_right' => $margin_right,
+                'margin_bottom' => $margin_bottom,
+                'margin_left' => $margin_left
+            ]);
+
+            // Si el formato/papel requiere 2 columnas, agrupar los códigos de barra de 2 en 2
+            $isTwoColumns = ($paper == 2); // Ajusta esta condición según tu lógica real de columnas
+            if ($isTwoColumns) {
+                for ($i = 0; $i < count($barcodes); $i += 2) {
+                    if ($i > 0) {
+                        $pdf->AddPage();
+                    }
+                    $currentBarcode1 = isset($barcodes[$i]) ? $barcodes[$i] : '';
+                    $currentStock1 = 1;
+                    $currentBarcode2 = isset($barcodes[$i + 1]) ? $barcodes[$i + 1] : '';
+                    $currentStock2 = 1;
+                    // Validar que al menos uno de los códigos existe
+                    if (empty($currentBarcode1) && empty($currentBarcode2)) {
+                        throw new Exception('No se encontraron códigos para imprimir en esta página.');
+                    }
+                    if (!$record) {
+                        throw new Exception('No se encontró el producto con la descripción proporcionada.');
+                    }
+                    $html = view('etiquetas::' . $template, compact(
+                        'type',
+                        'record',
+                        'company',
+                        'description',
+                        'sale_code',
+                        'purchase_code',
+                        'image',
+                        'location',
+                        'price',
+                        'price1',
+                        'price2',
+                        'murcielagoCode',
+                        'paper',
+                        'is_code_128'
+                    ) + [
+                        'barcode1' => $currentBarcode1,
+                        'stock1' => $currentStock1,
+                        'barcode2' => $currentBarcode2,
+                        'stock2' => $currentBarcode2 ? $currentStock2 : null
+                    ])->render();
+                    $pdf->WriteHTML($html);
+                }
+            } else {
+                // 1 columna, igual que antes
+                foreach ($barcodes as $index => $currentBarcode) {
+                    if ($index > 0) {
+                        $pdf->AddPage();
+                    }
+                    $currentStock = 1;
+                    $html = view('etiquetas::' . $template, compact(
+                        'type',
+                        'record',
+                        'company',
+                        'description',
+                        'sale_code',
+                        'purchase_code',
+                        'image',
+                        'location',
+                        'price',
+                        'price1',
+                        'price2',
+                        'murcielagoCode',
+                        'paper',
+                        'is_code_128'
+                    ) + [
+                        'barcode' => $currentBarcode,
+                        'stock' => $currentStock
+                    ])->render();
+                    $pdf->WriteHTML($html);
+                }
+            }
+
+            $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
+        } catch (Exception $e) {
+            return response($e, 500);
+        }
+    } */
+
     public function save_word(Request $request)
     {
         $word = $request->input('word');
@@ -354,7 +541,7 @@ class EtiquetasController extends Controller
 
         // Get active items with active warehouse entries
         $items = Item::where("active", 1)
-            ->whereHas('warehouses', function($query) use ($establishment_id) {
+            ->whereHas('warehouses', function ($query) use ($establishment_id) {
                 $query->where('warehouse_id', $establishment_id)
                     ->where('active', 1);
             })
@@ -371,18 +558,27 @@ class EtiquetasController extends Controller
                 }
 
                 $stock = $row->getStockByWarehouse($establishment_id);
-                
+
                 // Calculate purchase price with IGV if needed
                 $purchase_price = $row->purchase_unit_price;
                 if ($row->purchase_affectation_igv_type_id === "10") {
                     $purchase_price = $purchase_price * 1.18;
                 }
 
+                if ((int)$row->codes_family === 1) {
+                    $barcodes = $row->item_codes()
+                        ->pluck('code_barcode') // Remueve el where si no estás seguro
+                        ->toArray();
+                } else {
+                    $barcodes[] = $row->internal_id;
+                }
+
                 return [
                     "id" => $row->id,
                     "descripcion" => $row->description,
-                    "barras" => $row->internal_id,
-                    "tipo_barras" => $row->barcode_type, 
+                    //"barras" => $row->internal_id,
+                    "barras" => $barcodes,
+                    "tipo_barras" => $row->barcode_type,
                     "stock" => $stock,
                     "price" => $row->sale_unit_price,
                     "purchase" => $purchase_price,

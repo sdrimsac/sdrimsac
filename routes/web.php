@@ -519,6 +519,9 @@ if ($hostname) {
                 Route::post('items/update_price_cash_commercial_treatment', [ItemController::class, 'updatePriceCommercialTreatment']);
                 Route::post('items/update_price_cash_unit_type', [ItemController::class, 'updatePriceUnitType']);
 
+                //ruta para probar si genera los codigos familia
+                Route::get('items/generate_family', [ItemController::class, 'generateCodes']);
+
                 Route::get('items/record/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'record']);
                 Route::post('items', [App\Http\Controllers\Tenant\ItemController::class, 'store']);
                 Route::delete('items/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'destroy']);

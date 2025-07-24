@@ -452,6 +452,11 @@ const app = new Vue({
                 "../../modules/Etiquetas/Resources/assets/js/views/index.vue"
             ),
 
+            "etiqueta-codes-index": () =>
+            import(
+                "../../modules/Etiquetas/Resources/assets/js/views/codes/index.vue"
+            ),
+
         "inventory-index": () =>
             import(
                 "../../modules/Inventory/Resources/assets/js/inventory/inventory.vue"

@@ -81,7 +81,7 @@ class EtiquetasController extends Controller
             if ($type == '9' && $format == '1' && $paper == '2') {
                 $template = 'template21';
             }
-            
+
             $record = Item::where('description', $description)->first();
             $company = Company::first();
             $price = $record->sale_unit_price;
@@ -178,6 +178,7 @@ class EtiquetasController extends Controller
             return response($e, 500);
         }
     }
+    
     public function save_word(Request $request)
     {
         $word = $request->input('word');
@@ -349,7 +350,7 @@ class EtiquetasController extends Controller
 
         // Get active items with active warehouse entries
         $items = Item::where("active", 1)
-            ->whereHas('warehouses', function($query) use ($establishment_id) {
+            ->whereHas('warehouses', function ($query) use ($establishment_id) {
                 $query->where('warehouse_id', $establishment_id)
                     ->where('active', 1);
             })
@@ -367,11 +368,23 @@ class EtiquetasController extends Controller
 
                 $stock = $row->getStockByWarehouse($establishment_id);
 
+                $barcodes = [];
+
+                if ($row->codes_family) {
+                    $barcodes = $row->item_codes()
+                        ->where('active', false)
+                        ->pluck('code_barcode')
+                        ->toArray();
+                } else {
+                    $barcodes[] = $row->internal_id;
+                }
+
                 return [
                     "id" => $row->id,
                     "descripcion" => $row->description,
-                    "barras" => $row->internal_id,
-                    "tipo_barras" => $row->barcode_type, 
+                    //"barras" => $row->internal_id,
+                    "barras" => $barcodes,
+                    "tipo_barras" => $row->barcode_type,
                     "stock" => $stock,
                     "price" => $row->sale_unit_price,
                     "purchase" => $row->purchase_unit_price,

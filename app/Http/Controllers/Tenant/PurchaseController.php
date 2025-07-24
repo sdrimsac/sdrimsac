@@ -52,6 +52,7 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
+use App\Services\ItemCodeService;
 use App\Services\RoleService;
 use App\Traits\JobReportTrait;
 use Exception;
@@ -594,6 +595,8 @@ class PurchaseController extends Controller
                     }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
+
+                    ItemCodeService::generateCodesForItemWarehouse($item->id, $row['warehouse_id']);
 
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {

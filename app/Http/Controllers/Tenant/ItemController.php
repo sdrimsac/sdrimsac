@@ -80,6 +80,7 @@ use App\Models\Tenant\ItemUnitTypePriceRange;
 use App\Models\Tenant\ItemWarranty;
 use App\Models\Tenant\RegisterMovement;
 use App\Models\Tenant\SaleOffertDetail;
+use App\Services\ItemCodeService;
 use Barryvdh\DomPDF\Facade as PDF;
 
 class ItemController extends Controller
@@ -1498,6 +1499,9 @@ class ItemController extends Controller
                 $food->image = 'imagen-no-disponible.jpg';
             }
             $item->save();
+
+            //ItemCodeService::generateCodesForItemWarehouse($item->id, $item['warehouse_id']);
+
             if ($request->has('item_codes') && is_array($request->item_codes)) {
                 // Elimina los códigos anteriores de este item (opcional)
                 ItemCodes::where('item_id', $item->id)->delete();
@@ -1772,6 +1776,16 @@ class ItemController extends Controller
 
 
             $item->update();
+
+            // FINAL: Generar códigos si aplica
+            if ($item->codes_family) {
+                $warehouses = ItemWarehouse::where('item_id', $item->id)->pluck('warehouse_id');
+                Log::info('Generando códigos para item con id: ' . $item->id);
+                foreach ($warehouses as $warehouse_id) {
+                    ItemCodeService::generateCodesForItemWarehouse($item->id, $warehouse_id);
+                }
+            }
+
             DB::connection('tenant')->commit();
             return [
                 'success' => true,
@@ -1785,6 +1799,90 @@ class ItemController extends Controller
             return [
                 'success' => false,
                 'message' => 'Error inesperado, no se pudo registrar el producto'
+            ];
+        }
+    }
+
+    public function generateCodes(Request $request)
+    {
+        try {
+            $items = Item::where('codes_family', 1)->get();
+
+            if ($items->isEmpty()) {
+                return [
+                    'success' => false,
+                    'message' => 'No hay ítems con código de familia activado.'
+                ];
+            }
+
+            $all_codes = [];
+
+            foreach ($items as $item) {
+                // Obtener stock por almacén
+                $warehouse_stocks = ItemWarehouse::where('item_id', $item->id)
+                    ->where('stock', '>', 0)
+                    ->get();
+
+                if ($warehouse_stocks->isEmpty()) {
+                    continue;
+                }
+
+                foreach ($warehouse_stocks as $warehouse_stock) {
+                    // Contar códigos existentes para este item en este almacén
+                    $existing_codes = ItemCodes::where('item_id', $item->id)
+                        ->where('warehouse_id', $warehouse_stock->warehouse_id)
+                        ->where('code_barcode', 'like', $item->internal_id . '-%')
+                        ->count();
+
+                    $start_number = $existing_codes + 1;
+                    $new_codes = [];
+
+                    for ($i = 0; $i < $warehouse_stock->stock - $existing_codes; $i++) {
+                        $code_number = str_pad($start_number + $i, 3, '0', STR_PAD_LEFT);
+                        $code_barcode = $item->internal_id . '-' . $code_number;
+
+                        // Evitar duplicados verificando item_id y warehouse_id
+                        if (!ItemCodes::where('code_barcode', $code_barcode)
+                            ->where('item_id', $item->id)
+                            ->where('warehouse_id', $warehouse_stock->warehouse_id)
+                            ->exists()) {
+
+                            $new_code = ItemCodes::create([
+                                'item_id' => $item->id,
+                                'warehouse_id' => $warehouse_stock->warehouse_id,
+                                'code_barcode' => $code_barcode
+                            ]);
+
+                            $new_codes[] = [
+                                'item_id' => $item->id,
+                                'item_name' => $item->description,
+                                'warehouse_id' => $warehouse_stock->warehouse_id,
+                                'code_barcode' => $code_barcode
+                            ];
+                        }
+                    }
+
+                    if (!empty($new_codes)) {
+                        $all_codes[] = [
+                            'item_id' => $item->id,
+                            'item_name' => $item->description,
+                            'warehouse_id' => $warehouse_stock->warehouse_id,
+                            'generated_codes' => $new_codes,
+                            'total_generated' => count($new_codes)
+                        ];
+                    }
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Códigos de familia generados con éxito.',
+                'data' => $all_codes
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error al generar códigos: ' . $e->getMessage()
             ];
         }
     }
@@ -1907,7 +2005,7 @@ class ItemController extends Controller
                 ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
         }
     }
-    
+
     public function exportBarCode(Request $request)
     {
         ini_set("pcre.backtrack_limit", "50000000");

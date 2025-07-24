@@ -47,6 +47,16 @@
                         class="btn_buscar"
                         style="margin-right: 5px;"
                         href="javascript:void(0)"
+                        @click.prevent="clickGenerate()"
+                    >
+                        <!-- <i class="fa fa-plus"></i> -->
+                        Generar Codigo de Familia
+                    </el-button>
+                    <el-button
+                        type="primary"
+                        class="btn_buscar"
+                        style="margin-right: 5px;"
+                        href="javascript:void(0)"
                         @click.prevent="clickCreate()"
                     >
                         <i class="fa fa-plus"></i>
@@ -662,6 +672,24 @@ export default {
             this.recordId = recordId;
             this.showDialog = true;
         },
+
+        clickGenerate() {
+            this.$http
+                .get(`${this.resource}/generate_family`, {
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        this.$toast.success(
+                            "Se generó el código de familia correctamente."
+                        );
+                        this.$eventHub.$emit("reloadData");
+                    } else {
+                        this.$toast.error("No se generó el código de familia");
+                    }
+                })
+                .catch(error => {});
+        },
+
         clickImport() {
             this.showImportDialog = true;
         },

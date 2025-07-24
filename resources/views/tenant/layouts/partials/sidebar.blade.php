@@ -498,6 +498,15 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica)
+                            <li>
+                                <a class="{{ $path[0] === 'codes' ? 'active' : '' }}"
+                                    href="{{ route('codes.index') }}">
+                                    <i class="icofont-label" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                    <span class="label" style="font-size: 1em; ">Etiqueta con Códigos familia</span>
+                                </a>
+                            </li>
+                        @endif
                     @endif
                 </ul>
             </li>

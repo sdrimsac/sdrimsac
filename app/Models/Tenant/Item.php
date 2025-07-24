@@ -90,6 +90,7 @@ class Item extends ModelTenant
         'promotion_count',
         'has_warranty',
         'month_day',
+        'codes_family'
         //'warehouse_id'
     ];
 
