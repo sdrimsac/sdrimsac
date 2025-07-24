@@ -80,7 +80,7 @@ class WhatsappSendMessageYapeProccess implements ShouldQueue
                 Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
                 return;
             }
-            $url = "https://sdrclientes.shop/api/send-message";
+            $url = "https://sdrimsac.xyz/api/send-message";
             // Log::info("Enviando mensaje a whatsapp".$number." mensaje: ".$message);
             foreach ($numbers as $number) {
                 if ($number->number) {
@@ -114,7 +114,7 @@ class WhatsappSendMessageYapeProccess implements ShouldQueue
                     } else {
                         $sender = 'sdrimsac';
                         if ($this->subdomain != null && $configuration->whatsapp_client) {
-                            $url = "https://" . $this->subdomain . ".sdrclientes.shop/api/send-message";
+                            $url = "https://" . $this->subdomain . ".sdrimsac.xyz/api/send-message";
                             $sender = $this->subdomain;
                         } else {
                             $web_whatsapp = config('app.web_whatsapp');
