@@ -33,7 +33,7 @@ class Area extends ModelTenant
     {
         return $this->description == 'BILLAR';
     }
-    
+
 
     public static function getAreaCajaId()
     {
@@ -58,19 +58,23 @@ class Area extends ModelTenant
         }
         return null;
     }
-    public static function getAreaEstablishmentJob($id,$user_id)
+    public static function getAreaEstablishmentJob($id, $user_id)
     {
         $user = User::find($user_id);
         if (!$user) return null;
         $establishment_id = $user->establishment_id;
-    
+
         $area = Area::where('id', $id)->first();
         if (!$area) return null;
+
+        if (strtoupper(trim($area->description)) == 'PARRILLA') {
+            return $id;
+        }
         $description = $area->description;
         $description = explode(" ", $description);
 
         $description = $description[0];
-    
+
         $user = User::where('establishment_id', $establishment_id)
             ->whereHas('area', function ($query) use ($description) {
                 $query->where('description', 'like', '%' . $description . '%');
@@ -97,20 +101,19 @@ class Area extends ModelTenant
             }
         }
         return null;
-        
     }
     public static function getAreaEstablishment($id)
     {
-        
+
         $establishment_id = auth()->user()->establishment_id;
-    
+
         $area = Area::where('id', $id)->first();
         if (!$area) return null;
         $description = $area->description;
         $description = explode(" ", $description);
 
         $description = $description[0];
-    
+
         $user = User::where('establishment_id', $establishment_id)
             ->whereHas('area', function ($query) use ($description) {
                 $query->where('description', 'like', '%' . $description . '%');
@@ -138,7 +141,7 @@ class Area extends ModelTenant
         }
         return null;
     }
-    public static function getZoneEstablishmentJob($id,$user_id)
+    public static function getZoneEstablishmentJob($id, $user_id)
     {
         $user = User::find($user_id);
         if (!$user) return null;
