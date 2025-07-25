@@ -367,7 +367,10 @@ class CodesController extends Controller
 
             $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
         } catch (Exception $e) {
-            return response($e, 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar códigos: ' . $e->getMessage()
+            ], 500);
         }
     }
 
