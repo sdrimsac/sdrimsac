@@ -241,6 +241,10 @@ class CodesController extends Controller
             }
 
             $record = Item::where('description', $description)->first();
+
+            if (!$record) {
+                throw new Exception('No se encontró el producto con la descripción proporcionada.');
+            }
             $company = Company::first();
             $price = $record->sale_unit_price;
             $price = number_format($price, 0, ".", "");
