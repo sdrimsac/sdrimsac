@@ -81,7 +81,7 @@
 </head>
 
 <body>
-    @for ($i = 0; $i < $stock; $i += 2)
+    {{-- @for ($i = 0; $i < $stock; $i += 2) --}}
         <div>
             <div class="" style="height: 60px; width: 240px;">
                 <div style="height: 60px;float: left; width:110px; padding: 3px;">
@@ -104,7 +104,7 @@
                                 echo '<img style="height: 18px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
                                     base64_encode(
                                         $generator->getBarcode(
-                                            $barcode,
+                                            $barcode1,
                                             $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
                                         ),
                                     ) .
@@ -112,7 +112,7 @@
                             @endphp
                         </div>
                         <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
-                            {{ $barcode }}
+                            {{ $barcode1 }}
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                                     echo '<img style="height: 18px; width: 90%; margin: 0 auto;"  src="data:image/png;base64,' .
                                         base64_encode(
                                             $generator->getBarcode(
-                                                $barcode,
+                                                $barcode2,
                                                 $is_code_128 ? $generator::TYPE_CODE_128 : $generator::TYPE_EAN_8,
                                             ),
                                         ) .
@@ -144,14 +144,14 @@
                                 @endphp
                             </div>
                             <div style="text-align:center;font-size:8px;margin:0px;padding:0px;">
-                                {{ $barcode }}
+                                {{ $barcode2 }}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endfor
+    {{-- @endfor --}}
 </body>
 
 </html>

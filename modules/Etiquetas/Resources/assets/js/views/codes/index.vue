@@ -594,7 +594,7 @@
                                                 ></i>
                                             </el-tooltip>
                                         </el-radio-button>
-                                        <el-radio-button
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_04"
                                             :label="4"
                                             plain
@@ -612,8 +612,8 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
-                                        <el-radio-button
+                                        </el-radio-button> -->
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_05"
                                             :label="5"
                                             plain
@@ -631,8 +631,8 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
-                                        <el-radio-button
+                                        </el-radio-button> -->
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_06"
                                             :label="6"
                                             plain
@@ -650,8 +650,8 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
-                                        <el-radio-button
+                                        </el-radio-button> -->
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_07"
                                             :label="7"
                                             plain
@@ -669,8 +669,8 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
-                                        <el-radio-button
+                                        </el-radio-button> -->
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_08"
                                             :label="8"
                                             plain
@@ -688,8 +688,8 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
-                                        <el-radio-button
+                                        </el-radio-button> -->
+                                        <!-- <el-radio-button
                                             v-if="configuration.model_09"
                                             :label="9"
                                             plain
@@ -707,7 +707,7 @@
                                                     class="fa fa-info-circle"
                                                 ></i>
                                             </el-tooltip>
-                                        </el-radio-button>
+                                        </el-radio-button> -->
                                     </el-radio-group>
                                 </div>
                             </div>
