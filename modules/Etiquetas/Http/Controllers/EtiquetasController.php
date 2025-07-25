@@ -80,7 +80,7 @@ class EtiquetasController extends Controller
             if ($type == '9' && $format == '1' && $paper == '2') {
                 $template = 'template21';
             }
-            
+
             $record = Item::where('description', $description)->first();
             $company = Company::first();
             $price = $record->sale_unit_price;
@@ -541,6 +541,7 @@ class EtiquetasController extends Controller
 
         // Get active items with active warehouse entries
         $items = Item::where("active", 1)
+            ->where('codes_family', 0)
             ->whereHas('warehouses', function ($query) use ($establishment_id) {
                 $query->where('warehouse_id', $establishment_id)
                     ->where('active', 1);

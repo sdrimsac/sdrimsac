@@ -458,7 +458,7 @@
                                         size="large"
                                     >
                                         <el-radio-button
-                                            v-if="configuration.model_01"
+                                        v-if="configuration.model_01"
                                             :label="1"
                                             plain
                                             class="mb-2 me-2"
@@ -477,7 +477,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_02"
+                                        v-if="configuration.model_02"
                                             :label="2"
                                             plain
                                             class="mb-2 me-2"
@@ -496,7 +496,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_03"
+                                        v-if="configuration.model_03"
                                             :label="3"
                                             plain
                                             class="mb-2 me-2"
@@ -515,7 +515,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_04"
+                                        v-if="configuration.model_04"
                                             :label="4"
                                             plain
                                             class="mb-2 me-2"
@@ -534,7 +534,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_05"
+                                        v-if="configuration.model_05"
                                             :label="5"
                                             plain
                                             class="mb-2 me-2"
@@ -553,7 +553,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_06"
+                                        v-if="configuration.model_06"
                                             :label="6"
                                             plain
                                             class="mb-2 me-2"
@@ -572,7 +572,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_07"
+                                        v-if="configuration.model_07"
                                             :label="7"
                                             plain
                                             class="mb-2 me-2"
@@ -591,7 +591,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_08"
+                                        v-if="configuration.model_08"
                                             :label="8"
                                             plain
                                             class="mb-2 me-2"
@@ -610,7 +610,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                            v-if="configuration.model_09"
+                                        v-if="configuration.model_09"
                                             :label="9"
                                             plain
                                             class="mb-2 me-2"
@@ -715,10 +715,7 @@
                             <div class="col-md-8">
                                 <br />
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo1' &&
-                                            configuration.model_01
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo1' && configuration.model_01"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -795,10 +792,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo2' &&
-                                            configuration.model_02
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo2' && configuration.model_02"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1011,10 +1005,7 @@
                                 </div>
 
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo3' &&
-                                            configuration.model_03
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo3' && configuration.model_03"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1073,10 +1064,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo4' &&
-                                            configuration.model_04
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo4' && configuration.model_04"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1161,10 +1149,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo5' &&
-                                            configuration.model_05
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo5' && configuration.model_05"
                                     class="pdf-preview-container border d-flex preview-container"
                                     style="width: 600px; height: 150px; margin: 20px auto; background: white;"
                                 >
@@ -1277,10 +1262,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo6' &&
-                                            configuration.model_06
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo6' && configuration.model_06"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1407,10 +1389,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo7' &&
-                                            configuration.model_07
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo7' && configuration.model_07"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1457,10 +1436,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo8' &&
-                                            configuration.model_08
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo8' && configuration.model_08"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1505,10 +1481,7 @@
                                         </div>
 
                                         <!-- Description below image -->
-                                        <span
-                                            class="text-center mb-2"
-                                            style="font-size: 12px;"
-                                        >
+                                        <span class="text-center mb-2" style="font-size: 12px;">
                                             {{
                                                 product.descripcion ||
                                                     "DESCRIPCION DEL PRODUCTO"
@@ -1528,9 +1501,7 @@
                                             class="d-flex w-100 justify-content-between"
                                             style="font-size: 12px;"
                                         >
-                                            <span>{{
-                                                product.location || "S/L"
-                                            }}</span>
+                                            <span>{{ product.location || "S/L" }}</span>
                                             <span
                                                 :style="
                                                     `color:${
@@ -1546,10 +1517,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="
-                                        modeloSeleccionado === 'Modelo9' &&
-                                            configuration.model_09
-                                    "
+                                    v-if="modeloSeleccionado === 'Modelo9' && configuration.model_09"
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -3019,42 +2987,13 @@ export default {
 
                 this.loading = false;
             } catch (e) {
-                this.loading = false;
-                console.error("Error completo:", e);
-
-                if (e.response) {
-                    const { status, data } = e.response;
-
-                    // Si Laravel lanza una excepción con mensaje claro
-                    if (data && data.message) {
-                        this.$toast.error(`Error ${status}: ${data.message}`);
-                    } else if (data) {
-                        // En caso de que haya más información
-                        this.$toast.error(
-                            `Error ${status}: ${JSON.stringify(data)}`
-                        );
-                    } else {
-                        // Error sin datos
-                        this.$toast.error(`Error ${status}: Error desconocido`);
-                    }
-                } else if (e.request) {
-                    // Error sin respuesta (puede ser problema de red)
-                    this.$toast.error("No se recibió respuesta del servidor.");
-                    console.error("Request sin respuesta:", e.request);
-                } else {
-                    // Otro tipo de error
-                    this.$toast.error(`Error: ${e.message}`);
-                }
-            }
-
-            /* catch (e) {
                 console.log(e);
                 const {
                     data: { message }
                 } = e.response;
                 this.$toast.error(message);
                 this.loading = false;
-            } */
+            }
             if (this.lector_barcode) {
                 this.$refs.input_barcode.focus();
                 this.item_for_barcode = null;
@@ -3116,42 +3055,13 @@ export default {
 
                 this.loading = false;
             } catch (e) {
-                this.loading = false;
-                console.error("Error completo:", e);
-
-                if (e.response) {
-                    const { status, data } = e.response;
-
-                    // Si Laravel lanza una excepción con mensaje claro
-                    if (data && data.message) {
-                        this.$toast.error(`Error ${status}: ${data.message}`);
-                    } else if (data) {
-                        // En caso de que haya más información
-                        this.$toast.error(
-                            `Error ${status}: ${JSON.stringify(data)}`
-                        );
-                    } else {
-                        // Error sin datos
-                        this.$toast.error(`Error ${status}: Error desconocido`);
-                    }
-                } else if (e.request) {
-                    // Error sin respuesta (puede ser problema de red)
-                    this.$toast.error("No se recibió respuesta del servidor.");
-                    console.error("Request sin respuesta:", e.request);
-                } else {
-                    // Otro tipo de error
-                    this.$toast.error(`Error: ${e.message}`);
-                }
-            }
-
-            /* catch (e) {
                 console.log(e);
                 const {
                     data: { message }
                 } = e.response;
                 this.$toast.error(message);
                 this.loading = false;
-            } */
+            }
             if (this.lector_barcode) {
                 this.$refs.input_barcode.focus();
                 this.item_for_barcode = null;
@@ -3344,7 +3254,7 @@ export default {
                     company_name,
                     etiqueta,
                     establishment,
-                    configuration
+                    configuration,
                 } = response.data;
                 this.establishment = establishment;
                 this.codes = codigos;
