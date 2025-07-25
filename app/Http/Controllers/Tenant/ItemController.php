@@ -1839,7 +1839,7 @@ class ItemController extends Controller
 
                     for ($i = 0; $i < $warehouse_stock->stock - $existing_codes; $i++) {
                         $code_number = str_pad($start_number + $i, 3, '0', STR_PAD_LEFT);
-                        $code_barcode = $item->internal_id . '-' . $code_number;
+                        $code_barcode = $item->internal_id . $code_number;
 
                         // Evitar duplicados verificando item_id y warehouse_id
                         if (!ItemCodes::where('code_barcode', $code_barcode)
