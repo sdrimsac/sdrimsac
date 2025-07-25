@@ -3116,13 +3116,42 @@ export default {
 
                 this.loading = false;
             } catch (e) {
+                this.loading = false;
+                console.error("Error completo:", e);
+
+                if (e.response) {
+                    const { status, data } = e.response;
+
+                    // Si Laravel lanza una excepción con mensaje claro
+                    if (data && data.message) {
+                        this.$toast.error(`Error ${status}: ${data.message}`);
+                    } else if (data) {
+                        // En caso de que haya más información
+                        this.$toast.error(
+                            `Error ${status}: ${JSON.stringify(data)}`
+                        );
+                    } else {
+                        // Error sin datos
+                        this.$toast.error(`Error ${status}: Error desconocido`);
+                    }
+                } else if (e.request) {
+                    // Error sin respuesta (puede ser problema de red)
+                    this.$toast.error("No se recibió respuesta del servidor.");
+                    console.error("Request sin respuesta:", e.request);
+                } else {
+                    // Otro tipo de error
+                    this.$toast.error(`Error: ${e.message}`);
+                }
+            }
+
+            /* catch (e) {
                 console.log(e);
                 const {
                     data: { message }
                 } = e.response;
                 this.$toast.error(message);
                 this.loading = false;
-            }
+            } */
             if (this.lector_barcode) {
                 this.$refs.input_barcode.focus();
                 this.item_for_barcode = null;
