@@ -7,16 +7,6 @@
                     <h6>
                         <span>Etiquetas</span>
                     </h6>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <span class="text-muted"
-                                >Preparación de etiquetas codigo familia</span
-                            >
-                        </li>
-                    </ol>
                 </div>
             </div>
         </div>
@@ -31,141 +21,147 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="row">
-                            <div
-                                class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center mb-2 mx-auto image-upload-container"
-                                style="border: 2px solid #000; border-radius: 4px;"
-                            >
-                                <br />
-                                <div
-                                    style="width: 150px; height: 100px;"
-                                    class="d-flex justify-content-center align-items-center"
-                                >
-                                    <template v-if="imageSaved">
-                                        <img
-                                            :src="imageSaved"
-                                            alt="imagen"
-                                            class="img-thumbnail"
-                                            style="width: 150%; height: 100%; object-fit: contain;"
-                                        />
-                                    </template>
-                                    <template v-else>
-                                        <el-empty :image-size="100"></el-empty>
-                                    </template>
-                                </div>
-                                <br />
-                                <div class="button-container">
-                                    <el-button
-                                        class="m-2"
-                                        type="primary"
-                                        @click="$refs.file.click()"
-                                        >Subir imagen</el-button
-                                    >
-                                    <el-button
-                                        v-if="imageSaved"
-                                        class="m-2"
-                                        type="danger"
-                                        @click="delete_image"
-                                    >
-                                        <i class="el-icon-delete"></i>
-                                    </el-button>
-                                    <p>
-                                        <em
-                                            >Reconemdado JPG, PNG, JPEG |
-                                            150x150</em
-                                        >
-                                    </p>
-                                    <input
-                                        accept="image/png, image/jpeg, image/jpg"
-                                        type="file"
-                                        @change="changeImage"
-                                        ref="file"
-                                        style="display: none"
-                                    />
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div
-                                    class="d-flex flex-column align-items-center justify-content-center mt-1 text-center"
-                                >
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
                                     <div
-                                        class="d-flex flex-row align-items-center mb-3 column-option"
+                                        class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex flex-column justify-content-center align-items-center mb-2 mx-auto image-upload-container"
+                                        style="border: 2px solid #000; border-radius: 4px;"
                                     >
+                                        <br />
                                         <div
-                                            role="button"
-                                            style="min-height:70px; width: 200px;"
-                                            @click="changePaper(1)"
-                                            :class="
-                                                `d-flex justify-content-center align-items-center rounded m-2 ${
-                                                    paperType == 1
-                                                        ? 'text-white bg-primary'
-                                                        : 'border bg-white'
-                                                }`
-                                            "
+                                            style="width: 150px; height: 100px;"
+                                            class="d-flex justify-content-center align-items-center"
                                         >
-                                            1 Columna x Etiqueta
+                                            <template v-if="imageSaved">
+                                                <img
+                                                    :src="imageSaved"
+                                                    alt="imagen"
+                                                    class="img-thumbnail"
+                                                    style="width: 150%; height: 100%; object-fit: contain;"
+                                                />
+                                            </template>
+                                            <template v-else>
+                                                <el-empty
+                                                    :image-size="100"
+                                                ></el-empty>
+                                            </template>
                                         </div>
-                                        <div class="ml-3">
-                                            <img
-                                                src="/storage/etiquetas/1.png"
-                                                alt="Column preview"
-                                                style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
+                                        <br />
+                                        <div class="button-container">
+                                            <el-button
+                                                class="m-2"
+                                                type="primary"
+                                                @click="$refs.file.click()"
+                                                >Subir imagen</el-button
+                                            >
+                                            <el-button
+                                                v-if="imageSaved"
+                                                class="m-2"
+                                                type="danger"
+                                                @click="delete_image"
+                                            >
+                                                <i class="el-icon-delete"></i>
+                                            </el-button>
+                                            <p>
+                                                <em
+                                                    >Reconemdado JPG, PNG, JPEG
+                                                    | 150x150</em
+                                                >
+                                            </p>
+                                            <input
+                                                accept="image/png, image/jpeg, image/jpg"
+                                                type="file"
+                                                @change="changeImage"
+                                                ref="file"
+                                                style="display: none"
                                             />
                                         </div>
                                     </div>
-                                    <div
-                                        class="d-flex flex-row align-items-center mb-3 column-option"
-                                    >
+                                    <div class="col-md-12">
                                         <div
-                                            role="button"
-                                            style="min-height:70px; width: 200px;"
-                                            @click="changePaper(2)"
-                                            :class="
-                                                `d-flex justify-content-center align-items-center rounded m-2 ${
-                                                    paperType == 2
-                                                        ? 'text-white bg-primary'
-                                                        : 'border text-black bg-white'
-                                                }`
-                                            "
+                                            class="d-flex flex-column align-items-center justify-content-center mt-1 text-center"
                                         >
-                                            2 Columnas x Etiqueta
-                                        </div>
-                                        <div class="ml-3">
-                                            <img
-                                                src="/storage/etiquetas/2.png"
-                                                alt="Column preview"
-                                                style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex flex-row align-items-center mb-3 column-option"
-                                    >
-                                        <div
-                                            role="button"
-                                            style="min-height:70px; width: 200px;"
-                                            @click="
-                                                $message.warning(
-                                                    'No disponible Por el momento'
-                                                )
-                                            "
-                                            title="En desarrollo"
-                                            :class="
-                                                `d-flex justify-content-center align-items-center rounded m-2 ${
-                                                    paperType == 3
-                                                        ? 'text-white bg-primary'
-                                                        : 'border bg-white'
-                                                }`
-                                            "
-                                        >
-                                            3 Columnas x Etiqueta
-                                        </div>
-                                        <div class="ml-3">
-                                            <img
-                                                src="/storage/etiquetas/3.png"
-                                                alt="Column preview"
-                                                style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
-                                            />
+                                            <div
+                                                class="d-flex flex-row align-items-center mb-3 column-option"
+                                            >
+                                                <div
+                                                    role="button"
+                                                    style="min-height:70px; width: 200px;"
+                                                    @click="changePaper(1)"
+                                                    :class="
+                                                        `d-flex justify-content-center align-items-center rounded m-2 ${
+                                                            paperType == 1
+                                                                ? 'text-white bg-primary'
+                                                                : 'border bg-white'
+                                                        }`
+                                                    "
+                                                >
+                                                    1 Columna x Etiqueta
+                                                </div>
+                                                <div class="ml-3">
+                                                    <img
+                                                        src="/storage/etiquetas/1.png"
+                                                        alt="Column preview"
+                                                        style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex flex-row align-items-center mb-3 column-option"
+                                            >
+                                                <div
+                                                    role="button"
+                                                    style="min-height:70px; width: 200px;"
+                                                    @click="changePaper(2)"
+                                                    :class="
+                                                        `d-flex justify-content-center align-items-center rounded m-2 ${
+                                                            paperType == 2
+                                                                ? 'text-white bg-primary'
+                                                                : 'border text-black bg-white'
+                                                        }`
+                                                    "
+                                                >
+                                                    2 Columnas x Etiqueta
+                                                </div>
+                                                <div class="ml-3">
+                                                    <img
+                                                        src="/storage/etiquetas/2.png"
+                                                        alt="Column preview"
+                                                        style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex flex-row align-items-center mb-3 column-option"
+                                            >
+                                                <div
+                                                    role="button"
+                                                    style="min-height:70px; width: 200px;"
+                                                    @click="
+                                                        $message.warning(
+                                                            'No disponible Por el momento'
+                                                        )
+                                                    "
+                                                    title="En desarrollo"
+                                                    :class="
+                                                        `d-flex justify-content-center align-items-center rounded m-2 ${
+                                                            paperType == 3
+                                                                ? 'text-white bg-primary'
+                                                                : 'border bg-white'
+                                                        }`
+                                                    "
+                                                >
+                                                    3 Columnas x Etiqueta
+                                                </div>
+                                                <div class="ml-3">
+                                                    <img
+                                                        src="/storage/etiquetas/3.png"
+                                                        alt="Column preview"
+                                                        style="width: 150px; height: 100px; border: 2px solid #000; border-radius: 4px;"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -194,8 +190,93 @@
                                         class="el-input el-input-group el-input-group--append mb-2"
                                     >
                                         <!-- Product Search Header -->
-                                        <div class="product-search-header mb-3">
-                                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <el-button
+                                                            class="bg-primary text-white"
+                                                            @click="createItem"
+                                                        >
+                                                            crear nuevo producto
+                                                        </el-button>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <el-button
+                                                            class="bg-success text-white"
+                                                            @click.prevent="
+                                                                clickCreate(
+                                                                    'input'
+                                                                )
+                                                            "
+                                                        >
+                                                            cargar stock inicial
+                                                        </el-button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for=""
+                                                            >Codigo
+                                                            Inicial</label
+                                                        >
+                                                        <el-select
+                                                            v-if="
+                                                                selectedItem &&
+                                                                    selectedItem
+                                                                        .barras
+                                                                        .length
+                                                            "
+                                                            v-model="
+                                                                codigoDesde
+                                                            "
+                                                            placeholder="Desde código"
+                                                            clearable
+                                                            filterable
+                                                        >
+                                                            <el-option
+                                                                v-for="code in selectedItem.barras"
+                                                                :key="code"
+                                                                :value="code"
+                                                                :label="code"
+                                                            ></el-option>
+                                                        </el-select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for=""
+                                                            >Codigo final</label
+                                                        >
+                                                        <el-select
+                                                            v-if="
+                                                                selectedItem &&
+                                                                    selectedItem
+                                                                        .barras
+                                                                        .length
+                                                            "
+                                                            v-model="
+                                                                codigoHasta
+                                                            "
+                                                            placeholder="Hasta código"
+                                                            clearable
+                                                            filterable
+                                                        >
+                                                            <el-option
+                                                                v-for="code in selectedItem.barras.filter(
+                                                                    c =>
+                                                                        c >=
+                                                                        codigoDesde
+                                                                )"
+                                                                :key="code"
+                                                                :value="code"
+                                                                :label="code"
+                                                            ></el-option>
+                                                        </el-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="product-search-header mb-3">
+                                            <div
+                                                class="d-flex flex-wrap gap-2 mb-2"
+                                            >
                                                 <el-button
                                                     class="bg-primary text-white"
                                                     @click="createItem"
@@ -204,42 +285,17 @@
                                                 </el-button>
                                                 <el-button
                                                     class="bg-success text-white"
-                                                    @click.prevent="clickCreate('input')"
+                                                    @click.prevent="
+                                                        clickCreate('input')
+                                                    "
                                                 >
                                                     cargar stock inicial
                                                 </el-button>
-
-                                                <label for="">Filtro 1</label>
-                                                <el-select
-                                                    v-model="filter1"
-                                                    @change="searchItems"
-                                                    placeholder="Seleccione filtro 1"
-                                                    style="width: 200px"
-                                                >
-                                                    <el-option
-                                                        v-for="option in filters1"
-                                                        :key="option.value"
-                                                        :value="option.value"
-                                                    >{{ option.text }}</el-option>
-                                                </el-select>
-
-                                                <label for="">Filtro 2</label>
-                                                <el-select
-                                                    v-model="filter2"
-                                                    @change="searchItems"
-                                                    placeholder="Seleccione filtro 2"
-                                                    style="width: 200px"
-                                                >
-                                                    <el-option
-                                                        v-for="option in filters2"
-                                                        :key="option.value"
-                                                        :value="option.value"
-                                                    >{{ option.text }}</el-option>
-                                                </el-select>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- Search and Stock Input -->
+                                        <br />
                                         <div class="search-stock-container">
                                             <div class="mb-2">
                                                 <div class="d-flex gap-2">
@@ -2511,6 +2567,11 @@ export default {
     components: { FormWord, ItemsForm, InventoriesForm },
     data() {
         return {
+            items: [],
+            product_id: null,
+            selectedItem: null,
+            codigoDesde: null,
+            codigoHasta: null,
             typeTransaction: null,
             showDialog: false,
             showDialogNewItem: false,
@@ -2728,6 +2789,24 @@ export default {
         }
     },
     methods: {
+        changeItem(id) {
+            const item = this.items.find(i => i.id === id);
+            this.selectedItem = item || null;
+            // ...otros cambios si es necesario
+        },
+        getCodigosFiltrados() {
+            if (!this.selectedItem || !this.codigoDesde || !this.codigoHasta)
+                return [];
+
+            const codigos = this.selectedItem.barras;
+            const desdeIdx = codigos.indexOf(this.codigoDesde);
+            const hastaIdx = codigos.indexOf(this.codigoHasta);
+
+            if (desdeIdx === -1 || hastaIdx === -1 || desdeIdx > hastaIdx)
+                return [];
+
+            return codigos.slice(desdeIdx, hastaIdx + 1);
+        },
         stockReal(quantity) {
             console.log("🚀 ~ stockReal ~ newItem", quantity);
             this.quantity = quantity;
@@ -3108,10 +3187,17 @@ export default {
                 this.quantity = this.quantityToPaper(this.quantity);
                 const config = { responseType: "blob" };
 
-                // Asegurarse de que barras sea un array
-                const barcodesArray = Array.isArray(this.product.barras)
-                    ? this.product.barras
-                    : [this.product.barras];
+                // Usar los códigos filtrados si hay filtro, si no, todos los códigos
+                let barcodesArray = [];
+                if (this.codigoDesde && this.codigoHasta && this.selectedItem && Array.isArray(this.selectedItem.barras)) {
+                    barcodesArray = this.getCodigosFiltrados();
+                }
+                if (!barcodesArray || barcodesArray.length === 0) {
+                    // Si no hay filtro, usar todos los códigos
+                    barcodesArray = Array.isArray(this.product.barras)
+                        ? this.product.barras
+                        : [this.product.barras];
+                }
                 // Convertir el array de códigos en una cadena separada por comas y codificarla
                 const barcodesParam = barcodesArray
                     .map(code => encodeURIComponent(code))
@@ -3190,9 +3276,16 @@ export default {
                 const config = { responseType: "blob" };
 
                 // Asegurarse de que barras sea un array
-                const barcodesArray = Array.isArray(this.product.barras)
-                    ? this.product.barras
-                    : [this.product.barras];
+                let barcodesArray = [];
+                if (this.codigoDesde && this.codigoHasta && this.selectedItem && Array.isArray(this.selectedItem.barras)) {
+                    barcodesArray = this.getCodigosFiltrados();
+                }
+                if (!barcodesArray || barcodesArray.length === 0) {
+                    // Si no hay filtro, usar todos los códigos
+                    barcodesArray = Array.isArray(this.product.barras)
+                        ? this.product.barras
+                        : [this.product.barras];
+                }
                 // Convertir el array de códigos en una cadena separada por comas y codificarla
                 const barcodesParam = barcodesArray
                     .map(code => encodeURIComponent(code))
@@ -3452,17 +3545,16 @@ export default {
         },
 
         changeItem() {
-            this.product = this.items.find(i => i.id == this.product_id);
+            // Recibe opcionalmente un id, si no lo recibe usa this.product_id
+            let id = arguments.length > 0 ? arguments[0] : this.product_id;
+            const item = this.items.find(i => i.id === id);
+            this.product = item || {};
+            this.selectedItem = item || null;
 
-            if (!this.product) {
-                console.error(
-                    "Producto no encontrado en items:",
-                    this.product_id
-                );
+            if (!item) {
+                console.error("Producto no encontrado en items:", id);
                 return;
             }
-
-            /* console.log("ver los productos si llegan", this.product); */
 
             this.generateBarcode(this.product.barras);
             if (this.product.barras) {
