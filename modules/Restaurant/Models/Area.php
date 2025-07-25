@@ -160,17 +160,50 @@ class Area extends ModelTenant
             return null;
         }
     }
-    public static function getZoneEstablishment($id)
+    /* public static function getZoneEstablishment($id)
     {
         $establishment_id = auth()->user()->establishment_id;
         $area = Area::where('id', $id)->first();
         if (!$area) return null;
+        if (strtoupper(trim($area->description)) == 'PARRILLA') {
+            return $id;
+        }
         $description = $area->description;
         $description = explode(" ", $description);
         $description = $description[0];
         $area_establishment = Area::where('establishment_id', $establishment_id)
             ->where('description', 'like', '%' . $description . '%')
             ->first();
+        if ($area_establishment) {
+            return $area_establishment->id;
+        } else {
+            return null;
+        }
+    } */
+
+    public static function getZoneEstablishment($id)
+    {
+        Log::info("Entró a getZoneEstablishment con id: $id");
+        $establishment_id = auth()->user()->establishment_id;
+        $area = Area::where('id', $id)->first();
+        if (!$area) return null;
+
+        // Caso especial: si es PARRILLA, se devuelve directamente el mismo ID
+        if (strtoupper(trim(preg_replace('/\s+/', ' ', $area->description))) === 'PARRILLA') {
+            Log::info("Área detectada como PARRILLA, devolviendo ID: $id");
+            return $id;
+        }
+
+        // Extraer la primera palabra de la descripción
+        $description = $area->description;
+        $description = explode(" ", $description);
+        $description = $description[0];
+
+        // Buscar otra área en el mismo establecimiento con esa palabra
+        $area_establishment = Area::where('establishment_id', $establishment_id)
+            ->where('description', 'like', '%' . $description . '%')
+            ->first();
+
         if ($area_establishment) {
             return $area_establishment->id;
         } else {
