@@ -195,9 +195,7 @@
                                     >
                                         <!-- Product Search Header -->
                                         <div class="product-search-header mb-3">
-                                            <div
-                                                class="d-flex flex-wrap gap-2 mb-2"
-                                            >
+                                            <div class="d-flex flex-wrap gap-2 mb-2">
                                                 <el-button
                                                     class="bg-primary text-white"
                                                     @click="createItem"
@@ -206,12 +204,38 @@
                                                 </el-button>
                                                 <el-button
                                                     class="bg-success text-white"
-                                                    @click.prevent="
-                                                        clickCreate('input')
-                                                    "
+                                                    @click.prevent="clickCreate('input')"
                                                 >
                                                     cargar stock inicial
                                                 </el-button>
+
+                                                <label for="">Filtro 1</label>
+                                                <el-select
+                                                    v-model="filter1"
+                                                    @change="searchItems"
+                                                    placeholder="Seleccione filtro 1"
+                                                    style="width: 200px"
+                                                >
+                                                    <el-option
+                                                        v-for="option in filters1"
+                                                        :key="option.value"
+                                                        :value="option.value"
+                                                    >{{ option.text }}</el-option>
+                                                </el-select>
+
+                                                <label for="">Filtro 2</label>
+                                                <el-select
+                                                    v-model="filter2"
+                                                    @change="searchItems"
+                                                    placeholder="Seleccione filtro 2"
+                                                    style="width: 200px"
+                                                >
+                                                    <el-option
+                                                        v-for="option in filters2"
+                                                        :key="option.value"
+                                                        :value="option.value"
+                                                    >{{ option.text }}</el-option>
+                                                </el-select>
                                             </div>
                                         </div>
 
@@ -3083,12 +3107,16 @@ export default {
                 this.loading = true;
                 this.quantity = this.quantityToPaper(this.quantity);
                 const config = { responseType: "blob" };
-                
+
                 // Asegurarse de que barras sea un array
-                const barcodesArray = Array.isArray(this.product.barras) ? this.product.barras : [this.product.barras];
+                const barcodesArray = Array.isArray(this.product.barras)
+                    ? this.product.barras
+                    : [this.product.barras];
                 // Convertir el array de códigos en una cadena separada por comas y codificarla
-                const barcodesParam = barcodesArray.map(code => encodeURIComponent(code)).join(',');
-                
+                const barcodesParam = barcodesArray
+                    .map(code => encodeURIComponent(code))
+                    .join(",");
+
                 let endPoint = `codes/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${this.price1}&price2=${
@@ -3160,12 +3188,16 @@ export default {
                 this.loading = true;
                 this.quantity = this.quantityToPaper(this.quantity);
                 const config = { responseType: "blob" };
-                
+
                 // Asegurarse de que barras sea un array
-                const barcodesArray = Array.isArray(this.product.barras) ? this.product.barras : [this.product.barras];
+                const barcodesArray = Array.isArray(this.product.barras)
+                    ? this.product.barras
+                    : [this.product.barras];
                 // Convertir el array de códigos en una cadena separada por comas y codificarla
-                const barcodesParam = barcodesArray.map(code => encodeURIComponent(code)).join(',');
-                
+                const barcodesParam = barcodesArray
+                    .map(code => encodeURIComponent(code))
+                    .join(",");
+
                 let endPoint = `codes/generate?stock=${
                     this.quantity
                 }&salecode=${this.sale_code}&price1=${this.price1}&price2=${

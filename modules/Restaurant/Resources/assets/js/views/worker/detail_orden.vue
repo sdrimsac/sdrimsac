@@ -558,8 +558,8 @@ export default {
         },
         clickCommand(type) {
             console.log("clickCommand called with type:", type);
-            console.log("Current listFoods:", this.listFoods);
-            let idxFood = this.listFoods.findIndex(
+            console.log("Current foods:", this.foods);
+            let idxFood = this.foods.findIndex(
                 food => food.item.id == type.item_id
             );
             console.log("Index found:", idxFood);

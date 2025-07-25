@@ -301,7 +301,19 @@ class CodesController extends Controller
             // Si el formato/papel requiere 2 columnas, agrupar los códigos de barra de 2 en 2
             $isTwoColumns = ($paper == 2); // Ajusta esta condición según tu lógica real de columnas
             if ($isTwoColumns) {
+                // Si la cantidad de códigos es impar, replica el último código
+                if (count($barcodes) % 2 !== 0) {
+                    $barcodes[] = $barcodes[count($barcodes) - 1];
+                }
                 for ($i = 0; $i < count($barcodes); $i += 2) {
+
+                    Log::info('Generando página 2 columnas', [
+                        'i' => $i,
+                        'barcode1' => $barcodes[$i] ?? null,
+                        'barcode2' => $barcodes[$i + 1] ?? null,
+                        'description' => $description,
+                        'template' => $template,
+                    ]);
                     if ($i > 0) {
                         $pdf->AddPage();
                     }
@@ -311,11 +323,24 @@ class CodesController extends Controller
                     $currentStock2 = 1;
                     // Validar que al menos uno de los códigos existe
                     if (empty($currentBarcode1) && empty($currentBarcode2)) {
+
+                        Log::error('No se encontraron códigos para imprimir en esta página', [
+                            'i' => $i,
+                            'barcode1' => $currentBarcode1,
+                            'barcode2' => $currentBarcode2,
+                        ]);
                         throw new Exception('No se encontraron códigos para imprimir en esta página.');
                     }
                     if (!$record) {
+                        Log::error('No se encontró el producto con la descripción proporcionada', [
+                            'description' => $description,
+                        ]);
                         throw new Exception('No se encontró el producto con la descripción proporcionada.');
                     }
+                    Log::info('Renderizando vista etiquetas::codes.' . $template, [
+                        'barcode1' => $currentBarcode1,
+                        'barcode2' => $currentBarcode2,
+                    ]);
                     $html = view('etiquetas::codes.' . $template, compact(
                         'type',
                         'record',
