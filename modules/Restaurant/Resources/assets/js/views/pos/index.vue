@@ -21,85 +21,86 @@
             margin-top: 10px;
             "
         >
-            <div
-                class="card-body bg-tertiary rounded w-100"
-                style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;"
-            >
-                <div class="row align-items-center">
-                    <!-- límite de monto para venta de CPE -->
-                    <div class="col-5">
-                        <div class="col-12" v-if="limitAmount">
-                            <div
-                                :class="[
-                                    `alert alert-${limitAmount.color}`,
-                                    'pos-alert-warning'
-                                ]"
-                                style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;"
-                            >
-                                <i
-                                    class="fas fa-exclamation-triangle me-2"
-                                    style="font-size: 1.3em; color: #ff9800;"
-                                ></i>
-                                <p
-                                    style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;"
-                                    :class="{
-                                        'blink-alert-text':
-                                            limitAmount.tipo === 'critico'
-                                    }"
-                                >
-                                    {{ limitAmount.mensaje }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2 text-white text-end">
-                        <el-tooltip
-                            content="Tiempo restante para refrescar la pantalla"
-                            placement="top"
+        <div
+            class="card-body bg-tertiary rounded w-100"
+            style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;"
+            v-if="screenWidth > 678"
+        >
+            <div class="row align-items-center">
+                <!-- límite de monto para venta de CPE -->
+                <div class="col-5">
+                    <div class="col-12" v-if="limitAmount">
+                        <div
+                            :class="[
+                                `alert alert-${limitAmount.color}`,
+                                'pos-alert-warning'
+                            ]"
+                            style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;"
                         >
-                            <button class="btn btn-success" type="button">
-                                <i class="fas fa-clock"></i>
-
-                                {{ formattedCountdown }}
-                            </button>
-                        </el-tooltip>
-                    </div>
-                    <div class="col-2 text-white text-center">
-                        <el-tooltip
-                            content="Estado de Estabilidad de Internet"
-                            placement="top"
-                        >
-                            <button
-                                class="btn"
-                                type="button"
-                                :style="{
-                                    backgroundColor: getPingBackground(),
-                                    color: 'white'
+                            <i
+                                class="fas fa-exclamation-triangle me-2"
+                                style="font-size: 1.3em; color: #ff9800;"
+                            ></i>
+                            <p
+                                style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;"
+                                :class="{
+                                    'blink-alert-text':
+                                        limitAmount.tipo === 'critico'
                                 }"
                             >
-                                Internet
-
-                                <i class="fas fa-wifi"></i>
-                                <span style="color: white;"
-                                    >{{ latencia }} ms</span
-                                >
-                            </button>
-                        </el-tooltip>
-                    </div>
-                    <div class="col-3 text-white text-end">
-                        {{
-                            new Date()
-                                .toLocaleDateString("es-ES", {
-                                    weekday: "long",
-                                    day: "numeric",
-                                    month: "long"
-                                })
-                                .replace(/^\w/, c => c.toUpperCase())
-                        }}
-                        {{ new Date().getFullYear() }}
+                                {{ limitAmount.mensaje }}
+                            </p>
+                        </div>
                     </div>
                 </div>
+                <div class="col-2 text-white text-end">
+                    <el-tooltip
+                        content="Tiempo restante para refrescar la pantalla"
+                        placement="top"
+                    >
+                        <button class="btn btn-success" type="button">
+                            <i class="fas fa-clock"></i>
+
+                            {{ formattedCountdown }}
+                        </button>
+                    </el-tooltip>
+                </div>
+                <div class="col-2 text-white text-center">
+                    <el-tooltip
+                        content="Estado de Estabilidad de Internet"
+                        placement="top"
+                    >
+                        <button
+                            class="btn"
+                            type="button"
+                            :style="{
+                                backgroundColor: getPingBackground(),
+                                color: 'white'
+                            }"
+                        >
+                            Internet
+
+                            <i class="fas fa-wifi"></i>
+                            <span style="color: white;"
+                                >{{ latencia }} ms</span
+                            >
+                        </button>
+                    </el-tooltip>
+                </div>
+                <div class="col-3 text-white text-end">
+                    {{
+                        new Date()
+                            .toLocaleDateString("es-ES", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long"
+                            })
+                            .replace(/^\w/, c => c.toUpperCase())
+                    }}
+                    {{ new Date().getFullYear() }}
+                </div>
             </div>
+        </div>
         </div>
         <!-- Alerta de límite de monto para venta de CPE -->
         <!-- <div class="row" v-if="limitAmount">
