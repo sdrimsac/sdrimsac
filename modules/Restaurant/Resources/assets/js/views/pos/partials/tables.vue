@@ -61,7 +61,7 @@
                     :class="
                         `btn ${
                             zone_id == zone.id
-                                ? 'btn-primary text-Success'
+                                ? 'btn-success text-white'
                                 : 'btn-primary'
                         }`
                     "

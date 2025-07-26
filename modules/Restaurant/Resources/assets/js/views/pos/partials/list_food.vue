@@ -1711,6 +1711,7 @@ export default {
             selectSerie = false,
             categoria = null,
             color_size = []
+            
         ) {
             if (!this.canAddItem) {
                 this.$showSAlert(
@@ -1735,10 +1736,44 @@ export default {
                 );
                 return;
             }
+
+            /* let foodItem = this.listFoods[index]?.item;
+            if (foodItem && foodItem.codes_family) {
+                if (!this.barcode) {
+                    this.$message.error('Este producto solo puede ser seleccionado escaneando un código de barra de familia activo.');
+                    return;
+                }
+                // Buscar el item de la familia por el código escaneado
+                let validFamilyItem = null;
+                if (Array.isArray(foodItem.codes_family_items)) {
+                    validFamilyItem = foodItem.codes_family_items.find(i => i.code === this.barcode && i.active == 1);
+                }
+                if (!validFamilyItem) {
+                    this.$message.error('El código de familia escaneado no es válido o no está activo para este producto.');
+                    return;
+                }
+            } */
+
+            // Validar si el item requiere código de familia y solo permitir agregar si barcode es válido
+            
+
             this.selectedFood = JSON.parse(
                 JSON.stringify(this.listFoods[index])
             );
             if (!this.selectedFood) return;
+
+            // Si el producto tiene item_codes y hay barcode, solo pasar el code_barcode escaneado
+            if (
+                this.selectedFood.item &&
+                Array.isArray(this.selectedFood.item.item_codes) &&
+                this.barcode
+            ) {
+                const foundCode = this.selectedFood.item.item_codes.find(c => c.code_barcode === this.barcode);
+                if (foundCode) {
+                    this.selectedFood.item.item_codes = [foundCode];
+                    this.selectedFood.item.code_barcode = this.barcode;
+                }
+            }
 
             let { categoria_madera_item } = this.selectedFood;
             if (
