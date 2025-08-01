@@ -170,6 +170,27 @@ class TableController extends Controller
         return compact('tables', 'zones');
     }
 
+    public function get_tables_delivery()
+    {
+        ini_set('memory_limit', '2500M');
+
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+        $this->checkTables($establishment_id);
+
+        $tables = Table::where('is_room', false)
+            ->where('has_billar', false)
+            ->where('is_delivery', 1)
+            ->where(function ($query) use ($establishment_id) {
+                $query->where('establishment_id', $establishment_id)
+                      ->orWhereNull('establishment_id');
+            })
+            ->get();
+
+        $zones = Zone::where('active', true)->get();
+        return compact('tables', 'zones');
+    }
+
     public function tables_zones(Request $request)
     {
         $configuration = Configuration::first();
@@ -413,12 +434,15 @@ class TableController extends Controller
         $id = $request->input('id');
         $data = $request->all();
         
-        // Convert is_cleaning to boolean
+        // Convert is_cleaning, has_frigobar, is_delivery to boolean (0/1)
         if (isset($data['is_cleaning'])) {
             $data['is_cleaning'] = filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
         if (isset($data['has_frigobar'])) {
             $data['has_frigobar'] = filter_var($data['has_frigobar'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+        if (isset($data['is_delivery'])) {
+            $data['is_delivery'] = filter_var($data['is_delivery'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
         $table = Table::firstOrNew(['id' => $id]);

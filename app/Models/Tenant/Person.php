@@ -9,7 +9,7 @@ use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Catalogs\Province;
 use Hyn\Tenancy\Traits\UsesTenantConnection;
-
+use Modules\Restaurant\Models\CustomerAddresses;
 
 class Person extends ModelTenant
 {
@@ -226,9 +226,9 @@ class Person extends ModelTenant
     {
         $person = Person::find($id);
         $zone_id = $person->client_zone_id;
-        if($zone_id){
+        if ($zone_id) {
             $zone = ClientZone::find($zone_id);
-            if($zone){
+            if ($zone) {
                 return $zone->description;
             }
         }
@@ -271,6 +271,10 @@ class Person extends ModelTenant
     {
         return $this->belongsTo(PersonParient::class, 'parient_id');
     }
+    public function addressesCustomer()
+    {
+        return $this->hasMany(CustomerAddresses::class, 'customer_id');
+    }
 
     public static function getIdClientesVariosOrCreate()
     {
@@ -298,7 +302,8 @@ class Person extends ModelTenant
     public function district()
     {
         return $this->belongsTo(District::class);
-    }    /**
+    }
+    /**
      * Get location data with lazy loading if needed
      *
      * @return array Location data including country, department, province and district
@@ -307,15 +312,15 @@ class Person extends ModelTenant
     {
         // Load relations if not already loaded, but only select the fields we need
         $locationEntities = ['country', 'department', 'province', 'district'];
-        
+
         foreach ($locationEntities as $entity) {
-            if (!$this->relationLoaded($entity) && $this->{$entity.'_id'}) {
-                $this->load([$entity => function($query) {
+            if (!$this->relationLoaded($entity) && $this->{$entity . '_id'}) {
+                $this->load([$entity => function ($query) {
                     $query->select('id', 'description', 'active');
                 }]);
             }
         }
-        
+
         return [
             'country' => $this->country ? [
                 'id' => $this->country->id,
@@ -342,37 +347,38 @@ class Person extends ModelTenant
     public function scopeWhereType($query, $type)
     {
         return $query->where('type', $type);
-    }    public function getAddressFullAttribute()
+    }
+    public function getAddressFullAttribute()
     {
         $address = trim($this->address);
         $address = ($address === '-' || $address === '') ? '' : $address . ' ,';
         if ($address === '') {
             return '';
         }
-        
+
         // Load only necessary fields for location models
         if (!$this->relationLoaded('department') && $this->department_id) {
-            $this->load(['department' => function($query) {
+            $this->load(['department' => function ($query) {
                 $query->select('id', 'description');
             }]);
         }
-        
+
         if (!$this->relationLoaded('province') && $this->province_id) {
-            $this->load(['province' => function($query) {
+            $this->load(['province' => function ($query) {
                 $query->select('id', 'description');
             }]);
         }
-        
+
         if (!$this->relationLoaded('district') && $this->district_id) {
-            $this->load(['district' => function($query) {
+            $this->load(['district' => function ($query) {
                 $query->select('id', 'description');
             }]);
         }
-        
+
         $dept = $this->department ? $this->department->description : '';
         $prov = $this->province ? $this->province->description : '';
         $dist = $this->district ? $this->district->description : '';
-        
+
         return "{$address} {$dept} - {$prov} - {$dist}";
     }
 

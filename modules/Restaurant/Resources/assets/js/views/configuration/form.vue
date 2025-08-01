@@ -365,12 +365,25 @@
                                 ></small>
                             </div>
                         </div>
+                        <div class="col-md-4"
+                        v-if="
+                                type == 'caja/tables'
+                            ">
+                            <label for="">Delivery</label>
+                            <el-checkbox
+                                    v-model="form.is_delivery"
+                                    label="Delivery"
+                                >
+                                    <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa para delivery?
+                                </el-checkbox>
+                        </div>
                         <template
                             v-if="
                                 type == 'caja/rooms' && all_services.length > 0
                             "
                         >
                             <div class="col-12 my-2">
+                                la
                                 <el-checkbox
                                     v-model="form.has_frigobar"
                                     label="Frigobar"
@@ -803,6 +816,7 @@ export default {
                 establishment_id: null,
                 area_id: null,
                 has_frigobar: false,
+                is_delivery: false,
                 description: null,
                 id: null,
                 description: null,
@@ -930,6 +944,7 @@ export default {
 
                 this.form = response.data.data;
                 this.form.images = [];
+                this.form.is_delivery = this.form.is_delivery == 1 || this.form.is_delivery == "1";
                 if (this.type === "caja/rooms") {
                     let { floor, description } = this.form;
                     this.detail = description;

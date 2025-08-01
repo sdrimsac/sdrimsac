@@ -368,6 +368,7 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/check', 'TableController@check');
         Route::get('tables/records', 'TableController@records');
         Route::get('tables/tables', 'TableController@get_tables');
+        Route::get('tables/get_tables_delivery', 'TableController@get_tables_delivery');
         Route::get('tables/tables-zone', 'TableController@tables_zones');
 
         Route::post('tables/store/{type}', 'TableController@store_zone');
@@ -407,6 +408,7 @@ Route::prefix('caja')->group(function () {
 
 
         Route::get('search_customers', [RestaurantController::class, 'search_customer']);
+        Route::get('search_customers/search_customer_delivery', [RestaurantController::class, 'search_customer_delivery']);
         Route::get('search_customer_by_id/{id}', [RestaurantController::class, 'search_customer_by_id']);
     });
     //VISTA TRABAJADORES

@@ -157,6 +157,60 @@ class RestaurantController extends Controller
 
         return compact('persons');
     }
+
+    public function search_customer_delivery(Request $request)
+    {
+        $configuration = Configuration::first();
+        $value = $request->value;
+        $parents = $request->parents;
+
+        $persons = Person::query();
+
+        $persons = $persons
+            ->where(function ($q) use ($value) {
+                $q->where('name', 'like', '%' . $value . '%')
+                    ->orWhere('alias', 'like', '%' . $value . '%')
+                    ->orWhere('number', 'like', '%' . $value . '%')
+                    ->orWhere('address', 'like', '%' . $value . '%');
+            })
+            ->whereType('customers')
+            ->whereIsEnabled()
+            ->orderBy('name')
+            ->with('addressesCustomer')
+            ->take(20)
+            ->get();
+
+        $persons = $persons->transform(function ($row) {
+            return [
+                'promotion_active_id' => null,
+                'students' => [],
+
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => optional($row->identity_document_type)->code,
+                'addressesCustomer' => $row->addressesCustomer->map(function ($address) {
+                    return [
+                        'id' => $address->id,
+                        'alias' => $address->alias,
+                        'address' => $address->address,
+                        'reference' => $address->reference,
+                        'telephone' => $address->telephone,
+                        'status' => $address->status,
+                    ];
+                }),
+                'addresses' => $row->addresses,
+                'address' => $row->address,
+                'seller_id' => $row->seller_id,
+                'phone' => $row->telephone,
+            ];
+        });
+
+        return compact('persons');
+    }
+
     public function workers_type_records()
     {
         $workers_type = WorkersType::all();
@@ -281,85 +335,6 @@ class RestaurantController extends Controller
                 $user->save();
             }
             $configuration = Configuration::first();
-
-            /* if ($configuration->user_unit) {
-
-                $existing = DB::connection('tenant')->table('user_sessions')
-                    ->where('user_id', $user->id)
-                    ->first();
-
-                $currentSessionId = Session::getId();
-
-                if ($existing) {
-                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > 5;
-
-                    if ($expired) {
-                        // Si ha expirado, elimina y continúa con el login
-                        DB::connection('tenant')->table('user_sessions')
-                            ->where('user_id', $user->id)
-                            ->delete();
-                    } elseif ($existing->session_id !== $currentSessionId) {
-                        Auth::logout();
-                        return response()->json([
-                            'success' => false,
-                            'session_conflict' => true,
-                            'message' => 'El usuario ya tiene una sesión activa.',
-                        ]);
-                    }
-                }
-
-                UserSession::updateOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'session_id' => $currentSessionId,
-                        'user_agent' => $request->header('User-Agent'),
-                        'last_activity' => now(),
-                    ]
-                );
-
-                $request->session()->put('user_id', $user->id);
-            } */
-
-            /* if ($configuration->user_unit) {
-
-                $existing = DB::connection('tenant')->table('user_sessions')
-                    ->where('user_id', $user->id)
-                    ->first();
-
-                $currentSessionId = Session::getId();
-                $currentUserAgent = $request->header('User-Agent');
-                $sessionLifetime = config('session.lifetime');
-
-                if ($existing) {
-                    $expired = now()->diffInMinutes($existing->last_activity ?? now()) > $sessionLifetime;
-                    $sameBrowser = $existing->tab_id === $browserToken;
-
-                    if ($expired || $sameBrowser) {
-                        DB::connection('tenant')->table('user_sessions')
-                            ->where('user_id', $user->id)
-                            ->delete();
-                    } else {
-                        Auth::logout();
-                        return response()->json([
-                            'success' => false,
-                            'session_conflict' => true,
-                            'message' => 'El usuario ya tiene una sesión activa en otro navegador o dispositivo.',
-                        ]);
-                    }
-                }
-
-                UserSession::updateOrCreate(
-                    ['user_id' => $user->id],
-                    [
-                        'session_id' => $currentSessionId,
-                        'user_agent' => $currentUserAgent,
-                        'last_activity' => now(),
-                        'tab_id' => $browserToken,
-                    ]
-                );
-
-                $request->session()->put('user_id', $user->id);
-            } */
 
             if ($configuration->user_unit) {
 

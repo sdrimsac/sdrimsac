@@ -52,7 +52,7 @@
                     <tr v-for="(ord, idx) in ordens" :key="idx">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td class="text-center">{{ ord.table }}</td>
-                        <td class="text-center">{{ ord.id }}</td>
+                        <td class="text-center">{{ ord.correlative }}</td>
                         <td>
                             <span
                                 :class="{

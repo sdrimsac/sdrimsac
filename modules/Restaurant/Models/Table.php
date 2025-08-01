@@ -35,6 +35,8 @@ class Table extends ModelTenant
         'description',
         'has_billar',
         'zone_id',
+        'is_delivery',
+
     ];
     protected $casts = [
         'has_frigobar' => 'boolean',

@@ -48,6 +48,8 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Support\Str;
 use Modules\Restaurant\Events\StockRealEvent;
+use Modules\Restaurant\Models\CustomerAddresses;
+use Modules\Restaurant\Models\Delivery;
 use Modules\Restaurant\Models\UserScheduleAppointment;
 
 class OrdenController extends Controller
@@ -802,7 +804,7 @@ class OrdenController extends Controller
             if ($orden->table_id) {
                 $zone = DB::connection('tenant')
                     ->table('tables as t')
-                    ->join('zones as z', 't.zone_id', '=', 'z.id') 
+                    ->join('zones as z', 't.zone_id', '=', 'z.id')
                     ->where('t.id', $orden->table_id)
                     ->select('z.name')
                     ->first();
@@ -837,7 +839,7 @@ class OrdenController extends Controller
                 $orden_items_query->where('status_orden_id', '!=', 5);
             }
             $orden_items = $orden_items_query->pluck('id')->toArray();
-            
+
             $ids_string = "";
             if (count($orden_items) != 0) {
                 $ids_string = join("_", $orden_items);
@@ -876,13 +878,6 @@ class OrdenController extends Controller
             $user = User::whereHas('area', function ($query) {
                 $query->where('description', 'like', '%CAJ%');
             })->where('establishment_id', $establishment_id)->first();
-
-            /* if (!$user) {
-                return [
-                    'success' => false,
-                    'message' => 'No se encontró un usuario de caja asignado al establecimiento.'
-                ];
-            } */
 
             if ($request->caja == false && $configuration->pin_switch) {
                 $pin = $request->pin;
@@ -1042,17 +1037,101 @@ class OrdenController extends Controller
                 }
                 $message = 'Pedido agregado.'; //me refiero en punto de caja
                 $orden->save();
-                //creo la orden y guardo los items
+                $data = $request->orden;
+
+                $table = Table::find($data['table_id']);
+
+                /* if ($table && $table->is_delivery) {
+                    Delivery::create([
+                        'orden_id' => $orden->id,
+                        'customer_id' => $data['customer_id'],
+                        'table_id' => $data['table_id'],
+                        'address' => $data['delivery_address'] ?? '-',
+                        'reference' => $data['reference'] ?? '-',
+                        'telephone' => $data['telephone'] ?? '-',
+                        'status' => '0',
+                    ]);
+                } */
+                if ($table && $table->is_delivery) {
+                    $delivery = Delivery::where('orden_id', $orden->id)->first();
+                    $deliveryData = [
+                        'customer_id' => $data['customer_id'],
+                        'table_id' => $data['table_id'],
+                        'address' => $data['delivery_address'] ?? '-',
+                        'reference' => $data['reference'] ?? '-',
+                        'telephone' => $data['telephone'] ?? '-',
+                        'status' => '0',
+                    ];
+
+                    if ($delivery) {
+                        // Solo actualiza los campos que han cambiado
+                        $updated = false;
+                        foreach ($deliveryData as $key => $value) {
+                            // Para address, reference y telephone, solo actualiza si el nuevo valor no es '-' o si el valor actual es '-'
+                            if (in_array($key, ['address', 'reference', 'telephone'])) {
+                                if ($delivery->$key !== $value && $value !== '-') {
+                                    $delivery->$key = $value;
+                                    $updated = true;
+                                }
+                            } else {
+                                if ($delivery->$key !== $value) {
+                                    $delivery->$key = $value;
+                                    $updated = true;
+                                }
+                            }
+                        }
+                        if ($updated) {
+                            $delivery->save();
+                        }
+                    } else {
+                        Delivery::create(array_merge(['orden_id' => $orden->id], $deliveryData));
+                    }
+                }
+
+                if ($table && $table->is_delivery) {
+                    $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
+                        ->where('address', $data['delivery_address'] ?? '-')
+                        ->where('reference', $data['reference'] ?? '-')
+                        ->where('telephone', $data['telephone'] ?? '-')
+                        ->where('alias', $request->ref ?? '-')
+                        ->exists();
+
+                    if (!$exists) {
+                        CustomerAddresses::create([
+                            'customer_id' => $data['customer_id'],
+                            'address' => $data['delivery_address'] ?? '-',
+                            'reference' => $data['reference'] ?? '-',
+                            'telephone' => $data['telephone'] ?? '-',
+                            'alias' => $request->ref ?? '-',
+                        ]);
+                    }
+                }
             } else {
                 $orden = new Orden;
-
                 $orden = $orden->fill($new_orden->all());
-
                 $orden->date = Carbon::today();
                 $orden->ref = $ref;
                 $orden->mozo_id = $mozo_id; // Solo guardamos el ID
                 $orden->to_carry = $request->to_carry;
                 $orden->commands_fisico = $request->commands_fisico;
+
+                // Obtener la sesión de caja activa para el usuario actual
+                $user_id = auth()->id();
+                $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
+                    ->where('user_id', $user_id)
+                    ->where('state', 1)
+                    ->latest('id')
+                    ->first();
+
+                // Asignar correlativo incremental por sesión de caja
+                if ($cash_order_session) {
+                    $order_start_id = $cash_order_session->order_start_id;
+                    // Contar las órdenes creadas después de order_start_id
+                    $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
+                    $orden->correlative = $correlative;
+                } else {
+                    $orden->correlative = 1;
+                }
 
                 if ($request->caja == true) {
                     $orden->table_id = $table->id;
@@ -1067,6 +1146,69 @@ class OrdenController extends Controller
                 }
                 $table->save();
                 $orden->save();
+                $data = $request->orden;
+
+                $table = Table::find($data['table_id']);
+
+                /* if ($table && $table->is_delivery) {
+                    Delivery::create([
+                        'orden_id' => $orden->id,
+                        'customer_id' => $data['customer_id'],
+                        'table_id' => $data['table_id'],
+                        //'address' => $data['delivery_address'],
+                        'address' => $data['delivery_address'] ?? '-',
+                        'reference' => $data['reference'] ?? '-',
+                        'telephone' => $data['telephone'] ?? '-',
+                        'status' => '0',
+                    ]);
+                } */
+
+                if ($table && $table->is_delivery) {
+                    $delivery = Delivery::where('orden_id', $orden->id)->first();
+                    $deliveryData = [
+                        'customer_id' => $data['customer_id'],
+                        'table_id' => $data['table_id'],
+                        'address' => $data['delivery_address'] ?? '-',
+                        'reference' => $data['reference'] ?? '-',
+                        'telephone' => $data['telephone'] ?? '-',
+                        'status' => '0',
+                    ];
+
+                    if ($delivery) {
+                        // Solo actualiza los campos que han cambiado
+                        $updated = false;
+                        foreach ($deliveryData as $key => $value) {
+                            if ($delivery->$key !== $value) {
+                                $delivery->$key = $value;
+                                $updated = true;
+                            }
+                        }
+                        if ($updated) {
+                            $delivery->save();
+                        }
+                    } else {
+                        Delivery::create(array_merge(['orden_id' => $orden->id], $deliveryData));
+                    }
+                }
+
+                if ($table && $table->is_delivery) {
+                    $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
+                        ->where('address', $data['delivery_address'] ?? '-')
+                        ->where('reference', $data['reference'] ?? '-')
+                        ->where('telephone', $data['telephone'] ?? '-')
+                        ->where('alias', $request->ref ?? '-')
+                        ->exists();
+
+                    if (!$exists) {
+                        CustomerAddresses::create([
+                            'customer_id' => $data['customer_id'],
+                            'address' => $data['delivery_address'] ?? '-',
+                            'reference' => $data['reference'] ?? '-',
+                            'telephone' => $data['telephone'] ?? '-',
+                            'alias' => $request->ref ?? '-',
+                        ]);
+                    }
+                }
             }
             event(new OrdenPendingEvent(1));
             /* ----------------------------- */

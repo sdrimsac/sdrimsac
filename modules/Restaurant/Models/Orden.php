@@ -33,6 +33,7 @@ class Orden extends ModelTenant
         'ref',
         'mozo_id',
         'reason',
+        'correlative',
     ];
 
     protected $casts = [

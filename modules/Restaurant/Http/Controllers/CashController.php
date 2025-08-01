@@ -73,6 +73,8 @@ use Modules\Restaurant\Http\Resources\CashIncomePrincipalCollection;
 use Modules\Restaurant\Http\Resources\ReportCollection;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\BoxesDetail;
+use Modules\Restaurant\Models\CashOrderSession;
+use Modules\Restaurant\Models\Orden;
 use Mpdf\Mpdf;
 use NumberFormatter;
 
@@ -2400,6 +2402,17 @@ class CashController extends Controller
         //</Preparamos la cadena de texto que guardanermos en el parametro 'reference_number) >
 
         $cash->save();
+
+        CashOrderSession::create([
+            'cash_id' => $cash->id,
+            'order_start_id' => $this->getLastOrderId(),
+            'state' => 1,
+            'user_id' => $cash->user_id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
         $this->insertStock($cash->id);
         // aqui llamo a una funcion de otro controlador para registrar el stock del producto 
         // $this->registerStock($request->input('id'), $request->input('beginning_balance'));
@@ -2423,6 +2436,12 @@ class CashController extends Controller
             'success' => true,
             'message' => ($id) ? 'Caja actualizada con éxito' : 'Caja aperturada con éxito'
         ];
+    }
+
+    protected function getLastOrderId()
+    {
+        $lastOrder = Orden::latest('id')->first();
+        return $lastOrder ? $lastOrder->id : null;
     }
 
     public function tables_principal()
@@ -2542,7 +2561,7 @@ class CashController extends Controller
         $parts = explode('.', (string)$number);
         return isset($parts[1]) && strlen($parts[1]) == 2;
     }
-    
+
 
     public function close(Request $request)
     {
@@ -2590,6 +2609,16 @@ class CashController extends Controller
         $cash->date_closed = date('Y-m-d');
         $cash->time_closed = date('H:i:s');
         $cash->save();
+
+        CashOrderSession::where('cash_id', $cash->id)
+            ->where('state', 1)
+            ->latest('id')
+            ->update([
+                'order_end_id' => $this->getLastOrderId(),
+                'state' => 0,
+                'updated_at' => now(),
+            ]);
+
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
         $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
             ->where('cash_id', $id)->where('method', 'Efectivo')
@@ -2703,7 +2732,6 @@ class CashController extends Controller
             'message' => 'Caja cerrada con éxito',
         ];
     }
-
 
     public function generate_reports($cash_id)
     {

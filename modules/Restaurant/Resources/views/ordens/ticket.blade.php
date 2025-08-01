@@ -369,7 +369,7 @@
                             @if ($precuenta)
                                 <strong>PRECUENTA</strong><br>
                             @endif
-                            <strong>ORDEN NRO. {{ $orden }}</strong>
+                            <strong>ORDEN NRO. {{ $ordenes->correlative }}</strong>
                         </td>
                     </tr>
                     @if ($area_desc)
@@ -414,7 +414,7 @@
                     @endif
                     <tr>
                         <td colspan="4" class="header_title0 text-center" valign="top">
-                            <strong>ORDEN NRO. {{ $orden }}</strong>
+                            <strong>ORDEN NRO. {{ $ordenes->correlative }}</strong>
                         </td>
                     </tr>
                     @if ($area_desc && strtoupper($area_desc) !== 'MENAJE')
