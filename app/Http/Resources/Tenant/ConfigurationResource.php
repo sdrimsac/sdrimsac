@@ -15,6 +15,9 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'delivery_caja' => (bool) $this->delivery_caja,
+            'delivery_cocina' => (bool) $this->delivery_cocina,
+            'restaurant_delivery' => (bool) $this->restaurant_delivery,
             'model_01' => (bool) $this->model_01,
             'model_02' => (bool) $this->model_02,
             'model_03' => (bool) $this->model_03,

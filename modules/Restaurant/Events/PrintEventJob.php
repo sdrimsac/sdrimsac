@@ -146,6 +146,9 @@ class PrintEventJob implements ShouldBroadcast
                     $documentLink = url('') . $url;
                 }
                 // $documentLink = url('') . $url;
+            case "D":
+                $documentLink = $url_base . "/caja/delivery/ticket?id={$id}";
+
                 break;
             case "S":
                 // $copies = 1;

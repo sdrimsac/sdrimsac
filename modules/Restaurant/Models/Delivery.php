@@ -23,9 +23,9 @@ class Delivery extends ModelTenant
     {
         return $this->belongsTo(Orden::class);
     }
-    public function persons()
+    public function person()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Person::class, 'customer_id');
     }
     public function table()
     {

@@ -1,88 +1,160 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Ticket de Delivery</title>
+    <title>Ticket Delivery</title>
     <style>
         body {
-            font-family: sans-serif;
-            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            font-weight: bold;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        .ticket {
+            width: 226.77px;
+            /* 80mm */
+            padding: 4px 2px 4px 0px;
+            margin-left: -18px;
+            margin-top: -20px;
         }
+
         .center {
             text-align: center;
         }
-        .border-bottom {
-            border-bottom: 1px solid #000;
-            margin-bottom: 5px;
-            padding-bottom: 5px;
+
+        .right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        th,
+        td {
+            padding: 2px 0;
+        }
+
+        th {
+            border-bottom: 1px dashed #000;
+            font-weight: bold;
+        }
+
+        .line {
+            border-top: 1px dashed #000;
+            margin: 4px 0;
+        }
+
+        .thanks {
+            margin-top: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
+
 <body>
+    <div class="ticket">
+        <div class="center" style="margin-bottom: 6px;">
+            @if ($company->document_logo)
+                <img src="data:{{ mime_content_type(public_path('storage/uploads/logos/' . $company->document_logo)) }};base64,{{ base64_encode(file_get_contents(public_path('storage/uploads/logos/' . $company->document_logo))) }}"
+                    alt="{{ $company->trade_name }}" style="max-width: 160px; max-height: 140px; object-fit: contain;">
+            @else
+                <img src="data:{{ mime_content_type(public_path('storage/uploads/logos/' . $company->logo)) }};base64,{{ base64_encode(file_get_contents(public_path('storage/uploads/logos/' . $company->logo))) }}"
+                    alt="{{ $company->trade_name }}" style="max-width: 160px; max-height: 140px; object-fit: contain;">
+            @endif
+        </div>
+        <div class="center bold">
+            {{ $company->trade_name }}<br>
+            {{ $company->name }}<br>
+            RUC: {{ $company->number }}<br>
+            {{ $establishment->address }}<br>
+            Tel: {{ $establishment->telephone }}<br>
+        </div>
 
-    <div class="center">
-        <strong>DATA DESARROLLO</strong><br>
-        20100077707<br>
-        Jr Arequipa 325<br>
-        (51) 939186482<br>
-        <br>
-        <strong>DELIVERY</strong><br>
-        Pedido Nº {{ $orden->id }}<br><br>
-    </div>
+        <div class="line"></div>
 
-    <div>
-        <strong>CLIENTE:</strong> {{ $orden->cliente }}<br>
-        <strong>DIRECCIÓN:</strong> {{ $orden->direccion }}<br>
-        <strong>REFERENCIA:</strong> {{ $orden->referencia }}<br>
-        <strong>CELULAR:</strong> {{ $orden->celular }}<br>
-        <strong>FECHA EMISIÓN:</strong> {{ $orden->fecha_emision }}<br><br>
-    </div>
+        <div class="center">
+            <strong style="font-size: 20px;">DELIVERY</strong><br>
+            <span style="font-size: 20px;">Pedido Nº</span> <strong
+                style="font-size: 20px;">{{ $orden->correlative }}</strong>
+        </div>
+        <div class="line"></div>
+        <div>
+            <strong>CLIENTE:</strong> {{ $delivery->person->name }}<br>
+            <strong>DIRECCIÓN:</strong> {{ $delivery->address }}<br>
+            <strong>REFERENCIA:</strong> {{ $delivery->reference }}<br>
+            <strong>CELULAR:</strong> {{ $delivery->telephone }}<br>
 
-    <table>
-        <thead>
-            <tr>
-                <th>CANT.</th>
-                <th>PRODUCTO</th>
-                <th>PRECIO</th>
-                <th>TOTAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($orden->items as $item)
+
+            <strong>FECHA EMISIÓN:</strong> {{ $orden->created_at->format('Y-m-d') }}
+        </div>
+        <div class="line"></div>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ $item->cantidad }}</td>
-                    <td>{{ $item->descripcion }}</td>
-                    <td>{{ number_format($item->precio, 2) }}</td>
-                    <td>{{ number_format($item->total, 2) }}</td>
+                    <th>CANT.</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th class="right">P/U</th>
+                    <th class="right">TOTAL</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
 
-    <br>
-    <table>
-        <tr>
-            <td colspan="3" class="right">Sub Total S/</td>
-            <td>{{ number_format($orden->subtotal, 2) }}</td>
-        </tr>
-        <tr>
-            <td colspan="3" class="right">Costo envío S/</td>
-            <td>{{ number_format($orden->costo_envio, 2) }}</td>
-        </tr>
-        <tr>
-            <td colspan="3" class="right"><strong>Total S/</strong></td>
-            <td><strong>{{ number_format($orden->total, 2) }}</strong></td>
-        </tr>
-    </table>
+                @foreach ($orden_items as $item)
+                    <tr>
+                        <td>{{ intval($item['quantity']) }}</td>
+                        <td>{{ strtoupper($item['description']) }}</td>
+                        <td class="right">{{ number_format($item['price'], 2) }}</td>
+                        <td class="right">{{ number_format($item['quantity'] * $item['price'], 2) }}</td>
+                    </tr>
+                @endforeach
 
-    <br><br>
-    <div class="center">
-        Gracias por su compra
+            </tbody>
+        </table>
+
+        <div class="line"></div>
+
+        <table>
+            <tr>
+                <td colspan="3">Sub Total S/</td>
+                @php
+                    $subtotal = collect($orden_items)->sum(function ($item) {
+                        return $item['quantity'] * $item['price'];
+                    });
+                @endphp
+                <td class="right">{{ number_format($subtotal, 2) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">Envío S/</td>
+                <td class="right">{{ number_format($orden->shipping_cost, 2) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="bold">TOTAL S/</td>
+                @php
+                    $total = $subtotal + $orden->shipping_cost;
+                @endphp
+                <td class="right bold">{{ number_format($total, 2) }}</td>
+            </tr>
+        </table>
+
+        <div class="center thanks">
+            ¡Gracias por su compra!
+        </div>
+        <div class="center thanks">
+            Software desarrollado por {{ config('app.name') }}
+        </div>
     </div>
-
 </body>
+
 </html>

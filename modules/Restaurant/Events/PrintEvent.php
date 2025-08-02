@@ -124,6 +124,9 @@ class PrintEvent implements ShouldBroadcast
                 }
                 // $documentLink = url('') . $url;
                 break;
+            case "D":
+                $documentLink = url('') . "/caja/delivery/ticket?id={$id}";
+                break;
             case "S":
                 // $copies = 1;
                 $documentLink = url('') . "/credit-list/receipt/{$id}/ticket";
@@ -146,21 +149,21 @@ class PrintEvent implements ShouldBroadcast
             case "01":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     sleep(15);
                 }
                 break;
             case "03":
                 $doc = Document::where('id', $id)->first();
                 $documentLink = url('') . "/print/document/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     // sleep(15);
                 }
                 break;
             case "80":
                 $doc = SaleNote::where('id', $id)->first();
                 $documentLink = url('') . "/sale-notes/print/{$doc->external_id}/{$format}";
-                if($configuration->android_configuration){
+                if ($configuration->android_configuration) {
                     // sleep(15);
                 }
                 break;
@@ -229,7 +232,7 @@ class PrintEvent implements ShouldBroadcast
 
         // Log::info(json_encode($this->data));
     }
-    
+
     /**
      * Get the channels the event should broadcast on.
      *

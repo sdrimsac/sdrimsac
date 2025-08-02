@@ -535,7 +535,7 @@
                             >
                         </button>
                         <button
-                            v-if="localOrden.length > 0"
+                            v-if="localOrden.length > 0 && configuration.restaurant_delivery && configuration.restaurant"
                             class="btn btn-light mt-2"
                             type="button"
                             @click="openDeliveryForm()"

@@ -52,6 +52,26 @@ class RestaurantController extends Controller
             'message' => 'Imprimiendo'
         ];
     }
+
+    public function Delivery(Request $request)
+    {
+        $area_id = null;
+        $url = $request->url;
+        $printer = $request->printer;
+        if ($printer != null) {
+            $area = Area::where('printer', $printer)->first();
+            if ($area) {
+                $area_id = $area->id;
+            }
+        }
+
+        event(new PrintEvent(null, 'URL', true, $area_id, [], false, false, $url));
+        return [
+            'success' => true,
+            'message' => 'Imprimiendo'
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      * @return Response

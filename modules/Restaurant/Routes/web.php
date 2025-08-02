@@ -44,6 +44,7 @@ Route::prefix('caja')->group(function () {
     Route::post('/override-session', [RestaurantController::class, 'window']);
 
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
+    Route::post('/re-print/delivery', [RestaurantController::class, 'Delivery']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
     Route::get('sale-notes', [SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
@@ -52,6 +53,11 @@ Route::prefix('caja')->group(function () {
     Route::get('documents/data_table', [DocumentController::class, 'data_table']);
     Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', [OrdenController::class, 'printTicket']);
+
+    Route::get('delivery/ticket', [OrdenController::class, 'DeliveryOrden']);
+
+    Route::get('delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
+
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);
@@ -368,7 +374,7 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/check', 'TableController@check');
         Route::get('tables/records', 'TableController@records');
         Route::get('tables/tables', 'TableController@get_tables');
-        Route::get('tables/get_tables_delivery', 'TableController@get_tables_delivery');
+        Route::get('tables/getTablesDelivery', 'TableController@get_tables_delivery');
         Route::get('tables/tables-zone', 'TableController@tables_zones');
 
         Route::post('tables/store/{type}', 'TableController@store_zone');

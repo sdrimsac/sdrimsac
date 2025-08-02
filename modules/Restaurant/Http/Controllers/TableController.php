@@ -164,8 +164,16 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('is_room', false)->where('has_billar', false)->where('establishment_id', 
-        $establishment_id)->orWhereNull('establishment_id')->get();
+
+        $tables = Table::where('is_room', false)
+            ->where('has_billar', false)
+            ->where('is_delivery', 0)
+            ->where(function ($query) use ($establishment_id) {
+                $query->where('establishment_id', $establishment_id)
+                      ->orWhereNull('establishment_id');
+            })
+            ->get();
+
         $zones = Zone::where('active', true)->get();
         return compact('tables', 'zones');
     }

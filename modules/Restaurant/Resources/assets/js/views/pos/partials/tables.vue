@@ -155,7 +155,8 @@
                                 type="button"
                                 class="btn btn-primary p-1 m-1 "
                             >
-                                <span class="h3 text-white">#{{ ord.correlative }}</span
+                                <span class="h3 text-white"
+                                    >#{{ ord.correlative }}</span
                                 ><br />
                                 <span class="h4 text-white">{{
                                     ord.ref ? ord.ref : "Sin referencia"
@@ -174,7 +175,7 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="Delivery" name="Delivery">
+            <el-tab-pane label="Delivery" name="Delivery" v-if="configuration.restaurant_delivery">
                 <div class="card">
                     <div class="card-body">
                         <div v-if="deliveryOrders.length > 0">
@@ -193,10 +194,19 @@
                                         class="card-body d-flex flex-column justify-content-center align-items-center"
                                     >
                                         <h2 class="fw-bold">
-                                            #{{ ord.order_number || ord.correlative || ord.id }}
+                                            #{{
+                                                ord.order_number ||
+                                                    ord.correlative ||
+                                                    ord.id
+                                            }}
                                         </h2>
                                         <p>{{ ord.ref || "Sin referencia" }}</p>
                                     </div>
+                                    <el-button
+                                        class="btn btn-light"
+                                        @click.stop="DeliveryTicket(ord)"
+                                        >Ticket Delivery</el-button
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -209,53 +219,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="card">
-                    <div class="card-body">
-                        <div class="row" v-if="deliveryOrders.length > 0">
-                            <div
-                                class="col-6 col-sm-4 col-md-3 col-lg-2"
-                                v-for="(ord, idx) in deliveryOrders"
-                                :key="idx"
-                            >
-                                <div
-                                    class="card m-2 shadow"
-                                    @click="sendOrdens(ord)"
-                                    style="width: 100%; aspect-ratio: 1 / 1; cursor: pointer;"
-                                >
-                                    <div
-                                        class="card-body d-flex flex-column justify-content-center align-items-center bg-danger text-white rounded"
-                                        style="height: 100%;"
-                                    >
-                                        <h2
-                                            class="card-title fw-bold text-white"
-                                        >
-                                            #{{
-                                                ord.order_number
-                                                    ? ord.order_number
-                                                    : ord.id
-                                            }}
-                                        </h2>
-                                        <p class="card-text text-center">
-                                            {{
-                                                ord.ref
-                                                    ? ord.ref
-                                                    : "Sin referencia"
-                                            }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            v-else
-                            class="h-25 d-flex justify-content-center align-items-center"
-                        >
-                            <span>Sin órdenes de delivery</span>
-                        </div>
-                    </div>
-                </div> -->
             </el-tab-pane>
         </el-tabs>
     </el-dialog>
@@ -291,7 +254,8 @@ export default {
             userOrders: [],
             zone_id: null,
             deliveryTable: null,
-            deliveryOrders: []
+            deliveryOrders: [],
+            deliveryLoaded: false
         };
     },
     async mounted() {
@@ -339,6 +303,260 @@ export default {
 
             return foundUser || null;
         },
+
+        /* DeliveryTicket(ord) {
+            const url = `/caja/delivery/ticket?id=${ord.id}`;
+            window.open(url, "_blank");
+        }, */
+
+        async DeliveryTicket(ord) {
+            try {
+                const id = ord.id;
+                const response = await this.$http.get(
+                    `/caja/delivery/DeliveryPrinter?id=${ord.id}`
+                );
+                let url = response.data.print;
+                console.log("URL de impresión:", url);
+                /* if (pdf) {
+                    window.open(url, "_blank");
+                    return;
+                } */
+                /* await this.$http.post("/caja/re-print/delivery", {
+                    url
+                }); */
+
+                return;
+
+                let config = qz.configs.create(response.data.printer, {
+                    scaleContent: false
+                });
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect(config);
+                }
+                let isPosd = response.data.printer.split(" ")[
+                    response.data.printer.split(" ").length - 1
+                ];
+                if (isPosd == "POSD") {
+                    config.density = 200;
+                }
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: url
+                    }
+                ];
+                qz.print(config, data).catch(e => {
+                    this.$toast.error(e.message);
+                });
+            } catch (e) {
+                this.$toast.error(e.message);
+            }
+        },
+
+        /* async DeliveryTicket(ord) {
+            try {
+                const response = await this.$http.get(
+                    `/caja/delivery/ticket?id=${ord.id}`
+                );
+                let url = response.data.print;
+                let printer = response.data.printer;
+
+                console.log("URL de impresión:", url);
+                if (typeof pdf !== 'undefined' && pdf) {
+                    window.open(url, "_blank");
+                    return url;
+                }
+                await this.$http.post("/caja/re-print/delivery", {
+                    url,
+                    type: "D"
+                });
+
+                // Si solo quieres devolver la url, descomenta la siguiente línea y comenta el resto:
+                // return url;
+
+                let config = qz.configs.create(printer, {
+                    scaleContent: false
+                });
+
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect();
+                }
+
+                let isPosd = printer.split(" ").pop();
+                if (isPosd === "POSD") {
+                    config.density = 200;
+                }
+
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: url
+                    }
+                ];
+
+                qz.print(config, data).catch(e => {
+                    this.$toast.error(e.message);
+                });
+                return url;
+            } catch (e) {
+                this.$toast.error("Error de impresión: " + e.message);
+                return null;
+            }
+        }, */
+
+        /* async DeliveryTicket(ord) {
+            try {
+                const response = await this.$http.get(
+                    `/caja/delivery/ticket?id=${ord.id}`
+                );
+                let url = response.data.print;
+                let printer = response.data.printer;
+
+                console.log("URL de impresión:", url);
+
+                // Si la opción `pdf` está activa, abre en navegador (solo visualización)
+                if (this.pdf) {
+                    window.open(url, "_blank");
+                    return url;
+                }
+
+                // Opcional: notificar backend que se imprimirá nuevamente
+                await this.$http.post("/caja/re-print/delivery", {
+                    url,
+                    type: "D"
+                });
+
+                // Configuración de impresora
+                let config = qz.configs.create(printer, {
+                    scaleContent: false
+                });
+
+                // Asegurar conexión con QZ
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect();
+                }
+
+                // Densidad especial para impresoras POSD
+                let isPosd = printer.split(" ").pop();
+                if (isPosd === "POSD") {
+                    config.density = 200;
+                }
+
+                // Preparar datos de impresión
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: url
+                    }
+                ];
+
+                // Enviar a imprimir
+                await qz.print(config, data);
+                return url;
+            } catch (e) {
+                this.$toast.error("Error de impresión: " + e.message);
+                return null;
+            }
+        }, */
+        /* async DeliveryTicket(ord) {
+            try {
+                const response = await this.$http.get(
+                    `/caja/delivery/DeliveryPrinter?id=${ord.id}`
+                );
+                let url = response.data.print;
+                let printer = response.data.printer
+
+                return;
+
+                // Configuración de impresora
+                let config = qz.configs.create(printer, {
+                    scaleContent: false
+                });
+
+                // Asegurar conexión con QZ
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect();
+                }
+
+                // Densidad especial para impresoras POSD
+                let isPosd = printer.split(" ").pop();
+                if (isPosd === "POSD") {
+                    config.density = 200;
+                }
+
+                // Preparar datos de impresión
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: url
+                    }
+                ];
+
+                // Enviar a imprimir
+                await qz.print(config, data);
+                return url;
+            } catch (e) {
+                this.$toast.error("Error de impresión: " + e.message);
+                return null;
+            }
+        }, */
+
+        /* async DeliveryTicket(ord) {
+            try {
+                const response = await this.$http.get(
+                    `/caja/delivery/DeliveryPrinter?id=${ord.id}`
+                );
+                let url = response.data.print;
+                let printer = response.data.printer;
+                let directPrinting = response.data.direct_printing;
+
+                if (!url) {
+                    this.$toast.error(
+                        "No se encontró el archivo para imprimir."
+                    );
+                    return null;
+                }
+
+                if (!directPrinting) {
+                    window.open(url, "_blank");
+                    return url;
+                }
+
+                let config = qz.configs.create(printer, {
+                    scaleContent: false
+                });
+
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect();
+                }
+
+                let isPosd = "";
+                if (printer && typeof printer === "string") {
+                    isPosd = printer.split(" ").pop();
+                    if (isPosd === "POSD") {
+                        config.density = 200;
+                    }
+                }
+
+                let data = [
+                    {
+                        type: "pdf",
+                        format: "file",
+                        data: url
+                    }
+                ];
+
+                await qz.print(config, data);
+                return url;
+            } catch (e) {
+                this.$toast.error("Error de impresión: " + e.message);
+                return null;
+            }
+        }, */
 
         getUserTypeClass(tableId) {
             const user = this.getUserByTable(tableId);
@@ -547,6 +765,7 @@ export default {
         },
         async open() {
             this.activeTab = "Mesas";
+            this.deliveryLoaded = false;
             this.closeOrden();
             await this.updateAllData();
         },
@@ -562,22 +781,27 @@ export default {
                     this.ordenes = ordenes;
                     this.zones = zones;
 
-                    let { show_caja_table } = this.configuration;
-                    if (!show_caja_table) {
-                        this.all_tables = tables.filter(
-                            f => f.number.toLowerCase() != "caja"
-                        );
-                    } else {
-                        this.all_tables = tables;
-                    }
-
-                    // Buscar la mesa de delivery y guardarla, pero NO cargar órdenes aquí
-                    this.deliveryTable = this.all_tables.find(
+                    // Buscar la mesa de delivery y guardarla
+                    this.deliveryTable = tables.find(
                         t =>
                             t.is_delivery == 1 ||
                             t.is_delivery === "1" ||
                             t.is_delivery === true
                     );
+
+                    let { show_caja_table } = this.configuration;
+                    // Filtrar mesas: quitar caja y delivery
+                    this.all_tables = tables.filter(f => {
+                        const isCaja =
+                            !show_caja_table &&
+                            f.number.toLowerCase() == "caja";
+                        const isDelivery =
+                            f.is_delivery == 1 ||
+                            f.is_delivery === "1" ||
+                            f.is_delivery === true;
+                        return !isCaja && !isDelivery;
+                    });
+
                     // Limpiar deliveryOrders por defecto
                     this.deliveryOrders = [];
 
@@ -600,7 +824,40 @@ export default {
             } catch (e) {
                 this.loading = false;
                 console.log(e);
+                this.$toast.warning("Ocurrió un error");
+            }
+        },
 
+        async getTablesDelivery() {
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    "/caja/tables/getTablesDelivery"
+                );
+                console.log("Respuesta del servidor:", response.data);
+
+                if (response.status == 200) {
+                    const { tables, ordenes, zones } = response.data;
+                    console.log("Órdenes recibidas:", ordenes);
+                    this.ordenes = ordenes;
+                    this.zones = zones;
+
+                    // Buscar la mesa de delivery y guardarla, pero NO cargar órdenes aquí ni modificar all_tables
+                    this.deliveryTable = tables.find(
+                        t =>
+                            t.is_delivery == 1 ||
+                            t.is_delivery === "1" ||
+                            t.is_delivery === true
+                    );
+                    // Limpiar deliveryOrders por defecto
+                    this.deliveryOrders = [];
+                } else {
+                    this.$toast.warning("Ocurrió un error");
+                }
+                this.loading = false;
+            } catch (e) {
+                this.loading = false;
+                console.log(e);
                 this.$toast.warning("Ocurrió un error");
             }
         },
@@ -629,11 +886,21 @@ export default {
 
         handleTabClick(tab) {
             if (tab.label === "Delivery") {
-                this.getDeliveryOrders();
+                if (!this.deliveryLoaded) {
+                    this.getTablesDelivery().then(() => {
+                        this.getDeliveryOrders().then(() => {
+                            this.deliveryLoaded = true;
+                        });
+                    });
+                }
+            } else if (tab.label === "Mesas") {
+                // Si vuelves a mesas, puedes resetear la bandera si quieres forzar recarga después
+                // this.deliveryLoaded = false;
             }
         },
         close() {
             this.addingOrden = false;
+            this.deliveryLoaded = false;
             this.$emit("update:showTables", false);
         }
     },

@@ -415,7 +415,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
-                    "/caja/tables/get_tables_delivery"
+                    "/caja/tables/getTablesDelivery"
                 );
                 console.log("Respuesta del servidor:", response.data);
 

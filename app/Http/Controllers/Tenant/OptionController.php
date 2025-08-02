@@ -570,6 +570,7 @@ class OptionController extends Controller
             DB::connection('tenant')->table('ordens')->delete();
 
             // Now safe to delete sale_notes
+            DB::connection('tenant')->table('receipts')->delete();
             DB::connection('tenant')->table('sale_note_payments')->delete();
             DB::connection('tenant')->table('sale_note_items')->delete();
             DB::connection('tenant')->table('sale_notes')->delete();
@@ -583,7 +584,6 @@ class OptionController extends Controller
             DB::connection('tenant')->table('kardex')->delete();
             DB::connection('tenant')->table('sale_notes_promotions')->delete();
             DB::connection('tenant')->table('sale_note_credits')->delete();
-            DB::connection('tenant')->table('receipts')->delete();
             DB::connection('tenant')->table('summary_documents')->delete();
             DB::connection('tenant')->table('internet_item')->delete();
             DB::connection('tenant')->table('internet_payment_month')->delete();
