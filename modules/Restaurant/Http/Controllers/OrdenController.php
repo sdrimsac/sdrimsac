@@ -1802,18 +1802,18 @@ class OrdenController extends Controller
 
         // Determinar si imprimir en caja o en cocina
         if ($configuration->delivery_caja) {
-            // Imprimir en caja
+            // Imprimir solo en caja
             $area_id = $this->getBoxArea();
             $area = Area::find($area_id);
             $printer = $area->printer ?? $establishment->printer;
+            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
         } else {
-            // Imprimir en cocina
+            // Imprimir solo en cocina
             $area = Area::where('description', 'like', '%COCIN%')->first();
             $area_id = $area ? $area->id : null;
             $printer = $area && $area->printer ? $area->printer : $establishment->printer;
+            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
         }
-
-        Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
         return [
             'success' => true,
             'printer' => $printer,
