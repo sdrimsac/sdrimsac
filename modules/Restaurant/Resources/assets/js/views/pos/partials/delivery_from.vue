@@ -46,12 +46,45 @@
                             </div>
                             <div class="col-md-6">
                                 <el-form-item label="Numero de Whatsapp">
+                                    <!-- <el-select
+                                        v-model="form.telephone"
+                                        filterable
+                                        allow-create
+                                        default-first-option
+                                        placeholder=""
+                                        @change="
+                                            onTelephoneInput(form.telephone)
+                                        "
+                                        @visible-change="
+                                            onSelectDropdownVisible(
+                                                'telephone',
+                                                $event
+                                            )
+                                        "
+                                        ref="selectTelephone"
+                                    >
+                                        <el-option
+                                            v-for="item in addressesOptions"
+                                            :key="item.id"
+                                            :label="item.telephone"
+                                            :value="item.telephone"
+                                        />
+                                    </el-select> -->
                                     <el-select
                                         v-model="form.telephone"
                                         filterable
                                         allow-create
                                         default-first-option
-                                        placeholder="..."
+                                        placeholder=""
+                                        @change="onTelephoneInput"
+                                        @input.native="onTelephoneInput"
+                                        @visible-change="
+                                            onSelectDropdownVisible(
+                                                'telephone',
+                                                $event
+                                            )
+                                        "
+                                        ref="selectTelephone"
                                     >
                                         <el-option
                                             v-for="item in addressesOptions"
@@ -60,6 +93,13 @@
                                             :value="item.telephone"
                                         />
                                     </el-select>
+                                    <el-input
+                                        v-if="false"
+                                        v-model="form.telephone"
+                                        style="display:none;"
+                                        maxlength="9"
+                                        show-word-limit
+                                    />
                                 </el-form-item>
                             </div>
                             <div class="col-md-12">
@@ -69,7 +109,9 @@
                                         filterable
                                         allow-create
                                         default-first-option
-                                        placeholder="..."
+                                        placeholder=""
+                                        @input.native="onRefInput($event)"
+                                        @change="onRefInput(form.ref)"
                                     >
                                         <el-option
                                             v-for="item in addressesOptions"
@@ -78,6 +120,13 @@
                                             :value="item.alias"
                                         />
                                     </el-select>
+                                    <el-input
+                                        v-if="false"
+                                        v-model="form.ref"
+                                        style="display:none;"
+                                        maxlength="20"
+                                        @input="onRefInput($event)"
+                                    />
                                 </el-form-item>
                             </div>
                             <div class="col-md-12">
@@ -87,8 +136,9 @@
                                         filterable
                                         allow-create
                                         default-first-option
-                                        placeholder="..."
+                                        placeholder=""
                                         @change="onAddressSelect"
+                                        @input.native="onAddressInput($event)"
                                     >
                                         <el-option
                                             v-for="item in addressesOptions"
@@ -97,6 +147,13 @@
                                             :value="item.address"
                                         />
                                     </el-select>
+                                    <el-input
+                                        v-if="false"
+                                        v-model="form.delivery_address"
+                                        style="display:none;"
+                                        maxlength="200"
+                                        @input="onAddressInput($event)"
+                                    />
                                 </el-form-item>
                             </div>
                             <div class="col-md-12">
@@ -106,7 +163,11 @@
                                         filterable
                                         allow-create
                                         default-first-option
-                                        placeholder="..."
+                                        placeholder=""
+                                        @input.native="onReferenceInput($event)"
+                                        @change="
+                                            onReferenceInput(form.reference)
+                                        "
                                     >
                                         <el-option
                                             v-for="item in addressesOptions"
@@ -115,6 +176,13 @@
                                             :value="item.reference"
                                         />
                                     </el-select>
+                                    <el-input
+                                        v-if="false"
+                                        v-model="form.reference"
+                                        style="display:none;"
+                                        maxlength="200"
+                                        @input="onReferenceInput($event)"
+                                    />
                                 </el-form-item>
                             </div>
                         </div>
@@ -214,6 +282,60 @@ export default {
         } */
     },
     methods: {
+        onTelephoneInput(value) {
+            if (typeof value !== "string") return;
+
+            // Solo números y máximo 9 dígitos
+            let filtered = value.replace(/\D/g, "").slice(0, 9);
+            this.form.telephone = filtered;
+        },
+
+        onSelectDropdownVisible(field, visible) {
+            // Cuando el select se abre, forzar el input a solo números si es el de teléfono
+            if (field === "telephone" && visible) {
+                this.$nextTick(() => {
+                    const dropdown = document.querySelector(
+                        ".el-select-dropdown__wrap input"
+                    );
+                    if (dropdown) {
+                        dropdown.setAttribute("maxlength", "9");
+                        dropdown.setAttribute("inputmode", "numeric");
+                        dropdown.setAttribute("pattern", "[0-9]*");
+                        // Limpia intervalos previos
+                        if (window._whatsappInterval)
+                            clearInterval(window._whatsappInterval);
+                        window._whatsappInterval = setInterval(() => {
+                            if (!dropdown.isConnected) {
+                                clearInterval(window._whatsappInterval);
+                                return;
+                            }
+                            let val = dropdown.value
+                                .replace(/\D/g, "")
+                                .slice(0, 9);
+                            if (dropdown.value !== val) {
+                                dropdown.value = val;
+                                this.form.telephone = val;
+                            }
+                        }, 50);
+                    }
+                });
+            } else if (field === "telephone" && !visible) {
+                if (window._whatsappInterval)
+                    clearInterval(window._whatsappInterval);
+            }
+        },
+        onRefInput(e) {
+            // Máximo 20 caracteres
+            this.form.ref = e.slice(0, 20);
+        },
+        onAddressInput(e) {
+            // Máximo 200 caracteres
+            this.form.delivery_address = e.slice(0, 200);
+        },
+        onReferenceInput(e) {
+            // Máximo 200 caracteres
+            this.form.reference = e.slice(0, 200);
+        },
         onAddressSelect(address) {
             // Cuando seleccionas una dirección, autocompleta los otros campos relacionados
             const selected = this.addressesOptions.find(
@@ -263,8 +385,20 @@ export default {
                 this.$toast.warning("Debe ingresar el número de WhatsApp.");
                 return false;
             }
+            if (!/^\d{9}$/.test(this.form.telephone)) {
+                this.$toast.warning(
+                    "El número de WhatsApp debe tener exactamente 9 dígitos numéricos."
+                );
+                return false;
+            }
             if (!this.form.ref || this.form.ref.trim() === "") {
                 this.$toast.warning("Debe ingresar el alias del cliente.");
+                return false;
+            }
+            if (this.form.ref.length > 20) {
+                this.$toast.warning(
+                    "El alias del cliente no debe exceder 20 caracteres."
+                );
                 return false;
             }
             if (
@@ -272,6 +406,18 @@ export default {
                 this.form.delivery_address.trim() === ""
             ) {
                 this.$toast.warning("Debe ingresar la dirección de entrega.");
+                return false;
+            }
+            if (this.form.delivery_address.length > 200) {
+                this.$toast.warning(
+                    "La dirección de entrega no debe exceder 200 caracteres."
+                );
+                return false;
+            }
+            if (this.form.reference && this.form.reference.length > 200) {
+                this.$toast.warning(
+                    "La referencia de entrega no debe exceder 200 caracteres."
+                );
                 return false;
             }
             return true;
@@ -312,7 +458,7 @@ export default {
                         `/caja/search_customers/search_customer_delivery?${parameters}`
                     )
                     .then(response => {
-                        this.customers = response.data.persons; 
+                        this.customers = response.data.persons;
                         this.loading_search = false;
                         if (this.customers.length == 0) {
                             this.customers = this.all_customers;

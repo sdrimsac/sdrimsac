@@ -16706,12 +16706,12 @@
                                                                                 ref="kitchenIcon"
                                                                                 class="fa fa-file-alt fa-lg"
                                                                             ></i>
-                                                                            Imprimir Ticket delivery en caja
+                                                                            Imprimir Ticket delivery
                                                                         
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
-                                                                                content="Habilitar impresión de ticket delivery en caja"
+                                                                                content="Habilitar impresión de ticket delivery"
                                                                                 placement="top-start"
                                                                             >
                                                                                 <i
@@ -16723,8 +16723,8 @@
                                                                             v-model="
                                                                                 form.delivery_caja
                                                                             "
-                                                                            active-text="SI"
-                                                                            inactive-text="NO"
+                                                                            active-text="No"
+                                                                            inactive-text="Si"
                                                                             :active-color="
                                                                                 '#28a745'
                                                                             "
@@ -16802,72 +16802,6 @@
                                                                                         'Imprimir restaurant delivery',
                                                                                         form.restaurant_delivery,
                                                                                         'precuentaIcon'
-                                                                                    )
-                                                                            "
-                                                                        ></el-switch>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Imprimir comanda en cocina Con letras grandes -->
-                                                        <div
-                                                            class="col-md-3 mt-4"
-                                                        >
-                                                            <div
-                                                                class="card h-100"
-                                                            >
-                                                                <div
-                                                                    class="card-body d-flex flex-column"
-                                                                >
-                                                                    <div
-                                                                        class="form-group text-left flex-grow-1"
-                                                                    >
-                                                                        <label
-                                                                            class="control-label w-100"
-                                                                            :style="{
-                                                                                color: form.comand_big
-                                                                                    ? '#28a745'
-                                                                                    : '#6c757d'
-                                                                            }"
-                                                                        >
-                                                                            <i
-                                                                                ref="bigTextIcon"
-                                                                                class="fa fa-file-alt fa-lg"
-                                                                            ></i>
-                                                                            Imprimir
-                                                                            Comanda
-                                                                            Letras
-                                                                            Grandes
-                                                                            <el-tooltip
-                                                                                class="item"
-                                                                                effect="dark"
-                                                                                content="Habilitar impresión de comanda en cocina con letras grandes"
-                                                                                placement="top-start"
-                                                                            >
-                                                                                <i
-                                                                                    class="fa fa-info-circle"
-                                                                                ></i>
-                                                                            </el-tooltip>
-                                                                        </label>
-                                                                        <el-switch
-                                                                            v-model="
-                                                                                form.comand_big
-                                                                            "
-                                                                            active-text="SI"
-                                                                            inactive-text="NO"
-                                                                            :active-color="
-                                                                                '#28a745'
-                                                                            "
-                                                                            :inactive-color="
-                                                                                '#6c757d'
-                                                                            "
-                                                                            @change="
-                                                                                () =>
-                                                                                    submit(
-                                                                                        'Imprimir comanda en cocina con letras grandes',
-                                                                                        form.comand_big,
-                                                                                        'bigTextIcon'
                                                                                     )
                                                                             "
                                                                         ></el-switch>
