@@ -146,14 +146,11 @@
                 @endphp
                 <td class="right bold">{{ number_format($total, 2) }}</td>
             </tr>
+            <tr><td>¡Gracias por su compra!</td>
+            </tr>
+            <tr><td>Software desarrollado por {{ config('app.name') }}</td>
+            </tr>
         </table>
-
-        <div class="center thanks">
-            ¡Gracias por su compra!
-        </div>
-        <div class="center thanks">
-            Software desarrollado por {{ config('app.name') }}
-        </div>
     </div>
 </body>
 
