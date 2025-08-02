@@ -1807,13 +1807,22 @@ class OrdenController extends Controller
             $area = Area::find($area_id);
             $printer = $area->printer ?? $establishment->printer;
             Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
-        } else {
-            // Imprimir solo en cocina
+        }
+        if ($configuration->delivery_cocina) {
             $area = Area::where('description', 'like', '%COCIN%')->first();
             $area_id = $area ? $area->id : null;
             $printer = $area && $area->printer ? $area->printer : $establishment->printer;
             Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
         }
+
+
+         /* else {
+            // Imprimir solo en cocina
+            $area = Area::where('description', 'like', '%COCIN%')->first();
+            $area_id = $area ? $area->id : null;
+            $printer = $area && $area->printer ? $area->printer : $establishment->printer;
+            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
+        } */
         return [
             'success' => true,
             'printer' => $printer,
@@ -1821,33 +1830,6 @@ class OrdenController extends Controller
             'printer_serve' => $establishment->printer_serve,
             'print'   => url('') . "/caja/delivery/ticket?id={$id}"
         ];
-        /* if ($configuration->delivery_caja) {
-            // Imprimir solo en caja
-            $area_id = $this->getBoxArea();
-            $area = Area::find($area_id);
-            $printer = $area->printer ?? $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
-            return [
-                'success' => true,
-                'printer' => $printer,
-                'direct_printing' => (bool) $establishment->direct_printing,
-                'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/delivery/ticket?id={$id}"
-            ];
-        } else {
-            // Imprimir solo en cocina
-            $area = Area::where('description', 'like', '%COCIN%')->first();
-            $area_id = $area ? $area->id : null;
-            $printer = $area && $area->printer ? $area->printer : $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
-            return [
-                'success' => true,
-                'printer' => $printer,
-                'direct_printing' => (bool) $establishment->direct_printing,
-                'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/delivery/ticket?id={$id}"
-            ];
-        } */
     }
 
     public function destroyorden($id)
