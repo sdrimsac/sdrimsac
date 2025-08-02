@@ -2958,7 +2958,9 @@
             :localOrden="localOrden"
             :configuration="configuration"
             :all_customers.sync="customers"
+            :fromPos="true"
             @limpiarForm="limpiarForm"
+            :cash_id="cash_id"
         />
     </div>
 </template>

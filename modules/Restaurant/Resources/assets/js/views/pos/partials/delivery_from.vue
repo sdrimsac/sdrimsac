@@ -240,11 +240,14 @@ export default {
         "showDialog",
         "visible",
         "ordenLoading",
-        "all_customers"
+        "all_customers",
+        "cash_id",
+        "fromPos"
     ],
     components: {
         PersonForm
     },
+
     data() {
         return {
             deliveryAddress: "",
@@ -265,6 +268,11 @@ export default {
             resource: "quotations"
         };
     },
+    created() {
+        this.$eventHub.$on("reloadDataPersons", customer_id => {
+            this.reloadDataCustomers(customer_id);
+        });
+    },
     computed: {
         addressesOptions() {
             const selected = this.customers.find(
@@ -276,10 +284,10 @@ export default {
         }
     },
     watch: {
-        /* all_customers(newCustomer, _) {
+        all_customers(newCustomer, _) {
             console.log("all_customers:", newCustomer);
             this.customers = newCustomer.filter(n => n.number != "88888888");
-        } */
+        }
     },
     methods: {
         onTelephoneInput(value) {
