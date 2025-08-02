@@ -279,7 +279,7 @@ class ClientController extends Controller
 
     public function records(Request $request)
     {
-        if (strpos(url()->current(), 'sdrimsac') !== false) {
+        if (strpos(url()->current(), 'sdrimsac') !== false || strpos(url()->current(), 'sdrclientes') !== false) {
             $canSee = true;
         }
 
