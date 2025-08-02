@@ -1751,7 +1751,7 @@ class OrdenController extends Controller
                 ];
             });
 
-        $base_height = 400;
+        $base_height = 500;
         $item_height = 30;
         $total_items = count($orden_items);
         $height = $base_height + ($total_items * $item_height);
