@@ -3,7 +3,7 @@
         <div class="row" v-if="ordens.length > 0">
             <div class="col-12 p-1">
                 <h2 class="small-title fw-bold">Ordenes Realizadas</h2>
-                <hooper :settings="hooperSettings">
+                <!-- <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
                         <div class="col-md-12 p-2">
                             <div
@@ -30,7 +30,7 @@
                         </div>
                     </slide>
                     <hooper-navigation slot="hooper-addons"></hooper-navigation>
-                </hooper>
+                </hooper> -->
             </div>
         </div>
 
@@ -393,6 +393,7 @@
                     @listtables="clearTables"
                     @selectNewOrden="handleSelectOrden"
                     :cashId="cash_id"
+                    :disableEnviarOrdenes.sync="disableEnviarOrdenes"
                 >
                 </current-orden>
             </div>
@@ -415,10 +416,12 @@ export default {
         "configuration",
         "tables_row_select",
         "changingOrden",
-        "cash_id"
+        "cash_id",
+        "disableEnviarOrdenes"
     ],
     async created() {
         this.ordens = this.table.orden;
+        console.log("ordens ver si esta llegando", this.ordens);
 
         try {
             this.loading = true;
@@ -439,11 +442,11 @@ export default {
     watch: {
         table(newTable, _) {
             this.ordens = newTable.orden;
-        }
+        },
     },
     data() {
         return {
-            mozos: [], // Add this line
+            mozos: [],
             divided_items: false,
             allFalse: true,
             currentFood: {},
@@ -516,7 +519,7 @@ export default {
                 }
 
                 this.ordenSelectedId = orden.id;
-                this.ordensItems = [...orden.orden_items]; // Ensure reactivity
+                this.ordensItems = [...orden.orden_items];
                 this.currentRef = orden.ref;
                 console.log("Orden seleccionada:", orden.id);
 
@@ -592,7 +595,8 @@ export default {
 
             // Always create a new item if divided_items is true, regardless of stock validation
             if (!this.divided_items) {
-                let qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
+                let qty =
+                    foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
 
                 // Skip stock validation for ZZ, PACK000, or PLAT000
                 if (
@@ -690,9 +694,10 @@ export default {
         },
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
-            let currentPriceIndx = listPricesDescription[type.price_default - 1];
+            let currentPriceIndx =
+                listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
-            
+
             if (type.total == null) {
                 this.$toast.error(
                     "Politica de precio sin total: Tomando precio unitario.."
@@ -701,7 +706,7 @@ export default {
             } else {
                 price = Number(type.total);
             }
-            
+
             // Convertir a entero si no tiene decimales
             return price % 1 === 0 ? parseInt(price) : price;
         },
@@ -715,7 +720,7 @@ export default {
                 orden.type_id = type ? type.id : null;
                 orden.type_description = type ? type.description : null;
                 orden.type_quantity = type ? Number(type.quantity_unit) : 0;
-                
+
                 if (type) {
                     orden.quantity = 1;
                     orden.price = Number(this.getDefaultPrice(type));
@@ -748,9 +753,13 @@ export default {
                         orden.lotes = [];
                         orden.type_quantity = type
                             ? Number(type.quantity_unit)
-                            : 0;                if (this.configuration.divided_items && this.divided_items) {
-                    orden.will_be_divided = true;
-                }
+                            : 0;
+                        if (
+                            this.configuration.divided_items &&
+                            this.divided_items
+                        ) {
+                            orden.will_be_divided = true;
+                        }
                         this.localOrden.push(orden);
                     }
                 } else {
@@ -796,6 +805,8 @@ export default {
                 this.ordensItems = [];
             }
             this.currentRef = orden.ref;
+            this.currentCustomerId = orden.customer_id;
+            console.log("Orden seleccionada:", orden.id);
             this.$refs.ordenRef.calculateTotal();
         }
     }

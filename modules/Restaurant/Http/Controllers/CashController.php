@@ -2406,6 +2406,7 @@ class CashController extends Controller
         CashOrderSession::create([
             'cash_id' => $cash->id,
             'order_start_id' => $this->getLastOrderId(),
+            'establishment_id' => $establishment_id,
             'state' => 1,
             'user_id' => $cash->user_id,
             'created_at' => now(),

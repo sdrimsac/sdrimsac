@@ -13,6 +13,7 @@ class CashOrderSession extends ModelTenant
         'order_end_id',
         'state',
         'user_id',
+        'establishment_id',
         'created_at',
         'updated_at',
     ];

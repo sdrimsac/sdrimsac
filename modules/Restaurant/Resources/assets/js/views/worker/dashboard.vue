@@ -209,77 +209,136 @@
                 </button>
             </div>
         </div>
+        <el-tabs
+            v-model="activeTab"
+            class="mb-3"
+            @tab-click="handleTabClick"
+            v-if="show == 'tables'"
+        >
+            <el-tab-pane label="tables" v-if="show == 'tables'" name="tables">
+                <div class="row p-2" v-show="show == 'tables'">
+                    <!-- Add zones section here, only dependent on show === 'tables' -->
+                    <div class="col-12 mb-3">
+                        <div class="zones-scroll">
+                            <div class="zones-wrapper">
+                                <button
+                                    v-for="(zone, idx) in zones"
+                                    :key="idx"
+                                    type="button"
+                                    class="zone-btn"
+                                    :class="[
+                                        'btn',
+                                        zone_id == zone.id
+                                            ? 'btn-primary text-Success'
+                                            : 'btn-primary'
+                                    ]"
+                                    @click="filterZones(zone.id)"
+                                >
+                                    ZONA {{ zone.name }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="row p-2" v-show="show == 'tables'">
-            <!-- Add zones section here, only dependent on show === 'tables' -->
-            <div class="col-12 mb-3">
-                <div class="zones-scroll">
-                    <div class="zones-wrapper">
-                        <button
-                            v-for="(zone, idx) in zones"
-                            :key="idx"
-                            type="button"
-                            class="zone-btn"
+                    <div
+                        class="col-6 col-md-4 col-xl-2 p-1"
+                        v-for="(data, index) in tables"
+                        :key="index"
+                    >
+                        <div
                             :class="[
-                                'btn',
-                                zone_id == zone.id
-                                    ? 'btn-primary text-Success'
-                                    : 'btn-primary'
+                                data.enabled == false
+                                    ? 'btn-light'
+                                    : data.status_table.id == 1
+                                    ? 'btn-primary'
+                                    : 'btn-danger'
                             ]"
-                            @click="filterZones(zone.id)"
+                            class="btn d-flex flex-column justify-content-center align-items-center w-100"
+                            style="max-height: 200px;"
+                            @click="selectedTable(data.id, data)"
                         >
-                            ZONA {{ zone.name }}
-                        </button>
+                            <strong class="h3 text-white">
+                                {{ data.is_room ? "Habitación" : "Mesa" }}
+                            </strong>
+                            <i class="icofont-dining-table icofont-4x"></i>
+                            <span class="h2 text-white">{{ data.number }}</span>
+                            <span
+                                :class="
+                                    data.enabled == false
+                                        ? 'text-light'
+                                        : data.status_table.id == 1
+                                        ? 'text-white'
+                                        : 'text-white'
+                                "
+                            >
+                                {{ data.status_table.description }}
+                            </span>
+                            <template
+                                v-if="
+                                    data.status_table.id !== 1 &&
+                                        getUserForTable(data.id)
+                                "
+                            >
+                                <span class="text-white">{{
+                                    getUserForTable(data.id).usuario.substring(
+                                        0,
+                                        15
+                                    )
+                                }}</span>
+                            </template>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div
-                class="col-6 col-md-4 col-xl-2 p-1"
-                v-for="(data, index) in tables"
-                :key="index"
+            </el-tab-pane>
+            <el-tab-pane
+                label="Delivery"
+                name="delivery"
+                v-if="show == 'tables'"
+                @click="getTablesDelivery"
             >
-                <div
-                    :class="[
-                        data.enabled == false
-                            ? 'btn-light'
-                            : data.status_table.id == 1
-                            ? 'btn-primary'
-                            : 'btn-danger'
-                    ]"
-                    class="btn d-flex flex-column justify-content-center align-items-center w-100"
-                    style="max-height: 200px;"
-                    @click="selectedTable(data.id, data)"
-                >
-                    <strong class="h3 text-white">
-                        {{ data.is_room ? "Habitación" : "Mesa" }}
-                    </strong>
-                    <i class="icofont-dining-table icofont-4x"></i>
-                    <span class="h2 text-white">{{ data.number }}</span>
-                    <span
-                        :class="
-                            data.enabled == false
-                                ? 'text-light'
-                                : data.status_table.id == 1
-                                ? 'text-white'
-                                : 'text-white'
-                        "
+                <div>
+                    <el-button
+                        type="primary"
+                        class="mb-2"
+                        @click="createDelivery"
                     >
-                        {{ data.status_table.description }}
-                    </span>
-                    <template
-                        v-if="
-                            data.status_table.id !== 1 &&
-                                getUserForTable(data.id)
-                        "
-                    >
-                        <span class="text-white">{{
-                            getUserForTable(data.id).usuario.substring(0, 15)
-                        }}</span>
-                    </template>
+                        Nuevo delivery
+                    </el-button>
                 </div>
-            </div>
-        </div>
+                <div
+                    v-if="deliveryOrders.length > 0"
+                    class="d-flex flex-wrap gap-2"
+                >
+                    <div
+                        v-for="orden in deliveryOrders"
+                        :key="orden.id"
+                        class="delivery-card-red d-flex flex-column justify-content-between align-items-start"
+                        @click="selectOrden(orden.id)"
+                        style="cursor: pointer;"
+                    >
+                        <h2
+                            class="card-title text-white text-center fw-bold"
+                        >
+                            #{{ orden.correlative }}
+                        </h2>
+                        <p
+                            class="card-text text-white mb-1"
+                            style="font-size: 0.95rem;"
+                        >
+                            <!-- <strong>Cliente:</strong>
+                            {{ orden.customer ? orden.customer.name : "N/A"
+                            }}<br /> -->
+                            <strong></strong>
+                            {{ orden.ref ? orden.ref : "N/A" }}
+                            <br />
+                        </p>
+                    </div>
+                </div>
+                <div v-else>
+                    No hay órdenes de delivery.
+                </div>
+            </el-tab-pane>
+        </el-tabs>
 
         <!-- v-show="show == 'ordens'" -->
         <!-- <ListOrden :configuration="configuration" v-if="selectOption == '2'">
@@ -302,6 +361,8 @@
                 @searchOrden="searchitem_modal"
                 :category.sync="category"
                 :cash_id.sync="cashId"
+                :ordenSelectedId.sync="selectedOrdenId"
+                :disableEnviarOrdenes.sync="disableEnviarOrdenes"
             ></detail-orden>
         </template>
         <Pos-form
@@ -314,6 +375,27 @@
 </template>
 
 <style scoped>
+.delivery-card-red {
+    width: 200px;
+    height: 200px;
+    background: #e53935;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s;
+    overflow: hidden;
+}
+.delivery-card-red:hover {
+    box-shadow: 0 4px 16px rgba(229, 57, 53, 0.18);
+}
+@media (max-width: 600px) {
+    .delivery-card-red {
+        width: 48%;
+        min-width: 140px;
+        margin-bottom: 10px;
+    }
+}
 .ttitle {
     font-size: 20px;
     font-weight: bold;
@@ -518,6 +600,9 @@ export default {
     ],
     data() {
         return {
+            disableEnviarOrdenes: false,
+            selectedOrdenId: null,
+            activeTab: "tables",
             zone_id: null,
             showDialog: false,
             recordId: null,
@@ -557,6 +642,8 @@ export default {
             allAreas: [],
             ordens: [],
             tables_row_select: null,
+            deliveryOrders: [],
+            deliveryTable: null, // Agregado para la mesa de delivery
             hooperSettings: {
                 centerMode: false,
                 trimWhiteSpace: true,
@@ -587,6 +674,11 @@ export default {
     mounted() {
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
+
+        // Escuchar evento global para habilitar el botón cuando se cree una orden delivery
+        this.$eventHub.$on('ordenCreadaYLimpiar', () => {
+            this.disableEnviarOrdenes = false;
+        });
 
         Echo.channel("orden_list").listen(
             `.order-list-${this.configuration.socket_channel}`,
@@ -651,74 +743,6 @@ export default {
         }); */
     },
 
-    /* async created() {
-        await this.getFoods();
-        qz.security.setCertificatePromise((resolve, reject) => {
-            this.$http
-                .get("/api/qz/crt/override", {
-                    responseType: "text"
-                })
-                .then(response => {
-                    resolve(response.data);
-                })
-                .catch(error => {
-                    reject(error.data);
-                });
-        });
-        qz.security.setSignaturePromise(toSign => {
-            return (resolve, reject) => {
-                this.$http
-                    .post("/api/qz/signing", {
-                        request: toSign
-                    })
-                    .then(response => {
-                        resolve(response.data);
-                    })
-                    .catch(error => {
-                        reject(error.data);
-                    });
-            };
-        });
-        this.categories.unshift({
-            id: 0,
-            name: "TODOS LAS CATEGORIAS"
-        });
-        this.currentArea = this.user.area_id;
-        this.allAreas = [
-            ...this.areas.map(a => {
-                if (this.currentArea == a.id) {
-                    a.selected = true;
-                } else {
-                    a.selected = false;
-                }
-                return a;
-            }),
-            {
-                id: 0,
-                description: "Ver Ordenes",
-                selected: false
-            }
-        ];
-        let allAreas_all = _.orderBy(this.allAreas, ["id"], ["asc"]);
-        this.allAreas = allAreas_all;
-        // this.tables = this.tables_area;
-        //this.tables_row_select=this.tables_active
-        await this.getTables();
-        await this.userorden();
-        this.$eventHub.$on("reloadData", () => {
-            this.getTables(true);
-        });
-        this.$notify({
-            title: "Sistema de Punto de Venta",
-            iconClass: "icofont-waiter icofont-3x",
-            message: "Bienvenido " + this.user.name
-        });
-        this.$eventHub.$on("selectOrden", ({ ordenId, tableId }) => {
-            if (this.currentTable && this.currentTable.id === tableId) {
-                this.$refs.detailRef.selectOrden(ordenId);
-            }
-        });
-    }, */
     async created() {
         this.cashId = this.cash_id;
         await this.getFoods();
@@ -790,6 +814,54 @@ export default {
         this.$eventHub.$off("cashStatusChanged");
     },
     methods: {
+        createDelivery() {
+            if (this.deliveryTable) {
+                this.currentTable = this.deliveryTable;
+                this.selectedOrdenId = null;
+                this.show = "create";
+                this.disableEnviarOrdenes = true; 
+            } else if (this.$toast) {
+                this.$toast.error("No hay mesa de delivery disponible");
+            }
+        },
+
+        selectOrden(id, retry = 0) {
+            console.log("Seleccionando orden con ID:", id);
+            this.selectedOrdenId = id;
+
+            // Busca la mesa que contiene la orden (para mesas normales y delivery)
+            let foundTable = null;
+            if (this.tables && this.tables.length > 0) {
+                foundTable = this.tables.find(
+                    t => t.orden && t.orden.some(o => o.id === id)
+                );
+            }
+            if (!foundTable && this.deliveryTable) {
+                foundTable = this.deliveryTable;
+            }
+            if (foundTable) {
+                this.currentTable = foundTable;
+            }
+
+            this.show = "create";
+
+            this.$nextTick(() => {
+                if (
+                    this.$refs.detailRef &&
+                    typeof this.$refs.detailRef.selectOrden === "function"
+                ) {
+                    this.$refs.detailRef.selectOrden(id);
+                    console.log("Llamando a selectOrden en detailRef");
+                } else if (retry < 8) {
+                    setTimeout(() => this.selectOrden(id, retry + 1), 100);
+                } else {
+                    console.warn(
+                        "detailRef o selectOrden no está disponible aún"
+                    );
+                }
+            });
+        },
+
         async updateCashId(id) {
             // Cuando se abre la caja
             console.log("Caja abierta con ID:", id);
@@ -1211,7 +1283,6 @@ export default {
             this.show = "create";
             // Actualizar usuarios al seleccionar mesa
             await this.userorden();
-            // Llamar a handleSelectOrden para seleccionar la única orden existente
             if (this.configuration.order_mozo === true) {
                 this.handleSelectOrden();
             }
@@ -1320,11 +1391,64 @@ export default {
                 this.loading = false;
             }
         },
+
+        async getTablesDelivery(change = null) {
+            this.loading = true;
+            try {
+                // Solo obtener la mesa delivery, sin modificar this.tables ni this.all_tables
+                const tablesResponse = await this.$http.get(
+                    `tables/recordsByAreaDelivery/${this.currentArea}`
+                );
+                if (tablesResponse.status == 200) {
+                    const { data } = tablesResponse.data;
+                    let deliveryTable = null;
+                    if (data && data.length > 0) {
+                        deliveryTable = data[0];
+                        this.deliveryTable = deliveryTable; // Guardar la mesa delivery
+                    } else {
+                        this.deliveryTable = null;
+                    }
+                    // Ahora obtener las órdenes usando el método correcto
+                    await this.getDeliveryOrders();
+                }
+            } catch (error) {
+                console.error("Error al actualizar mesas y usuarios:", error);
+                this.$toast.error("Error al actualizar datos");
+            } finally {
+                this.loading = false;
+            }
+        },
+        async getDeliveryOrders() {
+            if (!this.deliveryTable) {
+                this.deliveryOrders = [];
+                return;
+            }
+            this.loading = true;
+            try {
+                const deliveryResp = await this.$http(
+                    `/caja/tables/orden/${this.deliveryTable.id}`
+                );
+                if (deliveryResp.status == 200) {
+                    this.deliveryOrders = deliveryResp.data.ordens;
+                } else {
+                    this.deliveryOrders = [];
+                }
+            } catch (e) {
+                this.deliveryOrders = [];
+            } finally {
+                this.loading = false;
+            }
+        },
         returnToTablesView() {
             this.selectOption = 1;
-            this.tables_row_select = null; // Then reset currentTable
-            this.currentTable = null; // Important: reset currentTable to null
+            this.tables_row_select = null;
+            this.currentTable = null;
             this.show = "tables";
+        },
+        handleTabClick(tab) {
+            if (tab.name === "delivery") {
+                this.getTablesDelivery();
+            }
         }
     }
 };

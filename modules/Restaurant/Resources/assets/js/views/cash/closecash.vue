@@ -1,112 +1,174 @@
 <!-- Modal de CIerre de Caja -->
 <template>
-    <div>
-        <div class="row">
-            <el-dialog
-                title="Cierre de Caja - Contador de dinero"
-                :visible.sync="showDialogClose"
-                @open="dateclosed"
-                :before-close="closeDialog"
-                v-loading="loading"
-                width="600px"
-            >
-                <!-- Encabezado -->
-                <el-row :gutter="10" style="margin-bottom: 1px;">
-                    <el-col :span="12">
-                        <div>
-                            <label>Fecha:</label>
-                            <strong style="font-size: 1.2em; color: #000;">{{ date_closed }}</strong>
-                        </div>
-                    </el-col>
-                    <el-col :span="12" class="text-right">
-                        <div v-if="configuration.view_daily_cash || configuration.view_daily_cash_pin">
-                            <label style="color: darkgreen;">Total Ventas en Efectivo</label>
-                            <div v-if="configuration.view_daily_cash_pin">
-                                <h3>{{ returnTextObfuscated(totalSales.toString()) }}</h3>
-                            </div>
-                            <div v-else>
-                                <h2 style="color: darkgreen; font-size: 2em;">
-                                    <strong>{{ totalSales.toFixed(2) }}</strong>
-                                </h2>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-row>
+    <!-- <div>
+        <div class="row"> -->
+    <el-dialog
+        title="Cierre de Caja - Contador de dinero"
+        :visible.sync="showDialogClose"
+        @open="dateclosed"
+        :before-close="closeDialog"
+        v-loading="loading"
+        width="800px"
+    >
+        <!-- Encabezado -->
+        <el-row :gutter="10" style="margin-bottom: 1px;">
+            <el-col :span="12">
+                <div>
+                    <label>Fecha:</label>
+                    <strong style="font-size: 1.2em; color: #000;">{{
+                        date_closed
+                    }}</strong>
+                </div>
+            </el-col>
+            <el-col :span="12" class="text-right">
+                <div
+                    v-if="
+                        configuration.view_daily_cash ||
+                            configuration.view_daily_cash_pin
+                    "
+                >
+                    <label style="color: darkgreen;"
+                        >Total Ventas en Efectivo</label
+                    >
+                    <div v-if="configuration.view_daily_cash_pin">
+                        <h3>
+                            {{ returnTextObfuscated(totalSales.toString()) }}
+                        </h3>
+                    </div>
+                    <div v-else>
+                        <h2 style="color: darkgreen; font-size: 2em;">
+                            <strong>{{ totalSales.toFixed(2) }}</strong>
+                        </h2>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
 
-                <!-- Billetes y Monedas -->
-                <el-row :gutter="10">
-                    <el-col :span="12">
-                        <el-card shadow="hover" style="padding:1px;">
-                            <div class="header">
-                                <span>Billetes</span>
-                                <!-- <img src="/billetes.png" width="30" height="20" /> -->
-                            </div>
-                            <el-row v-for="b in [10,20,50,100,200]" :key="b" align="middle" style="margin-bottom:5px;">
-                                <el-col :span="8"><strong>S/ {{ b }}</strong></el-col>
-                                <el-col :span="8">
-                                    <el-input size="mini" v-model="count[b]" placeholder="0"
-                                        @input="updateFinalBalance(count[b], b)" />
-                                </el-col>
-                                <el-col :span="8" class="text-right">
-                                    <span>{{ ((count[b]||0)*b).toFixed(2) }}</span>
-                                </el-col>
-                            </el-row>
-                            <br>
-                            <br>
-                            <div class="total-row">
-                                <span>Total:</span>
-                                <span class="float-right"><strong>{{ totalBills.toFixed(2) }}</strong></span>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-card shadow="hover" style="padding:10px;">
-                            <div class="header">
-                                <span>Monedas</span>
-                                <!-- <img src="/monedas.png" width="30" height="20" /> -->
-                            </div>
-                            <el-row v-for="m in [0.1,0.2,0.5,1,2,5]" :key="m" align="middle" style="margin-bottom:5px;">
-                                <el-col :span="8"><strong>S/ {{ m }}</strong></el-col>
-                                <el-col :span="8">
-                                    <el-input size="mini" v-model="count[m]" placeholder="0"
-                                        @input="updateFinalBalance(count[m], m, true)" />
-                                </el-col>
-                                <el-col :span="8" class="text-right">
-                                    <span>{{ ((count[m]||0)*m).toFixed(2) }}</span>
-                                </el-col>
-                            </el-row>
-                            <div class="total-row">
-                                <span>Total:</span>
-                                <span class="float-right"><strong>{{ totalCoins.toFixed(2) }}</strong></span>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <br>
-                <!-- Resumen y acciones -->
-                <el-row :gutter="10" style="margin-top:5px; align-items: center;">
-                    <el-col :span="8" style="display: flex; align-items: center;">
-                        <span style="margin-right: 8px;">Conteo:</span>
-                        <el-input :value="final_balance.toFixed(2)" readonly size="mini" style="flex: 1;"></el-input>
-                    </el-col>
-                    <el-col :span="8" v-if="configuration.view_daily_cash || configuration.view_daily_cash_pin" style="display: flex; align-items: center;">
-                        <span style="margin-right: 8px;">Diferencia:</span>
-                        <el-input
-                            :class="difference < 0 ? 'text-danger-difference' : ''"
-                            :value="configuration.view_daily_cash_pin ? returnTextObfuscated(difference) : difference"
-                            readonly
-                            size="mini"
-                            style="flex: 1;"
-                        ></el-input>
-                    </el-col>
-                    <el-col :span="8" class="text-right" style="display: flex; align-items: right; justify-content: center;">
-                        <el-button class="btn_guardarsmall" size="mini" type="primary" @click="clickCloseCash">
-                            <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
-                            Cerrar Caja
-                        </el-button>
-                    </el-col>
-                </el-row>
-                <!-- <el-row :gutter="10" style="margin-top:15px;">
+        <!-- Billetes y Monedas -->
+        <el-row :gutter="10">
+            <el-col :span="12">
+                <el-card shadow="hover" style="padding:1px;">
+                    <div class="header">
+                        <span>Billetes</span>
+                        <!-- <img src="/billetes.png" width="30" height="20" /> -->
+                    </div>
+                    <el-row
+                        v-for="b in [10, 20, 50, 100, 200]"
+                        :key="b"
+                        align="middle"
+                        style="margin-bottom:5px;"
+                    >
+                        <el-col :span="8"
+                            ><strong>S/ {{ b }}</strong></el-col
+                        >
+                        <el-col :span="8">
+                            <el-input
+                                size="mini"
+                                v-model="count[b]"
+                                placeholder="0"
+                                @input="updateFinalBalance(count[b], b)"
+                            />
+                        </el-col>
+                        <el-col :span="8" class="text-right">
+                            <span>{{ ((count[b] || 0) * b).toFixed(2) }}</span>
+                        </el-col>
+                    </el-row>
+                    <br />
+                    <br />
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span class="float-right"
+                            ><strong>{{ totalBills.toFixed(2) }}</strong></span
+                        >
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="12">
+                <el-card shadow="hover" style="padding:10px;">
+                    <div class="header">
+                        <span>Monedas</span>
+                        <!-- <img src="/monedas.png" width="30" height="20" /> -->
+                    </div>
+                    <el-row
+                        v-for="m in [0.1, 0.2, 0.5, 1, 2, 5]"
+                        :key="m"
+                        align="middle"
+                        style="margin-bottom:5px;"
+                    >
+                        <el-col :span="8"
+                            ><strong>S/ {{ m }}</strong></el-col
+                        >
+                        <el-col :span="8">
+                            <el-input
+                                size="mini"
+                                v-model="count[m]"
+                                placeholder="0"
+                                @input="updateFinalBalance(count[m], m, true)"
+                            />
+                        </el-col>
+                        <el-col :span="8" class="text-right">
+                            <span>{{ ((count[m] || 0) * m).toFixed(2) }}</span>
+                        </el-col>
+                    </el-row>
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span class="float-right"
+                            ><strong>{{ totalCoins.toFixed(2) }}</strong></span
+                        >
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+        <br />
+        <!-- Resumen y acciones -->
+        <el-row :gutter="10" style="margin-top:5px; align-items: center;">
+            <el-col :span="8" style="display: flex; align-items: center;">
+                <span style="margin-right: 8px;">Conteo:</span>
+                <el-input
+                    :value="final_balance.toFixed(2)"
+                    readonly
+                    size="mini"
+                    style="flex: 1;"
+                ></el-input>
+            </el-col>
+            <el-col
+                :span="8"
+                v-if="
+                    configuration.view_daily_cash ||
+                        configuration.view_daily_cash_pin
+                "
+                style="display: flex; align-items: center;"
+            >
+                <span style="margin-right: 8px;">Diferencia:</span>
+                <el-input
+                    :class="difference < 0 ? 'text-danger-difference' : ''"
+                    :value="
+                        configuration.view_daily_cash_pin
+                            ? returnTextObfuscated(difference)
+                            : difference
+                    "
+                    readonly
+                    size="mini"
+                    style="flex: 1;"
+                ></el-input>
+            </el-col>
+            <el-col
+                :span="8"
+                class="text-right"
+                style="display: flex; align-items: right; justify-content: center;"
+            >
+                <el-button
+                    class="btn_guardarsmall"
+                    size="mini"
+                    type="primary"
+                    @click="clickCloseCash"
+                >
+                    <i class="el-icon-s-finance" style="margin-right: 5px;"></i>
+                    Cerrar Caja
+                </el-button>
+            </el-col>
+        </el-row>
+        <!-- <el-row :gutter="10" style="margin-top:15px;">
                     <el-col :span="16">
                         <el-card shadow="never" style="padding:10px;">
                             <div>
@@ -135,47 +197,47 @@
                     </el-col>
                 </el-row> -->
 
-                <!-- Serie de Billetes (solo si health_network) -->
-                <el-row v-if="configuration.health_network" style="margin-top:15px;">
-                    <el-col :span="24">
-                        <el-card shadow="never" style="padding:10px;">
-                            <div class="header">
-                                <span>Serie de Billetes</span>
-                            </div>
-                            <el-button
-                                type="primary"
-                                style="border-radius: 5px; padding: 5px 10px; margin-right: 10px;"
-                                icon="el-icon-document"
-                                @click="showSeriesBills"
-                            >
-                                Ingresar
-                            </el-button>
-                            <el-button
-                                style="border-radius: 5px; padding: 5px 10px; background-color: #28a745; color: white;"
-                                icon="el-icon-folder-opened"
-                                @click.prevent="$refs.file.click()"
-                            >
-                                Subir Excel
-                            </el-button>
-                            <input
-                                type="file"
-                                @change="uploadExcelBillsSeries"
-                                style="visibility:hidden;"
-                                ref="file"
-                                accept=".xlsx,.xls"
-                            />
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <br>
+        <!-- Serie de Billetes (solo si health_network) -->
+        <el-row v-if="configuration.health_network" style="margin-top:15px;">
+            <el-col :span="24">
+                <el-card shadow="never" style="padding:10px;">
+                    <div class="header">
+                        <span>Serie de Billetes</span>
+                    </div>
+                    <el-button
+                        type="primary"
+                        style="border-radius: 5px; padding: 5px 10px; margin-right: 10px;"
+                        icon="el-icon-document"
+                        @click="showSeriesBills"
+                    >
+                        Ingresar
+                    </el-button>
+                    <el-button
+                        style="border-radius: 5px; padding: 5px 10px; background-color: #28a745; color: white;"
+                        icon="el-icon-folder-opened"
+                        @click.prevent="$refs.file.click()"
+                    >
+                        Subir Excel
+                    </el-button>
+                    <input
+                        type="file"
+                        @change="uploadExcelBillsSeries"
+                        style="visibility:hidden;"
+                        ref="file"
+                        accept=".xlsx,.xls"
+                    />
+                </el-card>
+            </el-col>
+        </el-row>
+        <br />
 
-                <series-bills-dialog
-                    :showDialog.sync="showSeriesBillsDialog"
-                    :seriesBills.sync="seriesBills"
-                ></series-bills-dialog>
-            </el-dialog>
-        </div>
-    </div>
+        <series-bills-dialog
+            :showDialog.sync="showSeriesBillsDialog"
+            :seriesBills.sync="seriesBills"
+        ></series-bills-dialog>
+    </el-dialog>
+    <!-- </div>
+    </div> -->
 </template>
 
 <style>
@@ -337,9 +399,10 @@ export default {
         async clickCloseCash() {
             const result = await Swal.fire({
                 title: "Cerrar caja",
-                text: this.difference == 0
-                    ? "¿Está seguro de cerrar la caja?"
-                    : "¿Está seguro de cerrar la caja, sin realizar el conteo en efectivo?",
+                text:
+                    this.difference == 0
+                        ? "¿Está seguro de cerrar la caja?"
+                        : "¿Está seguro de cerrar la caja, sin realizar el conteo en efectivo?",
                 icon: "warning",
                 showCancelButton: true,
                 cancelButtonText: "Cancelar",

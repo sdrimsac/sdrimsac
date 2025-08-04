@@ -546,6 +546,9 @@ export default {
                 // Lanzar evento para limpiar la lista de órdenes
                 this.$emit("clearListOrden");
 
+                // Lanzar evento global para limpiar datos en otros componentes
+                this.$eventHub.$emit("ordenFormLimpiar", ordenId);
+
                 let msg = "";
                 if (this.clientTableData.orden_id) {
                     msg = `Se agregaron los pedidos a la orden ${ordenId}`;

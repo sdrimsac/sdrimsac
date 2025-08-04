@@ -127,7 +127,8 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_table_id = $user->establishment_table_id;
         $establishment_id = $user->establishment_id;
-        $query = Table::where('number', 'not like', '%caj%');
+        $query = Table::where('number', 'not like', '%caj%')
+            ->where('is_delivery', '!=', 1); // Omitir mesas de delivery
 
         if ($establishment_table_id) {
             $query->where('establishment_id', $establishment_table_id)
@@ -147,8 +148,7 @@ class TableController extends Controller
                 });
         }
 
-        $tables = new TableCollection($query
-            ->get());
+        $tables = new TableCollection($query->get());
         $zones = Zone::where('active', true)->get();
 
         return [
@@ -157,6 +157,45 @@ class TableController extends Controller
             'zones' => $zones
         ];
     }
+
+    public function recordsByAreaDelivery($id)
+    {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+
+        $query = Table::where('number', 'not like', '%caj%')
+            ->where('is_delivery', 1);
+
+        // Condición según el área o establecimiento
+        if ($user->establishment_table_id) {
+            // Filtrar por establecimiento si tiene mesa asignada
+            $query->where('establishment_id', $user->establishment_table_id);
+        } else {
+            // Si no, filtrar por área
+            $query->where('area_id', $id)
+                ->where('establishment_id', $establishment_id);
+        }
+
+        // Filtro común de estado de la mesa
+        $query->where(function ($q) {
+            $q->where(function ($query) {
+                $query->where('is_room', 1)->where('status_table_id', 2);
+            })
+                ->orWhere(function ($query) {
+                    $query->where('is_room', 0);
+                });
+        });
+
+        $tables = new TableCollection($query->get());
+        $zones = Zone::where('active', true)->get();
+
+        return [
+            'success' => true,
+            'data' => $tables,
+            'zones' => $zones,
+        ];
+    }
+
     public function get_tables()
     {
         ini_set('memory_limit', '2500M');
@@ -170,7 +209,7 @@ class TableController extends Controller
             ->where('is_delivery', 0)
             ->where(function ($query) use ($establishment_id) {
                 $query->where('establishment_id', $establishment_id)
-                      ->orWhereNull('establishment_id');
+                    ->orWhereNull('establishment_id');
             })
             ->get();
 
@@ -191,7 +230,7 @@ class TableController extends Controller
             ->where('is_delivery', 1)
             ->where(function ($query) use ($establishment_id) {
                 $query->where('establishment_id', $establishment_id)
-                      ->orWhereNull('establishment_id');
+                    ->orWhereNull('establishment_id');
             })
             ->get();
 
@@ -251,17 +290,17 @@ class TableController extends Controller
     {
         try {
             $orders = Orden::where('status_orden_id', 1)
-                ->with(['orden_items' => function($query) {
+                ->with(['orden_items' => function ($query) {
                     $query->where('status_orden_id', 1);
                 }, 'table', 'orden_items.user'])
-                ->whereHas('table', function($query) {
+                ->whereHas('table', function ($query) {
                     $query->where('status_table_id', 2);
                 })
                 ->get();
 
             $result = [];
-            foreach($orders as $order) {
-                foreach($order->orden_items as $item) {
+            foreach ($orders as $order) {
+                foreach ($order->orden_items as $item) {
                     $result[] = [
                         'orden_id' => $order->id,
                         'orden_item_id' => $item->id,
@@ -277,7 +316,6 @@ class TableController extends Controller
                 'success' => true,
                 'data' => $result
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -288,15 +326,14 @@ class TableController extends Controller
 
     public function get_ordens($id)
     {
-        
+
         ini_set('memory_limit', '500M');
         $ordens = Orden::where('table_id', $id)
             ->where('status_orden_id', '<>', 4)
             ->where('status_orden_id', '<>', 5)
-            ->with(['orden_items' => function($query) {
+            ->with(['orden_items' => function ($query) {
                 $query->where('status_orden_id', '<>', 4)
                     ->where('status_orden_id', '<>', 5);
-                
             }])
             ->get();
 
@@ -441,7 +478,7 @@ class TableController extends Controller
     {
         $id = $request->input('id');
         $data = $request->all();
-        
+
         // Convert is_cleaning, has_frigobar, is_delivery to boolean (0/1)
         if (isset($data['is_cleaning'])) {
             $data['is_cleaning'] = filter_var($data['is_cleaning'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;

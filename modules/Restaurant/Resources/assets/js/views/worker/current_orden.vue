@@ -158,15 +158,36 @@
                     ></el-switch>
                 </div>
                 <div class="col-8 d-flex justify-content-end">
-                    <el-tooltip
-                        effect="dark"
-                        content="Enviar ordenes"
-                        placement="top-start"
-                    >
-                        <el-button @click="submit" class="btn-sm bg-success">
-                            <i class="el-icon-s-promotion"></i>
-                        </el-button>
-                    </el-tooltip>
+                    <template >
+                        <el-tooltip
+                            effect="dark"
+                            content="Delivery"
+                            placement="top-start"
+                        >
+                            <el-button
+                                type="primary"
+                                class="btn btn-sm"
+                                @click="openDelivery"
+                            >
+                                <i class="fas fa-biking"></i>
+                            </el-button>
+                        </el-tooltip>
+                    </template>
+                    <template>
+                        <el-tooltip
+                            effect="dark"
+                            content="Enviar ordenes"
+                            placement="top-start"
+                        >
+                            <el-button
+                                @click="submit"
+                                class="btn-sm bg-success"
+                            >
+                                <i class="el-icon-s-promotion"></i>
+                            </el-button>
+                        </el-tooltip>
+                    </template>
+
                     <el-tooltip
                         effect="dark"
                         content="ver ordenes antes de enviar"
@@ -740,6 +761,15 @@
                 <!-- <el-button type="primary" @click="cancelOrdenaPin">Eliminar</el-button> -->
             </div>
         </el-dialog>
+
+        <DeliveryForm
+            :visible="showDeliveryForm"
+            @close="showDeliveryForm = false"
+            :localOrden="localOrden"
+            :configuration="configuration"
+            :fromPos="true"
+            :cash_id="cash_id"
+        />
     </div>
 </template>
 
@@ -769,6 +799,7 @@
 import Pinform from "./paid.vue";
 import ObservationForm from "../partials/observation_form.vue";
 import swal from "sweetalert2";
+import DeliveryForm from "../pos/partials/delivery_from.vue";
 const OpenItems = () => import("../../views/pos/partials/visualizate.vue");
 
 export default {
@@ -782,23 +813,52 @@ export default {
         "table",
         "divided_items",
         "mozos",
-        "cash_id"
+        "cash_id",
+        "customerId",
+        "disableEnviarOrdenes"
     ],
     async created() {
-        this.referenciaInput = this.referencia;
+        this.referenciaInput = this.referencia || "";
         this.mozos = this.mozos || [];
         this.readDividedItemsLocalStorage();
         await this.getTags();
-        //this.$root.$on("addProductToOrder", this.addProductToOrder);
+
+        this.$eventHub.$on("ordenFormLimpiar", async ordenId => {
+            console.log("ordenFormLimpiar event received, ordenId:", ordenId);
+            await this.reloadOrders(ordenId);
+        });
+    },
+    watch: {
+        referencia(newVal) {
+            if (!this.referenciaInput) {
+                this.referenciaInput = newVal || "";
+            }
+        },
+        ordenSelectedId(newVal) {
+            this.localOrdenSelectedId = newVal;
+            // Cuando cambia la orden seleccionada, actualiza el input con la referencia de la nueva orden
+            if (this.referencia) {
+                this.referenciaInput = this.referencia;
+            }
+            console.log("ordenSelectedId changed:", newVal);
+        },
+        ordens(newOrdens, _) {
+            this.calculateTotal(newOrdens);
+        },
+        selectedMozo(newValue) {
+            this.$emit("mozo-selected", newValue);
+        }
     },
     components: {
         swal,
         Pinform,
         ObservationForm,
-        OpenItems
+        OpenItems,
+        DeliveryForm
     },
     data() {
         return {
+            showDeliveryForm: false,
             showOpenOrden: false,
             localDividedItems: this.divided_items,
             deleteGeneralOrden: false,
@@ -838,10 +898,38 @@ export default {
         },
         ordenSelectedId(newVal) {
             this.localOrdenSelectedId = newVal;
+            console.log("ordenSelectedId changed:", newVal);
         }
     },
     mounted() {},
     methods: {
+        async reloadOrders(ordenId) {
+            // Lógica para recargar la lista de órdenes, puedes personalizar según tu API
+            try {
+                this.loading = true;
+                // Ejemplo: obtener las órdenes actualizadas
+                const response = await this.$http.get(
+                    "/caja/worker/orden-new/{}".replace("{}", ordenId)
+                );
+                if (response.status === 200 && response.data) {
+                    //this.$emit("update:ordens", response.data.ordens || []);
+
+                    //this.$emit("update:ordens", response.data.ordens || []);
+                    this.$emit("update:localOrden", []);
+                    this.$emit("update:disableEnviarOrdenes", false);
+                }
+            } catch (e) {
+                this.$toast &&
+                    this.$toast.error(
+                        "No se pudo actualizar la lista de órdenes"
+                    );
+            } finally {
+                this.loading = false;
+            }
+        },
+        openDelivery() {
+            this.showDeliveryForm = true;
+        },
         openOrden() {
             this.showOpenOrden = true;
         },
@@ -1209,7 +1297,8 @@ export default {
                 mozo_id: this.selectedMozo,
                 orden: {
                     table_id: this.tableId,
-                    status_orden_id: 1
+                    status_orden_id: 1,
+                    customer_id: null
                 },
                 items: this.localOrden,
                 ref: this.referenciaInput,
@@ -1265,18 +1354,6 @@ export default {
                 this.loading = false;
             }
         },
-
-        /* selectOrden(ordenId) {
-            // Logic to select and render the order
-            this.ordenSelectedId = ordenId;
-            const selectedOrder = this.ordens.find(o => o.id === ordenId);
-            if (selectedOrder) {
-                this.ordensItems = selectedOrder.orden_items || [];
-                this.currentRef = selectedOrder.ref;
-                this.calculateTotal();
-                this.view_orders();
-            }
-        }, */
 
         closeDialog(ordenId = null) {
             let ordenToAdd = [...this.localOrden];

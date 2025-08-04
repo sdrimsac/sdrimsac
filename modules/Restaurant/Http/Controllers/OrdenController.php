@@ -981,6 +981,7 @@ class OrdenController extends Controller
 
             // Optimizar la búsqueda de orden
             $id = null;
+            $orden = null;
             if ($configuration->commands_fisico) {
                 $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
                 $id = $orden ? $orden->id : null;
@@ -1025,7 +1026,11 @@ class OrdenController extends Controller
             $orden = null;
             if ($id != null) {
                 $orden = Orden::find($id);
-                $orden->ref = $ref;
+                // Only update ref if a new value is provided (not null or empty) and it's the same order
+                if ($ref !== null && $ref !== '') {
+                    $orden->ref = $ref;
+                }
+                // If ref is null or empty, keep the existing ref (do not overwrite)
                 $orden->mozo_id = $mozo_id;
 
                 $table = Table::find($orden->table_id);
@@ -1104,15 +1109,24 @@ class OrdenController extends Controller
                 $orden->to_carry = $request->to_carry;
                 $orden->commands_fisico = $request->commands_fisico;
 
-                // Obtener la sesión de caja activa para el usuario actual
-                $user_id = auth()->id();
+                //obtner el al usuaruio auth()->id() y asignar el establecimiento_id
+
+                $establishment_id = auth()->user()->establishment_id;
+                // Buscar la caja abierta para el establecimiento actual, sin importar el usuario
                 $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
-                    ->where('user_id', $user_id)
-                    ->where('state', 1)
+                    ->where('state', 1) // Solo sesiones abiertas
+                    ->where('establishment_id', $establishment_id)
                     ->latest('id')
                     ->first();
 
-                // Asignar correlativo incremental por sesión de caja
+                // Si no hay caja abierta, no permitir crear la orden
+                if (!$cash_order_session) {
+                    return [
+                        'success' => false,
+                        'message' => 'No hay caja abierta para este establecimiento (state=0: caja cerrada). Debe abrir caja antes de registrar órdenes.'
+                    ];
+                }
+
                 if ($cash_order_session) {
                     $order_start_id = $cash_order_session->order_start_id;
                     // Contar las órdenes creadas después de order_start_id
@@ -1121,6 +1135,17 @@ class OrdenController extends Controller
                 } else {
                     $orden->correlative = 1;
                 }
+
+
+                // Asignar correlativo incremental por sesión de caja
+                /* if ($cash_order_session) {
+                    $order_start_id = $cash_order_session->order_start_id;
+                    // Contar las órdenes creadas después de order_start_id
+                    $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
+                    $orden->correlative = $correlative;
+                } else {
+                    $orden->correlative = 1;
+                } */
 
                 if ($request->caja == true) {
                     $orden->table_id = $table->id;
@@ -1815,14 +1840,6 @@ class OrdenController extends Controller
             Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
         }
 
-
-         /* else {
-            // Imprimir solo en cocina
-            $area = Area::where('description', 'like', '%COCIN%')->first();
-            $area_id = $area ? $area->id : null;
-            $printer = $area && $area->printer ? $area->printer : $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
-        } */
         return [
             'success' => true,
             'printer' => $printer,
