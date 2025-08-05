@@ -234,20 +234,20 @@
             >
                 <div class="row col-12" v-if="clientTableData.table">
                     <div class="col-6" v-if="configuration.restaurant">
-                        <h3 class="text-white">
+                        <h5 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
                                     ` ${
                                         isCreatingOrden
-                                            ? "CREANDO ORDEN"
+                                            ? "Creando Orden"
                                             : clientTableData.correlative
-                                            ? `(ORDEN n°
+                                            ? `(Orden N°
                                 ${clientTableData.correlative})`
                                             : ""
                                     }`
                                 }}
                             </strong>
-                        </h3>
+                        </h5>
                     </div>
                     <div
                         class="h5 text-white col-6"
@@ -544,7 +544,7 @@
                             v-if="
                                 localOrden.length > 0 &&
                                     configuration.restaurant_delivery &&
-                                    configuration.restaurant
+                                    configuration.restaurant && !clientTableData.table
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -2702,7 +2702,7 @@
                                                                         style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                     >
                                                                         Precio
-                                                                        
+
                                                                         <el-input
                                                                             class="custom_input"
                                                                             style="width: 100%; font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
@@ -2776,7 +2776,6 @@
                                                                     size="medium"
                                                                 >
                                                                     <strong
-                                                                       
                                                                         style=" font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                     >
                                                                         {{
@@ -3711,7 +3710,13 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        /* openDeliveryForm() {
+            this.allToCarry();
+            this.showDeliveryForm = true;
+        }, */
         openDeliveryForm() {
+            this.to_carry = true; // Asegúrate de esto antes
+            this.allToCarry();
             this.showDeliveryForm = true;
         },
         addItemToSelection(item) {
@@ -5463,6 +5468,13 @@ export default {
             }
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
+            }
+            if (this.clientTableData.customer_id) {
+                form_submit.customer_id = this.clientTableData.customer_id;
+                console.log(
+                    "ver pasando el customer_id",
+                    this.clientTableData.customer_id
+                );
             }
             if (!this.configuration.maderera && !this.divided_items) {
                 form_submit.items = this.mergeItems(form_submit.items);

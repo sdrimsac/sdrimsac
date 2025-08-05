@@ -1762,9 +1762,9 @@ class OrdenController extends Controller
 
         $company = Company::first();
         $configuration = Configuration::first();
-        $establishment = Establishment::first();
+        $establishment = Establishment::find(auth()->user()->establishment_id);
+        
         $delivery = Delivery::with('person')->where('orden_id', $orden_id)->first();
-        dump($delivery);
         $orden_items = OrdenItem::with('item')
             ->where('orden_id', $orden_id)
             ->get()

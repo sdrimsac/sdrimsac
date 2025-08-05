@@ -1,8 +1,18 @@
 <!-- MODULO DE COBRO CAJA 8800 -->
 <template>
-    <el-dialog :visible="is_payment" @open="date_of_issue" @close="unlockButton" :close-on-click-modal="false"
-        :close-on-press-escape="false" :modal-append-to-body="true" :show-close="false" :append-to-body="true"
-        :width="dialogWidth" top="2vh" :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`">
+    <el-dialog
+        :visible="is_payment"
+        @open="date_of_issue"
+        @close="unlockButton"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :modal-append-to-body="true"
+        :show-close="false"
+        :append-to-body="true"
+        :width="dialogWidth"
+        top="2vh"
+        :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
+    >
         <!-- Ensure loading_submit covers the entire modal -->
         <div v-loading="loading_submit" :element-loading-text="loadingText">
             <div class=" mb-0">
@@ -71,80 +81,96 @@
                                                     }"
                                                     @click="
                                                         selectDocumentType('01')
-                                                        " title="FACTURA">
-                                                            <i class="fas fa-file-invoice-dollar fa-lg"
-                                                                style="margin-right: 8px;"></i>
-                                                            FACTURA
-                                                        </el-button>
-                                                        <!-- Botón Boleta -->
-                                                        <el-button v-if="receipt" label="03" class="responsive-btn"
-                                                            :style="{
-                                                                backgroundColor:
-                                                                    form.document_type_id ===
-                                                                        '03'
-                                                                        ? '#FFC107'
-                                                                        : '#B0B0B0',
-                                                                borderColor:
-                                                                    form.document_type_id ===
-                                                                        '03'
-                                                                        ? '#FFC107'
-                                                                        : '#ccc',
-                                                                color:
-                                                                    form.document_type_id ===
-                                                                        '03'
-                                                                        ? '#fff'
-                                                                        : '#000',
-                                                                marginRight: '10px',
-                                                                fontSize: '16px',
-                                                                fontFamily:
-                                                                    'Arial, sans-serif',
-                                                                padding: '8px 20px',
-                                                                fontWeight: 'bold',
-                                                                width: '130px',
-                                                                height: '50px',
-                                                                borderRadius: '5px',
-                                                                display: 'flex',
-                                                                justifyContent:
-                                                                    'center',
-                                                                alignItems: 'center'
-                                                            }" @click="
+                                                    "
+                                                    title="FACTURA"
+                                                >
+                                                    <i
+                                                        class="fas fa-file-invoice-dollar fa-lg"
+                                                        style="margin-right: 8px;"
+                                                    ></i>
+                                                    FACTURA
+                                                </el-button>
+                                                <!-- Botón Boleta -->
+                                                <el-button
+                                                    v-if="receipt"
+                                                    label="03"
+                                                    class="responsive-btn"
+                                                    :style="{
+                                                        backgroundColor:
+                                                            form.document_type_id ===
+                                                            '03'
+                                                                ? '#FFC107'
+                                                                : '#B0B0B0',
+                                                        borderColor:
+                                                            form.document_type_id ===
+                                                            '03'
+                                                                ? '#FFC107'
+                                                                : '#ccc',
+                                                        color:
+                                                            form.document_type_id ===
+                                                            '03'
+                                                                ? '#fff'
+                                                                : '#000',
+                                                        marginRight: '10px',
+                                                        fontSize: '16px',
+                                                        fontFamily:
+                                                            'Arial, sans-serif',
+                                                        padding: '8px 20px',
+                                                        fontWeight: 'bold',
+                                                        width: '130px',
+                                                        height: '50px',
+                                                        borderRadius: '5px',
+                                                        display: 'flex',
+                                                        justifyContent:
+                                                            'center',
+                                                        alignItems: 'center'
+                                                    }"
+                                                    @click="
                                                         selectDocumentType('03')
-                                                        " title="BOLETA">
-                                                            <i class="fas fa-file-alt fa-lg"
-                                                                style="margin-right: 8px;"></i>
-                                                            BOLETA
-                                                        </el-button>
-                                                        <!-- Botón Nota de Venta -->
-                                                        <el-button v-if="sale_note" label="80" class="responsive-btn"
-                                                            :style="{
-                                                                backgroundColor:
-                                                                    form.document_type_id ===
-                                                                        '80'
-                                                                        ? '#1E88E5'
-                                                                        : '#B0B0B0',
-                                                                borderColor:
-                                                                    form.document_type_id ===
-                                                                        '80'
-                                                                        ? '#1E88E5'
-                                                                        : '#ccc',
-                                                                color:
-                                                                    form.document_type_id ===
-                                                                        '80'
-                                                                        ? '#fff'
-                                                                        : '#000',
-                                                                fontSize: '16px',
-                                                                fontFamily:
-                                                                    'Arial, sans-serif',
-                                                                padding: '8px 20px',
-                                                                fontWeight: 'bold',
-                                                                width: '130px',
-                                                                height: '50px',
-                                                                borderRadius: '5px',
-                                                                display: 'flex',
-                                                                justifyContent:
-                                                                    'center',
-                                                                alignItems: 'center'
-                                                            }" @click="
+                                                    "
+                                                    title="BOLETA"
+                                                >
+                                                    <i
+                                                        class="fas fa-file-alt fa-lg"
+                                                        style="margin-right: 8px;"
+                                                    ></i>
+                                                    BOLETA
+                                                </el-button>
+                                                <!-- Botón Nota de Venta -->
+                                                <el-button
+                                                    v-if="sale_note"
+                                                    label="80"
+                                                    class="responsive-btn"
+                                                    :style="{
+                                                        backgroundColor:
+                                                            form.document_type_id ===
+                                                            '80'
+                                                                ? '#1E88E5'
+                                                                : '#B0B0B0',
+                                                        borderColor:
+                                                            form.document_type_id ===
+                                                            '80'
+                                                                ? '#1E88E5'
+                                                                : '#ccc',
+                                                        color:
+                                                            form.document_type_id ===
+                                                            '80'
+                                                                ? '#fff'
+                                                                : '#000',
+                                                        fontSize: '16px',
+                                                        fontFamily:
+                                                            'Arial, sans-serif',
+                                                        padding: '8px 20px',
+                                                        fontWeight: 'bold',
+                                                        width: '130px',
+                                                        height: '50px',
+                                                        borderRadius: '5px',
+                                                        display: 'flex',
+                                                        justifyContent:
+                                                            'center',
+                                                        alignItems: 'center'
+                                                    }"
+                                                    @click="
                                                         selectDocumentType('80')
                                                     "
                                                     title="NOTA"
@@ -1681,10 +1707,14 @@
             </div>
         </div>
 
-            <multiple-payment-form v-if="showDialogMultiplePayment" :showDialog.sync="showDialogMultiplePayment"
-                :payments="payments" @add="addRow"></multiple-payment-form>
+        <multiple-payment-form
+            v-if="showDialogMultiplePayment"
+            :showDialog.sync="showDialogMultiplePayment"
+            :payments="payments"
+            @add="addRow"
+        ></multiple-payment-form>
 
-            <!-- <sale-notes-options :showDialog.sync="showDialogSaleNote"
+        <!-- <sale-notes-options :showDialog.sync="showDialogSaleNote"
                                     :recordId="saleNotesNewId"
                                     :showClose="true"></sale-notes-options>  -->
 
@@ -1854,7 +1884,6 @@ label {
 
 /* Media query para pantallas de tamaño 1280x768px */
 @media (max-width: 1280px) and (max-height: 768px) {
-
     /* Ajuste en los botones para pantallas pequeñas */
     .radio-buttons-group .el-radio-button {
         padding: 5px;
@@ -1881,7 +1910,6 @@ label {
 
 /* Media query para pantallas muy pequeñas (como móviles) */
 @media (max-width: 576px) {
-
     /* Ajuste aún más pequeño en los íconos y botones */
     .radio-buttons-group .el-radio-button i {
         font-size: 18px;
@@ -1918,7 +1946,7 @@ import printjs from "print-js";
 //import MultiplePaymentForm from "./multiple_payment.vue";
 //import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 //import ShowSplitPaymentForm from "./split_payment.vue";
-import GenerateQr from './GenerateQr.vue';  // Ajusta la ruta según donde esté
+import GenerateQr from "./GenerateQr.vue"; // Ajusta la ruta según donde esté
 
 const PromotionBox = () => import("./promotion_box.vue");
 const ListItems = () => import("./list_items.vue");
@@ -2736,16 +2764,16 @@ export default {
                 total_base_igv:
                     affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                        (1 + this.percentage_igv / 100)
+                          (1 + this.percentage_igv / 100)
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
                     affectation_igv_type_id == 10 ||
-                        affectation_igv_type_id == 15
+                    affectation_igv_type_id == 15
                         ? (i.sale_unit_price *
-                            i.quantity *
-                            this.percentage_igv) /
-                        100
+                              i.quantity *
+                              this.percentage_igv) /
+                          100
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
@@ -2788,21 +2816,21 @@ export default {
                     unit_value:
                         affectation_igv_type_id == 10
                             ? i.sale_unit_price /
-                            (1 + this.percentage_igv / 100)
+                              (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                            (1 + this.percentage_igv / 100)
+                              (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                (1 + this.percentage_igv / 100)) *
-                            (this.percentage_igv / 100)
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -2813,13 +2841,13 @@ export default {
                     total_taxes:
                         affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                (1 + this.percentage_igv / 100)) *
-                            (this.percentage_igv / 100)
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
                             : 0,
                     total_value:
                         affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                            (1 + this.percentage_igv / 100)
+                              (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -3070,7 +3098,7 @@ export default {
             this.showDialogNewPerson = true;
         },
 
-        add_customer(value) { },
+        add_customer(value) {},
 
         async searchClientOne(number) {
             let url = `/caja/search_customers?value=${number}`;
@@ -3454,43 +3482,49 @@ export default {
             this.bank = null;
             this.hasExceedBank = false;
         },
-    async date_of_issue() {
-        this.resetForm();
+        async date_of_issue() {
+            this.resetForm();
 
-        console.log("this.form_variation", this.formVariation);
-        // this.discount_amount = 0;
-        // this.form.customer_id
-        // this.form.student_id = null;
+            console.log("this.form", this.orden);
 
-        if (!this.conf.pos_quick_sale) {
-            this.getLastNumbersDocument();
-        }
-        this.sumCoins = [];
-        if (!this.form.is_room) {
+            console.log("this.form_variation", this.formVariation);
+            // this.discount_amount = 0;
+            // this.form.customer_id
+            // this.form.student_id = null;
+
+            if (!this.conf.pos_quick_sale) {
+                this.getLastNumbersDocument();
+            }
+            this.sumCoins = [];
+            /* if (!this.form.is_room) {
             this.value = null;
             this.form.customer_id = null;
-        }
-        if (this.configuration.restrict_receipt_date) {
-            this.form.date_of_issue = moment().format("YYYY-MM-DD");
-        }
-        let { documents, document_default } = this.establishments;
-        if (documents) {
-            let { invoice, sale_note, receipt } = documents;
-            this.invoice = invoice;
-            this.sale_note = sale_note;
-            this.receipt = receipt;
-        }
-        if (document_default) {
-            this.form.document_type_id = document_default;
-        }
-        // Si es variación, forzar boleta y deshabilitar nota de venta
-        if (this.variation) {
-            this.form.document_type_id = "03"; // Boleta
-            this.sale_note = false; // Deshabilitar nota de venta
-        }
-        this.customers = this.all_customers.filter(
-            n => n.number != "88888888"
-        );
+        } */
+            if (!this.form.is_room && !this.form.customer_id) {
+                this.value = null;
+                this.form.customer_id = null;
+            }
+            if (this.configuration.restrict_receipt_date) {
+                this.form.date_of_issue = moment().format("YYYY-MM-DD");
+            }
+            let { documents, document_default } = this.establishments;
+            if (documents) {
+                let { invoice, sale_note, receipt } = documents;
+                this.invoice = invoice;
+                this.sale_note = sale_note;
+                this.receipt = receipt;
+            }
+            if (document_default) {
+                this.form.document_type_id = document_default;
+            }
+            // Si es variación, forzar boleta y deshabilitar nota de venta
+            if (this.variation) {
+                this.form.document_type_id = "03"; // Boleta
+                this.sale_note = false; // Deshabilitar nota de venta
+            }
+            this.customers = this.all_customers.filter(
+                n => n.number != "88888888"
+            );
             // this.customers = [
             //     ...this.customers.filter(c => c.id != this.customer_default.id)
             // ];
@@ -3804,8 +3838,8 @@ export default {
                 ) {
                     this.$toast.error(
                         "La fecha de emisión no puede ser menor a " +
-                        days_before_emit +
-                        " días"
+                            days_before_emit +
+                            " días"
                     );
                     this.form.date_of_issue = moment().format("YYYY-MM-DD");
                 }
@@ -4077,7 +4111,7 @@ export default {
                 if (this.configuration.affectation_igv_type_id == "10") {
                     this.form.total_igv = _.round(
                         total_taxed_without_rounding *
-                        (this.percentage_igv / 100),
+                            (this.percentage_igv / 100),
                         2
                     );
                 } else {
@@ -4087,8 +4121,8 @@ export default {
                 //impuestos (isc + igv + icbper)
                 this.form.total_taxes = _.round(
                     this.form.total_igv +
-                    this.form.total_isc +
-                    this.form.total_plastic_bag_taxes,
+                        this.form.total_isc +
+                        this.form.total_plastic_bag_taxes,
                     2
                 );
                 this.form.total = _.round(
@@ -4209,7 +4243,7 @@ export default {
                     this.form.total_taxed = this.form.total_value;
                     this.form.total_igv = _.round(
                         this.form.total_value *
-                        (this.percentage_igv || 18 / 100),
+                            (this.percentage_igv || 18 / 100),
                         2
                     );
                     this.form.total_taxes = this.form.total_igv;
@@ -4298,8 +4332,8 @@ export default {
                     let total_value_partial = unit_value * row.quantity;
                     row.total_taxes =
                         row.total_value -
-                            total_value_partial +
-                            isNaN(parseFloat(row.total_plastic_bag_taxes))
+                        total_value_partial +
+                        isNaN(parseFloat(row.total_plastic_bag_taxes))
                             ? 0.0
                             : parseFloat(row.total_plastic_bag_taxes);
                     row.total_igv =
@@ -5833,7 +5867,6 @@ label {
 
 /* Media query para pantallas de tamaño 1280x768px */
 @media (max-width: 1280px) and (max-height: 768px) {
-
     /* Ajuste en los botones para pantallas pequeñas */
     .radio-buttons-group .el-radio-button {
         padding: 5px;
@@ -5860,7 +5893,6 @@ label {
 
 /* Media query para pantallas muy pequeñas (como móviles) */
 @media (max-width: 576px) {
-
     /* Ajuste aún más pequeño en los íconos y botones */
     .radio-buttons-group .el-radio-button i {
         font-size: 18px;
