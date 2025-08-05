@@ -306,7 +306,7 @@
     @php
         $precuenta = isset($precuenta) ? (bool) $precuenta : false;
         $configuration = App\Models\Tenant\Configuration::first();
-        $establishment = App\Models\Tenant\Establishment::first();
+        //$establishment = App\Models\Tenant\Establishment::first();
     @endphp
 
     @if ($configuration->imprimir_comanda_cocina)
@@ -554,11 +554,19 @@
                             </th>
                             <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
                         </tr>
-                        @if ($establishment->image_yape)
+                        {{-- @if ($establishment->image_yape)
                             <tr>
                                 <td colspan="4" class="text-center">
                                     <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
                                         alt="payment-logo" style="max-width: 200px; height: auto;" />
+                                </td>
+                            </tr>
+                        @endif --}}
+                        @if ($establishment && $establishment->image_yape)
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                        alt="payment-logo" style="max-width: 150px; height: auto;" />
                                 </td>
                             </tr>
                         @endif

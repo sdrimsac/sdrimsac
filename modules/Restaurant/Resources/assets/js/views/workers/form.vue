@@ -236,7 +236,7 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" v-if="configuration.restaurant">
                         <i class="fas fa-chair"></i>
                         <!-- Icono de mesa -->
                         <i class="fas fa-store-alt"></i>

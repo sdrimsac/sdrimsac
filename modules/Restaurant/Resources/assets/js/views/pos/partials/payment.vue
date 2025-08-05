@@ -3454,41 +3454,43 @@ export default {
             this.bank = null;
             this.hasExceedBank = false;
         },
-        async date_of_issue() {
-            this.resetForm();
+    async date_of_issue() {
+        this.resetForm();
 
-            console.log("this.form_variation", this.formVariation);
-            // this.discount_amount = 0;
-            // this.form.customer_id
-            // this.form.student_id = null;
+        console.log("this.form_variation", this.formVariation);
+        // this.discount_amount = 0;
+        // this.form.customer_id
+        // this.form.student_id = null;
 
-            if (!this.conf.pos_quick_sale) {
-                this.getLastNumbersDocument();
-            }
-            this.sumCoins = [];
-            if (!this.form.is_room) {
-                this.value = null;
-                this.form.customer_id = null;
-            }
-            if (this.configuration.restrict_receipt_date) {
-                this.form.date_of_issue = moment().format("YYYY-MM-DD");
-            }
-            let { documents, document_default } = this.establishments;
-            if (documents) {
-                let { invoice, sale_note, receipt } = documents;
-                this.invoice = invoice;
-                this.sale_note = sale_note;
-                this.receipt = receipt;
-            }
-            if (document_default) {
-                this.form.document_type_id = document_default;
-            }
-            if (this.variation) {
-                this.form.document_type_id = "03";
-            }
-            this.customers = this.all_customers.filter(
-                n => n.number != "88888888"
-            );
+        if (!this.conf.pos_quick_sale) {
+            this.getLastNumbersDocument();
+        }
+        this.sumCoins = [];
+        if (!this.form.is_room) {
+            this.value = null;
+            this.form.customer_id = null;
+        }
+        if (this.configuration.restrict_receipt_date) {
+            this.form.date_of_issue = moment().format("YYYY-MM-DD");
+        }
+        let { documents, document_default } = this.establishments;
+        if (documents) {
+            let { invoice, sale_note, receipt } = documents;
+            this.invoice = invoice;
+            this.sale_note = sale_note;
+            this.receipt = receipt;
+        }
+        if (document_default) {
+            this.form.document_type_id = document_default;
+        }
+        // Si es variación, forzar boleta y deshabilitar nota de venta
+        if (this.variation) {
+            this.form.document_type_id = "03"; // Boleta
+            this.sale_note = false; // Deshabilitar nota de venta
+        }
+        this.customers = this.all_customers.filter(
+            n => n.number != "88888888"
+        );
             // this.customers = [
             //     ...this.customers.filter(c => c.id != this.customer_default.id)
             // ];

@@ -1075,7 +1075,7 @@
                                         class="os-content"
                                         style="padding: 0px 5px; height: 100%; width: 100%"
                                     >
-                                    <div
+                                        <div
                                             v-if="variation"
                                             class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
                                         >
@@ -1086,48 +1086,241 @@
                                                 class="mx-2 coupon rounded d-flex justify-content-between"
                                             >
                                                 <div
-                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2 card"
-                                                    style="margin-top: 20px; margin-bottom: 20px;"
-                                                    
-                                                    
+                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
+                                                    style="margin-top: 20px !important;"
                                                 >
                                                     <div
-                                                        class="overflow-hidden w-100"
+                                                        class="col-12 overflow-hidden card shadow-lg p-3 rounded"
                                                     >
-                                                        <h3
-                                                            class="lead font-weight-light fw-bold"
-                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; padding: auto; min-width: 350px;"
+                                                        <div
+                                                            class="row"
+                                                            style="min-width: 500px;"
                                                         >
-                                                            {{
-                                                                variationItem.description.toUpperCase()
-                                                            }}
-                                                            <el-tag
-                                                                role="button"
-                                                                class="text-white bg-primary"
-                                                                style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                @click="showChangeDescription(idx)"
-                                                            >
-                                                                Cambiar
-                                                            </el-tag>
+                                                            <div class="col-12">
+                                                                <div
+                                                                    class="row align-items-center"
+                                                                >
+                                                                    <!-- Descripción: ocupa más espacio -->
+                                                                    <div
+                                                                        class="col-8 col-md-8 col-lg-8 col-xl-8"
+                                                                    >
+                                                                        <h3
+                                                                            class="m-0 fw-bold"
+                                                                            style="font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
+                                                                        >
+                                                                            {{
+                                                                                variationItem.description.toUpperCase()
+                                                                            }}
+                                                                        </h3>
+                                                                    </div>
 
-                                                            <el-tag
-                                                                type="success"
-                                                                v-if="idx == 0"
-                                                                role="button"
-                                                                style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                @click="addVariation"
+                                                                    <!-- Botones: ocupan menos espacio -->
+                                                                    <div
+                                                                        class="col-4 col-md-4 col-lg-4 col-xl-4 text-end"
+                                                                    >
+                                                                        <el-button
+                                                                            size="mini"
+                                                                            round
+                                                                            class="text-white bg-primary"
+                                                                            @click="
+                                                                                showChangeDescription(
+                                                                                    idx
+                                                                                )
+                                                                            "
+                                                                            >Cambiar</el-button
+                                                                        >
+                                                                        <el-button
+                                                                            size="mini"
+                                                                            round
+                                                                            class="text-white bg-success"
+                                                                            v-if="
+                                                                                idx ==
+                                                                                    0
+                                                                            "
+                                                                            @click="
+                                                                                addVariation
+                                                                            "
+                                                                            >Agregar
+                                                                            Item</el-button
+                                                                        >
+                                                                        <el-button
+                                                                            size="mini"
+                                                                            round
+                                                                            class="text-white bg-danger"
+                                                                            v-if="
+                                                                                foodDefaults.length >
+                                                                                    1
+                                                                            "
+                                                                            @click="
+                                                                                deleteDefaultFood(
+                                                                                    idx
+                                                                                )
+                                                                            "
+                                                                            >Eliminar</el-button
+                                                                        >
+                                                                        <!-- <el-tag
+                                                                            role="button"
+                                                                            class="text-white bg-primary me-1"
+                                                                            style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center;"
+                                                                            @click="
+                                                                                showChangeDescription(
+                                                                                    idx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            Cambiar
+                                                                        </el-tag> -->
+
+                                                                        <!-- <el-tag
+                                                                            type="success"
+                                                                            v-if="
+                                                                                idx ==
+                                                                                    0
+                                                                            "
+                                                                            role="button"
+                                                                            class="me-1"
+                                                                            style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center;"
+                                                                            @click="
+                                                                                addVariation
+                                                                            "
+                                                                        >
+                                                                            Agregar
+                                                                            item
+                                                                        </el-tag> -->
+
+                                                                        <!-- <el-tag
+                                                                            v-if="
+                                                                                foodDefaults.length >
+                                                                                    1
+                                                                            "
+                                                                            type="danger"
+                                                                            role="button"
+                                                                            @click="
+                                                                                deleteDefaultFood(
+                                                                                    idx
+                                                                                )
+                                                                            "
+                                                                        >
+                                                                            <i
+                                                                                class="el-icon-delete"
+                                                                            ></i>
+                                                                        </el-tag> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- <div class="col-12">
+                                                                <div
+                                                                    class="col-6 col-md-6 col-lg-6 col-xl-6"
+                                                                >
+                                                                    {{
+                                                                        variationItem.description.toUpperCase()
+                                                                    }}
+                                                                </div>
+                                                                <div
+                                                                    class="col-4 col-md-4 col-lg-4 col-xl-4"
+                                                                >
+                                                                    <el-tag
+                                                                        role="button"
+                                                                        class="text-white bg-primary"
+                                                                        style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                        @click="
+                                                                            showChangeDescription(
+                                                                                idx
+                                                                            )
+                                                                        "
+                                                                    >
+                                                                        Cambiar
+                                                                    </el-tag>
+
+                                                                    <el-tag
+                                                                        type="success"
+                                                                        v-if="
+                                                                            idx ==
+                                                                                0
+                                                                        "
+                                                                        role="button"
+                                                                        style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                        @click="
+                                                                            addVariation
+                                                                        "
+                                                                    >
+                                                                        Agregar
+                                                                        otro
+                                                                        item
+                                                                    </el-tag>
+                                                                    <el-tag
+                                                                        v-if="
+                                                                            foodDefaults.length >
+                                                                                1
+                                                                        "
+                                                                        type="danger"
+                                                                        role="button"
+                                                                        @click="
+                                                                            deleteDefaultFood(
+                                                                                idx
+                                                                            )
+                                                                        "
+                                                                    >
+                                                                        <i
+                                                                            class="el-icon-delete"
+                                                                        ></i>
+                                                                    </el-tag>
+                                                                </div>
+                                                            </div> -->
+                                                            <!-- <h3
+                                                                class="lead font-weight-light fw-bold"
+                                                                style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; padding: auto; min-width: 350px;"
                                                             >
-                                                                Agregar otro item
-                                                            </el-tag>
-                                                            <el-tag
-                                                                v-if="foodDefaults.length > 1"
-                                                                type="danger"
-                                                                role="button"
-                                                                @click="deleteDefaultFood(idx)"
-                                                            >
-                                                                <i class="el-icon-delete"></i>
-                                                            </el-tag>
-                                                        </h3>
+                                                                {{
+                                                                    variationItem.description.toUpperCase()
+                                                                }}
+                                                                <el-tag
+                                                                    role="button"
+                                                                    class="text-white bg-primary"
+                                                                    style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                    @click="
+                                                                        showChangeDescription(
+                                                                            idx
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    Cambiar
+                                                                </el-tag>
+
+                                                                <el-tag
+                                                                    type="success"
+                                                                    v-if="
+                                                                        idx == 0
+                                                                    "
+                                                                    role="button"
+                                                                    style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                    @click="
+                                                                        addVariation
+                                                                    "
+                                                                >
+                                                                    Agregar otro
+                                                                    item
+                                                                </el-tag>
+                                                                <el-tag
+                                                                    v-if="
+                                                                        foodDefaults.length >
+                                                                            1
+                                                                    "
+                                                                    type="danger"
+                                                                    role="button"
+                                                                    @click="
+                                                                        deleteDefaultFood(
+                                                                            idx
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        class="el-icon-delete"
+                                                                    ></i>
+                                                                </el-tag>
+                                                            </h3> -->
+                                                        </div>
                                                         <p
                                                             class="badge bg-foreground text-uppercase font-weight-light p-0"
                                                         ></p>
@@ -1138,7 +1331,8 @@
                                                                 class="col-md-4"
                                                             >
                                                                 <span
-                                                                    class="text-muted fw-bold"
+                                                                    class="fw-bold text-primary"
+                                                                    style="font-size: 1rem; font-family: 'Arial', sans-serif;"
                                                                 >
                                                                     Cantidad
                                                                     <br />
@@ -1147,7 +1341,7 @@
                                                                     >
                                                                         <input
                                                                             type="text"
-                                                                            class="form-control text-center"
+                                                                            class="form-control text-center bg-white"
                                                                             v-model="
                                                                                 variationItem.quantity
                                                                             "
@@ -1198,12 +1392,13 @@
                                                                     class="time font-weight-light"
                                                                 >
                                                                     <span
-                                                                        class="text-muted"
+                                                                        class="fw-bold text-primary"
+                                                                        style="font-size: 1rem; font-family: 'Arial', sans-serif;"
                                                                     >
                                                                         Precio
                                                                         <br />
                                                                         <el-input
-                                                                            class="custom_input"
+                                                                            class="custom_input bg-white"
                                                                             style="width: 100%"
                                                                             type="number"
                                                                             v-model="
@@ -1970,7 +2165,7 @@
                                                                         v-if="
                                                                             !order_pend.change_subtotal
                                                                         "
-                                                                        size="large" 
+                                                                        size="large"
                                                                         class="text-center w-100"
                                                                     >
                                                                         <strong
@@ -2357,7 +2552,7 @@
                                             </a>
                                             Atendidos
                                         </div>
-                                        
+
                                         <div
                                             v-show="
                                                 ordens.length > 0 && !variation
@@ -2380,6 +2575,7 @@
                                                     >
                                                         <h3
                                                             class="lead font-weight-light fw-bold"
+                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                         >
                                                             <template
                                                                 v-if="
@@ -2437,7 +2633,8 @@
                                                                 class="col-5 col-md-5 col-lg-3 col-xl-4"
                                                             >
                                                                 <span
-                                                                    class="text-muted"
+                                                                    class=""
+                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                 >
                                                                     Cantidad
                                                                     <br />
@@ -2495,19 +2692,20 @@
                                                             </div>
 
                                                             <div
-                                                                class="col-6 col-md-5 col-lg-3 col-xl-4"
+                                                                class="col-6 col-4 col-md-5 col-lg-5 col-xl-4"
                                                             >
                                                                 <span
                                                                     class="time font-weight-light"
                                                                 >
                                                                     <span
-                                                                        class="text-muted"
+                                                                        class=""
+                                                                        style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                     >
                                                                         Precio
-                                                                        <br />
+                                                                        
                                                                         <el-input
                                                                             class="custom_input"
-                                                                            style="width: 100%"
+                                                                            style="width: 100%; font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                             type="number"
                                                                             v-model="
                                                                                 ord.price
@@ -2578,7 +2776,8 @@
                                                                     size="medium"
                                                                 >
                                                                     <strong
-                                                                        style="font-weight: 700"
+                                                                       
+                                                                        style=" font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                     >
                                                                         {{
                                                                             parseFloat(
