@@ -178,7 +178,7 @@ class RestaurantController extends Controller
         return compact('persons');
     }
 
-    public function search_customer_delivery(Request $request)
+    /* public function search_customer_delivery(Request $request)
     {
         $configuration = Configuration::first();
         $value = $request->value;
@@ -229,7 +229,134 @@ class RestaurantController extends Controller
         });
 
         return compact('persons');
+    } */
+
+
+    public function search_customer_delivery(Request $request)
+    {
+        $configuration = Configuration::first();
+        $input = trim($request->input);
+        $parents = $request->parents;
+
+        $persons = Person::query();
+
+        if ($input) {
+            $words = preg_split('/\s+/', $input);
+            $persons->where(function ($q) use ($words) {
+                foreach ($words as $word) {
+                    $q->where(function ($subQ) use ($word) {
+                        $subQ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($word) . '%'])
+                            ->orWhereRaw('LOWER(alias) LIKE ?', ['%' . strtolower($word) . '%'])
+                            ->orWhereRaw('LOWER(number) LIKE ?', ['%' . strtolower($word) . '%'])
+                            ->orWhereRaw('LOWER(address) LIKE ?', ['%' . strtolower($word) . '%']);
+                    });
+                }
+            });
+        }
+
+        $persons = $persons
+            ->whereType('customers')
+            ->whereIsEnabled()
+            ->orderBy('name')
+            ->with('addressesCustomer')
+            ->take(20)
+            ->get();
+
+        $persons = $persons->transform(function ($row) {
+            return [
+                'promotion_active_id' => null,
+                'students' => [],
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => optional($row->identity_document_type)->code,
+                'addressesCustomer' => $row->addressesCustomer->map(function ($address) {
+                    return [
+                        'id' => $address->id,
+                        'alias' => $address->alias,
+                        'address' => $address->address,
+                        'reference' => $address->reference,
+                        'telephone' => $address->telephone,
+                        'status' => $address->status,
+                    ];
+                }),
+                'addresses' => $row->addresses,
+                'address' => $row->address,
+                'seller_id' => $row->seller_id,
+                'telephone' => $row->telephone,
+            ];
+        });
+
+        return compact('persons');
     }
+
+    /* public function search_customer_delivery(Request $request)
+    {
+        $configuration = Configuration::first();
+        $value = trim($request->value);
+        $parents = $request->parents;
+
+        $persons = Person::query();
+
+        if ($value) {
+            // Si es un número exacto de 8 dígitos, buscar solo en number exacto
+            if (is_numeric($value) && strlen($value) == 8) {
+                $persons->where('number', $value);
+            } else {
+                $words = preg_split('/\s+/', $value);
+                $persons->where(function ($q) use ($words) {
+                    foreach ($words as $word) {
+                        $q->where(function ($subQ) use ($word) {
+                            $subQ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($word) . '%'])
+                                ->orWhereRaw('LOWER(alias) LIKE ?', ['%' . strtolower($word) . '%'])
+                                ->orWhereRaw('LOWER(address) LIKE ?', ['%' . strtolower($word) . '%']);
+                        });
+                    }
+                });
+            }
+        }
+
+        $persons = $persons
+            ->whereType('customers')
+            ->whereIsEnabled()
+            ->orderBy('name')
+            ->with('addressesCustomer')
+            ->take(20)
+            ->get();
+
+        $persons = $persons->transform(function ($row) {
+            return [
+                'promotion_active_id' => null,
+                'students' => [],
+                'id' => $row->id,
+                'description' => ($row->alias ? $row->alias . " - " : '') . $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => optional($row->identity_document_type)->code,
+                'addressesCustomer' => $row->addressesCustomer->map(function ($address) {
+                    return [
+                        'id' => $address->id,
+                        'alias' => $address->alias,
+                        'address' => $address->address,
+                        'reference' => $address->reference,
+                        'telephone' => $address->telephone,
+                        'status' => $address->status,
+                    ];
+                }),
+                'addresses' => $row->addresses,
+                'address' => $row->address,
+                'seller_id' => $row->seller_id,
+                'telephone' => $row->telephone,
+            ];
+        });
+
+        return compact('persons');
+    } */
+
+
 
     public function workers_type_records()
     {

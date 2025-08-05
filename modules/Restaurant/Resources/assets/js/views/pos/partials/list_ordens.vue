@@ -24,7 +24,10 @@
                         @click="openCash"
                         style="padding: 5px 5px; color: red; "
                     >
-                        <i class="fas fa-cash-register" style="margin-right: 2px;"></i>
+                        <i
+                            class="fas fa-cash-register"
+                            style="margin-right: 2px;"
+                        ></i>
                         Abrir<br />Caja
                     </button>
                     <!-- Botón Cerrar Caja (azul) -->
@@ -35,7 +38,10 @@
                         @click="trigerFunction(3)"
                         style="padding: 5px 5px;"
                     >
-                        <i class="fas fa-cash-register" style="margin-right: 2px;"></i>
+                        <i
+                            class="fas fa-cash-register"
+                            style="margin-right: 2px;"
+                        ></i>
                         Cerrar<br />Caja
                     </button>
                     <!-- Recibir Mercaderia -->
@@ -535,7 +541,11 @@
                             >
                         </button>
                         <button
-                            v-if="localOrden.length > 0 && configuration.restaurant_delivery && configuration.restaurant"
+                            v-if="
+                                localOrden.length > 0 &&
+                                    configuration.restaurant_delivery &&
+                                    configuration.restaurant
+                            "
                             class="btn btn-light mt-2"
                             type="button"
                             @click="openDeliveryForm()"
@@ -1065,6 +1075,172 @@
                                         class="os-content"
                                         style="padding: 0px 5px; height: 100%; width: 100%"
                                     >
+                                    <div
+                                            v-if="variation"
+                                            class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
+                                        >
+                                            <div
+                                                v-for="(variationItem,
+                                                idx) in foodDefaults"
+                                                :key="idx"
+                                                class="mx-2 coupon rounded d-flex justify-content-between"
+                                            >
+                                                <div
+                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2 card"
+                                                    style="margin-top: 20px; margin-bottom: 20px;"
+                                                    
+                                                    
+                                                >
+                                                    <div
+                                                        class="overflow-hidden w-100"
+                                                    >
+                                                        <h3
+                                                            class="lead font-weight-light fw-bold"
+                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; padding: auto; min-width: 350px;"
+                                                        >
+                                                            {{
+                                                                variationItem.description.toUpperCase()
+                                                            }}
+                                                            <el-tag
+                                                                role="button"
+                                                                class="text-white bg-primary"
+                                                                style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                @click="showChangeDescription(idx)"
+                                                            >
+                                                                Cambiar
+                                                            </el-tag>
+
+                                                            <el-tag
+                                                                type="success"
+                                                                v-if="idx == 0"
+                                                                role="button"
+                                                                style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
+                                                                @click="addVariation"
+                                                            >
+                                                                Agregar otro item
+                                                            </el-tag>
+                                                            <el-tag
+                                                                v-if="foodDefaults.length > 1"
+                                                                type="danger"
+                                                                role="button"
+                                                                @click="deleteDefaultFood(idx)"
+                                                            >
+                                                                <i class="el-icon-delete"></i>
+                                                            </el-tag>
+                                                        </h3>
+                                                        <p
+                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
+                                                        ></p>
+                                                        <div
+                                                            class="row align-items-end"
+                                                        >
+                                                            <div
+                                                                class="col-md-4"
+                                                            >
+                                                                <span
+                                                                    class="text-muted fw-bold"
+                                                                >
+                                                                    Cantidad
+                                                                    <br />
+                                                                    <div
+                                                                        class="input-group spinner"
+                                                                    >
+                                                                        <input
+                                                                            type="text"
+                                                                            class="form-control text-center"
+                                                                            v-model="
+                                                                                variationItem.quantity
+                                                                            "
+                                                                            data-rule="currency"
+                                                                        />
+                                                                        <div
+                                                                            class="input-group-text"
+                                                                        >
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-up"
+                                                                                data-spin="up"
+                                                                                @click="
+                                                                                    updateDefaultFoodQty(
+                                                                                        true,
+                                                                                        idx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                class="spin-down"
+                                                                                data-spin="down"
+                                                                                @click="
+                                                                                    updateDefaultFoodQty(
+                                                                                        false,
+                                                                                        idx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <span
+                                                                                    class="arrow"
+                                                                                ></span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </div>
+
+                                                            <div
+                                                                class="col-md-4"
+                                                            >
+                                                                <span
+                                                                    class="time font-weight-light"
+                                                                >
+                                                                    <span
+                                                                        class="text-muted"
+                                                                    >
+                                                                        Precio
+                                                                        <br />
+                                                                        <el-input
+                                                                            class="custom_input"
+                                                                            style="width: 100%"
+                                                                            type="number"
+                                                                            v-model="
+                                                                                variationItem.sale_unit_price
+                                                                            "
+                                                                        >
+                                                                            <span
+                                                                                slot="prepend"
+                                                                                style="padding-left: 6px;padding-right: 6px;"
+                                                                            >
+                                                                                <template
+                                                                                    v-if="
+                                                                                        configuration.other_currency_pos
+                                                                                    "
+                                                                                >
+                                                                                    {{
+                                                                                        currency_id ==
+                                                                                        "USD"
+                                                                                            ? "$"
+                                                                                            : "S/"
+                                                                                    }}
+                                                                                </template>
+                                                                                <template
+                                                                                    v-else
+                                                                                >
+                                                                                    S/
+                                                                                </template>
+                                                                            </span>
+                                                                        </el-input>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div
                                             class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
                                         >
@@ -1436,7 +1612,8 @@
                                                                 class="col-6 col-4 col-md-5 col-lg-4 col-xl-4"
                                                             >
                                                                 <span
-                                                                    class="fw-bold"
+                                                                    class="fw-bold "
+                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                 >
                                                                     Cantidad:
                                                                     <br />
@@ -1590,19 +1767,20 @@
                                                             <!-- Precio unitario del produto en lista de venta directa -->
                                                             <template>
                                                                 <div
-                                                                    class="col-6 col-md-5 col-lg-5 col-xl-4"
+                                                                    class="col-6 col-4 col-md-5 col-lg-5 col-xl-4"
                                                                 >
                                                                     <span
                                                                         class="time font-weight-light"
                                                                     >
                                                                         <span
                                                                             class="fw-bold"
+                                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                         >
                                                                             Precio:
                                                                             {{
                                                                                 currency_id
                                                                             }}
-                                                                            <br />
+
                                                                             <template
                                                                                 v-if="
                                                                                     order_pend.prices
@@ -1614,6 +1792,7 @@
                                                                                             configuration.edit_price_sales
                                                                                     "
                                                                                     class="custom_input fw-bold"
+                                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                                     type="number"
                                                                                     v-model.number="
                                                                                         order_pend.price
@@ -1671,6 +1850,7 @@
                                                                             >
                                                                                 <el-input
                                                                                     class="custom_input text-dark"
+                                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                                     :disabled="
                                                                                         isSellerConsolidated ||
                                                                                             configuration.editar_precio_politica ===
@@ -1702,43 +1882,7 @@
                                                                 <div
                                                                     class="col-4 col-md-2 col-lg-3 mt-2"
                                                                 >
-                                                                    <el-tag
-                                                                        :disable-transitions="
-                                                                            true
-                                                                        "
-                                                                        v-if="
-                                                                            !order_pend.change_subtotal
-                                                                        "
-                                                                        size="medium"
-                                                                    >
-                                                                        <strong
-                                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
-                                                                        >
-                                                                            {{
-                                                                                parseFloat(
-                                                                                    order_pend.price *
-                                                                                        order_pend.quantity
-                                                                                ).toFixed(
-                                                                                    2
-                                                                                )
-                                                                            }}
-                                                                        </strong>
-                                                                    </el-tag>
-                                                                    <el-input
-                                                                        v-else
-                                                                        class="input-new-tag1"
-                                                                        v-model="
-                                                                            order_pend.newSubtotal
-                                                                        "
-                                                                        @input="
-                                                                            justNumber(
-                                                                                indexx
-                                                                            )
-                                                                        "
-                                                                        placeholder="0.00"
-                                                                        size="medium"
-                                                                    ></el-input>
-                                                                    <template
+                                                                    <!-- <template
                                                                         v-if="
                                                                             configuration.edit_subtotal_box &&
                                                                                 !isSellerConsolidated
@@ -1775,7 +1919,89 @@
                                                                                 class="fas fa-save text-primary"
                                                                             ></i>
                                                                         </el-tag>
+                                                                    </template> -->
+                                                                    <template
+                                                                        v-if="
+                                                                            configuration.edit_subtotal_box &&
+                                                                                !isSellerConsolidated
+                                                                        "
+                                                                    >
+                                                                        <!-- Icono de editar o guardar, ahora arriba -->
+                                                                        <div
+                                                                            class="mb-1"
+                                                                            style="text-align:center;"
+                                                                        >
+                                                                            <el-tag
+                                                                                v-if="
+                                                                                    !order_pend.change_subtotal
+                                                                                "
+                                                                                role="button"
+                                                                                size="medium"
+                                                                                @click="
+                                                                                    changeSubtotal(
+                                                                                        indexx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <i
+                                                                                    class="fas fa-edit text-primary"
+                                                                                ></i>
+                                                                            </el-tag>
+                                                                            <el-tag
+                                                                                v-else
+                                                                                role="button"
+                                                                                size="medium"
+                                                                                @click="
+                                                                                    saveSubtotal(
+                                                                                        indexx
+                                                                                    )
+                                                                                "
+                                                                            >
+                                                                                <i
+                                                                                    class="fas fa-save text-primary"
+                                                                                ></i>
+                                                                            </el-tag>
+                                                                        </div>
                                                                     </template>
+                                                                    <el-tag
+                                                                        :disable-transitions="
+                                                                            true
+                                                                        "
+                                                                        v-if="
+                                                                            !order_pend.change_subtotal
+                                                                        "
+                                                                        size="large" 
+                                                                        class="text-center w-100"
+                                                                    >
+                                                                        <strong
+                                                                            style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
+                                                                        >
+                                                                            {{
+                                                                                parseFloat(
+                                                                                    order_pend.price *
+                                                                                        order_pend.quantity
+                                                                                ).toFixed(
+                                                                                    2
+                                                                                )
+                                                                            }}
+                                                                        </strong>
+                                                                    </el-tag>
+                                                                    <el-input
+                                                                        v-else
+                                                                        class="input-new-tag1 text-center w-100"
+                                                                        style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; text-align: center;"
+                                                                        v-model="
+                                                                            order_pend.newSubtotal
+                                                                        "
+                                                                        @input="
+                                                                            justNumber(
+                                                                                indexx
+                                                                            )
+                                                                        "
+                                                                        placeholder="0.00"
+                                                                        size="medium"
+                                                                    ></el-input>
+
                                                                     <el-tooltip
                                                                         v-if="
                                                                             configuration.change_price_product
@@ -2131,177 +2357,7 @@
                                             </a>
                                             Atendidos
                                         </div>
-                                        <div
-                                            v-if="variation"
-                                            class="col-sm-12 col-md-12 col-lg-12 col-xl-12"
-                                        >
-                                            <div
-                                                v-for="(variationItem,
-                                                idx) in foodDefaults"
-                                                :key="idx"
-                                                class="mx-2 coupon rounded d-flex justify-content-between"
-                                            >
-                                                <div
-                                                    class="tengah py-2 d-flex w-100 justify-content-start p-2"
-                                                >
-                                                    <div
-                                                        class="overflow-hidden"
-                                                    >
-                                                        <h3
-                                                            class="lead font-weight-light"
-                                                        >
-                                                            {{
-                                                                variationItem.description.toUpperCase()
-                                                            }}
-                                                            <el-tag
-                                                                role="button"
-                                                                @click="
-                                                                    showChangeDescription(
-                                                                        idx
-                                                                    )
-                                                                "
-                                                                >Cambiar</el-tag
-                                                            >
-
-                                                            <el-tag
-                                                                type="success"
-                                                                v-if="idx == 0"
-                                                                role="button"
-                                                                @click="
-                                                                    addVariation
-                                                                "
-                                                            >
-                                                                Agregar otro
-                                                                item
-                                                            </el-tag>
-                                                            <el-tag
-                                                                v-if="
-                                                                    foodDefaults.length >
-                                                                        1
-                                                                "
-                                                                type="danger"
-                                                                role="button"
-                                                                @click="
-                                                                    deleteDefaultFood(
-                                                                        idx
-                                                                    )
-                                                                "
-                                                                >x</el-tag
-                                                            >
-                                                        </h3>
-                                                        <p
-                                                            class="badge bg-foreground text-uppercase font-weight-light p-0"
-                                                        ></p>
-                                                        <div
-                                                            class="row align-items-end"
-                                                        >
-                                                            <div
-                                                                class="col-md-4"
-                                                            >
-                                                                <span
-                                                                    class="text-muted"
-                                                                >
-                                                                    Cantidad
-                                                                    <br />
-                                                                    <div
-                                                                        class="input-group spinner"
-                                                                    >
-                                                                        <input
-                                                                            type="text"
-                                                                            class="form-control text-center"
-                                                                            v-model="
-                                                                                variationItem.quantity
-                                                                            "
-                                                                            data-rule="currency"
-                                                                        />
-                                                                        <div
-                                                                            class="input-group-text"
-                                                                        >
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-up"
-                                                                                data-spin="up"
-                                                                                @click="
-                                                                                    updateDefaultFoodQty(
-                                                                                        true,
-                                                                                        idx
-                                                                                    )
-                                                                                "
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                            <button
-                                                                                type="button"
-                                                                                class="spin-down"
-                                                                                data-spin="down"
-                                                                                @click="
-                                                                                    updateDefaultFoodQty(
-                                                                                        false,
-                                                                                        idx
-                                                                                    )
-                                                                                "
-                                                                            >
-                                                                                <span
-                                                                                    class="arrow"
-                                                                                ></span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </span>
-                                                            </div>
-
-                                                            <div
-                                                                class="col-md-4"
-                                                            >
-                                                                <span
-                                                                    class="time font-weight-light"
-                                                                >
-                                                                    <span
-                                                                        class="text-muted"
-                                                                    >
-                                                                        Precio
-                                                                        <br />
-                                                                        <el-input
-                                                                            class="custom_input"
-                                                                            style="width: 100%"
-                                                                            type="number"
-                                                                            v-model="
-                                                                                variationItem.sale_unit_price
-                                                                            "
-                                                                        >
-                                                                            <span
-                                                                                slot="prepend"
-                                                                                style="padding-left: 6px;padding-right: 6px;"
-                                                                            >
-                                                                                <template
-                                                                                    v-if="
-                                                                                        configuration.other_currency_pos
-                                                                                    "
-                                                                                >
-                                                                                    {{
-                                                                                        currency_id ==
-                                                                                        "USD"
-                                                                                            ? "$"
-                                                                                            : "S/"
-                                                                                    }}
-                                                                                </template>
-                                                                                <template
-                                                                                    v-else
-                                                                                >
-                                                                                    S/
-                                                                                </template>
-                                                                            </span>
-                                                                        </el-input>
-                                                                    </span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div
                                             v-show="
                                                 ordens.length > 0 && !variation

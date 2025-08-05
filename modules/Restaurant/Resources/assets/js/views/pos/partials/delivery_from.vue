@@ -437,6 +437,7 @@ export default {
                 .then(response => {
                     this.customers = response.data.customers;
                     this.form.customer_id = customer_id;
+                    this.handleCustomerChange(customer_id);
                 });
         },
         handleClose(done) {

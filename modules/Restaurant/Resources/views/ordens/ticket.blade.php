@@ -326,7 +326,11 @@
                 <img src="{{ asset('status_images/menaje.png') }}" alt="menaje" />
             </div>
         @endif
-        @if (!$to_kitchen && $configuration->nane_comand && !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE'))
+        @if (
+            !$to_kitchen &&
+                $configuration->nane_comand &&
+                !(isset($area_desc) && strtoupper($area_desc) === 'MENAJE') &&
+                !(isset($es_anulacion) && $es_anulacion === true))
             <div class="menaje">
                 <img src="{{ asset('status_images/comanda.png') }}" alt="comanda" />
             </div>
@@ -394,11 +398,13 @@
                     </tr>
                 @endif
                 @if (!$to_kitchen)
-                    <tr>
-                        <td colspan="4" class="header_title text-center encabezado" valign="top">
-                            <strong>COMANDA</strong>
-                        </td>
-                    </tr>
+                    @if (!$configuration->nane_comand)
+                        <tr>
+                            <td colspan="4" class="header_title text-center encabezado" valign="top">
+                                <strong>COMANDA</strong>
+                            </td>
+                        </tr>
+                    @endif
                     <tr>
                         <td colspan="4" class="header_title text-center " valign="top">
                             <strong>NRO. MESA {{ strtoupper(str_pad($ordenes->mesa->number, 2, '0', STR_PAD_LEFT)) }}
@@ -548,13 +554,13 @@
                             </th>
                             <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
                         </tr>
-                        @if($establishment->image_yape)
-                        <tr>
-                            <td colspan="4" class="text-center">
-                                <img src="{{ public_path('storage/uploads/logos/'.$establishment->image_yape) }}" alt="payment-logo" 
-                                     style="max-width: 200px; height: auto;"/>
-                            </td>
-                        </tr>
+                        @if ($establishment->image_yape)
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                        alt="payment-logo" style="max-width: 200px; height: auto;" />
+                                </td>
+                            </tr>
                         @endif
                     </tbody>
                 @else
@@ -594,7 +600,9 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td class="celda_center header_title2" style="font-size: 20px !important; font-weight: bold;">{{ $row->quantity }}</td>
+                                        <td class="celda_center header_title2"
+                                            style="font-size: 20px !important; font-weight: bold;">{{ $row->quantity }}
+                                        </td>
                                         <td colspan="3" class="celda_left header_title2 border-bottom">
                                             <strong>
                                                 {{ strtoupper($row->desc_unit) }}

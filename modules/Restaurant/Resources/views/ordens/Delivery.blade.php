@@ -92,7 +92,7 @@
         <div class="line"></div>
         <div>
             <strong>CLIENTE:</strong> {{ $delivery->person->name }}<br>
-            <strong>DIRECCIÓN:</strong> {{ $delivery->address }}<br>
+            <strong>DIRECCIÓN ENTREGA:</strong> {{ $delivery->address }}<br>
             <strong>REFERENCIA:</strong> {{ $delivery->reference }}<br>
             <strong>CELULAR:</strong> {{ $delivery->telephone }}<br>
 

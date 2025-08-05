@@ -17,7 +17,7 @@
                                     aria-expanded="false"
                                 >
                                     <i class="icofont-waiter icofont-2x"></i>
-                                    {{ user.name }}
+                                   
                                 </a>
                                 <el-button
                                     v-if="show != 'tables'"
