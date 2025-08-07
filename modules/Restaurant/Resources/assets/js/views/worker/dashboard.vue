@@ -215,7 +215,7 @@
             @tab-click="handleTabClick"
             v-if="show == 'tables'"
         >
-            <el-tab-pane label="tables" v-if="show == 'tables'" name="tables">
+            <el-tab-pane label="Mesas" v-if="show == 'tables'" name="tables">
                 <div class="row p-2" v-show="show == 'tables'">
                     <!-- Add zones section here, only dependent on show === 'tables' -->
                     <div class="col-12 mb-3">
@@ -293,7 +293,7 @@
             <el-tab-pane
                 label="Delivery"
                 name="delivery"
-                v-if="show == 'tables'"
+                v-if="show == 'tables' && configuration.restaurant_delivery"
                 @click="getTablesDelivery"
             >
                 <div>
