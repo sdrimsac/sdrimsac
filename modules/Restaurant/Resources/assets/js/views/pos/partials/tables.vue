@@ -314,12 +314,12 @@ export default {
                     `/caja/delivery/DeliveryPrinter?id=${ord.id}`
                 );
                 let url = response.data.print;
-                let printerR = response.data.printer;
+                /* let printerR = response.data.printer;
 
                 await this.$http.post("/caja/re-print", {
                     url,
                     printer: printerR
-                });
+                }); */
                 return;
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false

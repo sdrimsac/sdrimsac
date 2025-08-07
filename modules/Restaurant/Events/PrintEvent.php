@@ -30,7 +30,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $re_printer = false)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $re_printer = false, $establishment = null)
     {
         $configuration = Configuration::first();
         $company = Company::active();
@@ -125,7 +125,7 @@ class PrintEvent implements ShouldBroadcast
                 // $documentLink = url('') . $url;
                 break;
             case "D":
-                $documentLink = url('') . "/caja/delivery/ticket?id={$id}";
+                $documentLink = url('') . "/caja/delivery/ticket?id={$id}&establishment_id={$establishment->id}";
                 break;
             case "S":
                 // $copies = 1;

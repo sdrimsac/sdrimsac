@@ -1150,7 +1150,7 @@ class OrdenController extends Controller
 
                 $table = Table::find($data['table_id']);
 
-                if ($table && $table->is_delivery) {
+                if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $delivery = Delivery::where('orden_id', $orden->id)->first();
                     $deliveryData = [
                         'customer_id' => $data['customer_id'],
@@ -1186,7 +1186,7 @@ class OrdenController extends Controller
                     }
                 }
 
-                if ($table && $table->is_delivery) {
+                if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
                         ->where('address', $data['delivery_address'] ?? '-')
                         ->where('reference', $data['reference'] ?? '-')
@@ -1216,28 +1216,29 @@ class OrdenController extends Controller
                 //obtner el al usuaruio auth()->id() y asignar el establecimiento_id
 
                 $establishment_id = auth()->user()->establishment_id;
-                // Buscar la caja abierta para el establecimiento actual, sin importar el usuario
-                $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
-                    ->where('state', 1) // Solo sesiones abiertas
-                    ->where('establishment_id', $establishment_id)
-                    ->latest('id')
-                    ->first();
+                if ($configuration->restaurant) {
+                    $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
+                        ->where('state', 1) // Solo sesiones abiertas
+                        ->where('establishment_id', $establishment_id)
+                        ->latest('id')
+                        ->first();
 
-                // Si no hay caja abierta, no permitir crear la orden
-                if (!$cash_order_session) {
-                    return [
-                        'success' => false,
-                        'message' => 'No hay caja abierta para este establecimiento (state=0: caja cerrada). Debe abrir caja antes de registrar órdenes.'
-                    ];
-                }
+                    // Si no hay caja abierta, no permitir crear la orden
+                    if (!$cash_order_session) {
+                        return [
+                            'success' => false,
+                            'message' => 'No hay caja abierta para este establecimiento (state=0: caja cerrada). Debe abrir caja antes de registrar órdenes.'
+                        ];
+                    }
 
-                if ($cash_order_session) {
-                    $order_start_id = $cash_order_session->order_start_id;
-                    // Contar las órdenes creadas después de order_start_id
-                    $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
-                    $orden->correlative = $correlative;
-                } else {
-                    $orden->correlative = 1;
+                    if ($cash_order_session) {
+                        $order_start_id = $cash_order_session->order_start_id;
+                        // Contar las órdenes creadas después de order_start_id
+                        $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
+                        $orden->correlative = $correlative;
+                    } else {
+                        $orden->correlative = 1;
+                    }
                 }
 
                 if ($request->caja == true) {
@@ -1915,8 +1916,9 @@ class OrdenController extends Controller
 
     public function DeliveryOrden(Request $request)
     {
-
         $orden_id = $request->id;
+        $establishment_id = $request->establishment_id;
+        $establishment = Establishment::find($establishment_id);
         $orden = Orden::find($orden_id);
 
         if (!$orden) {
@@ -1928,17 +1930,9 @@ class OrdenController extends Controller
 
         $company = Company::first();
         $configuration = Configuration::first();
+        /* $establishment = Establishment::first(); */
 
-        $user = auth()->user();
 
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Usuario no autenticado'
-            ], 401);
-        }
-        //$establishment = Establishment::find(auth()->user()->establishment_id);
-        $establishment = Establishment::find($user->establishment_id);
 
         $delivery = Delivery::with('person')->where('orden_id', $orden_id)->first();
         $orden_items = OrdenItem::with('item')
@@ -1996,7 +1990,7 @@ class OrdenController extends Controller
         }
     }
 
-    /* public function DeliveryPrinter(Request $request)
+    public function DeliveryPrinter(Request $request)
     {
         $orden_id = $request->id;
         $orden = Orden::find($orden_id);
@@ -2017,13 +2011,13 @@ class OrdenController extends Controller
             $area_id = $this->getBoxArea();
             $area = Area::find($area_id);
             $printer = $area->printer ?? $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
+            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
         }
         if ($configuration->delivery_cocina) {
             $area = Area::where('description', 'like', '%COCIN%')->first();
             $area_id = $area ? $area->id : null;
             $printer = $area && $area->printer ? $area->printer : $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
+            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
         }
 
         return [
@@ -2031,11 +2025,11 @@ class OrdenController extends Controller
             'printer' => $printer,
             'direct_printing' => (bool) $establishment->direct_printing,
             'printer_serve' => $establishment->printer_serve,
-            'print'   => url('') . "/caja/delivery/ticket?id={$id}"
+            'print'   => url('') . "/caja/delivery/ticket?id={$id}&establishment_id={$establishment->id}"
         ];
-    } */
+    }
 
-    public function DeliveryPrinter(Request $request)
+    /* public function DeliveryPrinter(Request $request)
     {
         $orden_id = $request->id;
         $orden = Orden::find($orden_id);
@@ -2077,10 +2071,11 @@ class OrdenController extends Controller
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/delivery/ticket?id={$id}",
+                //'print'   => url('') . "/caja/delivery/ticket?id={$id}",
+                'print' => url('') . "/caja/delivery/ticket?id={$id}&establishment_id={$establishment->id}"
             ];
         }
-    }
+    } */
 
     public function destroyorden($id)
     {
