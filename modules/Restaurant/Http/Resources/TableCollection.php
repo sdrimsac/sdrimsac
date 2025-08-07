@@ -52,6 +52,7 @@ class TableCollection extends ResourceCollection
                 'has_billar'    => $row->has_billar,
                 'zone'          => $row->zone,
                 'zone_id'       => $row->zone_id,
+                'is_delivery'   => $row->is_delivery,
             ];
         });
     }

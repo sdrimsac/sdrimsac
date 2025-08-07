@@ -85,11 +85,11 @@
                     @if ($stablishment->document_logo)
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-contain" style=" max-width: 400px; max-height: 150px">
+                            contain" style=" max-width: 400px; max-height: 150px">
                     @else
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-contain" style=" max-width: 400px; max-height: 150px">
+                            contain" style=" max-width: 400px; max-height: 150px">
                     @endif
                 </div>
             @else
@@ -110,12 +110,12 @@ contain" style=" max-width: 400px; max-height: 150px">
                         @if ($company->document_logo)
                             <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
                                 alt="{{ $company->trade_name }}" class="
-contain"
+                                contain"
                                 style=" max-width: 400px; max-height: 150px">
                         @else
                             <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
                                 alt="{{ $company->trade_name }}" class="
-contain"
+                                contain"
                                 style=" max-width: 400px; max-height: 150px">
                         @endif
                     </div>

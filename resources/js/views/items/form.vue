@@ -705,7 +705,7 @@
                                 <!-- Delivery -->
                                 <div
                                     class="col-xl-3 col-lg-4 col-md-6 px-2"
-                                    v-if="form.unit_type_id != 'ZZ'"
+                                    v-if="configuration.restaurant"
                                 >
                                     <div class="form-group">
                                         <label

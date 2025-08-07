@@ -3,7 +3,7 @@
         <div class="row" v-if="ordens.length > 0">
             <div class="col-12 p-1">
                 <h2 class="small-title fw-bold">Ordenes Realizadas</h2>
-                <!-- <hooper :settings="hooperSettings">
+                <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
                         <div class="col-md-12 p-2">
                             <div
@@ -30,7 +30,7 @@
                         </div>
                     </slide>
                     <hooper-navigation slot="hooper-addons"></hooper-navigation>
-                </hooper> -->
+                </hooper>
             </div>
         </div>
 

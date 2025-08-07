@@ -44,7 +44,7 @@ Route::prefix('caja')->group(function () {
     Route::post('/override-session', [RestaurantController::class, 'window']);
 
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
-    Route::post('/re-print/delivery', [RestaurantController::class, 'Delivery']);
+    //Route::post('/re-print/delivery', [RestaurantController::class, 'Delivery']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
     Route::get('sale-notes', [SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
@@ -53,10 +53,7 @@ Route::prefix('caja')->group(function () {
     Route::get('documents/data_table', [DocumentController::class, 'data_table']);
     Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', [OrdenController::class, 'printTicket']);
-
     Route::get('delivery/ticket', [OrdenController::class, 'DeliveryOrden']);
-
-    Route::get('delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
 
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
@@ -202,6 +199,8 @@ Route::prefix('caja')->group(function () {
             Route::post('', 'CashTransferController@store');
             Route::delete('{id}', 'CashTransferController@destroy');
         });
+
+        Route::get('delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
 
         //*** ORDENS */
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
@@ -504,6 +503,10 @@ Route::prefix('caja')->group(function () {
             Route::get('pos/item/{id}', [PosController::class, 'itemNew']);
             Route::get('record/{id}', 'OrdenController@record');
             Route::get('record-worker/{id}', 'OrdenController@recordWorker');
+
+            Route::get('re-print-ticket/{id}', 'OrdenController@recordWorkerRePrint');
+
+
 
             //ORDERS
             Route::post('send-orden', 'OrdenController@store');

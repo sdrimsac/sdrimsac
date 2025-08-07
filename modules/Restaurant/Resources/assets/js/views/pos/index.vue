@@ -4365,7 +4365,10 @@ export default {
             this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;
             this.form.customer_id = form.customer_id ? form.customer_id : 1;
-            console.log("form.customer_id ver si obtiene el customer id", form.customer_id);
+            console.log(
+                "form.customer_id ver si obtiene el customer id",
+                form.customer_id
+            );
             if (this.form.is_room) {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
@@ -4451,9 +4454,15 @@ export default {
             this.form.difference = 0;
             let flag = 0;
             this.form.establishment_id = this.establishment.id;
-            console.log("Antes de asignar por defecto, customer_id:", this.form.customer_id);
+            console.log(
+                "Antes de asignar por defecto, customer_id:",
+                this.form.customer_id
+            );
             if (!this.form.customer_id) {
-                console.log("No tiene customer_id, se asignará por defecto", this.form.customer_id);
+                console.log(
+                    "No tiene customer_id, se asignará por defecto",
+                    this.form.customer_id
+                );
                 let varios = this.all_customers.filter(a =>
                     a.name.toLowerCase().includes("varios")
                 );
@@ -4461,14 +4470,20 @@ export default {
                     this.form.customer_id = this.all_customers[0].id;
                 } else {
                     this.form.customer_id = varios[0].id;
-                    console.log("Se asignó customer_id por defecto:", this.form.customer_id);
+                    console.log(
+                        "Se asignó customer_id por defecto:",
+                        this.form.customer_id
+                    );
                 }
                 if (!this.form.customer_id) {
                     this.is_payment = false;
                     return this.$toast.error("Seleccione un cliente");
                 }
             } else {
-                console.log("Pasando al else para ver el customer_id, 76236t5477456:", this.form.customer_id);
+                console.log(
+                    "Pasando al else para ver el customer_id, 76236t5477456:",
+                    this.form.customer_id
+                );
                 if (variationItem.length > 0) {
                     console.log("Hay variaciones, se cambiará el customer_id");
                     let tmpchange = this.formVariation;
@@ -4487,7 +4502,10 @@ export default {
                     this.currencyIdChoice == "PEN"
                         ? "PEN"
                         : "USD";
-                console.log("this.form.customer_id ::::", this.form.customer_id);
+                console.log(
+                    "this.form.customer_id ::::",
+                    this.form.customer_id
+                );
 
                 /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
                 this.is_payment = true;

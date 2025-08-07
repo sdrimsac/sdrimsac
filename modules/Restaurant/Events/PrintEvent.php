@@ -30,7 +30,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null, $re_printer = false)
     {
         $configuration = Configuration::first();
         $company = Company::active();
@@ -65,7 +65,7 @@ class PrintEvent implements ShouldBroadcast
                 $user_establishment_id_printer = $area_found->establishment_id;
             }
         }
-        // }
+        //Log::info('Valor de re_printer en PrintEvent: ' . var_export($re_printer, true));
 
         $format = 'ticket';
         if ($establishment->format_printer == 2) {
@@ -138,7 +138,7 @@ class PrintEvent implements ShouldBroadcast
                 $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
                 break;
             case "00":
-                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
+                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}&precuenta={$isPrecuenta}&re_printer={$re_printer}";
                 break;
             case "0":
                 $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$zone_id}&ids={$ids_string}";
@@ -227,6 +227,7 @@ class PrintEvent implements ShouldBroadcast
             'area_id' => $area_id,
             'user_establishment_id' => $user_establishment_id,
             'user_establishment_id_printer' => $user_establishment_id_printer,
+            're_printer' => $re_printer,
         );
         $this->data = $data;
 

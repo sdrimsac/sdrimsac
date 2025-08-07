@@ -305,6 +305,7 @@
 <body>
     @php
         $precuenta = isset($precuenta) ? (bool) $precuenta : false;
+        $re_printer = isset($re_printer) ? (bool) $re_printer : false;
         $configuration = App\Models\Tenant\Configuration::first();
         //$establishment = App\Models\Tenant\Establishment::first();
     @endphp
@@ -376,13 +377,33 @@
                             <strong>ORDEN NRO. {{ $ordenes->correlative }}</strong>
                         </td>
                     </tr>
-                    @if ($area_desc)
+                    @if ($re_printer)
+                        <tr>
+                            <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                                <strong>REIMPRESIÓN</strong>
+                            </td>
+                        </tr>
+                    @elseif ($area_desc)
+                        <tr>
+                            <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                                <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                            </td>
+                        </tr>
+                    @endif
+                    {{-- @if ($area_desc)
                         <tr>
                             <td colspan="4" class="header_title0 text-center  under_line" valign="top">
                                 <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                             </td>
                         </tr>
                     @endif
+                    @if ($re_printer)
+                        <tr>
+                            <td colspan="4" class="header_title0 text-center  under_line" valign="top">
+                                <strong>REIMPRESIÓN</strong>
+                            </td>
+                        </tr>
+                    @endif --}}
                     <tr>
                         <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
 
@@ -423,10 +444,23 @@
                             <strong>ORDEN NRO. {{ $ordenes->correlative }}</strong>
                         </td>
                     </tr>
-                    @if ($area_desc && strtoupper($area_desc) !== 'MENAJE')
+                    {{-- @if ($area_desc && strtoupper($area_desc) !== 'MENAJE')
                         <tr>
                             <td colspan="4" class="header_title0 text-center under_line" valign="top"
                                 style="font-size: 20px !important;">
+                                <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                            </td>
+                        </tr>
+                    @endif --}}
+                    @if ($re_printer)
+                        <tr>
+                            <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                                <strong>REIMPRESIÓN</strong>
+                            </td>
+                        </tr>
+                    @elseif ($area_desc)
+                        <tr>
+                            <td colspan="4" class="header_title0 text-center under_line" valign="top">
                                 <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                             </td>
                         </tr>
@@ -609,7 +643,8 @@
                                 @else
                                     <tr>
                                         <td class="celda_center header_title2"
-                                            style="font-size: 20px !important; font-weight: bold;">{{ $row->quantity }}
+                                            style="font-size: 20px !important; font-weight: bold;">
+                                            {{ $row->quantity }}
                                         </td>
                                         <td colspan="3" class="celda_left header_title2 border-bottom">
                                             <strong>
@@ -668,7 +703,16 @@
                                 <th class="encabezado" colspan="3" style="text-align: right">Total S/ </th>
                                 <th class="encabezado">{{ number_format($total, 2) }}</th>
                             </tr>
+                            @if ($establishment && $establishment->image_yape)
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                        alt="payment-logo" style="max-width: 150px; height: auto;" />
+                                </td>
+                            </tr>
                         @endif
+                        @endif
+                        
                     </tbody>
                 @endif
 
@@ -720,14 +764,27 @@
                         <strong>ORDEN NRO. {{ $orden }}</strong>
                     </td>
                 </tr>
+                @if ($re_printer)
+                    <tr>
+                        <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                            <strong>REIMPRESIÓN</strong>
+                        </td>
+                    </tr>
+                @elseif ($area_desc)
+                    <tr>
+                        <td colspan="4" class="header_title0 text-center under_line" valign="top">
+                            <strong>AREA: {{ strtoupper($area_desc) }} </strong>
+                        </td>
+                    </tr>
+                @endif
 
-                @if ($area_desc)
+                {{-- @if ($area_desc)
                     <tr>
                         <td colspan="4" class="header_title0 text-center  under_line" valign="top">
                             <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                         </td>
                     </tr>
-                @endif
+                @endif --}}
                 <tr>
                     <td colspan="4" colspan="4" class=" text-center header_title1" valign="top">
 
@@ -838,6 +895,14 @@
                             S/</th>
                         <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
                     </tr>
+                    @if ($establishment && $establishment->image_yape)
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                    alt="payment-logo" style="max-width: 150px; height: auto;" />
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
             <br>
@@ -982,6 +1047,14 @@
                                 </td>
                             @endif
                         </tr>
+                        {{-- @if ($establishment && $establishment->image_yape)
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                        alt="payment-logo" style="max-width: 150px; height: auto;" />
+                                </td>
+                            </tr>
+                        @endif --}}
                     @endforeach
                 </tbody>
             </table>

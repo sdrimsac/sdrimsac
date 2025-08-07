@@ -88,7 +88,7 @@
                     <el-button-group>
                         <el-tooltip
                             effect="dark"
-                            content="Imprimir ticket en caja"
+                            content="Imprimir Precuenta en caja"
                             placement="top-start"
                         >
                             <el-button
@@ -98,12 +98,24 @@
                                 v-if="configuration.print_pos_worker"
                             >
                                 <i class="icofont-printer"></i>
-                                Caja
                             </el-button>
                         </el-tooltip>
                         <el-tooltip
                             effect="dark"
-                            content="Imprimir precuenta"
+                            content="re-Imprimir comanda sus respectivas areas"
+                            placement="top-start"
+                        >
+                            <el-button
+                                type="warning"
+                                class="btn btn-sm"
+                                @click="printTicketRePrint"
+                            >
+                                <i class="icofont-printer"></i>
+                            </el-button>
+                        </el-tooltip>
+                        <el-tooltip
+                            effect="dark"
+                            content="re-Imprimir comanda en caja"
                             placement="top-start"
                         >
                             <el-button
@@ -158,7 +170,13 @@
                     ></el-switch>
                 </div>
                 <div class="col-8 d-flex justify-content-end">
-                    <template >
+                    <template
+                        v-if="
+                            table &&
+                                table.is_delivery === '1' &&
+                                ordens.length === 0
+                        "
+                    >
                         <el-tooltip
                             effect="dark"
                             content="Delivery"
@@ -173,7 +191,7 @@
                             </el-button>
                         </el-tooltip>
                     </template>
-                    <template>
+                    <template v-else>
                         <el-tooltip
                             effect="dark"
                             content="Enviar ordenes"
@@ -928,6 +946,8 @@ export default {
             }
         },
         openDelivery() {
+            this.to_carry = true;
+            this.allToCarry();
             this.showDeliveryForm = true;
         },
         openOrden() {
@@ -1194,53 +1214,21 @@ export default {
         },
         async printTicket() {
             let id = this.ordens[0].orden_id;
-            //  let total = this.totalOrdenItems;
-            //   try {
-            //     printjs({
-            //       printable: `caja/worker/print-ticket?id=${id}&total=${total}`,
-            //       type: "pdf",
-            //       showModal: true,
-            //       modalMessage: "Espere por favor...",
-            //     });
-            //   } catch (e) {
-            //     console.log(e.response);
-            //   }
             try {
                 const response = await this.$http.get(
-                    `/caja/worker/record-worker/${id}`
+                    `/caja/worker/record-worker/${id}?re_printer=true`
                 );
-                // let config = qz.configs.create(response.data.printer, {
-                //     usingSecure: false,
-                //     scaleContent: false
-                // });
-                // if (!qz.websocket.isActive()) {
-                //     await qz.websocket.connect(config);
-                // }
-                // // console.log(qz.websocket.isActive(), "aqui");
-                // let url = response.data.print;
-                // // console.log(url);
-                // let ordenIdToPrint = url.split("/");
-                // ordenIdToPrint = ordenIdToPrint[ordenIdToPrint.length - 1];
-                // // url = url.split("/");
-                // // url = url.slice(0, -1);
-                // // url = url.join("/");
-                // // url = url + `?id=${ordenIdToPrint}&area_id=0`;
-                // let data = [
-                //     {
-                //         type: "pdf",
-                //         format: "file",
-                //         data: url
-                //     }
-                // ];
-                // qz.print(config, data).catch(e => {
-                //     console.log(e);
-                //     this.$toast.error(e.message);
-                // });
-
-                // this.$toast.success(
-                //     "se esta imprimiendo el comprobante con exito"
-                // );
-                // qz.websocket.disconnect()
+            } catch (e) {
+                this.$toast.error(e.message);
+            }
+        },
+        async printTicketRePrint() {
+            let id = this.ordens[0].orden_id;
+            try {
+                const response = await this.$http.get(
+                    `/caja/worker/re-print-ticket/${id}?re_printer=true`
+                );
+                // puedes usar response.data si necesitas usar los datos retornados
             } catch (e) {
                 this.$toast.error(e.message);
             }

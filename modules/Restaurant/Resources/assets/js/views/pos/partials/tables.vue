@@ -175,7 +175,11 @@
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="Delivery" name="Delivery" v-if="configuration.restaurant_delivery">
+            <el-tab-pane
+                label="Delivery"
+                name="Delivery"
+                v-if="configuration.restaurant_delivery"
+            >
                 <div class="card">
                     <div class="card-body">
                         <div v-if="deliveryOrders.length > 0">
@@ -304,40 +308,32 @@ export default {
             return foundUser || null;
         },
 
-        /* DeliveryTicket(ord) {
-            const url = `/caja/delivery/ticket?id=${ord.id}`;
-            window.open(url, "_blank");
-        }, */
-
         async DeliveryTicket(ord) {
             try {
-                const id = ord.id;
                 const response = await this.$http.get(
                     `/caja/delivery/DeliveryPrinter?id=${ord.id}`
                 );
                 let url = response.data.print;
-                console.log("URL de impresión:", url);
-                /* if (pdf) {
-                    window.open(url, "_blank");
-                    return;
-                } */
-                /* await this.$http.post("/caja/re-print/delivery", {
-                    url
-                }); */
+                let printerR = response.data.printer;
 
+                await this.$http.post("/caja/re-print", {
+                    url,
+                    printer: printerR
+                });
                 return;
-
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect(config);
-                }
-                let isPosd = response.data.printer.split(" ")[
-                    response.data.printer.split(" ").length - 1
-                ];
+                let printer = response.data.printer;
+                console.log(printer);
+                let isPosd = printer.split(" ")[printer.split(" ").length - 1];
+                console.log(isPosd);
                 if (isPosd == "POSD") {
                     config.density = 200;
+                }
+                console.log(config);
+                if (!qz.websocket.isActive()) {
+                    await qz.websocket.connect(config);
                 }
                 let data = [
                     {
@@ -349,214 +345,13 @@ export default {
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
+
+                //this.$toast.success("se esta imprimiendo el comprobante con exito");
+                // qz.websocket.disconnect()
             } catch (e) {
                 this.$toast.error(e.message);
             }
         },
-
-        /* async DeliveryTicket(ord) {
-            try {
-                const response = await this.$http.get(
-                    `/caja/delivery/ticket?id=${ord.id}`
-                );
-                let url = response.data.print;
-                let printer = response.data.printer;
-
-                console.log("URL de impresión:", url);
-                if (typeof pdf !== 'undefined' && pdf) {
-                    window.open(url, "_blank");
-                    return url;
-                }
-                await this.$http.post("/caja/re-print/delivery", {
-                    url,
-                    type: "D"
-                });
-
-                // Si solo quieres devolver la url, descomenta la siguiente línea y comenta el resto:
-                // return url;
-
-                let config = qz.configs.create(printer, {
-                    scaleContent: false
-                });
-
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect();
-                }
-
-                let isPosd = printer.split(" ").pop();
-                if (isPosd === "POSD") {
-                    config.density = 200;
-                }
-
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: url
-                    }
-                ];
-
-                qz.print(config, data).catch(e => {
-                    this.$toast.error(e.message);
-                });
-                return url;
-            } catch (e) {
-                this.$toast.error("Error de impresión: " + e.message);
-                return null;
-            }
-        }, */
-
-        /* async DeliveryTicket(ord) {
-            try {
-                const response = await this.$http.get(
-                    `/caja/delivery/ticket?id=${ord.id}`
-                );
-                let url = response.data.print;
-                let printer = response.data.printer;
-
-                console.log("URL de impresión:", url);
-
-                // Si la opción `pdf` está activa, abre en navegador (solo visualización)
-                if (this.pdf) {
-                    window.open(url, "_blank");
-                    return url;
-                }
-
-                // Opcional: notificar backend que se imprimirá nuevamente
-                await this.$http.post("/caja/re-print/delivery", {
-                    url,
-                    type: "D"
-                });
-
-                // Configuración de impresora
-                let config = qz.configs.create(printer, {
-                    scaleContent: false
-                });
-
-                // Asegurar conexión con QZ
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect();
-                }
-
-                // Densidad especial para impresoras POSD
-                let isPosd = printer.split(" ").pop();
-                if (isPosd === "POSD") {
-                    config.density = 200;
-                }
-
-                // Preparar datos de impresión
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: url
-                    }
-                ];
-
-                // Enviar a imprimir
-                await qz.print(config, data);
-                return url;
-            } catch (e) {
-                this.$toast.error("Error de impresión: " + e.message);
-                return null;
-            }
-        }, */
-        /* async DeliveryTicket(ord) {
-            try {
-                const response = await this.$http.get(
-                    `/caja/delivery/DeliveryPrinter?id=${ord.id}`
-                );
-                let url = response.data.print;
-                let printer = response.data.printer
-
-                return;
-
-                // Configuración de impresora
-                let config = qz.configs.create(printer, {
-                    scaleContent: false
-                });
-
-                // Asegurar conexión con QZ
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect();
-                }
-
-                // Densidad especial para impresoras POSD
-                let isPosd = printer.split(" ").pop();
-                if (isPosd === "POSD") {
-                    config.density = 200;
-                }
-
-                // Preparar datos de impresión
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: url
-                    }
-                ];
-
-                // Enviar a imprimir
-                await qz.print(config, data);
-                return url;
-            } catch (e) {
-                this.$toast.error("Error de impresión: " + e.message);
-                return null;
-            }
-        }, */
-
-        /* async DeliveryTicket(ord) {
-            try {
-                const response = await this.$http.get(
-                    `/caja/delivery/DeliveryPrinter?id=${ord.id}`
-                );
-                let url = response.data.print;
-                let printer = response.data.printer;
-                let directPrinting = response.data.direct_printing;
-
-                if (!url) {
-                    this.$toast.error(
-                        "No se encontró el archivo para imprimir."
-                    );
-                    return null;
-                }
-
-                if (!directPrinting) {
-                    window.open(url, "_blank");
-                    return url;
-                }
-
-                let config = qz.configs.create(printer, {
-                    scaleContent: false
-                });
-
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect();
-                }
-
-                let isPosd = "";
-                if (printer && typeof printer === "string") {
-                    isPosd = printer.split(" ").pop();
-                    if (isPosd === "POSD") {
-                        config.density = 200;
-                    }
-                }
-
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: url
-                    }
-                ];
-
-                await qz.print(config, data);
-                return url;
-            } catch (e) {
-                this.$toast.error("Error de impresión: " + e.message);
-                return null;
-            }
-        }, */
 
         getUserTypeClass(tableId) {
             const user = this.getUserByTable(tableId);

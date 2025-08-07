@@ -68,14 +68,46 @@
         <div class="center" style="margin-bottom: 6px;">
 
             <div class="text-center company_logo_box pt-5 pl-5">
+
+                {{-- @if ($company->document_logo)
+                    <img src="data:{{ mime_content_type(public_path('storage/uploads/logos/' . $company->document_logo)) }};base64,{{ base64_encode(file_get_contents(public_path('storage/uploads/logos/' . $company->document_logo))) }}"
+                        alt="{{ $company->trade_name }}"
+                        style="max-width: 160px; max-height: 140px; object-fit: contain;">
+                @else
+                    <img src="data:{{ mime_content_type(public_path('storage/uploads/logos/' . $company->logo)) }};base64,{{ base64_encode(file_get_contents(public_path('storage/uploads/logos/' . $company->logo))) }}"
+                        alt="{{ $company->trade_name }}"
+                        style="max-width: 160px; max-height: 140px; object-fit: contain;">
+                @endif --}}
+
+                @if ($establishment->logo || $establishment->document_logo)
+
                     @if ($establishment->document_logo)
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->document_logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo_ticket contain" style="max-width: 160px; max-height: 140px; object-fit: contain;">
+                            alt="{{ $company->trade_name }}" class="
+                            contain"
+                            style="width: 160px; height: 140px; max-width: 160px; max-height: 140px; object-fit: contain;">
                     @else
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo_ticket contain" style="max-width: 160px; max-height: 140px; object-fit: contain;">
+                            alt="{{ $company->trade_name }}" class="
+                            contain"
+                            style="width: 160px; height: 140px; max-width: 160px; max-height: 140px; object-fit: contain;">
                     @endif
-                </div>
+                @else
+                    @if ($company->logo)
+                        @if ($company->document_logo)
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+                                contain"
+                                style="width: 160px; height: 140px; max-width: 160px; max-height: 140px; object-fit: contain;">
+                        @else
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+                                contain"
+                                style="width: 160px; height: 140px; max-width: 160px; max-height: 140px; object-fit: contain;">
+                        @endif
+                    @endif
+                @endif
+            </div>
         </div>
         <div class="center bold">
             {{ $company->trade_name }}<br>

@@ -159,6 +159,7 @@ class OrdenController extends Controller
         $zone_name = $request->zone_name ?? null;
         $es_anulacion = $request->cancelled ?? false;
         $es_anulacion_item = $request->cancel_orden_item;
+        $re_printer = $request->re_printer ?? false;
         $to_kitchen = false;
         if ($precuenta) {
             $to_kitchen = true;
@@ -361,10 +362,11 @@ class OrdenController extends Controller
                 'zone_name',
                 'es_anulacion',
                 'es_anulacion_item',
+                're_printer',
             ))
                 ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
-            /* \Log::error('Línea 268 - Error en el proceso: ' . $e->getMessage()); */
+
             return ['m' => $e->getMessage()];
         }
         $timestamp = Carbon::now()->format('YmdHis');
@@ -696,22 +698,22 @@ class OrdenController extends Controller
             'message' => 'Área ' . ($orden->active ? 'activada' : 'desactivada')
         ];
     }
+
     public function recordWorker($id, Request $request)
     {
         $orden = Orden::find($id);
         $print_pos = $request->printpos ?? false;
         $precuenta = $request->precuenta ?? false;
         $to_kitchen = $request->to_kitchen;
+        $re_printer = filter_var($request->get('re_printer', false), FILTER_VALIDATE_BOOLEAN);
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
         $printer = null;
 
-        // Optimizamos cómo obtenemos mozo_name y zone_name
         $mozo_name = null;
         $zone_name = null;
 
         if ($orden) {
-            // Obtenemos el nombre del mozo
             if ($orden->mozo_id) {
                 $mozo = DB::connection('tenant')
                     ->table('seller_mozo')
@@ -720,7 +722,6 @@ class OrdenController extends Controller
                 $mozo_name = $mozo ? $mozo->name : null;
             }
 
-            // Obtenemos el nombre de la zona directamente de la relación table->zone
             if ($orden->table_id) {
                 $zone = DB::connection('tenant')
                     ->table('tables as t')
@@ -733,13 +734,24 @@ class OrdenController extends Controller
             }
         }
 
-        if (!$to_kitchen) {
+        /* if (!$to_kitchen) {
             $area_id = $user->area_id;
             $area = Area::find($area_id);
         } else {
             $area = Area::where('description', 'like', '%COCIN%')->first();
             $area_id = $area->id;
+        } */
+        if ($to_kitchen) {
+            // Si va a cocina, usa área de cocina
+            $area = Area::where('description', 'like', '%COCIN%')->first();
+            $area_id = $area->id ?? null;
+        } else {
+            // Siempre usa el área de caja por defecto (NO la del usuario/mozo)
+            $area_id = Area::getCajaAreaIdByTableId($orden->table_id);
+            $area = Area::find($area_id);
         }
+
+
         if ($print_pos) {
             $area_pos_id = Area::getCajaAreaIdByTableId($orden->table_id);
             $area = Area::find($area_pos_id);
@@ -750,7 +762,13 @@ class OrdenController extends Controller
             $printer = $area->printer;
         }
         if ($printer == null) {
-            $printer = $establishment->printer;
+            $area_caja_id = Area::getCajaAreaIdByTableId($orden->table_id);
+            $area_caja = Area::find($area_caja_id);
+
+            if ($area_caja && $area_caja->printer) {
+                $printer = $area_caja->printer;
+                $area_id = $area_caja->id;
+            }
         }
         if ($orden == null) {
             return [
@@ -768,7 +786,7 @@ class OrdenController extends Controller
             $orden->mozo_name = $mozo_name;
             $orden->zone_name = $zone_name;
 
-            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta));
+            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta, null, $re_printer));
             return [
                 'success' => true,
                 'data' => $orden,
@@ -779,6 +797,92 @@ class OrdenController extends Controller
             ];
         }
     }
+
+    public function recordWorkerRePrint($id, Request $request)
+    {
+        $orden = Orden::find($id);
+        if (!$orden) {
+            return [
+                'success' => false,
+                'print'  => "Nº Orden no existe"
+            ];
+        }
+
+        $precuenta = $request->precuenta ?? false;
+        $re_printer = filter_var($request->get('re_printer', false), FILTER_VALIDATE_BOOLEAN);
+        $user = auth()->user();
+        $establishment = Establishment::findOrFail($user->establishment_id);
+
+        $mozo_name = null;
+        $zone_name = null;
+
+        // Obtener mozo
+        if ($orden->mozo_id) {
+            $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $orden->mozo_id)->first();
+            $mozo_name = $mozo ? $mozo->name : null;
+        }
+
+        // Obtener zona de la mesa
+        if ($orden->table_id) {
+            $zone = DB::connection('tenant')
+                ->table('tables as t')
+                ->join('zones as z', 't.zone_id', '=', 'z.id')
+                ->where('t.id', $orden->table_id)
+                ->select('z.name')
+                ->first();
+
+            $zone_name = $zone ? $zone->name : null;
+        }
+
+        // Obtener items de la orden
+        $orden_items = $orden->orden_items;
+        if ($orden_items->isEmpty()) {
+            return [
+                'success' => false,
+                'print'  => "No se encontraron items en la orden."
+            ];
+        }
+
+        // Agrupar por área
+        $items_by_area = $orden_items->groupBy('area_id');
+        $impresiones = [];
+
+        foreach ($items_by_area as $area_id => $items) {
+            $area = Area::find($area_id);
+            if (!$area || !$area->printer) {
+                return [
+                    'success' => false,
+                    'print'  => "No se encontró una impresora configurada para el área con ID {$area_id}."
+                ];
+            }
+
+            $orden_item_ids = $items->pluck('id')->toArray();
+            $ids_string = implode("_", $orden_item_ids);
+
+            // Asignar propiedades auxiliares a la orden
+            $orden->mozo_name = $mozo_name;
+            $orden->zone_name = $zone_name;
+
+            // Enviar a imprimir
+            //event(new PrintEvent($orden->id, "00", true, $area_id, $orden_item_ids, false, $precuenta));
+            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_item_ids, false, $precuenta, null, $re_printer));
+            // Agregar resultado a lista
+            $impresiones[] = [
+                'printer' => $area->printer,
+                'area' => $area->description,
+                'print_url' => url('') . "/caja/worker/print-ticket?id={$orden->id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}&mozo_name={$mozo_name}&zone_name={$zone_name}"
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data' => $orden,
+            'impresiones' => $impresiones,
+            'direct_printing' => (bool) $establishment->direct_printing,
+            'printer_serve' => $establishment->printer_serve
+        ];
+    }
+
     /* para la precuenta */
     public function record($id, Request $request)
     {
@@ -1136,17 +1240,6 @@ class OrdenController extends Controller
                     $orden->correlative = 1;
                 }
 
-
-                // Asignar correlativo incremental por sesión de caja
-                /* if ($cash_order_session) {
-                    $order_start_id = $cash_order_session->order_start_id;
-                    // Contar las órdenes creadas después de order_start_id
-                    $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
-                    $orden->correlative = $correlative;
-                } else {
-                    $orden->correlative = 1;
-                } */
-
                 if ($request->caja == true) {
                     $orden->table_id = $table->id;
                 }
@@ -1344,7 +1437,7 @@ class OrdenController extends Controller
 
                     if ($area_found->printer || $area_found->search_print == 1) {
                         // Si el área es Cocina, se envía a Cocina y también en el area menaje
-                        if ($area_found->description == 'COCINA') {
+                        if (in_array($area_found->description, ['COCINA', 'BARRA'])) {
                             $menaje_id = $this->getMenaje();
 
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
@@ -1748,7 +1841,7 @@ class OrdenController extends Controller
         }
     }
 
-    public function DeliveryOrden(Request $request)
+    /* public function DeliveryOrden(Request $request)
     {
         $orden_id = $request->id;
         $orden = Orden::find($orden_id);
@@ -1762,8 +1855,16 @@ class OrdenController extends Controller
 
         $company = Company::first();
         $configuration = Configuration::first();
+        $user = auth()->user();
+        if (!$user) {
+            return [
+                'success' => false,
+                'message' => 'Usuario no autenticado'
+            ];
+        }
+
         $establishment = Establishment::find(auth()->user()->establishment_id);
-        
+
         $delivery = Delivery::with('person')->where('orden_id', $orden_id)->first();
         $orden_items = OrdenItem::with('item')
             ->where('orden_id', $orden_id)
@@ -1781,35 +1882,121 @@ class OrdenController extends Controller
         $total_items = count($orden_items);
         $height = $base_height + ($total_items * $item_height);
 
-        $pdf = PDF::loadView('restaurant::ordens.Delivery', compact(
+        try {
+            $pdf = PDF::loadView('restaurant::ordens.delivery', compact(
+                'configuration',
+                'establishment',
+                'company',
+                'orden',
+                'orden_items',
+                'delivery',
+            ))
+                ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
 
-            'configuration',
-            'establishment',
-            'company',
-            'orden',
-            'orden_items',
-            'delivery',
-        ))
-            ->setPaper(array(0, 0, 249.45, $height));
+            return ['m' => $e->getMessage()];
+        }
 
         $timestamp = Carbon::now()->format('YmdHis');
-        $filename = $timestamp . '_delivery_ticket.pdf';
 
         if ($configuration->android_configuration) {
-            $path = storage_path('app/public/temp/' . $filename);
+            $path = storage_path('app/public/temp/' . $timestamp);
             $pdf->save($path);
 
             return response()->json([
                 'success' => true,
-                'print' => asset('storage/temp/' . $filename),
+                'print' => asset('storage/temp/' . $timestamp),
                 'printer' => $orden->area->printer ?? null
             ]);
         } else {
-            return $pdf->stream($filename);
+            return $pdf->stream($timestamp . '_delivery_ticket.pdf');
         }
-        //return $pdf->stream("ticket_delivery.pdf");
+    } */
+
+    public function DeliveryOrden(Request $request)
+    {
+
+        $orden_id = $request->id;
+        $orden = Orden::find($orden_id);
+
+        if (!$orden) {
+            return [
+                'success' => false,
+                'message' => 'Orden no encontrada'
+            ];
+        }
+
+        $company = Company::first();
+        $configuration = Configuration::first();
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no autenticado'
+            ], 401);
+        }
+        //$establishment = Establishment::find(auth()->user()->establishment_id);
+        $establishment = Establishment::find($user->establishment_id);
+
+        $delivery = Delivery::with('person')->where('orden_id', $orden_id)->first();
+        $orden_items = OrdenItem::with('item')
+            ->where('orden_id', $orden_id)
+            ->get()
+            ->map(function ($orden_item) {
+                return [
+                    'quantity' => $orden_item->quantity,
+                    'description' => $orden_item->food->description ?? '',
+                    'price' => $orden_item->price,
+                ];
+            });
+
+        $base_height = 500;
+        $item_height = 30;
+        $total_items = count($orden_items);
+        $height = $base_height + ($total_items * $item_height);
+
+
+        try {
+            $pdf = PDF::loadView('restaurant::ordens.delivery', compact(
+                'configuration',
+                'establishment',
+                'company',
+                'orden',
+                'orden_items',
+                'delivery',
+            ))
+                ->setPaper(array(0, 0, 249.45, $height));
+        } catch (\Throwable $e) {
+            Log::error("Error al generar el PDF: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el PDF',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+        $timestamp = Carbon::now()->format('YmdHis');
+
+        if ($configuration->android_configuration) {
+            $filePath = storage_path('app/public/' . $timestamp . '_orden_.pdf');
+            $pdf->save($filePath);
+
+            return response()->download(
+                $filePath,
+                $timestamp . '_orden_.pdf',
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="' . $timestamp . '_orden_.pdf"'
+                ]
+            );
+        } else {
+            return $pdf->stream($timestamp . '_orden_.pdf');
+        }
     }
-    public function DeliveryPrinter(Request $request)
+
+    /* public function DeliveryPrinter(Request $request)
     {
         $orden_id = $request->id;
         $orden = Orden::find($orden_id);
@@ -1825,7 +2012,6 @@ class OrdenController extends Controller
         $id = $orden->id;
         $establishment = Establishment::find(auth()->user()->establishment_id);
 
-        // Determinar si imprimir en caja o en cocina
         if ($configuration->delivery_caja) {
             // Imprimir solo en caja
             $area_id = $this->getBoxArea();
@@ -1847,6 +2033,53 @@ class OrdenController extends Controller
             'printer_serve' => $establishment->printer_serve,
             'print'   => url('') . "/caja/delivery/ticket?id={$id}"
         ];
+    } */
+
+    public function DeliveryPrinter(Request $request)
+    {
+        $orden_id = $request->id;
+        $orden = Orden::find($orden_id);
+        $configuration = Configuration::first();
+
+        if (!$orden) {
+            return [
+                'success' => false,
+                'message' => 'Orden no encontrada'
+            ];
+        }
+
+        $id = $orden->id;
+        $establishment = Establishment::find(auth()->user()->establishment_id);
+
+        if ($configuration->delivery_caja) {
+            // Imprimir solo en caja
+            $area_id = $this->getBoxArea();
+            $area = Area::find($area_id);
+            $printer = $area->printer ?? $establishment->printer;
+            //Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
+        }
+        if ($configuration->delivery_cocina) {
+            $area = Area::where('description', 'like', '%COCIN%')->first();
+            $area_id = $area ? $area->id : null;
+            $printer = $area && $area->printer ? $area->printer : $establishment->printer;
+            //Event(new PrintEvent($orden->id, "D", true, $area_id, [], true));
+        }
+        if ($orden == null) {
+            return [
+                'success' => false,
+                'print'  => "Nº Orden no existe"
+            ];
+        } else {
+
+            return [
+                'success' => true,
+                'data' => $orden,
+                'printer' => $printer,
+                'direct_printing' => (bool) $establishment->direct_printing,
+                'printer_serve' => $establishment->printer_serve,
+                'print'   => url('') . "/caja/delivery/ticket?id={$id}",
+            ];
+        }
     }
 
     public function destroyorden($id)

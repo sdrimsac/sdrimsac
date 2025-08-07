@@ -10128,13 +10128,13 @@
                                                                                 ref="printPosWorkerIcon"
                                                                                 class="fas fa-ticket-alt tab-icon fa-lg"
                                                                             ></i>
-                                                                            Reimprimir
-                                                                            Comanda
+                                                                            Impresion de precuenta en caja desde 
+                                                                            Área
                                                                             (Mozo)
                                                                             <el-tooltip
                                                                                 class="item"
                                                                                 effect="dark"
-                                                                                content="Reimprimir Comanda de forma manual en Área desde el Módulo de Mozo"
+                                                                                content="Impresion de precuenta desde el usuario Mozo"
                                                                                 placement="top-start"
                                                                             >
                                                                                 <i
@@ -10157,7 +10157,7 @@
                                                                             @change="
                                                                                 () =>
                                                                                     submit(
-                                                                                        'Imprimir comanda en caja desde mozo (manual)',
+                                                                                        'Imprimir precuenta en caja desde mozo (manual)',
                                                                                         form.print_pos_worker,
                                                                                         'printPosWorkerIcon'
                                                                                     )
