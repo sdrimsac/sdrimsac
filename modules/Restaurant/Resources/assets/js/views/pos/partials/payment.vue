@@ -1558,7 +1558,7 @@
                                     <button
                                         class="btn btn-primary w-100 me-2"
                                         @click="handleOneClick"
-                                        :disabled="isLocked"
+                                        :disabled="button_payment || isLocked"
                                     >
                                         <i class="fas fa-money-bill-alt"></i>
                                         PAGAR

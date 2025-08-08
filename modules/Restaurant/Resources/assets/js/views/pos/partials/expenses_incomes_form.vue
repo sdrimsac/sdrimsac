@@ -281,6 +281,7 @@ export default {
             }
         },
         openCreateItem() {
+            this.newItem.unitTypeId = 'ZZ';
             this.showCreateItem = true;
         },
         deleteDetail(id) {

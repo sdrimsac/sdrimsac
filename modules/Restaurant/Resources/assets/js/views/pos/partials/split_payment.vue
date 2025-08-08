@@ -3,7 +3,7 @@
         append-to-body
         @open="open"
         @close="close"
-        v-loading="loading"
+        
         :visible="showSplitPayment"
         :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`"
         :width="dialogWidth"
@@ -380,7 +380,7 @@
                                         <el-input v-model="person.amount" readonly></el-input>
                                     </div> -->
                             <!-- N° de operación -->
-                            <div
+                            <!-- <div
                                 class="col-3"
                                 v-if="
                                     ['03', '04', '05', '06'].includes(
@@ -399,11 +399,11 @@
                                     :placeholder="`N° de operación ${idx + 1}`"
                                 ></el-input>
                                 <div class="col-3" v-else>
-                                    <!-- Sino cumple queda vacio -->
+                                   
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- Nro de WhatsApp -->
-                            <div class="col-4">
+                            <!-- <div class="col-4">
                                 <label for="" style="margin-bottom: 2px;">
                                     <i
                                         class="fab fa-whatsapp"
@@ -417,7 +417,7 @@
                                     @keyup.enter="sendPayments"
                                     style="padding: 2px 6px; margin: 0;"
                                 ></el-input>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
@@ -526,7 +526,7 @@
         ></person-form>
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
-                <el-button type="primary" @click="sendPayments"
+                <el-button type="primary" :disabled="sendingPayments" @click="handleSendPayments"
                     >Listo</el-button
                 >
             </div>
@@ -687,12 +687,13 @@ export default {
                 { background: "#FBFBFF", color: "#483D8B" }, // SoftGhostWhite background with SlateBlue text
                 { background: "#F7F7F7", color: "#696969" } // SoftWhiteSmoke background with DimGray text
             ],
+            sendingPayments: false,
             selectedAccount: undefined,
             customer_default_id: null,
             current_index_person: null,
             splitByAmount: "1",
             number: 2,
-            loading: false,
+            
             numberProduct: 2,
             payments: [],
             items: [],
@@ -772,8 +773,17 @@ export default {
     },
 
     methods: {
+         async handleSendPayments() {
+            if (this.sendingPayments) return;
+            this.sendingPayments = true;
+            try {
+                await this.sendPayments();
+            } finally {
+                this.sendingPayments = false;
+            }
+        },
+
         reloadDataCustomers(customer_id) {
-            this.loading = true;
             this.$http
                 .get(`/documents/search/customer/${customer_id}`)
                 .then(response => {
@@ -784,9 +794,6 @@ export default {
                 })
                 .catch(error => {
                     console.log(error);
-                })
-                .finally(() => {
-                    this.loading = false;
                 });
         },
         openDialogNewPerson(idx) {
@@ -840,26 +847,26 @@ export default {
             }
 
             // Validar número de operación para métodos de pago específicos
-            let invalidOperation = this.persons.some(p => {
+            /* let invalidOperation = this.persons.some(p => {
                 if (["03", "04", "05", "06"].includes(p.payment_method)) {
                     return (
                         !p.operation_number || p.operation_number.trim() === ""
                     );
                 }
                 return false;
-            });
-            if (invalidOperation) {
+            }); */
+            /* if (invalidOperation) {
                 this.$showSAlert(
                     "Error",
                     "Debe ingresar el número de operación para para poder realizar la operacion",
                     "error"
                 );
                 return false;
-            }
+            } */
             return true;
         },
         async sendDocument(form, resource) {
-            this.loading = true;
+            
             let newForm = this.reCalculateTotal(form);
             if (this.printerOn) {
                 newForm.printerOn = true;
@@ -882,7 +889,7 @@ export default {
                 }
             }
             const response = await this.$http.post(`/${resource}`, newForm);
-            this.loading = false;
+            
         },
         async sendPayments() {
             if (!this.validate()) {
@@ -919,7 +926,7 @@ export default {
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
                         customer_telephone: p.customer_telephone,
-                        operation_number: p.operation_number
+                        //operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -977,7 +984,7 @@ export default {
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
                         customer_telephone: p.customer_telephone,
-                        operation_number: p.operation_number
+                        //operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -1359,9 +1366,9 @@ export default {
         onChangePaymentMethod(idx) {
             // Limpiar número de operación si cambia a método que no lo requiere
             const p = this.persons[idx];
-            if (!["03", "04", "05", "06"].includes(p.payment_method)) {
+            /* if (!["03", "04", "05", "06"].includes(p.payment_method)) {
                 p.operation_number = "";
-            }
+            } */
         },
         addPerson(amount = 0) {
             this.persons.push({
@@ -1374,7 +1381,7 @@ export default {
                 document_type_id: "03",
                 products: [],
                 customer_telephone: "",
-                operation_number: ""
+                //operation_number: ""
             });
         },
         open() {
