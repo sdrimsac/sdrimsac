@@ -1,21 +1,11 @@
 <template>
-  <el-dialog
-    :title="titleDialog"
-    :visible="showDialog"
-    @close="close"
-    @open="create"
-    append-to-body
-    :close-on-click-modal="false"
-    class="rounded-dialog"
-  >
+  <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" append-to-body
+    :close-on-click-modal="false" class="rounded-dialog">
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
         <br />
         <div class="row">
-          <div
-            v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
-            class="col-md-12"
-          >
+          <div v-if="type !== 'caja/tables' && type !== 'caja/rooms'" class="col-md-12">
             <div class="form-group" :class="{ 'has-danger': errors.description }">
               <label class="control-label">
                 <i class="fas fa-info-circle mr-2"></i> Descripción
@@ -61,18 +51,10 @@
                   <i class="fas fa-building mr-2"></i> Torre
                 </label>
                 <el-select v-model="form.tower_id" @change="filterFloorsByTower(form.tower_id)">
-                  <el-option
-                    v-for="(data, index) in towers"
-                    :key="index"
-                    :label="data.name"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in towers" :key="index" :label="data.name"
+                    :value="data.id"></el-option>
                 </el-select>
-                <small
-                  class="form-control-feedback"
-                  v-if="errors.floor_id"
-                  v-text="errors.floor_id[0]"
-                ></small>
+                <small class="form-control-feedback" v-if="errors.floor_id" v-text="errors.floor_id[0]"></small>
               </div>
             </div>
             <div class="col-md-4" v-if="type == 'caja/rooms'">
@@ -81,18 +63,10 @@
                   <i class="fas fa-layer-group mr-2"></i> Piso
                 </label>
                 <el-select v-model="form.floor_id">
-                  <el-option
-                    v-for="(data, index) in floors"
-                    :key="index"
-                    :label="data.name"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in floors" :key="index" :label="data.name"
+                    :value="data.id"></el-option>
                 </el-select>
-                <small
-                  class="form-control-feedback"
-                  v-if="errors.floor_id"
-                  v-text="errors.floor_id[0]"
-                ></small>
+                <small class="form-control-feedback" v-if="errors.floor_id" v-text="errors.floor_id[0]"></small>
               </div>
             </div>
             <div class="col-md-4" v-if="type == 'caja/rooms'">
@@ -101,18 +75,11 @@
                   <i class="fas fa-bed mr-2"></i> Tipo
                 </label>
                 <el-select v-model="form.table_type_id">
-                  <el-option
-                    v-for="(data, index) in types"
-                    :key="index"
-                    :label="data.name"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in types" :key="index" :label="data.name"
+                    :value="data.id"></el-option>
                 </el-select>
-                <small
-                  class="form-control-feedback"
-                  v-if="errors.table_type_id"
-                  v-text="errors.table_type_id[0]"
-                ></small>
+                <small class="form-control-feedback" v-if="errors.table_type_id"
+                  v-text="errors.table_type_id[0]"></small>
               </div>
             </div>
             <div class="col-md-4" v-if="type == 'caja/rooms'">
@@ -130,11 +97,7 @@
                   <i class="fas fa-calendar-alt mr-2"></i> Precio mensual
                 </label>
                 <el-input v-model="form.month_price" type="number"></el-input>
-                <small
-                  class="form-control-feedback"
-                  v-if="errors.month_price"
-                  v-text="errors.month_price[0]"
-                ></small>
+                <small class="form-control-feedback" v-if="errors.month_price" v-text="errors.month_price[0]"></small>
               </div>
             </div>
             <div class="col-md-4">
@@ -142,22 +105,15 @@
                 <label class="control-label">
                   <i class="fas fa-info-circle mr-2"></i>
                   Estado de {{
-                  getLabelText(type)
+                    getLabelText(type)
                   }}
                 </label>
                 <el-select v-model="form.status_table_id">
-                  <el-option
-                    v-for="(data, index) in statusTable"
-                    :key="index"
-                    :label="data.description"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in statusTable" :key="index" :label="data.description"
+                    :value="data.id"></el-option>
                 </el-select>
-                <small
-                  class="form-control-feedback"
-                  v-if="errors.status_table_id"
-                  v-text="errors.status_table_id[0]"
-                ></small>
+                <small class="form-control-feedback" v-if="errors.status_table_id"
+                  v-text="errors.status_table_id[0]"></small>
               </div>
             </div>
             <div class="col-md-4">
@@ -165,16 +121,12 @@
                 <label class="control-label">
                   <i class="fas fa-map-marker-alt mr-2"></i>
                   Área de {{
-                  getLabelText(type)
+                    getLabelText(type)
                   }}
                 </label>
                 <el-select v-model="form.area_id">
-                  <el-option
-                    v-for="(data, index) in areas"
-                    :key="index"
-                    :label="data.description"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in areas" :key="index" :label="data.description"
+                    :value="data.id"></el-option>
                 </el-select>
                 <small class="text-danger" v-if="errors.area_id" v-text="errors.area_id[0]"></small>
               </div>
@@ -185,18 +137,10 @@
                   <i class="fas fa-store mr-2"></i> Establecimiento
                 </label>
                 <el-select v-model="form.establishment_id">
-                  <el-option
-                    v-for="(data, index) in establishments"
-                    :key="index"
-                    :label="data.description"
-                    :value="data.id"
-                  ></el-option>
+                  <el-option v-for="(data, index) in establishments" :key="index" :label="data.description"
+                    :value="data.id"></el-option>
                 </el-select>
-                <small
-                  class="text-danger"
-                  v-if="errors.establishment_id"
-                  v-text="errors.establishment_id[0]"
-                ></small>
+                <small class="text-danger" v-if="errors.establishment_id" v-text="errors.establishment_id[0]"></small>
               </div>
             </div>
             <div class="col-md-4">
@@ -204,7 +148,7 @@
                 <label class="control-label w-100">
                   <i class="fas fa-list-ol mr-2"></i>
                   Número inicial de {{
-                  getLabelText(type)
+                    getLabelText(type)
                   }}
                 </label>
                 <el-input-number class="w-100" v-model="form.initNumberTable"></el-input-number>
@@ -215,7 +159,7 @@
                 <label class="control-label w-100">
                   <i class="fas fa-list-ol mr-2"></i>
                   Número final de {{
-                  getLabelText(type)
+                    getLabelText(type)
                   }}
                 </label>
                 <el-input-number class="w-100" v-model="form.finalNumberTable"></el-input-number>
@@ -233,15 +177,14 @@
           </template>
         </div>
       </div>
-      <div class="form-actions text-end pt-2 pb-2">
-        <el-button icon="fas fa-times fa-lg" @click.prevent="close()">Cancelar</el-button>
-        <el-button
-          type="primary"
-          icon="fas fa-save fa-lg"
-          native-type="submit"
-          :loading="loading_submit"
-        >Guardar</el-button>
-      </div>
+    
+      <footer class="dialog-footer mt-3 pt-2 border-top">
+        <div class="d-flex justify-content-end">
+          <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">Cancelar</el-button>
+          <el-button class="btn_guardarsmall" type="primary" icon="fas fa-save fa-lg" native-type="submit"
+            :loading="loading_submit">Guardar</el-button>
+        </div>
+      </footer>
     </form>
   </el-dialog>
 </template>
@@ -272,7 +215,7 @@ export default {
     "areas",
     "statusTable",
     "configurations",
-    "establishments"
+    "establishments",
   ],
   data() {
     return {
@@ -398,7 +341,7 @@ export default {
       let { initNumberTable, finalNumberTable, prefix } = this.form;
       let numbers = [];
       for (let i = initNumberTable; i <= finalNumberTable; i++) {
-        numbers.push(`${prefix || ""} ${i}`);
+        numbers.push(`${i}  ${prefix}`);
       }
       return numbers;
     },

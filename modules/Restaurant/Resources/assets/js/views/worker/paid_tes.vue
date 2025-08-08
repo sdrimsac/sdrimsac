@@ -2,7 +2,7 @@
     <el-dialog
         :visible="showDialogPing"
         @close="close"
-        width="20%"
+        width="80%"
         @open="open"
     >
         <div

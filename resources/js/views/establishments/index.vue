@@ -1,88 +1,110 @@
 <!-- Listado de Establecimientos -->
 <template>
-<div>
-    <div class="card">
-        <div class="card-header bg-primary">
-            <h4 class="text-white my-0">
-                <i class="fas fa-warehouse fa-lg"></i> 
-                Listado de establecimientos
-            </h4>
-        </div>
-        <div class="data-table-visible-columns">
-                <el-button type="primary" 
-                            class="" 
-                            href="javascript:void(0)" 
-                            @click.prevent="clickCreate()">
-                            <i class="fas fa-warehouse fa-lg"></i>
-                            <i class="fas fa-plus"></i>
-                             Nuevo Establecimiento
-                </el-button>
-        </div> 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr slot="heading" class="bg-primary">
-                            <th class="text-white">#</th>
-                            <th class="text-white">Descripción</th>
-                            <th class="text-white text-end">Código</th>
-                            <th class="text-white text-end">Factura</th>
-                            <th class="text-white text-end">Boleta</th>
-                            <th class="text-white text-end">Nota de venta</th>
-                            <th class="text-white text-end">Acciones</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(row, index) in records" :key="index">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ row.description }}</td>
-                            <td class="text-end">{{ row.code }}</td>
-                            <td class="text-end">{{ row.factura }}</td>
-                            <td class="text-end">{{ row.boleta }}</td>
-                            <td class="text-end">{{ row.nota_venta }}</td>
-                            <td class="text-end">
-
-                                <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end" style="">
-                                    <a type="button" class="dropdown-item" @click.prevent="
-                                                        clickCreate(
-                                                            row.id
-                                                        )
-                                                    ">Editar
-                                    </a>
-                                    <a type="button" class="dropdown-item" @click.prevent="
-                                                        clickDelete(
-                                                            row.id
-                                                        )
-                                                    ">Eliminar
-                                    </a>
-                                    <a type="button" class="dropdown-item" @click.prevent="
-                                                        clickSeries(
-                                                            row.id
-                                                        )
-                                                    ">Series
-                                    </a>
-
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div>
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h4 class="text-white my-0">
+                    <i class="fas fa-warehouse "></i>
+                    Listado
+                </h4>
             </div>
-            <!-- <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" v-if="typeUser != 'integrator'" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-                        </div>
-                    </div> -->
+            <div class="data-table-visible-columns">
+                <el-tooltip content="Crear nuevo establecimiento" placement="top">
+                    <el-button type="primary" class="btn_buscar" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fas fa-plus"></i>
+                        Nuevo
+                    </el-button>
+                </el-tooltip>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <el-table
+                        :data="records"
+                        style="width: 100%"
+                        stripe
+                        border
+                        size="small"
+                        empty-text="No hay establecimientos registrados."
+                        header-cell-class-name="custom-table-header"
+                    >
+                        <el-table-column label="#" type="index" width="50" align="center" />
+                        <el-table-column prop="document_logo" label="Logo Doc." min-width="100" align="center">
+                            <template #default="scope">
+                                <img
+                                    v-if="scope.row.document_logo && scope.row.document_logo !== '0'"
+                                    class="img-thumbnail"
+                                    :src="`/storage/uploads/logos/${scope.row.document_logo}`"
+                                    alt="Logo Documento"
+                                    style="height: 100px; max-width: 150px; object-fit: contain;"
+                                />
+                                <span v-else style="color: #aaa;">Sin logo</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="description" label="Descripción" min-width="220">
+                            <template #default="scope">
+                                <div>
+                                    <strong style="font-size: 1.3em; color: #073f68;">{{ scope.row.description }}</strong>
+                                    <div>
+                                        <strong style="font-size: 1em; ">
+                                           CÓDIGO FISCAL:  {{ scope.row.code ? ' - ' + scope.row.code : '' }}
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <strong style="font-size: 1em; color: #145a32;">
+                                           DIRECCIÓN : {{ scope.row.address || 'Sin dirección' }}
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <strong style="font-size: 1.2em; color: #073f68;">
+                                            <i class="fas fa-print" style="margin-right: 6px;"></i>
+                                            {{ scope.row.printer || 'No asignada' }}
+                                        </strong>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="factura" label="Factura" min-width="100" align="center" />
+                        <el-table-column prop="boleta" label="Boleta" min-width="100" align="center" />
+                        <el-table-column prop="nota_venta" label="Nota de venta" min-width="100" align="center" />
+                        <el-table-column label="Acciones" width="200" align="center" fixed="right">
+                            <template #default="scope">
+                                <el-tooltip content="Editar Establecimiento" placement="top">
+                                    <el-button size="mini" type="primary" circle @click="clickCreate(scope.row.id)" class="mr-1">
+                                        <i class="fas fa-edit"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-tooltip content="Eliminar Establecimiento" placement="top">
+                                    <el-button size="mini" type="danger" circle @click="clickDelete(scope.row.id)" class="mr-1">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-tooltip content="Series del Establecimiento" placement="top">
+                                    <el-button size="mini" type="info" circle @click="clickSeries(scope.row.id)">
+                                        <i class="fas fa-list-ol"></i>
+                                    </el-button>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    
+                </div>
+    
+            </div>
+            <establishments-form :configuration="configuration" :seriesDefault.sync="seriesDefault"
+                :soap_type_id="soap_type_id" :showDialog.sync="showDialog" :number.sync="number" :recordId="recordId"
+                @generateSerie="generateSerie"></establishments-form>
+            <establishment-series :showDialog.sync="showDialogSeries"
+                :establishmentId="recordId"></establishment-series>
         </div>
-        <establishments-form :configuration="configuration" :seriesDefault.sync="seriesDefault" :soap_type_id="soap_type_id" :showDialog.sync="showDialog" :number.sync="number" :recordId="recordId" @generateSerie="generateSerie"></establishments-form>
-        <establishment-series :showDialog.sync="showDialogSeries" :establishmentId="recordId"></establishment-series>
     </div>
-</div>
 </template>
+
+<style scoped>
+                    .custom-table-header {
+                        background: #195580 !important;
+                        color: #fff !important;
+                    }
+                    </style>
 
 <script>
 import EstablishmentsForm from "./form1.vue";
@@ -90,7 +112,7 @@ import { deletable } from "../../mixins/deletable";
 import EstablishmentSeries from "./partials/series.vue";
 
 export default {
-    props: ["typeUser", "soap_type_id","configuration"],
+    props: ["typeUser", "soap_type_id", "configuration"],
     mixins: [deletable],
     components: { EstablishmentsForm, EstablishmentSeries },
     data() {
@@ -163,6 +185,7 @@ export default {
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;
+                console.log('ESTABLISHMENTS DATA:', this.records);
             });
         },
         clickCreate(recordId = null) {

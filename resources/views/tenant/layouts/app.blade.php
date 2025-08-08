@@ -193,14 +193,15 @@
                                 $commit = exec('git rev-parse HEAD');
                                 $commit = substr($commit, 0, 7);
                             @endphp
-                            <p class="mb-0 text-muted text-medium" style="text-align: right ; color:darkblue ">
+                            <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
                                 @if ($commit)
                                     <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
                                 @endif
-                                <span>Todos
-                                    los derechos reservados por Sdrimsac Solutions {{ date('Y') }} <i
-                                        class="far fa-copyright"></i></span>
-                            </p>
+                                </p>
+                                <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                                    &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                                    Solutions
+                                </p>
                         </div>
                     </div>
                 </div>

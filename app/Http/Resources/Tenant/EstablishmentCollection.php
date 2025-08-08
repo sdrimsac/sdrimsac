@@ -50,6 +50,9 @@ class EstablishmentCollection extends ResourceCollection
 
             }
             return [
+                'document_logo' => $row->document_logo,
+                'address' => $row->address,
+                'printer' => $row->printer,
                 'id' => $row->id,
                 'code' => $row->code,
                 'description' => $row->description,

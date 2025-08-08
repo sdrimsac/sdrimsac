@@ -1,13 +1,13 @@
 @extends('system.layouts.auth')
 
 @section('content')
-
     <section class="body-sign">
         <div class="center-sign">
             <div class="">
                 <div class="card card-header card-primary" style="background:hsl(201, 95%, 8%)">
                     <p class="card-title text-center">Acceso al Sistema</p>
-                    <h1 class="display-3 position-absolute text-left font-weight-bold" style="left: 90%; margin-top: -35px; color: rgba(255,255,255,.1);">5</h1>
+                    <h1 class="display-3 position-absolute text-left font-weight-bold"
+                        style="left: 90%; margin-top: -35px; color: rgba(255,255,255,.1);">5</h1>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -15,7 +15,8 @@
                         <div class="form-group mb-3">
                             <label>Correo electrónico</label>
                             <div class="input-group">
-                                <input id="email" type="email" name="email" class="form-control form-control-lg" value="{{ old('email') }}">
+                                <input id="email" type="email" name="email" class="form-control form-control-lg"
+                                    value="{{ old('email') }}">
                                 <span class="input-group-append">
                                     <span class="input-group-text">
                                         <i class="fas fa-user"></i>
@@ -47,7 +48,8 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="checkbox-custom checkbox-default">
-                                    <input name="remember" id="RememberMe" type="checkbox" {{ old('remember') ? 'checked' : '' }}>
+                                    <input name="remember" id="RememberMe" type="checkbox"
+                                        {{ old('remember') ? 'checked' : '' }}>
                                     <label for="RememberMe">Recordarme</label>
                                 </div>
                             </div>
@@ -58,8 +60,18 @@
                     </form>
                 </div>
             </div>
-            <p class="text-center text-muted mt-3 mb-3">&copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac Solutions</p>
+            <div>
+                <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
+                    @if ($commit)
+                        <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                    @endif
+                </p>
+                <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                    &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                    Solutions
+                </p>
+            </div>
+
         </div>
     </section>
-
 @endsection

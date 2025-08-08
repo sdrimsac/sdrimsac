@@ -5,7 +5,9 @@
 
     <div class="col-1" style="position: fixed;    top: 0;    left: 0;">
         <button id="btn-refresh" class="button btn-success" onclick="limpiarcache()"
-            style="max-width: 27px; max-height: 27px; "> <i class="fas fa-sync-alt"></i>
+            style="max-width: 27px; max-height: 27px;" title="Limpia temporales y la memoria caché del navegador">
+            
+            <i class="fas fa-sync-alt"></i>
         </button>
     </div>
 @endsection

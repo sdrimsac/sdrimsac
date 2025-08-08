@@ -81,14 +81,14 @@
                 class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
             >
                 <el-button
-                    class="btn-cancel btn-cancel:hover"
+                    class="btn_cancelarsmall"
                     icon="fas fa-times fa-lg"
                     @click.prevent="close"
                 >
                     <span>Cancelar</span>
                 </el-button>
                 <el-button
-                    class="btn-save btn-save:hover"
+                    class="btn_guardarsmall"
                     icon="fas fa-save fa-lg"
                     type="primary"
                     native-type="submit"
@@ -96,6 +96,10 @@
                 >
                     <span>Guardar</span>
                 </el-button>
+
+
+
+                
             </div>
         </form>
     </el-dialog>
@@ -177,7 +181,16 @@ export default {
 
         // Enviar formulario
         submit() {
-            if (!this.validateForm()) return;
+            if (!this.validateForm()) {
+                // Opcional: mostrar mensaje general de error
+                Swal.fire({
+                    icon: "warning",
+                    title: "Por favor complete los campos obligatorios.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
 
             this.loading_submit = true;
 
@@ -238,6 +251,42 @@ export default {
             } else {
                 this.initForm();
             }
+        },
+        // Validar formulario según tipo de usuario
+        validateForm() {
+            this.errors = {};
+            // Ajusta el campo y valores según tu lógica de roles
+            // Ejemplo: si tienes form.user_type o form.worker_type_id
+            const adminRoles = ["Administrador", "Contador", "Soporte"];
+            // Suponiendo que tienes form.user_type con el nombre del rol
+            // Si usas IDs, reemplaza los valores por los IDs correspondientes
+            const isAdmin = adminRoles.includes(this.form.user_type);
+
+            let valid = true;
+
+            // Validar nombre
+            if (!this.form.name || !this.form.name.trim()) {
+                this.errors.name = true;
+                valid = false;
+            }
+
+            // Solo validar estos campos si NO es admin/contador/soporte
+            if (!isAdmin) {
+                if (!this.form.worker_type_id) {
+                    this.errors.worker_type_id = true;
+                    valid = false;
+                }
+                if (!this.form.user_type) {
+                    this.errors.user_type = true;
+                    valid = false;
+                }
+                if (!this.form.area_id) {
+                    this.errors.area_id = true;
+                    valid = false;
+                }
+            }
+
+            return valid;
         },
     }
 };

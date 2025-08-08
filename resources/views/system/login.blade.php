@@ -1,7 +1,6 @@
 @extends('layouts.auth')
 
 @section('content')
-
     <section class="body-sign">
         <div class="center-sign">
             <div class="card">
@@ -14,7 +13,8 @@
                         <div class="form-group mb-3">
                             <label>Correo electrónico</label>
                             <div class="input-group">
-                                <input id="email" type="email" name="email" class="form-control form-control-lg" value="{{ old('email') }}">
+                                <input id="email" type="email" name="email" class="form-control form-control-lg"
+                                    value="{{ old('email') }}">
                                 <span class="input-group-append">
                                     <span class="input-group-text">
                                         <i class="fas fa-user"></i>
@@ -46,7 +46,8 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="checkbox-custom checkbox-default">
-                                    <input name="remember" id="RememberMe" type="checkbox" {{ old('remember') ? 'checked' : '' }}>
+                                    <input name="remember" id="RememberMe" type="checkbox"
+                                        {{ old('remember') ? 'checked' : '' }}>
                                     <label for="RememberMe">Recordarme</label>
                                 </div>
                             </div>
@@ -56,8 +57,19 @@
                         </div>
                     </form>
                 </div>
-            <p class="text-center text-muted mt-3 mb-3">&copy; Copyright {{ date('Y') }}. Todos los derechos reservados</p>
+
+                <div>
+                    <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
+                        @if ($commit)
+                            <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                        @endif
+                    </p>
+                    <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                        &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                        Solutions
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
-
 @endsection

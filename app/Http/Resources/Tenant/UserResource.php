@@ -20,27 +20,6 @@ class UserResource extends JsonResource
         $levels_in_user = $this->levels->pluck('id')->toArray();
         $modules = [];
         $levels = [];
-
-        foreach ($all_modules as $module)
-        {
-            $modules[] = [
-                'id' => $module->id,
-                'description' => $module->description,
-                'checked' => (bool) in_array($module->id, $modules_in_user)
-            ];
-
-            if(in_array($module->id, $modules_in_user)){
-                
-                foreach ($module->levels as $level) {
-                    $levels[] = [
-                        'id' => $level->id,
-                        'description' => $level->description,
-                        'checked' => (bool) in_array($level->id, $levels_in_user)
-                    ];
-                }
-
-            }
-        }
         return [
             'id' => $this->id,
             'email' => $this->email,
@@ -56,9 +35,19 @@ class UserResource extends JsonResource
             'locked' => (bool) $this->locked,
             'category' => $this->category,
             'is_arca' => (bool) $this->is_arca,
-            /* 'image' => $this->image, */
-            'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),
-
+            'image_url' => $this->getImageUrl(),
         ];
+
+    }
+
+    /**
+     * Devuelve la URL absoluta de la imagen del usuario, o null si no hay imagen.
+     */
+    private function getImageUrl()
+    {
+        if ($this->image && $this->image !== 'imagen-no-disponible.jpg') {
+            return asset('storage/uploads/workers/' . $this->image);
+        }
+        return null;
     }
 }

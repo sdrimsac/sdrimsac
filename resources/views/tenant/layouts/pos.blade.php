@@ -664,23 +664,23 @@
                                 $commit = exec('git rev-parse HEAD');
                                 $commit = substr($commit, 0, 7);
                             @endphp
-                            <div class="text-end">
-                                <p class="mb-0 text-medium" style="font-size: 1.2rem;">
-                                    @if ($commit)
-                                        <span style="font-size: 1rem; margin-right: 35px;">Commit: {{ $commit }}</span>
-                                    @endif
-                                    <br/>
-                                    <span style="font-size: 1rem;">&copy; {{ date('Y') }} <strong>Sdrimsac Solutions</strong>. Todos los derechos reservados.</span>
-                                </p>
-                            </div>
-                        </div>
-                   
 
-                 
-                 {{-- <div class="container">
-                    <div class="row">
-                        <div style="color: rgb(9, 9, 57);">
-                            @php
+                            <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
+                            @if ($commit)
+                                <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                            @endif
+                            </p>
+                            <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                                &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                                Solutions
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- <div class="container">
+                        <div class="row">
+                            <div style="color: rgb(9, 9, 57);">
+                                @php
                             $commit = exec('git rev-parse HEAD');
                             $commit = substr($commit, 0, 7);
                             @endphp

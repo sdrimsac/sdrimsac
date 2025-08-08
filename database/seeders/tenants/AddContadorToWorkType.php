@@ -24,7 +24,7 @@ class AddContadorToWorkType extends Seeder
 
         DB::table('users')->insert([
             
-            ['name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true,'number'=>null ,       'pin' => 12345 ,'type'=> 'seller', 'worker_type_id'=> 5, 'area_id'=>	null, 'active'=>	1],
+            ['name' => 'Contador',      'email' => "contador@sdrimsac.pro", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true,'number'=>null ,       'pin' => 12345 ,'type'=> 'seller', 'worker_type_id'=> 5, 'area_id'=>	null, 'active'=>	1],
             
         ]); 
     }

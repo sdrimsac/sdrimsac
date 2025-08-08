@@ -18,324 +18,179 @@
                         </el-checkbox>
                     </div>
                 </div> -->
-        <form autocomplete="off" @submit.prevent="submit">
+        <form autocomplete="off" @submit.prevent="proSubmit">
             <div class="form-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.number }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-id-card" style="margin-right:8px;"></i>
-                              RUC
-                            </label>
-                            <el-input :disabled="form.is_update" v-model="form.number" :maxlength="11" dusk="number">
-                                <el-button :disabled="form.is_update" type="primary" slot="append" :loading="loading_search" icon="el-icon-search" @click.prevent="searchSunat">
-                                    SUNAT
-                                </el-button>
-                            </el-input>
-
-                            <!-- apiperu -->
-                            <x-input-service
-                                v-model="form.number"
-                                :identity_document_type_id="form.identity_document_type_id"
-                                @search="searchNumber"
-                                style="display: none;"
-                            ></x-input-service>
+                <!-- Sección: Datos de la Empresa -->
+                <div class="card mb-3">
+                  <div class="card-header d-flex align-items-center" style="background:#073f68;color:#fff;font-weight:bold;">
+                    <i class="fa fa-building mr-2"></i> Datos de la Empresa
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.number }" class="form-group">
+                          <label class="control-label">
+                            <i class="fa fa-id-card" style="margin-right:8px;"></i> RUC
+                          </label>
+                          <el-input :disabled="form.is_update" v-model="form.number" :maxlength="11" dusk="number">
+                            <el-button :disabled="form.is_update" type="primary" slot="append" :loading="loading_search" icon="el-icon-search" @click.prevent="searchSunat">
+                              SUNAT
+                            </el-button>
+                          </el-input>
+                          <x-input-service v-model="form.number" :identity_document_type_id="form.identity_document_type_id" @search="searchNumber" style="display: none;"></x-input-service>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.name }"
-                            class="form-group"
-                        >
-                            <label class="control-label"
-                                ><i class="fa fa-building" style="margin-right:8px;"></i>
-                                Nombre de la Empresa</label
-                            >
-                            <el-input
-                                v-model="form.name"
-                                :disabled="form.is_update"
-                                dusk="name"
-                            >
-                            </el-input>
-                            <small
-                                v-if="errors.name"
-                                class="form-control-feedback"
-                                v-text="errors.name[0]"
-                            >
-                            </small>
+                      </div>
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.name }" class="form-group">
+                          <label class="control-label">
+                            <i class="fa fa-building" style="margin-right:8px;"></i> Nombre de la Empresa
+                          </label>
+                          <el-input v-model="form.name" :disabled="form.is_update" dusk="name"></el-input>
                         </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div
-                            v-if="form.is_update"
-                            :class="{
-                                'has-danger': errors.subdomain || errors.uuid
-                            }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                                Nombre de Subdominio
-                            </label>
-                            <el-input
-                                v-model="form.hostname"
-                                :disabled="form.is_update"
-                                dusk="name"
-                            >
-                            </el-input>
+                <!-- Sección: Acceso y Subdominio -->
+                <div class="card mb-3">
+                  <div class="card-header d-flex align-items-center" style="background:#073f68;color:#fff;font-weight:bold;">
+                    <i class="fa fa-user-lock mr-2"></i> Acceso y Subdominio
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div v-if="form.is_update" :class="{ 'has-danger': errors.subdomain || errors.uuid }" class="form-group">
+                          <label class="control-label"><i class="fa fa-globe" style="margin-right:8px;"></i> Nombre de Subdominio</label>
+                          <el-input v-model="form.hostname" :disabled="form.is_update" dusk="name"></el-input>
                         </div>
-                        <div
-                            v-else
-                            :class="{
-                                'has-danger': errors.subdomain || errors.uuid
-                            }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-globe" style="margin-right:8px;"></i>
-                                Nombre de Subdominio
-                            </label>
-                            <el-input v-model="form.subdomain" dusk="subdomain">
-                                <template slot="append">{{
-                                    url_base
-                                }}</template>
-                            </el-input>
-                            <small
-                                v-if="errors.subdomain"
-                                class="form-control-feedback"
-                                v-text="errors.subdomain[0]"
-                            >
-                            </small>
-                            <small
-                                v-if="errors.uuid"
-                                class="form-control-feedback"
-                                v-text="errors.uuid[0]"
-                            >
-                            </small>
+                        <div v-else :class="{ 'has-danger': errors.subdomain || errors.uuid }" class="form-group">
+                          <label class="control-label"><i class="fa fa-globe" style="margin-right:8px;"></i> Nombre de Subdominio</label>
+                          <el-input v-model="form.subdomain" dusk="subdomain">
+                            <template slot="append">{{ url_base }}</template>
+                          </el-input>
                         </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.email }" class="form-group">
+                          <label class="control-label"><i class="fa fa-envelope" style="margin-right:8px;"></i> Correo de Acceso</label>
+                          <el-input v-model="form.email" :disabled="form.is_update" dusk="email"></el-input>
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.email }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-envelope" style="margin-right:8px;"></i>
-                                Correo de Acceso
-                            </label>
-                            <el-input
-                                v-model="form.email"
-                                :disabled="form.is_update"
-                                dusk="email"
-                            >
-                            </el-input>
-                            <small
-                                v-if="errors.email"
-                                class="form-control-feedback"
-                                v-text="errors.email[0]"
-                            >
-                            </small>
+                    <div class="row">
+                      <div v-if="!form.is_update" class="col-md-6">
+                        <div :class="{ 'has-danger': errors.password }" class="form-group">
+                          <label class="control-label">
+                            <i class="fa fa-lock" style="margin-right:8px;"></i> Contraseña
+                            <el-tooltip class="item" effect="dark" placement="top-start" v-if="regex_password_client">
+                              <i class="fa fa-info-circle"></i>
+                              <div slot="content">
+                                <strong>FORMATO DE CONTRASEÑA</strong><br /><br />
+                                La contraseña debe contener al menos una letra minúscula.<br />
+                                La contraseña debe contener al menos una letra mayúscula.<br />
+                                La contraseña debe contener al menos un dígito.<br />
+                                La contraseña debe contener al menos un carácter especial [@.$!%*#?&-].<br />
+                              </div>
+                            </el-tooltip>
+                          </label>
+                          <el-input v-model="form.password" :disabled="form.is_update" dusk="password" type="password" show-password></el-input>
                         </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.plan_id }" class="form-group">
+                          <label class="control-label"><i class="fa fa-list-alt" style="margin-right:8px;"></i> Plan</label>
+                          <el-select v-model="form.plan_id" dusk="plan_id">
+                            <el-option v-for="option in plans" :key="option.id" :label="option.name" :value="option.id"></el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div v-if="!form.is_update" class="col-md-6">
+                        <div :class="{ 'has-danger': errors.type }" class="form-group">
+                          <label class="control-label"><i class="fa fa-user-tag" style="margin-right:8px;"></i> Perfil</label>
+                          <el-select v-model="form.type" :disabled="form.is_update">
+                            <el-option v-for="option in types" :key="option.type" :label="option.description" :value="option.type"></el-option>
+                          </el-select>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div class="row mb-3">
-                    <div v-if="!form.is_update" class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.password }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-lock" style="margin-right:8px;"></i>
-                                Contraseña
+                <!-- Sección: Seguridad y Plan -->
+                <!-- <div class="card mb-3">
+                  <div class="card-header d-flex align-items-center" style="background:#073f68;color:#fff;font-weight:bold;">
+                    <i class="fa fa-lock mr-2"></i> Seguridad y Plan
+                  </div>
+                  <div class="card-body">
+                    
+                  </div>
+                </div> -->
+                <!-- Sección: Whatsapp -->
+                <div class="card mb-3">
+                  <div class="card-header d-flex align-items-center" style="background:#073f68;color:#fff;font-weight:bold;">
+                    <i class="fa fa-whatsapp mr-2"></i> Información de Whatsapp
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.phone }" class="form-group">
+                          <button type="button"
+                            class="whatsapp-title-btn"
+                            :class="{ 'active-title': !form.sent_to_group }"
+                            @click="selectEnvioCliente"
+                          >
+                            <i class="fa fa-phone" style="margin-right:8px;"></i> Nro Whatsapp
+                          </button>
+                          <el-input v-model="form.phone" :disabled="form.sent_to_group" ref="inputPhone"></el-input>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div :class="{ 'has-danger': errors.group_whatsapp }" class="form-group">
+                          <button type="button"
+                            class="whatsapp-title-btn"
+                            :class="{ 'active-title': form.sent_to_group }"
+                            @click="selectEnvioGrupo"
+                          >
+                            <i class="fa fa-users" style="margin-right:8px;"></i> Grupo de Whatsapp
+                          </button>
+                          <el-input v-model="form.group_whatsapp" :disabled="!form.sent_to_group" ref="inputGroup"></el-input>
+                        </div>
+                      </div>
 
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    placement="top-start"
-                                    v-if="regex_password_client"
-                                >
-                                    <i class="fa fa-info-circle"></i>
-                                    <div slot="content">
-                                        <strong>FORMATO DE CONTRASEÑA</strong
-                                        ><br /><br />
-                                        La contraseña debe contener al menos una
-                                        letra minúscula.<br />
-                                        La contraseña debe contener al menos una
-                                        letra mayúscula.<br />
-                                        La contraseña debe contener al menos un
-                                        dígito.<br />
-                                        La contraseña debe contener al menos un
-                                        carácter especial [@.$!%*#?&-].<br />
-                                    </div>
-                                </el-tooltip>
-                            </label>
-                            <el-input
-                                v-model="form.password"
-                                :disabled="form.is_update"
-                                dusk="password"
-                                type="password"
-                                show-password
+                      <div class="col-md-6" v-show="false">
+                        <div :class="{ 'has-danger': errors.sent_to_group }" class="form-group">
+                          <label class="control-label"><i class="fa fa-paper-plane" style="margin-right:8px;"></i> Tipo de envío</label>
+                          <div class="envio-switch-pro">
+                            <span
+                              :class="['envio-label', form.sent_to_group ? 'envio-activo-grupo' : '']"
+                              style="margin-left:0; cursor:pointer;"
+                              @click="selectEnvioGrupo"
                             >
-                            </el-input>
-                            <small
-                                v-if="errors.password"
-                                class="form-control-feedback"
-                                v-text="errors.password[0]"
+                              <i class="fa fa-users"></i> Enviar a grupo
+                            </span>
+                            <el-switch
+                              v-model="form.sent_to_group"
+                              active-color="#075e54"
+                              inactive-color="#25d366"
+                              :active-value="true"
+                              :inactive-value="false"
+                              :width="60"
+                              style="margin: 0 12px;"
+                              @change="onSwitchChange"
+                            ></el-switch>
+                            <span
+                              :class="['envio-label', !form.sent_to_group ? 'envio-activo-cliente' : '']"
+                              style="margin-left:0; cursor:pointer;"
+                              @click="selectEnvioCliente"
                             >
-                            </small>
+                              <i class="fa fa-user"></i> Enviar a cliente
+                            </span>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.plan_id }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-list-alt" style="margin-right:8px;"></i>
-                                Plan
-                            </label>
-                            <el-select v-model="form.plan_id" dusk="plan_id">
-                                <el-option
-                                    v-for="option in plans"
-                                    :key="option.id"
-                                    :label="option.name"
-                                    :value="option.id"
-                                >
-                                </el-option>
-                            </el-select>
-                            <small
-                                v-if="errors.plan_id"
-                                class="form-control-feedback"
-                                v-text="errors.plan_id[0]"
-                            >
-                            </small>
-                        </div>
-                    </div>
-
-                    <div v-if="!form.is_update" class="col-md-6">
-                        <div
-                            :class="{ 'has-danger': errors.type }"
-                            class="form-group"
-                        >
-                            <label class="control-label">
-                              <i class="fa fa-user-tag" style="margin-right:8px;"></i>
-                                Perfil
-                            </label>
-                            <el-select
-                                v-model="form.type"
-                                :disabled="form.is_update"
-                            >
-                                <el-option
-                                    v-for="option in types"
-                                    :key="option.type"
-                                    :label="option.description"
-                                    :value="option.type"
-                                >
-                                </el-option>
-                            </el-select>
-                            <small
-                                v-if="errors.type"
-                                class="form-control-feedback"
-                                v-text="errors.type[0]"
-                            >
-                            </small>
-                        </div>
-                    </div>
-                   
-                    <div class="col-12">
-                        <div class="card" >
-                            <div class="card-body" style="background-color: #6c726c !important;">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div
-                                            :class="{ 'has-danger': errors.phone }"
-                                            class="form-group"
-                                        >
-                                            <label class="control-label">
-                                            
-                                                Nro Whatsapp
-                                            </label>
-                                            <el-input
-                                                v-model="form.phone"
-                                            >
-                                            </el-input>
-                                            <small
-                                                v-if="errors.phone"
-                                                class="form-control-feedback"
-                                                v-text="errors.phone[0]"
-                                            >
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div
-                                            :class="{ 'has-danger': errors.group_whatsapp }"
-                                            class="form-group"
-                                        >
-                                            <label class="control-label">
-                                              
-                                                Grupo de Whatsapp
-                                            </label>
-                                            <el-input
-                                                v-model="form.group_whatsapp"
-                                            >
-                                            </el-input>
-                                            <small
-                                                v-if="errors.group_whatsapp"
-                                                class="form-control-feedback"
-                                                v-text="errors.group_whatsapp[0]"
-                                            >
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="col-md-6">
-                                        <div
-                                            :class="{ 'has-danger': errors.sent_to_group }"
-                                            class="form-group"
-                                        >
-                                            <label class="control-label">
-                                              <i class="fa fa-paper-plane" style="margin-right:8px;"></i>
-                                                Tipo de envío
-                                            </label>
-                                            <el-switch
-                                                v-model="form.sent_to_group"
-                                                active-text="Enviar a grupo"
-                                                inactive-text="Enviar a cliente"
-                                            >
-                                            </el-switch>
-                                        
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 center-el-checkbox mt-4" v-show="false">
-                                        <div
-                                            :class="{ 'has-danger': errors.locked_emission }"
-                                            class="form-group"
-                                        >
-                                            <el-checkbox
-                                                v-model="form.locked_emission"
-                                                :disabled="form.is_update"
-                                            >
-                                                Limitar emisión de documentos
-                                            </el-checkbox>
-                                            <br />
-                                            <small
-                                                v-if="errors.locked_emission"
-                                                class="form-control-feedback"
-                                                v-text="errors.locked_emission[0]"
-                                            >
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
+               
 
                 <el-collapse v-show="false" v-model="collapse">
                     <el-collapse-item name="1" title="Módulos">
@@ -870,10 +725,49 @@ export default {
 
         await this.initForm();
 
+        // Asignar valores por defecto después de inicializar el form
+        if (this.plans && this.plans.length > 0) {
+            this.form.plan_id = this.plans[0].id;
+        }
+        if (this.types && this.types.length > 0) {
+            this.form.type = this.types[0].type;
+        }
         this.form.soap_username = this.soap_username;
         this.form.soap_password = this.soap_password;
+        // Por defecto, enviar a grupo
+        this.form.sent_to_group = true;
     },
     methods: {
+        selectEnvioGrupo() {
+            this.form.sent_to_group = true;
+            this.form.phone = '';
+            // Focus al input de grupo
+            this.$nextTick(() => {
+                if (this.$refs.inputGroup && this.$refs.inputGroup.focus) {
+                    this.$refs.inputGroup.focus();
+                }
+            });
+        },
+        selectEnvioCliente() {
+            this.form.sent_to_group = false;
+            this.form.group_whatsapp = '';
+            // Focus al input de cliente
+            this.$nextTick(() => {
+                if (this.$refs.inputPhone && this.$refs.inputPhone.focus) {
+                    this.$refs.inputPhone.focus();
+                }
+            });
+        },
+        onSwitchChange(val) {
+            // Si el usuario cambia el switch manualmente, limpiar el campo opuesto
+            if (val) {
+                this.form.phone = '';
+            } else {
+                this.form.group_whatsapp = '';
+            }
+            // El campo correspondiente queda habilitado
+        },
+    // watcher eliminado para evitar limpiar campos al alternar
         FixChildren(currentObj, treeStatus) {
             let element = this.$refs.tree;
             if (currentObj !== undefined) {
@@ -939,10 +833,10 @@ export default {
             this.form = {
                 id: null,
                 name: null,
-                email: null,
+                email: "admin@gmail.com",
                 identity_document_type_id: "6",
                 number: "",
-                password: null,
+                password: "123456",
                 plan_id: null,
                 locked_emission: false,
                 type: null,
@@ -1046,7 +940,60 @@ export default {
                     });
             }
         },
-        async submit() {
+        async proSubmit() {
+            // Validación profesional con resaltado y mensaje detallado
+            let missingFields = [];
+            this.errors = {};
+            if (!this.form.number || this.form.number.length !== 11) {
+                missingFields.push('<b>RUC</b> (11 dígitos)');
+                this.errors.number = true;
+            }
+            if (!this.form.name) {
+                missingFields.push('<b>Nombre de la Empresa</b>');
+                this.errors.name = true;
+            }
+            // Validación de subdominio solo en creación
+            if (!this.form.is_update) {
+                const sub = this.form.subdomain ? this.form.subdomain.trim() : '';
+                // Solo letras, números, guiones, 3-30 caracteres, no inicia/termina con guión
+                const subdomainRegex = /^(?!-)[a-zA-Z0-9-]{3,30}(?<!-)$/;
+                if (!sub) {
+                    missingFields.push('<b>Subdominio</b>');
+                    this.errors.subdomain = 'El subdominio es obligatorio.';
+                } else if (!subdomainRegex.test(sub)) {
+                    missingFields.push('<b>Subdominio</b> (3-30 letras, números o guiones, sin guión inicial/final)');
+                    this.errors.subdomain = 'Formato inválido. Solo letras, números y guiones (no al inicio/fin, 3-30 caracteres).';
+                }
+            }
+            if (!this.form.email) {
+                missingFields.push('<b>Correo de Acceso</b>');
+                this.errors.email = true;
+            }
+            if (!this.form.is_update && (!this.form.password || this.form.password.length < 6)) {
+                missingFields.push('<b>Contraseña</b> (mínimo 6 caracteres)');
+                this.errors.password = true;
+            }
+            if (!this.form.plan_id) {
+                missingFields.push('<b>Plan</b>');
+                this.errors.plan_id = true;
+            }
+            if (!this.form.is_update && !this.form.type) {
+                missingFields.push('<b>Perfil</b>');
+                this.errors.type = true;
+            }
+            if (missingFields.length > 0) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Por favor complete los campos requeridos',
+                    html: '<ul style="text-align:left; margin:0 0 0 1em; padding:0; color:#c0392b; font-size:1.1em;">' + missingFields.map(f => `<li style='margin-bottom:4px;'>${f}</li>`).join('') + '</ul>' +
+                        (this.errors.subdomain && typeof this.errors.subdomain === 'string' ? `<div style='color:#c0392b; font-size:0.98em; margin-top:8px;'><i class="fa fa-exclamation-circle"></i> ${this.errors.subdomain}</div>` : ''),
+                    confirmButtonColor: '#073f68',
+                    customClass: { popup: 'swal2-border-radius' }
+                });
+            }
+            // ...puedes agregar más validaciones pro aquí...
+
+            // Lógica original de submit
             const modulesAndLevelsSelecteds = this.$refs.tree.getCheckedNodes();
             const appsAndLevelsSelecteds = this.$refs.Apptree.getCheckedNodes();
             const modules = [];
@@ -1077,23 +1024,13 @@ export default {
             this.form.levels = levels;
             this.form.regex_password_client = this.regex_password_client;
 
-            // if (modules.length < 1) {
-            //     return this.$message.error(
-            //         "Debe seleccionar al menos un módulo"
-            //     );
-            // }
-
             if (!this.form.is_update) {
                 if (this.form.certificate && !this.form.password_certificate) {
-                    return this.$message.error(
-                        "Si carga un certificado, es necesario ingresar el password del certificado"
-                    );
+                    return Swal.fire({ icon: 'warning', title: 'Falta password de certificado', text: 'Si carga un certificado, es necesario ingresar el password del certificado.' });
                 }
             } else {
                 if (this.form.temp_path && !this.form.password_certificate) {
-                    return this.$message.error(
-                        "Si carga un certificado, es necesario ingresar el password del certificado"
-                    );
+                    return Swal.fire({ icon: 'warning', title: 'Falta password de certificado', text: 'Si carga un certificado, es necesario ingresar el password del certificado.' });
                 }
             }
 
@@ -1108,18 +1045,19 @@ export default {
                 )
                 .then(response => {
                     if (response.data.success) {
-                        this.$message.success(response.data.message);
+                        Swal.fire({ icon: 'success', title: '¡Éxito!', text: response.data.message });
                         this.$eventHub.$emit("reloadData");
                         this.close();
                     } else {
-                        this.$message.error(response.data.message);
+                        Swal.fire({ icon: 'error', title: 'Error', text: response.data.message });
                     }
                 })
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
+                        Swal.fire({ icon: 'error', title: 'Error de validación', text: 'Verifique los campos resaltados.' });
                     } else if (error.response.status === 500) {
-                        this.$message.error(error.response.data.message);
+                        Swal.fire({ icon: 'error', title: 'Error de servidor', text: error.response.data.message });
                     } else {
                         console.log(error.response);
                     }
@@ -1187,6 +1125,32 @@ export default {
 </script>
 
 <style scoped>
+
+.whatsapp-title-btn {
+  background: #f4f8fb;
+  border: 1px solid #dbe6ef;
+  color: #073f68;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 4px 16px 4px 10px;
+  font-size: 1em;
+  margin-bottom: 6px;
+  margin-right: 8px;
+  transition: all 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+.whatsapp-title-btn.active-title {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+  box-shadow: 0 2px 8px #25d36622;
+}
+.whatsapp-title-btn:focus {
+  outline: none;
+}
+
+
 .custom-dialog >>> .el-dialog {
     border-radius: 18px;
 }
@@ -1199,5 +1163,100 @@ export default {
 }
 .custom-dialog >>> .el-dialog__body {
     padding: 5px 24px 16px 24px; /* Ejemplo: puedes ajustar estos valores a tu gusto */
+}
+/* Mejoras visuales pro */
+/* Ajustes visuales para menos espacio y títulos más pequeños */
+.card-header {
+  background: #073f68 !important;
+  color: #fff !important;
+  font-weight: bold;
+  font-size: 1rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  min-height: 32px;
+}
+.card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(7,63,104,0.08);
+  border: 1px solid #073f6822;
+  margin-bottom: 8px !important;
+}
+.card + .card {
+  margin-top: 8px !important;
+}
+.card-body {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+.form-group label i {
+  color: #073f68;
+}
+.el-input__inner:focus {
+  border-color: #073f68 !important;
+  box-shadow: 0 0 0 2px #073f6840;
+}
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #073f68 !important;
+}
+.el-button--primary {
+  background: #073f68 !important;
+  border-color: #073f68 !important;
+}
+.btn-save {
+  background: #073f68 !important;
+  border-color: #073f68 !important;
+  color: #fff !important;
+}
+.swal2-popup {
+  font-size: 1.1rem !important;
+}
+</style>
+<style scoped>
+.envio-switch-pro {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+.envio-label {
+  font-weight: 500;
+  color: #888;
+  background: #f4f8fb;
+  border-radius: 8px;
+  padding: 3px 12px 3px 8px;
+  font-size: 1em;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+.envio-label i {
+  margin-right: 5px;
+}
+.envio-activo-grupo {
+  color: #fff !important;
+  background: #075e54 !important;
+  box-shadow: 0 2px 8px #075e5422;
+}
+.envio-activo-cliente {
+  color: #fff !important;
+  background: #25d366 !important;
+  box-shadow: 0 2px 8px #25d36622;
+}
+</style>
+<style scoped>
+.has-danger .el-input__inner,
+.has-danger .el-select {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 2px #e74c3c40 !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.swal2-border-radius {
+  border-radius: 16px !important;
+}
+.swal2-popup ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+}
+.swal2-popup li {
+  margin-bottom: 4px;
 }
 </style>

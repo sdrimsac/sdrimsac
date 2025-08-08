@@ -623,6 +623,16 @@ export default {
         validateForm() {
             this.errors = {};
 
+            // Obtener el tipo de usuario seleccionado
+            let selectedWorkerType = this.workersType.find(type => type.id === this.form.worker_type_id);
+            let skipRequired = false;
+            if (selectedWorkerType) {
+                const desc = selectedWorkerType.description ? selectedWorkerType.description.toLowerCase() : '';
+                if (["administrador", "contador", "soporte"].includes(desc)) {
+                    skipRequired = true;
+                }
+            }
+
             if (!this.form.number) {
                 this.errors.number = ["El DNI es obligatorio."];
             } else if (this.form.number.length !== 8) {
@@ -633,14 +643,15 @@ export default {
                 this.errors.name = ["El nombre es obligatorio."];
             }
 
-            if (!this.form.worker_type_id) {
-                this.errors.worker_type_id = [
-                    "El tipo de trabajador es obligatorio."
-                ];
-            }
-
-            if (!this.form.area_id) {
-                this.errors.area_id = ["El área de trabajo es obligatoria."];
+            if (!skipRequired) {
+                if (!this.form.worker_type_id) {
+                    this.errors.worker_type_id = [
+                        "El tipo de trabajador es obligatorio."
+                    ];
+                }
+                if (!this.form.area_id) {
+                    this.errors.area_id = ["El área de trabajo es obligatoria."];
+                }
             }
 
             if (!this.form.establishment_id) {

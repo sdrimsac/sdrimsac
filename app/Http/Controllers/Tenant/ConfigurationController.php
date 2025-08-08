@@ -16,6 +16,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\DetractionType;
+use App\Models\Tenant\ConfEstablishment;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\EstablishmentNotificationNumber;
 use App\Models\Tenant\ExcludedUser;
@@ -321,11 +322,11 @@ class ConfigurationController extends Controller
         $id = $request->input('id');
         $configuration = Configuration::find($id);
         $configuration->fill($request->all());
-        //dd($request->all());
         $configuration->save();
 
-        if ($configuration->restaurant) {
-            $this->check_and_set_restaurant();
+        // Verifica si el campo 'restaurant' está presente y es true en el request
+        if ($request->has('restaurant') && $request->input('restaurant')) {
+            $this->activateRestaurant(new Request());
         }
 
         return [
@@ -416,6 +417,20 @@ class ConfigurationController extends Controller
         return [
             'success' => true,
             'message' => 'Configuración actualizada'
+        ];
+    }
+
+    public function activateRestaurant(Request $request)
+    {
+        $configuration = Configuration::find(1);
+        $configuration->restaurant = true;
+        $configuration->save();
+
+        ConfEstablishment::query()->update(['print_command' => 1]);
+
+        return [
+            'success' => true,
+            'message' => 'Restaurante activado y configuraciones aplicadas'
         ];
     }
 

@@ -10,7 +10,7 @@ class ConfEstablishment extends ModelTenant
     protected $casts = [
         'show_discounts_payment' => 'boolean',
         'show_payment_method' => 'boolean',
-        'print_command'  => 'boolean', // 'print_command' => 'boolean
+        'print_command'  => 'boolean',
         "direct_sale" => "boolean",
         "pos_quick_sale" => "boolean",
         "company_address" => "boolean",

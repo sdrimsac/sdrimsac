@@ -59,6 +59,7 @@ class UserCollection extends ResourceCollection
                 'establishment_table_id' => $row->establishment_table_id,
                 'warehouse_product_id' => $row->warehouse_product_id,
                 'state' => $row->state,
+                'image' => $row->image,
                 /* 'apply_store' => (bool)$row->apply_store, */
                 'image_url' => ($row->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'workers' . DIRECTORY_SEPARATOR . $row->image) : asset("/logo/{$row->image}"),
             ];

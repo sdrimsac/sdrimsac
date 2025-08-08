@@ -86,12 +86,12 @@
     cursor: pointer;
 }
 .btn-pin-danger {
-    background-color: #ff6161;
-    border-color: #ff6161;
+    background-color: #bd0303;
+    border-color: #990a0a;
 }
 .btn-pin-success {
-    background-color: #33cc33;
-    border-color: #33cc33;
+    background-color: #0c8d0c;
+    border-color: #064706;
 }
 .pin-radio:checked + label {
     background-color: #0071bb;

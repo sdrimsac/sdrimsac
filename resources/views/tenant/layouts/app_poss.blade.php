@@ -169,12 +169,18 @@
         <footer class="footer">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-md-6 footer-copyright">
-                <p class="mb-0">Copyright 2024 © Todos los derechos reservados.</p>
-              </div>
-              <div class="col-md-6">
-                <p class="pull-right mb-0">Desarrollado por GRUPOPCSYSTEMS</p>
-              </div>
+               <div>
+                    <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
+                        @if ($commit)
+                            <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
+                        @endif
+                    </p>
+                    <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                        &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                        Solutions
+                    </p>
+                </div>
+              
             </div>
           </div>
         </footer>

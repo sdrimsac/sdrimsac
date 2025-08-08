@@ -2,39 +2,31 @@
     <div class="d-flex flex-column justify-content-start align-items-center">
         <div id="form" autocomplete="off">
             <div class="form-header">
-                <img
-                    v-if="company.logo != null"
-                    :src="`/storage/uploads/logos/${company.logo}`"
-                    alt=""
-                />
+                <img v-if="company.logo != null" :src="`/storage/uploads/logos/${company.logo}`" alt="" />
                 <img v-else :src="`/acorn/img/restaurant.png`" alt="" />
                 <h2 v-if="company.trade_name != null" class="text-white">
                     {{ company.trade_name }}
                 </h2>
 
-                <h2 v-else class="text-white">Tu Negocio Peru</h2>
+                <h2 v-else class="text-white">Tu Negocio Sdrimsac</h2>
             </div>
             <div class="form-body" style="padding-bottom: 5px">
                 <div class="form-menu">
                     <!-- <button type="button" class="form-menu-btn" value="#admin">
                         <i class="fa fa-user"></i>   ADMINISTRADOR
                     </button> -->
-                    <button
+                    <!-- <button
                         type="button"
                         class="form-menu-btn selected"
                         value="#pin"
                     >
                         <i class="fa fa-key"></i> PIN DE ACCESO
-                    </button>
+                    </button> -->
                 </div>
                 <div id="pin" style="display: block">
                     <p>Ingrese PIN de acceso</p>
                     <div id="pin-container">
-                        <input
-                            type="hidden"
-                            id="password-pin"
-                            name="password-pin"
-                        />
+                        <input type="hidden" id="password-pin" name="password-pin" />
                     </div>
                     <table id="table-pin">
                         <tbody></tbody>
@@ -77,46 +69,20 @@
                     </button>
                 </div> -->
             </div>
-            <div
-                class="d-flex justify-content-center"
-                style="padding-bottom: 30px"
-            >
+            <div class="d-flex justify-content-center" style="padding-bottom: 30px">
                 <div id="footer" class="">
-                    <img
-                        id="logo"
-                        src="images/sdrimsac.png"
-                        alt="SDRIMSAC Solutions"
-                    />
+                    <img id="logo" src="images/sdrimsac.png" alt="SDRIMSAC Solutions" />
                     <div class="text-white display-5">
-                        <a
-                            href="https://wa.me/51995764963"
-                            target="_blank"
-                            class="text-white me-3"
-                        >
+                        <a :href="socialLinks.whatsapp" target="_blank" class="text-white me-3">
                             <i class="fab fa-whatsapp" aria-hidden="true"></i>
                         </a>
-
-                        <a
-                            href="https://www.facebook.com/sdrimsac"
-                            target="_blank"
-                            class="text-white me-3"
-                        >
+                        <a :href="socialLinks.facebook" target="_blank" class="text-white me-3">
                             <i class="fab fa-facebook" aria-hidden="true"></i>
                         </a>
-
-                        <a
-                            href="https://www.instagram.com/sdrimsac"
-                            target="_blank"
-                            class="text-white me-3"
-                        >
+                        <a :href="socialLinks.instagram" target="_blank" class="text-white me-3">
                             <i class="fab fa-instagram" aria-hidden="true"></i>
                         </a>
-
-                        <a
-                            href="https://www.sdrimsac.com"
-                            target="_blank"
-                            class="text-white"
-                        >
+                        <a :href="socialLinks.web" target="_blank" class="text-white">
                             <i class="fas fa-globe" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -138,6 +104,33 @@ export default {
             maskPin: null,
             form: {}
         };
+    },
+    computed: {
+        socialLinks() {
+            const domain = window.location.hostname;
+            if (domain.includes('miperufactura')) {
+                return {
+                    whatsapp: 'https://wa.me/51938777829',
+                    facebook: 'https://www.facebook.com/grupovillacorp',
+                    instagram: 'https://www.instagram.com/grupovillacorp/',
+                    web: 'https://grupovillacorp.com'
+                };
+            } else if (domain.includes('guepardo')) {
+                return {
+                    whatsapp: 'https://wa.me/51938777829',
+                    facebook: 'https://www.facebook.com/grupovillacorp',
+                    instagram: 'https://www.instagram.com/grupovillacorp/',
+                    web: 'https://grupovillacorp.com'
+                };
+            }
+            // Por defecto SDRIMSAC
+            return {
+                whatsapp: 'https://wa.me/51995764963',
+                facebook: 'https://www.facebook.com/sdrimsac',
+                instagram: 'https://www.instagram.com/sdrimsacsolutions',
+                web: 'https://www.sdrimsac.com'
+            };
+        }
     },
     created() {
         this.initForm();
@@ -175,7 +168,7 @@ export default {
                         this.$toast.error(response.data.message);
                     }
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error(error);
                 });
         },
@@ -301,7 +294,7 @@ export default {
         uuidv4() {
             return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
                 /[xy]/g,
-                function(c) {
+                function (c) {
                     var r = (Math.random() * 16) | 0,
                         v = c == "x" ? r : (r & 0x3) | 0x8;
                     return v.toString(16);
@@ -318,19 +311,19 @@ export default {
             instagram: "#",
             globe: "https://sdrimsac.com"
         };
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#email").focus();
         });
 
-        $(document).on("submit", "#form", function(e) {
+        $(document).on("submit", "#form", function (e) {
             e.preventDefault();
         });
 
-        $(document).on("reset", "#form", function() {
+        $(document).on("reset", "#form", function () {
             $("#password-pin").val("");
         });
 
-        $(document).on("click", ".form-menu-btn", function() {
+        $(document).on("click", ".form-menu-btn", function () {
             let value = $(this).val();
             $(".form-menu-btn").removeClass("selected");
             $(this).addClass("selected");
@@ -349,7 +342,7 @@ export default {
             $("#form").trigger("reset");
         });
 
-        $(document).on("click", ".btn-pin", function() {
+        $(document).on("click", ".btn-pin", function () {
             let newValue = $(this)
                 .text()
                 .trim();
@@ -364,7 +357,7 @@ export default {
             }
         });
 
-        $(document).on("change", "#password-pin", function() {
+        $(document).on("change", "#password-pin", function () {
             let value = $(this).val();
             let length = value.length;
             $(".pin-radio").prop("checked", false);
@@ -380,7 +373,7 @@ export default {
             $("#form").trigger("reset");
         };
 
-        $(document).on("keyup", function(e) {
+        $(document).on("keyup", function (e) {
             if (!$("#pin").is(":visible")) {
                 return;
             }
@@ -461,6 +454,7 @@ export default {
                 _type: "reset",
                 _class: "btn-pin-danger",
                 _text: "DEL"
+
             })
         );
         tr.append(
@@ -497,3 +491,106 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.btn-pin {
+    background: linear-gradient(180deg, #0a5a9c 0%, #073f68 60%, #052b47 100%) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px 0 rgba(7, 63, 104, 0.25), 0 2px 0 #052b47;
+    font-size: 1.7rem;
+    font-weight: bold;
+    padding: 16px 0;
+    width: 64px;
+    height: 64px;
+    margin: 10px;
+    transition: all 0.12s cubic-bezier(.4, 0, .2, 1);
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    overflow: hidden;
+}
+
+.btn-pin::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    pointer-events: none;
+}
+
+.btn-pin:active {
+    box-shadow: 0 2px 4px 0 rgba(7, 63, 104, 0.18), 0 1px 0 #052b47;
+    transform: translateY(3px) scale(0.96);
+    background: linear-gradient(180deg, #073f68 0%, #052b47 100%) !important;
+}
+
+.btn-pin-danger {
+    background: linear-gradient(180deg, #ff6f61 0%, #e74c3c 60%, #a93226 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 16px 0 rgba(231, 76, 60, 0.18), 0 2px 0 #a93226;
+}
+
+.btn-pin-danger:active {
+    box-shadow: 0 2px 4px 0 rgba(231, 76, 60, 0.12), 0 1px 0 #a93226;
+    background: linear-gradient(180deg, #e74c3c 0%, #a93226 100%) !important;
+}
+
+.btn-pin-success {
+    background: linear-gradient(180deg, #58d68d 0%, #27ae60 60%, #1e8449 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 16px 0 rgba(39, 174, 96, 0.18), 0 2px 0 #1e8449;
+}
+
+.btn-pin-success:active {
+    box-shadow: 0 2px 4px 0 rgba(39, 174, 96, 0.12), 0 1px 0 #1e8449;
+    background: linear-gradient(180deg, #27ae60 0%, #1e8449 100%) !important;
+}
+
+/* Icono centrado en el botón DEL */
+.btn-pin-danger i {
+    font-size: 1.3em;
+    vertical-align: middle;
+}
+
+.btn-pin:active {
+    box-shadow: 0 2px 0 #052b47, 0 2px 8px rgba(0, 0, 0, 0.19);
+    transform: translateY(2px) scale(0.97);
+    background-color: #055082 !important;
+}
+
+.btn-pin-danger {
+    background-color: #e74c3c !important;
+    color: #fff !important;
+    box-shadow: 0 4px 0 #a93226, 0 6px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn-pin-danger:active {
+    box-shadow: 0 2px 0 #a93226, 0 2px 8px rgba(0, 0, 0, 0.19);
+    background-color: #c0392b !important;
+}
+
+.btn-pin-success {
+    background-color: #27ae60 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 0 #1e8449, 0 6px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn-pin-success:active {
+    box-shadow: 0 2px 0 #1e8449, 0 2px 8px rgba(0, 0, 0, 0.19);
+    background-color: #229954 !important;
+}
+
+/* Icono centrado en el botón DEL */
+.btn-pin-danger i {
+    font-size: 1.3em;
+    vertical-align: middle;
+}
+</style>
