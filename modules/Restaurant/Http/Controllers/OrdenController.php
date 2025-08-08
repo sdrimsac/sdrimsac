@@ -710,11 +710,15 @@ class OrdenController extends Controller
         $user = auth()->user();
         $printer = null;
 
-        $mozo_name = null;
+        //$mozo_name = null;
+        if (!is_null($orden->mozo_id)) {
+            $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $orden->mozo_id)->first();
+            $mozo_name = $mozo ? $mozo->name : null;
+        }
         $zone_name = null;
 
         if ($orden) {
-            if ($orden->mozo_id) {
+            if (!is_null($orden->mozo_id)) {
                 $mozo = DB::connection('tenant')
                     ->table('seller_mozo')
                     ->where('id', $orden->mozo_id)
@@ -817,7 +821,7 @@ class OrdenController extends Controller
         $zone_name = null;
 
         // Obtener mozo
-        if ($orden->mozo_id) {
+        if (!is_null($orden->mozo_id)) {
             $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $orden->mozo_id)->first();
             $mozo_name = $mozo ? $mozo->name : null;
         }
@@ -897,7 +901,7 @@ class OrdenController extends Controller
         $zone_name = null;
 
         if ($orden) {
-            if ($orden->mozo_id) {
+            if (!is_null($orden->mozo_id)) {
                 $mozo = DB::connection('tenant')
                     ->table('seller_mozo')
                     ->where('id', $orden->mozo_id)
@@ -972,7 +976,7 @@ class OrdenController extends Controller
         try {
             $user = null;
             $ref = $request->ref;
-            $mozo_id = $request->mozo_id;
+            $mozo_id = $request->mozo_id ?? null;
             $sale_direct = $request->saleDirect ?? true;
             $configuration = Configuration::first();
 
@@ -1086,10 +1090,10 @@ class OrdenController extends Controller
             // Optimizar la búsqueda de orden
             $id = null;
             $orden = null;
-            if ($configuration->commands_fisico) {
+            if ($configuration->commands_fisico && $request->commands_fisico) {
                 $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
                 $id = $orden ? $orden->id : null;
-            } else if ($request->id) {
+            } else if (!empty($request->id)) {
                 $orden = Orden::find($request->id);
                 $id = $orden ? $orden->id : null;
             }
@@ -1121,10 +1125,12 @@ class OrdenController extends Controller
                         'status_table_id' => 2
                     ]
                 );
-            } else if ($request->orden) {
+            } else if ($request->orden && !empty($request->orden['table_id'])) {
                 $table = Table::where('id', $request->orden['table_id'])
                     ->update(['status_table_id' => 2]);
                 $table = Table::find($request->orden['table_id']);
+            } else {
+                $table = null;
             }
 
             $orden = null;
@@ -1137,8 +1143,8 @@ class OrdenController extends Controller
                 // If ref is null or empty, keep the existing ref (do not overwrite)
                 $orden->mozo_id = $mozo_id;
 
-                $table = Table::find($orden->table_id);
-                if ($table->is_room) {
+                $table = !empty($orden->table_id) ? Table::find($orden->table_id) : null;
+                if ($table && $table->is_room) {
                     $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
                     if ($hotel_rent_item) {
                         $orden->hotel_rent_item_id = $hotel_rent_item->id;
@@ -1148,16 +1154,15 @@ class OrdenController extends Controller
                 $orden->save();
                 $data = $request->orden;
 
-                $table = Table::find($data['table_id']);
-
+                $table = (!empty($data['table_id'])) ? Table::find($data['table_id']) : null;
                 if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $delivery = Delivery::where('orden_id', $orden->id)->first();
                     $deliveryData = [
                         'customer_id' => $data['customer_id'],
                         'table_id' => $data['table_id'],
-                        'address' => $data['delivery_address'] ?? '-',
-                        'reference' => $data['reference'] ?? '-',
-                        'telephone' => $data['telephone'] ?? '-',
+                        'address' => $data['delivery_address'] ?? '',
+                        'reference' => $data['reference'] ?? '',
+                        'telephone' => $data['telephone'] ?? '',
                         'status' => '0',
                     ];
 
@@ -1187,20 +1192,27 @@ class OrdenController extends Controller
                 }
 
                 if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
+
+                    $address   = is_array($data['delivery_address']) ? '-' : ($data['delivery_address'] ?? '-');
+                    $reference = is_array($data['reference']) ? '-' : ($data['reference'] ?? '-');
+                    $telephone = is_array($data['telephone']) ? '-' : ($data['telephone'] ?? '-');
+                    $alias     = is_array($request->ref) ? '-' : ($request->ref ?? '-');
+
+
                     $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
-                        ->where('address', $data['delivery_address'] ?? '-')
-                        ->where('reference', $data['reference'] ?? '-')
-                        ->where('telephone', $data['telephone'] ?? '-')
-                        ->where('alias', $request->ref ?? '-')
+                        ->where('address', $address)
+                        ->where('reference', $reference)
+                        ->where('telephone', $telephone)
+                        ->where('alias', $alias)
                         ->exists();
 
                     if (!$exists) {
                         CustomerAddresses::create([
                             'customer_id' => $data['customer_id'],
-                            'address' => $data['delivery_address'] ?? '-',
-                            'reference' => $data['reference'] ?? '-',
-                            'telephone' => $data['telephone'] ?? '-',
-                            'alias' => $request->ref ?? '-',
+                            'address' => $data['delivery_address'] ?? '',
+                            'reference' => $data['reference'] ?? '',
+                            'telephone' => $data['telephone'] ?? '',
+                            'alias' => $request->ref ?? '',
                         ]);
                     }
                 }
@@ -1216,7 +1228,7 @@ class OrdenController extends Controller
                 //obtner el al usuaruio auth()->id() y asignar el establecimiento_id
 
                 $establishment_id = auth()->user()->establishment_id;
-                if ($configuration->restaurant) {
+                /* if ($configuration->restaurant) {
                     $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
                         ->where('state', 1) // Solo sesiones abiertas
                         ->where('establishment_id', $establishment_id)
@@ -1239,7 +1251,37 @@ class OrdenController extends Controller
                     } else {
                         $orden->correlative = 1;
                     }
+                } */
+
+                if ($configuration->restaurant) {
+                    $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
+                        ->where('state', 1) // Solo sesiones abiertas
+                        ->where('establishment_id', $establishment_id)
+                        ->latest('id')
+                        ->first();
+
+                    // Si no hay caja abierta, no permitir crear la orden
+                    if (!$cash_order_session) {
+                        return [
+                            'success' => false,
+                            'message' => 'No hay caja abierta para este establecimiento (state=0: caja cerrada). Debe abrir caja antes de registrar órdenes.'
+                        ];
+                    }
+
+                    // Verificar si tiene un order_start_id definido
+                    $order_start_id = $cash_order_session->order_start_id;
+
+                    if ($order_start_id !== null) {
+                       
+                        $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
+                    } else {
+                       
+                        $correlative = Orden::count() + 1; 
+                    }
+
+                    $orden->correlative = $correlative;
                 }
+
 
                 if ($request->caja == true) {
                     $orden->table_id = $table->id;
@@ -1273,9 +1315,9 @@ class OrdenController extends Controller
                     $deliveryData = [
                         'customer_id' => $data['customer_id'],
                         'table_id' => $data['table_id'],
-                        'address' => $data['delivery_address'] ?? '-',
-                        'reference' => $data['reference'] ?? '-',
-                        'telephone' => $data['telephone'] ?? '-',
+                        'address' => $data['delivery_address'] ?? '',
+                        'reference' => $data['reference'] ?? '',
+                        'telephone' => $data['telephone'] ?? '',
                         'status' => '0',
                     ];
 
@@ -1298,19 +1340,19 @@ class OrdenController extends Controller
 
                 if ($table && $table->is_delivery) {
                     $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
-                        ->where('address', $data['delivery_address'] ?? '-')
-                        ->where('reference', $data['reference'] ?? '-')
-                        ->where('telephone', $data['telephone'] ?? '-')
-                        ->where('alias', $request->ref ?? '-')
+                        ->where('address', $data['delivery_address'] ?? '')
+                        ->where('reference', $data['reference'] ?? '')
+                        ->where('telephone', $data['telephone'] ?? '')
+                        ->where('alias', $request->ref ?? '')
                         ->exists();
 
                     if (!$exists) {
                         CustomerAddresses::create([
                             'customer_id' => $data['customer_id'],
-                            'address' => $data['delivery_address'] ?? '-',
-                            'reference' => $data['reference'] ?? '-',
-                            'telephone' => $data['telephone'] ?? '-',
-                            'alias' => $request->ref ?? '-',
+                            'address' => $data['delivery_address'] ?? '',
+                            'reference' => $data['reference'] ?? '',
+                            'telephone' => $data['telephone'] ?? '',
+                            'alias' => $request->ref ?? '',
                         ]);
                     }
                 }
