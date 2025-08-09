@@ -113,7 +113,8 @@
                                 </el-button>
                             </el-tooltip>
 
-                            <div class="dropdown-as-select d-inline-block">
+                            <div class="dropdown-as-select d-inline-block" style="position: relative; z-index: 1 !important
+                            ;">
                                 <button
                                     v-if="
                                         data.state_type_id != '11' &&
@@ -1475,9 +1476,9 @@ export default {
 </script>
 
 <style scoped>
-.dropdown-menu {
+/* .dropdown-menu {
     transform: translate(0, 0) !important;
-}
+} */
 
 .row-danger-border {
     /* border-left: 6px solid #dc3545 !important;

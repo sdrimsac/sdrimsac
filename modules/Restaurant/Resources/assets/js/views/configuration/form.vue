@@ -367,7 +367,7 @@
                         </div>
                         <div class="col-md-4"
                         v-if="
-                                type == 'caja/tables'
+                                type == 'caja/tables' && configurations.restaurant_delivery
                             ">
                             <label for="">Delivery</label>
                             <el-checkbox

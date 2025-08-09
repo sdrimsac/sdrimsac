@@ -572,8 +572,7 @@
                                             data.item.is_set == 0 &&
                                                 data.item.unit_type_id !=
                                                     'ZZ' &&
-                                                configuration.show_stock_cash ==
-                                                    true
+                                                configuration.show_stock_cash == true
                                         "
                                         class="row justify-content-end"
                                         style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"

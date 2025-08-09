@@ -279,6 +279,8 @@
                         {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
+                        {{ clientTableData.table_id }}
+
                     </strong>
                 </div>
 
@@ -2533,7 +2535,7 @@
                                         </div>
                                         <div
                                             v-if="
-                                                ordens.length != 0 && !variation
+                                                ordens.length != 0 && !variation && isCreatingOrden == false
                                             "
                                             class="mx-2 h4 txt-info p-10 f-w-700 d-flex align-items-center"
                                         >
@@ -2554,6 +2556,7 @@
                                         </div>
 
                                         <div
+                                            v-if="isCreatingOrden == false"
                                             v-show="
                                                 ordens.length > 0 && !variation
                                             "

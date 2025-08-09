@@ -50,7 +50,7 @@ class TableCollection extends ResourceCollection
                 'full_name'       => $row->getTableFullName(),
                 'is_room'       => $row->is_room,
                 'has_billar'    => $row->has_billar,
-                'zone'          => $row->zone,
+                'zone'          => $row->zone ? $row->zone->name : null,
                 'zone_id'       => $row->zone_id,
                 'is_delivery'   => $row->is_delivery,
             ];

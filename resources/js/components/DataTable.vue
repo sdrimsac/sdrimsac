@@ -380,7 +380,7 @@
                                 v-if="
                                     resource !== 'item-color-size' &&
                                         resource !==
-                                            'caja/worker/expenses'
+                                            'caja/worker/expenses'  && resource !== 'caja/tables'
                                 "
                                 icon="icofont-file-excel"
                                 @click.prevent="clickDownload('excel')"

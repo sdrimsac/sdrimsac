@@ -184,13 +184,8 @@
                     <el-input v-model="newItem.item"></el-input>
                 </div>
                 <div class="col-md-4">
-                    <label for="type">
-                        Unidad de medida
-                    </label>
-                    <el-select v-model="newItem.unitTypeId">
-                        <el-option v-for="(type, idx) in unitTypes" :key="idx" :value="type.id"
-                            :label="type.description"></el-option>
-                    </el-select>
+                        <!-- Unidad de medida oculta, se asigna automáticamente 'ZZ' -->
+                        <input type="hidden" v-model="newItem.unitTypeId" />
                 </div>
                 <div class="col-12 text-right " style="margin-top:15px;">
                     <el-button type="primary" @click="saveUnitType">Guardar</el-button>

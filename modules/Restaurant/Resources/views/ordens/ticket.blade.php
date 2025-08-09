@@ -29,7 +29,7 @@
     .celda {
         text-align: left;
         padding: 5px;
-        border: 0.1px solid #ccc;
+        border: 0.1px solid #030000;
     }
 
     .celda_left {
@@ -103,7 +103,7 @@
     }
 
     .encabezado {
-        background-color: #eee;
+        background-color: #0f0101;
         text-transform: uppercase;
         padding: 2px;
         padding-left: 2px;
@@ -243,17 +243,14 @@
 
     /* Updating styles for "Para llevar" section with darker background */
     .para-llevar-header {
-        background-color: #777777 !important;
-        /* Darker gray background */
-        color: #000000 !important;
-        /* Keep text black for readability */
+        background-color: #f70b0b !important;
+        /* Fondo negro puro */
+        color: #fdfdfd !important;
+        /* Texto blanco para contraste */
         font-weight: bold;
         -webkit-print-color-adjust: exact !important;
-        /* For Chrome */
         color-adjust: exact !important;
-        /* Standard */
         print-color-adjust: exact !important;
-        /* Firefox */
     }
 
     /* Estilos para la marca de agua */
@@ -496,23 +493,32 @@
                     </tr>
                 @endif
                 <tr>
-                    <td colspan="1" class=" cell_number encabezado header_title2">
+                    <td colspan="1" class="cell_number encabezado header_title2" style="color: #fdfdfd !important;">
                         <strong>#</strong>
                     </td>
+                    @if (count($to_carry) != 0)
+                        <td colspan="3" class="encabezado  text-center header_title2" style="color: #fdfdfd !important;">
+                            <strong>PARA LLEVAR</strong>
+                        </td>
+                    @endif
                     @if ($to_kitchen)
-                        <td class="encabezado header_title2 text-center">
+                        <td class="encabezado header_title2 text-center" style="color: #fdfdfd !important;">
                             <strong>PRODUCTO</strong>
                         </td>
-                        <td class="encabezado header_title2 text-center">
+                        <td class="encabezado header_title2 text-center text-white" style="color: #fdfdfd !important;">
                             <strong>IMP.</strong>
                         </td>
-                        <td class="encabezado header_title2 text-center">
+                        <td class="encabezado header_title2 text-center text-white" style="color: #fdfdfd !important;">
                             <strong>SUB.</strong>
                         </td>
                     @else
-                        <td colspan="3" class="encabezado  text-center header_title2">
+                        {{-- <td colspan="3" class="encabezado  text-center header_title2">
                             <strong>PRODUCTO</strong>
-                        </td>
+                        </td> --}}
+
+                        {{-- <td colspan="3" class="encabezado  text-center header_title2">
+                            <strong>PRODUCTO</strong>
+                        </td> --}}
                     @endif
                 </tr>
 
@@ -583,10 +589,12 @@
                             </tr>
                         @endforeach
                         <tr>
-                            <th class="encabezado description_preparacion" colspan="3" style="text-align: right">
+                            <th class="encabezado description_preparacion" colspan="3"
+                                style="text-align: right; color: #fdfdfd !important;">
                                 Total S/
                             </th>
-                            <th class="encabezado description_preparacion">{{ number_format($total, 2) }}</th>
+                            <th class="encabezado description_preparacion" style="color: #fdfdfd !important;">
+                                {{ number_format($total, 2) }}</th>
                         </tr>
                         {{-- @if ($establishment->image_yape)
                             <tr>
@@ -674,9 +682,9 @@
                             @endif
                         @endforeach
                         @if (count($to_carry) != 0)
-                            <tr class="para-llevar-header">
+                            {{-- <tr class="para-llevar-header">
                                 <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
-                            </tr>
+                            </tr> --}}
                             @foreach ($to_carry as $row_carry)
                                 <tr>
                                     <td class="celda_center header_title2">{{ $row_carry->quantity }}</td>
@@ -704,15 +712,15 @@
                                 <th class="encabezado">{{ number_format($total, 2) }}</th>
                             </tr>
                             @if ($establishment && $establishment->image_yape)
-                            <tr>
-                                <td colspan="4" class="text-center">
-                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
-                                        alt="payment-logo" style="max-width: 150px; height: auto;" />
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
+                                            alt="payment-logo" style="max-width: 150px; height: auto;" />
+                                    </td>
+                                </tr>
+                            @endif
                         @endif
-                        @endif
-                        
+
                     </tbody>
                 @endif
 
@@ -977,8 +985,7 @@
                         <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
                     </tr> --}}
                         <tr class="para-llevar-header">
-                            <th class="encabezado text-center header_title2" colspan="4"
-                                style="color: rgb(12, 12, 12);">Para
+                            <th class="" colspan="4" style="color: rgb(10, 0, 0);">Para
                                 llevar </th>
                         </tr>
                     @endif

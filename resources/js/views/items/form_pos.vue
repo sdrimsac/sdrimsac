@@ -19,7 +19,7 @@
                         <div class="">
                             <div class="row">
                                 <!-- Apartado de Código  Nombre y Almacén-->
-                                <div class="col-9">
+                                <div class="col-12">
                                     <div class="row col-12">
                                         <!-- Código Interno -->
                                         <div class="col-12 col-lg-6 col-xl-4">
@@ -69,7 +69,7 @@
                                             </div>
                                         </div>
                                         <!-- Código Externo -->
-                                        <div
+                                        <!-- <div
                                             class="col-12 col-lg-6 col-xl-4"
                                             v-if="
                                                 configuration.show_second_name_external_code
@@ -110,7 +110,7 @@
                                                     v-text="errors.barcode[0]"
                                                 ></small>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!-- Código Origen -->
                                         <!-- <div
                                             class="col-12 col-lg-6 col-xl-4"
@@ -341,7 +341,7 @@
                                     </div>
                                 </div>
                                 <!-- Apartado Imagen -->
-                                <div class="col-3">
+                                <!-- <div class="col-3">
                                     <div class="form-group">
                                         <label class="control-label">
                                             Imagen
@@ -366,7 +366,7 @@
                                             ></i>
                                         </el-upload>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- segundo bloque de fila-->
@@ -453,7 +453,7 @@
                                         ></small>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6 px-2">
+                                <!-- <div class="col-xl-3 col-lg-4 col-md-6 px-2">
                                     <div
                                         class="form-group"
                                         :class="{
@@ -486,8 +486,8 @@
                                             </el-checkbox>
                                         </small>
                                     </div>
-                                </div>
-                                <div class="col-12 col-lg-6 col-xl-3 px-2">
+                                </div> -->
+                                <!-- <div class="col-12 col-lg-6 col-xl-3 px-2">
                                     <div
                                         class="form-group"
                                         :class="{
@@ -522,7 +522,7 @@
                                         >
                                         </small>
                                     </div>
-                                </div>
+                                </div> -->
                                 
                             </div>
                         </div>
@@ -657,7 +657,7 @@
                                             <i
                                                 class="fas fa-map-marker-alt me-2"
                                             ></i>
-                                            Zona
+                                            Zona de Impresión
                                             <el-tooltip
                                                 class="ms-2"
                                                 effect="dark"
@@ -698,7 +698,7 @@
                                 <!-- Delivery -->
                                 <div
                                     class="col-xl-3 col-lg-4 col-md-6 px-2"
-                                    v-if="form.unit_type_id != 'ZZ'"
+                                    v-if="configuration.restaurant"
                                 >
                                     <div class="form-group">
                                         <label
@@ -2424,7 +2424,7 @@
                     >
                         <!-- Botón Cancelar -->
                         <el-button
-                            class="btn-cancel btn-cancel:hover"
+                            class="btn_cancelarsmall"
                             icon="fas fa-times fa-lg"
                             @click.prevent="close()"
                         >
@@ -2432,7 +2432,7 @@
                         </el-button>
                         <!-- Botón Guardar -->
                         <el-button
-                            class="btn-save btn-save:hover"
+                            class="btn_guardarsmall"
                             icon="fas fa-save fa-lg"
                             type="primary"
                             native-type="submit"

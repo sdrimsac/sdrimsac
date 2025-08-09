@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="row" v-if="ordens.length > 0">
-            <div class="col-12 p-1">
+        <div class="row" v-if="ordens.length > 0 && !configuration.order_mozo">
+            <div class="col-12 p-1" v-if="table.is_delivery === false || table.is_delivery === '0'">
                 <h2 class="small-title fw-bold">Ordenes Realizadas</h2>
                 <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
@@ -261,7 +261,7 @@
                                                                                     data
                                                                                         .item
                                                                                         .unit_type_id !=
-                                                                                        'ZZ'
+                                                                                        'ZZ' && configuration.show_stock_cash == true
                                                                             "
                                                                         >
                                                                             <template

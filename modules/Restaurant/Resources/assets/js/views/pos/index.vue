@@ -3928,6 +3928,17 @@ export default {
         },
         creatingOrden(number, id, is_room = false) {
             this.isCreatingOrden = true;
+            console.log(
+                "creatingOrden",
+                number,
+                id,
+                is_room,
+                this.clientTableData
+            );
+            // Limpiar localOrden y clientTableData en el padre
+            this.localOrden = [];
+            this.clientTableData = {};
+            // Luego setear la nueva mesa seleccionada (si aplica)
             this.clientTableData = {
                 ref: undefined,
                 table: number,
@@ -3936,6 +3947,10 @@ export default {
                 customer_id: undefined,
                 correlative: undefined
             };
+            console.log(
+                "clientTableData después de crear orden",
+                this.clientTableData
+            );
         },
         async setPaymentOrden(items, allTables = false) {
             let form = {
@@ -5604,6 +5619,7 @@ export default {
             this.selectOption = 1;
         },
         selectTable(row, index) {
+            console.log("Mesa seleccionada:", row, index);
             this.tableSelect = [];
             this.selecttables = row.id;
             this.tableSelect = this.listar_tables[index];
@@ -5621,6 +5637,12 @@ export default {
                 ) {
                     this.foodItem++;
                 }
+            }
+
+            // Limpia las órdenes si la mesa seleccionada no tiene órdenes
+            if (!this.tableSelect.ordens || this.tableSelect.ordens.length === 0) {
+                console.log("No hay órdenes para esta mesa");
+                this.ordensItems = [];
             }
         },
         consumir() {

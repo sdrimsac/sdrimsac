@@ -3,7 +3,6 @@
         append-to-body
         @open="open"
         @close="close"
-        
         :visible="showSplitPayment"
         :title="`Dividir pago: S/. ${total} Cant. ${quantity} productos`"
         :width="dialogWidth"
@@ -522,11 +521,16 @@
             :user_id="form.user_id"
             :external="true"
             document_type_id="03"
+            :document_type_id="currentPersonDocumentTypeId"
+            :customer_default="currentPersonCustomerDefault"
             @reloadDataPersons="reloadDataCustomers"
         ></person-form>
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
-                <el-button type="primary" :disabled="sendingPayments" @click="handleSendPayments"
+                <el-button
+                    type="primary"
+                    :disabled="sendingPayments"
+                    @click="handleSendPayments"
                     >Listo</el-button
                 >
             </div>
@@ -693,7 +697,7 @@ export default {
             current_index_person: null,
             splitByAmount: "1",
             number: 2,
-            
+
             numberProduct: 2,
             payments: [],
             items: [],
@@ -739,6 +743,35 @@ export default {
         };
     },
     computed: {
+        currentPersonDocumentTypeId() {
+            
+            if (
+                this.current_index_person !== null &&
+                this.persons[this.current_index_person]
+            ) {
+                return (
+                    this.persons[this.current_index_person].document_type_id ||
+                    "03"
+                );
+            }
+            return "03";
+        },
+        currentPersonCustomerDefault() {
+            // Si es factura (document_type_id === "01"), retorna el cliente RUC por defecto, si no, null
+            if (
+                this.current_index_person !== null &&
+                this.persons[this.current_index_person] &&
+                this.persons[this.current_index_person].document_type_id ===
+                    "01"
+            ) {
+                return this.customer_default &&
+                    this.customer_default.identity_document_type_id === "6"
+                    ? this.customer_default
+                    : null;
+            }
+            return null;
+        },
+
         dialogWidth() {
             return window.innerWidth <= 1280 ? "90%" : "75%";
         },
@@ -773,7 +806,7 @@ export default {
     },
 
     methods: {
-         async handleSendPayments() {
+        async handleSendPayments() {
             if (this.sendingPayments) return;
             this.sendingPayments = true;
             try {
@@ -866,7 +899,6 @@ export default {
             return true;
         },
         async sendDocument(form, resource) {
-            
             let newForm = this.reCalculateTotal(form);
             if (this.printerOn) {
                 newForm.printerOn = true;
@@ -889,7 +921,6 @@ export default {
                 }
             }
             const response = await this.$http.post(`/${resource}`, newForm);
-            
         },
         async sendPayments() {
             if (!this.validate()) {
@@ -925,7 +956,7 @@ export default {
                     this.payments.push({
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
-                        customer_telephone: p.customer_telephone,
+                        customer_telephone: p.customer_telephone
                         //operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
@@ -983,7 +1014,7 @@ export default {
                     this.payments.push({
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
-                        customer_telephone: p.customer_telephone,
+                        customer_telephone: p.customer_telephone
                         //operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
@@ -1380,7 +1411,7 @@ export default {
                 selected: false,
                 document_type_id: "03",
                 products: [],
-                customer_telephone: "",
+                customer_telephone: ""
                 //operation_number: ""
             });
         },

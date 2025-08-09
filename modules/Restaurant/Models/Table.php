@@ -17,7 +17,7 @@ class Table extends ModelTenant
 {
     use RegisterMovementTrait;
     public $timestamps = false;
-    protected $with = ["type", "area", "status_table", "floor"];
+    protected $with = ["type", "area", "status_table", "floor", "zone"];
     protected $fillable = [
         'enabled',
         'month_price',

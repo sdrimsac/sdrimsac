@@ -108,7 +108,7 @@
                                                     data.item.is_set == 0 &&
                                                         data.item
                                                             .unit_type_id !=
-                                                            'ZZ'
+                                                            'ZZ' && configuration.show_stock_cash == true
                                                 "
                                             >
                                                 <template

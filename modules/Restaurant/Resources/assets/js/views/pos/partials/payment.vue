@@ -1946,7 +1946,7 @@ import printjs from "print-js";
 //import MultiplePaymentForm from "./multiple_payment.vue";
 //import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 //import ShowSplitPaymentForm from "./split_payment.vue";
-import GenerateQr from "./GenerateQr.vue"; // Ajusta la ruta según donde esté
+import GenerateQr from "./GenerateQr.vue";
 
 const PromotionBox = () => import("./promotion_box.vue");
 const ListItems = () => import("./list_items.vue");

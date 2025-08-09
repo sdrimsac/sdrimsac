@@ -110,6 +110,12 @@
                                 Área
                             </th>
                             <th class="text-white" v-if="
+                                type == 'caja/tables'
+                                
+                            ">
+                                zona
+                            </th>
+                            <th class="text-white" v-if="
                                 type == 'caja/tables' ||
                                 type == 'caja/rooms'
                             ">
@@ -164,6 +170,7 @@
                             ">
                                 {{ row.area.description }}
                             </td>
+                            <td>{{ row.zone }}</td>
                             <td v-if="
                                 type == 'caja/tables' ||
                                 type == 'caja/rooms'
@@ -236,7 +243,7 @@
                     :establishments="establishments"></create-form>
 
                 <create-form-massive :types="types" :showDialog.sync="showDialogMassive" :areas="areas" :type="type"
-                    :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable"
+                    :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :zones="zones"
                     :establishments="establishments"></create-form-massive>
                 <items-rooms :showDialog.sync="showItems" :type="typeItem"></items-rooms>
                 <items-tables :showDialog.sync="showItemsTables" :type="typeItem"></items-tables>

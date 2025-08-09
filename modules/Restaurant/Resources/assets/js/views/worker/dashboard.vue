@@ -7,7 +7,7 @@
                     <h1 class="mb-1 pb-0 display-4 user_online">
                         <div class="btn-group">
                             <div class="dropdown">
-                                <a
+                                <!-- <a
                                     class="dropdown-toggle mb-1"
                                     href="javascript:void(0)"
                                     role="button"
@@ -18,14 +18,14 @@
                                 >
                                     <i class="icofont-waiter icofont-2x"></i>
                                    
-                                </a>
+                                </a> -->
                                 <el-button
+
                                     v-if="show != 'tables'"
                                     @click="returnToTablesView"
-                                    class="fw-bold"
+                                    class="fw-bold bg-primary"
                                 >
-                                    <i class="icofont icofont-dining-table"></i>
-                                    Visualizar mesas
+                                    <i class="icofont icofont-dining-table" style="color: #fff;"></i>
                                 </el-button>
 
                                 <el-button
@@ -34,16 +34,24 @@
                                             show == 'create' &&
                                             currentTable
                                     "
+                                    icon="el-icon-plus"
                                     type="success"
                                     @click="open"
-                                    style="padding: 12px 24px; border-radius: 25px; font-size: 16px;"
                                 >
-                                    Crear producto
+                                    
+                                </el-button>
+                                <el-button
+                                    v-if="currentTable != null"
+                                    
+                                    type="primary"
+                                
+                                >
+                                    Mesa N°{{ currentTable.number }}
                                 </el-button>
                             </div>
                         </div>
                     </h1>
-                    <nav
+                    <!-- <nav
                         class="breadcrumb-container d-inline-block"
                         aria-label="breadcrumb"
                     >
@@ -55,21 +63,22 @@
                                     >
                                 </li>
                             </template>
-                            <template v-if="currentTable != null">
+                            
+                        </ul>
+                    </nav> -->
+                   <!--  <template v-if="currentTable != null">
                                 <li class="breadcrumb-item">
                                     <h1 class="fw-bold">
                                         <a
                                             href="javascript:void(0)"
                                             class="text-danger font-weight-bold"
-                                            @click="returnToTablesView"
+                                            
                                         >
-                                            Mesa N°{{ currentTable.number }}
+                                            
                                         </a>
                                     </h1>
                                 </li>
-                            </template>
-                        </ul>
-                    </nav>
+                            </template> -->
                 </div>
                 <div
                     class="col-12 col-sm-6 pt-2 pb-2"
@@ -211,7 +220,7 @@
         </div>
         <el-tabs
             v-model="activeTab"
-            class="mb-3"
+            class=""
             @tab-click="handleTabClick"
             v-if="show == 'tables'"
         >
@@ -234,7 +243,7 @@
                                     ]"
                                     @click="filterZones(zone.id)"
                                 >
-                                    ZONA {{ zone.name }}
+                                     {{ zone.name }}
                                 </button>
                             </div>
                         </div>
@@ -257,9 +266,9 @@
                             style="max-height: 200px;"
                             @click="selectedTable(data.id, data)"
                         >
-                            <strong class="h3 text-white">
+                            <!-- <strong class="h3 text-white">
                                 {{ data.is_room ? "Habitación" : "Mesa" }}
-                            </strong>
+                            </strong> -->
                             <i class="icofont-dining-table icofont-4x"></i>
                             <span class="h2 text-white">{{ data.number }}</span>
                             <span
@@ -344,6 +353,7 @@
         <!-- <ListOrden :configuration="configuration" v-if="selectOption == '2'">
     </ListOrden>-->
         <template v-if="currentTable && show == 'create'">
+            <!-- Ocultar Ordenes Realizadas si la mesa es de delivery -->
             <detail-orden
                 @changeOrdenEvent="changeOrdenEvent"
                 :changingOrden.sync="changingOrden"
@@ -375,6 +385,11 @@
 </template>
 
 <style scoped>
+.custom-tab-margin {
+    
+    padding-left: 0rem !important;
+    padding-right: 0rem !important;
+}
 .delivery-card-red {
     width: 200px;
     height: 200px;
@@ -565,6 +580,8 @@
     }
 }
 </style>
+
+
 
 <script>
 import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";

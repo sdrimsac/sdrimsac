@@ -101,7 +101,7 @@
                             @click="selectTable(table)"
                             style="max-height: 200px; max-width: 300px;"
                         >
-                            <strong class="h3 text-white">Mesa</strong>
+                            <!-- <strong class="h3 text-white"></strong> -->
                             <i class="icofont-dining-table icofont-4x"></i>
                             <span class="h2 text-white">{{
                                 table.number
@@ -523,11 +523,19 @@ export default {
                     return;
                 }
                 this.$emit("creatingOrden", table.number, table.id);
+                console.log(
+                    "Mesa seleccionada para crear orden:",
+                    table.number,
+                    table.id
+                );
                 this.close();
                 return;
             }
 
             if (table.status_table_id == 1) {
+                // Limpiar orden y datos de mesa en el padre
+                this.$emit("update:localOrden", []);
+                this.$emit("update:clientTableData", {});
                 this.$toast.warning("La mesa no tiene ordenes");
                 return;
             }

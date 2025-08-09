@@ -105,6 +105,8 @@
                             </div>
                         </a>
                     </div>
+
+
                 </div>
                 <!-- Logo End -->
 
@@ -158,6 +160,35 @@
 
                 <!-- Mobile Buttons Start -->
                 <div class="mobile-buttons-container">
+                    <div>
+                        <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            style="width: 100px; height: 60px; min-width: 100px; min-height: 60px; max-width: 100px; max-height: 40px; padding: 0; overflow: hidden; align-items: center; justify-content: center;">
+                            <img style="width: 100%; height: 100%; object-fit: contain; display: block;"
+                                class="profile" alt="profile" src="{{ asset('acorn/img/profile/store.png') }}" />
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end user-menu wide">
+
+                            <div class="row  ms-0 me-0">
+                                <div class="col-12 pe-1 ps-1">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <a href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
+                                                <span class="align-middle">Cerrar Sesión</span>
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                            </form>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Scrollspy Mobile Button Start -->
                     <a href="#" id="scrollSpyButton" class="spy-button" data-bs-toggle="dropdown">
                         <i data-cs-icon="menu-dropdown"></i>
@@ -169,16 +200,16 @@
                     <!-- Scrollspy Mobile Dropdown End -->
 
                     <!-- Menu Button Start -->
-                    <a href="#" id="mobileMenuButton" class="menu-button">
+                    {{-- <a href="#" id="mobileMenuButton" class="menu-button">
                         <i data-cs-icon="menu"></i>
-                    </a>
+                    </a> --}}
                     <!-- Menu Button End -->
                 </div>
                 <!-- Mobile Buttons End -->
             </div>
             <div class="nav-shadow"></div>
         </div>
-        <main style="padding-left:1.5rem !important">
+        <main style="padding-left:0.8rem !important; padding-right:0.6rem !important;">
             <div id="main">
                 @yield('content')
             </div>
@@ -190,14 +221,14 @@
                     <div class="row">
                         <div class="col-12 col-sm-12  ">
                             <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
-                                @if ($commit)
+                                {{-- @if ($commit)
                                     <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
-                                @endif
-                                </p>
-                                <p class="text-center   mt-3 mb-3" style="color: #073f68;">
-                                    &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
-                                    Solutions
-                                </p>
+                                @endif --}}
+                            </p>
+                            <p class="text-center   mt-3 mb-3" style="color: #073f68;">
+                                &copy; Copyright {{ date('Y') }}. Todos los derechos reservados a Sdrimsac
+                                Solutions
+                            </p>
                         </div>
 
                     </div>

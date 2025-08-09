@@ -1047,7 +1047,7 @@
             >
                 <!-- Botón Cancelar -->
                 <el-button
-                    class="btn-cancel btn-cancel:hover"
+                    class="btn_cancelarsmall"
                     icon="fas fa-times fa-lg"
                     @click.prevent="close()"
                 >
@@ -1055,7 +1055,7 @@
                 </el-button>
                 <!-- Botón Guardar -->
                 <el-button
-                    class="btn-save btn-save:hover"
+                    class="btn_guardarsmall"
                     icon="fas fa-save fa-lg"
                     type="primary"
                     native-type="submit"

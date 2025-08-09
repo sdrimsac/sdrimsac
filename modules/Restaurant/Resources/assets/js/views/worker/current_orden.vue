@@ -83,9 +83,61 @@
                     >Lista de Ordenes</span
                 >
             </div>
-            <div v-if="ordens.length > 0" class="row d-flex flex-row p-2">
+            <div class="row d-flex flex-row p-2">
                 <div class="col-12 d-flex justify-content-end">
                     <el-button-group>
+                        <el-button
+                        v-if="localOrden.length != 0"
+                            :type="to_carry ? 'success' : 'info'"
+                            size="mini"
+                            @click="
+                                to_carry = !to_carry;
+                                allToCarry();
+                            "
+                        >
+                        <i class="fas fa-biking"></i>
+                            <i class="el-icon-shopping-bag" style="margin-right: 4px;"></i>
+                            <!-- <i class="el-icon-truck" style="margin-right: 4px;"></i> -->
+                             <b>{{ to_carry ? "Sí" : "No" }}</b>
+                        </el-button>
+                        <template
+                            v-if="
+                                table &&
+                                    table.is_delivery === '1' &&
+                                    ordens.length === 0
+                            "
+                        >
+                            <el-tooltip
+                                effect="dark"
+                                content="Delivery"
+                                placement="top-start"
+                            >
+                                <el-button
+                                v-if="localOrden.length != 0"
+                                    type="primary"
+                                    class="btn btn-sm"
+                                    @click="openDelivery"
+                                >
+                                    <i class="fas fa-biking"></i>
+                                </el-button>
+                            </el-tooltip>
+                        </template>
+                        <template v-else>
+                            <el-tooltip
+                                effect="dark"
+                                content="Enviar ordenes"
+                                placement="top-start"
+                            >
+                                <el-button
+                                v-if="localOrden.length != 0"
+                                    @click="submit"
+                                    class="btn-sm bg-success"
+                                >
+                                    <i class="el-icon-s-promotion"></i>
+                                </el-button>
+                            </el-tooltip>
+                        </template>
+
                         <el-tooltip
                             effect="dark"
                             content="Imprimir Precuenta en caja"
@@ -95,7 +147,7 @@
                                 type="success"
                                 class="btn btn-sm"
                                 @click="printTicketPos"
-                                v-if="configuration.print_pos_worker"
+                                v-if="configuration.print_pos_worker && ordens.length > 0"
                             >
                                 <i class="icofont-printer"></i>
                             </el-button>
@@ -109,6 +161,7 @@
                                 type="warning"
                                 class="btn btn-sm"
                                 @click="printTicketRePrint"
+                                v-if="ordens.length > 0"
                             >
                                 <i class="icofont-printer"></i>
                             </el-button>
@@ -119,7 +172,7 @@
                             placement="top-start"
                         >
                             <el-button
-                                v-if="configuration.re_printer"
+                                v-if="configuration.re_printer && ordens.length > 0"
                                 type="primary"
                                 class="btn btn-sm"
                                 @click="printTicket"
@@ -133,7 +186,7 @@
                             placement="top-start"
                         >
                             <el-button
-                                v-if="configuration.pdf_preorder"
+                                v-if="configuration.pdf_preorder && ordens.length > 0"
                                 type="info"
                                 @click="printTicketPdf"
                                 class="btn btn-sm"
@@ -148,7 +201,7 @@
                             placement="top-start"
                         >
                             <el-button
-                                v-if="configuration.delete_mozo"
+                                v-if="configuration.delete_mozo && ordens.length > 0"
                                 type="danger"
                                 @click="cancelGeneralOrden"
                                 class="btn btn-sm"
@@ -159,16 +212,11 @@
                     </el-button-group>
                 </div>
             </div>
-            <div class="row p-2" v-if="localOrden.length != 0">
-                <div class="col-4 f-w-700 text-end pt-2 pb-2">
-                    <label class="control-label w-100">para llevar</label>
-                    <el-switch
-                        v-model="to_carry"
-                        active-text="Si"
-                        inactive-text="No"
-                        @change="allToCarry"
-                    ></el-switch>
-                </div>
+            <!-- <div class="row p-2" v-if="localOrden.length != 0">
+                <div
+                    class="col-4 f-w-700 text-end pt-2 pb-2"
+                    v-if="table.is_delivery !== '1'"
+                ></div>
                 <div class="col-8 d-flex justify-content-end">
                     <template
                         v-if="
@@ -218,7 +266,7 @@
                         ></el-button>
                     </el-tooltip>
                 </div>
-            </div>
+            </div> -->
 
             <div
                 v-if="ordens.length == 0 && localOrden.length == 0"
@@ -408,7 +456,13 @@
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
-                                                <div class="col-4">
+                                                <div
+                                                    class="col-4"
+                                                    v-if="
+                                                        table.is_delivery !==
+                                                            '1'
+                                                    "
+                                                >
                                                     <el-tag
                                                         v-if="
                                                             configuration.restaurant
@@ -434,7 +488,7 @@
                                                             @click="
                                                                 deleteFood(idx)
                                                             "
-                                                            style="width: 58px;"
+                                                            style="width: 38px; height: 38px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center;"
                                                         ></el-button>
                                                         <el-button
                                                             class="text-white"
@@ -450,7 +504,7 @@
                                                                         .item.id
                                                                 )
                                                             "
-                                                            style="width: 58px;"
+                                                            style="width: 38px; height: 38px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; margin-left: 6px;"
                                                         ></el-button>
                                                     </el-button-group>
                                                 </div>
@@ -655,17 +709,17 @@
             :style="{ maxWidth: '350px', margin: '0 auto' }"
             @open="onOpenPinModal"
         >
-            <div class="row mt-1">
+            <!-- <div class="row mt-1">
                 <h6 class="fw-bold">
                     Para poder eliminar la orden debe ingresar un motivo y su
                     PIN de usuario.
                 </h6>
-            </div>
+            </div> -->
             <div class="row mt-1">
                 <div class="col-12">
                     <el-input
                         v-model="reasonToDelete"
-                        placeholder="Ingrese un motivo"
+                        placeholder="Ingrese un motivo para eli"
                         type="textarea"
                         maxlength="200"
                         show-word-limit
@@ -774,10 +828,10 @@
                     </div>
                 </div>
             </div>
-            <div slot="footer" class="dialog-footer">
+            <!-- <div slot="footer" class="dialog-footer">
                 <el-button @click="showPinRequest = false">Cancelar</el-button>
-                <!-- <el-button type="primary" @click="cancelOrdenaPin">Eliminar</el-button> -->
-            </div>
+                <el-button type="primary" @click="cancelOrdenaPin">Eliminar</el-button>
+            </div> -->
         </el-dialog>
 
         <DeliveryForm
