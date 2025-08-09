@@ -467,6 +467,7 @@ class TableController extends Controller
             $table->area_id = $request->input('area_id');
             $table->status_table_id = $request->input('status_table_id');
             $table->establishment_id = $request->input('establishment_id');
+            $table->zone_id = $request->input('zone_id');
             $table->save();
         }
         return [

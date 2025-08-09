@@ -398,7 +398,6 @@
                                     :placeholder="`N° de operación ${idx + 1}`"
                                 ></el-input>
                                 <div class="col-3" v-else>
-                                   
                                 </div>
                             </div>
                             <!-- Nro de WhatsApp -->

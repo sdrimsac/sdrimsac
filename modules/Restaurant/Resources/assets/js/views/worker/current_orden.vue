@@ -87,7 +87,7 @@
                 <div class="col-12 d-flex justify-content-end">
                     <el-button-group>
                         <el-button
-                        v-if="localOrden.length != 0"
+                        v-if="localOrden.length != 0 && table.is_delivery !== '1'"
                             :type="to_carry ? 'success' : 'info'"
                             size="mini"
                             @click="
