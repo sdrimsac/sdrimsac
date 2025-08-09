@@ -62,7 +62,7 @@
             </div>
             <div>
                 <p class="mb-0   text-medium" style="text-align: right; color: #073f68;">
-                    @if ($commit)
+                    @if (!empty($commit))
                         <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
                     @endif
                 </p>
