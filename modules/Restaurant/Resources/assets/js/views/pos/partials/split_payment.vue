@@ -379,7 +379,7 @@
                                         <el-input v-model="person.amount" readonly></el-input>
                                     </div> -->
                             <!-- N° de operación -->
-                            <!-- <div
+                            <div
                                 class="col-3"
                                 v-if="
                                     ['03', '04', '05', '06'].includes(
@@ -400,7 +400,7 @@
                                 <div class="col-3" v-else>
                                    
                                 </div>
-                            </div> -->
+                            </div>
                             <!-- Nro de WhatsApp -->
                             <!-- <div class="col-4">
                                 <label for="" style="margin-bottom: 2px;">
@@ -880,22 +880,22 @@ export default {
             }
 
             // Validar número de operación para métodos de pago específicos
-            /* let invalidOperation = this.persons.some(p => {
+            let invalidOperation = this.persons.some(p => {
                 if (["03", "04", "05", "06"].includes(p.payment_method)) {
                     return (
                         !p.operation_number || p.operation_number.trim() === ""
                     );
                 }
                 return false;
-            }); */
-            /* if (invalidOperation) {
+            });
+            if (invalidOperation) {
                 this.$showSAlert(
                     "Error",
                     "Debe ingresar el número de operación para para poder realizar la operacion",
                     "error"
                 );
                 return false;
-            } */
+            }
             return true;
         },
         async sendDocument(form, resource) {
@@ -956,8 +956,8 @@ export default {
                     this.payments.push({
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
-                        customer_telephone: p.customer_telephone
-                        //operation_number: p.operation_number
+                        customer_telephone: p.customer_telephone,
+                        operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -1014,8 +1014,8 @@ export default {
                     this.payments.push({
                         amount: p.amount,
                         payment_method: p.payment_method, // Now this is the value (e.g., '03' for Yape)
-                        customer_telephone: p.customer_telephone
-                        //operation_number: p.operation_number
+                        customer_telephone: p.customer_telephone,
+                        operation_number: p.operation_number
                     });
                     await this.sendDocument(form, resource);
                 }
@@ -1397,9 +1397,9 @@ export default {
         onChangePaymentMethod(idx) {
             // Limpiar número de operación si cambia a método que no lo requiere
             const p = this.persons[idx];
-            /* if (!["03", "04", "05", "06"].includes(p.payment_method)) {
+            if (!["03", "04", "05", "06"].includes(p.payment_method)) {
                 p.operation_number = "";
-            } */
+            }
         },
         addPerson(amount = 0) {
             this.persons.push({
@@ -1411,8 +1411,8 @@ export default {
                 selected: false,
                 document_type_id: "03",
                 products: [],
-                customer_telephone: ""
-                //operation_number: ""
+                customer_telephone: "",
+                operation_number: ""
             });
         },
         open() {
