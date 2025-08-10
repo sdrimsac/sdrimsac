@@ -230,6 +230,11 @@ export default {
             showModalGenerateCPE: false
         };
     },
+    mounted() {
+        this.$nextTick(() => {
+            $(".dropdown-toggle").dropdown({ container: "body" });
+        });
+    },
     methods: {
         closeDispatch() {
             this.showCreate = false;

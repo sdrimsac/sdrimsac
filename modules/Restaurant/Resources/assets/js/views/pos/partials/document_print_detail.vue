@@ -113,8 +113,7 @@
                                 </el-button>
                             </el-tooltip>
 
-                            <div class="dropdown-as-select d-inline-block" style="position: relative; z-index: 1 !important
-                            ;">
+                            <div class="dropdown">
                                 <button
                                     v-if="
                                         data.state_type_id != '11' &&
@@ -122,16 +121,18 @@
                                     "
                                     class="btn btn-primary btn-sm dropdown-toggle"
                                     type="button"
-                                    data-bs-toggle="dropdown"
+                                    data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
+                                
                                 >
                                     <i class="fas fa-list"></i>
                                 </button>
-                                <div class="dropdown-menu p-1">
+                                <div class="dropdown-menu p-1" style="max-height: 250px; overflow-y: auto;">
                                     <template>
                                         <!-- Anulado Interno -->
                                         <el-button
+                                            append-to-body
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                             v-if="
@@ -822,8 +823,6 @@
                                     ? data.number
                                     : data.identifier
                             }}
-
-                            
                         </td>
 
                         <!-- Fecha y Hora de Emisión -->
@@ -1170,6 +1169,12 @@ export default {
         };
     },
 
+    /* mounted() {
+        this.$nextTick(() => {
+            $(".dropdown-toggle").dropdown({ container: "body" });
+        });
+    }, */
+
     methods: {
         whatsapp(data) {
             let { external_id } = data;
@@ -1488,4 +1493,5 @@ export default {
     background: none !important;
     color: #dc3545 !important;
 }
+
 </style>
