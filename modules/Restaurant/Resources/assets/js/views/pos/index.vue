@@ -4765,49 +4765,11 @@ export default {
                         orden.prices = newPrices;
                     }
                 }
-                // para el escaneo de códigos de barras con item_codes
 
-                /* if (
-                    Array.isArray(orden?.food?.item?.item_codes) &&
-                    this.barcode === true &&
-                    //this.value
-                    this.input_item
-                ) {
-                    console.log("Escaneado (value):", this.input_item);
-                    console.log("Item Codes:", orden.food.item.item_codes);
-
-                    const scanned = String(this.input_item)
-                        .trim()
-                        .toLowerCase();
-                    const foundCode = orden.food.item.item_codes.find(
-                        c =>
-                            String(c.code_barcode)
-                                .trim()
-                                .toLowerCase() === scanned
-                    );
-                    console.log(
-                        "Comparando con:",
-                        orden.food.item.item_codes.map(c =>
-                            String(c.code_barcode).trim()
-                        )
-                    );
-                    console.log("Escaneado comparado:", scanned);
-
-                    if (foundCode) {
-                        orden.food.item.item_codes = [foundCode];
-                        console.log("Solo el código escaneado queda:", orden.food.item.item_codes);
-                    } else {
-                        console.warn("Código no encontrado:", scanned);
-                        this.$toast.error(
-                            "Código no válido para este producto."
-                        );
-                        return;
-                    }
-                } */
 
                 // LOGS para depuración de códigos
                 console.log("[SCAN] input_item:", this.input_item);
-                console.log(
+                /* console.log(
                     "[SCAN] item_codes:",
                     orden?.food?.item?.item_codes
                 );
@@ -4818,9 +4780,9 @@ export default {
                 console.log(
                     "[SCAN] item_codes_scanned antes:",
                     orden?.food?.item?.item_codes_scanned
-                );
+                ); */
 
-                if (
+                /* if (
                     Array.isArray(orden?.food?.item?.item_codes) &&
                     this.barcode === true &&
                     this.input_item
@@ -4914,7 +4876,7 @@ export default {
                         "[SCAN] Escaneados después:",
                         orden.food.item.item_codes_scanned
                     );
-                }
+                } */
 
                 if (this.configuration.divided_items) {
                     if (this.divided_items) {
@@ -4983,7 +4945,7 @@ export default {
                             }
                         }
                         // Unificar lógica de escaneo de códigos de barras
-                        if (
+                        /* if (
                             Array.isArray(orden?.food?.item?.item_codes) &&
                             this.barcode === true &&
                             this.input_item
@@ -5112,7 +5074,7 @@ export default {
                                     realItem.item_codes_scanned
                                 );
                             }
-                        }
+                        } */
 
                         // orden.quantity = Number(type.quantity_unit);
                         orden.quantity = orden.food.item.series_enabled
