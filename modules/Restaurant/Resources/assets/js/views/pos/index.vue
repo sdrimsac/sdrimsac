@@ -4003,15 +4003,20 @@ export default {
             this.form.difference = 0;
             let flag = 0;
             this.form.establishment_id = this.establishment.id;
-            if (!this.form.customer_id) {
-                let varios = this.all_customers.filter(a =>
-                    a.name.toLowerCase().includes("varios")
+            // Si no hay cliente válido, usar el cliente por defecto del establecimiento
+            if (
+                !this.form.customer_id ||
+                !this.all_customers?.some(c => c.id === this.form.customer_id)
+            ) {
+                const varios = this.all_customers?.find(a =>
+                    a.name?.toLowerCase()?.includes("varios")
                 );
-                if (varios.length == 0) {
-                    this.form.customer_id = this.all_customers[0].id;
-                } else {
-                    this.form.customer_id = varios[0].id;
-                }
+                this.form.customer_id =
+                    (this.customer_default && this.customer_default.id) ||
+                    (varios && varios.id) ||
+                    (this.all_customers && this.all_customers[0]?.id) ||
+                    null;
+
                 if (!this.form.customer_id) {
                     this.is_payment = false;
                     return this.$toast.error("Seleccione un cliente");
@@ -4473,23 +4478,27 @@ export default {
                 "Antes de asignar por defecto, customer_id:",
                 this.form.customer_id
             );
-            if (!this.form.customer_id) {
+            // Si no hay cliente válido, usar el cliente por defecto del establecimiento
+            if (
+                !this.form.customer_id ||
+                !this.all_customers?.some(c => c.id === this.form.customer_id)
+            ) {
                 console.log(
-                    "No tiene customer_id, se asignará por defecto",
+                    "No tiene customer_id válido, se asignará por defecto",
                     this.form.customer_id
                 );
-                let varios = this.all_customers.filter(a =>
-                    a.name.toLowerCase().includes("varios")
+                const varios = this.all_customers?.find(a =>
+                    a.name?.toLowerCase()?.includes("varios")
                 );
-                if (varios.length == 0) {
-                    this.form.customer_id = this.all_customers[0].id;
-                } else {
-                    this.form.customer_id = varios[0].id;
-                    console.log(
-                        "Se asignó customer_id por defecto:",
-                        this.form.customer_id
-                    );
-                }
+                this.form.customer_id =
+                    (this.customer_default && this.customer_default.id) ||
+                    (varios && varios.id) ||
+                    (this.all_customers && this.all_customers[0]?.id) ||
+                    null;
+                console.log(
+                    "Customer asignado por defecto:",
+                    this.form.customer_id
+                );
                 if (!this.form.customer_id) {
                     this.is_payment = false;
                     return this.$toast.error("Seleccione un cliente");
@@ -4499,43 +4508,40 @@ export default {
                     "Pasando al else para ver el customer_id, 76236t5477456:",
                     this.form.customer_id
                 );
-                if (variationItem.length > 0) {
-                    console.log("Hay variaciones, se cambiará el customer_id");
-                    let tmpchange = this.formVariation;
-                    let tmpchange2 = this.form;
+            }
 
-                    this.form = tmpchange;
-                    this.formVariation = tmpchange2;
-                    this.form.variation = true;
-                }
-                if (this.variation) {
-                    this.isNoteIsDefault();
-                }
-                this.form.currency_type_id =
-                    this.currencyIdChoice == "S/" ||
-                    this.currencyIdChoice == undefined ||
-                    this.currencyIdChoice == "PEN"
-                        ? "PEN"
-                        : "USD";
-                console.log(
-                    "this.form.customer_id ::::",
-                    this.form.customer_id
-                );
+            // A partir de aquí se finaliza el flujo para ambos casos (con cliente válido o asignado por defecto)
+            if (variationItem.length > 0) {
+                console.log("Hay variaciones, se cambiará el customer_id");
+                let tmpchange = this.formVariation;
+                let tmpchange2 = this.form;
 
-                /* console.log("this.currencyIdChoice ::::", JSON.stringify(this.currencyIdChoice)); */
-                this.is_payment = true;
+                this.form = tmpchange;
+                this.formVariation = tmpchange2;
+                this.form.variation = true;
+            }
+            if (this.variation) {
+                this.isNoteIsDefault();
+            }
+            this.form.currency_type_id =
+                this.currencyIdChoice == "S/" ||
+                this.currencyIdChoice == undefined ||
+                this.currencyIdChoice == "PEN"
+                    ? "PEN"
+                    : "USD";
+            console.log("this.form.customer_id ::::", this.form.customer_id);
+            this.is_payment = true;
 
-                if (this.form.is_room && this.form.promotion_sale) {
-                    await this.$nextTick();
+            if (this.form.is_room && this.form.promotion_sale) {
+                await this.$nextTick();
 
-                    setTimeout(() => {
-                        if (this.$refs.paymentComponent) {
-                            this.$refs.paymentComponent.$emit("auto-payment");
-                        } else {
-                            console.warn("Componente de pago no encontrado");
-                        }
-                    }, 500);
-                }
+                setTimeout(() => {
+                    if (this.$refs.paymentComponent) {
+                        this.$refs.paymentComponent.$emit("auto-payment");
+                    } else {
+                        console.warn("Componente de pago no encontrado");
+                    }
+                }, 500);
             }
         },
         formatVariation(i) {
@@ -6235,8 +6241,23 @@ export default {
             if (this.ordens[0].food.price == 0 && this.selectOption == 2) {
                 return this.$toast.error("Ingrese el Precio por consumo");
             }
-            if (!this.form.customer_id)
-                return this.$toast.error("Seleccione un cliente");
+            // Si no hay cliente válido, usar el cliente por defecto del establecimiento
+            if (
+                !this.form.customer_id ||
+                !this.all_customers?.some(c => c.id === this.form.customer_id)
+            ) {
+                const varios = this.all_customers?.find(a =>
+                    a.name?.toLowerCase()?.includes("varios")
+                );
+                this.form.customer_id =
+                    (this.customer_default && this.customer_default.id) ||
+                    (varios && varios.id) ||
+                    (this.all_customers && this.all_customers[0]?.id) ||
+                    null;
+                if (!this.form.customer_id) {
+                    return this.$toast.error("Seleccione un cliente");
+                }
+            }
             this.form.establishment_id = this.establishment.id;
             this.form.currency_type_id =
                 this.currency_id == "S/" ? "PEN" : "USD";

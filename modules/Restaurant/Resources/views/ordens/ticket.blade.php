@@ -418,7 +418,7 @@
                 @if (!$to_kitchen)
                     @if (!$configuration->nane_comand)
                         <tr>
-                            <td colspan="4" class="header_title text-center encabezado" valign="top">
+                            <td colspan="4" class="header_title text-center encabezado" valign="top" style="color: #fff;">
                                 <strong>COMANDA</strong>
                             </td>
                         </tr>
@@ -590,11 +590,12 @@
                         @endforeach
                         <tr>
                             <th class="encabezado description_preparacion" colspan="3"
-                                style="text-align: right; color: #fdfdfd !important;">
+                                style="text-align: right; color: #fdfdfd !important; font-size: 20px !important;">
                                 Total S/
                             </th>
-                            <th class="encabezado description_preparacion" style="color: #fdfdfd !important;">
-                                {{ number_format($total, 2) }}</th>
+                            <th class="encabezado description_preparacion" style="color: #fdfdfd !important; font-size: 20px !important;">
+                                {{ number_format($total, 2) }}
+                            </th>
                         </tr>
                         {{-- @if ($establishment->image_yape)
                             <tr>
