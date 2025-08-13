@@ -1272,11 +1272,11 @@ class OrdenController extends Controller
                     $order_start_id = $cash_order_session->order_start_id;
 
                     if ($order_start_id !== null) {
-                       
+
                         $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
                     } else {
-                       
-                        $correlative = Orden::count() + 1; 
+
+                        $correlative = Orden::count() + 1;
                     }
 
                     $orden->correlative = $correlative;
@@ -1480,12 +1480,37 @@ class OrdenController extends Controller
 
                     if ($area_found->printer || $area_found->search_print == 1) {
                         // Si el área es Cocina, se envía a Cocina y también en el area menaje
-                        if (in_array($area_found->description, ['COCINA', 'BARRA'])) {
+                        // agregar una condicion para el area de barra para que tambien salga en area menaje si menaje_barra = true 
+
+                        /*if (in_array($area_found->description, ['COCINA',])) {
+
                             $menaje_id = $this->getMenaje();
 
                             dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
 
                             if ($menaje_id != null || $area_found->search_print == 1) {
+                                $area_id = $menaje_id;
+                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            }
+                        } else {
+                            // Imprimir en el área actual
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                        }*/
+
+                        if (
+                            in_array($area_found->description, ['COCINA']) ||
+                            (
+                                $this->$configuration->menaje_barra === true &&
+                                in_array($area_found->description, ['BARRA'])
+                            )
+                        ) {
+                            $menaje_id = $this->getMenaje();
+
+                            // Imprime en el área original
+                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+
+                            // Si hay menaje o el área busca impresión
+                            if ($menaje_id !== null || $area_found->search_print == 1) {
                                 $area_id = $menaje_id;
                                 dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
                             }
