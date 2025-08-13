@@ -340,9 +340,10 @@ class OrdenController extends Controller
                 $mozo_name = $mozo->name;
             }
         }
+        $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
 
         try {
-            $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
+            $pdf = PDF::loadView($view, compact(
                 'two_or_more',
                 'is_restaurant',
                 'precuenta',
@@ -486,10 +487,11 @@ class OrdenController extends Controller
             $height = $height + $orden_item_length;
         }
 
-        // 
+     // aqui usar dinamicamenete entre el ticket o el ticketnew segun la configuracion
+     $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
 
         try {
-            $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
+            $pdf = PDF::loadView($view, compact(
                 'is_restaurant',
                 'configuration',
                 'area_desc',

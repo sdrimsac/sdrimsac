@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'printing_comanda',
         'menaje_barra',
         'delivery_caja',
         'delivery_cocina',
@@ -341,6 +342,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'printing_comanda' => 'boolean',
         'menaje_barra' => 'boolean',
         'delivery_caja' => 'boolean',
         'delivery_cocina' => 'boolean',
@@ -625,6 +627,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'printing_comanda' => (bool)$this->printing_comanda,
             'menaje_barra' => (bool)$this->menaje_barra,
             'delivery_caja' => (bool)$this->delivery_caja,
             'delivery_cocina' => (bool)$this->delivery_cocina,
