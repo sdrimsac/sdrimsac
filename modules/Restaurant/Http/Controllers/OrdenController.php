@@ -1500,7 +1500,7 @@ class OrdenController extends Controller
                         if (
                             in_array($area_found->description, ['COCINA']) ||
                             (
-                                $this->$configuration->menaje_barra === true &&
+                                $configuration['menaje_barra'] &&
                                 in_array($area_found->description, ['BARRA'])
                             )
                         ) {
