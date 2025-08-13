@@ -2663,6 +2663,12 @@ export default {
     async created() {
         this.iniciarMedicionLatencia();
 
+        /* await this.$http.get(`/companies/record`).then(response => {
+            if (response.data !== "") {
+                this.company = response.data.data;
+            }
+        }); */
+
         console.log("this.establishments", this.establishments);
         this.area_id = this.worker.area_id;
         this.getExchange();
@@ -3880,8 +3886,7 @@ export default {
                     name +
                     "por " +
                     total +
-                    " de *" +
-                    this.establishments.description +
+                    " de *" + this.establishment.description +
                     "*, ha sido generado correctamente a través del facturador electrónico de " +
                     "*" +
                     this.$desarrollador +

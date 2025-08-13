@@ -224,7 +224,7 @@ export default {
                         "Su comprobante de pago electrónico " +
                         this.form.number +
                         " de *" +
-                        this.company.name +
+                        this.company.trade_name +
                         "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
                 };
                 try {

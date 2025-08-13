@@ -512,6 +512,7 @@ class WhatsappController extends Controller
 
     public function sendwhatsapp(Request $request)
     {
+        dump($request->all());
         $website = $this->getTenantWebsite();
         // $message,
         // $website_id,

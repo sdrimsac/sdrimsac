@@ -3786,7 +3786,7 @@ export default {
                         " por S/" +
                         this.form.total +
                         " de *" +
-                        this.establishments.description +
+                        this.company.trade_name +
                         "*, ha sido generado correctamente a través del facturador electrónico de " +
                         "*" +
                         this.$desarrollador +

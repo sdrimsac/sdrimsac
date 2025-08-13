@@ -46,7 +46,7 @@
                     </button>
                     <!-- Recibir Mercaderia -->
                     <button
-                        v-if="configuration.receive_merchandise && !isSeller"
+                        v-if="configuration.receive_merchandise && !isSeller && configuration.translate_direct === false"
                         class="btn btn-primary pos-btn mb-2"
                         type="button"
                         @click="trigerFunction(2)"

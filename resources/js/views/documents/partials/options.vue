@@ -318,8 +318,8 @@ export default {
                         this.form.number +
                         " por S/" +
                         this.form.total +
-                        " de *" +
-                        this.form.establishment_description +
+                        " de *" + this.company.trade_name +
+                        /* this.form.establishment_description + */
                         "*, ha sido generado correctamente a través del facturador electrónico de " +
                         "*" +
                         this.$desarrollador +

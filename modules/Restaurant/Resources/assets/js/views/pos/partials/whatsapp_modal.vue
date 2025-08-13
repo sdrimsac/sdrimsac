@@ -131,9 +131,7 @@ export default {
           "Su comprobante de pago electrónico " +
           this.documentNumber +
           " de *" +
-          (this.establishment
-            ? this.establishment.description
-            : this.company.name) +
+           this.company.trade_name +
           "*, ha sido generado correctamente a través del facturador electrónico de *" +
           this.$desarrollador +
           "*"
