@@ -3886,7 +3886,8 @@ export default {
                     name +
                     "por " +
                     total +
-                    " de *" + this.establishment.description +
+                    " de *" +
+                    this.establishment.description +
                     "*, ha sido generado correctamente a través del facturador electrónico de " +
                     "*" +
                     this.$desarrollador +
@@ -4777,7 +4778,6 @@ export default {
                     }
                 }
 
-
                 // LOGS para depuración de códigos
                 console.log("[SCAN] input_item:", this.input_item);
                 /* console.log(
@@ -5613,7 +5613,10 @@ export default {
             }
 
             // Limpia las órdenes si la mesa seleccionada no tiene órdenes
-            if (!this.tableSelect.ordens || this.tableSelect.ordens.length === 0) {
+            if (
+                !this.tableSelect.ordens ||
+                this.tableSelect.ordens.length === 0
+            ) {
                 console.log("No hay órdenes para esta mesa");
                 this.ordensItems = [];
             }

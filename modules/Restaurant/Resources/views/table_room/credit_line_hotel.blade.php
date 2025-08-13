@@ -321,6 +321,22 @@
             </table>
         </div>
 
+        {{-- Mensaje final si no hay datos --}}
+        @php
+            $sinDatos = empty($record) || (
+                empty($record->room)
+                && empty($record->customer_name)
+                && empty($record->customer_number)
+                && (empty($record->credit_line) && $record->credit_line !== '0' && $record->credit_line !== 0)
+                && empty($record->user_name)
+            );
+        @endphp
+        @if ($sinDatos)
+            <div class="text-center small" style="margin-top:10px;color:#666;">
+                <em>Sin datos</em>
+            </div>
+        @endif
+
     </div>
 
 </body>

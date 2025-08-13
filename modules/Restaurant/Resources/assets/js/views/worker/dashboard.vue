@@ -97,7 +97,7 @@
                                 slot="prefix"
                                 class="el-input__icon el-icon-search"
                             ></i>
-                            <el-button
+                            <!-- <el-button
                                 :class="
                                     optionsSelected == 0
                                         ? 'bg-secondary text-white'
@@ -116,7 +116,7 @@
                                 slot="append"
                                 icon="el-icon-s-order"
                                 @click="selectSearch(1)"
-                            ></el-button>
+                            ></el-button> -->
                         </el-input>
                     </div>
                 </div>

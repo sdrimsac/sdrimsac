@@ -42,9 +42,7 @@ Route::prefix('caja')->group(function () {
     //Route::get('documents', 'OrdenController@printTicket');
 
     Route::post('/override-session', [RestaurantController::class, 'window']);
-
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
-    //Route::post('/re-print/delivery', [RestaurantController::class, 'Delivery']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
     Route::get('sale-notes', [SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');

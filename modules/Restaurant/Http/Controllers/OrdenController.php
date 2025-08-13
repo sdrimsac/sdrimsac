@@ -340,7 +340,7 @@ class OrdenController extends Controller
                 $mozo_name = $mozo->name;
             }
         }
-        
+
         $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
 
         try {
@@ -488,8 +488,8 @@ class OrdenController extends Controller
             $height = $height + $orden_item_length;
         }
 
-     // aqui usar dinamicamenete entre el ticket o el ticketnew segun la configuracion
-     $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
+        // aqui usar dinamicamenete entre el ticket o el ticketnew segun la configuracion
+        $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
 
         try {
             $pdf = PDF::loadView($view, compact(
@@ -1311,9 +1311,15 @@ class OrdenController extends Controller
 
                 $data = $request->orden;
 
-                $table = Table::find($data['table_id']);
+                //$table = Table::find($data['table_id']) ?? null;
+                if (is_array($data) && isset($data['table_id'])) {
+                    $table = Table::find($data['table_id']);
+                } else {
+                    $table = null;
+                }
 
-                if ($table && $table->is_delivery) {
+
+                if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $delivery = Delivery::where('orden_id', $orden->id)->first();
                     $deliveryData = [
                         'customer_id' => $data['customer_id'],
@@ -1341,7 +1347,7 @@ class OrdenController extends Controller
                     }
                 }
 
-                if ($table && $table->is_delivery) {
+                if ($table && $table->is_delivery && $configuration->restaurant_delivery) {
                     $exists = CustomerAddresses::where('customer_id', $data['customer_id'])
                         ->where('address', $data['delivery_address'] ?? '')
                         ->where('reference', $data['reference'] ?? '')

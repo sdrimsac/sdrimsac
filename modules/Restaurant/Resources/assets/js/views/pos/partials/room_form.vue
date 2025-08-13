@@ -248,7 +248,7 @@
                                         <el-checkbox
                                             @change="changeMonthRent(room)"
                                             v-model="room.is_month_rent"
-                                            :disabled="!form.customer_id"
+                                            :disabled="!form.customer_id || room.is_reserve"
                                             label="Mensual"
                                         >
                                             <span
@@ -264,7 +264,7 @@
                                             v-if="!isReserve"
                                             @change="verifyIsReserve(room)"
                                             v-model="room.is_reserve"
-                                            :disabled="!form.customer_id"
+                                            :disabled="!form.customer_id || room.is_month_rent"
                                             label="Reserva"
                                         >
                                             <span
@@ -890,7 +890,9 @@ export default {
         },
         async changeMonthRent(room) {
             let { is_month_rent } = room;
-            if (is_month_rent) {
+            // Si se marca mensual, desactiva reserva para esta habitación
+            if (is_month_rent && room.is_reserve) {
+                room.is_reserve = false;
             }
             await this.checkDateReserve(room);
             this.calculateTotal();
@@ -947,6 +949,10 @@ export default {
         },
         async verifyIsReserve(room) {
             if (room.is_reserve) {
+                // Si se marca reserva, desactiva mensual para esta habitación
+                if (room.is_month_rent) {
+                    room.is_month_rent = false;
+                }
                 this.textLoading = "Verificando reserva...";
                 await this.checkDateReserve(room);
             }
@@ -1295,6 +1301,16 @@ export default {
 
             for (let idx in rooms) {
                 let room = rooms[idx];
+
+                // Validación: no permitir que ambos flags estén activos
+                if (room.is_month_rent && room.is_reserve) {
+                    this.$showSAlert(
+                        "ALERTA",
+                        `Habitación N° ${parseInt(idx) + 1}: seleccione solo "Mensual" o "Reserva", no ambos`,
+                        "warning"
+                    );
+                    pass = false;
+                }
 
                 if (
                     room.is_reserve &&

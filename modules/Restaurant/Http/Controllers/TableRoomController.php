@@ -486,8 +486,9 @@ class TableRoomController extends Controller
     }
     public function print_warranty($id)
     {
-        $room = null;
+
         $hotel_rent_item = HotelRentItem::findOrFail($id);
+        $room = null;
         $record = new \stdClass();
         $hotel_rent = $hotel_rent_item->hotel_rent;
         $customer_name = $hotel_rent->customer->name;
@@ -511,13 +512,16 @@ class TableRoomController extends Controller
                 'record',
                 'company'
             ))
-                ->setPaper(array(0, 0, 226.77, $height));
+                ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
+        //$pdfPath = storage_path('app/test_warranty.pdf');
+        //$pdf->save($pdfPath);
 
         return $pdf->stream('pdf_credit_line.pdf');
     }
+
     public function print_service($id)
     {
         $record = HotelRentItemServices::findOrFail($id);
@@ -932,7 +936,10 @@ class TableRoomController extends Controller
     {
         $hotel_rent_item = HotelRentItem::find($id);
         $table = $hotel_rent_item->table;
+        $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
+        $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
         $table->status_table_id = 5;
+
         $table->sendMessageDesocupied();
         $table->save();
         if ($hotel_rent_item && $hotel_rent_item->is_month_rent) {
@@ -941,6 +948,7 @@ class TableRoomController extends Controller
             $hotel_rent_item->payment_status = "Pagado";
             $hotel_rent_item->save();
         }
+        $hotel_rent_item->save();
         $table->save();
         return [
             'success' => true,
@@ -1081,7 +1089,6 @@ class TableRoomController extends Controller
             'penalties' => $hotel_rent_penalties
         ];
     }
-
 
     public  function getInfractionsDebt($id)
     {
@@ -1572,24 +1579,6 @@ class TableRoomController extends Controller
             'checkout_time_estimated' => $checkout_time_estimated,
         ];
     }
-    /* public function delete_hotel_rent($id)
-    {
-        $hotel_rent = HotelRent::findOrFail($id);
-        $hotel_rent->items->each(function ($item) {
-            $item->services->each(function ($service) {
-                $service->delete();
-            });
-            $item->table->status_table_id = 1;
-            $item->table->save();
-
-            $item->delete();
-        });
-        $hotel_rent->delete();
-        return [
-            'success' => true,
-            'message' => 'Registro eliminado con éxito'
-        ];
-    } */
     public function delete_hotel_rent($id)
     {
         $hotel_rent = HotelRent::findOrFail($id);
@@ -1806,12 +1795,21 @@ class TableRoomController extends Controller
                     $hotel_rent_item_person->person_id = $guess['id'];
                     $hotel_rent_item_person->save();
                 }
-                if ($hotel_rent_item->credit_line > 0) {
-                    /* $this->print_warranty($hotel_rent_item->id); */
-                    event(new PrintEvent($hotel_rent_item->id, "CL", true));
-                }
+                //if ($hotel_rent_item->credit_line > 0) {
+                // Esperar 500ms antes de lanzar el evento
+                //   usleep(500000); // 500,000 microsegundos = 500ms
+                //   event(new PrintEvent($hotel_rent_item->id, "CL", true));
+                //}
             }
             DB::connection('tenant')->commit();
+
+            /*if ($hotel_rent_item->credit_line > 0) {
+                event(new PrintEvent($hotel_rent_item->id, "CL", true));
+            }*/
+
+            if ($hotel_rent_item->credit_line > 0) {
+                event(new PrintEvent($hotel_rent_item->id, "CL", true));
+            }
 
             return [
                 'success' => true,
@@ -1869,6 +1867,9 @@ class TableRoomController extends Controller
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent = $hotel_rent_item->hotel_rent;
 
+        $hotel_rent_item->checkout_date = date('Y-m-d');  // Fecha actual
+        $hotel_rent_item->checkout_time = date('H:i:s');
+
         $hotel_rent_item->was_cancel = true;
         $hotel_rent_item->save();
 
@@ -1925,7 +1926,7 @@ class TableRoomController extends Controller
 
             InventoryKardex::create([
                 'date_of_issue' => date('Y-m-d'),
-                'item_id' => $item_id, // Usar aquí el item_id correcto
+                'item_id' => $item_id,
                 'quantity' => $insumo->quantity,
                 'warehouse_id' => $warehouse_id,
                 'type' => 'input',
@@ -1935,30 +1936,6 @@ class TableRoomController extends Controller
                 'user_id' => auth()->user()->id,
             ]);
         }
-
-        /* foreach ($insumos as $insumo) {
-
-            $item_warehouse = ItemWarehouse::where('item_id', $insumo->insumos_hotel_id)
-                ->where('warehouse_id', $warehouse_id)
-                ->first();
-
-            if ($item_warehouse) {
-                $item_warehouse->stock += $insumo->quantity; 
-                $item_warehouse->save();
-            }
-
-            InventoryKardex::create([
-                'date_of_issue' => date('Y-m-d'),
-                'item_id' => $insumo->insumos_hotel_id,
-                'quantity' => $insumo->quantity,
-                'warehouse_id' => $warehouse_id,
-                'type' => 'input',
-                'description' => 'Entrada por cancelación de habitación',
-                'inventory_kardexable_id' => $hotel_rent_item->id,
-                'inventory_kardexable_type' => 'App\Models\Tenant\HotelRentItem',
-                'user_id' => auth()->user()->id,
-            ]);
-        } */
 
         return [
             'success' => true,
