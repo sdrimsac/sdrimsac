@@ -340,6 +340,7 @@ class OrdenController extends Controller
                 $mozo_name = $mozo->name;
             }
         }
+        
         $view = $configuration->printing_comanda ? 'restaurant::ordens.ticketnew' : 'restaurant::ordens.ticket';
 
         try {

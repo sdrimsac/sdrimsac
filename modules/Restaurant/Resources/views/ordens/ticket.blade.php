@@ -1087,7 +1087,7 @@
     @else
         {{-- Optional: Handle the case where none of the conditions are true --}}
         <div>
-            <p>No configuration is enabled.</p>
+            <p>Debe activar una de las tres opciones de comandas para que pueda imprimir el contenido.</p>
         </div>
     @endif
 
