@@ -1825,7 +1825,7 @@
                                                                                     .food
                                                                                     .item
                                                                                     .is_set &&
-                                                                                    !configuration.item_set_quantity_pos) ||
+                                                                                    configuration.item_set_quantity_pos) ||
                                                                                     isConsignment ||
                                                                                     !configuration.quantity_cash ||
                                                                                     order_pend
@@ -4828,7 +4828,7 @@ export default {
                 }
 
                 // Validate quantity against stock
-                if (qty > stock) {
+                /* if (qty > stock) {
                     this.$toast.warning(
                         `La cantidad excede el stock disponible (${stock})`
                     );
@@ -4843,7 +4843,7 @@ export default {
                         }
                     }
                     return;
-                }
+                } */
 
                 // Update lot quantity if single lot
                 if (current_orden.length == 1) {

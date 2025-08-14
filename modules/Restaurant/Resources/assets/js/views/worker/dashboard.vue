@@ -30,7 +30,7 @@
 
                                 <el-button
                                     v-if="
-                                        configuration.created_items &&
+                                        configuration.chifa_china &&
                                             show == 'create' &&
                                             currentTable
                                     "

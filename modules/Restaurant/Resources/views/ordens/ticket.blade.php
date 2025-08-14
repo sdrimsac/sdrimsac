@@ -496,11 +496,11 @@
                     <td colspan="1" class="cell_number encabezado header_title2" style="color: #fdfdfd !important;">
                         <strong>#</strong>
                     </td>
-                    @if (count($to_carry) != 0)
+                    {{-- @if (count($to_carry) != 0)
                         <td colspan="3" class="encabezado  text-center header_title2" style="color: #fdfdfd !important;">
                             <strong>PARA LLEVAR</strong>
                         </td>
-                    @endif
+                    @endif --}}
                     @if ($to_kitchen)
                         <td class="encabezado header_title2 text-center" style="color: #fdfdfd !important;">
                             <strong>PRODUCTO</strong>
@@ -597,14 +597,6 @@
                                 {{ number_format($total, 2) }}
                             </th>
                         </tr>
-                        {{-- @if ($establishment->image_yape)
-                            <tr>
-                                <td colspan="4" class="text-center">
-                                    <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
-                                        alt="payment-logo" style="max-width: 200px; height: auto;" />
-                                </td>
-                            </tr>
-                        @endif --}}
                         @if ($establishment && $establishment->image_yape)
                             <tr>
                                 <td colspan="4" class="text-center">
@@ -683,9 +675,9 @@
                             @endif
                         @endforeach
                         @if (count($to_carry) != 0)
-                            {{-- <tr class="para-llevar-header">
+                            <tr class="para-llevar-header">
                                 <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
-                            </tr> --}}
+                            </tr>
                             @foreach ($to_carry as $row_carry)
                                 <tr>
                                     <td class="celda_center header_title2">{{ $row_carry->quantity }}</td>

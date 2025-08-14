@@ -1228,33 +1228,7 @@ class OrdenController extends Controller
                 $orden->to_carry = $request->to_carry;
                 $orden->commands_fisico = $request->commands_fisico;
 
-                //obtner el al usuaruio auth()->id() y asignar el establecimiento_id
-
                 $establishment_id = auth()->user()->establishment_id;
-                /* if ($configuration->restaurant) {
-                    $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
-                        ->where('state', 1) // Solo sesiones abiertas
-                        ->where('establishment_id', $establishment_id)
-                        ->latest('id')
-                        ->first();
-
-                    // Si no hay caja abierta, no permitir crear la orden
-                    if (!$cash_order_session) {
-                        return [
-                            'success' => false,
-                            'message' => 'No hay caja abierta para este establecimiento (state=0: caja cerrada). Debe abrir caja antes de registrar órdenes.'
-                        ];
-                    }
-
-                    if ($cash_order_session) {
-                        $order_start_id = $cash_order_session->order_start_id;
-                        // Contar las órdenes creadas después de order_start_id
-                        $correlative = Orden::where('id', '>', $order_start_id)->count() + 1;
-                        $orden->correlative = $correlative;
-                    } else {
-                        $orden->correlative = 1;
-                    }
-                } */
 
                 if ($configuration->restaurant) {
                     $cash_order_session = DB::connection('tenant')->table('cash_order_sessions')
@@ -1444,41 +1418,6 @@ class OrdenController extends Controller
             $print_kitchen = $configuration->print_kitchen;
             $conopy_kitchen = $configuration->conopy_kitchen;
 
-            /* if ($conopy_kitchen) {
-                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                foreach ($ids_areas as $area_id) {
-                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                        return $area_id == $a['area_id'];
-                    }), "orden_id");
-                    $area_found = Area::find($area_id);
-                    if ($area_found->printer || $area_found->search_print == 1) {
-                        // Print to kitchen and box area
-                        if ($area_found->description == 'COCINA') {
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $filtered, null, null, null, $user_id, url('')));
-                        } else {
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                        }
-                    }
-                }
-            } else {
-                if ($print_kitchen) {
-                    $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                    foreach ($ids_areas as $area_id) {
-                        $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                            return $area_id == $a['area_id'];
-                        }), "orden_id");
-                        $area_found = Area::find($area_id);
-                        if ($area_found->printer || $area_found->search_print == 1) {
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                        }
-                    }
-                }
-                //if ($print_box) {
-                //    dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
-                //}
-            } */
-
             if ($conopy_kitchen) {
                 $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
                 foreach ($ids_areas as $area_id) {
@@ -1488,23 +1427,6 @@ class OrdenController extends Controller
                     $area_found = Area::find($area_id);
 
                     if ($area_found->printer || $area_found->search_print == 1) {
-                        // Si el área es Cocina, se envía a Cocina y también en el area menaje
-                        // agregar una condicion para el area de barra para que tambien salga en area menaje si menaje_barra = true 
-
-                        /*if (in_array($area_found->description, ['COCINA',])) {
-
-                            $menaje_id = $this->getMenaje();
-
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-
-                            if ($menaje_id != null || $area_found->search_print == 1) {
-                                $area_id = $menaje_id;
-                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                            }
-                        } else {
-                            // Imprimir en el área actual
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                        }*/
 
                         if (
                             in_array($area_found->description, ['COCINA']) ||
@@ -1537,9 +1459,6 @@ class OrdenController extends Controller
                             return $area_id == $a['area_id'];
                         }), "orden_id");
                         $area_found = Area::find($area_id);
-                        /* if ($area_found->printer || $area_found->search_print == 1) {
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                        } */
                         if ($area_found) {
                             $copies = $area_found->copies ?? 0;
                             $total_copies = $copies + 1;
@@ -1553,21 +1472,13 @@ class OrdenController extends Controller
                         }
                     }
                 }
-                /* if ($print_box) {
-                    dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
-                } */
             }
 
             $isFromBox = $this->isArea("CAJ", $user->area_id);
 
             if ($print_box) {
                 dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
-
-                // event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }
-            // if ($isFromBox == false && $print_box) {
-            //     event(new PrintEvent($orden->id, "0", true, $user->area_id, $orden_items_ids));
-            // }
             if ($request->appointment_id) {
                 $appointment = UserScheduleAppointment::find($request->appointment_id);
                 $appointment->orden_id = $orden->id;

@@ -301,7 +301,7 @@ import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
 import ItemsTables from "./items_tables.vue";
-import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
+import DataTable from "../../../../../../../resources/js/components/DataTableZone.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 import ConfigHotels from "./config.vue";
@@ -444,10 +444,10 @@ export default {
             //}
         },
         async getTables() {
-            this.$http.get(`/caja/tables/tables-zone`).then(response => {
+            /* this.$http.get(`/caja/tables/tables-zone`).then(response => {
                 let { zones } = response.data;
                 this.zones = zones;
-            });
+            }); */
             this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {

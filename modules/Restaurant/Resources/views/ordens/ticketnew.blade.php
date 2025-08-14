@@ -245,7 +245,7 @@
     .para-llevar-header {
         background-color: #f70b0b !important;
         /* Fondo negro puro */
-        color: #fdfdfd !important;
+        color: #050000 !important;
         /* Texto blanco para contraste */
         font-weight: bold;
         -webkit-print-color-adjust: exact !important;
@@ -496,11 +496,11 @@
                     <td colspan="1" class="cell_number encabezado header_title2">
                         <strong>#</strong>
                     </td>
-                    @if (count($to_carry) != 0)
+                    {{-- @if (count($to_carry) != 0)
                         <td colspan="3" class="encabezado  text-center header_title2">
                             <strong>PARA LLEVAR</strong>
                         </td>
-                    @endif
+                    @endif --}}
                     @if ($to_kitchen)
                         <td class="encabezado header_title2 text-center">
                             <strong>PRODUCTO</strong>
@@ -683,9 +683,9 @@
                             @endif
                         @endforeach
                         @if (count($to_carry) != 0)
-                            {{-- <tr class="para-llevar-header">
+                            <tr class="para-llevar-header">
                                 <th class="encabezado text-center header_title2" colspan="4">Para llevar </th>
-                            </tr> --}}
+                            </tr>
                             @foreach ($to_carry as $row_carry)
                                 <tr>
                                     <td class="celda_center header_title2">{{ $row_carry->quantity }}</td>
