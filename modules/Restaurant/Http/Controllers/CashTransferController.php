@@ -12,6 +12,7 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\CashTransfer;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
