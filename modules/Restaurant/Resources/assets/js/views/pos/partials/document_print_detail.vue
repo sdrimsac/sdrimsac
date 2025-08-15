@@ -923,7 +923,7 @@
                         </td>
                         <td v-if="type != 'guides'">
                             {{ data.currency_type_id === "USD" ? "$" : "S/." }}
-                            {{ data.total }}
+                            {{ Number(data.total).toFixed(2) }}
                         </td>
                     </tr>
                 </tbody>

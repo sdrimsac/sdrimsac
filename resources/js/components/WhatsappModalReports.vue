@@ -35,21 +35,32 @@ export default {
         return {
             loading: false,
             number: null,
-            configuration: {}
+            configuration: {},
+            // Safe defaults to avoid undefined access
+            sender: "sdrimsac",
+            socket: null
         };
     },
     async created() {
-        //this.socketWhatsappConfig();
+        // Try to initialize Socket connection when available; fallback is HTTP
+        try {
+            this.socketWhatsappConfig();
+        } catch (e) {
+            // Ignore and keep HTTP fallback
+            console.debug("Socket init skipped:", e);
+        }
         await this.getConfiguration();
     },
 
     methods: {
         async send() {
-            if (this.sender == "sdrimsac") {
+            // If no socket or explicitly using SDRIMSAC, send via HTTP
+            const canUseSocket = this.socket && this.sender && this.sender !== "sdrimsac";
+            if (!canUseSocket) {
                 await this.sendWhatsapp();
-            } else {
-                await this.sendFile();
+                return;
             }
+            await this.sendFile();
         },
         async getConfiguration() {
             try {
@@ -71,10 +82,20 @@ export default {
                 .replace("/", "")
                 .split(".")
                 .join("");
+            // If Socket.IO isn't available, keep HTTP fallback
             try {
-                this.socket = io.connect(this.$socketUrl);
+                if (typeof io !== "undefined" && this.$socketUrl) {
+                    this.socket = io.connect(this.$socketUrl);
+                } else {
+                    this.socket = null;
+                    this.sender = "sdrimsac";
+                    return; // stop wiring listeners
+                }
             } catch (e) {
                 console.log(e);
+                this.socket = null;
+                this.sender = "sdrimsac";
+                return;
             }
             this.socket.on("ready", message => {
                 this.showMessage(message);
@@ -126,6 +147,10 @@ export default {
                     isNaN(this.number)
                 ) {
                     return this.$toast.error("Ingrese un número válido");
+                }
+                // Guard: if socket not available, fallback to HTTP
+                if (!this.socket) {
+                    return await this.sendWhatsapp();
                 }
                 this.loading = true;
                 let b64 = await this.getBase64FromUrl(this.resource);

@@ -60,6 +60,7 @@ class CreditListController extends Controller
         $orden_items->orderBy('date', 'asc');
         return $orden_items;
     }
+    
     public function download(Request $request)
     {
         $company = Company::first();

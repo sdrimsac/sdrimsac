@@ -192,7 +192,7 @@ class SaleNoteController extends Controller
         $expenses = Box::whereNull('purchase_id')->where('expenses', true);
         $purchases = Box::whereNotNull('purchase_id');
         $sale_notes = SaleNote::whereIn('state_type_id', ['01', '05'])
-            ->where('status', 'A');
+            ->where('status', 'A'); /* ACEPTADO */
 
         switch ($period) {
             case 'date':
@@ -302,7 +302,7 @@ class SaleNoteController extends Controller
     }
     public function checkCustomerLine($customer_id)
     {
-        $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R', 'O'])->count();
+        $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R', 'O'])->count(); /* RECHAZADO, OBSERVADO */
         // return $sale_notes > 0;
         return [
             'success' => true,
@@ -317,7 +317,7 @@ class SaleNoteController extends Controller
         $sale_note_credit = SaleNoteCredit::where('sale_note_id', $sale_note_id)->first();
         $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
         $sale_note_credit->save();
-        $sale_note->status = 'O';
+        $sale_note->status = 'O'; /* OBSERVADO */
         $sale_note->save();
 
         return [
@@ -333,7 +333,7 @@ class SaleNoteController extends Controller
         $sale_note_credit = SaleNoteCredit::where('sale_note_id', $sale_note_id)->first();
         $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
         $sale_note_credit->save();
-        $sale_note->status = 'R';
+        $sale_note->status = 'R'; /* RECHAZADO */
         $user_name = auth()->user()->name;
         $message_base = "El crédito de la nota de venta N° " . $sale_note->series . "-" . $sale_note->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
         // (new WhatsappSendMessageProccess())->dispatch($sale_note->website_id, $message_base, $sale_note_credit->number);
@@ -2049,7 +2049,6 @@ class SaleNoteController extends Controller
 
 
                 if ($request->generate === null || $request->generate === false) {
-                    //advances
 
 
                 } else {

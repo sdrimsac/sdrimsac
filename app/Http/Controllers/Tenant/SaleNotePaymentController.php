@@ -38,8 +38,8 @@ class SaleNotePaymentController extends Controller
     public function records($sale_note_id)
     {
         $records = SaleNotePayment::where('sale_note_id', $sale_note_id)->where('payment', '>', 0)
-        
-        ->get();
+
+            ->get();
 
         return new SaleNotePaymentCollection($records);
     }
@@ -89,18 +89,18 @@ class SaleNotePaymentController extends Controller
         } else {
             $total = $sale_note->total_payment - $sale_note->advances;
         }
-        if(Payment::where('sale_note_id', $sale_note_id)->exists()){
+        if (Payment::where('sale_note_id', $sale_note_id)->exists()) {
             $total = Payment::where('sale_note_id', $sale_note_id)->sum('amount');
         }
-        
-        if($sale_note->credit_cash){
+
+        if ($sale_note->credit_cash) {
             $total = $sale_note->total;
         }
 
         $total_difference = round($total  - $total_paid, 2);
         $total_difference_document = round($total_difference + $penalties_payed, 2);
 
-    
+
         // if ($total_difference_document < 0.01) {
         //     $sale_note->paid = true;
         // }else{
@@ -274,20 +274,20 @@ class SaleNotePaymentController extends Controller
             $receipt = Receipt::where('sale_note_payment_id', $id)->first();
             $cash_id = $receipt->cash_id;
             $description_register = "EXTORNO DE PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
-            
-                /** @var  User $user */
-                $user = auth()->user();
 
-                    $cash_id = $user->get_cash_id();
-                    Box::createExpense(
-                        $amount,
-                        $payment_method_description,
-                        $description_register,
-                        $cash_id,
-                        $sale_note->id,
-                        null,
-                        $sale_note_payment->id
-                    );
+            /** @var  User $user */
+            $user = auth()->user();
+
+            $cash_id = $user->get_cash_id();
+            Box::createExpense(
+                $amount,
+                $payment_method_description,
+                $description_register,
+                $cash_id,
+                $sale_note->id,
+                null,
+                $sale_note_payment->id
+            );
 
             // Box::where('sale_note_payment_id', $id)
             // ->where('amount', $amount)
@@ -349,6 +349,16 @@ class SaleNotePaymentController extends Controller
                     $this->createReceipt($cash->id, $sale_note, $sale_note_payment_id, $payment->date_payment, $amount_payed, $num_cuota);
                 }
             }
+            // agregado para al final del ultimo pago ya marcarlo por pagado
+            $pendingPayments = Payment::where('sale_note_id', $id)
+                ->where('paid', 0)
+                ->count();
+
+            if ($pendingPayments === 0) {
+                $sale_note->paid = 1; // marcar como pagada
+                $sale_note->save();
+            }
+
             DB::connection('tenant')->commit();
             return [
                 'success' => true,
