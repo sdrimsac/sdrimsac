@@ -1881,7 +1881,7 @@
                                                                                         .food
                                                                                         .item
                                                                                         .is_set &&
-                                                                                        !configuration.item_set_quantity_pos) ==
+                                                                                        configuration.item_set_quantity_pos) ==
                                                                                         1 ||
                                                                                         isConsignment ||
                                                                                         (order_pend
@@ -4861,27 +4861,31 @@ export default {
         },
 
         validStock(orden, quantity = 1) {
+            // Si el item es un set (receta), no validar stock
+            if (orden.food.item.is_set) {
+            return false;
+            }
             if (this.configuration.quotation_stock) {
-                return false;
+            return false;
             }
             let qty = this.localOrden
-                .filter(o => o.id == orden.id)
-                .reduce((a, b) => a + Number(b.quantity), 0);
+            .filter(o => o.id == orden.id)
+            .reduce((a, b) => a + Number(b.quantity), 0);
             if (orden.type_id) {
-                qty += orden.type_quantity;
+            qty += orden.type_quantity;
             } else {
-                qty += quantity;
+            qty += quantity;
             }
             let stock = Number(orden.food.item.stock);
             let unit_type_id = orden.food.item.unit_type_id;
             if (
-                this.configuration.sales_stock == true &&
-                !this.quotation_stock &&
-                unit_type_id != "ZZ"
+            this.configuration.sales_stock == true &&
+            !this.quotation_stock &&
+            unit_type_id != "ZZ"
             ) {
-                if (qty > stock) {
-                    return true;
-                }
+            if (qty > stock) {
+                return true;
+            }
             }
             return false;
         },

@@ -16,6 +16,7 @@ use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Modules\Report\Exports\ReportCreditDailyExport;
 use Modules\Report\Exports\ReportCreditExport;
 use Modules\Report\Exports\ReportCreditTypeCashExport;
@@ -521,7 +522,12 @@ class ReportCreditController extends Controller
 
     public function records(Request $request)
     {
-        $paid = $request->paid ? ($request->paid == "1") : null;
+        //$paid = isset($request->paid) ? intval($request->paid) : null;
+    // Map paid=2 to null (show all), while keeping 0 and 1 as valid filter states
+    $rawPaid = $request->has('paid') ? (int) $request->paid : null;
+    $paid = ($rawPaid === 2) ? null : $rawPaid;
+    Log::info('Filtering records', ['paid' => $paid, 'raw_paid' => $rawPaid]);
+
         $isFromAdmin = $request->isFromAdmin;
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
@@ -559,7 +565,7 @@ class ReportCreditController extends Controller
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        if ($paid) {
+    if ($paid !== null) {
             $records = $records->where('paid', $paid);
         }
         if ($type != null) {

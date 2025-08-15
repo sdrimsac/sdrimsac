@@ -140,7 +140,8 @@
                         <el-option
                             v-for="(option, idx) in [
                                 { id: 0, description: 'Pendiente' },
-                                { id: 1, description: 'Pagado' }
+                                { id: 1, description: 'Pagado' },
+                                { id: 2, description: 'Todos' }
                             ]"
                             :key="idx"
                             :value="option.id"
