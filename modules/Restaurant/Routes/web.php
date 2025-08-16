@@ -516,6 +516,8 @@ Route::prefix('caja')->group(function () {
 
             Route::post('cancel-orden', 'OrdenController@cancelOrden');
             Route::post('cancel-orden-hotel', 'OrdenController@cancelOrdenHotel');
+            Route::post('cancel-hotel-items', 'OrdenController@cancelOrdenHotelItem');
+
             Route::post('change-orden', 'OrdenController@changeOrder');
             Route::get('destroyorden/{ordenid}', 'OrdenController@destroyorden');
 

@@ -904,7 +904,7 @@
                                                         content="Agregar más productos a este pedido"
                                                         placement="top"
                                                     >
-                                                        <button
+                                                        <!-- <button
                                                             class="btn btn-primary btn-sm mx-1"
                                                             @click="
                                                                 getOrden(
@@ -916,16 +916,16 @@
                                                                 class="fas fa-plus"
                                                             ></i>
                                                             Agregar Productos
-                                                        </button>
+                                                        </button> -->
                                                     </el-tooltip>
-                                                    <!-- <el-tooltip content="Eliminar orden" placement="top">
+                                                    <el-tooltip content="Eliminar orden" placement="top">
                                                     <button
                                                         class="btn btn-danger btn-sm mx-1"
                                                         @click="deleteOrden(orden.id)"
                                                     >
                                                         <i class="fas fa-trash"></i>
                                                     </button>
-                                                </el-tooltip> -->
+                                                </el-tooltip>
                                                 </div>
                                             </div>
                                         </template>
@@ -946,6 +946,9 @@
                                                     <th style="color: white;">
                                                         Total
                                                     </th>
+                                                    <th style="color: white;">
+                                                        Acciones
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -964,6 +967,14 @@
                                                     <td>{{ item.name }}</td>
                                                     <td>{{ item.price }}</td>
                                                     <td>{{ item.total }}</td>
+                                                    <td>
+                                                        <button
+                                                            class="btn btn-danger btn-sm mx-1"
+                                                            @click="attemptRemoveItem(orden, item.id)"
+                                                        >
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -1710,6 +1721,39 @@ export default {
         pdf(id) {
             window.open(`/caja/rooms/pdf/${id}`, "_blank");
         },
+        async attemptRemoveItem(orden, itemId) {
+            try {
+                // If only one item in this order, block item deletion and force deleting the whole order
+                const itemsCount = Array.isArray(orden.items) ? orden.items.length : 0;
+                if (itemsCount <= 1) {
+                    await this.$alert(
+                        "Esta orden tiene un solo producto. Para eliminarlo, debe eliminar la orden completa.",
+                        "Acción no permitida",
+                        { type: "warning" }
+                    );
+                    // Optionally offer to delete the entire order
+                    const confirmDeleteAll = await this.$confirm(
+                        "¿Desea eliminar toda la orden?",
+                        "Confirmación",
+                        {
+                            confirmButtonText: "Sí, eliminar",
+                            cancelButtonText: "Cancelar",
+                            type: "warning"
+                        }
+                    ).then(() => true).catch(() => false);
+
+                    if (confirmDeleteAll) {
+                        return this.deleteOrden(orden.id);
+                    }
+                    return;
+                }
+
+                // If more than 1 item, allow removing the single item
+                return this.removeItemOrd(itemId);
+            } catch (e) {
+                // Swallow UI cancel exceptions
+            }
+        },
         clickShowVariationModal() {
             this.showVariationModal = true;
         },
@@ -1745,6 +1789,40 @@ export default {
                 }
             } catch (e) {}
         },
+
+        async removeItemOrd(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de eliminar el producto de la orden?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.post(
+                    `/caja/worker/cancel-hotel-items`,
+                    { id }
+                );
+                if (response.status == 200) {
+                    this.$toast.success("Producto de la orden eliminado");
+                    console.log(
+                        "🚀 ~ file: tables_rooms.vue:1118 ~ deleteOrden ~ this.roomSeeId:",
+                        this.roomSeeId
+                    );
+                    if (this.currentRoom) {
+                        let table = this.all_tables.find(
+                            t => t.id == this.currentTable.id
+                        );
+                        this.selectTable(table);
+                    }
+                } else {
+                    this.$toast.error("Error al eliminar la orden");
+                }
+            } catch (e) {}
+        },
+
         filterByMonth() {
             this.showReserves = false;
             this.tables = this.all_tables
@@ -1946,7 +2024,7 @@ export default {
         async emitAdvances(id, paymentVariation = null) {
             const response = await this.$http(`/caja/rooms/advance/${id}`);
             const { data } = response;
-            let { items, hotel_rent_id, customer_number } = data;
+            let { items, hotel_rent_id, customer_number, advance, is_reserve } = data;
             if (paymentVariation) {
                 let { description, price } = paymentVariation;
                 let foodDefault = this.itemDefault;
@@ -1960,7 +2038,9 @@ export default {
                         is_room: true,
                         is_advance: true,
                         hotel_rent_id,
-                        customer_number
+                        customer_number,
+                        advance,
+                        is_reserve,
                     },
                     [foodDefault]
                 );
@@ -1970,7 +2050,9 @@ export default {
                     is_room: true,
                     is_advance: true,
                     hotel_rent_id,
-                    customer_number
+                    customer_number,
+                    advance,
+                    is_reserve,
                 });
             }
             this.close();

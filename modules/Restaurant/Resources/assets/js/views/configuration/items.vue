@@ -444,10 +444,10 @@ export default {
             //}
         },
         async getTables() {
-            /* this.$http.get(`/caja/tables/tables-zone`).then(response => {
+            this.$http.get(`/caja/tables/tables-zone`).then(response => {
                 let { zones } = response.data;
                 this.zones = zones;
-            }); */
+            });
             this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {

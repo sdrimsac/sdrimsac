@@ -4386,6 +4386,10 @@ export default {
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
+            this.form.advance = form.advance;
+            this.form.is_reserve = form.is_reserve;
+            console.log("advance recibido:", this.form.advance);
+            console.log("is_reserve recibido:", this.form.is_reserve);
             this.form.offert = form.offert;
             this.form.to_carry = form.to_carry;
             this.form.comercial_treatment_id = form.comercial_treatment_id;
@@ -4411,6 +4415,8 @@ export default {
                 this.form.is_advance = form.is_advance;
                 this.form.hotel_rent_id = form.hotel_rent_id;
                 this.form.hotel_customer_number = form.customer_number;
+                //this.form.advance = form.advance;
+                //this.form.is_reserve = form.is_reserve;
 
                 //this.form.caja = true;
             }

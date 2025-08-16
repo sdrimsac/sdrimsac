@@ -188,7 +188,8 @@
                                 </el-input>
                             </template>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2" 
+                        v-if="resource == 'caja/tables'">
                             <label for="">zona</label>
                             <el-select
                                 v-model="search.zone_id"

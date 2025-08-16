@@ -1418,66 +1418,75 @@ class OrdenController extends Controller
             $print_kitchen = $configuration->print_kitchen;
             $conopy_kitchen = $configuration->conopy_kitchen;
 
-            if ($conopy_kitchen) {
-                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                foreach ($ids_areas as $area_id) {
-                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                        return $area_id == $a['area_id'];
-                    }), "orden_id");
-                    $area_found = Area::find($area_id);
+            // Evitar impresión y envío a eventos de impresión si la mesa es de habitación (is_room)
+            // o si explícitamente llega is_room=true en la solicitud (top-level o dentro de orden.is_room)
+            $tableForPrint = $orden->table_id ? Table::find($orden->table_id) : null;
+            $nested_is_room = data_get($request->all(), 'orden.is_room');
+            $request_room_flag = $request->boolean('is_room')
+                || (is_bool($nested_is_room) ? $nested_is_room : filter_var($nested_is_room, FILTER_VALIDATE_BOOLEAN));
+            $skip_print_for_room = ($tableForPrint && $tableForPrint->is_room) || $request_room_flag;
 
-                    if ($area_found->printer || $area_found->search_print == 1) {
-
-                        if (
-                            in_array($area_found->description, ['COCINA']) ||
-                            (
-                                $configuration['menaje_barra'] &&
-                                in_array($area_found->description, ['BARRA'])
-                            )
-                        ) {
-                            $menaje_id = $this->getMenaje();
-
-                            // Imprime en el área original
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-
-                            // Si hay menaje o el área busca impresión
-                            if ($menaje_id !== null || $area_found->search_print == 1) {
-                                $area_id = $menaje_id;
-                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                            }
-                        } else {
-                            // Imprimir en el área actual
-                            dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                        }
-                    }
-                }
-            } else {
-                if ($print_kitchen) {
+            if (!$skip_print_for_room) {
+                if ($conopy_kitchen) {
                     $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
                     foreach ($ids_areas as $area_id) {
                         $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
                             return $area_id == $a['area_id'];
                         }), "orden_id");
                         $area_found = Area::find($area_id);
-                        if ($area_found) {
-                            $copies = $area_found->copies ?? 0;
-                            $total_copies = $copies + 1;
 
-                            if ($area_found->printer || $area_found->search_print == 1) {
-                                for ($i = 0; $i < $total_copies; $i++) {
+                        if ($area_found && ($area_found->printer || $area_found->search_print == 1)) {
+                            if (
+                                in_array($area_found->description, ['COCINA']) ||
+                                (
+                                    $configuration['menaje_barra'] &&
+                                    in_array($area_found->description, ['BARRA'])
+                                )
+                            ) {
+                                $menaje_id = $this->getMenaje();
+
+                                // Imprime en el área original
+                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+
+                                // Si hay menaje o el área busca impresión
+                                if ($menaje_id !== null || $area_found->search_print == 1) {
+                                    $area_id = $menaje_id;
                                     dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                    sleep(1);
+                                }
+                            } else {
+                                // Imprimir en el área actual
+                                dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            }
+                        }
+                    }
+                } else {
+                    if ($print_kitchen) {
+                        $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                        foreach ($ids_areas as $area_id) {
+                            $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                                return $area_id == $a['area_id'];
+                            }), "orden_id");
+                            $area_found = Area::find($area_id);
+                            if ($area_found) {
+                                $copies = $area_found->copies ?? 0;
+                                $total_copies = $copies + 1;
+
+                                if ($area_found->printer || $area_found->search_print == 1) {
+                                    for ($i = 0; $i < $total_copies; $i++) {
+                                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                                        sleep(1);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            $isFromBox = $this->isArea("CAJ", $user->area_id);
+                $isFromBox = $this->isArea("CAJ", $user->area_id);
 
-            if ($print_box) {
-                dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
+                if ($print_box) {
+                    dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
+                }
             }
             if ($request->appointment_id) {
                 $appointment = UserScheduleAppointment::find($request->appointment_id);
@@ -1643,6 +1652,22 @@ class OrdenController extends Controller
         $orden->delete();
 
         return ['success' => true, 'message' => 'Orden cancelada con éxito.'];
+    }
+
+    public function cancelOrdenHotelItem(Request $request)
+    {
+        $id = $request->id;
+
+        $item = OrdenItem::find($id);
+        $items_message = [];
+        if ($item) {
+            $items_message[] = $item->info_item();
+            $item->delete();
+            event(new OrdenCancelEvent($item->id));
+            return ['success' => true, 'message' => 'Item cancelado con éxito.'];
+        } else {
+            return ['success' => false, 'message' => 'Item no encontrado.'];
+        }
     }
 
     public function cancelOrden(Request $request)

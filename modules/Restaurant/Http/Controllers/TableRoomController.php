@@ -382,7 +382,6 @@ class TableRoomController extends Controller
             ->first();
         $promotion->dued();
 
-
         if ($promotion) {
             if ($promotion->active == false) {
                 $user = auth()->user();
@@ -1190,7 +1189,7 @@ class TableRoomController extends Controller
             'customer_number'
         );
     }
-    public  function advanceDocument($id)
+    /*public  function advanceDocument($id)
     {
         $hotel_rent = HotelRent::find($id);
         $hotel_rent_items = $hotel_rent->items->where('advances', '>', 0);
@@ -1235,7 +1234,85 @@ class TableRoomController extends Controller
             'hotel_rent_id',
             'customer_number'
         );
+    }*/
+
+    public function advanceDocument($id)
+    {
+        $hotel_rent = HotelRent::find($id);
+        $hotel_rent_items = $hotel_rent->items->where('advances', '>', 0);
+        $customer_number  = $hotel_rent->customer->number;
+        $hotel_rent_id = $id;
+        $items = collect();
+
+    // Variables extra solicitadas en la respuesta
+    $first_item = $hotel_rent_items->first();
+    $is_reserve = $first_item ? (bool) $first_item->is_reserve : false;
+    // Sumar todos los adelantos (advances) de los items relacionados
+    $advance = $hotel_rent_items->sum('advances');
+
+        foreach ($hotel_rent_items as $hotel_rent_item) {
+            $service = $this->get_item_service();
+
+            // Obtener precio real de la habitación desde la tabla tables
+            $room_price = optional($hotel_rent_item->table)->price ?? 0;
+            //Log::info("Precio real de la habitación: $room_price");
+
+            // Seteamos el precio del servicio con lo pagado como adelanto
+            $service->price = $hotel_rent_item->advances;
+
+            $word_rent = $hotel_rent_item->is_reserve == 1 ? "Reservación" : "Alquiler";
+            $word_advance = $hotel_rent_item->is_reserve == 1 ? "Adelanto de reservación" : "Adelanto";
+
+            // Comparación con precio real
+            if ($room_price > 0 && $hotel_rent_item->advances >= $room_price) {
+                $concept = "$word_rent de habitación n° " . $hotel_rent_item->table->number;
+            } else {
+                $concept = "$word_advance de habitación n° " . $hotel_rent_item->table->number;
+            }
+
+            // Si es alquiler mensual
+            if ($hotel_rent_item->is_month_rent) {
+                $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
+                $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
+
+                // Día y mes en letras
+                $day = $checkin_date->format('d');
+                $month = $this->getMonth($checkin_date->format('m'));
+
+                $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
+                $month_one_more_month = $this->getMonth(Carbon::parse($checkin_date_more_one_month)->format('m'));
+
+                // Calcular si es pago total o adelanto comparando con precio real
+                if ($room_price > 0 && $hotel_rent_item->advances >= $room_price) {
+                    $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number .
+                        " del $day de $month al $day_one_more_month de $month_one_more_month";
+                } else {
+                    $concept = "Adelanto de Alquiler de habitación n° " . $hotel_rent_item->table->number .
+                        " del $day de $month al $day_one_more_month de $month_one_more_month";
+                }
+            }
+
+            $service->description = $concept;
+            $service->item->description = $concept;
+
+            $items->push([
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => $service->price,
+            ]);
+        }
+
+        return compact(
+            'items',
+            'hotel_rent_id',
+            'customer_number',
+            'is_reserve',
+            'advance'
+        );
     }
+
     function getMonth($m)
     {
         $months = [
@@ -1872,6 +1949,12 @@ class TableRoomController extends Controller
 
         $hotel_rent_item->was_cancel = true;
         $hotel_rent_item->save();
+
+        DB::connection('tenant')
+            ->table('hotel_rent_item_services')
+            ->where('hotel_rent_item_id', $hotel_rent_item->id)
+            ->where('active', 1)
+            ->update(['active' => 0]);
 
         $table = $hotel_rent_item->table;
         $table->status_table_id = 1;

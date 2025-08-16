@@ -692,6 +692,9 @@
                                     <el-input-number
                                         v-model="service.quantity"
                                         controls-position="right"
+                                        :disabled="
+                                            room.discount_instead_services
+                                        "
                                         @input="updateServices"
                                         :min="0"
                                         :max="2"

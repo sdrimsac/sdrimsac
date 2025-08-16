@@ -1304,7 +1304,31 @@
                             </div>
 
                             <!-- Desocupar habitación -->
-                            <template v-if="form.is_room">
+                            <!-- <template
+                                v-if="
+                                    form.is_room &&
+                                        !form.is_reserve &&
+                                        (!form.advances || form.advances <= 0)
+                                "
+                            >
+                                <div class="mb-3 d-flex justify-content-end">
+                                    <div>
+                                        <label for="vacate"
+                                            >Desocupar habitación</label
+                                        >
+                                        <el-checkbox
+                                            v-model="form.vacate"
+                                        ></el-checkbox>
+                                    </div>
+                                </div>
+                            </template> -->
+                            <template
+                                v-if="
+                                    form.is_room &&
+                                        !form.is_reserve &&
+                                        (!form.advance || form.advance <= 0)
+                                "
+                            >
                                 <div class="mb-3 d-flex justify-content-end">
                                     <div>
                                         <label for="vacate"

@@ -128,12 +128,13 @@ class HotelRentItemResource extends JsonResource
         // }else{
         //     $extra_time = $price_table * $checkout_date_estimated->diffInDays($now);
         // }
-        $toPay = ($this->total +  $total_all_orden + $extra_time) > 0  ;
+    // Outstanding (Resta): usar total neto + ordenes + extra, sin restar documentos facturados aquí
+    $outstanding = ($this->total + $total_all_orden + $extra_time);
+    $toPay = $outstanding > 0;
         $credit_line =0;
         if($this->credit_line > 0){
             $credit_line = $this->credit_line - $total_all_orden;
         }
-        $tes = $this->total + $this->advances;
         $table_name = $this->table->getTableFullName();
         if($this->total == 0){
             $cancel_document = 0;
@@ -161,9 +162,11 @@ class HotelRentItemResource extends JsonResource
             'advance' => $this->advances,
             'ordens' => $ordens,
             'customer' => $customer,
-            'total_room' => $this->total + $this->advances - $cancel_document,
+            // Precio real de la habitación = total (neto) + advances
+            'total_room' => $this->total + $this->advances,
             'total_orden' => $total_all_orden,
-            'total' => $this->total + $total_all_orden - $cancel_document,
+            // Resta = total (neto) + órdenes + extra (sin descontar documentos facturados)
+            'total' => $outstanding,
             'is_month_rent' => $this->is_month_rent,
         ];
     }
