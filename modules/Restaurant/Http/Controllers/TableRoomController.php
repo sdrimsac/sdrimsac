@@ -485,7 +485,6 @@ class TableRoomController extends Controller
     }
     public function print_warranty($id)
     {
-
         $hotel_rent_item = HotelRentItem::findOrFail($id);
         $room = null;
         $record = new \stdClass();
@@ -505,7 +504,7 @@ class TableRoomController extends Controller
         $record->credit_line = $hotel_rent_item->credit_line;
         $record->created_at = $hotel_rent_item->checkin_date;
         $company = Company::active();
-        $height = 280;
+        $height = 300;
         try {
             $pdf = PDF::loadView('restaurant::table_room.credit_line_hotel', compact(
                 'record',
@@ -1885,7 +1884,7 @@ class TableRoomController extends Controller
             }*/
 
             if ($hotel_rent_item->credit_line > 0) {
-                event(new PrintEvent($hotel_rent_item->id, "CL", true));
+                event(new PrintEvent($hotel_rent_item->id, "L", true));
             }
 
             return [

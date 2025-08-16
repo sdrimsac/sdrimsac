@@ -181,8 +181,8 @@
         <table style="border-collapse: collapse;border-bottom:1px solid #ddd;">
             <tr>
                 <td width="60%" height="30" align="left" valign="top">
-                    @if ($company->logo)
-                        <img src="{{ asset('storage/uploads/logos/' . $company->logo) }}" height="40" />
+                    @if (data_get($company, 'logo'))
+                        <img src="{{ asset('storage/uploads/logos/' . data_get($company, 'logo')) }}" height="40" />
                     @endif
                 </td>
                 {{-- @if ($type_box == '1') --}}
@@ -207,24 +207,24 @@
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <td class="headers" height="20">
-                    <strong>Empresa: </strong>{{ $company->name }}
+                    <strong>Empresa: </strong>{{ data_get($company, 'name', '') }}
                 </td>
                 <td class="headers">
                     <strong>Fecha: </strong>{{ date('Y-m-d') }}
                 </td>
                 @if ($user)
                     <td class="headers">
-                        <strong>Usuario: </strong>{{ $user->name }}
+                        <strong>Usuario: </strong>{{ data_get($user, 'name', '') }}
                     </td>
                 @endif
             </tr>
             <tr class="nth-child">
                 <td class="headers" height="20">
-                    <strong>Ruc: </strong>{{ $company->number }}
+                    <strong>Ruc: </strong>{{ data_get($company, 'number', '') }}
                 </td>
                 <td class="headers">
-                    <strong>Establecimiento: </strong>{{ $establishment->address }} -
-                    {{ $establishment->department->description }} - {{ $establishment->district->description }}
+                    <strong>Establecimiento: </strong>{{ data_get($establishment, 'address', '') }} -
+                    {{ data_get($establishment, 'department.description', '') }} - {{ data_get($establishment, 'district.description', '') }}
                 </td>
             </tr>
             <tr>
@@ -264,19 +264,23 @@
                             $amount = $row['amount'];
                             if (isset($row['document_id']) && $row['document_id'] != null) {
                                 $document = \App\Models\Tenant\Document::find($row['document_id']);
-                                $total = $document->total;
-                                if ($total < $amount) {
-                                    $amount = $total;
+                                if ($document) {
+                                    $total = $document->total;
+                                    if ($total < $amount) {
+                                        $amount = $total;
+                                    }
+                                    $date = $document->date_of_issue . ' ' . $document->time_of_issue;
                                 }
-                                $date = $document->date_of_issue . ' ' . $document->time_of_issue;
                             }
                             if (isset($row['sale_note_id']) && $row['sale_note_id'] != null) {
                                 $document = \App\Models\Tenant\SaleNote::find($row['sale_note_id']);
-                                $total = $document->total;
-                                if ($total < $amount) {
-                                    $amount = $total;
+                                if ($document) {
+                                    $total = $document->total;
+                                    if ($total < $amount) {
+                                        $amount = $total;
+                                    }
+                                    $date = $document->date_of_issue->format('Y-m-d') . ' ' . $document->time_of_issue;
                                 }
-                                $date = $document->date_of_issue->format('Y-m-d') . ' ' . $document->time_of_issue;
                             }
                             if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
                                 $ingresos = $ingresos + $amount;
@@ -310,30 +314,30 @@
                                         {{ $row['method'] }}
                                     </td>
                                 @endif
-                                <td class="celda_left">{{ $row['cash']['reference_number'] }}</td>
+                                <td class="celda_left">{{ data_get($row, 'cash.reference_number', '-') }}</td>
                                 @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
                                     <td class="celda_left">
-                                        {{ $row['subcategories']->subcategory }}
+                                        {{ data_get($row, 'subcategories.subcategory', '-') }}
                                     </td>
                                 @else
                                     @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
                                         <td class="celda_left">
-                                            {{ $row['subcategories']->subcategory }}
+                                            {{ data_get($row, 'subcategories.subcategory', '-') }}
                                         </td>
                                     @else
                                         @if ($row['sale_note_id'] != null && $row['document_id'] == null)
                                             <td class="celda_left">
-                                                {{ $row['salenote']['customer']->name }}
+                                                {{ data_get($row, 'salenote.customer.name', '-') }}
                                             </td>
                                         @else
                                             @if ($row['sale_note_id'] != null && $row['document_id'] != null)
                                                 <td class="celda_left">
-                                                    {{ $row['salenote']['customer']->name }}
+                                                    {{ data_get($row, 'salenote.customer.name', '-') }}
                                                 </td>
                                             @else
                                                 @if ($row['document_id'] != null && $row['sale_note_id'] == null)
                                                     <td class="celda_left">
-                                                        {{ $row['document']['customer']->name }}
+                                                        {{ data_get($row, 'document.customer.name', '-') }}
                                                     </td>
                                                 @endif
                                             @endif
@@ -342,7 +346,7 @@
                                 @endif
                                 <td class="celda_left">{{ $row['description'] }}</td>
                                 <td class="celda_date">{{ $amount }}</td>
-                                <td class="celda_left">{{ $row['user']->name }}</td>
+                                <td class="celda_left">{{ data_get($row, 'user.name', '-') }}</td>
 
                             </tr>
                         @endforeach
@@ -407,9 +411,9 @@
     <footer>
         <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;">
             <tr>
-                <td align="left" valign="middle" colspan="2">Direccion:{{ $establishment->address }} -
-                    {{ $establishment->department->description }} - {{ $establishment->district->description }} -
-                    Telefonos: {{ $establishment->telephone }} Email: {{ $establishment->email }}</td>
+                <td align="left" valign="middle" colspan="2">Direccion:{{ data_get($establishment, 'address', '') }} -
+                    {{ data_get($establishment, 'department.description', '') }} - {{ data_get($establishment, 'district.description', '') }} -
+                    Telefonos: {{ data_get($establishment, 'telephone', '') }} Email: {{ data_get($establishment, 'email', '') }}</td>
             </tr>
         </table>
     </footer>

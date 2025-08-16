@@ -622,7 +622,6 @@ class BoxController extends Controller
     }
     public function reports_results_excel(Request $request)
     {
-
         ini_set('max_execution_time', '3000');
         ini_set('memory_limit', '2048M');
         $date_close = $request['date_close'];

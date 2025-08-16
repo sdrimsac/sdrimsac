@@ -6515,6 +6515,7 @@ export default {
                 };
                 return;
             }
+            console.log("Printing document:", document);
             let paperConfig = {
                 scaleContent: false
             };
@@ -6603,6 +6604,7 @@ export default {
                     data: linkpdf
                 }
             ];
+            console.log("Print job data:", data);
 
             qz.print(config, data).catch(e => {
                 this.$toast.error(e.message);
@@ -7762,12 +7764,13 @@ export default {
                 console.error("Error printing:", error);
             } finally {
                 this.isPrinting = false;
-                this.processPrintQueue(); // Procesar siguiente trabajo
+                this.processPrintQueue();
             }
         },
 
         addToPrintQueue(printJob) {
             this.printQueue.push(printJob);
+            console.log("Print job added to queue:", printJob);
             this.processPrintQueue();
         }
     },
@@ -7889,6 +7892,7 @@ export default {
                 // console.log("this.establishments.id", this.establishments.id);
                 // console.log("user_establishment_id_printer", user_establishment_id_printer);
                 // console.log("isSameEstablishmentPrinter", isSameEstablishmentPrinter);
+                
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
                 // console.log("isSameEstablishment", isSameEstablishment);

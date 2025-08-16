@@ -284,12 +284,13 @@ export default {
             this.form = {
                 id: null,
                 user_id: null,
-                date_close: moment().format("YYYY-MM-DD"),
+                // No preselected dates by default
+                date_close: null,
                 type: "pdf",
                 type_box: null,
                 period: "month",
                 date_start: null,
-                date_end: moment().format("YYYY-MM-DD"),
+                date_end: null,
                 month_start: moment().format("YYYY-MM"),
                 month_end: moment().format("YYYY-MM")
             };
@@ -354,14 +355,29 @@ export default {
             );
         },
         getQueryParameters() {
-            return queryString.stringify({
+            const params = this.cleanFormParams({
                 page: this.pagination.current_page,
                 limit: this.limit,
                 ...this.form
             });
+            return queryString.stringify(params);
+        },
+        // Remove null/undefined/empty-string values from params
+        cleanFormParams(obj) {
+            const out = {};
+            Object.keys(obj || {}).forEach(k => {
+                const v = obj[k];
+                if (v !== null && v !== undefined && v !== "") out[k] = v;
+            });
+            return out;
         },
         changeDisabledDates() {
-            if (this.form.date_end < this.form.date_start) {
+            // Only adjust when both dates are set and end is before start
+            if (
+                this.form.date_start &&
+                this.form.date_end &&
+                this.form.date_end < this.form.date_start
+            ) {
                 this.form.date_end = this.form.date_start;
             }
             // this.loadAll();
@@ -402,10 +418,7 @@ export default {
         clickDownload(type) {
             this.modaltype = true;
             this.form.type = type;
-            let form_data = this.form;
-            let query = queryString.stringify({
-                ...this.form
-            });
+            const query = queryString.stringify(this.cleanFormParams(this.form));
             //expensesbox/reports_pd
             let ruta = `/expensesbox/reports_pdf?${query}`;
             if (type === "excel") {

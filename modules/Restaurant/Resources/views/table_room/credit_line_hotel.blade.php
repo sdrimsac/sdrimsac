@@ -1,344 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garantía</title>
+    <title>Ticket Garantía</title>
+    <style>
+        @page {
+            margin: 8px;
+        }
+
+        body {
+            font-family: "Arial", sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ticket {
+            width: 80mm;
+            /* ancho real del ticket */
+            padding: 5px 8px;
+        }
+
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            border-bottom: 1px dashed #000;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+        }
+
+        .section {
+            margin: 5px 0;
+        }
+
+        .section span {
+            display: block;
+            margin: 2px 0;
+            word-wrap: break-word;
+            /* evita desbordes si el texto es largo */
+        }
+
+        .highlight {
+            font-weight: bold;
+        }
+
+        .footer {
+            border-top: 1px dashed #000;
+            margin-top: 10px;
+            padding-top: 5px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .big-text {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .separator {
+            border-bottom: 1px dashed #000;
+            margin: 6px 0;
+        }
+    </style>
 </head>
-<style>
-    html {
-        font-family: sans-serif;
-        font-size: 11px;
-    }
-
-    table {
-        width: 100%;
-        border-spacing: 0;
-
-    }
-
-    .table {
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda {
-        text-align: left;
-        padding: 5px;
-        border: 0.1px solid #ccc;
-    }
-
-    .celda_left {
-        text-align: left;
-
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_center {
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_right {
-        text-align: right;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    tr:nth-child(even) {}
-
-    .nth-child {
-        background-color: transparent;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid rgb(49, 49, 49);
-    }
-
-    th {
-        padding: 1.5px;
-        text-align: center;
-        border-color: #409EFF;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .headers {
-        padding: 5px !important;
-        /* border-bottom:0.1px solid #ccc; */
-        height: 25px;
-    }
-
-    .title {
-        font-weight: bold;
-        padding: 5px;
-        font-size: 20px !important;
-        text-decoration: underline;
-    }
-
-    p>strong {
-        margin-left: 5px;
-        font-size: 13px;
-    }
-
-    thead {
-
-        color: #000;
-        text-align: center;
-    }
-
-    .title {
-        font-weight: bold;
-        padding: 3px;
-        font-size: 20px !important;
-        text-decoration: underline;
-    }
-
-    .encabezado {
-        background-color: #eee;
-        text-transform: uppercase;
-        padding: 2px;
-        padding-left: 2px;
-    }
-
-    .categoria {
-        background-color: #eee;
-        text-transform: uppercase;
-        padding: 5px;
-        padding-left: 50px;
-    }
-
-    .celda_loop {
-        width: 10% !important;
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_descrip {
-        width: 60% !important;
-        text-align: left;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_date {
-        width: 30% !important;
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_left {
-        text-align: left;
-        padding: 2px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    p>strong {
-        margin-left: 5px;
-        font-size: 11px;
-    }
-
-    header {
-        position: fixed;
-        height: 1cm;
-        color: #000;
-        text-align: center;
-        padding: 10px;
-        font-size: 12px;
-        font-family: arial;
-
-    }
-
-    footer {
-        position: fixed;
-        bottom: 10px;
-        height: 0.8cm;
-        color: #000;
-        text-align: center;
-        font-size: 11px;
-        padding: 12px;
-        font-family: Arial;
-        padding: 10px;
-    }
-
-    .sinbordes {
-        border: 0px !important;
-        height: 15px !important;
-    }
-
-    h5 {
-        padding: 0px !important;
-        margin: 0px !important;
-    }
-
-    @page {
-        margin: 15px;
-    }
-
-    td,
-    th {
-        font-size: 10px !important;
-        /* height: 15px; */
-    }
-
-    .small {
-        font-size: 8px !important;
-    }
-
-    .company_logo_ticket {
-        max-width: 150px;
-        max-height: 70px;
-    }
-
-    .description {
-        font-size: 13px;
-    }
-
-    .description_preparacion {
-        font-size: 11px !important;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .header_title {
-        font-size: 20px !important;
-    }
-
-    .header_title0 {
-
-        font-size: 12px !important;
-    }
-
-    .header_title1 {
-
-        font-size: 10px !important;
-    }
-
-    .under_line {
-        text-decoration: underline;
-    }
-
-    .cell_number {
-        width: 10% !important;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .header_title2 {
-
-        font-size: 14px !important;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .text-left {
-        text-align: left;
-    }
-</style>
-<?php
-
-?>
 
 <body>
-    <div id="register">
-
-        <table border="0" style="border:0px solid;width:90%">
-            <thead>
-                <tr>
-                    <th colspan="4" class="header_title text-center">
-                        @if ($company->trade_name)
-                            {{ $company->trade_name }}
-                        @else
-                            {{ $company->name }}
-                        @endif
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="4" class="header_title0 text-center">
-                        HABITACIÓN: {{ $record->room }}
-                    </th>
-                </tr>
-                <tr>
-
-
-                    <th colspan="4" class="header_title0 text-center">
-
-                        FECHA: {{ $record->created_at }}
-                    </th>
-
-                </tr>
-                <tr>
-                    <th colspan="4" class="header_title0 text-center">
-                        HORA: {{ date('H:i:s') }}
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td colspan="4" class="header_title0 text-left">
-                        <strong>HUESPED:</strong> {{ $record->customer_name }}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="header_title0 text-left">
-                        <strong>DOCUMENTO:</strong> {{ $record->customer_number }}
-                    </td>
-                </tr>
-                <tr style="height: 14px;">
-                    <td colspan="5" class="header_title0 text-left">
-                        <strong>
-                            SE DEJA UNA GARANTÍA DE: S/ {{ $record->credit_line }}
-
-                        </strong>
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-
-        <div style="margin-top:15px;">
-
-            <table border="0" style="border:0px solid;width:100%">
-                <tbody>
-
-                    <tr>
-                        <td colspan="4" class="header_title0 text-left">
-                            <strong>CAJERO:</strong> {{ $record->user_name }}
-                        </td>
-                    </tr>
-
-
-                </tbody>
-            </table>
+    <div class="ticket">
+        <div class="header">
+            @if ($company->trade_name)
+                {{ $company->trade_name }}
+            @else
+                {{ $company->name }}
+            @endif
         </div>
 
-        {{-- Mensaje final si no hay datos --}}
-        @php
-            $sinDatos = empty($record) || (
-                empty($record->room)
-                && empty($record->customer_name)
-                && empty($record->customer_number)
-                && (empty($record->credit_line) && $record->credit_line !== '0' && $record->credit_line !== 0)
-                && empty($record->user_name)
-            );
-        @endphp
-        @if ($sinDatos)
-            <div class="text-center small" style="margin-top:10px;color:#666;">
-                <em>Sin datos</em>
-            </div>
-        @endif
+        <div class="section">
+            <span class="highlight">HABITACIÓN: {{ $record->room }}</span>
+            <span><strong>FECHA:</strong> {{ $record->created_at }}</span>
+            <span><strong>HORA:</strong> {{ date('H:i:s') }}</span>
+        </div>
 
+        <div class="separator"></div>
+
+        <div class="section">
+            <span><strong>HUÉSPED:</strong> {{ $record->customer_name }}</span>
+            <span><strong>DOCUMENTO:</strong> {{ $record->customer_number }}</span>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="section big-text">
+            SE DEJA UNA GARANTÍA DE: S/ {{ number_format($record->credit_line, 2) }}
+        </div>
+
+        <div class="separator"></div>
+        <div>
+            FIRMANTE: __________________
+        </div>
+
+        <div class="footer">
+            <strong>CAJERO:</strong> {{ $record->user_name }}
+        </div>
     </div>
-
 </body>
 
 </html>

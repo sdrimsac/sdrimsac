@@ -134,7 +134,7 @@ class PrintEvent implements ShouldBroadcast
             case "H":
                 $documentLink = url('') . "/caja/rooms/print_service/{$id}";
                 break;
-            case "CL":
+            case "L":
                 $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
                 break;
             case "00":

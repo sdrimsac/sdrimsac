@@ -22,7 +22,7 @@
             <tr>
                 <td colspan="6"
                     style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
-                    <strong>Empresa: </strong>{{ $company->name }}
+                    <strong>Empresa: </strong>{{ data_get($company, 'name', '') }}
                 </td>
                 <td colspan="5"
                         style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
@@ -30,23 +30,22 @@
                         {{ \Carbon\Carbon::parse($date_start)->format('d-m-Y') }}
                         hasta {{ \Carbon\Carbon::parse($date_end)->format('d-m-Y') }}
                 </td>
-
             </tr>
             <tr>
                 @if ($user)
                     <td colspan="5"
                         style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
-                        <strong>Usuario: </strong>{{ $user->name }}
+                        <strong>Usuario: </strong>{{ data_get($user, 'name', '') }}
                     </td>
                 @endif
                 <td colspan="3"
                     style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
-                    <strong>Ruc: </strong>{{ $company->number }}
+                    <strong>Ruc: </strong>{{ data_get($company, 'number', '') }}
                 </td>
                 <td colspan="3"
                     style="border: 1px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
-                    <strong>Establecimiento: </strong>{{ $establishment->address }} -
-                    {{ $establishment->department->description }} - {{ $establishment->district->description }}
+                    <strong>Establecimiento: </strong>{{ data_get($establishment, 'address', '') }} -
+                    {{ data_get($establishment, 'department.description', '') }} - {{ data_get($establishment, 'district.description', '') }}
                 </td>
             </tr>
         </table>
@@ -76,34 +75,44 @@
                             <td style="border: 1px solid black; background-color: #DCDCDC;">Monto</td>
                             <td style="border: 1px solid black; background-color: #DCDCDC;">Usuario</td>
                             <td style="border: 1px solid black; background-color: #DCDCDC;">Condicion de Pago</td>
-
                         </tr>
                     <tbody>
                         @foreach ($boxes_report as $row)
                             @php
-                                $establishment = App\Models\Tenant\Establishment::find($row->establishment_id);
-                                $establishment_description = $establishment == null ? '' : $establishment->description;
+                                // Safe establishment description (supports array/object row)
+                                $establishment_id = data_get($row, 'establishment_id');
+                                $establishment_description = '';
+                                if ($establishment_id) {
+                                    $establishment_model = \App\Models\Tenant\Establishment::find($establishment_id);
+                                    $establishment_description = $establishment_model ? $establishment_model->description : '';
+                                }
                             @endphp
                             <?php
                             $amount = $row['amount'];
+                            $payment_condition = '';
+                            $date = data_get($row, 'date');
                             if (isset($row['document_id']) && $row['document_id'] != null) {
                                 $document = \App\Models\Tenant\Document::find($row['document_id']);
-                                $total = $document->total;
-                                /* $payment_condition = $row_document->payment_condition_id == "01" ? "Contado" : "Crédito"; */
-                                $payment_condition = $document->payment_condition_id == "01" ? "Contado" : "Crédito";
-                                if ($total < $amount) {
-                                    $amount = $total;
+                                if ($document) {
+                                    $total = $document->total;
+                                    /* $payment_condition = $row_document->payment_condition_id == "01" ? "Contado" : "Crédito"; */
+                                    $payment_condition = $document->payment_condition_id == "01" ? "Contado" : "Crédito";
+                                    if ($total < $amount) {
+                                        $amount = $total;
+                                    }
+                                    $date = $document->date_of_issue . ' ' . $document->time_of_issue;
                                 }
-                                $date = $document->date_of_issue . ' ' . $document->time_of_issue;
                             }
                             if (isset($row['sale_note_id']) && $row['sale_note_id'] != null) {
                                 $document = \App\Models\Tenant\SaleNote::find($row['sale_note_id']);
-                                $payment_condition = $document->credit_cash !== 1 ? "Contado" : "Crédito";
-                                $total = $document->total;
-                                if ($total < $amount) {
-                                    $amount = $total;
+                                if ($document) {
+                                    $payment_condition = $document->credit_cash !== 1 ? "Contado" : "Crédito";
+                                    $total = $document->total;
+                                    if ($total < $amount) {
+                                        $amount = $total;
+                                    }
+                                    $date = $document->date_of_issue->format('Y-m-d') . ' ' . $document->time_of_issue;
                                 }
-                                $date = $document->date_of_issue->format('Y-m-d') . ' ' . $document->time_of_issue;
                             }
                             if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
                                 $ingresos = $ingresos + $amount;
@@ -118,7 +127,9 @@
                             if ($row['type'] == '2') {
                                 $egresos = $egresos + $amount;
                             }
-                            $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y') . ' ' . \Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
+                            $date = $date ? \Carbon\Carbon::parse($date)->format('d-m-Y') : '';
+                            $created_at = data_get($row, 'created_at');
+                            $date .= $created_at ? (' ' . \Carbon\Carbon::parse($created_at)->format('h:m:s')) : '';
                             
                             ?>
                             <tr>
@@ -137,15 +148,15 @@
                                         {{ $row['method'] }}
                                     </td>
                                 @endif
-                                <td style="border: 1px solid black;">{{ $row['cash']['reference_number'] }}</td>
+                                <td style="border: 1px solid black;">{{ data_get($row, 'cash.reference_number', data_get($row, 'reference', '-')) }}</td>
                                 @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
                                     <td style="border: 1px solid black;">
-                                        {{ $row['subcategories']->subcategory }}
+                                        {{ data_get($row, 'subcategories.subcategory', '-') }}
                                     </td>
                                 @else
                                     @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
                                         <td style="border: 1px solid black;">
-                                            {{ $row['subcategories']->subcategory }}
+                                            {{ data_get($row, 'subcategories.subcategory', '-') }}
                                         </td>
                                     @else
                                         <td style="border: 1px solid black;">
@@ -153,26 +164,26 @@
                                         </td>
                                         @if ($row['sale_note_id'] != null && $row['document_id'] == null)
                                             <td style="border: 1px solid black;">
-                                                {{ $row['salenote']['customer']->name }}
+                                                {{ data_get($row, 'salenote.customer.name', '-') }}
                                             </td>
                                             <td style="border: 1px solid black;">
-                                                {{ $row['salenote']['customer']->number }}
+                                                {{ data_get($row, 'salenote.customer.number', '-') }}
                                             </td>
                                         @else
                                             @if ($row['sale_note_id'] != null && $row['document_id'] != null)
                                                 <td style="border: 1px solid black;">
-                                                    {{ $row['salenote']['customer']->name }}
+                                                    {{ data_get($row, 'salenote.customer.name', '-') }}
                                                 </td>
                                                 <td style="border: 1px solid black;">
-                                                    {{ $row['salenote']['customer']->number }}
+                                                    {{ data_get($row, 'salenote.customer.number', '-') }}
                                                 </td>
                                             @else
                                                 @if ($row['document_id'] != null && $row['sale_note_id'] == null)
                                                     <td style="border: 1px solid black;">
-                                                        {{ $row['document']['customer']->name }}
+                                                        {{ data_get($row, 'document.customer.name', '-') }}
                                                     </td>
                                                     <td style="border: 1px solid black;">
-                                                        {{ $row['document']['customer']->number }}
+                                                        {{ data_get($row, 'document.customer.number', '-') }}
                                                     </td>
                                                 @endif
                                             @endif
@@ -184,8 +195,8 @@
                                 @endif
                                 <td style="border: 1px solid black;">{{ $row['description'] }}</td>
                                 <td style="border: 1px solid black;">{{ $amount }}</td>
-                                <td style="border: 1px solid black;">{{ $row['user']->name }}</td>
-                                <td style="border: 1px solid black;">{{ $payment_condition }}</td>
+                                <td style="border: 1px solid black;">{{ data_get($row, 'user.name', data_get($row, 'user', '-')) }}</td>
+                                <td style="border: 1px solid black;">{{ $payment_condition ?: '-' }}</td>
 
                             </tr>
                         @endforeach

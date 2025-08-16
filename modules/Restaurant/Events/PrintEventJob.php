@@ -156,7 +156,7 @@ class PrintEventJob implements ShouldBroadcast
             case "H":
                 $documentLink = $url_base . "/caja/rooms/print_service/{$id}";
                 break;
-            case "CL":
+            case "L":
                 $documentLink = $url_base . "/caja/rooms/print_warranty/{$id}";
                 break;
             case "00":
