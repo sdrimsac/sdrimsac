@@ -170,7 +170,10 @@
                             ">
                                 {{ row.area.description }}
                             </td>
-                            <td>{{ row.zone }}</td>
+                            <td v-if="
+                                type == 'caja/tables'
+                               
+                            ">{{ row.zone }}</td>
                             <td v-if="
                                 type == 'caja/tables' ||
                                 type == 'caja/rooms'

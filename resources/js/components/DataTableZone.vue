@@ -7,9 +7,7 @@
                     <div class="row">
                         <div
                             class="col-lg-3 col-md-3 col-sm-12 pb-2"
-                            v-if="
-                                resource == 'caja/cash-transfer/report'
-                            "
+                            v-if="resource == 'caja/cash-transfer/report'"
                         >
                             <label
                                 for="value"
@@ -36,7 +34,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                        <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                             <label
                                 class="d-flex align-items-center mb-1"
                                 style="width:100%"
@@ -73,20 +71,14 @@
                             <template
                                 v-if="
                                     search.column == 'date_of_issue' ||
-                                        search.column ==
-                                            'date_of_due' ||
-                                        search.column ==
-                                            'date_of_payment' ||
-                                        search.column ==
-                                            'delivery_date' ||
+                                        search.column == 'date_of_due' ||
+                                        search.column == 'date_of_payment' ||
+                                        search.column == 'delivery_date' ||
                                         search.column == 'date'
-                            "
+                                "
                             >
                                 <template
-                                    v-if="
-                                        resource !=
-                                            'caja/worker/expenses'
-                                    "
+                                    v-if="resource != 'caja/worker/expenses'"
                                 >
                                     <el-date-picker
                                         v-model="search.value"
@@ -112,9 +104,7 @@
                                 </template>
                             </template>
                             <template
-                                v-else-if="
-                                    search.column == 'district_id'
-                            "
+                                v-else-if="search.column == 'district_id'"
                             >
                                 <el-select
                                     v-model="search.value"
@@ -130,9 +120,7 @@
                                     </el-option>
                                 </el-select>
                             </template>
-                            <template
-                                v-else-if="search.column == 'seller_id'"
-                            >
+                            <template v-else-if="search.column == 'seller_id'">
                                 <el-select
                                     v-model="search.value"
                                     @change="getRecords"
@@ -151,7 +139,7 @@
                                 v-else-if="
                                     search.column == 'active' &&
                                         resource == 'caja/workers-type'
-                            "
+                                "
                             >
                                 <el-select
                                     v-model="search.value"
@@ -166,8 +154,7 @@
                                             },
                                             {
                                                 id: 0,
-                                                description:
-                                                    'Desactivado'
+                                                description: 'Desactivado'
                                             }
                                         ]"
                                         :key="idx"
@@ -188,8 +175,10 @@
                                 </el-input>
                             </template>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2" 
-                        v-if="resource == 'caja/tables'">
+                        <div
+                            class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                            v-if="resource == 'caja/tables'"
+                        >
                             <label for="">zona</label>
                             <el-select
                                 v-model="search.zone_id"
@@ -208,11 +197,73 @@
                             </el-select>
                         </div>
                         <div
+                            class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                            v-if="resource == 'caja/rooms'"
+                        >
+                            <label for="">TORRE</label>
+                            <el-select
+                                v-model="search.tower_id"
+                                @change="getRecords"
+                                placeholder="Seleccione la torre"
+                                clearable
+                                filterable
+                            >
+                                <el-option
+                                    v-for="(item, idx) in towers"
+                                    :key="idx"
+                                    :label="item.name"
+                                    :value="item.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div
+                            class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                            v-if="resource == 'caja/rooms'"
+                        >
+                            <label for="">PISO</label>
+                            <el-select
+                                v-model="search.floor_id"
+                                @change="getRecords"
+                                placeholder="Seleccione el piso"
+                                clearable
+                                filterable
+                            >
+                                <el-option
+                                    v-for="(item, idx) in floors"
+                                    :key="idx"
+                                    :label="item.name"
+                                    :value="item.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div
+                            class="col-lg-2 col-md-2 col-sm-12 pb-2"
+                            v-if="resource == 'caja/rooms'"
+                        >
+                            <label for="">TIPO DE HABITACIÓN</label>
+                            <el-select
+                                v-model="search.table_type_id"
+                                @change="getRecords"
+                                placeholder="Seleccione el tipo de habitación"
+                                clearable
+                                filterable
+                            >
+                                <el-option
+                                    v-for="(item, idx) in table_types"
+                                    :key="idx"
+                                    :label="item.name"
+                                    :value="item.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div
                             v-if="
                                 search.column == 'date_of_issue' ||
                                     search.column == 'date_of_due' ||
-                                    search.column ==
-                                        'date_of_payment' ||
+                                    search.column == 'date_of_payment' ||
                                     search.column == 'delivery_date' ||
                                     (search.column == 'date' &&
                                         resource == 'purchases' &&
@@ -251,9 +302,7 @@
                                 class="d-flex align-items-center mb-1"
                             >
                                 <span class="mr-2"
-                                    ><i
-                                        class="el-icon-office-building"
-                                    ></i
+                                    ><i class="el-icon-office-building"></i
                                 ></span>
                                 <span>Almacén</span>
                             </label>
@@ -281,9 +330,7 @@
                                 class="d-flex align-items-center mb-1"
                             >
                                 <span class="mr-2"
-                                    ><i
-                                        class="el-icon-location-outline"
-                                    ></i
+                                    ><i class="el-icon-location-outline"></i
                                 ></span>
                                 <span>Área/Zona</span>
                             </label>
@@ -307,9 +354,7 @@
                             class="col-lg-3 col-md-3 col-sm-12 pb-2"
                             v-if="resource == 'items'"
                         >
-                            <label
-                                class="d-flex align-items-center mb-1"
-                            >
+                            <label class="d-flex align-items-center mb-1">
                                 <span class="mr-2"
                                     ><i class="el-icon-s-check"></i
                                 ></span>
@@ -340,9 +385,7 @@
                             class="col-lg-2 col-md-2 col-sm-12 pb-2"
                             v-if="resource == 'item-color-size'"
                         >
-                            <label
-                                class="d-flex align-items-center mb-1"
-                            >
+                            <label class="d-flex align-items-center mb-1">
                                 <span class="mr-2"
                                     ><i class="el-icon-s-flag"></i
                                 ></span>
@@ -549,7 +592,11 @@ export default {
                 value: null,
                 active: null,
                 status: null,
-                zone_id: null
+                zone_id: null,
+                // Filters for rooms
+                tower_id: null,
+                floor_id: null,
+                table_type_id: null
             },
             columns: [],
             records: [],
@@ -559,7 +606,11 @@ export default {
             warehouses: [],
             areas: [],
             loading: false,
-            zones: []
+            zones: [],
+            // Data sources for rooms
+            towers: [],
+            floors: [],
+            table_types: []
         };
     },
     computed: {},
@@ -583,6 +634,16 @@ export default {
             let { zones } = response.data;
             this.zones = zones;
         });
+        if (this.resource == "caja/rooms") {
+            this.$http.get(`/caja/rooms/tables`).then(response => {
+                // Some endpoints return `tables_types` (typo) instead of `table_types`.
+                const { towers, floors, table_types, tables_types } =
+                    response.data;
+                this.towers = towers;
+                this.floors = floors;
+                this.table_types = table_types || tables_types || [];
+            });
+        }
 
         if (this.resource == "item-color-size") {
             this.$http.get(`item-color-size/tables`).then(response => {
@@ -756,7 +817,11 @@ export default {
                 warehouse_id: this.search.warehouse_id,
                 area_id: this.search.area_id,
                 status: this.search.status,
-                zone_id: this.search.zone_id
+                zone_id: this.search.zone_id,
+                // Rooms filters
+                tower_id: this.search.tower_id,
+                floor_id: this.search.floor_id,
+                table_type_id: this.search.table_type_id
             });
         },
         changeClearInput() {

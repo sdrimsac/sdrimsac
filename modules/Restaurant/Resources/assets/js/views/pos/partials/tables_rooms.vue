@@ -196,6 +196,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="card" style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-left: 10px;">
+                    <div class="card-body" style="padding: 0px;">
+                        <label for="type_room_id" style="color: #000; font-weight: bold;">Tipo de Habitación</label>
+                        <el-select
+                            id="type_room_id"
+                            v-model="table_type_id"
+                            placeholder="Seleccione Tipo de Habitación"
+                            @change="filterTablesByTypeRoom"
+                            clearable
+                            filterable
+                            style="width: 180px; margin-top: 5px;"
+                        >
+                            <el-option
+                                v-for="(type, idx) in tables_types"
+                                :key="type.id"
+                                :label="type.name"
+                                :value="type.id"
+                            />
+                        </el-select>
+                    </div>
+                </div>
             </div>
             <!-- Botones de filtro -->
             <div class="col-6 d-flex justify-content-end">
@@ -1705,6 +1726,9 @@ export default {
             showReserves: false,
             hotelRentId: null,
             showServices: false,
+            // Filtro por tipo de habitación
+            table_type_id: null,
+            tables_types: [],
             value: "", // Variable para el v-model del vs-input
             get checkinDateTime() {
                 return `${this.currentRoom?.checkin_date || ""} - ${this
@@ -2006,6 +2030,29 @@ export default {
         },
         filterByReserve() {
             this.showReserves = true;
+        },
+        // Filtra habitaciones por tipo seleccionado en el <el-select>
+        filterTablesByTypeRoom(typeId) {
+            this.showReserves = false;
+            const selectedId = typeId != null ? typeId : this.table_type_id;
+
+            // Si se limpia la selección, restaurar la vista según piso/torre si corresponde
+            if (!selectedId) {
+                if (this.floor_id) return this.filterTablesByFloor(this.floor_id);
+                if (this.tower_id) return this.filterFloorsByTower(this.tower_id);
+                this.tables = this.all_tables.slice();
+                return;
+            }
+
+            this.tables = this.all_tables.filter(t => {
+                const tTypeId = t?.type?.id != null ? t.type.id : t.table_type_id;
+                if (tTypeId != selectedId) return false;
+                // Mantener filtros actuales por piso/torre si están activos
+                if (this.floor_id) return t.floor_id == this.floor_id;
+                if (this.tower_id && t.floor && t.floor.tower_id != null)
+                    return t.floor.tower_id == this.tower_id;
+                return true;
+            });
         },
         filterByStatus(id) {
             this.showReserves = false;
@@ -2501,7 +2548,12 @@ export default {
             this.floor_id = floor_id;
             this.tables = this.all_tables.filter(f => {
                 delete f.tower_name;
-                return f.floor_id == floor_id;
+                if (f.floor_id != floor_id) return false;
+                if (this.table_type_id) {
+                    const tTypeId = f?.type?.id != null ? f.type.id : f.table_type_id;
+                    return tTypeId == this.table_type_id;
+                }
+                return true;
             });
         },
         filterFloorsByTower(tower_id) {
@@ -2512,9 +2564,23 @@ export default {
             });
             let [floor] = this.floors;
             if (floor) {
-                this.filterTablesByFloor(floor.id);
+                // Si hay un piso ya seleccionado que pertenezca a esta torre, mantenerlo
+                if (this.floor_id && this.floors.some(f => f.id == this.floor_id)) {
+                    this.filterTablesByFloor(this.floor_id);
+                } else {
+                    this.filterTablesByFloor(floor.id);
+                }
             } else {
-                this.tables = [];
+                // No hay pisos en esta torre: filtrar por torre directamente respetando tipo
+                this.floor_id = null;
+                this.tables = this.all_tables.filter(t => {
+                    if (!t.floor || t.floor.tower_id != tower_id) return false;
+                    if (this.table_type_id) {
+                        const tTypeId = t?.type?.id != null ? t.type.id : t.table_type_id;
+                        return tTypeId == this.table_type_id;
+                    }
+                    return true;
+                });
             }
         },
 
@@ -2528,7 +2594,8 @@ export default {
                         tables,
                         towers,
                         floors,
-                        status
+                        status,
+                        tables_types
                     } = response.data;
                     //  this.tables = tables.filter(f => f.number != "caja");
                     this.all_tables = tables;
@@ -2565,6 +2632,7 @@ export default {
                     this.towers = towers;
                     let [tower] = towers;
                     this.tower_id = tower.id;
+                    this.tables_types = tables_types;
 
                     this.filterFloorsByTower(tower.id);
                     let [floor] = floors;

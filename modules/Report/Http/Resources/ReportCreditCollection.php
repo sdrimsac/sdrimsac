@@ -121,8 +121,11 @@ class ReportCreditCollection extends ResourceCollection
             }
             $observation = $row->observation;
             if ($row->state_type_id == '11' || $row->state === 'O') {
-                $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
-                $observation .= " " . $observation_credit;
+                // sale_note_credit may be null; use optional to avoid accessing property on non-object
+                $observation_credit = optional($row->sale_note_credit)->reason_to_anulate_credit ?? '';
+                if ($observation_credit !== '') {
+                    $observation = trim($observation . ' ' . $observation_credit);
+                }
             }
             // $penalty = $row->c
             return [

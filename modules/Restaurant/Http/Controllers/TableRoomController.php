@@ -1243,11 +1243,11 @@ class TableRoomController extends Controller
         $hotel_rent_id = $id;
         $items = collect();
 
-    // Variables extra solicitadas en la respuesta
-    $first_item = $hotel_rent_items->first();
-    $is_reserve = $first_item ? (bool) $first_item->is_reserve : false;
-    // Sumar todos los adelantos (advances) de los items relacionados
-    $advance = $hotel_rent_items->sum('advances');
+        // Variables extra solicitadas en la respuesta
+        $first_item = $hotel_rent_items->first();
+        $is_reserve = $first_item ? (bool) $first_item->is_reserve : false;
+        // Sumar todos los adelantos (advances) de los items relacionados
+        $advance = $hotel_rent_items->sum('advances');
 
         foreach ($hotel_rent_items as $hotel_rent_item) {
             $service = $this->get_item_service();
@@ -1466,8 +1466,8 @@ class TableRoomController extends Controller
     {
         return [
             'number' => 'Nº de habitación',
-            'floor_id' => 'N° Piso',
             'description' => 'Incluye',
+
         ];
     }
     public function recordsByArea($id)
@@ -2269,19 +2269,45 @@ class TableRoomController extends Controller
     {
         $column = $request->input('column');
         $value = $request->input('value');
-        // $this->checkReserves();
+        $floor_id = $request->input('floor_id');
+        $tower_id = $request->input('tower_id');
+        $table_type_id = $request->input('table_type_id');
+
         $records = Table::where('is_room', true);
 
-        if ($column && $value) {
+        /* if ($column && $value) {
             $records = $records->where($column, 'like', "%{$value}%");
+        } */
+        if ($column && $value) {
+            $records->where($column, 'like', "%{$value}%");
         }
 
-        return new TableCollection($records->paginate(config('tenant.items_per_page')));
+        /* if ($floor_id) {
+            $records = $records->where('floor_id', $floor_id);
+        } */
+        if ($floor_id) {
+            $records->where('floor_id', $floor_id);
+        }
+        if ($tower_id) {
+            $records->whereHas('floor', function ($q) use ($tower_id) {
+                $q->where('tower_id', $tower_id);
+            });
+        }
 
-        // return [
-        //     'success' => true,
-        //     'data' => $tables
-        // ];
+        /* if ($tower_id) {
+            $records = $records->whereHas('floor', function ($q) use ($tower_id) {
+                $q->where('tower_id', $tower_id);
+            });
+        } */
+        if ($table_type_id) {
+            $records->where('table_type_id', $table_type_id);
+        }
+
+        /* f ($table_type_id) {
+            $records = $records->where('table_type_id', $table_type_id);
+        } */
+
+        return new TableCollection($records->paginate(config('tenant.items_per_page')));
     }
     function checkReserves($establishment_id)
     {
