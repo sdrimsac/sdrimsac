@@ -2659,6 +2659,8 @@ export default {
 
             this.$emit("update:showTables", false);
             this.$emit("update:roomSeeId", null);
+            // Emitir evento personalizado al cerrar el modal
+            this.$emit("modal-closed");
         },
         goToReservations() {
             this.showReserves = true;

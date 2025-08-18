@@ -1969,24 +1969,29 @@ class DocumentController extends Controller
             if ($configuration->hotels) {
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-                    foreach ($hotel_rent_items as $item) {
-                        $item->payment_status = "Pagado";
+                    foreach ($hotel_rent_items as $hotel_rent_item) {
+                        $hotel_rent_item->payment_status = "Pagado";
                         if ($vacate) {
-                            $table = Table::where('id', $item->table_id)->first();
-                            $table->status_table_id = 5;
-                            $table->sendMessageDesocupied();
-                            $table->save();
+                            $table = Table::where('id', $hotel_rent_item->table_id)->first();
+                            if ($table) {
+                                $table->status_table_id = 5;
+                                $table->sendMessageDesocupied();
+                                $table->save();
+                                
+                            }
+                            DB::connection('tenant')->table('hotel_rent_item_services')->where('hotel_rent_item_id', $hotel_rent_item->id)->update(['active' => 0]);
                         } else {
-                            $item->total = 0;
-                            $item->advances = 0;
-                            $id_to_document = $item->hotel_rent_id;
+                            $hotel_rent_item->total = 0;
+                            $hotel_rent_item->advances = 0;
+                            $id_to_document = $hotel_rent_item->hotel_rent_id;
                             HotelRentDocument::create([
                                 'hotel_rent_id' => $id_to_document,
                                 'document_id' => $document->id,
                                 'is_advance' => false,
                             ]);
                         }
-                        $item->save();
+                        $hotel_rent_item->save();
+                        
                     }
                 }
                 if ($request->hotel_rent_id) {
@@ -2018,6 +2023,11 @@ class DocumentController extends Controller
                                 $table->status_table_id = 5;
                                 $table->sendMessageDesocupied();
                                 $table->save();
+                                // Desactivar servicios vinculados al item de renta al desocupar
+                                /* DB::connection('tenant')
+                                    ->table('hotel_rent_item_services')
+                                    ->where('hotel_rent_item_id', $item->id)
+                                    ->update(['active' => 0]); */
                             } else {
                                 $item->total = 0;
                                 $item->advances = 0;

@@ -377,67 +377,107 @@ class TableRoomController extends Controller
 
     public function get_promotion($code)
     {
+        // Buscar la promoción por código (sensible a mayúsculas/minúsculas)
+        $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)->first();
 
-        $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)
-            ->first();
-        $promotion->dued();
-
-        if ($promotion) {
-            if ($promotion->active == false) {
-                $user = auth()->user();
-                $room_service = $promotion->room_service;
-                $hotel_rent_item_id = $promotion->hotel_rent_item_id;
-                $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
-                $table = $hotel_rent_item->table;
-                $name = $table->getTableFullName();
-                $service_name = $room_service->name;
-                $user_name = $user->name;
-                $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
-                (new WhatsappController)->sendMessageAll($message);
-                return [
-                    'success' => false,
-                    'message' => 'Código ya utilizado'
-                ];
-            }
-            if ($promotion->was_due) {
-                return [
-                    'success' => false,
-                    'message' => 'Código vencido'
-                ];
-            }
-            $hotel_rent_item_id = $promotion->hotel_rent_item_id;
-            $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
-            $customer_number = $hotel_rent_item->hotel_rent->customer->number;
-            $customer_id = $hotel_rent_item->hotel_rent->customer_id;
-            $room_service = $promotion->room_service;
-            $promotion->has_items = (bool) $room_service->has_items;
-            if ($promotion->has_items) {
-                $formated = $this->formatedItems($room_service->items, $promotion->quantity);
-                $error = $formated['error'];
-                if ($error) {
-                    return [
-                        'success' => false,
-                        'message' => 'Producto no encontrado'
-                    ];
-                } else {
-                    $promotion->items = $formated['items'];
-                    $promotion->hotel_rent_item_id = $hotel_rent_item_id;
-                    $promotion->customer_number = $customer_number;
-                    $promotion->customer_id = $customer_id;
-                }
-            }
-            $promotion->name = $room_service->name;
-            return [
-                'success' => true,
-                'data' => $promotion,
-
-            ];
-        } else {
+        // Si no existe, devolver mensaje adecuado
+        if (!$promotion) {
             return [
                 'success' => false,
                 'message' => 'Código no encontrado'
             ];
         }
+
+        // Calcular si está vencida
+        $promotion->dued();
+
+        // Bloquear si ya fue utilizada
+        if ($promotion->active == false) {
+            $user = auth()->user();
+            $room_service = $promotion->room_service;
+            $hotel_rent_item_id = $promotion->hotel_rent_item_id;
+            $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
+            $table = $hotel_rent_item ? $hotel_rent_item->table : null;
+            $name = $table ? $table->getTableFullName() : '';
+            $service_name = $room_service ? $room_service->name : '';
+            $user_name = $user ? $user->name : '';
+            $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
+            (new WhatsappController)->sendMessageAll($message);
+            return [
+                'success' => false,
+                'message' => 'Código ya utilizado'
+            ];
+        }
+
+        // Verificación solicitada: si la habitación fue liberada o el alquiler está cancelado/pagado, no permitir canjear
+        $hotel_rent_item_id = $promotion->hotel_rent_item_id;
+        $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
+        $hotel_rent = $hotel_rent_item ? $hotel_rent_item->hotel_rent : null;
+        $table = $hotel_rent_item ? $hotel_rent_item->table : null;
+
+        // Estados considerados como no canjeables
+        $status_item = $hotel_rent_item && is_string($hotel_rent_item->payment_status)
+            ? mb_strtolower($hotel_rent_item->payment_status)
+            : '';
+        $status_rent = $hotel_rent && is_string($hotel_rent->payment_status)
+            ? mb_strtolower($hotel_rent->payment_status)
+            : '';
+
+        $isCanceled = ($status_item === 'canceled') || ($status_rent === 'canceled');
+        // "Pagado" puede venir con mayúscula/minúscula, normalizamos a minúsculas
+        $isPaid = ($status_item === mb_strtolower('Pagado')) || ($status_rent === mb_strtolower('Pagado'));
+        $hasCheckout = $hotel_rent_item && ($hotel_rent_item->checkout_date || $hotel_rent_item->checkout_time);
+        $tableFreed = $table && ((int) $table->status_table_id === 5);
+        $isFreedOrClosed = $isCanceled || $isPaid || $hasCheckout || $tableFreed;
+
+        if ($isFreedOrClosed) {
+            // Mensaje de alerta y bloqueo
+            $user = auth()->user();
+            $room_service = $promotion->room_service;
+            $name = $table ? $table->getTableFullName() : '';
+            $service_name = $room_service ? $room_service->name : '';
+            $user_name = $user ? $user->name : '';
+            $message = "El cajero $user_name intentó canjear el código de promoción $code ($service_name - Hab. $name) pero la habitación ya fue liberada/cancelada/pagada";
+            (new WhatsappController)->sendMessageAll($message);
+            return [
+                'success' => false,
+                'message' => 'La habitación ya fue liberada o el alquiler fue cancelado/pagado, por lo tanto no se puede canjear esta promoción'
+            ];
+        }
+
+        // Bloquear si está vencida
+        if ($promotion->was_due) {
+            return [
+                'success' => false,
+                'message' => 'Código vencido'
+            ];
+        }
+
+        // Preparar datos si todo está OK
+        $customer_number = $hotel_rent_item->hotel_rent->customer->number;
+        $customer_id = $hotel_rent_item->hotel_rent->customer_id;
+        $room_service = $promotion->room_service;
+        $promotion->has_items = (bool) $room_service->has_items;
+        if ($promotion->has_items) {
+            $formated = $this->formatedItems($room_service->items, $promotion->quantity);
+            $error = $formated['error'];
+            if ($error) {
+                return [
+                    'success' => false,
+                    'message' => 'Producto no encontrado'
+                ];
+            } else {
+                $promotion->items = $formated['items'];
+                $promotion->hotel_rent_item_id = $hotel_rent_item_id;
+                $promotion->customer_number = $customer_number;
+                $promotion->customer_id = $customer_id;
+            }
+        }
+        $promotion->name = $room_service->name;
+        return [
+            'success' => true,
+            'data' => $promotion,
+        ];
     }
 
     function formatedItems($items, $qty = 1)
@@ -940,13 +980,17 @@ class TableRoomController extends Controller
 
         $table->sendMessageDesocupied();
         $table->save();
+
+        // Actualiza los servicios relacionados después de guardar el hotel_rent_item
+        $hotel_rent_item->save();
+        DB::connection('tenant')->table('hotel_rent_item_services')->where('hotel_rent_item_id', $hotel_rent_item->id)->update(['active' => 0]);
+
         if ($hotel_rent_item && $hotel_rent_item->is_month_rent) {
             $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
             $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
             $hotel_rent_item->payment_status = "Pagado";
             $hotel_rent_item->save();
         }
-        $hotel_rent_item->save();
         $table->save();
         return [
             'success' => true,
@@ -1242,52 +1286,45 @@ class TableRoomController extends Controller
         $customer_number  = $hotel_rent->customer->number;
         $hotel_rent_id = $id;
         $items = collect();
-
-        // Variables extra solicitadas en la respuesta
         $first_item = $hotel_rent_items->first();
         $is_reserve = $first_item ? (bool) $first_item->is_reserve : false;
-        // Sumar todos los adelantos (advances) de los items relacionados
         $advance = $hotel_rent_items->sum('advances');
 
         foreach ($hotel_rent_items as $hotel_rent_item) {
             $service = $this->get_item_service();
 
-            // Obtener precio real de la habitación desde la tabla tables
             $room_price = optional($hotel_rent_item->table)->price ?? 0;
-            //Log::info("Precio real de la habitación: $room_price");
-
-            // Seteamos el precio del servicio con lo pagado como adelanto
             $service->price = $hotel_rent_item->advances;
+
+            // Obtener torre asociada a la habitación (table -> floor -> tower)
+            $table = $hotel_rent_item->table;
+            $room_number = $table ? $table->number : '';
+            $tower = ($table && $table->floor) ? $table->floor->tower : null;
+            $tower_name = $tower ? $tower->name : null;
+            $room_label = "habitación n° " . $room_number . ($tower_name ? " - " . $tower_name : "");
 
             $word_rent = $hotel_rent_item->is_reserve == 1 ? "Reservación" : "Alquiler";
             $word_advance = $hotel_rent_item->is_reserve == 1 ? "Adelanto de reservación" : "Adelanto";
-
-            // Comparación con precio real
             if ($room_price > 0 && $hotel_rent_item->advances >= $room_price) {
-                $concept = "$word_rent de habitación n° " . $hotel_rent_item->table->number;
+                $concept = "$word_rent de $room_label";
             } else {
-                $concept = "$word_advance de habitación n° " . $hotel_rent_item->table->number;
+                $concept = "$word_advance de $room_label";
             }
 
-            // Si es alquiler mensual
             if ($hotel_rent_item->is_month_rent) {
                 $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
                 $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
 
-                // Día y mes en letras
                 $day = $checkin_date->format('d');
                 $month = $this->getMonth($checkin_date->format('m'));
 
                 $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
                 $month_one_more_month = $this->getMonth(Carbon::parse($checkin_date_more_one_month)->format('m'));
 
-                // Calcular si es pago total o adelanto comparando con precio real
                 if ($room_price > 0 && $hotel_rent_item->advances >= $room_price) {
-                    $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number .
-                        " del $day de $month al $day_one_more_month de $month_one_more_month";
+                    $concept = "Alquiler de $room_label del $day de $month al $day_one_more_month de $month_one_more_month";
                 } else {
-                    $concept = "Adelanto de Alquiler de habitación n° " . $hotel_rent_item->table->number .
-                        " del $day de $month al $day_one_more_month de $month_one_more_month";
+                    $concept = "Adelanto de Alquiler de $room_label del $day de $month al $day_one_more_month de $month_one_more_month";
                 }
             }
 

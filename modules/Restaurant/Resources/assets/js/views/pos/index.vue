@@ -2029,6 +2029,7 @@
             @roomWasCleaned="roomWasCleaned"
             @sendOrdens="sendOrdens"
             :roomSeeId="roomSeeId"
+            @modal-closed="modalClosed"
             :showTables.sync="showTablesRooms"
             :itemDefault.sync="itemDefault"
             :fromPos="true"
@@ -2960,6 +2961,12 @@ export default {
     },
 
     methods: {
+        modalClosed() {
+            // Cerrar el modal de habitaciones si sigue abierto
+            this.showTablesRooms = false;
+            this.getTablesToClean();
+            this.getTablesToLeave();
+        },
         iniciarMedicionLatencia() {
             setInterval(async () => {
                 const valor = await this.medirLatencia();
