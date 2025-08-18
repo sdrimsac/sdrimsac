@@ -2476,6 +2476,13 @@ export default {
                     } catch (e) {
                         return; // si cancela, no sigue el flujo
                     }
+                } else {
+                    // Habitación libre y no en limpieza: permitir alquilar
+                    if (!this.cash_id) {
+                        this.$message.warning("Abra una caja para continuar");
+                        return;
+                    }
+                    this.showRoom = true;
                 }
             } else if (table.status_table_id == 5) {
                 if (table.is_cleaning) {
