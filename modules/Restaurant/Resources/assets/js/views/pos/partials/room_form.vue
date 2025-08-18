@@ -487,16 +487,28 @@
                                     Días
                                 </template>
                             </label>
-                            <el-input
+                            <el-input-number
                                 type="number"
-                                @input="changeTable(room)"
+                                @input="val => {
+                                    // Solo permitir 0.5 o enteros >= 1
+                                    if (val === 0.5) {
+                                        room.duration = 0.5;
+                                    } else if (Number.isInteger(val) && val >= 1) {
+                                        room.duration = val;
+                                    } else if (val < 0.5) {
+                                        room.duration = 0.5;
+                                    } else {
+                                        // Si no es válido, dejar el último valor válido
+                                        room.duration = room.duration || 1;
+                                    }
+                                    changeTable(room);
+                                }"
                                 v-model="room.duration"
-                                placeholder="Duración"
                                 size="small"
-                                step="1"
+                                :min="0.5"
                                 style="width: 100%;"
                                 :disabled="!form.customer_id"
-                            ></el-input>
+                            />
                             <br />
                             <div
                                 v-if="
@@ -524,12 +536,20 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="total_room">Adelanto de pago </label>
+                            <label for="total_room">Adelanto de pago</label>
                             <el-input
                                 type="number"
                                 :min="0"
-                                @input="calculateTotal"
-                                v-model="room.advances"
+                                :max="room.max_advance || 0"
+                                step="any"
+                                v-model.number="room.advances"
+                                @input="val => onAdvancesInput(room, val)"
+                                @keydown.native="e => {
+                                    // Bloquear signo negativo y notación exponencial
+                                    if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                        e.preventDefault();
+                                    }
+                                }"
                                 :disabled="!form.customer_id"
                             >
                             </el-input>
@@ -863,6 +883,27 @@ export default {
         };
     },
     methods: {
+        onAdvancesInput(room, val) {
+            // Normaliza entradas vacías o no numéricas a 0
+            if (val === '' || val === null || val === undefined) {
+                room.advances = 0;
+                this.calculateTotal();
+                return;
+            }
+            // Asegura no negativos
+            let n = Number(val);
+            if (isNaN(n) || n < 0) n = 0;
+
+            const max = Number(room.max_advance || 0);
+
+            // Permitir cualquier valor entre 0 y max (inclusive)
+            if (n > max) n = max;
+            if (n < 0) n = 0;
+
+            // Redondeo opcional a 2 decimales
+            room.advances = Math.round(n * 100) / 100;
+            this.calculateTotal();
+        },
         removeGuess(room, idx) {
             room.guesses.splice(idx, 1);
             room.quantity_persons = room.guesses.length;
@@ -1020,10 +1061,7 @@ export default {
                         t => t.id == room.table_id
                     );
                     if (table.description) {
-                        room.description = table.description.replaceAll(
-                            "/",
-                            "·"
-                        );
+                        room.description = table.description.replaceAll('/', '·');
                     }
                     if (table) {
                         let { price, month_price } = table;
@@ -1032,23 +1070,24 @@ export default {
                         }
                         price = price * room.duration;
                         room.original_price = price;
-                        let result = price - Number(advances);
-                        if (room.discount_instead_services) {
-                            let {
-                                discount_amount_instead_service
-                            } = this.configuration;
-                            discount_amount_instead_service = Number(
-                                discount_amount_instead_service
-                            );
-                            result -=
-                                discount_amount_instead_service * room.duration;
+                        // Descuento por servicios si aplica
+                        if (room.discount_instead_services && this.configuration && this.configuration.discount_amount_instead_service) {
+                            price = price - (this.configuration.discount_amount_instead_service * room.duration);
                         }
-                        if (
-                            this.form.discount_pack > 0 &&
-                            this.rooms.length > 1
-                        ) {
-                            result -= this.form.discount_pack;
+                        // Descuento por pack si aplica
+                        if (this.form && this.form.discount_pack && this.rooms.length > 1) {
+                            price = price - Number(this.form.discount_pack || 0);
                         }
+
+                        // Precio base (antes de adelanto) y tope de adelanto
+                        const basePrice = Math.max(0, Number(price));
+                        room.max_advance = basePrice;
+
+                        // Clampea advances entre 0 y basePrice
+                        const numericAdvance = Math.min(Math.max(0, Number(advances || 0)), basePrice);
+                        room.advances = isNaN(numericAdvance) ? 0 : numericAdvance;
+
+                        const result = Math.max(0, basePrice - Number(room.advances || 0));
                         room.total = result;
 
                         subtotal += result;

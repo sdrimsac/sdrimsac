@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-left: 10px;">
+                <div class="card" style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-left: 10px;" v-if="!viewingRoom">
                     <div class="card-body" style="padding: 0px;">
                         <label for="type_room_id" style="color: #000; font-weight: bold;">Tipo de Habitación</label>
                         <el-select
@@ -534,15 +534,16 @@
                                                         }}]
                                                     </a>
                                                 </label>
-                                                <input
+                                                <el-input-number
                                                     type="number"
+                                                    :min="0.5"
                                                     class="form-control"
                                                     id="duration"
                                                     v-model="
                                                         currentRoom.duration
                                                     "
                                                     disabled
-                                                />
+                                                ></el-input-number>
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <label for="quantity">
@@ -1571,7 +1572,7 @@
                         de alquiler</label
                     >
                     <el-input-number
-                        :min="1"
+                        :min="0.1"
                         class="w-100"
                         id="days"
                         v-model="currentRoom.new_duration"

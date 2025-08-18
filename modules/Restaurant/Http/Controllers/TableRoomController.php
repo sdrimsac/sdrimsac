@@ -645,6 +645,7 @@ class TableRoomController extends Controller
     }
     public function addDays($id, $days)
     {
+        /* dump($id, $days); */
         try {
             DB::connection('tenant')->beginTransaction();
             $hotel_rent_item = HotelRentItem::find($id);
@@ -654,11 +655,33 @@ class TableRoomController extends Controller
             $hotel_rent =  $hotel_rent_item->hotel_rent;
             $old_total = $hotel_rent->total;
             $old_duration = $hotel_rent_item->duration;
+
+            /* para el nuevo periodo  de aumetar la hora*/
             $new_duration = $hotel_rent_item->duration + $days;
             $hotel_rent_item->duration = $new_duration;
             $table = $hotel_rent_item->table;
             $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price;
-            $total = $price * $new_duration;
+            //$total = $price * $new_duration;
+
+            $full_days = floor($new_duration);
+            $fraction = $new_duration - $full_days;
+
+            $total = ($price * $full_days);
+
+            // Si hay medio día, cobrar la mitad
+            if ($fraction == 0.5) {
+                $total += ($price / 2);
+            }
+
+            /* if (!$hotel_rent_item->is_month_rent && fmod($days, 1) != 0) {
+                $fraction = $days - floor($days);
+                $total += $price * $fraction;
+            } */
+            /* $new_duration = $hotel_rent_item->duration + $days;
+            $hotel_rent_item->duration = $new_duration;
+            $table = $hotel_rent_item->table;
+            $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price;
+            $total = $price * $new_duration; */
             $documents = $hotel_rent->documents;
             $advances = 0;
             foreach ($documents as $document) {
@@ -1572,6 +1595,7 @@ class TableRoomController extends Controller
             'data' => $tablesClean
         ];
     }
+
     public  function getTables()
     {
         $configuration = Configuration::first();
@@ -1646,7 +1670,8 @@ class TableRoomController extends Controller
         $orden = Orden::find($id);
         return compact('orden');
     }
-    function getDateAndTimeToLeave($date, $time, $duration, $is_month_rent)
+
+    /*function getDateAndTimeToLeave($date, $time, $duration, $is_month_rent)
     {
         if ($is_month_rent) {
             //a $date agregale en meses $duration
@@ -1668,7 +1693,6 @@ class TableRoomController extends Controller
             $checkout_date_estimated = null;
             $checkout_time_estimated = null;
             if ($duration == 1) {
-
                 if (Carbon::parse($time) < Carbon::parse($time_to_enter)) {
                     $checkout_date_estimated = Carbon::parse($date)
                         ->setTimezone('America/Lima')
@@ -1691,7 +1715,71 @@ class TableRoomController extends Controller
             'checkout_date_estimated' => $checkout_date_estimated,
             'checkout_time_estimated' => $checkout_time_estimated,
         ];
+    }*/
+
+    function getDateAndTimeToLeave($date, $time, $duration, $is_month_rent)
+    {
+        if ($is_month_rent) {
+            // Si es renta mensual → simplemente sumar meses
+            $checkout_date_estimated = Carbon::parse($date)
+                ->setTimezone('America/Lima')
+                ->addMonths($duration)
+                ->format('Y-m-d');
+            $checkout_time_estimated = $time;
+        } else {
+            $configuration = Configuration::first();
+            $time_to_leave = Carbon::parse($configuration->time_to_leave)
+                ->setTimezone('America/Lima')
+                ->format('H:i:s');
+            $time_to_enter = Carbon::parse($configuration->time_to_enter)
+                ->setTimezone('America/Lima')
+                ->format('H:i:s');
+
+            $checkout_date_estimated = null;
+            $checkout_time_estimated = null;
+
+            // separar días completos y medio día
+            $full_days = floor($duration); // parte entera
+            $fraction = $duration - $full_days; // parte fraccional
+
+            if ($fraction == 0) {
+                // 🔹 CASO NORMAL: días completos
+                if ($full_days == 1) {
+                    if (Carbon::parse($time) < Carbon::parse($time_to_enter)) {
+                        $checkout_date_estimated = Carbon::parse($date)
+                            ->setTimezone('America/Lima')
+                            ->format('Y-m-d');
+                    } else {
+                        $checkout_date_estimated = Carbon::parse($date)
+                            ->setTimezone('America/Lima')
+                            ->addDay()
+                            ->format('Y-m-d');
+                    }
+                } else {
+                    $checkout_date_estimated = Carbon::parse($date)
+                        ->setTimezone('America/Lima')
+                        ->addDays($full_days)
+                        ->format('Y-m-d');
+                }
+
+                $checkout_time_estimated = $time_to_leave;
+            } elseif ($fraction == 0.5) {
+                // 🔹 CASO ESPECIAL: medio día adicional → salir a las 8 PM
+                $checkout = Carbon::parse($date . ' ' . $time)
+                    ->setTimezone('America/Lima')
+                    ->addDays($full_days);
+
+                $checkout_date_estimated = $checkout->format('Y-m-d');
+                $checkout_time_estimated = "20:00:00"; // fijo 8 PM
+            }
+        }
+
+        return [
+            'checkout_date_estimated' => $checkout_date_estimated,
+            'checkout_time_estimated' => $checkout_time_estimated,
+        ];
     }
+
     public function delete_hotel_rent($id)
     {
         $hotel_rent = HotelRent::findOrFail($id);
