@@ -4959,12 +4959,29 @@ export default {
                 this.isLocked = false;
                 return;
             }
-            if (form.total + 200 <= form.enter_amount) {
-                this.$toast.error(
-                    "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
-                );
-                this.isLocked = false;
-                return;
+            // Validación de montos según tipo de documento
+            // Para Factura (01) y Boleta (03) el monto ingresado (incluyendo pagos divididos)
+            // debe ser exactamente igual al Total a cobrar
+            const enteredAmount = (parseFloat(form.enter_amount) || 0) + this.totalPayments();
+            const totalAmount = parseFloat(form.total) || 0;
+            const isInvoiceOrReceipt = ["01", "03"].includes(form.document_type_id);
+            if (isInvoiceOrReceipt) {
+                if (Math.abs(enteredAmount - totalAmount) > 0.009) {
+                    this.$toast.error(
+                        "El monto ingresado debe ser exactamente igual al Total a cobrar"
+                    );
+                    this.isLocked = false;
+                    return;
+                }
+            } else {
+                // Para otros documentos, mantener la validación anterior de sobrepago > S/. 200
+                if (form.total + 200 <= form.enter_amount) {
+                    this.$toast.error(
+                        "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
+                    );
+                    this.isLocked = false;
+                    return;
+                }
             }
 
             let customer = this.customers.find(c => c.id == form.customer_id);

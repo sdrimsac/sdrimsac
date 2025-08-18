@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Http\Resources;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
+use App\Models\Tenant\HotelRentItem;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Restaurant\Models\Orden;
@@ -71,38 +72,52 @@ class HotelRentItemResource extends JsonResource
                 ];
             }
         }
+        // Only show orders on the active (is_reserve = 0) item for the same room (table).
+        // If this item is a reservation, hide orders here; they will appear under the active item.
         $total_all_orden = 0;
-        $ordens = Orden::where('hotel_rent_item_id', $this->id)
-            ->whereNull('document_id')
-            ->whereNull('sale_note_id')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->transform(function ($row) use (&$total_all_orden) {
-                $total_orden = 0;
+        $ordens = collect([]);
+        $orderItemIds = [];
+        if (!$this->is_reserve) {
+            // Agregar órdenes de todos los registros (reserva y no-reserva) de la misma habitación (table)
+            $orderItemIds = HotelRentItem::query()
+                ->where('table_id', $this->table_id)
+                ->pluck('id')
+                ->all();
+        }
 
-                return [
-                    'id' => $row->id,
-                    'paid' => $row->hasDocument(),
+        if (!empty($orderItemIds)) {
+            $ordens = Orden::whereIn('hotel_rent_item_id', $orderItemIds)
+                ->whereNull('document_id')
+                ->whereNull('sale_note_id')
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->transform(function ($row) use (&$total_all_orden) {
+                    $total_orden = 0;
 
-                    'document' => $row->getDocument(),
-                    'number' => $row->id,
-                    'date' => $row->created_at->format('d/m/Y H:i:s'),
-                    'items' => $row->orden_items->transform(function ($item) use (&$total_orden, &$total_all_orden) {
+                    return [
+                        'id' => $row->id,
+                        'paid' => $row->hasDocument(),
 
-                        $total = $item->price * $item->quantity;
-                        $total_orden += $total;
-                        $total_all_orden += $total;
-                        return [
-                            'id' => $item->id,
-                            'name' => $item->food->description,
-                            'quantity' => $item->quantity,
-                            'price' => number_format($item->price, 2),
-                            'total' => number_format($total, 2),
-                        ];
-                    }),
-                    'total' => number_format($total_orden, 2),
-                ];
-            });
+                        'document' => $row->getDocument(),
+                        'number' => $row->id,
+                        'date' => $row->created_at->format('d/m/Y H:i:s'),
+                        'items' => $row->orden_items->transform(function ($item) use (&$total_orden, &$total_all_orden) {
+
+                            $total = $item->price * $item->quantity;
+                            $total_orden += $total;
+                            $total_all_orden += $total;
+                            return [
+                                'id' => $item->id,
+                                'name' => $item->food->description,
+                                'quantity' => $item->quantity,
+                                'price' => number_format($item->price, 2),
+                                'total' => number_format($total, 2),
+                            ];
+                        }),
+                        'total' => number_format($total_orden, 2),
+                    ];
+                });
+        }
         $has_many_rooms = $this->hotel_rent->has_many_rooms();
         $price_table = $this->table->price;
         $extra_time = 0;

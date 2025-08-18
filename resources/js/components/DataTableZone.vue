@@ -203,7 +203,7 @@
                             <label for="">TORRE</label>
                             <el-select
                                 v-model="search.tower_id"
-                                @change="getRecords"
+                                @change="onTowerChange"
                                 placeholder="Seleccione la torre"
                                 clearable
                                 filterable
@@ -225,12 +225,13 @@
                             <el-select
                                 v-model="search.floor_id"
                                 @change="getRecords"
-                                placeholder="Seleccione el piso"
+                                :disabled="!search.tower_id"
+                                :placeholder="search.tower_id ? 'Seleccione el piso' : 'Primero seleccione la torre'"
                                 clearable
                                 filterable
                             >
                                 <el-option
-                                    v-for="(item, idx) in floors"
+                                    v-for="(item, idx) in floorsFiltered"
                                     :key="idx"
                                     :label="item.name"
                                     :value="item.id"
@@ -610,10 +611,18 @@ export default {
             // Data sources for rooms
             towers: [],
             floors: [],
+            all_floors: [],
             table_types: []
         };
     },
-    computed: {},
+    computed: {
+        floorsFiltered() {
+            // Only show floors that belong to the selected tower
+            if (!this.search.tower_id) return [];
+            const source = this.all_floors.length ? this.all_floors : this.floors;
+            return source.filter(f => f.tower_id == this.search.tower_id);
+        }
+    },
     created() {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
@@ -641,6 +650,7 @@ export default {
                     response.data;
                 this.towers = towers;
                 this.floors = floors;
+                this.all_floors = floors;
                 this.table_types = table_types || tables_types || [];
             });
         }
@@ -826,6 +836,11 @@ export default {
         },
         changeClearInput() {
             this.search.value = "";
+            this.getRecords();
+        },
+        onTowerChange() {
+            // Reset floor when tower changes and fetch records
+            this.search.floor_id = null;
             this.getRecords();
         }
     }

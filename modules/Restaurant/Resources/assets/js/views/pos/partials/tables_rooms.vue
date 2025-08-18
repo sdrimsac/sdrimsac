@@ -12,7 +12,7 @@
     >
         <div class="row">
             <!-- torres y pisos -->
-            <div class="col-5 d-flex justify-content-start align-items-center">
+            <div class="col-6 d-flex justify-content-start align-items-center">
                 <div
                     class="card"
                     style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-right: 10px;"
@@ -169,7 +169,7 @@
                                     filterTablesByFloor(floor.id);
                                     active = 1;
                                 "
-                                style="margin-right:5px; border: 1px solid #ccc; border-radius: 8px; width: 30px; height: 30px;"
+                                style="margin-right:5px; border: 1px solid #ccc; border-radius: 8px; width: 80px; height: 30px;"
                                 :class="
                                     floor_id == floor.id
                                         ? 'btn-primary text-white'
@@ -196,9 +196,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-left: 10px;" v-if="!viewingRoom">
+                <div
+                    class="card"
+                    style="padding: 3px; background-color: #6c757d; display: inline-block; width: auto; margin-left: 10px;"
+                    v-if="!viewingRoom"
+                >
                     <div class="card-body" style="padding: 0px;">
-                        <label for="type_room_id" style="color: #000; font-weight: bold;">Tipo de Habitación</label>
+                        <label
+                            for="type_room_id"
+                            style="color: #000; font-weight: bold;"
+                            >Tipo de Habitación</label
+                        >
                         <el-select
                             id="type_room_id"
                             v-model="table_type_id"
@@ -940,14 +948,23 @@
                                                             Agregar Productos
                                                         </button> -->
                                                     </el-tooltip>
-                                                    <el-tooltip content="Eliminar orden" placement="top">
-                                                    <button
-                                                        class="btn btn-danger btn-sm mx-1"
-                                                        @click="deleteOrden(orden.id)"
+                                                    <el-tooltip
+                                                        content="Eliminar orden"
+                                                        placement="top"
                                                     >
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </el-tooltip>
+                                                        <button
+                                                            class="btn btn-danger btn-sm mx-1"
+                                                            @click="
+                                                                deleteOrden(
+                                                                    orden.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-trash"
+                                                            ></i>
+                                                        </button>
+                                                    </el-tooltip>
                                                 </div>
                                             </div>
                                         </template>
@@ -992,9 +1009,16 @@
                                                     <td>
                                                         <button
                                                             class="btn btn-danger btn-sm mx-1"
-                                                            @click="attemptRemoveItem(orden, item.id)"
+                                                            @click="
+                                                                attemptRemoveItem(
+                                                                    orden,
+                                                                    item.id
+                                                                )
+                                                            "
                                                         >
-                                                            <i class="fas fa-trash"></i>
+                                                            <i
+                                                                class="fas fa-trash"
+                                                            ></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -1749,7 +1773,9 @@ export default {
         async attemptRemoveItem(orden, itemId) {
             try {
                 // If only one item in this order, block item deletion and force deleting the whole order
-                const itemsCount = Array.isArray(orden.items) ? orden.items.length : 0;
+                const itemsCount = Array.isArray(orden.items)
+                    ? orden.items.length
+                    : 0;
                 if (itemsCount <= 1) {
                     await this.$alert(
                         "Esta orden tiene un solo producto. Para eliminarlo, debe eliminar la orden completa.",
@@ -1765,7 +1791,9 @@ export default {
                             cancelButtonText: "Cancelar",
                             type: "warning"
                         }
-                    ).then(() => true).catch(() => false);
+                    )
+                        .then(() => true)
+                        .catch(() => false);
 
                     if (confirmDeleteAll) {
                         return this.deleteOrden(orden.id);
@@ -2039,14 +2067,17 @@ export default {
 
             // Si se limpia la selección, restaurar la vista según piso/torre si corresponde
             if (!selectedId) {
-                if (this.floor_id) return this.filterTablesByFloor(this.floor_id);
-                if (this.tower_id) return this.filterFloorsByTower(this.tower_id);
+                if (this.floor_id)
+                    return this.filterTablesByFloor(this.floor_id);
+                if (this.tower_id)
+                    return this.filterFloorsByTower(this.tower_id);
                 this.tables = this.all_tables.slice();
                 return;
             }
 
             this.tables = this.all_tables.filter(t => {
-                const tTypeId = t?.type?.id != null ? t.type.id : t.table_type_id;
+                const tTypeId =
+                    t?.type?.id != null ? t.type.id : t.table_type_id;
                 if (tTypeId != selectedId) return false;
                 // Mantener filtros actuales por piso/torre si están activos
                 if (this.floor_id) return t.floor_id == this.floor_id;
@@ -2072,7 +2103,13 @@ export default {
         async emitAdvances(id, paymentVariation = null) {
             const response = await this.$http(`/caja/rooms/advance/${id}`);
             const { data } = response;
-            let { items, hotel_rent_id, customer_number, advance, is_reserve } = data;
+            let {
+                items,
+                hotel_rent_id,
+                customer_number,
+                advance,
+                is_reserve
+            } = data;
             if (paymentVariation) {
                 let { description, price } = paymentVariation;
                 let foodDefault = this.itemDefault;
@@ -2088,7 +2125,7 @@ export default {
                         hotel_rent_id,
                         customer_number,
                         advance,
-                        is_reserve,
+                        is_reserve
                     },
                     [foodDefault]
                 );
@@ -2100,7 +2137,7 @@ export default {
                     hotel_rent_id,
                     customer_number,
                     advance,
-                    is_reserve,
+                    is_reserve
                 });
             }
             this.close();
@@ -2426,6 +2463,20 @@ export default {
                 }
                 this.getRoomDetail(table.id);
                 return;
+            } else if (table.status_table_id == 1) {
+                if (table.is_cleaning) {
+                    try {
+                        await this.$confirm("¿Terminar limpieza?", "Atención", {
+                            confirmButtonText: "Aceptar",
+                            cancelButtonText: "Cancelar",
+                            type: "warning"
+                        });
+                        this.roomCleaned(table.id);
+                        return; // 🚨 muy importante: salimos aquí para no seguir con el flujo de alquiler
+                    } catch (e) {
+                        return; // si cancela, no sigue el flujo
+                    }
+                }
             } else if (table.status_table_id == 5) {
                 if (table.is_cleaning) {
                     try {
@@ -2437,18 +2488,6 @@ export default {
                         this.roomCleaned(table.id);
                     } catch (e) {}
                 } else {
-                    // try {
-                    //     await this.$confirm(
-                    //         "¿Limpiar habitación?",
-                    //         "Atención",
-                    //         {
-                    //             confirmButtonText: "Aceptar",
-                    //             cancelButtonText: "Cancelar",
-                    //             type: "warning"
-                    //         }
-                    //     );
-                    //     this.sendToClean();
-                    // } catch (e) {}
                 }
             } else if (table.status_table_id == 3) {
                 try {
@@ -2551,7 +2590,8 @@ export default {
                 delete f.tower_name;
                 if (f.floor_id != floor_id) return false;
                 if (this.table_type_id) {
-                    const tTypeId = f?.type?.id != null ? f.type.id : f.table_type_id;
+                    const tTypeId =
+                        f?.type?.id != null ? f.type.id : f.table_type_id;
                     return tTypeId == this.table_type_id;
                 }
                 return true;
@@ -2566,7 +2606,10 @@ export default {
             let [floor] = this.floors;
             if (floor) {
                 // Si hay un piso ya seleccionado que pertenezca a esta torre, mantenerlo
-                if (this.floor_id && this.floors.some(f => f.id == this.floor_id)) {
+                if (
+                    this.floor_id &&
+                    this.floors.some(f => f.id == this.floor_id)
+                ) {
                     this.filterTablesByFloor(this.floor_id);
                 } else {
                     this.filterTablesByFloor(floor.id);
@@ -2577,7 +2620,8 @@ export default {
                 this.tables = this.all_tables.filter(t => {
                     if (!t.floor || t.floor.tower_id != tower_id) return false;
                     if (this.table_type_id) {
-                        const tTypeId = t?.type?.id != null ? t.type.id : t.table_type_id;
+                        const tTypeId =
+                            t?.type?.id != null ? t.type.id : t.table_type_id;
                         return tTypeId == this.table_type_id;
                     }
                     return true;
