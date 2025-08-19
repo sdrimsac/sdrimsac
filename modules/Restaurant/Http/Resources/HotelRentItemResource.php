@@ -120,9 +120,14 @@ class HotelRentItemResource extends JsonResource
         }
         $has_many_rooms = $this->hotel_rent->has_many_rooms();
         $price_table = $this->table->price;
-        // Prefer the persisted extra_time if set (used when preparing payment). If not set, compute dynamically.
+        // Prefer the persisted extra_time if set (used when preparing payment).
+        // Nunca recalcules penalidad si el item ya está pagado o inactivo.
         $extra_time = (float) ($this->extra_time ?? 0);
-        if ($extra_time <= 0) {
+        $isPaidOrInactive = (
+            (isset($this->payment_status) && strtolower($this->payment_status) === 'pagado')
+            || (isset($this->active) && $this->active === false)
+        );
+        if ($extra_time <= 0 && !$isPaidOrInactive) {
             $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
             $now = Carbon::now();
             if ($now->greaterThan($checkout_date_estimated)) {

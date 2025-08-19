@@ -1561,6 +1561,8 @@ class SaleNoteController extends Controller
                             $item->sale_note_id = $this->sale_note->id;
                             $item->checkout_date = date('Y-m-d');
                             $item->checkout_time = date('H:i:s');
+                            // Asegurar que la penalidad (extra_time) no vuelva a cobrarse
+                            $item->extra_time = 0;
                             if ($vacate) {
                                 $table = Table::where('id', $item->table_id)->first();
                                 $table->status_table_id = 5;
@@ -1617,7 +1619,8 @@ class SaleNoteController extends Controller
                                     $item->total = 0;
                                     $item->advances = 0;
                                 }
-
+                                // Asegurar que la penalidad (extra_time) no vuelva a cobrarse
+                                $item->extra_time = 0;
                                 $item->checkout_date = date('Y-m-d');
                                 $item->checkout_time = date('H:i:s');
                                 $item->save();
