@@ -120,20 +120,23 @@ class HotelRentItemResource extends JsonResource
         }
         $has_many_rooms = $this->hotel_rent->has_many_rooms();
         $price_table = $this->table->price;
-        $extra_time = 0;
-        $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
-        $now = Carbon::now();
-        if ($now->greaterThan($checkout_date_estimated)) {
-            $difference_days = $checkout_date_estimated->diffInDays($now);
-            if ($difference_days == 0) {
-                $checkout_time_estimated = Carbon::parse($this->checkout_time_estimated);
-                $now_time = Carbon::parse($now->format('H:i:s'));
-                if ($now_time->greaterThan($checkout_time_estimated)) {
-                    $extra_time = $price_table / 2;
+        // Prefer the persisted extra_time if set (used when preparing payment). If not set, compute dynamically.
+        $extra_time = (float) ($this->extra_time ?? 0);
+        if ($extra_time <= 0) {
+            $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
+            $now = Carbon::now();
+            if ($now->greaterThan($checkout_date_estimated)) {
+                $difference_days = $checkout_date_estimated->diffInDays($now);
+                if ($difference_days == 0) {
+                    $checkout_time_estimated = Carbon::parse($this->checkout_time_estimated);
+                    $now_time = Carbon::parse($now->format('H:i:s'));
+                    if ($now_time->greaterThan($checkout_time_estimated)) {
+                        $extra_time = $price_table / 2;
+                    }
                 }
-            }
-            if ($difference_days > 0) {
-                $extra_time = $price_table * $difference_days;
+                if ($difference_days > 0) {
+                    $extra_time = $price_table * $difference_days;
+                }
             }
         }
         // if ($checkout_date_estimated->greaterThan($now) && $checkout_date_estimated->diffInDays($now) <= 1

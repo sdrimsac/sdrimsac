@@ -1990,6 +1990,8 @@ class DocumentController extends Controller
                                 'is_advance' => false,
                             ]);
                         }
+                        // Limpia el extra_time ya facturado en cualquier caso
+                        $hotel_rent_item->extra_time = 0;
                         $hotel_rent_item->save();
                         
                     }
@@ -2038,6 +2040,8 @@ class DocumentController extends Controller
                                     'is_advance' => false,
                                 ]);
                             }
+                            // Limpia el extra_time ya facturado en cualquier caso
+                            $item->extra_time = 0;
                             $item->checkout_date = date('Y-m-d');
                             $item->checkout_time = date('H:i:s');
                             $item->save();
