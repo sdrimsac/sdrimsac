@@ -96,7 +96,6 @@ class AnulationServiceProvider extends ServiceProvider
 
     private function anulation_purchase()
     {
-
         Purchase::updated(function ($document) {
 
             if ($document['state_type_id'] == 11) {

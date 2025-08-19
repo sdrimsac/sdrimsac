@@ -23,7 +23,7 @@
                         </th>
                         <th
                             v-if="
-                                configuration.restaurant &&
+                                configuration.restaurant && 
                                     (type == 'documents' || type == 'saleNotes')
                             "
                             class="text-white"

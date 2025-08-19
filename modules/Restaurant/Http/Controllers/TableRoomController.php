@@ -401,12 +401,35 @@ class TableRoomController extends Controller
             $name = $table ? $table->getTableFullName() : '';
             $service_name = $room_service ? $room_service->name : '';
             $user_name = $user ? $user->name : '';
+
+            // Verifica si la habitación fue liberada/cancelada
+            $status_item = $hotel_rent_item && is_string($hotel_rent_item->payment_status)
+            ? mb_strtolower($hotel_rent_item->payment_status)
+            : '';
+            $status_rent = $hotel_rent_item && $hotel_rent_item->hotel_rent && is_string($hotel_rent_item->hotel_rent->payment_status)
+            ? mb_strtolower($hotel_rent_item->hotel_rent->payment_status)
+            : '';
+            $isCanceled = ($status_item === 'canceled') || ($status_rent === 'canceled');
+            $isPaid = ($status_item === mb_strtolower('Pagado')) || ($status_rent === mb_strtolower('Pagado'));
+            $hasCheckout = $hotel_rent_item && ($hotel_rent_item->checkout_date || $hotel_rent_item->checkout_time);
+            $tableFreed = $table && ((int) $table->status_table_id === 5);
+            $isFreedOrClosed = $isCanceled || $isPaid || $hasCheckout || $tableFreed;
+
+            if ($isFreedOrClosed) {
+            $message = "El cajero $user_name intentó canjear el código de promoción $code ($service_name - Hab. $name), pero el código fue dado de baja porque la habitación ya fue liberada o cancelada.";
+            (new WhatsappController)->sendMessageAll($message);
+            return [
+                'success' => false,
+                'message' => 'El código fue dado de baja porque la habitación ya fue liberada o cancelada.'
+            ];
+            } else {
             $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
             (new WhatsappController)->sendMessageAll($message);
             return [
                 'success' => false,
                 'message' => 'Código ya utilizado'
             ];
+            }
         }
 
         // Verificación solicitada: si la habitación fue liberada o el alquiler está cancelado/pagado, no permitir canjear

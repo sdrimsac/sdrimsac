@@ -581,6 +581,9 @@ class BoxesController extends Controller
                                     }
                                     if ($configuration->mod_renta) {
                                         $description_item = $item->item->description;
+                                    }
+                                    if ($configuration->hotels) {
+                                        $description_item = $item->item->description;
                                     } else {
                                         $description_item = $item_db->description;
 

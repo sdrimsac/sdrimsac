@@ -797,20 +797,6 @@
                                         style="margin-right: 15px;"
                                     >
                                         <span class="fw-bold text-secondary h5"
-                                            >Resta S/:</span
-                                        >
-                                        <span class="text-success h4">{{
-                                            (
-                                                Number(currentRoom.total) +
-                                                Number(extra_time)
-                                            ).toFixed(2)
-                                        }}</span>
-                                    </div>
-                                    <div
-                                        class="d-flex flex-column align-items-start"
-                                        style="margin-right: 15px;"
-                                    >
-                                        <span class="fw-bold text-secondary h5"
                                             >Órdenes:</span
                                         >
                                         <span class="text-dark h4">{{
@@ -819,7 +805,6 @@
                                             ).toFixed(2)
                                         }}</span>
                                     </div>
-
                                     <template v-if="extra_time > 0">
                                         <div
                                             class="d-flex flex-column align-items-start"
@@ -834,6 +819,20 @@
                                             }}</span>
                                         </div>
                                     </template>
+                                    <div
+                                        class="d-flex flex-column align-items-start"
+                                        style="margin-right: 15px;"
+                                    >
+                                        <span class="fw-bold text-secondary h5"
+                                            >Resta S/:</span
+                                        >
+                                        <span class="text-success h4">{{
+                                            (
+                                                Number(currentRoom.total) +
+                                                Number(extra_time)
+                                            ).toFixed(2)
+                                        }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

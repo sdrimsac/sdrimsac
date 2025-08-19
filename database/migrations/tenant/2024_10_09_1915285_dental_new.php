@@ -33,7 +33,6 @@ class DentalNew extends Migration
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->string('state')->default('Activo')->nullable();
-
             $table->timestamps();
         });
 

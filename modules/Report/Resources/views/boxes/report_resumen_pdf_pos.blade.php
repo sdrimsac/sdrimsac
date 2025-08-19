@@ -1694,7 +1694,7 @@
                             </tr>
                             <tr>
                                 <th>
-                                    <span class="f12">UNIDAD</span>
+                                    <span class="f12">CANTIDAD</span>
                                 </th>
                                 <th>
                                     <span class="f12">DESCRIPCION</span>
@@ -1889,7 +1889,7 @@
                 {{-- @dd($order_anulate_items['cancelado_orders']) --}}
                 <div style="text-align:center;">
                     <span style="font-size: 18px !important;">
-                        ORDENES DE PEDIDO ANULADOS
+                        ORDENES ANULADOS
                     </span>
 
                     <table class="border">
@@ -1897,7 +1897,7 @@
                             <tr>
                                 <th colspan="6" class="left">
                                     <span class="f12">
-                                        ORDENES DE PEDIDO ANULADOS
+                                        ORDENES ANULADOS
                                     </span>
                                 </th>
                             </tr>
