@@ -1424,7 +1424,13 @@ class OrdenController extends Controller
             $nested_is_room = data_get($request->all(), 'orden.is_room');
             $request_room_flag = $request->boolean('is_room')
                 || (is_bool($nested_is_room) ? $nested_is_room : filter_var($nested_is_room, FILTER_VALIDATE_BOOLEAN));
+            $printerDefault = $request->boolean('printerDefault'); // Nuevo flag
+
+            // Si printerDefault=true, permite imprimir aunque sea habitación
             $skip_print_for_room = ($tableForPrint && $tableForPrint->is_room) || $request_room_flag;
+            if ($printerDefault) {
+                $skip_print_for_room = false;
+            }
 
             if (!$skip_print_for_room) {
                 if ($conopy_kitchen) {
@@ -1645,11 +1651,11 @@ class OrdenController extends Controller
         foreach ($items as $item) {
             //cancelar orden
             $items_message[] = $item->info_item();
-            $item->delete();
+            $item->update(['status_orden_id' => 5]);
             event(new OrdenCancelEvent($item->id));
         }
         $orden = Orden::find($id);
-        $orden->delete();
+        $orden->update(['status_orden_id' => 5]);
 
         return ['success' => true, 'message' => 'Orden cancelada con éxito.'];
     }
@@ -1662,7 +1668,7 @@ class OrdenController extends Controller
         $items_message = [];
         if ($item) {
             $items_message[] = $item->info_item();
-            $item->delete();
+            $item->update(['status_orden_id' => 5]);
             event(new OrdenCancelEvent($item->id));
             return ['success' => true, 'message' => 'Item cancelado con éxito.'];
         } else {

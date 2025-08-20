@@ -37,7 +37,7 @@ trait CheckTotalTrait
             $message = "El documento {$documentTypeDescription} {$serie}-{$number} de fecha {$date_of_issue} ha sido emitido con un valor igual o menor a 0 (Total: {$total})";
 
             if ($isHotelPromotionRedemption) {
-                $message .= " :CANJE PROMOCIÓN HOTEL(BRAZALETE)";
+                $message .= " :CANJE PROMOCIÓN HOTEL. ";
             }
 
             (new WhatsappController)->sendMessageAllSupprot($message);

@@ -1692,11 +1692,22 @@ class BoxesController extends Controller
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
 
+        /* $query = Orden::with(['orden_items' => function ($q) {
+            $q->where('status_orden_id', 5);
+        }, 'orden_items.food', 'orden_items.user', 'orden_items.ordens_delete'])
+            ->whereDate('created_at', '>=', $date_opening)
+            ->whereTime('created_at', '>=', $time_opening); */
+
         $query = Orden::with(['orden_items' => function ($q) {
             $q->where('status_orden_id', 5);
         }, 'orden_items.food', 'orden_items.user', 'orden_items.ordens_delete'])
             ->whereDate('created_at', '>=', $date_opening)
             ->whereTime('created_at', '>=', $time_opening);
+
+        // limitamos a los ítems del usuario dueño de la caja
+        $query->whereHas('orden_items', function ($q) use ($cash) {
+            $q->where('user_id', $cash->user_id);
+        });
 
         if ($date_closed && $time_closed) {
             $query->whereDate('created_at', '<=', $date_closed)

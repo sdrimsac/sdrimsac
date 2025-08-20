@@ -4079,6 +4079,14 @@ export default {
                             } catch (e) {}
                         } else {
                             this.$toast.success("Cargando productos");
+                            // Determinar si el usuario pertenece a un establecimiento de tipo RESTAURANT
+                            const isRestaurantEst = (this.establishments && this.establishments.description)
+                                ? this.establishments.description.toString().toUpperCase().includes("RESTAURANT")
+                                : false;
+                            const sameEstablishment = (this.user && this.user.establishment_id && this.establishments && this.establishments.id)
+                                ? Number(this.user.establishment_id) === Number(this.establishments.id)
+                                : false;
+                            const printerDefault = isRestaurantEst && sameEstablishment;
                             this.$emit("paymentsOrden", {
                                 items: items,
                                 is_room: true,
@@ -4087,7 +4095,8 @@ export default {
                                 customer_id,
                                 promotion_sale: true,
                                 caja: true,
-                                printerOn: false
+                                printerOn: false,
+                                printerDefault
                             });
                             // this.$emit('update:localOrden',items)
                         }

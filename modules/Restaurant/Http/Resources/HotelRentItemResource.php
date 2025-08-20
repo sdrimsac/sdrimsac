@@ -89,20 +89,16 @@ class HotelRentItemResource extends JsonResource
             $ordens = Orden::whereIn('hotel_rent_item_id', $orderItemIds)
                 ->whereNull('document_id')
                 ->whereNull('sale_note_id')
+                ->where('status_orden_id', '!=', 5) // ocultar órdenes con estado 5
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->transform(function ($row) use (&$total_all_orden) {
                     $total_orden = 0;
 
-                    return [
-                        'id' => $row->id,
-                        'paid' => $row->hasDocument(),
-
-                        'document' => $row->getDocument(),
-                        'number' => $row->id,
-                        'date' => $row->created_at->format('d/m/Y H:i:s'),
-                        'items' => $row->orden_items->transform(function ($item) use (&$total_orden, &$total_all_orden) {
-
+                    $items = $row->orden_items
+                        ->where('status_orden_id', '!=', 5) // ocultar items con estado 5
+                        ->values()
+                        ->transform(function ($item) use (&$total_orden, &$total_all_orden) {
                             $total = $item->price * $item->quantity;
                             $total_orden += $total;
                             $total_all_orden += $total;
@@ -113,7 +109,15 @@ class HotelRentItemResource extends JsonResource
                                 'price' => number_format($item->price, 2),
                                 'total' => number_format($total, 2),
                             ];
-                        }),
+                        });
+
+                    return [
+                        'id' => $row->id,
+                        'paid' => $row->hasDocument(),
+                        'document' => $row->getDocument(),
+                        'number' => $row->id,
+                        'date' => $row->created_at->format('d/m/Y H:i:s'),
+                        'items' => $items,
                         'total' => number_format($total_orden, 2),
                     ];
                 });

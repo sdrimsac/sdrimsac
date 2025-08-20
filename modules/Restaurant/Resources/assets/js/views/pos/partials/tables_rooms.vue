@@ -827,10 +827,7 @@
                                             >Resta S/:</span
                                         >
                                         <span class="text-success h4">{{
-                                            (
-                                                Number(currentRoom.total) +
-                                                Number(extra_time)
-                                            ).toFixed(2)
+                                            Number(currentRoom.total).toFixed(2)
                                         }}</span>
                                     </div>
                                 </div>
@@ -2004,7 +2001,7 @@ export default {
             try {
                 this.loading = true;
                 const result = await Swal.fire({
-                    title: "¿Está seguro de cancelar la habitación?",
+                    title: "¿Está seguro de anular la habitación?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Aceptar",

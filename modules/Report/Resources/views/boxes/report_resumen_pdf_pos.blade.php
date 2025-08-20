@@ -1537,7 +1537,6 @@
                         </tr> --}}
                     </tbody>
                 </table>
-
             </div>
         @endif
         @if ($credit_list_ordens_customers && count($credit_list_ordens_customers) > 0)
@@ -1679,7 +1678,7 @@
         @if ($grouped && count($grouped) > 0)
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
-                    DETALLE DE PRODUCTOS VENDIDOS
+                    DETALLE DE PRODUCTOS/SERVICIOS VENDIDOS
                 </span>
 
                 @foreach ($grouped as $group)

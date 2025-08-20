@@ -404,11 +404,11 @@ class TableRoomController extends Controller
 
             // Verifica si la habitación fue liberada/cancelada
             $status_item = $hotel_rent_item && is_string($hotel_rent_item->payment_status)
-            ? mb_strtolower($hotel_rent_item->payment_status)
-            : '';
+                ? mb_strtolower($hotel_rent_item->payment_status)
+                : '';
             $status_rent = $hotel_rent_item && $hotel_rent_item->hotel_rent && is_string($hotel_rent_item->hotel_rent->payment_status)
-            ? mb_strtolower($hotel_rent_item->hotel_rent->payment_status)
-            : '';
+                ? mb_strtolower($hotel_rent_item->hotel_rent->payment_status)
+                : '';
             $isCanceled = ($status_item === 'canceled') || ($status_rent === 'canceled');
             $isPaid = ($status_item === mb_strtolower('Pagado')) || ($status_rent === mb_strtolower('Pagado'));
             $hasCheckout = $hotel_rent_item && ($hotel_rent_item->checkout_date || $hotel_rent_item->checkout_time);
@@ -416,19 +416,19 @@ class TableRoomController extends Controller
             $isFreedOrClosed = $isCanceled || $isPaid || $hasCheckout || $tableFreed;
 
             if ($isFreedOrClosed) {
-            $message = "El cajero $user_name intentó canjear el código de promoción $code ($service_name - Hab. $name), pero el código fue dado de baja porque la habitación ya fue liberada o cancelada.";
-            (new WhatsappController)->sendMessageAll($message);
-            return [
-                'success' => false,
-                'message' => 'El código fue dado de baja porque la habitación ya fue liberada o cancelada.'
-            ];
+                $message = "El cajero $user_name intentó canjear el código de promoción $code ($service_name - Hab. $name), pero el código fue dado de baja porque la habitación ya fue liberada o cancelada.";
+                (new WhatsappController)->sendMessageAll($message);
+                return [
+                    'success' => false,
+                    'message' => 'El código fue dado de baja porque la habitación ya fue desocupada o cancelada.'
+                ];
             } else {
-            $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
-            (new WhatsappController)->sendMessageAll($message);
-            return [
-                'success' => false,
-                'message' => 'Código ya utilizado'
-            ];
+                $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
+                (new WhatsappController)->sendMessageAll($message);
+                return [
+                    'success' => false,
+                    'message' => 'Código ya utilizado'
+                ];
             }
         }
 
@@ -966,8 +966,11 @@ class TableRoomController extends Controller
         $duration = $hotel_rent_item->duration;
         $table = $hotel_rent_item->table;
         $number = $table->number;
+        $tower = ($table && $table->floor) ? $table->floor->tower : null;
+        $tower_name = $tower ? $tower->name : null;
+        $room_label = "habitación n° $number" . ($tower_name ? " - $tower_name" : "");
 
-        return "Habitación n° $number por $duration día(s) ";
+        return "Alquiler de $room_label por $duration día(s)";
     }
     function recalculate(HotelRentItem $hote_rent_item)
     {
@@ -1443,11 +1446,18 @@ class TableRoomController extends Controller
         $description = $this->create_description($hotel_rent_item);
         $extra_service = null;
         $service = $this->get_item_service();
+        //para la media tarifa con mas datos
+        $table = $hotel_rent_item->table;
+        $room_number = $table ? $table->number : '';
+        $tower = ($table && $table->floor) ? $table->floor->tower : null;
+        $tower_name = $tower ? $tower->name : null;
+        $room_label = "habitación n° " . $room_number . ($tower_name ? " - " . $tower_name : "");
+
         if ($extra_time > 0) {
             $extra_service = $this->get_item_service();
             $extra_service->price = $extra_time;
             $extra_service->description = "Media tarifa";
-            $extra_service->item->description = "Media tarifa";
+            $extra_service->item->description = "Media tarifa $room_label";
         }
         $service->price = $total - $advance - $cancel_documents;
         if ($service->price < 0) {

@@ -4409,6 +4409,8 @@ export default {
                 "form.customer_id ver si obtiene el customer id",
                 form.customer_id
             );
+            // Propagar banderas de impresión opcionales
+            this.form.printerDefault = form.printerDefault;
             if (this.form.is_room) {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
