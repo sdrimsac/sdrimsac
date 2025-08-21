@@ -148,6 +148,8 @@ if ($hostname) {
             Route::post('document/email', 'Api\MobileController@document_email');
             Route::get('sale-note/record/{salenote}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
             Route::post('sale-note', '\App\Http\Controllers\Tenant\SaleNoteController@store');
+            // para la busqueda de items para la venta
+            Route::post('documents/search-items', [DocumentController::class, 'searchItems']);
 
             //--------------------------------------------------------------------------------------------------
             Route::get('quotations', 'QuotationController@index')->middleware('redirect.level');
