@@ -195,7 +195,7 @@ class MobileController extends Controller
             ->whereNotIsSet()
             ->whereIsActive()
             ->orderBy('description')
-            ->take(20)
+            ->take(50)
             ->get()
             ->transform(function ($row) {
                 $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
@@ -513,7 +513,7 @@ class MobileController extends Controller
                     'aux_quantity' => 1,
                     'image_url' => $image_url,
                     'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
-                    'brand' => $row->brand ?? '',
+                    'brand' => $row->brand->name ?? '',
                     'category' => $row->category->name ?? '',
                     'max_quantity' => $row->max_quantity,
                     'origin' => $row->origin,
