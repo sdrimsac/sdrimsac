@@ -500,6 +500,11 @@
                                                 <i class="fas fa-file-invoice-dollar mr-2 text-info"></i>
                                                 <span class="text-info">E. Cuenta</span>
                                             </el-dropdown-item> -->
+                                            <el-dropdown-item :command="['clickEdit', row.id]"
+                                                class="dropdown-item-account">
+                                                <i class="fas fa-file-invoice-dollar mr-2 text-info"></i>
+                                                <span class="text-info">Editar</span>
+                                            </el-dropdown-item>
                                             
                                             <el-dropdown-item :command="['clickDelete', row]"
                                                 class="dropdown-item-delete">
