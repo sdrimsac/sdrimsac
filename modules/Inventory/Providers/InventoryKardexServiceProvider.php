@@ -11,6 +11,7 @@ use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\Warehouse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Modules\Inventory\Traits\InventoryTrait;
 use Modules\Order\Models\OrderNote;
@@ -59,7 +60,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
         DocumentItem::created(function ($document_item) {
             $inventory_kardex = null;
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
-            if(isset($document->has_related_sale_note) && $document->has_related_sale_note == 1) return;
+            if (isset($document->has_related_sale_note) && $document->has_related_sale_note == 1) return;
             $warehouse = ($document_item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($document_item->warehouse_id)->establishment_id) : $this->findWarehouse();
             $presentationQuantity = (!empty($document_item->item->presentation)) ? $document_item->item->presentation->quantity_unit : 1;
             if (!$document_item->item->is_set) {
@@ -72,7 +73,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
 
                         $quantity = $quantity * $unit_type->quantity_unit;
                     }
-                }else if(isset($document_item->item->from_unit_type_id)){
+                } else if (isset($document_item->item->from_unit_type_id)) {
                     $unit_type = ItemUnitType::where('item_id', $document_item->item_id)
                         ->where('id', $document_item->item->from_unit_type_id)->first();
                     if ($unit_type) {
@@ -80,15 +81,28 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     }
                 }
                 $document = $document_item->document;
-                $factor = ($document->document_type_id === '07') ? 1 : -1;
-              $inventory_kardex = $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
+                //Log::info("ver asddd $document");
+                //$factor = ($document->document_type_id === '07') ? 1 : -1;
+                if ($document) {
+                    $factor = ($document->document_type_id === '07') ? 1 : -1;
+                } else {
+                    return;
+                }
+
+                $inventory_kardex = $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
                 if (!$document_item->document->sale_note_id && !$document_item->document->order_note_id)
                     $this->updateStock($document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
             } else {
-                $factor = ($document->document_type_id === '07') ? 1 : -1;
+                if ($document) {
+                    $factor = ($document->document_type_id === '07') ? 1 : -1;
+                } else {
+                    return;
+                }
+                //$factor = ($document->document_type_id === '07') ? 1 : -1;
+                //Log::info("verdasdasdasdadas $document");
                 $item = Item::findOrFail($document_item->item_id);
                 $document = $document_item->document;
-              $inventory_kardex =  $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
+                $inventory_kardex =  $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
 
                 // $this->updateStock($document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
                 foreach ($item->sets as $it) {
@@ -118,11 +132,11 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $color_size_found = ItemColorSize::find($it->id);
                     if ($color_size_found) {
                         $quantity_color_size = $it->quantity ?? $it->selectedQuantity;
-                        $color_size_found->stock = ($document->document_type_id === '07') ? ($color_size_found->stock+ $quantity_color_size) : ($color_size_found->stock - $quantity_color_size);
+                        $color_size_found->stock = ($document->document_type_id === '07') ? ($color_size_found->stock + $quantity_color_size) : ($color_size_found->stock - $quantity_color_size);
                         $color_size_found->save();
                         InventoryKardexDetail::create([
                             'inventory_kardex_id' => $inventory_kardex->id,
-                            'detail' => ($document->document_type_id === '07') ? 'Entrada del color ' . $it->color.' y talla '.$it->size : 'Salida del color ' . $it->color.' y talla '.$it->size,
+                            'detail' => ($document->document_type_id === '07') ? 'Entrada del color ' . $it->color . ' y talla ' . $it->size : 'Salida del color ' . $it->color . ' y talla ' . $it->size,
                         ]);
                     }
                 }
@@ -131,14 +145,14 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 foreach ($document_item->item->lots as $it) {
 
                     // if($it->has_sale){
-                        $r = ItemLot::find($it->id);
-                        $r->has_sale = ($document->document_type_id === '07') ? false : true;
-                        $r->save();
-                        $detail = $r->has_sale ? 'Salida de la serie ' . $it->series : 'Entrada de la serie ' . $it->series;
-                        InventoryKardexDetail::create([
-                            'inventory_kardex_id' => $inventory_kardex->id,
-                            'detail' => $detail,
-                        ]);
+                    $r = ItemLot::find($it->id);
+                    $r->has_sale = ($document->document_type_id === '07') ? false : true;
+                    $r->save();
+                    $detail = $r->has_sale ? 'Salida de la serie ' . $it->series : 'Entrada de la serie ' . $it->series;
+                    InventoryKardexDetail::create([
+                        'inventory_kardex_id' => $inventory_kardex->id,
+                        'detail' => $detail,
+                    ]);
                     // }
                     // $r->has_sale = true;
                 }
@@ -203,9 +217,9 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 }
             }
             if ($sale_note_item->item->is_stock == 'Si' && !$sale_note_item->sale_note->from_consignment) {
-                if($sale_note_item->warehouse_id){
+                if ($sale_note_item->warehouse_id) {
                     $warehouse = Warehouse::find($sale_note_item->warehouse_id);
-                }else{
+                } else {
                     $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
                 }
                 if (!$sale_note_item->item->is_set) {
@@ -220,7 +234,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         }
                     }
                     $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
-            
+
                     $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
                     if (!$sale_note_item->sale_note->order_note_id) {
                         $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
