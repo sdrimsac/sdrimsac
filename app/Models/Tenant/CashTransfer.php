@@ -17,8 +17,6 @@ class CashTransfer extends ModelTenant
         'observation',
     ];
  
-
-  
     public function cash_principal()
     {
         return $this->belongsTo(Cash::class, 'cash_principal_id');
@@ -28,6 +26,4 @@ class CashTransfer extends ModelTenant
     {
         return $this->belongsTo(Cash::class, 'cash_destination_id');
     }
-
- 
 }

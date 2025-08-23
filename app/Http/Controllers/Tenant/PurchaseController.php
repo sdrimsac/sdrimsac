@@ -57,6 +57,7 @@ use App\Services\RoleService;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Models\Hostname;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Http\Controllers\CashTransferController;
 use Modules\Restaurant\Models\Food;
@@ -563,7 +564,7 @@ class PurchaseController extends Controller
         $data = self::convert($request);
         $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
             try {
-                DB::connection('tenant')->beginTransaction();
+                //DB::connection('tenant')->beginTransaction();
                 $series = $data['series'];
                 $number = $data['number'];
                 $purchase = Purchase::where('series', $series)
@@ -751,6 +752,19 @@ class PurchaseController extends Controller
 
                 if (!$doc->filename) {
                     $this->setFilename($doc);
+                }
+
+                $total = (new CashTransferController)->available();
+                Log::info("Total disponible: {$total}");
+                if ($total > 0) {
+                    $date = date('Y-m-d');
+                    $time_box = $time_box;
+                    $time_now = date('H:i:s');
+                    $total_with_purchase = $total + $doc->total;
+                    Log::info("Total con compra: {$total_with_purchase}");
+                    $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total_with_purchase} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
+                    $website = $this->getTenantWebsite();
+                    WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
                 }
 
                 $configuration = Configuration::first();

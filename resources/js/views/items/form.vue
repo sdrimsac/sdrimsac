@@ -1064,12 +1064,9 @@
                                             >
                                                 <div class="form-group">
                                                     <el-checkbox
-                                                        v-model="
-                                                            form.series_enabled
-                                                        "
-                                                        @change="
-                                                            changeLotsEnabled
-                                                        "
+                                                        v-model="form.series_enabled"
+                                                        @change="changeLotsEnabled"
+                                                        :disabled="Boolean(form.series_enabled)"
                                                         style="color: black;"
                                                     >
                                                         Series
@@ -1079,9 +1076,7 @@
                                                             content="Agregar Series"
                                                             placement="top"
                                                         >
-                                                            <i
-                                                                class="fas fa-info-circle"
-                                                            ></i>
+                                                            <i class="fas fa-info-circle"></i>
                                                         </el-tooltip>
                                                     </el-checkbox>
                                                     <br />
@@ -1530,7 +1525,7 @@
                                                                 warehouse.id
                                                             ).stock
                                                         "
-                                                        :disabled="!!recordId || form.has_color_size"
+                                                        :disabled="!!recordId || form.has_color_size || is_prurchase"
                                                         min="0"
                                                         @input="
                                                             calculateTotalStock
@@ -2893,7 +2888,7 @@ import LotsForm from "./partials/lots.vue";
 import ColorSize from "./partials/color_size.vue";
 
 export default {
-    props: ["showDialog", "recordId", "external", "worker", "typeUser"],
+    props: ["showDialog", "recordId", "external", "worker", "typeUser", "is_prurchase"],
     components: {
         LotsForm,
         ColorSize

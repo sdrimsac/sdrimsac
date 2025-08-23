@@ -597,10 +597,36 @@ export default {
             }
         },
         addRowSelectLot(lots) {
-            this.form.lots = lots;
-            // Si está habilitado el modo series, la cantidad es igual al número de series seleccionadas
-            if (this.form.series_enabled && Array.isArray(lots)) {
-                this.form.quantity = lots.length;
+            // `lots` puede venir como solo los seleccionados (has_sale = true).
+            // No reemplazamos la lista completa: fusionamos la selección con la lista existente
+            try {
+                if (Array.isArray(this.form.lots) && this.form.lots.length > 0) {
+                    // Crear conjunto de identificadores de los seleccionados
+                    const selectedKeys = new Set(
+                        (lots || []).map(l => l.id ?? l.series ?? l.lot_code)
+                    );
+
+                    this.form.lots = this.form.lots.map(l => {
+                        const key = l.id ?? l.series ?? l.lot_code;
+                        // Mantener has_sale si ya existía, o marcar true si está en selectedKeys
+                        const has_sale = selectedKeys.has(key) ? true : !!l.has_sale;
+                        // Retornar nuevo objeto para evitar mutar referencias compartidas
+                        return Object.assign({}, l, { has_sale });
+                    });
+                } else {
+                    // Si no hay lista previa, asignar lo recibido (clonar para seguridad)
+                    this.form.lots = Array.isArray(lots)
+                        ? JSON.parse(JSON.stringify(lots))
+                        : [];
+                }
+
+                // Si está habilitado el modo series, la cantidad es igual al número de series marcadas
+                if (this.form.series_enabled && Array.isArray(this.form.lots)) {
+                    this.form.quantity = this.form.lots.filter(x => x.has_sale).length;
+                }
+            } catch (e) {
+                // En caso de error, como fallback, asignar lo recibido
+                this.form.lots = lots;
             }
         }
     }

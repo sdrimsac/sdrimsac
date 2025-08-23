@@ -84,31 +84,45 @@ export default {
     async created() {},
     watch: {
         lots(val) {
-            this.lots_ = val;
+            // Clonar para no mutar la prop original desde la vista
+            this.lots_ = val ? JSON.parse(JSON.stringify(val)) : [];
         }
     },
     methods: {
         filter() {
             if (this.search) {
-                this.lots_ = this.lots.filter(x =>
-                    x.series.toUpperCase().includes(this.search.toUpperCase())
+                const base = this.lots || [];
+                this.lots_ = base.filter(x =>
+                    (x.series || "").toString().toUpperCase().includes(this.search.toUpperCase())
                 );
             } else {
-                this.lots_ = this.lots;
+                // Restaurar lista completa (clonada)
+                this.lots_ = this.lots ? JSON.parse(JSON.stringify(this.lots)) : [];
             }
         },
-        create() {},
+        create() {
+            // Al abrir el diálogo, reiniciamos búsqueda y restauramos la lista de series
+            this.search = "";
+            this.lots_ = this.lots ? JSON.parse(JSON.stringify(this.lots)) : [];
+        },
         async submit() {
             // Filtrar solo los seleccionados
             const selectedLots = this.lots_.filter(lot => lot.has_sale);
-            await this.$emit("addRowSelectLot", selectedLots);
+            // Si no hay seleccionados, no emitimos un arreglo vacío para no borrar las series
+            if (selectedLots && selectedLots.length > 0) {
+                await this.$emit("addRowSelectLot", selectedLots);
+            }
+            // Siempre cerramos el diálogo
             await this.$emit("update:showDialog", false);
         },
         close() {
             // Filtrar solo los seleccionados
             const selectedLots = this.lots_.filter(lot => lot.has_sale);
+            // Solo emitimos si hay seleccionados
+            if (selectedLots && selectedLots.length > 0) {
+                this.$emit("addRowSelectLot", selectedLots);
+            }
             this.$emit("update:showDialog", false);
-            this.$emit("addRowSelectLot", selectedLots);
         },
         async clickCancelSubmit() {
             // this.$emit('addRowLot', []);

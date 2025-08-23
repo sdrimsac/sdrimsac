@@ -43,6 +43,7 @@
                         Bonificaciones
                     </el-button>
                     <el-button
+                     v-if="config.unique_code_unit_types"
                         type="primary"
                         class="btn_buscar"
                         style="margin-right: 5px;"

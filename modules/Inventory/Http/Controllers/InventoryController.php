@@ -412,6 +412,23 @@ class InventoryController extends Controller
                 'warehouse_id' => $warehouse_id
             ]);
 
+            if ($type == 'input' && count($lots) > 0) {
+                foreach ($lots as $lot) {
+                    $existing_lot = ItemLot::where('item_id', $item_id)
+                        ->where('warehouse_id', $warehouse_id)
+                        ->where('series', $lot['series'])
+                        ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
+                        ->first();
+
+                    if ($existing_lot) {
+                        return [
+                            'success' => false,
+                            'message' => "La serie {$lot['series']} ya existe para este producto en este almacén no puede registrarse otra vez."
+                        ];
+                    }
+                }
+            }
+
             $inventory_transaction = InventoryTransaction::findOrFail($inventory_transaction_id);
 
             if ($type == 'output' && ($quantity > $item_warehouse->stock)) {

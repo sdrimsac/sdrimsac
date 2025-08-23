@@ -745,6 +745,7 @@
         <item-form
             :showDialog.sync="showDialogNewItem"
             :external="true"
+            :is_prurchase="true"
             @add="addRowItems"
         ></item-form>
         <lots-form
