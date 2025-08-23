@@ -93,6 +93,7 @@ class BoxCollection extends ResourceCollection
                 'items' => $items,
                 'user'              => $row->user->name,
                 'date'             => $date,
+                'purchase_id'     => $row->purchase_id
             ];
         });
     }

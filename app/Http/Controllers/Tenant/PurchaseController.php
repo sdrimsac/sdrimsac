@@ -562,6 +562,274 @@ class PurchaseController extends Controller
         $has_error = false;
         $message = '';
         $data = self::convert($request);
+
+        $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
+            try {
+                $series = $data['series'];
+                $number = $data['number'];
+
+                // Validar duplicidad del documento
+                $purchase = Purchase::where('series', $series)
+                    ->where('number', $number)
+                    ->where('document_type_id', 'NE76')
+                    ->first();
+
+                if ($purchase) {
+                    $has_error = true;
+                    $message = "El documento {$series}-{$number} ya ha sido registrado.";
+                    throw new Exception($message);
+                }
+
+                $doc = Purchase::create($data);
+
+                // --- Crear items, color_size y lots ---
+                foreach ($data['items'] as $row) {
+                    $unit_price = floatval($row['unit_price']);
+                    $p_item = new PurchaseItem;
+                    $p_item->fill($row);
+                    $p_item->purchase_id = $doc->id;
+                    $p_item->save();
+
+                    $item = Item::findOrFail($row['item_id']);
+
+                    if (isset($row['sale_unit_price']) && $row['sale_unit_price'] != 0 && $row['sale_unit_price'] != null) {
+                        $item->sale_unit_price = $row['sale_unit_price'];
+                        Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
+                        ItemWarehousePrice::where('item_id', $row['item_id'])
+                            ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                    }
+
+                    if ($unit_price != floatval($item->purchase_unit_price)) {
+                        $item->purchase_unit_price = $unit_price;
+                    }
+
+                    $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
+                    $item->save();
+
+                    ItemCodeService::generateCodesForItemWarehouse($item->id, $row['warehouse_id']);
+
+                    // Color/Size
+                    if (array_key_exists('color_size', $row)) {
+                        foreach ($row['color_size'] as $color_size) {
+                            $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
+                                ->where('warehouse_id', $row['warehouse_id'])
+                                ->where('code', $color_size['code'])
+                                ->where('color', $color_size['color'])
+                                ->where('size', $color_size['size'])
+                                ->first();
+                            if ($color_size_exists) {
+                                $color_size_exists->stock += $color_size['stock'];
+                                if (!empty($color_size['code']) && strpos($color_size_exists->code, $color_size['code']) === false) {
+                                    $color_size_exists->code .= '-' . $color_size['code'];
+                                }
+                                if (!empty($color_size['price']) && $color_size['price'] != 0) {
+                                    $color_size_exists->price = $color_size['price'];
+                                }
+                                $color_size_exists->save();
+                            } else {
+                                $item->color_size()->create([
+                                    'item_id' => $row['item_id'],
+                                    'warehouse_id' => $row['warehouse_id'],
+                                    'color' => $color_size['color'],
+                                    'code' => $color_size['code'],
+                                    'price' => $color_size['price'],
+                                    'size' => $color_size['size'],
+                                    'stock' => $color_size['stock'],
+                                ]);
+                            }
+                        }
+                    }
+
+                    // Lots
+                    if (array_key_exists('lots', $row)) {
+                        foreach ($row['lots'] as $lot) {
+                            $item_lot = ItemLot::where('series', $lot['series'])
+                                ->where('item_id', $row['item_id'])
+                                ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
+                                ->first();
+                            if ($item_lot) {
+                                $message = "La serie {$lot['series']} ya existe en el sistema";
+                                throw new Exception($message);
+                            }
+                            $p_item->lots()->create([
+                                'date' => $lot['date'],
+                                'series' => $lot['series'],
+                                'item_id' => $row['item_id'],
+                                'warehouse_id' => $row['warehouse_id'],
+                                'has_sale' => false,
+                                'state' => $lot['state']
+                            ]);
+                        }
+                    }
+
+                    // Lots group
+                    if (array_key_exists('item', $row) && $row['item']['lots_enabled'] == true) {
+                        if (isset($row['lot_code'])) {
+                            ItemLotsGroup::create([
+                                'code' => $row['lot_code'],
+                                'quantity' => $row['quantity'],
+                                'date_of_due' => $row['date_of_due'],
+                                'item_id' => $row['item_id'],
+                                'warehouse_id' => $row['warehouse_id'],
+                            ]);
+                        }
+                        if (!empty($row['item']['lots_group'])) {
+                            foreach ($row['item']['lots_group'] as $lot) {
+                                ItemLotsGroup::create([
+                                    'code' => $lot['code'],
+                                    'quantity' => $lot['quantity'],
+                                    'date_of_due' => $lot['date_of_due'],
+                                    'item_id' => $row['item_id'],
+                                    'warehouse_id' => $row['warehouse_id'],
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+                // --- Validación usuario arca ---
+                $isArca = auth()->user()->is_arca == 1;
+                $arcaCash = null;
+                /*if ($isArca) {
+                    $arcaCash = Cash::where('user_id', auth()->id())
+                        ->where('state', 1)
+                        ->latest()
+                        ->first();
+
+                    if (!$arcaCash) {
+                        throw new Exception("No tiene caja aperturada.");
+                    }
+
+                    $totalCompra = $doc->total;
+                    if ($arcaCash->balance < $totalCompra) {
+                        $faltante = $totalCompra - $arcaCash->balance;
+                        throw new Exception("Saldo insuficiente. Faltan S/{$faltante} para realizar la compra.");
+                    }
+                }*/
+
+                if ($isArca) {
+                    // Obtener la caja abierta del usuario arca
+                    $arcaCash = Cash::where('user_id', auth()->id())
+                        ->where('state', 1)
+                        ->latest()
+                        ->first();
+
+                    if (!$arcaCash) {
+                        throw new Exception("No tiene caja aperturada.");
+                    }
+
+                    // Calcular el saldo total disponible de esa caja sumando todos los box
+                    $totalDisponible = Box::where('cash_id', $arcaCash->id)
+                        ->where('state', 1)
+                        ->sum('amount');
+
+                    $totalCompra = $doc->total;
+
+                    if ($totalDisponible < $totalCompra) {
+                        $faltante = $totalCompra - $totalDisponible;
+                        throw new Exception("Saldo insuficiente. Faltan S/{$faltante} para realizar la compra.");
+                    }
+                }
+
+                foreach ($data['payments'] as $payment) {
+                    $record_payment = $doc->purchase_payments()->create($payment);
+
+                    if ($isArca) {
+                        // Tomar la caja abierta
+                        $box = Box::where('cash_id', $arcaCash->id)
+                            ->where('state', 1)
+                            ->orderBy('id')
+                            ->first();
+
+                        if (!$box) {
+                            throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
+                        }
+
+                        // Descontar el monto
+                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                        //$box->amount = $payment['payment'];
+                        //$box->save();
+
+                        // Registrar movimiento en la caja
+                        Box::create([
+                            'cash_id' => $arcaCash->id,
+                            'date' => $record_payment->date_of_payment,
+                            'amount' => $payment['payment'],
+                            'expenses' => 1,
+                            'group_id' => 2,
+                            'category_id' => 2,
+                            'subcategory_id' => 1,
+                            'state' => 1,
+                            'type' => 2, // Egreso
+                            'soap_type_id' => Company::active()->soap_type_id,
+                            'user_id' => auth()->id(),
+                            'description' => "Compra realizada {$doc->series}-{$doc->number} descontada del arca",
+                            'purchase_id' => $doc->id,
+                            'currency_type_id' => $doc->currency_type_id,
+                            'method' => $payment_method->description,
+                        ]);
+                    }
+
+                    if (isset($payment['payment_destination_id'])) {
+                        $this->createGlobalPayment($record_payment, $payment);
+                    }
+                }
+
+                // --- Envío WhatsApp si aplica ---
+                $configuration = Configuration::first();
+                if ($configuration->sale_note_credit_penalty && $isArca) {
+                    $total = (new CashTransferController)->available();
+                    if ($total > 0) {
+                        $date = date('Y-m-d');
+                        $time_now = date('H:i:s');
+                        $total_with_purchase = $total + $doc->total;
+                        $message = "El usuario arca - administrador hasta la fecha {$doc->created_at->format('Y-m-d')} / {$doc->created_at->format('H:i:s')} contaba con monto de S/{$total_with_purchase} y ha realizado una compra por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
+                        $website = $this->getTenantWebsite();
+                        WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
+                    }
+                }
+
+                // Generar PDF
+                if (!$doc->filename) {
+                    $this->setFilename($doc);
+                }
+                $this->createPdf($doc, "a4", $doc->filename);
+
+                return $doc;
+            } catch (Exception $e) {
+                DB::connection('tenant')->rollBack();
+                $has_error = true;
+                $message = $e->getMessage();
+                return null;
+            }
+        });
+
+        if ($has_error) {
+            return [
+                'success' => false,
+                'message' => $message,
+            ];
+        }
+
+        $number_full = $request->series_guia && $request->number_guia
+            ? $request->series_guia . "-" . $request->number_guia
+            : $purchase->series . "-" . $purchase->number;
+
+        return [
+            'success' => true,
+            'data' => [
+                'id' => $purchase->id,
+                'number_full' => "{$number_full}",
+            ],
+        ];
+    }
+
+
+    /*public function store(PurchaseRequest $request)
+    {
+        $has_error = false;
+        $message = '';
+        $data = self::convert($request);
         $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
             try {
                 //DB::connection('tenant')->beginTransaction();
@@ -601,12 +869,7 @@ class PurchaseController extends Controller
 
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {
-                            // Validar que el code sea único en toda la tabla
-                            /* $code_exists = ItemColorSize::where('code', $color_size['code'])->exists();
-                            if ($code_exists) {
-                                $message = "El código {$color_size['code']} ya existe para otra combinación de color/talla. Debe ser único.";
-                                throw new \Exception($message);
-                            } */
+
                             $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
                                 ->where('warehouse_id', $row['warehouse_id'])
                                 ->where('code', $color_size['code'])
@@ -754,19 +1017,6 @@ class PurchaseController extends Controller
                     $this->setFilename($doc);
                 }
 
-                $total = (new CashTransferController)->available();
-                Log::info("Total disponible: {$total}");
-                if ($total > 0) {
-                    $date = date('Y-m-d');
-                    $time_box = $time_box;
-                    $time_now = date('H:i:s');
-                    $total_with_purchase = $total + $doc->total;
-                    Log::info("Total con compra: {$total_with_purchase}");
-                    $message = "El usuario arca - administrador hasta la fecha {$date_box} / {$time_box} contaba con monto de S/{$total_with_purchase} y ha realizado una compra el {$date} a las {$time_now} por un monto de S/{$doc->total}, quedando un saldo a favor de S/{$total}";
-                    $website = $this->getTenantWebsite();
-                    WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
-                }
-
                 $configuration = Configuration::first();
                 if ($configuration->sale_note_credit_penalty && $cash && !$isAdminOrSuperadmin) {
                     $total = (new CashTransferController)->available();
@@ -813,7 +1063,7 @@ class PurchaseController extends Controller
                 'number_full' => "{$number_full}",
             ],
         ];
-    }
+    }*/
 
     public function toPrinter($id)
     {
@@ -1091,7 +1341,8 @@ class PurchaseController extends Controller
         DB::connection('tenant')->table('item_warehouse')->where('item_id', $id)->update(['stock' => $saldo_stock]);
     }
 
-    public function anular($id)
+    //validar para anular 
+    /*public function anular($id)
     {
         try {
             DB::connection('tenant')->beginTransaction();
@@ -1139,7 +1390,138 @@ class PurchaseController extends Controller
                 'message' => $e->getMessage()
             ];
         }
+    }*/
+
+
+    public function anular($id)
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+
+            $obj = Purchase::find($id);
+            $obj->state_type_id = 11; // anulado
+            $obj->save();
+
+            $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+            $type = "App\Models\Tenant\Purchase";
+
+            foreach ($obj->items as $item) {
+                $inventoryKardex = InventoryKardex::where('item_id', $item->item_id)
+                    ->where('inventory_kardexable_type', $type)
+                    ->where('inventory_kardexable_id', $id)
+                    ->first();
+
+                // Registrar movimiento inverso en kardex
+                $item->purchase->inventory_kardex()->create([
+                    'date_of_issue' => date('Y-m-d'),
+                    'item_id' => $item->item_id,
+                    'warehouse_id' => $inventoryKardex->warehouse_id,
+                    'quantity' => -$item->quantity,
+                    'user_id' => auth()->id(),
+                ]);
+
+                // Actualizar stock
+                $wr = ItemWarehouse::where([
+                    ['item_id', $item->item_id],
+                    ['warehouse_id', $inventoryKardex->warehouse_id]
+                ])->first();
+
+                if ($wr->stock == 0 || $wr->stock < $item->quantity) {
+                    throw new Exception("El stock del producto {$item->item->description} no es suficiente para anular la compra");
+                }
+
+                $wr->stock -= $item->quantity;
+                $wr->save();
+
+                $it = Item::find($item->item_id);
+                $it->stock -= $item->quantity;
+                $it->save();
+
+                $this->removeDetailItems($item);
+            }
+
+            /**
+             * 💰 Devolver el monto al box solo si el usuario es ARCA
+             */
+            $user = auth()->user();
+
+            if ($user->is_arca == 1) {
+                // Caja abierta del usuario arca
+                $arcaCash = Cash::where('user_id', $user->id)
+                    ->where('state', 1)
+                    ->latest()
+                    ->first();
+
+                if (!$arcaCash) {
+                    throw new Exception("El usuario arca no tiene una caja aperturada.");
+                }
+
+                // Registrar devolución en box
+                Box::create([
+                    'cash_id'        => $arcaCash->id,
+                    'date'           => now(),
+                    'amount'         => $obj->total, // 👈 monto total de la compra anulada
+                    'expenses'       => 0,
+                    'incomes'         => 1,           // ingreso
+                    'group_id'       => 1,
+                    'category_id'    => 2,
+                    'subcategory_id' => 1,
+                    'state'          => 1,
+                    'type'           => 1, // 1 = ingreso
+                    'soap_type_id'   => Company::active()->soap_type_id,
+                    'user_id'        => $user->id,
+                    'description'    => "Devolución por anulación de compra {$obj->series}-{$obj->number}",
+                    'purchase_id'    => $obj->id,
+                    'currency_type_id' => $obj->currency_type_id,
+                    'method'         => 'Efectivo',
+                ]);
+            }
+
+            /*if ($user->is_arca == 1) {
+                $box = Box::where('user_id', $user->id)->where('establishment_id', $establishment->id)->first();
+
+                if ($box) {
+                    $box->final_balance += $obj->total; // se devuelve el monto
+                    $box->save();
+
+                    // Registrar movimiento en box (opcional pero recomendable)
+                    if ($obj->total > 0) {
+                        Box::create([
+                            'cash_id'        => auth()->user()->cash_id,
+                            'date'           => now(),
+                            'amount'         => $obj->total, // monto de la compra que anulaste
+                            'expenses'       => 0,
+                            'group_id'       => 2, // depende de tu lógica de grupos
+                            'category_id'    => 2,
+                            'subcategory_id' => 1,
+                            'state'          => 1,
+                            'type'           => 1, // ingreso (ya que devuelves el dinero)
+                            'soap_type_id'   => '01',
+                            'user_id'        => auth()->id(),
+                            'description'    => "Devolución por anulación de compra {$obj->id}",
+                            'purchase_id'    => $obj->id,
+                            'currency_type_id' => $obj->currency_type_id,
+                            'method'         => 'cash', // 👈 obligatorio ya que tu tabla lo pide
+                        ]);
+                    }
+                }
+            }*/
+
+            DB::connection('tenant')->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Compra anulada con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
     }
+
     function removeDetailItems($item)
     {
         $item->lots()->delete();

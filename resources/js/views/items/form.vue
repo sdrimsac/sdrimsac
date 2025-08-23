@@ -1066,7 +1066,7 @@
                                                     <el-checkbox
                                                         v-model="form.series_enabled"
                                                         @change="changeLotsEnabled"
-                                                        :disabled="Boolean(form.series_enabled)"
+                                                        :disabled="(form.series_enabled === 1 || form.series_enabled === true) && !!recordId"
                                                         style="color: black;"
                                                     >
                                                         Series

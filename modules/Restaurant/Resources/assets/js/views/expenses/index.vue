@@ -72,7 +72,7 @@
                             <td>{{ row.date }}</td>
                             <td>{{ row.amount }}</td>
 
-                            <td class="text-end">
+                            <td class="text-end" v-if="!row.purchase_id">
                                 <button
                                     type="button"
                                     class="btn waves-effect waves-light btn-sm btn-primary"

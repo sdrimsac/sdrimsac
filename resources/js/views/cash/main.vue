@@ -1,34 +1,41 @@
 <template>
     <div>
         <template>
-            <div v-if="!has_cash && !configuration.health_network" class="col-md- d-flex justify-content-end">
-            <button
-                type="button"
-                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                @click.prevent="clickCreate()"
+            <div
+                v-if="!has_cash && !configuration.health_network"
+                class="col-md- d-flex justify-content-end"
             >
-                <i class="icofont-plus-circle"></i>
-                <span>Nuevo</span>
-            </button>
-        </div>
-
-        <template v-else>
-            <div class="d-flex justify-content-between">
-                <div
-                    class="alert alert-success d-flex justify-content-start align-items-center"
-                >
-                    <span>Efectivo disponible: S/ {{ total.toFixed(2) }}</span>
-                </div>
                 <button
-                    v-if="!configuration.health_network"
                     type="button"
                     class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                    @click.prevent="clickClose()"
+                    @click.prevent="clickCreate()"
                 >
-                    <span>Cerrar caja</span>
+                    <i class="icofont-plus-circle"></i>
+                    <span>Nuevo</span>
                 </button>
             </div>
-        </template>
+
+            <template v-else>
+                <div class="d-flex justify-content-end align-items-center">
+                    <el-button
+                        class="ms-2"
+                        style="font-size: 1.5rem; font-weight: bold;"
+                    >
+                        <span>
+                            Efectivo disponible: S/ {{ total.toFixed(2) }}
+                        </span>
+                    </el-button>
+                    <button
+                        v-if="!configuration.health_network"
+                        type="button"
+                        class="btn btn-danger btn-icon btn-icon-start w-100 w-md-auto me-3"
+                        style="color: #fff;"
+                        @click.prevent="clickClose()"
+                    >
+                        <span>Cerrar caja</span>
+                    </button>
+                </div>
+            </template>
         </template>
         <cash-form
             :showDialog.sync="showDialogCash"
@@ -303,12 +310,11 @@ export default {
         };
     },
     methods: {
-        getAvaibleCash(){
-            this.$http("/caja/cash-transfer/available")
-            .then(response => {
+        getAvaibleCash() {
+            this.$http("/caja/cash-transfer/available").then(response => {
                 this.total = response.data;
-                console.log("🚀 ~ getAvaibleCash ~ this.total:", this.total)
-            })
+                console.log("🚀 ~ getAvaibleCash ~ this.total:", this.total);
+            });
         },
         exportRecords() {
             window.open(
