@@ -65,7 +65,8 @@ class JustAdmin
             "report_closed_cash",
             "documents",
             "banks",
-            "documents_ventas"
+            "documents_ventas",
+            "reports/valued"
         ];
         $paths_logistic = [
             "items",

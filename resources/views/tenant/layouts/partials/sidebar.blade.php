@@ -940,7 +940,7 @@
                     </li>
 
                     {{-- Reporte Stock Valorizado de Productos --}}
-                    @if ($user->type == 'superadmin' || ($config->house && !$roleService->isLogistic() && $config->stock_valorizado))
+                    @if ($user->type == 'superadmin' || ($config->stock_valorizado && !$roleService->isLogistic()))
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                                 href="{{ route('reports.valued.index') }}">
