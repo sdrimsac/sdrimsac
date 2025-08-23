@@ -498,7 +498,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if ($user->type == 'superadmin' || $config->ver_etiqueta_logistica)
+                        @if ($user->type == 'superadmin' || $config->unique_code_unit_types)
                             <li>
                                 <a class="{{ $path[0] === 'codes' ? 'active' : '' }}"
                                     href="{{ route('codes.index') }}">
