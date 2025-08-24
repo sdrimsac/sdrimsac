@@ -21,23 +21,23 @@
                 <data-table class="table-striped" ref="datatable" :resource="resource">
                     <tr slot="heading" width="100%" class="bg-primary">
                         <th class="text-white">#</th>
-                        <th class="text-white">Código</th>
+                        <th class="text-white">Código Interno</th>
+                         <th class="text-white">Código familia</th>
                         <th class="text-white">Producto</th>
-                        <th class="text-white">Código familia</th>
                         <th class="text-white">Color</th>
                         <th class="text-white">Talla</th>
                         <th class="text-white">Stock</th>
                         <th class="text-white">Precio</th>
                         <th class="text-white">Estado</th>
-                        <th class="text-right text-white">Acciones</th>
+                        <th class="text-center text-white">Acciones</th>
                     </tr>
 
                     <tr></tr>
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
                         <td>{{ row.item_internal_id }}</td>
-                        <td>{{ row.item_description }}</td>
                         <td>{{ row.code }}</td>
+                        <td>{{ row.item_description }}</td>
                         <td>{{ row.color }}</td>
                         <td>{{ row.size }}</td>
                         <td>{{ row.stock }}</td>
@@ -48,7 +48,7 @@
                             </span>
                         </td>
 
-                        <td class="text-right">
+                        <td class="text-center">
                             <template v-if="
                                 typeUser === 'admin' ||
                                 typeUser === 'superadmin'
@@ -60,11 +60,16 @@
                                 >
                                     Editar
                                 </button> -->
-                                <!-- <button type="button" class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
-                                
-                                    @click.prevent="clickDelete(row.id)">
-                                    Eliminar
-                                </button> -->
+                                <el-tooltip content="Eliminar producto con Color y Talla" placement="top">
+                                    <button
+                                        type="button"
+                                        class="btn btn-xs btn-danger btn-circle"
+                                        style="border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                                        @click.prevent="clickDelete(row.id)"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </el-tooltip>
                             </template>
                         </td>
                     </tr>

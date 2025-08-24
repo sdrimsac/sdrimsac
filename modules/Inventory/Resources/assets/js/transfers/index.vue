@@ -3,35 +3,18 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div
-                    class="card-header bg-primary d-flex align-items-center"
-                    style="padding: 15px;"
-                >
-                    <h4
-                        class="my-0 text-white d-flex align-items-center"
-                        style="font-size: 1.5rem; font-weight: bold;"
-                    >
-                        <i
-                            class="fa fa-dolly"
-                            style="font-size: 2rem; margin-right: 0.5rem;"
-                        ></i>
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
+                        <i class="fa fa-dolly" style="font-size: 2rem; margin-right: 0.5rem;"></i>
                         Listado de {{ title }}
                     </h4>
                 </div>
-                <div
-                    class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
-                    style="margin-left: 1rem;"
-                >
-                    <el-button
-                        class="btn_buscar me-2"
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate()"
-                    >
+                <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
+                    style="margin-left: 1rem;">
+                    <el-button class="btn_buscar me-2" href="javascript:void(0)" @click.prevent="clickCreate()">
                         <i class="fas fa-plus"></i>
-                        <span
-                            style="color: #fff; font-size: 1.25rem; font-weight: bold;"
-                            >Nuevo Traslado de Productos</span
-                        >
+                        <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Nuevo Traslado de
+                            Productos</span>
                     </el-button>
                 </div>
                 <div class="card-body">
@@ -61,55 +44,25 @@
                             <td>{{ row.warehouse_destination }}</td>
                             <td>{{ row.description }}</td>
                             <td>
-                                <el-popover
-                                    placement="right"
-                                    width="400"
-                                    trigger="click"
-                                >
+                                <el-popover placement="right" width="400" trigger="click">
                                     <el-table :data="row.inventory">
-                                        <el-table-column
-                                            property="description"
-                                            label="Producto"
-                                            width="260"
-                                        ></el-table-column>
-                                        <el-table-column
-                                            property="quantity"
-                                            label="Cantidad"
-                                            width="100"
-                                        ></el-table-column>
-                                        <el-table-column
-                                            label="Series"
-                                            width="52"
-                                            fixed="right"
-                                        >
+                                        <el-table-column property="description" label="Producto"
+                                            width="260"></el-table-column>
+                                        <el-table-column property="quantity" label="Cantidad"
+                                            width="100"></el-table-column>
+                                        <el-table-column label="Series" width="52" fixed="right">
                                             <template slot-scope="scope">
-                                                <el-popover
-                                                    placement="right"
-                                                    width="350"
-                                                    trigger="click"
-                                                >
-                                                    <el-table
-                                                        :data="scope.row.lots"
-                                                        width="300"
-                                                    >
-                                                        <el-table-column
-                                                            prop="series"
-                                                            label="Series"
-                                                            width="300"
-                                                        ></el-table-column>
+                                                <el-popover placement="right" width="350" trigger="click">
+                                                    <el-table :data="scope.row.lots" width="300">
+                                                        <el-table-column prop="series" label="Series"
+                                                            width="300"></el-table-column>
                                                     </el-table>
-                                                    <el-button
-                                                        slot="reference"
-                                                        icon="el-icon-zoom-in"
-                                                    ></el-button>
+                                                    <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
                                                 </el-popover>
                                             </template>
                                         </el-table-column>
                                     </el-table>
-                                    <el-button
-                                        slot="reference"
-                                        icon="el-icon-zoom-in"
-                                    ></el-button>
+                                    <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
                                 </el-popover>
                             </td>
                             <td class="text-center">{{ row.quantity }}</td>
@@ -123,11 +76,8 @@
                     </data-table>
                 </div>
 
-                <inventories-form
-                    :showDialog.sync="showDialog"
-                    :recordId="recordId"
-                    :isDirect="direct"
-                ></inventories-form>
+                <inventories-form :showDialog.sync="showDialog" :recordId="recordId"
+                    :isDirect="direct"></inventories-form>
             </div>
         </div>
     </div>

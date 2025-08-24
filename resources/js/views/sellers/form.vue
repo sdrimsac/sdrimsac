@@ -1,247 +1,134 @@
 <!-- Nuevo Vendedor -->
 <template>
-    <el-dialog
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        append-to-body
-        :title="title"
-        class="rounded-dialog"
-        :close-on-click-modal="false"
-    >
+    <el-dialog :visible="showDialog" @open="open" @close="close" append-to-body :title="title" class="rounded-dialog"
+        :close-on-click-modal="false">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="row mb-3">
                 <!-- Tipo de Documento -->
-                <div class="col-md-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.document_type_id }"
-                    >
+                <div class="col-md-3">
+                    <div class="form-group" :class="{ 'has-danger': errors.document_type_id }">
                         <label for="document_type">
                             <i class="far fa-id-card"></i> Tipo de Documento
-                            <el-tooltip
-                                content="Campo Obligatorio"
-                                placement="top"
-                            >
-                                <i
-                                    class="fas fa-exclamation-circle text-danger"
-                                ></i>
+                            <el-tooltip content="Campo Obligatorio" placement="top">
+                                <i class="fas fa-exclamation-circle text-danger"></i>
                             </el-tooltip>
                         </label>
-                        <el-select
-                            v-model="form.document_type_id"
-                            :disabled="loading_submit"
-                        >
-                            <el-option
-                                v-for="(item, idx) in document_types"
-                                :key="idx"
-                                :label="item.description"
-                                :value="item.id"
-                            >
+                        <el-select v-model="form.document_type_id" :disabled="loading_submit">
+                            <el-option v-for="(item, idx) in document_types.filter(dt => dt.description === 'DNI' || dt.description === 'CE')" :key="idx" :label="item.description"
+                                :value="item.id">
                             </el-option>
                         </el-select>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.document_type_id"
-                            v-text="errors.document_type_id[0]"
-                        >
+                        <small class="form-control-feedback" v-if="errors.document_type_id"
+                            v-text="errors.document_type_id[0]">
                         </small>
                     </div>
                 </div>
 
                 <!-- Número de DNI/CE -->
-                <div class="col-md-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.document }"
-                    >
+                <div class="col-md-3">
+                    <div class="form-group" :class="{ 'has-danger': errors.document }">
                         <label for="document_number">
-                            <i class="fas fa-list-ol"></i> Número de DNI/CE
-                            <el-tooltip
-                                content="Campo Obligatorio"
-                                placement="top"
-                            >
-                                <i
-                                    class="fas fa-exclamation-circle text-danger"
-                                ></i>
+                            <i class="fas fa-list-ol"></i>DNI/CE
+                            <el-tooltip content="Campo Obligatorio" placement="top">
+                                <i class="fas fa-exclamation-circle text-danger"></i>
                             </el-tooltip>
                         </label>
-                        <el-input
-                            v-model="form.document"
-                            placeholder="Documento"
-                            :disabled="loading_submit"
-                            minlength="8"
-                            maxlength="8"
-                            show-word-limit
-                            @input="validateNumbers('document')"
-                        >
-                            <el-button
-                                v-if="
+                        <el-input v-model="form.document" placeholder="Documento" :disabled="loading_submit"
+                             maxlength="8" show-word-limit @input="validateNumbers('document')">
+                            <template #append>
+                                <el-button v-if="
                                     form.document_type_id == 1 ||
-                                        form.document_type_id == 4
-                                "
-                                @click="searchDocument"
-                                slot="prepend"
-                                icon="el-icon-search"
-                            >
-                            </el-button>
+                                    form.document_type_id == 4
+                                " @click="searchDocument" icon="el-icon-search">
+                                </el-button>
+                            </template>
                         </el-input>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.document"
-                            v-text="errors.document[0]"
-                        >
-                        </small>
+                        <!-- <small class="form-control-feedback" v-if="errors.document" v-text="errors.document[0]"></small> -->
                     </div>
-                </div>
-
-                <!-- Establecimiento -->
-                <div class="col-md-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.establishment_id }"
-                    >
-                        <label for="establishment_id">
-                            <i class="fas fa-store"></i> Establecimiento
-                            <el-tooltip
-                                content="Campo Obligatorio"
-                                placement="top"
-                            >
-                                <i
-                                    class="fas fa-exclamation-circle text-danger"
-                                ></i>
-                            </el-tooltip>
-                        </label>
-                        <el-select
-                            v-model="form.establishment_id"
-                            placeholder="Establecimiento"
-                            :disabled="loading_submit"
-                        >
-                            <el-option
-                                v-for="item in establishments"
-                                :key="item.id"
-                                :label="item.description"
-                                :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.establishment_id"
-                            v-text="errors.establishment_id[0]"
-                        >
-                        </small>
-                    </div>
-                </div>
             </div>
 
-            <div class="row mb-3">
                 <!-- Nombre -->
-                <div class="col-md-8">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.name }"
-                    >
+                <div class="col-md-6">
+                    <div class="form-group" :class="{ 'has-danger': errors.name }">
                         <label for="name">
-                            <i class="fas fa-tag"></i> Nombre
-                            <el-tooltip
-                                content="Campo Obligatorio"
-                                placement="top"
-                            >
-                                <i
-                                    class="fas fa-exclamation-circle text-danger"
-                                ></i>
+                            <i class="fas fa-tag"></i> Vendedor
+                            <el-tooltip content="Campo Obligatorio" placement="top">
+                                <i class="fas fa-exclamation-circle text-danger"></i>
                             </el-tooltip>
                         </label>
-                        <el-input
-                            v-model="form.name"
-                            placeholder="Nombre"
-                            :disabled="loading_submit"
-                            @input="convertToUppercase('name')"
-                        >
+                        <el-input v-model="form.name" placeholder="Nombre del vendedor" :disabled="loading_submit"
+                            @input="convertToUppercase('name')">
                         </el-input>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.name"
-                            v-text="errors.name[0]"
-                        >
+                        <small class="form-control-feedback" v-if="errors.name" v-text="errors.name[0]">
                         </small>
                     </div>
                 </div>
 
-                <!-- Teléfono -->
-                <div class="col-md-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.telephone }"
-                    >
-                        <label>Teléfono</label>
-                        <el-input
-                            v-model="form.telephone"
-                            placeholder="Teléfono"
-                            :disabled="loading_submit"
-                            maxlength="9"
-                            show-word-limit
-                            @input="validateNumbers('telephone')"
-                        >
-                        </el-input>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.telephone"
-                            v-text="errors.telephone[0]"
-                        >
-                        </small>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div
-                        class="form-group"
-                        :class="{ 'has-danger': errors.commission_percentage }"
-                    >
-                        <label>Porcentaje Comision</label>
-                        <el-input
-                            v-model="form.commission_percentage"
-                            placeholder="Teléfono"
-                            :disabled="loading_submit"
-                            maxlength="4"
-                            show-word-limit
-                            
-                        >
-                        </el-input>
-                        <small
-                            class="form-control-feedback"
-                            v-if="errors.commission_percentage"
-                            v-text="errors.commission_percentage[0]"
-                        >
-                        </small>
-                    </div>
-                </div>
+               
+
             </div>
+             <div class="row mb-1">
+                    <!-- Teléfono -->
+                    <div class="col-md-3">
+                        <div class="form-group" :class="{ 'has-danger': errors.telephone }">
+                            <label>
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </label>
+                            <el-input v-model="form.telephone" placeholder="WhatsApp" :disabled="loading_submit"
+                                maxlength="9" show-word-limit @input="validateNumbers('telephone')">
+                            </el-input>
+                            <small class="form-control-feedback" v-if="errors.telephone" v-text="errors.telephone[0]">
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" :class="{ 'has-danger': errors.commission_percentage }">
+                            <label>% Comisión</label>
+                            <el-input v-model="form.commission_percentage" placeholder="Porcentaje de Comisión"
+                                :disabled="loading_submit" maxlength="4" show-word-limit>
+                            </el-input>
+                            <small class="form-control-feedback" v-if="errors.commission_percentage"
+                                v-text="errors.commission_percentage[0]">
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Establecimiento -->
+                    <div class="col-md-3">
+                        <div class="form-group" :class="{ 'has-danger': errors.establishment_id }">
+                            <label for="establishment_id">
+                                <i class="fas fa-store"></i> Establecimiento
+                                <el-tooltip content="Campo Obligatorio" placement="top">
+                                    <i class="fas fa-exclamation-circle text-danger"></i>
+                                </el-tooltip>
+                            </label>
+                            <el-select v-model="form.establishment_id" placeholder="Establecimiento"
+                                :disabled="loading_submit">
+                                <el-option v-for="item in establishments" :key="item.id" :label="item.description"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <small class="form-control-feedback" v-if="errors.establishment_id"
+                                v-text="errors.establishment_id[0]">
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+
 
             <!-- Botones de acción -->
-            <div
-                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-            >
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
                 <!-- Botón Cancelar -->
-                <el-button
-                    class="btn-cancel btn-cancel:hover"
-                    icon="fas fa-times fa-lg"
-                    @click.prevent="close()"
-                >
+                <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">
                     <span>Cancelar</span>
                 </el-button>
                 <!-- Botón Guardar -->
-                <el-button
-                    class="btn-save btn-save:hover"
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    @click.prevent="
+                <el-button class="btn_guardarsmall" icon="fas fa-save fa-lg" type="primary" native-type="submit"
+                    :loading="loading_submit" @click.prevent="
                         convertToUppercase('name');
-                        submit();
-                    "
-                >
+                    submit();
+                    ">
                     <span>Guardar</span>
                 </el-button>
             </div>
@@ -265,9 +152,11 @@ export default {
         };
     },
     watch: {
-        "form.document_type_id": function(newVal) {
-            if (newVal !== null) {
-                this.form.name = `VENDEDOR - ${this.form.name || ""}`;
+        "form.document_type_id": function (newVal) {
+            if (newVal !== null && this.form.name) {
+                if (!this.form.name.startsWith("VENDEDOR - ")) {
+                    this.form.name = `VENDEDOR - ${this.form.name}`;
+                }
             }
         }
     },
@@ -316,11 +205,25 @@ export default {
                         `/service/${identity_document_type_name}/${this.form.document}`
                     );
                     console.log("Respuesta de DNI:", response.data);
+                    // Usar response.data.data para obtener los datos correctos
+                    const data = response.data.data;
+                    if (data && data.nombres && data.apellido_paterno) {
+                        const primerNombre = data.nombres.split(' ')[0];
+                        const primerApellido = data.apellido_paterno.split(' ')[0];
+                        this.form.name = `VENDEDOR - ${primerNombre} ${primerApellido}`;
+                    }
                 } else if (documentTypeId === 4) {
                     response = await this.$http.get(
                         `/search-ce/${this.form.document}`
                     );
                     console.log("Respuesta de CE:", response.data);
+                    // Usar response.data.data para obtener los datos correctos
+                    const data = response.data.data;
+                    if (data && data.nombres && data.apellido_paterno) {
+                        const primerNombre = data.nombres.split(' ')[0];
+                        const primerApellido = data.apellido_paterno.split(' ')[0];
+                        this.form.name = `VENDEDOR - ${primerNombre} ${primerApellido}`;
+                    }
                 }
             } catch (error) {
                 Swal.fire({
@@ -336,10 +239,10 @@ export default {
         open() {
             console.log(this.recordId);
             if (this.recordId) {
-                this.title = "Editar vendedor";
+                this.title = "Editar Vendedor";
                 this.getRecord(this.recordId);
             } else {
-                this.title = "Crear vendedor";
+                this.title = "Nuevo Vendedor";
                 this.initForm();
             }
         },
@@ -348,6 +251,12 @@ export default {
                 `/${this.resource}/record/${id}`
             );
             this.form = response.data.data;
+            // Evitar duplicar el prefijo al editar
+            if (this.form.name && this.form.name.startsWith("VENDEDOR - ")) {
+                // No hacer nada, ya tiene el prefijo
+            } else if (this.form.name) {
+                this.form.name = `VENDEDOR - ${this.form.name}`;
+            }
         },
         close() {
             this.$emit("update:showDialog", false);
@@ -356,11 +265,16 @@ export default {
         async submit() {
             this.loading_submit = true;
             this.errors = {};
-            // Convert non-numeric fields to lowercase before saving
-            this.form.name = this.form.name.toLowerCase();
+            // Convertir todos los campos string del formulario a mayúsculas antes de guardar
+            const formUpper = {};
+            Object.keys(this.form).forEach(key => {
+                formUpper[key] = typeof this.form[key] === 'string'
+                    ? this.form[key].toUpperCase()
+                    : this.form[key];
+            });
             const response = await this.$http.post(
                 `/${this.resource}`,
-                this.form
+                formUpper
             );
             if (response.data.success) {
                 this.$message.success(response.data.message);

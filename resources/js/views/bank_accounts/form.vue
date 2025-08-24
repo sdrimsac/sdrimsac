@@ -72,11 +72,11 @@
         </div>
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
             <!-- Botón Cancelar -->
-            <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close()">
+            <el-button class="btn_cancelarsmall" type="primary" icon="fas fa-times fa-lg" @click.prevent="close()">
                 <span>Cancelar</span>
             </el-button>
             <!-- Botón Guardar -->
-            <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
+            <el-button class="btn_guardarsmall" icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit">
                 <span>Guardar</span>
             </el-button>
         </div>

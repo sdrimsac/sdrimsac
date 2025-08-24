@@ -143,18 +143,7 @@
                         </li>
                     @endif
 
-                    {{-- Tratamiento Comercial --}}
-                    @if (
-                        $config->commercial_treatments ||
-                            ($config->commercial_treatment_items && !$roleService->isLogistic() && $noIsArcaProduct))
-                        <li>
-                            <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.commercial_treatment.index') }}">
-                                <i class="fas fa-layer-group" style="font-size: 1.5em; margin-right: 10px;"></i>
-                                <span style="font-size: 1em;">Tratamiento Comercial</span>
-                            </a>
-                        </li>
-                    @endif
+
                     {{-- Categorías Principales --}}
                     @if ($config->health_network && !$roleService->isLogistic() && $noIsArcaProduct)
                         <li>
@@ -386,6 +375,19 @@
                                 <hr style="border: 1px solid #021427;">
                                 <span class="label" style="font-size: 1em;  font-weight: bold;">FUNCIONES
                                     ESPECIALES</span>
+                            </li>
+                        @endif
+
+                        {{-- Tratamiento Comercial --}}
+                        @if (
+                            $config->commercial_treatments ||
+                                ($config->commercial_treatment_items && !$roleService->isLogistic() && $noIsArcaProduct))
+                            <li>
+                                <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.commercial_treatment.index') }}">
+                                    <i class="fas fa-layer-group" style="font-size: 1.5em; margin-right: 10px;"></i>
+                                    <span style="font-size: 1em;">Tratamiento Comercial</span>
+                                </a>
                             </li>
                         @endif
 

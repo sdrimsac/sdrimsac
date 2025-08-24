@@ -3,18 +3,18 @@
     
 <div class="card">
     <!-- Titulo de la vista -->
-    <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-        <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-            <i class="fas fa-coins" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+    <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
+        <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+            <i class="fas fa-coins" style="font-size: 1rem; margin-right: 0.5rem;"></i>
             Módulo de Cuentas Bancarias
         </h4>
     </div>
 
     <div class="data-table-visible-columns" >
-        <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="addNewAccount">
-            <i class="fas fa-coins"></i>
+        <el-button class="btn_guardarsmall" type="primary" href="javascript:void(0)" @click.prevent="addNewAccount">
+            
             <i class="fa fa-plus"></i>
-            <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+            <span >Nuevo</span>
         </el-button>
     </div>
 
@@ -63,27 +63,28 @@
 
                         <!-- Acciones -->
                         <td class="text-end">
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Acciones
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <!-- Opción: Editar -->
-                                    <li>
-                                        <a type="button" class="dropdown-item text-info" @click.prevent="clickCreate(row.id)">
-                                            <i class="fa fa-edit"></i> Editar
-                                        </a>
-                                    </li>
-                                    <!-- Opción: Eliminar (Solo para Admin/SuperAdmin) -->
-                                    <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">
-                                        <li>
-                                            <a type="button" class="dropdown-item text-danger" @click.prevent="clickDelete(row.id)">
-                                                <i class="fa fa-trash"></i> Eliminar
-                                            </a>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </div>
+                            <!-- Botón Editar -->
+                            <el-button
+                                circle
+                                size="small"
+                                type="info"
+                                title="Editar"
+                                @click.prevent="clickCreate(row.id)"
+                                class="me-1"
+                            >
+                                <i class="fa fa-edit"></i>
+                            </el-button>
+                            <!-- Botón Eliminar (Solo para Admin/SuperAdmin) -->
+                            <el-button
+                                v-if="typeUser === 'admin' || typeUser === 'superadmin'"
+                                circle
+                                size="small"
+                                type="danger"
+                                title="Eliminar"
+                                @click.prevent="clickDelete(row.id)"
+                            >
+                                <i class="fa fa-trash"></i>
+                            </el-button>
                         </td>
                     </tr>
                 </tbody>

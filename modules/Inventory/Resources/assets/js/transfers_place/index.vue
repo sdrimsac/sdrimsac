@@ -1,247 +1,138 @@
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-6">
-                        <h4>
-                            <span>{{ title }}</span>
-                        </h4>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">{{ title }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
+                    <i class="fas fa-exchange-alt text-white me-2" style="font-size: 1rem;"></i>
                     <h4 class="my-0 text-white">Listado de {{ title }}</h4>
                 </div>
-                <div
-                    class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
-                    style="margin-left: 1rem;"
-                >
-                    <el-button
-                        class="btn_buscar me-2"
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate"
-                    >
+                <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
+                    style="margin-left: 1rem;">
+                    <el-button class="btn_guardarsmall" href="javascript:void(0)" @click.prevent="clickCreate">
                         <i class="fas fa-plus"></i>
-                        <span
-                            style="color: #fff; font-size: 1.25rem; font-weight: bold;"
-                            >Nuevo Traslado de Productos</span
-                        >
+                        <span style="color: #fff; font-size: 1rem; font-weight: bold;">Nuevo</span>
                     </el-button>
                 </div>
-                <div class="card-body">
-                    <data-table ref="dataTable" :resource="resource">
-                        <tr slot="heading" class="bg-primary">
-                            <th class="text-white">#</th>
-                            <th class="text-white">Fecha</th>
-                            <th class="text-white">Almacen Inicial</th>
-                            <th class="text-white">Almacen Destino</th>
-                            <th class="text-white">Usuario remitente</th>
-                            <th class="text-white">Motivo del Traslado</th>
-                            <th class="text-white">Código</th>
-                            <th class="text-white">Detalle Productos</th>
-                            <th class="text-white">Cantidad Total</th>
-                            <th class="text-white">Estado</th>
-                            <th class="text-end text-white">Acciones</th>
-                        </tr>
-                        <tr></tr>
-                        <tr slot-scope="{ index, row }">
-                            <td>{{ index }}</td>
-                            <td>{{ row.created_at }}</td>
-                            <td>{{ row.warehouse }}</td>
-                            <td>{{ row.warehouse_destination }}</td>
-                            <td>{{ row.sender }}</td>
-                            <td>{{ row.observation }}</td>
-                            <td>
-                                {{ row.code }}
-                                <button
-                                    @click="clickPrint(row.code)"
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                >
-                                    <i class="fa fa-print"></i>
-                                </button>
-                                <!-- <button
-                                    @click="clickPrint(row.code)"
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                >
-                                    <i class="fa fa-print"></i>
-                                </button> -->
-                            </td>
-                            <td>
-                                <el-popover
-                                    placement="right"
-                                    width="400"
-                                    trigger="click"
-                                >
-                                    <el-table :data="row.detail">
-                                        <el-table-column
-                                            width="260"
-                                            property="description"
-                                            label="Producto"
-                                        ></el-table-column>
-
-                                        <el-table-column
-                                            width="100"
-                                            property="quantity"
-                                            label="Cantidad"
-                                        ></el-table-column>
-
-                                        <el-table-column
-                                            fixed="right"
-                                            label="Series"
-                                            width="120"
-                                        >
-                                            <template slot-scope="scope">
-                                                <el-popover
-                                                    placement="right"
-                                                    width="150"
-                                                    trigger="click"
-                                                >
-                                                    <el-table
-                                                        :data="scope.row.lots"
-                                                        width="80"
-                                                    >
-                                                        <el-table-column
-                                                            prop="series"
-                                                            label="Series"
-                                                            width="180"
-                                                        ></el-table-column>
-                                                    </el-table>
-                                                    <el-button
-                                                        slot="reference"
-                                                        icon="el-icon-zoom-in"
-                                                    ></el-button>
-                                                </el-popover>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                    <el-button
-                                        slot="reference"
-                                        icon="el-icon-zoom-in"
-                                    ></el-button>
-                                </el-popover>
-                            </td>
-                            <td>{{ row.quantity }}</td>
-                            <td>
-                                <button
-                                    class="btn"
-                                    :style="{
+                
+                    <div class="card-body">
+                        <data-table ref="dataTable" :resource="resource">
+                            <tr slot="heading" class="bg-primary">
+                                <th class="text-white">#</th>
+                                <th class="text-white">Fecha Envío</th>
+                                <th class="text-white">Almacén Origen</th>
+                                <th class="text-white">Almacén Destino</th>
+                                <th class="text-white">Usuario Remitente</th>
+                                <th class="text-white">Motivo</th>
+                                <th class="text-white">Código</th>
+                                <th class="text-white">Detalle Productos</th>
+                                <th class="text-white">Cantidad Total</th>
+                                <th class="text-white">Estado</th>
+                                <th class="text-end text-white">Acciones</th>
+                            </tr>
+                            <tr></tr>
+                            <tr slot-scope="{ index, row }">
+                                <td>{{ index }}</td>
+                                <td>
+                                    <div style="color: #007bff;">{{ row.created_at ? row.created_at.split(' ')[0] : '' }}</div>
+                                    <div style="color: #28a745;">{{ row.created_at ? row.created_at.split(' ')[1] : '' }}</div>
+                                </td>
+                                <td class="text-center">{{ row.warehouse }}</td>
+                                <td class="text-center">{{ row.warehouse_destination }}</td>
+                                <td class="text-center">{{ row.sender }}</td>
+                                <td class="text-center">{{ row.observation }}</td>
+                                <td>
+                                    {{ row.code }}
+                                </td>
+                                <td>
+                                    <el-popover placement="right" width="400" trigger="click">
+                                        <el-table :data="row.detail">
+                                            <el-table-column width="260" property="description" label="Producto"></el-table-column>
+                                            <el-table-column width="100" property="quantity" label="Cantidad"></el-table-column>
+                                            <el-table-column fixed="right" label="Series" width="120">
+                                                <template slot-scope="scope">
+                                                    <el-popover placement="right" width="150" trigger="click">
+                                                        <el-table :data="scope.row.lots" width="80">
+                                                            <el-table-column prop="series" label="Series" width="180"></el-table-column>
+                                                        </el-table>
+                                                        <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
+                                                    </el-popover>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                        <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
+                                    </el-popover>
+                                </td>
+                                <td class="text-center">{{ row.quantity }}</td>
+                                <td>
+                                    <button class="btn" :style="{
                                         color: 'white',
                                         backgroundColor:
                                             row.status === 1
-                                                ? 'blue'
+                                                ? '#073f68'
                                                 : row.status === 2
-                                                ? 'green'
-                                                : row.status === 3
-                                                ? 'red'
-                                                : 'gray',
+                                                    ? 'green'
+                                                    : row.status === 3
+                                                        ? 'red'
+                                                        : 'gray',
                                         fontWeight: 'bold',
                                         width: '110px'
-                                    }"
-                                >
-                                    {{
-                                        row.status === 1
-                                            ? "Enviado"
-                                            : row.status === 2
-                                            ? "Aceptado"
-                                            : row.status === 3
-                                            ? "Anulado"
-                                            : "Desconocido"
-                                    }}
-                                </button>
-                            </td>
-                            <td class="text-end" v-if="row.status === 1">
-                                <button
-                                    class="btn p-0"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    <span
-                                        class="btn btn-primary dropdown-toggle"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        data-bs-delay="0"
-                                        title=""
-                                        data-bs-original-title="Item Count"
-                                        aria-label="Item Count"
-                                        >Acciones</span
-                                    >
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a
-                                        type="button"
-                                        class="dropdown-item text-warning"
-                                        @click="cancelTransfer(row.code)"
-                                    >
-                                        <i class="fa fa-edit"></i> Cancelar
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </data-table>
-                </div>
+                                    }">
+                                        {{
+                                            row.status === 1
+                                                ? "Enviado"
+                                                : row.status === 2
+                                                    ? "Aceptado"
+                                                    : row.status === 3
+                                                        ? "Anulado"
+                                                        : "Desconocido"
+                                        }}
+                                    </button>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <el-tooltip content="Anular Traslado" placement="top" v-if="row.status === 1">
+                                            <button
+                                                class="btn btn-warning rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 36px; height: 36px; padding: 0;"
+                                                @click="cancelTransfer(row.code)"
+                                            >
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </el-tooltip>
+                                        <el-tooltip content="Imprimir" placement="top">
+                                            <button
+                                                @click="clickPrint(row.code)"
+                                                type="button"
+                                                class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                style="width: 36px; height: 36px; padding: 0;"
+                                            >
+                                                <i class="fa fa-print"></i>
+                                            </button>
+                                        </el-tooltip>
+                                    </div>
+                                </td>
+                            </tr>
+                        </data-table>
+                    </div>
+                
             </div>
-            <el-dialog
-                append-to-body
-                :visible.sync="showDialogPrinters"
-                title="Seleccione una impresora"
-            >
-                <el-select
-                    class="m-2"
-                    v-model="printer_id"
-                    placeholder="Seleccione una impresora"
-                >
-                    <el-option
-                        v-for="printer in printers"
-                        :key="printer.id"
-                        :label="printer.printer"
-                        :value="printer.id"
-                    ></el-option>
+            <el-dialog append-to-body :visible.sync="showDialogPrinters" title="Seleccione una impresora">
+                <el-select class="m-2" v-model="printer_id" placeholder="Seleccione una impresora">
+                    <el-option v-for="printer in printers" :key="printer.id" :label="printer.printer"
+                        :value="printer.id"></el-option>
                 </el-select>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="showDialogPrinters = false"
-                        >Cancelar</el-button
-                    >
-                    <el-button type="primary" @click="Printer"
-                        >Aceptar</el-button
-                    >
+                    <el-button @click="showDialogPrinters = false">Cancelar</el-button>
+                    <el-button type="primary" @click="Printer">Aceptar</el-button>
                 </span>
             </el-dialog>
         </div>
-        <transfer-form
-            :showDialog.sync="showDialogTransferForm"
-            :configuration="configuration"
-            :direct="direct"
-            :warehouse_id="warehouse_id"
-            :establishment_id="establishment_id"
-            :establishments="establishments"
-            :printers="printers"
-            @reloadData="reloadDataTable"
-        ></transfer-form>
-        <pdf-model
-            :showDialog.sync="showDialogPdf"
-            :currentCode="currentCode"
-            :printer_id="printer_id"
-            :printers="printers"
-            :configuration="configuration"
-            @reloadData="reloadData"
-            @Printer="Printer"
-        ></pdf-model>
+        <transfer-form :showDialog.sync="showDialogTransferForm" :configuration="configuration" :direct="direct"
+            :warehouse_id="warehouse_id" :establishment_id="establishment_id" :establishments="establishments"
+            :printers="printers" @reloadData="reloadDataTable"></transfer-form>
+        <pdf-model :showDialog.sync="showDialogPdf" :currentCode="currentCode" :printer_id="printer_id"
+            :printers="printers" :configuration="configuration" @reloadData="reloadData" @Printer="Printer"></pdf-model>
     </div>
 </template>
 

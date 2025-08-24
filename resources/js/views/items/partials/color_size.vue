@@ -1,88 +1,51 @@
+<!-- Agragar Tallas y Colores en compras -->
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        width="70%"
-        append-to-body
-    >
-        <!-- Contenedor principal -->
+    <el-dialog :title="titleDialog" :visible="showDialog" @open="open" @close="close" width="70%" append-to-body>
+
         <div class="row m-3">
-            <!-- Botón Agregar -->
-            <div class="col-12 text-end mb-3">
-                <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    size="mini"
-                    @click="clickAddColorSize"
-                >
-                    Agregar
-                </el-button>
-            </div>
-            <!-- Tabla de contenido -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light text-center">
                         <tr>
-                            <th>Color</th>
-                            <th>Código</th>
-                            <th>Talla</th>
-                            <th>Stock</th>
-                            <th>P. Venta</th>
-                            <th></th>
+                            <th class="text-center" style="padding: 4px; width: 18%;">Código Familia</th>
+                            <th class="text-center" style="padding: 4px; width: 18%;">Color</th>
+                            <th class="text-center" style="padding: 4px; width: 18%;">Talla</th>
+                            <th class="text-center" style="padding: 4px; width: 14%;">Stock</th>
+                            <th class="text-center" style="padding: 4px; width: 18%;">P. Venta</th>
+                            <th class="text-center" style="padding: 4px; width: 14%;">
+                                <el-button class="btn_guardarsmall" type="primary" icon="el-icon-plus" size="mini"
+                                    @click="clickAddColorSize">
+                                    Agregar
+                                </el-button>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-for="(row, index) in colorSizes"
-                            :key="index"
-                            class="text-center"
-                        >
+                        <tr v-for="(row, index) in colorSizes" :key="index" class="text-center">
                             <td>
-                                <el-input
-                                    v-model="row.color"
-                                    placeholder="Color"
-                                ></el-input>
+                                <el-input v-model="row.code" placeholder="Código"></el-input>
                             </td>
                             <td>
-                                <el-input
-                                    v-model="row.code"
-                                    placeholder="Código"
-                                ></el-input>
+                                <el-input v-model="row.color" placeholder="Color"></el-input>
+                            </td>
+
+                            <td>
+                                <el-input v-model="row.size" placeholder="Talla"></el-input>
                             </td>
                             <td>
-                                <el-input
-                                    v-model="row.size"
-                                    placeholder="Talla"
-                                ></el-input>
+                                <el-input type="number" v-model="row.stock" placeholder="Stock"></el-input>
                             </td>
                             <td>
-                                <el-input
-                                    type="number"
-                                    v-model="row.stock"
-                                    placeholder="Stock"
-                                ></el-input>
+                                <el-input type="number" v-model="row.price" step="0.01" placeholder="Precio"></el-input>
                             </td>
-                            <td>
-                                <el-input
-                                    type="number"
-                                    v-model="row.price"
-                                    step="0.01"
-                                    placeholder="Precio"
-                                ></el-input>
-                            </td>
-                            <td>
-                                <el-tooltip
-                                    content="Eliminar Producto"
-                                    placement="top"
-                                >
+                            <td class="text-center">
+                                <el-tooltip content="Eliminar Producto" placement="top">
                                     <el-button
                                         type="danger"
                                         icon="el-icon-delete"
                                         size="mini"
-                                        @click="colorSizes.splice(index, 1)"
-                                    >
+                                        circle
+                                        @click="colorSizes.splice(index, 1)">
                                     </el-button>
                                 </el-tooltip>
                             </td>
@@ -90,24 +53,18 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Footer de acciones -->
-        <div class="form-actions d-flex justify-content-end gap-3 pt-3">
-            <!-- Botón Cancelar -->
-            <el-button class="btn-cancel" icon="fas fa-times" @click="close">
+                    <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+            <el-button type="primary" class="btn_cancelarsmall" icon="fas fa-times" @click="close">
                 Cancelar
             </el-button>
-            <!-- Botón Aceptar -->
-            <el-button
-                class="btn-save"
-                icon="fas fa-save"
-                type="primary"
-                @click="addColorSize"
-            >
+            <el-button type="primary" class="btn_guardarsmall" icon="fas fa-save" @click="addColorSize">
                 Aceptar
             </el-button>
         </div>
+
+        </div>
+
+
     </el-dialog>
 </template>
 

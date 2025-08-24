@@ -1,80 +1,63 @@
+<!-- Lotes en Compra -->
 <template>
-    <el-dialog
-        :title="titleDialog"
-        width="70%"
-        :visible="showDialog"
-        @open="create"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        append-to-body
-        :show-close="false"
-    >
+    <el-dialog :title="titleDialog" width="70%" :visible="showDialog" @open="create" :close-on-click-modal="false"
+        :close-on-press-escape="false" append-to-body :show-close="false">
 
-    <div class="row m-3">
-            <!-- Botón Agregar -->
-            <div class="col-12 text-end mb-3">
-                <el-button
-                    class="btn-agregar"
-                    icon="el-icon-plus"
-                    size="mini"
-                    @click.prevent="clickAddLot"
-                >
-                    Agregar
-                </el-button>
-            </div>
+        <div class="row m-3">
+
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light text-center">
                         <tr>
-                            <th>Lote</th>
-                            <th>Cantidad</th>
-                            <th>Fecha</th>
-                            <th></th>
+                            <th style="padding: 4px; width: 180px;">Lote</th>
+                            <th style="padding: 4px; width: 120px;">Cantidad</th>
+                            <th style="padding: 4px; width: 150px;">Fecha</th>
+                            <th style="padding: 4px; width: 100px; text-align: center;">
+                                <el-button type="primary" class="btn_guardarsmall" icon="el-icon-plus" size="mini"
+                                    @click.prevent="clickAddLot">
+                                    Agregar
+                                </el-button>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                            <tr v-for="(row, index) in lotsGroup_splice" :key="index" class="text-center">
-                                <td>
-                                    <el-input
-                                        v-model="row.code"
-                                        placeholder="Lote"
-                                        @blur="duplicateSerie(row.code, index)"
-                                    >
-                                        <template #prefix>
-                                            <i class="el-icon-edit-outline"></i>
-                                        </template>
-                                    </el-input>
-                                </td>
-                                <td>
-                                    <el-input
-                                        v-model="row.quantity"
-                                        type="number"
-                                        placeholder="Cantidad"
-                                    ></el-input>
-                                </td>
-                                <td>
-                                    <el-date-picker
-                                        v-model="row.date_of_due"
-                                        type="date"
-                                        value-format="yyyy-MM-dd"
-                                        :clearable="false"
-                                        placeholder="Fecha"
-                                    ></el-date-picker>
-                                </td>
-                                <td>
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger btn-sm"
-                                        @click.prevent="clickCancel(index)"
-                                    >
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tr v-for="(row, index) in lotsGroup_splice" :key="index" class="text-center">
+                            <td>
+                                <el-input v-model="row.code" placeholder="Lote" @blur="duplicateSerie(row.code, index)">
+                                    <template #prefix>
+                                        <i class="el-icon-edit-outline"></i>
+                                    </template>
+                                </el-input>
+                            </td>
+                            <td>
+                                <el-input v-model="row.quantity" type="number" placeholder="Cantidad"></el-input>
+                            </td>
+                            <td>
+                                <el-date-picker v-model="row.date_of_due" type="date" value-format="yyyy-MM-dd"
+                                    :clearable="false" placeholder="Fecha"></el-date-picker>
+                            </td>
+                            <td>
+                                <el-tooltip content="Eliminar lote ingresado" placement="top">
+                                    <el-button type="danger" icon="el-icon-delete" circle size="mini"
+                                        @click.prevent="clickCancel(index)">
+                                    </el-button>
+                                </el-tooltip>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
-    </div>
-        
+            </div>
+            <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+                <!-- Botón Cancelar -->
+                <el-button type="primary" class="btn_cancelarsmall" icon="fas fa-times fa-lg"
+                    @click.prevent="clickCancelSubmit">
+                    Cancelar
+                </el-button>
+                <!-- Botón Guardar -->
+                <el-button type="primary" class="btn_guardarsmall" icon="fas fa-save fa-lg" @click="submit">
+                    Guardar
+                </el-button>
+            </div>
             <!-- <el-pagination
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
@@ -86,25 +69,7 @@
         </div>
 
         <!-- Acciones del formulario -->
-        <div class="form-actions d-flex justify-content-end gap-3 pt-3">
-            <!-- Botón Cancelar -->
-            <el-button
-                class="btn-cancel"
-                icon="fas fa-times fa-lg"
-                @click.prevent="clickCancelSubmit"
-            >
-                Cancelar
-            </el-button>
-            <!-- Botón Guardar -->
-            <el-button
-                class="btn-save"
-                icon="fas fa-save fa-lg"
-                type="primary"
-                @click="submit"
-            >
-                Guardar
-            </el-button>
-        </div>
+
     </el-dialog>
 </template>
 
@@ -125,7 +90,7 @@ export default {
             states: ["Activo", "Inactivo", "Desactivado", "Voz", "M2m"]
         };
     },
-    async created() {},
+    async created() { },
     computed: {
         // Sumar las cantidades de todos los lotes
         totalQuantity() {
@@ -223,7 +188,7 @@ export default {
             let val_lotsGroup = await this.validatelotsGroup();
             if (!val_lotsGroup.success)
                 return this.$toast.error(val_lotsGroup.message);
-             console.log("ver retormar los lotes con datos", this.lotsGroup);   
+            console.log("ver retormar los lotes con datos", this.lotsGroup);
             await this.$emit("addRowLot", this.lotsGroup);
             console.log("ver retormar los lotes con datos", this.lotsGroup);
             await this.$emit("update:showDialog", false);

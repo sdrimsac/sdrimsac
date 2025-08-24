@@ -543,7 +543,8 @@
                             >
                                 <!-- Cancelar -->
                                 <el-button
-                                    class="btn-cancel btn-cancel:hover"
+                                    type="primary"
+                                    class="btn_cancelarsmall"
                                     icon="fas fa-times fa-lg"
                                     @click.prevent="close()"
                                 >
@@ -551,7 +552,8 @@
                                 </el-button>
 
                                 <el-button
-                                    class="btn-save btn-save:hover"
+                                    
+                                    class="btn_guardarsmall"
                                     icon="fas fa-save fa-lg"
                                     type="primary"
                                     native-type="submit"
@@ -1033,11 +1035,7 @@ export default {
             return `warehouse_id=${this.form.warehouse_id}&item_id=${this.form_add.item_id}`;
         },
         async submit() {
-            if (!this.form.printer && !this.isDirect) {
-                return this.$toast.warning(
-                    "Recuerde Seleccionar una impresora."
-                );
-            }
+            // Validación de impresora eliminada a pedido del usuario
             if (!this.form.description) {
                 return this.$toast.error("Debe agregar el motivo de traslado.");
             }
@@ -1048,17 +1046,18 @@ export default {
             this.loading_submit = true;
             await this.$http
                 .post(`/${this.resource}/place`, this.form)
-                .then(async response => {
+                .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
                         let { code } = response.data;
                         let { printer } = response.data;
-                        if (this.form.printer) {
-                            await this.printTransfer(code, printer);
-                        }
                         this.$emit("reloadData");
                         /* this.$emit("update:reloadData"); */
                         this.close();
+                        // Lanzar impresión en segundo plano
+                        setTimeout(() => {
+                            this.printTransfer(code, printer);
+                        }, 100);
                     } else {
                         this.$toast.error(response.data.message);
                     }

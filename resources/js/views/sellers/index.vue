@@ -1,126 +1,137 @@
 <!-- Listado de Vendedores -->
 <template>
   <div>
-    
+
     <div class="container-fluid p-l-0 p-r-0">
       <div class="card">
-        <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-          <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-            <i class="fas fa-user-tie" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+        <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+          <h3 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+            <i class="fas fa-user-tie" style="font-size: 1rem; margin-right: 1rem;"></i>
             Módulo de Vendedores
-          </h4>
+          </h3>
         </div>
         <div class="data-table-visible-columns">
-
-          <el-button
-              type="button"
-              class="btn_buscar"
-              style="margin-right: 5px;"
-              href="javascript:void(0)" @click.prevent="clickCreate()"
-          >
-                <i
-                  class="fas fa-plus-circle fa-lg icon-style"
-                ></i>
-              Nuevo
+          <el-button type="button" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+            @click.prevent="clickCreate()">
+            <i class="fas fa-plus-circle fa-lg icon-style"></i>
+            Nuevo
           </el-button>
         </div>
         <div class="card-body">
-          <br />
           <data-table :resource="resource">
             <tr slot="heading" class="bg-primary">
-              <th class="text-white">#</th>
-              <th class="text-white">Nombre</th>
-              <th class="text-white">Documento</th>
-              <th class="text-white">Creado por</th>
-              <th class="text-white">Fecha</th>
-              <th class="text-white">Establecimiento</th>
-              <th class="text-white">Total Ventas B. & F.</th>
-              <th class="text-white">Total Ventas Nota V.</th>
-              <th class="text-white">Total ventas</th>
-              <th class="text-white">Comision %</th>
-              <th class="text-white">Comision Ganado Segun %</th>
-              <th class="text-white">Productos Vendidos</th>
-              <th class="text-white text-end">Acciones</th>
+                <th class="text-white" style="width: 40px;">#</th>
+                <th class="text-white" style="width: 180px;">Vendedor</th>
+                <!-- <th class="text-white">Documento</th> -->
+                <th class="text-white" style="width: 120px;">Creador</th>
+                <!-- <th class="text-white">Fecha</th> -->
+                <th class="text-white" style="width: 150px;">Establecimiento</th>
+                <th class="text-white" style="width: 100px;">Ventas CPE</th>
+                <th class="text-white" style="width: 100px;">Ventas NV</th>
+                <th class="text-white" style="width: 120px;">Total Ventas</th>
+                <th class="text-white" style="width: 120px;">% de Comisión</th>
+                <th class="text-white" style="width: 140px;">Total S/ Comisión</th>
+                <th class="text-white" style="width: 70px;">Productos</th>
+                <th class="text-white text-center" style="width: 100px;">Acciones</th>
             </tr>
-            <tr></tr>
+            
+             
             <tr slot-scope="{ index, row }">
               <td>{{ index + 1 }}</td>
-              <td>{{ row.name }}</td>
-              <td>{{ row.document }}</td>
-              <td>{{ row.user_name }}</td>
-              <td>{{ row.created_at }}</td>
-              <td>{{ row.establishment_description }}</td>
-              <td>{{ row.documents_total }}</td>
-              <td>{{ row.sale_notes_total }}</td>
-              <td>{{ Number(row.total_sales).toFixed(2)  }}</td>
-              <td>{{ Number(row.commission_percentage).toFixed(2)  }} %</td>
-              <td>{{ Number(row.commission_earned).toFixed(2)  }}</td>
-              <td>
-                <el-button type="info" @click="getProd(row.id)">ver</el-button>
+              <td>{{ row.document }}
+                <br />
+                {{ row.name }}
               </td>
-              <td class="text-end">
-                <button
-                  class="btn p-0"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span
-                    class="btn btn-primary dropdown-toggle"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-bs-delay="0"
-                    title
-                    data-bs-original-title="Item Count"
-                    aria-label="Item Count"
-                  >Acciones</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" style>
-                  <a
-                    type="button"
-                    class="dropdown-item text-secondary"
-                    @click.prevent=" clickCreate(row.id)"
+              <!-- <td></td> -->
+              <td>{{ row.user_name }}
+                <br />
+                {{ row.created_at }}
+              </td>
+
+              <td>{{ row.establishment_description }}</td>
+              <td>{{ Number(row.documents_total).toFixed(2) }}</td>
+              <td>{{ Number(row.sale_notes_total).toFixed(2)}}</td>
+              <td>{{ Number(row.total_sales).toFixed(2) }}</td>
+              <td>{{ Number(row.commission_percentage).toFixed(2) }} %</td>
+              <td>{{ Number(row.commission_earned).toFixed(2) }}</td>
+              <td>
+                <el-tooltip content="Visualizar producto vendidos" placement="bottom">
+                  <vs-button
+                    gradient
+                    success
+                    animation-type="scale"
+                    style="min-width: 32px; height: 32px; padding: 0;"
+                    @click.prevent="getProd(row.id)"
                   >
-                    <i class="fa fa-edit"></i> Editar
-                  </a>
-                  <!-- <a
-                    type="button"
-                    class="dropdown-item text-danger"
-                    @click.prevent="
-                                            clickDelete(row.id)"
-                  >
-                    <i class="fa fa-trash"></i> Eliminar
-                  </a>-->
-                  <a
-                    type="button"
-                    class="dropdown-item text-warning"
+                    <i class="fas fa-eye" style="color: #fff;"></i>
+                  </vs-button>
+                </el-tooltip>
+              </td>
+              <td class="text-center">
+                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                    <vs-button
+                    gradient
+                    primary
+                    animation-type="scale"
+                    style="min-width: 32px; height: 32px; padding: 0;"
+                    @click.prevent="clickCreate(row.id)"
+                    >
+                    <i class="fa fa-edit"></i>
+                    </vs-button>
+                    
+                    <!-- <vs-button
+                    gradient
+                    danger
+                    animation-type="scale"
+                    style="min-width: 32px; height: 32px; padding: 0;"
+                    @click.prevent="clickDelete(row.id)"
+                    >
+                    <i class="fa fa-trash"></i>
+                    </vs-button> -->
+                   
+                    <vs-button
+                    gradient
+                    warn
+                    animation-type="scale"
+                    style="min-width: 32px; height: 32px; padding: 0;"
                     @click.prevent="clickDisable(row.id)"
                     v-if="row.active"
-                  >Inhabilitar</a>
-                  <a
-                    type="button"
-                    class="dropdown-item text-success"
+                    >
+                    <i class="fa fa-ban"></i>
+                    </vs-button>
+                    <vs-button
+                    gradient
+                    success
+                    animation-type="scale"
+                    style="min-width: 32px; height: 32px; padding: 0;"
                     @click.prevent="clickEnable(row.id)"
                     v-else
-                  >Habilitar</a>
+                    >
+                    <i class="fa fa-check"></i>
+                    </vs-button>
                 </div>
+
+               
               </td>
             </tr>
-          </data-table>
-        </div>
-        <sellers-form
-          :showDialog.sync="showDialog"
-          :typeUser="typeUser"
-          :establishments="establishments"
-          :document_types="document_types"
-          :recordId="recordId"
-        ></sellers-form>
-        <list-prod
-          :showDialog.sync="showDialogProd"
-          :sellerId="ListProdId"
-          :sellers="sellers"
-        ></list-prod>
+          
+              
+              <template v-slot:footer>
+                <tr style="background: #f5f5f5; font-weight: bold;">
+                  <td colspan="4" class="text-right" style="font-weight: bold; font-size: 1.1rem;">Totales:</td>
+                  <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.cpe }}</td>
+                  <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.nv }}</td>
+                  <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.totalVentas }}</td>
+                  <td></td>
+                  <td style="font-weight: bold; font-size: 1.1rem;">{{ totals.totalComision }}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </template>
+            </data-table>
+          </div>
+        <sellers-form :showDialog.sync="showDialog" :typeUser="typeUser" :establishments="establishments"
+          :document_types="document_types" :recordId="recordId"></sellers-form>
+        <list-prod :showDialog.sync="showDialogProd" :sellerId="ListProdId" :sellers="sellers"></list-prod>
       </div>
     </div>
   </div>
@@ -155,6 +166,22 @@ export default {
       ListSoldItems: []
     };
   },
+
+    computed: {
+      totals() {
+        // Sumar los totales de cada columna relevante
+        const cpe = this.sellers.reduce((acc, s) => acc + Number(s.documents_total || 0), 0);
+        const nv = this.sellers.reduce((acc, s) => acc + Number(s.sale_notes_total || 0), 0);
+        const totalVentas = this.sellers.reduce((acc, s) => acc + Number(s.total_sales || 0), 0);
+        const totalComision = this.sellers.reduce((acc, s) => acc + Number(s.commission_earned || 0), 0);
+        return {
+          cpe: cpe.toFixed(2),
+          nv: nv.toFixed(2),
+          totalVentas: totalVentas.toFixed(2),
+          totalComision: totalComision.toFixed(2)
+        };
+      }
+    },
   created() {
     this.$eventHub.$on("reloadData", () => {
       this.getData();

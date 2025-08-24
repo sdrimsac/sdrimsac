@@ -1,35 +1,20 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @open="create"
-        width="40%"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" @open="create" width="30%" :close-on-click-modal="false"
+        :close-on-press-escape="false" :show-close="false">
         <div class="d-flex justify-content-center gap-5 mt-3">
             <div class="text-center font-weight-bold">
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrint('a4')"
-                    style="font-size: 2em;"
-                >
+                <button type="button" class="btn btn-lg btn-info waves-effect waves-light" @click="clickPrint('a4')"
+                    style="font-size: 1em;">
                     <i class="fa fa-file-alt"></i>
                 </button>
-                <p style="font-size: 2em;">Imprimir A4</p>
+                <p style="font-size: 1em;">Imprimir A4</p>
             </div>
             <div class="text-center font-weight-bold">
-                <button
-                    type="button"
-                    class="btn btn-lg btn-info waves-effect waves-light"
-                    @click="clickPrinter(recordId)"
-                    style="font-size: 2em;"
-                >
+                <button type="button" class="btn btn-lg btn-info waves-effect waves-light"
+                    @click="clickPrinter(recordId)" style="font-size: 1em;">
                     <i class="fa fa-file-alt"></i>
                 </button>
-                <p style="font-size: 2em;">Imprimir A4 generado</p>
+                <p style="font-size: 1em;">A4</p>
             </div>
         </div>
         <!-- <div class="d-flex justify-content-center gap-5 mt-3">
@@ -50,46 +35,24 @@
             </div>
         </div> -->
 
-        <span slot="footer" class="dialog-footer">
-            <div
-                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-            >
-                <template v-if="showClose">
-                    <el-button
-                        class="btn-cancel btn-cancel:hover"
-                        icon="fas fa-times fa-lg"
-                        @click="clickClose"
-                    >
-                        <span> Cerrar</span>
-                    </el-button>
-                </template>
-                <div
-                    class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-                >
-                    <!-- Botón Listado de Compras -->
-                    <el-button
-                        class="btnsdr-listado btnsdr-listado:hover"
-                        icon="fas fa-list fa-lg"
-                        @click="clickFinalize"
-                        style="font-size: 1.2em;"
-                    >
-                        <span> Listado de Compras</span>
-                    </el-button>
 
-                    <!-- Botón Nueva Compra -->
-                    <el-button
-                        class="btn-save btn-save:hover"
-                        icon="fas fa-plus fa-lg"
-                        type="success"
-                        native-type="submit"
-                        @click="clickNewDocument"
-                    >
-                        <span> Nueva compra</span>
-                    </el-button>
-                </div>
-            </div>
+        <div class="form-actions d-flex justify-content-center gap-3 pt-2 pb-2">
+            <template v-if="showClose">
+            <el-button type="primary" class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click="clickClose">
+                <span> Cerrar</span>
+            </el-button>
+            </template>
+            <el-button type="primary" class="btn_excelsmall" icon="fas fa-list fa-lg" @click="clickFinalize"
+            style="font-size: 1.2em;">
+            <span> Listado de Compras</span>
+            </el-button>
+            <el-button class="btn_guardarsmall" icon="fas fa-plus fa-lg" type="primary" native-type="submit"
+            @click="clickNewDocument">
+            <span> Nueva compra</span>
+            </el-button>
+        </div>
 
-            <!-- <template v-if="showClose">
+        <!-- <template v-if="showClose">
                 <el-button @click="clickClose">Cerrar</el-button>
             </template>
             <template v-else>
@@ -98,7 +61,7 @@
                     >Nueva compra</el-button
                 >
             </template> -->
-        </span>
+
     </el-dialog>
 </template>
 
@@ -127,8 +90,8 @@ export default {
         },
         clickPrinter(recordId) {
             window.open(
-            `/${this.resource}/printer/${recordId}`,
-            "_blank"
+                `/${this.resource}/printer/${recordId}`,
+                "_blank"
             );
         },
         /* clickPrintDocument(filename) {

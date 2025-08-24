@@ -1,7 +1,7 @@
 <!-- Listado de Inventario -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
+        <!-- <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
@@ -19,46 +19,48 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-              <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+              <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
                   <h4 class="my-0 text-white d-flex align-items-center"
-                      style="font-size: 1.5rem; font-weight: bold;">
-                      <i class="fas fa-truck-loading" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                      style="font-size: 1rem; font-weight: bold;">
+                      <i class="fas fa-truck-loading" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                       Ingreso y Salida de Productos
                   </h4>
               </div>
                 <div class="data-table-visible-columns">
-                    <el-button
-                        type="primary"
-                        class="btn_titulos_modal"
-                        href="javascript:void(0)"
-                        @click.prevent="clickImportColorSize()"
-                    >
-                        <i class="fa fa-arrow-circle-down fa-lg"></i>
-                        Importar talla color 
-                    </el-button>
-                    <el-button
-                        type="primary"
-                        class="btn_titulos_modal"
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate('input')"
-                    >
-                        <i class="fa fa-arrow-circle-down fa-lg"></i>
-                        Ingreso
-                    </el-button>
-
-                    <el-button
-                        type="primary"
-                        class="btn_titulos_modal"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickOutput()"
-                    >
-                        <i class="fa fa-arrow-circle-up fa-lg"></i>
-                        Salida
-                    </el-button>
+                    <div style="display: flex; gap: 8px;">
+                        <el-button
+                            v-if="configuration.color_size_enabled"
+                            type="primary"
+                            class="btn_guardarsmall"
+                            href="javascript:void(0)"
+                            @click.prevent="clickImportColorSize()"
+                        >
+                            <i class="fa fa-arrow-circle-down fa-lg"></i>
+                            Importar talla color 
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            class="btn_guardarsmall"
+                            href="javascript:void(0)"
+                            @click.prevent="clickCreate('input')"
+                        >
+                            <i class="fa fa-arrow-circle-down fa-lg"></i>
+                            Ingreso
+                        </el-button>
+                        <el-button
+                            type="primary"
+                            class="btn_guardarsmall"
+                            style="margin-right: 5px;"
+                            href="javascript:void(0)"
+                            @click.prevent="clickOutput()"
+                        >
+                            <i class="fa fa-arrow-circle-up fa-lg"></i>
+                            Salida
+                        </el-button>
+                    </div>
                 </div>
                 
 
@@ -72,15 +74,15 @@
                             <th class="text-white text-left">Producto</th>
                             <th class="text-white text-left">Almacén</th>
                             <th class="text-white text-left">
-                                Stock Movimiento
+                                Cant-Movimiento
                             </th>
                             <th class="text-white text-letf">
                                 Fecha Movimiento
                             </th>
                             <th class="text-white text-center">
-                                Estado de Productos
+                                Tipo
                             </th>
-                            <th class="text-white text-center">ticket</th>
+                            <th class="text-white text-center">Ticket</th>
                         </tr>
 
                         <tr calss="text-white"></tr>
@@ -107,7 +109,7 @@
                                             >
                                                 <!-- <th class="text-white">N°</th> -->
                                                 <th class="text-white">
-                                                    SERIE
+                                                    Serie
                                                 </th>
                                             </tr>
                                         </thead>
@@ -135,28 +137,30 @@
                                                 slot="heading"
                                                 class="bg-primary"
                                             >
+                                                <th class="text-white">Código Familia</th>
                                                 <th class="text-white">
-                                                    COLOR
+                                                    Color
                                                 </th>
                                                 <th class="text-white">
-                                                    TALLA
+                                                    Talla
                                                 </th>
                                                 <th class="text-white">
-                                                    PRECIO
+                                                    Precio
                                                 </th>
-                                                <th class="text-white">CODIGO FAMILIA</th>
-                                                <th class="text-white">STOCK TALLA COLOR</th>
+                                                
+                                                <th class="text-white">Stock</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr
                                                 v-for="color_size in row.color_size"
                                                 :key="color_size.id"
-                                            >
+                                            >   
+                                                <td>{{ color_size.code }}</td>
                                                 <td>{{ color_size.color }}</td>
                                                 <td>{{ color_size.size }}</td>
                                                 <td>{{ color_size.price }}</td>
-                                                <td>{{ color_size.code }}</td>
+                                                
                                                 <td>{{ color_size.stock }}</td>
                                                 
                                             </tr>
@@ -170,43 +174,57 @@
                             <td class="text-left">
                                 {{ parseFloat(row.quantity).toFixed(2) }}
                             </td>
-                            <td class="text_left">{{ row.created_at }}</td>
+                            <td class="text_left">
+                                <div>
+                                    <span style="color: #1976d2; font-weight: bold;">
+                                        {{ row.created_at ? row.created_at.split(' ')[0] : '' }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span style="color: #e53935; font-weight: bold;">
+                                        {{ row.created_at ? row.created_at.split(' ')[1] : '' }}
+                                    </span>
+                                </div>
+                            </td>
                             <td class="text-center">
-                              <span
-                                :class="{
-                                  'bg-success text-white rounded px-1 py-1':
-                                    row.type === 'input',
-                                  'bg-danger text-white rounded px-1 py-1':
-                                    row.type === 'output'
-                                }"
-                                >{{
-                                  row.type === "input"
-                                    ? "ingreso"
-                                    : "salida"
-                                }}</span
+                              <el-tag
+                                :type="row.type === 'input' ? 'success' : 'danger'"
+                                effect="dark"
+                                disable-transitions
+                                style="font-size: 0.95em; padding: 2px 10px;"
                               >
+                                {{ row.type === "input" ? "Ingreso" : "Salida" }}
+                              </el-tag>
                             </td>
                             
                             <td class="text-center">
-                              <button
-                                @click="clickPrint(row.id)"
-                                type="button"
-                                class="btn btn-sm btn-primary"
-                              >
-                                <i class="fa fa-print"></i>
-                              </button>
-                              <button
-                                @click="RePrint(row.id)"
-                                type="button"
-                                class="btn btn-sm btn-danger"
-                              >
-                                <i class="fa fa-print"></i>
-                              </button>
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <button
+                                    @click="clickPrint(row.id)"
+                                    type="button"
+                                    class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width:32px;height:32px;padding:0;"
+                                    title="Imprimir"
+                                >
+                                    <i class="fa fa-print"></i>
+                                </button>
+                                <button
+                                    @click="RePrint(row.id)"
+                                    type="button"
+                                    class="btn btn-sm btn-danger rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width:32px;height:32px;padding:0;margin-left:6px;"
+                                    title="Reimprimir"
+                                >
+                                    <i class="fa fa-redo"></i>
+                                </button>
+                            </div>
                             </td>
                         </tr>
                     </data-table>
                 </div>
             </div>
+
+            
             <el-dialog
                 append-to-body
                 :visible.sync="showDialogEstablishment"

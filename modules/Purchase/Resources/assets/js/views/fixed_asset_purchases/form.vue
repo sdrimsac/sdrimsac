@@ -15,7 +15,7 @@
                                 }"
                             >
                                 <label class="control-label"
-                                    >Tipo comprobante</label
+                                    >Tipo comprobantes</label
                                 >
                                 <el-select
                                     v-model="form.document_type_id"

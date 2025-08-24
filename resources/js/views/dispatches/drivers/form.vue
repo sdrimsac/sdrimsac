@@ -1,3 +1,4 @@
+<!-- Editar Conductor en Guias de Remisión -->
 <template>
     <el-dialog
         :close-on-click-modal="false"
@@ -145,6 +146,7 @@
                             <el-input
                                 v-model="form.license"
                                 @keyup.native="keyUpLicense"
+                                @focus="addLicensePrefix"
                             ></el-input>
                             <small
                                 v-if="errors.license"
@@ -164,6 +166,7 @@
                             <el-input
                                 v-model="form.telephone"
                                 dusk="telephone"
+                                ref="inputTelephone"
                             ></el-input>
                             <small
                                 v-if="errors.telephone"
@@ -172,18 +175,26 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                         <div class="form-group" style="margin-top: 32px;">
-                            <el-switch
-                                v-model="form.is_default"
-                                active-text="Predeterminado"
-                                inactive-text=""
-                            ></el-switch>
+                            <vs-switch color="#073f68" v-model="form.is_default" val="Predeterminado">
+                                Predeterminado
+                            </vs-switch>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-right mt-4">
+             <div class="row">
+                <div class="col-12 d-flex justify-content-end align-items-center pt-2 pb-2">
+                    <el-button class="btn_cancelarsmall" type="primary" icon="fas fa-times fa-lg" @click.prevent="close()">
+                        Cancelar
+                    </el-button>
+                    <el-button class="btn_guardarsmall" type="primary" icon="fas fa-save fa-lg" native-type="submit" :loading="loading_submit">
+                        Guardar
+                    </el-button>
+                </div>
+            </div>
+            <!-- <div class="form-actions text-right mt-4">
                 <el-button @click.prevent="close()">Cancelar</el-button>
                 <el-button
                     :loading="loading_submit"
@@ -191,7 +202,7 @@
                     type="primary"
                     >Guardar
                 </el-button>
-            </div>
+            </div> -->
         </form>
     </el-dialog>
 </template>
@@ -218,8 +229,12 @@ export default {
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
             this.api_service_token = response.data.api_service_token;
-            this.identity_document_types =
-                response.data.identity_document_types;
+            let types = response.data.identity_document_types || [];
+            // Verificar si existe DNI (id: '1'), si no, agregarlo
+            if (!types.some(t => t.id === '1' || t.id === 1)) {
+                types.unshift({ id: '1', description: 'DNI' });
+            }
+            this.identity_document_types = types;
         });
     },
     computed: {
@@ -242,6 +257,16 @@ export default {
                 this.form.license = this.form.license.concat(this.form.number);
             }
         },
+        addLicensePrefix() {
+            // Si ya tiene el prefijo y el número, no hacer nada
+            const number = this.form.number ? this.form.number.toString() : '';
+            const expected = 'P-' + number;
+            if (number && this.form.license !== expected) {
+                this.form.license = expected;
+            } else if (!number && (typeof this.form.license !== 'string' || !this.form.license.startsWith('P-'))) {
+                this.form.license = 'P-';
+            }
+        },
         initForm() {
             this.errors = {};
 
@@ -250,7 +275,7 @@ export default {
                 identity_document_type_id: "1",
                 number: "",
                 name: null,
-                license: null,
+                license: '', // Siempre string
                 telephone: null,
                 is_default: false,
                 is_active: true
@@ -266,7 +291,13 @@ export default {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
-                        this.form = response.data.data;
+                        // Aseguramos que license sea string y tenga el prefijo
+                        const data = response.data.data;
+                        data.license = (data.license || '').toString();
+                        if (data.license && !data.license.startsWith('P-')) {
+                            data.license = 'P-' + data.license;
+                        }
+                        this.form = data;
                     });
             }
         },
@@ -318,6 +349,16 @@ export default {
                 this.form.identity_document_type_id === "1"
                     ? data.nombre_completo
                     : data.nombre_o_razon_social;
+            // Actualizar la licencia automáticamente con el número encontrado
+            if (this.form.identity_document_type_id === "1" && this.form.number) {
+                this.form.license = 'P-' + this.form.number;
+            }
+            // Hacer focus en el input de teléfono
+            this.$nextTick(() => {
+                if (this.$refs.inputTelephone && this.$refs.inputTelephone.focus) {
+                    this.$refs.inputTelephone.focus();
+                }
+            });
         }
     }
 };

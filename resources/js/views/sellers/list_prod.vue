@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    width="70%"
+    width="60%"
     :visible="showDialog"
     @open="open"
     @close="close"
@@ -9,12 +9,12 @@
     class="rounded-dialog"
     :close-on-click-modal="false"
   >
-    <br />
-    <div class>
-      <div class>
+
+
+      <div class="">
         <div class="row">
           <div class="col-md-3">
-            <label class="w-100">Por Dia</label>
+            <!-- <label class="w-100">Por Dia</label> -->
             <el-date-picker
               v-model="date_of_issue"
               type="date"
@@ -25,7 +25,7 @@
             ></el-date-picker>
           </div>
           <div class="col-md-3">
-            <label class="w-100">Por Mes</label>
+            <!-- <label class="w-100">Por Mes</label> -->
             <el-date-picker
               v-model="month_start"
               type="month"
@@ -35,34 +35,34 @@
               @change="changeClearInput('month_start')"
             ></el-date-picker>
           </div>
-          <div class="col-lg-3 col-md-2 pb-2">
+          <div class="col-lg-2 col-md-2 pb-2">
             <div class="form-group">
               <el-button
-                class="submit"
-                type="success"
+                class="btn_excelsmall"
+                type="primary"
                 icon="el-icon-tickets"
                 @click.prevent="clickDownload('excel')"
               >Exportar Excel</el-button>
             </div>
           </div>
-          <div class="col-md-3">
-            <h4 class="fw-bold">Total Acumulado S/. {{ totalAcumulado }}</h4>
+          <div class="col-md-4">
+            <h3 class="fw-bold">Total Acumulado S/ {{ totalAcumulado }}</h3>
           </div>
         </div>
       </div>
-    </div>
-    <br />
+  
+   
     <div class="card">
-      <div class="card-body">
+      <div class="card-body mb-2" style="padding: 12px;">
         <div class="row">
           <table class="table table-striped">
-            <thead>
+            <thead style="background-color: #073f68; color: #fff;">
               <tr>
-                <th>#</th>
-                <th>Nombre Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Total</th>
+                <th style="color: #fff;">#</th>
+                <th style="color: #fff;">Nombre Producto</th>
+                <th style="color: #fff;">Cantidad</th>
+                <th style="color: #fff;">Precio</th>
+                <th style="color: #fff;">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -90,9 +90,7 @@
         </div>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <!-- <el-button icon="fas fa-times" @click="close">Cancelar</el-button> -->
-    </span>
+    
   </el-dialog>
 </template>
 
@@ -133,7 +131,7 @@ export default {
       console.log(this.sellers);
       const seller = this.sellers.find(seller => seller.id === this.sellerId);
       const sellerName = seller ? seller.name : "Vendedor Desconocido";
-      return `${sellerName} - Productos Vendidos`;
+      return `${sellerName} -  Lista de Productos Vendidos`;
     },
     paginatedItems() {
       if (!this.combinedItems || this.combinedItems.length === 0) {

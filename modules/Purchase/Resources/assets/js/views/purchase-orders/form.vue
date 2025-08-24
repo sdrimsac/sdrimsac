@@ -3,7 +3,7 @@
         <!-- <div class="card-header bg-primary">
             <h6 class="my-0 text-white">Nueva Compra</h6>
         </div> -->
-        <div class="tab-content   p-3" v-if="loading_form">
+        <div class="tab-content p-2" v-if="loading_form">
             <div class="invoice">
                 <header class="clearfix">
                     <div class="row">
@@ -15,9 +15,7 @@
                                 <span class="font-weight-bold d-block">ORDEN DE COMPRA</span>
                                 <span class="font-weight-bold d-block">OC-XXX</span>
                                 <span class="font-weight-bold">{{company.name}}</span>
-                                <br>
                                 <div v-if="establishment.address != '-'">{{ establishment.address }}, </div> {{ establishment.district.description }}, {{ establishment.province.description }}, {{ establishment.department.description }} - {{ establishment.country.description }}
-                                <br>
                                 {{establishment.email}} - <span v-if="establishment.telephone != '-'">{{establishment.telephone}}</span>
                             </address>
                         </div>

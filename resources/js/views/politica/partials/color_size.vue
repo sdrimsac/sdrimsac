@@ -1,37 +1,26 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        append-to-body
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" @open="open" @close="close" append-to-body>
         <div class="row m-2">
             <div class="col-12 text-end">
-                <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    size="mini"
-                    @click="clickAddColorSize"
-                ></el-button>
+                <el-button type="primary" icon="el-icon-plus" size="mini" @click="clickAddColorSize"></el-button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>
+                            <th style="padding: 4px;">
                                 COLOR
                             </th>
-                            <th>
+                            <th style="padding: 4px;">
                                 TALLA
                             </th>
-                            <th>
+                            <th style="padding: 4px;">
                                 STOCK
                             </th>
-                               <th>
+                            <th style="padding: 4px;">
                                 PRECIO
                             </th>
-                            <th></th>
+                            <th style="padding: 4px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,25 +32,14 @@
                                 <el-input v-model="row.size"></el-input>
                             </td>
                             <td>
-                                <el-input
-                                    type="number"
-                                    v-model="row.stock"
-                                ></el-input>
-                            </td>
-                                <td>
-                                <el-input
-                                    type="number"
-                                    v-model="row.price"
-                                    step="0.01"
-                                ></el-input>
+                                <el-input type="number" v-model="row.stock"></el-input>
                             </td>
                             <td>
-                                <el-button
-                                    type="danger"
-                                    icon="el-icon-delete"
-                                    size="mini"
-                                    @click="colorSizes.splice(index, 1)"
-                                ></el-button>
+                                <el-input type="number" v-model="row.price" step="0.01"></el-input>
+                            </td>
+                            <td>
+                                <el-button type="danger" icon="el-icon-delete" size="mini"
+                                    @click="colorSizes.splice(index, 1)"></el-button>
                             </td>
                         </tr>
                     </tbody>
@@ -116,7 +94,7 @@ export default {
             return complete;
         },
         verifyStock() {
-            if(this.stock == 0){
+            if (this.stock == 0) {
                 return true;
             }
             let total = 0;
@@ -132,7 +110,7 @@ export default {
             return true;
         },
         clickAddColorSize() {
-            if(this.totalStock >= this.stock){
+            if (this.totalStock >= this.stock) {
                 this.$toast.warning("El stock total no puede ser mayor al stock del producto");
                 return;
             }
@@ -190,7 +168,7 @@ export default {
             this.colorSizes.forEach(item => {
                 if (item.size && item.color) {
                     item.color = item.color.toUpperCase();
-                 
+
                     if (isNaN(item.size)) {
                         item.size = item.size.toUpperCase();
                     }

@@ -1,33 +1,29 @@
+<!-- Series en compras -->
 <template>
-<el-dialog  :title="titleDialog" 
-            width="60%" 
-            :visible="showDialog" 
-            @open="create" 
-            :close-on-click-modal="false" 
-            :close-on-press-escape="false" append-to-body 
-            :show-close="false">
+    <el-dialog :title="titleDialog" width="60%" :visible="showDialog" @open="create" :close-on-click-modal="false"
+        :close-on-press-escape="false" append-to-body :show-close="false">
 
-    <div class="row m-3">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="thead-light text-center">
-                    <tr>
-                        <th v-if="lots.length > 0">Serie</th>
-                        <th v-if="lots.length > 0">Estado</th>
-                        <th v-if="lots.length > 0">Fecha</th>
-                        <th ></th>
-                    </tr>
-                </thead>
+        <div class="row m-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light text-center">
+                        <tr>
+                            <th v-if="lots.length > 0" style="padding: 4px;">Serie</th>
+                            <th v-if="lots.length > 0" style="padding: 4px;">Estado</th>
+                            <th v-if="lots.length > 0" style="padding: 4px;">Fecha</th>
+                            <th style="padding: 4px;"></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr v-for="(row, index) in lots_splice" :key="index" class="text-center">
                             <td>
                                 <div class="form-group mb-2 mr-2">
                                     <el-input @blur="
-                                                duplicateSerie(
-                                                    row.series,
-                                                    index
-                                                )
-                                            " v-model="row.series">
+                                        duplicateSerie(
+                                            row.series,
+                                            index
+                                        )
+                                        " v-model="row.series">
                                         <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                                 </div>
                             </td>
@@ -35,48 +31,42 @@
                                 <div class="form-group mb-2 mr-2">
                                     <el-select v-model="row.state">
                                         <el-option v-for="(option,
-                                                index) in states" :key="index" :value="option" :label="option"></el-option>
+                                            index) in states" :key="index" :value="option" :label="option"></el-option>
                                     </el-select>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-group mb-2 mr-2">
-                                    <el-date-picker v-model="row.date" type="date" value-format="yyyy-MM-dd" :clearable="false"></el-date-picker>
+                                    <el-date-picker v-model="row.date" type="date" value-format="yyyy-MM-dd"
+                                        :clearable="false"></el-date-picker>
                                 </div>
                             </td>
                             <td class="series-table-actions text-center">
-                                <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickCancel(index)">
+                                <button type="button" class="btn waves-effect waves-light btn-sm btn-danger"
+                                    @click.prevent="clickCancel(index)">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
 
                         </tr>
                     </tbody>
-            </table>
+                </table>
+            </div>
+            <div class="form-actions d-flex justify-content-end gap-3 pt-3">
+                <!-- Botón Cancelar -->
+                <el-button type="primary" class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="clickCancelSubmit">
+                    Cancelar
+                </el-button>
+                <!-- Botón Guardar -->
+                <el-button type="primary" class="btn_guardarsmall" icon="fas fa-save fa-lg" @click="submit">
+                    Guardar
+                </el-button>
+            </div>
         </div>
-    </div>
 
-   
-    <div class="form-actions d-flex justify-content-end gap-3 pt-3">
-            <!-- Botón Cancelar -->
-            <el-button
-                class="btn-cancel"
-                icon="fas fa-times fa-lg"
-                @click.prevent="clickCancelSubmit"
-            >
-                Cancelar
-            </el-button>
-            <!-- Botón Guardar -->
-            <el-button
-                class="btn-save"
-                icon="fas fa-save fa-lg"
-                type="primary"
-                @click="submit"
-            >
-                Guardar
-            </el-button>
-        </div>
-</el-dialog>
+
+
+    </el-dialog>
 </template>
 
 <script>
@@ -171,7 +161,7 @@ export default {
         clickAddLot() {
             if (!this.recordId) {
                 if (this.lots.length >= this.stock)
-                return this.$showSAlert("Advertencia", "La cantidad de registros es superior al stock", "error");
+                    return this.$showSAlert("Advertencia", "La cantidad de registros es superior al stock", "error");
             }
 
             this.lots.push({

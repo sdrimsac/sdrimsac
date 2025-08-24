@@ -1,67 +1,36 @@
 <!-- Modulo Listado de Compras -->
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
+        <!-- <div class="container-fluid p-l-0 p-r-0">
+            <div class="page-header" >
                 <div class="row">
-                    <div
-                        v-if="configuration.sale_note_credit_penalty"
-                        class="col-sm-12 col-lg-2 alert alert-success d-flex justify-content-start align-items-center"
-                    >
-                        <span
-                            >Efectivo disponible: S/
-                            {{ Number(total).toFixed(2) }}</span
-                        >
+                    <div v-if="configuration.sale_note_credit_penalty"
+                        class="col-sm-12 col-lg-2 alert alert-success d-flex justify-content-start align-items-center">
+                        <span>Efectivo disponible: S/
+                            {{ Number(total).toFixed(2) }}</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
-                <div
-                    class="card-header bg-primary d-flex align-items-center"
-                    style="padding: 15px;"
-                >
-                    <h4
-                        class="my-0 text-white d-flex align-items-center"
-                        style="font-size: 1.5rem; font-weight: bold;"
-                    >
-                        <i
-                            class="fas fa-shopping-cart"
-                            style="font-size: 2rem; margin-right: 0.5rem;"
-                        ></i>
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
+                    <h3 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="fas fa-shopping-cart" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                         Módulo de Compras
-                    </h4>
+                    </h3>
                 </div>
 
-                <div
-                    class="data-table-visible-columns d-flex align-items-center"
-                >
-                    <!-- <el-button
-                        type="primary"
-                        class="me-2"
-                        href="javascript:void(0)"
-                        @click.prevent="clickRestaurar()"
-                    >
-                        Importar talla y color
-                    </el-button> -->
-                    <!-- <el-button
-                        type="button"
-                        class="btn btn-add-product"
-                        @click.prevent="clickImportColorSize()"
-                        data-toggle="tooltip"
-                    >
-                        <i class="fa fa-upload"></i>
-                        Importar Talla color
-                    </el-button> -->
-
-                    <el-button
-                        type="primary"
-                        class="btn_buscar me-2"
-                        href="javascript:void(0)"
-                        @click.prevent="clickNuevo()"
-                    >
+                <div class="data-table-visible-columns d-flex align-items-center">
+                    <!--  -->
+                    <el-button v-if="configuration.sale_note_credit_penalty" type="success" class="btn_excelsmall "
+                        disabled style="font-weight: bold; font-size: 1.1rem;">
+                        <i class="fas fa-wallet"></i>
+                        Efectivo disponible: S/ {{ Number(total).toFixed(2) }}
+                    </el-button>
+                    <el-button type="primary" class="btn_guardarsmall" href="javascript:void(0)"
+                        @click.prevent="clickNuevo()">
                         <i class="fas fa-plus"></i>
                         Nuevo
                     </el-button>
@@ -80,300 +49,191 @@
                 <!-- ********** -->
 
                 <div class="card-body">
-                    <data-table
-                        :resource="resource"
-                        @clickReport="clickReport"
-                        class="table-striped"
-                    >
+                    <data-table :resource="resource" @clickReport="clickReport" class="table-striped">
                         <tr slot="heading" class="bg-primary">
-                            <th class="text-white text-center">#</th>
-                            <th class="text-center text-white">Actividad</th>
+                            <th class="text-white text-center" style="width: 10px;">#</th>
+                            <th class="text-left text-white" style="width: 60px;">Actividad</th>
                             <!-- <th class="text-center text-white">Usuario</th> -->
-                            <th
-                                class="text-center text-white"
-                                v-if="columns.date_of_due.visible"
-                            >
+                            <th class="text-center text-white" v-if="columns.date_of_due.visible" style="width: 110px;">
                                 F. Vencimiento
                             </th>
-                            <th class="text-white text-center">Proveedor</th>
-                            <th class="text-white text-center">Estado</th>
-                            <th class="text-white text-center">Número</th>
-                            <th class="text-white text-center">Productos</th>
-                            <th class="text-white text-center">Pagos</th>
-                            <th class="text-center text-white">Moneda</th>
-                            <th
-                                v-if="columns.total_free.visible"
-                                class="text-end"
-                            >
+                            <th class="text-white text-center" style=" width: 180px;">Proveedor</th>
+                            <th class="text-white text-center" style="width: 80px;">Estado</th>
+                            <th class="text-white text-center" style="width: 120px;">Comprobante</th>
+                            <th class="text-white text-center" style="width: 90px;">Productos</th>
+                            <!-- <th class="text-white text-center" style="width: 80px;">Pagos</th> -->
+                            <th class="text-center text-white" style="width: 80px;">Moneda</th>
+                            <th v-if="columns.total_free.visible" class="text-end" style="width: 90px;">
                                 T.Gratuita
                             </th>
-                            <th
-                                v-if="columns.total_unaffected.visible"
-                                class="text-end text-white"
-                            >
+                            <th v-if="columns.total_unaffected.visible" class="text-end text-white"
+                                style="width: 90px;">
                                 T.Inafecta
                             </th>
-                            <th
-                                v-if="columns.total_exonerated.visible"
-                                class="text-end text-white"
-                            >
+                            <th v-if="columns.total_exonerated.visible" class="text-end text-white"
+                                style="width: 90px;">
                                 T.Exonerado
                             </th>
-                            <th
-                                v-if="columns.total_taxed.visible"
-                                class="text-end text-white"
-                            >
+                            <th v-if="columns.total_taxed.visible" class="text-end text-white" style="width: 90px;">
                                 T.Gravado
                             </th>
-                            <th
-                                v-if="columns.total_igv.visible"
-                                class="text-end text-white"
-                            >
+                            <th v-if="columns.total_igv.visible" class="text-end text-white" style="width: 90px;">
                                 T.Igv
                             </th>
-                            <th
-                                v-if="columns.total_perception.visible"
-                                class="text-end text-white"
-                            >
+                            <th v-if="columns.total_perception.visible" class="text-end text-white"
+                                style="width: 90px;">
                                 Percepcion
                             </th>
-                            <th class="text-end text-white">Total</th>
-                            <th class="text-white">Acciones</th>
+                            <th class="text-center text-white" style="width: 100px;">Total</th>
+                            <th class="text-center text-white" style="width: 110px;">Acciones</th>
                         </tr>
 
                         <!-- Filas de datos -->
-                        <tr class="text-center" slot-scope="{ index, row }">
-                            <td>{{ index }}</td>
+                        <tr slot-scope="{ index, row }">
+                            <td class="text-center">{{ index }}</td>
                             <td class="">
-                                <strong>{{ row.user_name }}</strong> :
+                                <strong style="font-size: 1.1rem;">{{ row.user_name }}</strong> :
                                 <br />
                                 {{ row.date_of_issue }}
                                 <br />
                                 <small>{{ row.time_of_issue }}</small>
                             </td>
                             <!-- <td class="text-center">{{ row.user_name }}</td> -->
-                            <td
-                                v-if="columns.date_of_due.visible"
-                                class="text-center"
-                            >
+                            <td v-if="columns.date_of_due.visible" class="text-center">
                                 {{ row.date_of_due }}
                             </td>
-                            <td>
-                                {{ row.supplier_name }}<br /><small
-                                    v-text="row.supplier_number"
-                                ></small>
+                            <td class="text-left">
+                                {{ row.supplier_name }}<br /><small v-text="row.supplier_number"></small>
                             </td>
-                            <td
-                                :class="{
-                                    'text-danger': row.state_type_id == '11'
-                                }"
-                            >
+                            <td :class="{
+                                'text-danger': row.state_type_id == '11'
+                            }" class="text-center">
                                 {{ row.state_type_payment_description }}
                             </td>
                             <td>
-                                <template
-                                    v-if="
-                                        row.document_type_description === 'GUÍA'
-                                    "
-                                >
-                                    {{ row.number_full }}<br /><small
-                                        v-text="row.document_type_description"
-                                    ></small>
+                                <template v-if="
+                                    row.document_type_description === 'GUÍA'
+                                ">
+                                    {{ row.number_full }}<br /><small v-text="row.document_type_description"></small>
                                 </template>
                                 <template v-else>
-                                    {{ row.number }}<br /><small
-                                        v-text="row.document_type_description"
-                                    ></small>
+                                    {{ row.number }}<br /><small v-text="row.document_type_description"></small>
                                 </template>
                             </td>
                             <td class="text-center">
-                                <el-popover
-                                    placement="right"
-                                    width="600"
-                                    trigger="click"
-                                    popper-class="custom-popover"
-                                >
-                                    <div class="popover-header">
-                                        <h5>Detalles del Producto</h5>
+                                <el-popover placement="right" width="420" trigger="click" popper-class="custom-popover pro-popover">
+                                    <div class="popover-header pro-popover-header">
+                                        <i class="fas fa-box-open" style="color:#007bff; margin-right:8px;"></i>
+                                        Productos Comprados
                                     </div>
-                                    <div class="popover-content">
-                                        <el-table
-                                            :data="row.items"
-                                            border
-                                            style="width: 100%"
-                                        >
-                                            <el-table-column
-                                                width="80"
-                                                property="key"
-                                                label="#"
-                                                align="center"
-                                            ></el-table-column>
-                                            <el-table-column
-                                                width="220"
-                                                label="Nombre"
-                                                align="left"
-                                            >
+                                    <div class="popover-content pro-popover-content" style="background: #23272f; border-radius: 8px; padding: 10px;">
+                                        <el-table :data="row.items" border style="width:100%; border-radius:10px; overflow:hidden;" size="mini">
+                                            <el-table-column width="50" property="key" label="#" align="center">
                                                 <template slot-scope="scope">
-                                                    <template
-                                                        v-if="
-                                                            scope.row
-                                                                .name_product_pdf
-                                                        "
-                                                    >
-                                                        <span
-                                                            v-html="
-                                                                scope.row
-                                                                    .name_product_pdf
-                                                            "
-                                                        ></span>
-                                                    </template>
-                                                    <template v-else>
-                                                        {{
-                                                            scope.row
-                                                                .description
-                                                        }}
-                                                    </template>
+                                                    <span style="font-weight:bold; color:#007bff;">{{ scope.$index + 1 }}</span>
                                                 </template>
                                             </el-table-column>
-                                            <el-table-column
-                                                width="90"
-                                                label="Cantidad"
-                                                align="center"
-                                            >
+                                            <el-table-column width="180" label="Nombre" align="left">
                                                 <template slot-scope="scope">
-                                                    {{ calculate(scope.row) }}
+                                                    <span style="font-weight:500;">
+                                                        <template v-if="scope.row.name_product_pdf">
+                                                            <span v-html="scope.row.name_product_pdf"></span>
+                                                        </template>
+                                                        <template v-else>
+                                                            {{ scope.row.description }}
+                                                        </template>
+                                                    </span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column width="80" label="Cantidad" align="center">
+                                                <template slot-scope="scope">
+                                                    <span style="background:#e3f2fd; border-radius:4px; padding:2px 8px; font-weight:500;">
+                                                        {{ calculate(scope.row) }}
+                                                    </span>
                                                 </template>
                                             </el-table-column>
                                         </el-table>
                                     </div>
-                                    <el-button
-                                        slot="reference"
-                                        class="btn-view-details"
-                                    >
-                                        <i class="fa fa-eye"></i>
+                                    <el-button slot="reference" class="btn-view-details pro-btn-view-details" style="box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                                        <i class="fa fa-eye"></i> Ver
                                     </el-button>
                                 </el-popover>
                             </td>
 
-                            <td class="text-center">
-                                <button
-                                    v-if="row.state_type_id != '11'"
-                                    type="button"
-                                    class="btn btn-info btn-sm m-1__2"
-                                    @click.prevent="
+                            <!-- <td class="text-center">
+                                <button v-if="row.state_type_id != '11'" type="button"
+                                    class="btn btn-info btn-sm m-1__2" @click.prevent="
                                         clickPurchasePayment(row.id)
-                                    "
-                                >
+                                        ">
                                     Pagos
                                 </button>
-                            </td>
+                            </td> -->
                             <td class="text-center">
                                 {{ row.currency_type_id }}
                             </td>
-                            <td
-                                v-if="columns.total_free.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_free.visible" class="text-end">
                                 {{ row.total_free }}
                             </td>
-                            <td
-                                v-if="columns.total_unaffected.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_unaffected.visible" class="text-end">
                                 {{ row.total_unaffected }}
                             </td>
-                            <td
-                                v-if="columns.total_exonerated.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_exonerated.visible" class="text-end">
                                 {{ row.total_exonerated }}
                             </td>
-                            <td
-                                v-if="columns.total_taxed.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_taxed.visible" class="text-end">
                                 {{ row.total_taxed }}
                             </td>
-                            <td
-                                v-if="columns.total_igv.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_igv.visible" class="text-end">
                                 {{ row.total_igv }}
                             </td>
-                            <td
-                                v-if="columns.total_perception.visible"
-                                class="text-end"
-                            >
+                            <td v-if="columns.total_perception.visible" class="text-end">
                                 {{ row.total_perception || 0 }}
                             </td>
                             <td class="text-end">{{ row.total }}</td>
                             <td class="text-end">
                                 <div class="dropdown">
-                                    <button
-                                        class="btn btnsdr-acciones btnsdr-acciones:hover"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        style="height: 50px; font-size: 1.2rem;"
-                                    >
-                                        <span
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            data-bs-delay="0"
-                                            title
-                                            data-bs-original-title="Item Count"
-                                            aria-label="Item Count"
-                                        >
+                                    <button class="btn btn-acciones" style="background-color: #1e5a85; color: #fff;"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title
+                                            data-bs-original-title="Item Count" aria-label="Item Count">
                                             Acciones
                                         </span>
                                     </button>
 
-                                    <div
-                                        class="dropdown-menu dropdown-menu-end custom-dropdown"
-                                    >
-                                        <a
-                                            v-if="row.state_type_id != '11'"
-                                            :href="
-                                                `/${resource}/edit/${row.id}`
-                                            "
-                                            class="dropdown-item text-edit"
-                                            style="background-color: #28a745; color: #fff;"
-                                        >
+                                    <div class="dropdown-menu dropdown-menu-end custom-dropdown dark-dropdown-bg">
+                                        <button v-if="row.state_type_id != '11'" type="button"
+                                            class="btn btn-edit btn-sm m-1__2 me-1 btn-efecto action-btn"
+                                            style="background-color: #28a745; color: #fff; margin: 2px;"
+                                            @click="goToEdit(row.id)">
                                             <i class="fa fa-edit"></i> Editar
-                                        </a>
-                                        <a
-                                            v-if="row.state_type_id != '11'"
-                                            @click.prevent="
-                                                clickAnulate(row.id)
-                                            "
-                                            class="dropdown-item text-anular"
-                                            style="background-color: #dc3545; color: #fff;"
-                                        >
+                                        </button>
+                                        <button v-if="row.state_type_id != '11'" type="button"
+                                            class="btn btn-anular btn-sm m-1__2 me-1 btn-efecto action-btn"
+                                            style="background-color: #dc3545; color: #fff; margin: 2px;"
+                                            @click.prevent="clickAnulate(row.id)">
                                             <i class="fa fa-ban"></i> Anular
-                                        </a>
-                                        <a
-                                            v-if="
-                                                row.document_type_description !=
-                                                    'FACTURA ELECTRÓNICA' &&
-                                                    row.state_type_id != '11'
-                                            "
-                                            @click.prevent="clickFacturar(row)"
-                                            class="dropdown-item text-facturar"
-                                            style="background-color: #17a2b8; color: #fff;"
-                                        >
-                                            <i class="fas fa-file-invoice"></i>
-                                            Facturar
-                                        </a>
-                                        <a
-                                            @click.prevent="
-                                                clickOptions(row.id)
-                                            "
-                                            class="dropdown-item text-imprimir"
-                                            style="background-color: #6c757d; color: #fff;"
-                                        >
-                                            <i class="fas fa-print"></i>
-                                            Imprimir
-                                        </a>
+                                        </button>
+                                        <button
+                                            v-if="row.document_type_description != 'FACTURA ELECTRÓNICA' && row.state_type_id != '11'"
+                                            type="button"
+                                            class="btn btn-facturar btn-sm m-1__2 me-1 btn-efecto action-btn"
+                                            style="background-color: #17a2b8; color: #fff; margin: 2px;"
+                                            @click.prevent="clickFacturar(row)">
+                                            <i class="fas fa-file-invoice"></i> Facturar
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-imprimir btn-sm m-1__2 me-1 btn-efecto action-btn"
+                                            style="background-color: #6c757d; color: #fff; margin: 2px;"
+                                            @click.prevent="clickOptions(row.id)">
+                                            <i class="fas fa-print"></i> Imprimir
+                                        </button>
+                                        <button v-if="row.state_type_id != '11'" type="button"
+                                            class="btn btn-edit btn-sm m-1__2 me-1 btn-efecto action-btn"
+                                            style="background-color: #1e5a85; color: #fff; margin: 2px;" @click.prevent="
+                                                clickPurchasePayment(row.id)
+                                                ">
+                                            <i class="fa fa-edit"></i> Pagos
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -381,28 +241,15 @@
                     </data-table>
                 </div>
 
-                <document-options
-                    :showDialog.sync="showDialogOptions"
-                    :recordId="recordId"
-                    :showClose="true"
-                ></document-options>
-                <purchase-import
-                    :showDialog.sync="showImportDialog"
-                ></purchase-import>
+                <document-options :showDialog.sync="showDialogOptions" :recordId="recordId"
+                    :showClose="true"></document-options>
+                <purchase-import :showDialog.sync="showImportDialog"></purchase-import>
             </div>
         </div>
-        <purchase-payments
-            :showDialog.sync="showDialogPurchasePayments"
-            :purchaseId="recordId"
-            :external="true"
-        ></purchase-payments>
-        <FacturarModal
-            :showFacturarDialog.sync="showFacturarDialog"
-            :data.sync="data"
-        ></FacturarModal>
-        <import-color-size
-            :showDialog.sync="showImportColorSizeDialog"
-        ></import-color-size>
+        <purchase-payments :showDialog.sync="showDialogPurchasePayments" :purchaseId="recordId"
+            :external="true"></purchase-payments>
+        <FacturarModal :showFacturarDialog.sync="showFacturarDialog" :data.sync="data"></FacturarModal>
+        <import-color-size :showDialog.sync="showImportColorSizeDialog"></import-color-size>
     </div>
 </template>
 
@@ -428,7 +275,7 @@
     font-weight: bold;
     font-size: 1.2rem;
     color: #333;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #0e2e50;
     padding-bottom: 8px;
 }
 
@@ -459,7 +306,7 @@
 
 /* Botón para abrir el Popover */
 .btn-view-details {
-    background-color: #007bff;
+    background-color: #103256;
     color: #fff;
     border: none;
     font-size: 0.9rem;
@@ -469,7 +316,7 @@
 }
 
 .btn-view-details:hover {
-    background-color: #0056b3;
+    background-color: #193553;
     transform: scale(1.1);
 }
 
@@ -705,11 +552,15 @@ export default {
             }
         };
     },
-    created() {},
+    created() { },
     mounted() {
         this.getAvaibleCash();
     },
     methods: {
+        goToEdit(id) {
+            window.location.href = `/${this.resource}/edit/${id}`;
+        },
+
         clickImportColorSize() {
             this.showImportColorSizeDialog = true;
         },
@@ -798,7 +649,7 @@ export default {
                             }
                         });
                 })
-                .catch(() => {});
+                .catch(() => { });
         },
         clickNuevo() {
             location.href = `/${this.resource}/create`;

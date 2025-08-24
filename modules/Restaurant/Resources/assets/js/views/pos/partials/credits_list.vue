@@ -1,144 +1,98 @@
+<!-- LListado de Créditos Caja -->
 <template>
-    <el-dialog
-        :visible="showDialog"
-        :close-on-click-modal="false"
-        v-loading="loading"
-        @open="open"
-        @close="close"
-        title="Lista de créditos"
-        width="85%"
-    >
-        <div class="row mt-2">
-            <div class="col-md-3">
-                <label class="control-label">Periodo (Fecha de emisión)</label>
-                <el-select v-model="form.period" @change="changePeriod">
-                    <el-option
-                        key="month"
-                        value="month"
-                        label="Por mes"
-                    ></el-option>
-                    <el-option
-                        key="between_months"
-                        value="between_months"
-                        label="Entre meses"
-                    ></el-option>
-                    <el-option
-                        key="date"
-                        value="date"
-                        label="Por fecha"
-                    ></el-option>
-                    <el-option
-                        key="between_dates"
-                        value="between_dates"
-                        label="Entre fechas"
-                    ></el-option>
-                </el-select>
+    <el-dialog :visible="showDialog" :close-on-click-modal="false" v-loading="loading" @open="open" @close="close"
+        width="85%">
+        <template #title>
+            <div style="display: flex; align-items: center; justify-content: flex-start;">
+                <i class="el-icon-s-check" style="margin-right:8px;"></i>
+                <span>Lista de créditos</span>
             </div>
-            <template
-                v-if="
-                    form.period === 'month' || form.period === 'between_months'
-                "
-            >
-                <div class="col-md-2">
-                    <label class="w-100 control-label">Mes de</label>
-                    <el-date-picker
-                        v-model="form.month_start"
-                        type="month"
-                        class="w-100"
-                        @change="changeDisabledMonths"
-                        value-format="yyyy-MM"
-                        format="MM/yyyy"
-                        clearable
-                    ></el-date-picker>
+        </template>
+        <div class="card mb-1 shadow-sm">
+            <div class="card-body">
+                <div class="row" style="padding-left: 10px; padding-right: 10px;">
+                    <div class="col-lg-4 col-md-4 mb-3 d-flex flex-column justify-content-center">
+                        <!-- <label class="control-label font-weight-bold">Cliente</label> -->
+                        <el-select class="w-100" v-model="form.person_id" filterable remote
+                            popper-class="el-select-customers" clearable placeholder="Ingrese Nombre de Cliente o número de Comprobante"
+                            :remote-method="searchRemotePersons" :loading="loading_search">
+                            <el-option v-for="option in persons" :key="option.id" :value="option.id"
+                                :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col d-flex flex-column align-items-start mb-3" style="width: auto;">
+                        <el-button class="btn_buscarsmall" type="primary" @click.prevent="getRecordsByFilter"
+                            :loading="loading_submit" icon="el-icon-search">Buscar</el-button>
+                        <template v-if="records.length > 0 && resource !== 'reports/document-detractions'">
+                            <el-button class="btn_pdfsmall" type="primary" icon="el-icon-tickets"
+                                @click.prevent="clickDownload('pdf')">PDF</el-button>
+                            <el-button class="btn_excelsmall" type="primary" @click.prevent="clickDownload('excel')">
+                                <i class="fa fa-file-excel"></i> Excel
+                            </el-button>
+                            <el-button class="btn_whatsappsmall" type="primary" @click.prevent="clickOpenWhatsapp">
+                                <i class="fa fa-whatsapp"></i> Whatsapp
+                            </el-button>
+                            <el-button class="btn_excelsmall" v-if="form.paid" type="primary"
+                                @click.prevent="clickDownload('excel_accept')">
+                                <i class="fa fa-file-excel"></i> Excel Aceptados
+                            </el-button>
+                            <el-button class="btn_limpiarsmall" v-if="form.person_id" type="primary"
+                                @click.prevent="clickReportByPerson">Créditos de cliente</el-button>
+                        </template>
+                    </div>
                 </div>
-            </template>
-            <template v-if="form.period === 'between_months'">
-                <div class="col-md-2">
-                    <label class="w-100 control-label">Mes al</label>
-                    <el-date-picker
-                        class="w-100"
-                        v-model="form.month_end"
-                        type="month"
-                        :picker-options="pickerOptionsMonths"
-                        value-format="yyyy-MM"
-                        format="MM/yyyy"
-                        :clearable="false"
-                    ></el-date-picker>
-                </div>
-            </template>
-            <template
-                v-if="form.period === 'date' || form.period === 'between_dates'"
-            >
-                <div class="col-md-2">
-                    <label class="w-100 control-label">Fecha del</label>
-                    <el-date-picker
-                        class="w-100"
-                        v-model="form.date_start"
-                        type="date"
-                        @change="changeDisabledDates"
-                        value-format="yyyy-MM-dd"
-                        format="dd/MM/yyyy"
-                        :clearable="false"
-                    ></el-date-picker>
-                </div>
-            </template>
-            <template v-if="form.period === 'between_dates'">
-                <div class="col-md-2">
-                    <label class="w-100 control-label">Fecha al</label>
-                    <el-date-picker
-                        class="w-100"
-                        v-model="form.date_end"
-                        type="date"
-                        :picker-options="pickerOptionsDates"
-                        value-format="yyyy-MM-dd"
-                        format="dd/MM/yyyy"
-                        :clearable="false"
-                    ></el-date-picker>
-                </div>
-            </template>
 
-            <div class="col-lg-4 col-md-4">
-                <div class="form-group">
-                    <label class="w-100 control-label">
-                        Clientes
-                    </label>
 
-                    <el-select
-                        class="w-100"
-                        v-model="form.person_id"
-                        filterable
-                        remote
-                        popper-class="el-select-customers"
-                        clearable
-                        placeholder="Nombre o número de documento"
-                        :remote-method="searchRemotePersons"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="option in persons"
-                            :key="option.id"
-                            :value="option.id"
-                            :label="option.description"
-                        ></el-option>
-                    </el-select>
                 </div>
-            </div>
-            <div class="col-lg-2 col-md-2">
-                <div class="form-group">
-                    <label class="w-100 control-label">
-                        Estado del pago
-                    </label>
-
-                    <el-select
-                        class="w-100"
-                        v-model="form.paid"
-                        clearable
-                        placeholder="Estado de crédito"
-                        @change="getRecordsByFilter"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="(option, idx) in [
+                
+                <div class="row align-items-end">
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label font-weight-bold">Periodo (Fecha de emisión)</label>
+                        <el-select v-model="form.period" @change="changePeriod" class="w-100">
+                            <el-option key="month" value="month" label="Por mes"></el-option>
+                            <el-option key="between_months" value="between_months" label="Entre meses"></el-option>
+                            <el-option key="date" value="date" label="Por fecha"></el-option>
+                            <el-option key="between_dates" value="between_dates" label="Entre fechas"></el-option>
+                        </el-select>
+                    </div>
+                    <template v-if="form.period === 'month' || form.period === 'between_months'">
+                        <div class="col-md-2 mb-3">
+                            <label class="control-label font-weight-bold">Mes de</label>
+                            <el-date-picker v-model="form.month_start" type="month" class="w-100"
+                                @change="changeDisabledMonths" value-format="yyyy-MM" format="MM/yyyy"
+                                clearable></el-date-picker>
+                        </div>
+                    </template>
+                    <template v-if="form.period === 'between_months'">
+                        <div class="col-md-2 mb-3">
+                            <label class="control-label font-weight-bold">Mes al</label>
+                            <el-date-picker class="w-100" v-model="form.month_end" type="month"
+                                :picker-options="pickerOptionsMonths" value-format="yyyy-MM" format="MM/yyyy"
+                                :clearable="false"></el-date-picker>
+                        </div>
+                    </template>
+                    <template v-if="form.period === 'date' || form.period === 'between_dates'">
+                        <div class="col-md-2 mb-3">
+                            <label class="control-label font-weight-bold">Fecha del</label>
+                            <el-date-picker class="w-100" v-model="form.date_start" type="date"
+                                @change="changeDisabledDates" value-format="yyyy-MM-dd" format="dd/MM/yyyy"
+                                :clearable="false"></el-date-picker>
+                        </div>
+                    </template>
+                    <template v-if="form.period === 'between_dates'">
+                        <div class="col-md-2 mb-3">
+                            <label class="control-label font-weight-bold">Fecha al</label>
+                            <el-date-picker class="w-100" v-model="form.date_end" type="date"
+                                :picker-options="pickerOptionsDates" value-format="yyyy-MM-dd" format="dd/MM/yyyy"
+                                :clearable="false"></el-date-picker>
+                        </div>
+                    </template>
+                    
+                    <div class="col-lg-2 col-md-2 mb-3">
+                        <label class="control-label font-weight-bold">Estado del pago</label>
+                        <el-select class="w-100" v-model="form.paid" clearable placeholder="Estado de crédito"
+                            @change="getRecordsByFilter" :loading="loading_search">
+                            <el-option v-for="(option, idx) in [
                                 { id: 0, description: 'Pendiente' },
                                 { id: 1, description: 'Pagado' },
                                 { id: 2, description: 'Todos' }
@@ -169,179 +123,60 @@
                     >
                         <el-option
                             v-for="(option, idx) in [
+                                { id: 1, description: 'Pagado' }
+                            ]" :key="idx" :value="option.id" :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-lg-2 col-md-2 mb-3" v-if="configuration.sale_note_credit_confirm">
+                        <!-- <label class="control-label font-weight-bold">Estado del documento</label> -->
+                        <el-select class="w-100" v-model="form.status" clearable placeholder="Estado de crédito"
+                            @change="getRecordsByFilter" :loading="loading_search">
+                            <el-option v-for="(option, idx) in [
                                 { id: 'A', description: 'Aceptado' },
                                 { id: 'P', description: 'Pendiente' },
                                 { id: 'R', description: 'Rechazado' }
-                            ]"
-                            :key="idx"
-                            :value="option.id"
-                            :label="option.description"
-                        ></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div
-                class="col-lg-2 col-md-2"
-                v-if="configuration.sale_note_credit_confirm"
-            >
-                <div class="form-group">
-                    <label class="w-100 control-label">
-                        Usuario
-                    </label>
-
-                    <el-select
-                        class="w-100"
-                        v-model="form.user_id"
-                        clearable
-                        placeholder="Usuario"
-                        @change="getRecordsByFilter"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="(option, idx) in users"
-                            :key="idx"
-                            :value="option.id"
-                            :label="option.name"
-                        ></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div
-                class="col-lg-2 col-md-2"
-                v-if="configuration.sale_note_credit_confirm"
-            >
-                <div class="form-group">
-                    <label class="w-100 control-label">
-                        Tipo
-                    </label>
-
-                    <el-select
-                        class="w-100"
-                        v-model="form.type"
-                        clearable
-                        placeholder="Tipo"
-                        @change="getRecordsByFilter"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="(option, idx) in [
+                            ]" :key="idx" :value="option.id" :label="option.description"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-lg-2 col-md-2 mb-3" v-if="configuration.sale_note_credit_confirm">
+                        <!-- <label class="control-label font-weight-bold">Usuario</label> -->
+                        <el-select class="w-100" v-model="form.user_id" clearable placeholder="Analista"
+                            @change="getRecordsByFilter" :loading="loading_search">
+                            <el-option v-for="(option, idx) in users" :key="idx" :value="option.id"
+                                :label="option.name"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-lg-2 col-md-2 mb-3" v-if="configuration.sale_note_credit_confirm">
+                        <!-- <label class="control-label font-weight-bold">Tipo</label> -->
+                        <el-select class="w-100" v-model="form.type" clearable placeholder="Tipo de Crédito"
+                            @change="getRecordsByFilter" :loading="loading_search">
+                            <el-option v-for="(option, idx) in [
                                 { id: 'is_product', name: 'Hogar' },
                                 { id: 'is_cash', name: 'Efectivo' }
-                            ]"
-                            :key="idx"
-                            :value="option.id"
-                            :label="option.name"
-                        ></el-option>
-                    </el-select>
+                            ]" :key="idx" :value="option.id" :label="option.name"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-lg-2 col-md-2 mb-3" v-if="configuration.sale_note_credit_confirm">
+                        <!-- <label class="control-label font-weight-bold">Tipo cuota</label> -->
+                        <el-select class="w-100" v-model="form.type_payment" clearable placeholder="Tipo cuota"
+                            @change="getRecordsByFilter" :loading="loading_search">
+                            <el-option v-for="(option, idx) in [
+                                { id: 'Diario', name: 'Diario' },
+                                { id: 'Semanal', name: 'Semanal' },
+                                { id: 'Quincenal', name: 'Quincenal' },
+                                { id: 'Mensual', name: 'Mensual' },
+                                { id: 'Unico', name: 'Unico' }
+                            ]" :key="idx" :value="option.id" :label="option.name"></el-option>
+                        </el-select>
+                    </div>
                 </div>
+                
             </div>
-            <div
-                class="col-lg-2 col-md-2"
-                v-if="configuration.sale_note_credit_confirm"
-            >
-                <div class="form-group">
-                    <label class="w-100 control-label">
-                        Tipo cuota
-                    </label>
-
-                    <el-select
-                        class="w-100"
-                        v-model="form.type_payment"
-                        clearable
-                        placeholder="Tipo cuota"
-                        @change="getRecordsByFilter"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="(option, idx) in [
-                                {
-                                    id: 'Diario',
-                                    name: 'Diario'
-                                },
-                                {
-                                    id: 'Semanal',
-                                    name: 'Semanal'
-                                },
-                                {
-                                    id: 'Quincenal',
-                                    name: 'Quincenal'
-                                },
-                                {
-                                    id: 'Mensual',
-                                    name: 'Mensual'
-                                },
-                                {
-                                    id: 'Unico',
-                                    name: 'Unico'
-                                }
-                            ]"
-                            :key="idx"
-                            :value="option.id"
-                            :label="option.name"
-                        ></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="d-flex col-12" style="margin-top:29px">
-                <el-button
-                    class="submit"
-                    type="primary"
-                    @click.prevent="getRecordsByFilter"
-                    :loading="loading_submit"
-                    icon="el-icon-search"
-                    >Buscar</el-button
-                >
-
-                <template
-                    v-if="
-                        records.length > 0 &&
-                            resource !== 'reports/document-detractions'
-                    "
-                >
-                    <el-button
-                        class="submit"
-                        type="danger"
-                        icon="el-icon-tickets"
-                        @click.prevent="clickDownload('pdf')"
-                        >Exportar PDF</el-button
-                    >
-
-                    <el-button
-                        class="submit"
-                        type="success"
-                        @click.prevent="clickDownload('excel')"
-                        ><i class="fa fa-file-excel"></i> Exportar
-                        Excel</el-button
-                    >
-                    <el-button class="submit" @click.prevent="clickOpenWhatsapp"
-                        ><i class="fa fa-whatsapp"></i> Enviar
-                        whatsapp</el-button
-                    >
-                    <el-button
-                        class="submit"
-                        v-if="form.paid"
-                        type="success"
-                        @click.prevent="clickDownload('excel_accept')"
-                        ><i class="fa fa-file-excel"></i> Exportar Excel
-                        aceptados</el-button
-                    >
-                    <el-button
-                        class="submit"
-                        v-if="form.person_id"
-                        type="success"
-                        @click.prevent="clickReportByPerson"
-                    >
-                        Créditos de cliente
-                    </el-button>
-                </template>
-            </div>
-        </div>
+        
         <div>
             <div class="container table-responsive">
-                <table
-                    class="table table-hover table-striped table-condensed  table-responsive"
-                    style="width: 100%; white-space: nowrap;"
-                >
+                <table class="table table-hover table-striped table-condensed  table-responsive"
+                    style="width: 100%; white-space: nowrap;">
                     <thead>
                         <tr>
                             <th class="text-right">Acciones</th>
@@ -355,18 +190,12 @@
                             <th class="text-center">Estado</th>
                             <th class="text-end">Fecha de cobro</th>
                             <th class="text-end">Monto</th>
-                            <th
-                                v-if="configuration.sale_note_credit_penalty"
-                                class="text-end"
-                            >
+                            <th v-if="configuration.sale_note_credit_penalty" class="text-end">
                                 Penalidad
                             </th>
 
                             <th class="text-end">Días de atraso</th>
-                            <th
-                                v-if="configuration.sale_note_credit_confirm"
-                                class="text-end"
-                            >
+                            <th v-if="configuration.sale_note_credit_confirm" class="text-end">
                                 Aprobado
                             </th>
                         </tr>
@@ -374,122 +203,85 @@
                     <tbody>
                         <tr v-for="(row, idx) in records" :key="idx">
                             <td class="text-center">
-                                <template
-                                    v-if="
-                                        row.is_credit &&
-                                            configuration.sale_note_credit_confirm
-                                    "
-                                >
-                                    <el-dropdown
-                                        v-if="
-                                            !user.can_accept_credit_sale_note &&
+                                <template v-if="
+                                    row.is_credit &&
+                                    configuration.sale_note_credit_confirm
+                                ">
+                                    <el-dropdown v-if="
+                                        !user.can_accept_credit_sale_note &&
                                             !isAnalist
-                                                ? row.status == 'A'
-                                                : true
-                                        "
-                                        size="medium"
-                                        split-button
-                                        type="primary"
-                                        trigger="click"
-                                    >
+                                            ? row.status == 'A'
+                                            : true
+                                    " size="medium" split-button type="primary" trigger="click">
                                         Acciones
                                         <el-dropdown-menu slot="dropdown">
-                                            <template
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        configuration.sale_note_credit_confirm &&
-                                                        user.can_accept_credit_sale_note &&
-                                                        row.status == 'P'
-                                                "
-                                            >
+                                            <template v-if="
+                                                row.state_type_id != '11' &&
+                                                configuration.sale_note_credit_confirm &&
+                                                user.can_accept_credit_sale_note &&
+                                                row.status == 'P'
+                                            ">
                                                 <el-dropdown-item>
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
-                                                        class="text-success"
-                                                        @click.prevent="
+                                                    <span role="button" style="width:100%;display:block;"
+                                                        class="text-success" @click.prevent="
                                                             clickSetStatus(
                                                                 row.id,
                                                                 'A'
                                                             )
-                                                        "
-                                                    >
+                                                            ">
                                                         Aceptar créditos
                                                     </span>
                                                 </el-dropdown-item>
                                                 <el-dropdown-item>
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
-                                                        class="text-danger"
-                                                        @click.prevent="
+                                                    <span role="button" style="width:100%;display:block;"
+                                                        class="text-danger" @click.prevent="
                                                             clickSetStatus(
                                                                 row.id,
                                                                 'R'
                                                             )
-                                                        "
-                                                    >
+                                                            ">
                                                         Rechazar crédito
                                                     </span>
                                                 </el-dropdown-item>
                                             </template>
                                             <template>
-                                                <el-dropdown-item
-                                                    v-if="
-                                                        !row.canceled &&
-                                                            row.state_type_id !=
-                                                                '11' &&
-                                                            (configuration.sale_note_credit_confirm
-                                                                ? row.status ==
-                                                                  'A'
-                                                                : true)
-                                                    "
-                                                >
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
+                                                <el-dropdown-item v-if="
+                                                    !row.canceled &&
+                                                    row.state_type_id !=
+                                                    '11' &&
+                                                    (configuration.sale_note_credit_confirm
+                                                        ? row.status ==
+                                                        'A'
+                                                        : true)
+                                                ">
+                                                    <span role="button" style="width:100%;display:block;"
                                                         @click.prevent="
                                                             clickPayment(row.id)
-                                                        "
-                                                    >
+                                                            ">
                                                         Registrar pagos
                                                     </span>
                                                 </el-dropdown-item>
                                                 <el-dropdown-item>
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
+                                                    <span role="button" style="width:100%;display:block;"
                                                         @click.prevent="
                                                             clickContract(
                                                                 row.id
                                                             )
-                                                        "
-                                                    >
+                                                            ">
                                                         Imprimir contrato
                                                     </span>
                                                 </el-dropdown-item>
-                                                <template
-                                                    v-if="row.status != 'R'"
-                                                >
-                                                    <el-dropdown-item
-                                                        v-for="(schedule,
-                                                        idx) in row.schedules"
-                                                        :key="idx"
-                                                    >
-                                                        <a
-                                                            role="button"
-                                                            style="width:100%;display:block;"
-                                                            target="_blank"
-                                                            :href="schedule"
-                                                        >
-                                                            <template
-                                                                v-if="
-                                                                    row
-                                                                        .schedules
-                                                                        .length >
-                                                                        1
-                                                                "
-                                                            >
+                                                <template v-if="row.status != 'R'">
+                                                    <el-dropdown-item v-for="(schedule,
+                                                        idx) in row.schedules" :key="idx">
+                                                        <a role="button" style="width:100%;display:block;"
+                                                            target="_blank" :href="schedule">
+                                                            <template v-if="
+                                                                row
+                                                                    .schedules
+                                                                    .length >
+                                                                1
+                                                            ">
                                                                 Cronograma de
                                                                 pagos N°
                                                                 {{ idx + 1 }}
@@ -518,154 +310,112 @@
                                                 Registrar pagos anteriores
                                             </span>
                                         </el-dropdown-item> -->
-                                            <el-dropdown-item
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        row.status != 'O' &&
-                                                        row.can_edit &&
-                                                        (user.can_accept_credit_sale_note
-                                                            ? true
-                                                            : isAnalist
-                                                            ? row.status == 'P'
-                                                            : false)
-                                                "
-                                            >
-                                                <span
-                                                    style="width:100%;display:block;"
-                                                    role="button"
-                                                    @click.prevent="
-                                                        clickEditSaleNote(
-                                                            row.id
-                                                        )
-                                                    "
-                                                >
+                                            <el-dropdown-item v-if="
+                                                row.state_type_id != '11' &&
+                                                row.status != 'O' &&
+                                                row.can_edit &&
+                                                (user.can_accept_credit_sale_note
+                                                    ? true
+                                                    : isAnalist
+                                                        ? row.status == 'P'
+                                                        : false)
+                                            ">
+                                                <span style="width:100%;display:block;" role="button" @click.prevent="
+                                                    clickEditSaleNote(
+                                                        row.id
+                                                    )
+                                                    ">
                                                     Editar
                                                 </span>
                                             </el-dropdown-item>
-                                            <el-dropdown-item
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        row.can_edit &&
-                                                        user.can_accept_credit_sale_note &&
-                                                        row.status != 'O'
-                                                "
-                                            >
-                                                <span
-                                                    style="width:100%;display:block;"
-                                                    role="button"
-                                                    @click.prevent="
-                                                        pauseCredit(row)
-                                                    "
-                                                >
+                                            <el-dropdown-item v-if="
+                                                row.state_type_id != '11' &&
+                                                row.can_edit &&
+                                                user.can_accept_credit_sale_note &&
+                                                row.status != 'O'
+                                            ">
+                                                <span style="width:100%;display:block;" role="button" @click.prevent="
+                                                    pauseCredit(row)
+                                                    ">
                                                     Terminar
                                                 </span>
                                             </el-dropdown-item>
-                                            <el-dropdown-item
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        row.can_edit &&
-                                                        user.can_accept_credit_sale_note
-                                                "
-                                            >
-                                                <span
-                                                    style="width:100%;display:block;"
-                                                    role="button"
-                                                    @click.prevent="
-                                                        anulateCredit(row)
-                                                    "
-                                                >
+                                            <el-dropdown-item v-if="
+                                                row.state_type_id != '11' &&
+                                                row.can_edit &&
+                                                user.can_accept_credit_sale_note
+                                            ">
+                                                <span style="width:100%;display:block;" role="button" @click.prevent="
+                                                    anulateCredit(row)
+                                                    ">
                                                     Anular
                                                 </span>
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>
-                                <template
-                                    v-if="
-                                        row.is_credit &&
-                                            !configuration.sale_note_credit_confirm
-                                    "
-                                >
-                                    <el-dropdown
-                                        size="medium"
-                                        split-button
-                                        type="primary"
-                                    >
+                                <template v-if="
+                                    row.is_credit &&
+                                    !configuration.sale_note_credit_confirm
+                                ">
+                                    <el-dropdown size="medium" split-button type="primary">
                                         Acciones
                                         <el-dropdown-menu slot="dropdown">
                                             <template>
-                                                <el-dropdown-item
-                                                    v-if="
-                                                        !row.canceled &&
-                                                            row.state_type_id !=
-                                                                '11'
-                                                    "
-                                                >
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
+                                                <el-dropdown-item v-if="
+                                                    !row.canceled &&
+                                                    row.state_type_id !=
+                                                    '11'
+                                                ">
+                                                    <span role="button" style="width:100%;display:block;"
                                                         @click.prevent="
                                                             clickPayment(row.id)
-                                                        "
-                                                    >
+                                                            ">
                                                         Registrar pagos
                                                     </span>
                                                 </el-dropdown-item>
                                                 <el-dropdown-item>
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
+                                                    <span role="button" style="width:100%;display:block;"
                                                         @click.prevent="
                                                             clickContract(
                                                                 row.id
                                                             )
-                                                        "
-                                                    >
+                                                            ">
                                                         Imprimir contrato
                                                     </span>
                                                 </el-dropdown-item>
                                                 <el-dropdown-item>
-                                                    <span
-                                                        role="button"
-                                                        style="width:100%;display:block;"
+                                                    <span role="button" style="width:100%;display:block;"
                                                         @click.prevent="
                                                             clickSchedule(
                                                                 row.id
                                                             )
-                                                        "
-                                                    >
+                                                            ">
                                                         Cronograma de pagos
                                                     </span>
                                                 </el-dropdown-item>
                                             </template>
 
-                                            <el-dropdown-item
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        row.status != 'O' &&
-                                                        row.can_edit &&
-                                                        (user.can_accept_credit_sale_note
-                                                            ? true
-                                                            : isAnalist
-                                                            ? row.status == 'P'
-                                                            : false)
-                                                "
-                                            >
-                                                <span
-                                                    style="width:100%;display:block;"
-                                                    role="button"
-                                                    @click.prevent="
-                                                        clickEditSaleNote(
-                                                            row.id
-                                                        )
-                                                    "
-                                                >
+                                            <el-dropdown-item v-if="
+                                                row.state_type_id != '11' &&
+                                                row.status != 'O' &&
+                                                row.can_edit &&
+                                                (user.can_accept_credit_sale_note
+                                                    ? true
+                                                    : isAnalist
+                                                        ? row.status == 'P'
+                                                        : false)
+                                            ">
+                                                <span style="width:100%;display:block;" role="button" @click.prevent="
+                                                    clickEditSaleNote(
+                                                        row.id
+                                                    )
+                                                    ">
                                                     Editar
                                                 </span>
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
-                                    </el-dropdown></template
-                                >
+                                    </el-dropdown></template>
                             </td>
                             <td class="text-center">{{ row.number }}</td>
                             <td class="text-center">{{ row.user_name }}</td>
@@ -675,16 +425,11 @@
                             </td>
                             <td class="text-center">{{ row.customer.name }}</td>
                             <td class="text-center">{{ row.dues }}</td>
-                            <td
-                                class="text-center"
-                                :class="
-                                    `${
-                                        row.canceled
-                                            ? 'text-success'
-                                            : 'text-danger'
-                                    }`
-                                "
-                            >
+                            <td class="text-center" :class="`${row.canceled
+                                    ? 'text-success'
+                                    : 'text-danger'
+                                }`
+                                ">
                                 <template v-if="row.state_type_id != '11'">
                                     {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
                                 </template>
@@ -694,164 +439,93 @@
                             </td>
                             <td class="text-end">{{ row.date_of_due }}</td>
                             <td class="text-end">{{ row.amount_due }}</td>
-                            <td
-                                v-if="configuration.sale_note_credit_penalty"
-                                class="text-end"
-                            >
+                            <td v-if="configuration.sale_note_credit_penalty" class="text-end">
                                 {{ row.penalty }}
                             </td>
                             <td class="text-end">{{ row.differenc_days }}</td>
-                            <td
-                                v-if="configuration.sale_note_credit_confirm"
-                                class="text-end"
-                                :class="
-                                    `${
-                                        row.status == 'P'
-                                            ? 'text-warning'
-                                            : row.status == 'A'
-                                            ? 'text-success'
-                                            : 'text-danger'
-                                    }`
-                                "
-                            >
+                            <td v-if="configuration.sale_note_credit_confirm" class="text-end" :class="`${row.status == 'P'
+                                    ? 'text-warning'
+                                    : row.status == 'A'
+                                        ? 'text-success'
+                                        : 'text-danger'
+                                }`
+                                ">
                                 <strong>
                                     {{
                                         row.status == "P"
                                             ? "POR APROBAR"
                                             : row.status == "A"
-                                            ? "ACEPTADO"
-                                            : row.status == "O"
-                                            ? "TERMINADO"
-                                            : row.state_type_id == "11"
-                                            ? "ANULADO"
-                                            : "RECHAZADO"
+                                                ? "ACEPTADO"
+                                                : row.status == "O"
+                                                    ? "TERMINADO"
+                                                    : row.state_type_id == "11"
+                                                        ? "ANULADO"
+                                                        : "RECHAZADO"
                                     }}
-                                    <el-tooltip
-                                        v-if="
-                                            (row.status == 'R' ||
-                                                row.state_type_id == '11') &&
-                                                row.observation
-                                        "
-                                        :content="row.observation"
-                                        placement="top"
-                                    >
-                                        <i
-                                            class="el-icon-info"
-                                            style="color:red"
-                                        ></i>
+                                    <el-tooltip v-if="
+                                        (row.status == 'R' ||
+                                            row.state_type_id == '11') &&
+                                        row.observation
+                                    " :content="row.observation" placement="top">
+                                        <i class="el-icon-info" style="color:red"></i>
                                     </el-tooltip>
                                 </strong>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <el-dialog
-                    :visible.sync="showObservationsDialog"
-                    title="Rechazo de crédito"
-                    @open="openObservationsDialog"
-                    append-to-body
-                >
+                <el-dialog :visible.sync="showObservationsDialog" title="Rechazo de crédito"
+                    @open="openObservationsDialog" append-to-body>
                     <div class="row m-2">
                         <div class="col-md-12">
-                            <el-input
-                                type="textarea"
-                                v-model="observations"
-                                placeholder="Motivo de rechazo"
-                            ></el-input>
+                            <el-input type="textarea" v-model="observations" placeholder="Motivo de rechazo"></el-input>
                         </div>
                     </div>
 
                     <span slot="footer" class="dialog-footer">
-                        <el-button @click="showObservationsDialog = false"
-                            >Cancelar</el-button
-                        >
-                        <el-button
-                            type="primary"
-                            @click="changeStatus(recordId, 'R')"
-                            >Aceptar</el-button
-                        >
+                        <el-button @click="showObservationsDialog = false">Cancelar</el-button>
+                        <el-button type="primary" @click="changeStatus(recordId, 'R')">Aceptar</el-button>
                     </span>
                 </el-dialog>
             </div>
         </div>
 
-        <el-dialog
-            :visible.sync="showAnulateDialog"
-            :title="titleVoided"
-            append-to-body
-            :close-on-click-modal="false"
-        >
+        <el-dialog :visible.sync="showAnulateDialog" :title="titleVoided" append-to-body :close-on-click-modal="false">
             <div class="row m-2">
                 <div class="col-md-12">
-                    <el-input
-                        type="textarea"
-                        v-model="anulateReason"
-                        placeholder="Motivo de anulación"
-                    ></el-input>
+                    <el-input type="textarea" v-model="anulateReason" placeholder="Motivo de anulación"></el-input>
                 </div>
             </div>
 
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showAnulateDialog = false"
-                    >Cancelar</el-button
-                >
-                <el-button
-                    type="primary"
-                    @click="
-                        isPauseSaleNote
-                            ? clickPauseSaleNote()
-                            : clickVoidSaleNote()
-                    "
-                    >{{ isPauseSaleNote ? "Terminar" : "Anular" }}</el-button
-                >
+                <el-button @click="showAnulateDialog = false">Cancelar</el-button>
+                <el-button type="primary" @click="
+                    isPauseSaleNote
+                        ? clickPauseSaleNote()
+                        : clickVoidSaleNote()
+                    ">{{ isPauseSaleNote ? "Terminar" : "Anular" }}</el-button>
             </span>
         </el-dialog>
 
         <div>
-            <el-pagination
-                @current-change="getRecords"
-                layout="total, prev, pager, next"
-                :total="pagination.total"
-                :current-page.sync="pagination.current_page"
-                :page-size="pagination.per_page"
-            >
+            <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+                :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
             </el-pagination>
         </div>
-        <whatsapp-form-report
-            :message.sync="messageReport"
-            :resource="resourceReport"
-            :showWhatsappForm.sync="showWhatsappForm"
-        >
+        <whatsapp-form-report :message.sync="messageReport" :resource="resourceReport"
+            :showWhatsappForm.sync="showWhatsappForm">
         </whatsapp-form-report>
-        <sale-note-payments
-            :configuration="configuration"
-            :showDialog.sync="showDialogPayments"
-            :documentId="recordId"
-        ></sale-note-payments>
+        <sale-note-payments :configuration="configuration" :showDialog.sync="showDialogPayments"
+            :documentId="recordId"></sale-note-payments>
 
-        <sale-note-generate
-            :showDialog.sync="showDialogGenerate"
-            :recordId="recordId"
-            :showGenerate="true"
-            :showClose="false"
-        ></sale-note-generate>
-        <sale-note-detail
-            :number="currentNumber"
-            :saleNoteId="recordId"
-            :showDialog.sync="showDialogDetail"
-            :boxes="boxes"
-        >
+        <sale-note-generate :showDialog.sync="showDialogGenerate" :recordId="recordId" :showGenerate="true"
+            :showClose="false"></sale-note-generate>
+        <sale-note-detail :number="currentNumber" :saleNoteId="recordId" :showDialog.sync="showDialogDetail"
+            :boxes="boxes">
         </sale-note-detail>
-        <credit-modal-update
-            :configuration="configuration"
-            :showDialog.sync="showDialogUpdate"
-            :recordId="recordId"
-        >
+        <credit-modal-update :configuration="configuration" :showDialog.sync="showDialogUpdate" :recordId="recordId">
         </credit-modal-update>
-        <credits-init-payment
-            :showDialog.sync="showDialogInitPayments"
-            :recordId="recordId"
-        ></credits-init-payment>
+        <credits-init-payment :showDialog.sync="showDialogInitPayments" :recordId="recordId"></credits-init-payment>
     </el-dialog>
 </template>
 
@@ -992,7 +666,7 @@ export default {
                 } else {
                     await this.changeStatus(id, status);
                 }
-            } catch (e) {}
+            } catch (e) { }
         },
 
         clickPauseSaleNote() {
