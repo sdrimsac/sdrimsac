@@ -26,7 +26,7 @@
               <small class="form-control-feedback" v-if="errors.user" v-text="errors.user[0]"></small>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" v-if="!disableUser">
             <div class="form-group" :class="{ 'has-danger': errors.beginning_balance }">
               <label class="control-label">Saldo inicial de Apertura</label>
               <el-input v-model="form.beginning_balance">

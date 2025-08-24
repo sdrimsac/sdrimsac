@@ -4966,13 +4966,15 @@ export default {
             const totalAmount = parseFloat(form.total) || 0;
             const isInvoiceOrReceipt = ["01", "03"].includes(form.document_type_id);
             if (isInvoiceOrReceipt) {
-                if (Math.abs(enteredAmount - totalAmount) > 0.009) {
+                // Solo validar si el monto ingresado es menor al total a cobrar
+                if (enteredAmount < totalAmount - 0.009) {
                     this.$toast.error(
-                        "El monto ingresado debe ser exactamente igual al Total a cobrar"
+                        "El monto ingresado no puede ser menor al Total a cobrar"
                     );
                     this.isLocked = false;
                     return;
                 }
+                // Si el monto ingresado es mayor, se permite para dar vuelto
             } else {
                 // Para otros documentos, mantener la validación anterior de sobrepago > S/. 200
                 if (form.total + 200 <= form.enter_amount) {

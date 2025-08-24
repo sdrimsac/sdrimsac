@@ -2695,6 +2695,10 @@ class CashController extends Controller
                 // $amount = 
                 $credit_cash_out = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->sum('total');
                 $t_amount = $all_cash - $credit_cash_out - $expenses;
+                Log::info("all_cash: " . $all_cash);
+                Log::info("credit_cash_out: " . $credit_cash_out);
+                Log::info("expenses: " . $expenses);
+                Log::info("t_amount: " . $t_amount);
                 CashIncomePrincipal::create([
                     'cash_principal_id' => $cash_principal_id,
                     'cash_id' => $cash_id,
