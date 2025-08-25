@@ -123,6 +123,7 @@ class CashController extends Controller
         $cash = $cash_income_principal->cash;
         $amount = $cash_income_principal->amount;
         $user_id = $cash_income_principal->cash->user_id;
+        $method = $cash_income_principal->method;
         $user = User::findOrFail($user_id);
         $user_name = $user->name;
         $establishment_id = $user->establishment_id;
@@ -140,7 +141,7 @@ class CashController extends Controller
             'type' => 1,
             'incomes' => true,
             'date' => date('Y-m-d'),
-            'method' => 'Efectivo',
+            'method' => $method,
             'group_id' => 1,
             'subcategory_id' => 1,
             'category_id' => 1,
@@ -2622,9 +2623,16 @@ class CashController extends Controller
 
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
         $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
-            ->where('cash_id', $id)->where('method', 'Efectivo')
+            ->where('cash_id', $id)  //->where('method', 'Efectivo')
             ->where('expenses', 0)
             ->get();
+    
+        $totalsByMethod = Box::select('method', DB::raw('SUM(amount) as total'))
+            ->where('cash_id', $id)
+            ->where('expenses', 0) // Solo ingresos
+            ->groupBy('method')
+            ->get();
+
         $expenses = Box::where('cash_id', $id)->where('expenses', 1)
             ->where('method', 'Efectivo')
             ->sum('amount');
@@ -2695,16 +2703,33 @@ class CashController extends Controller
                 // $amount = 
                 $credit_cash_out = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->sum('total');
                 $t_amount = $all_cash - $credit_cash_out - $expenses;
-                Log::info("all_cash: " . $all_cash);
-                Log::info("credit_cash_out: " . $credit_cash_out);
-                Log::info("expenses: " . $expenses);
-                Log::info("t_amount: " . $t_amount);
-                CashIncomePrincipal::create([
-                    'cash_principal_id' => $cash_principal_id,
-                    'cash_id' => $cash_id,
-                    'amount' => $t_amount,
-                    'status' => $t_amount > 0 ? 1 : 3,
-                ]);
+
+                // Si existen totales por método, crear un registro por cada método.
+                if (isset($totalsByMethod) && $totalsByMethod->count() > 0) {
+                    foreach ($totalsByMethod as $tm) {
+                        $method_name = $tm->method ?? 'SIN METODO';
+                        $amount_by_method = floatval($tm->total);
+                        // Saltar montos cero
+                        if ($amount_by_method == 0) continue;
+
+                        CashIncomePrincipal::create([
+                            'cash_principal_id' => $cash_principal_id,
+                            'cash_id' => $cash_id,
+                            'amount' => $amount_by_method,
+                            'method' => $method_name,
+                            'status' => $amount_by_method > 0 ? 1 : 3,
+                        ]);
+                    }
+                } else {
+                    // Fallback: crear registro global como antes si no hay desglose por método
+                    CashIncomePrincipal::create([
+                        'cash_principal_id' => $cash_principal_id,
+                        'cash_id' => $cash_id,
+                        'amount' => $t_amount,
+                        'method' => null,
+                        'status' => $t_amount > 0 ? 1 : 3,
+                    ]);
+                }
                 $user = User::find($cash->user_id);
                 $name = $user->name;
                 $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";

@@ -19,6 +19,7 @@ class CashIncomePrincipal extends ModelTenant
         'amount',
         'status',
         'active',
+        'method'
     ];
 
 

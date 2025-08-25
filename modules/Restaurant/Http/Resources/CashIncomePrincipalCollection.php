@@ -35,6 +35,7 @@ class CashIncomePrincipalCollection extends ResourceCollection
                 'active' => $row->active,
                 'cash_principal' => $row->cash_principal,
                 'cash' => $row->cash,
+                'method' => $row->method
 
             ];
         });

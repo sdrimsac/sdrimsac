@@ -2618,7 +2618,8 @@ class BoxesController extends Controller
 
             return [
                 "description" => $row->description,
-                "amount" => $row->amount
+                "amount" => $row->amount,
+                "method" => $row->method,
             ];
         });
 
@@ -3265,15 +3266,17 @@ class BoxesController extends Controller
         $expenses_cash_quantity = $expenses_cash->count();
 
         $incomes = Box::where('currency_type_id', 'PEN')->where('type', '1')->where('incomes', 1)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        $incomes_cash =  $incomes->where('method', 'Efectivo');
-        $incomes_cash_sum =  $incomes_cash->sum('amount');
+        // Para considerar todos los métodos de pago, no filtres solo por 'Efectivo'
+        $incomes_cash = $incomes; // incluye todos los métodos
+        $incomes_cash_sum = $incomes_cash->sum('amount');
 
         $incomes_cash_quantity = $incomes_cash->count();
         $incomes_records = $incomes_cash->get()->transform(function ($row) {
 
             return [
                 "description" => $row->description,
-                "amount" => $row->amount
+                "amount" => $row->amount,
+                "method" => $row->method
             ];
         });
 

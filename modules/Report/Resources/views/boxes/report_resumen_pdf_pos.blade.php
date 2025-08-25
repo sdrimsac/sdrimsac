@@ -1188,7 +1188,7 @@
 
                                     <td>
                                         <span class="f12">
-                                            {{ $income['description'] }}
+                                            {{ $income['description'] }} - {{ $income['method'] }}
                                         </span>
                                     </td>
                                     <td class=" right">

@@ -157,6 +157,7 @@
                                     <th>CODIGO PRINCIPAL</th>
                                     <th>CAJA</th>
                                     <th>USUARIO</th>
+                                    <th>METODO DE PAGO</th>
                                     <th>MONTO</th>
                                     <th>OBS.</th>
                                     <th>ESTADO</th>
@@ -188,6 +189,7 @@
                                     </td>
                                     <td>{{ record.cash.reference_number }}</td>
                                     <td>{{ record.user_name }}</td>
+                                    <td>{{ record.method }}</td>
                                     <td>{{ record.amount }}</td>
                                     <td>{{ record.comment }}</td>
                                     <td>{{ record.status_description }}</td>

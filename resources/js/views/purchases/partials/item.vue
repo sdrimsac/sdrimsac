@@ -1,81 +1,150 @@
 <!-- Modal de Agregar Productos Compras -->
 <template>
-
-    <el-dialog :title="titleDialog" :visible="showDialog" @open="create" @close="close" :close-on-click-modal="false"
-        width="70%">
-
-        <form autocomplete="off" @submit.prevent="clickAddItem" @keydown.enter.prevent>
+    <el-dialog
+        :title="titleDialog"
+        :visible="showDialog"
+        @open="create"
+        @close="close"
+        :close-on-click-modal="false"
+        width="70%"
+    >
+        <form
+            autocomplete="off"
+            @submit.prevent="clickAddItem"
+            @keydown.enter.prevent
+        >
             <div class="form-body">
                 <!-- Fila 1 -->
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group" :class="{ 'has-danger': errors.item_id }">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.item_id }"
+                        >
                             <!-- Checkbox del lector -->
-                            <vs-checkbox color="#073f68" v-model="barcode_lector" style="margin-top: 0px;">
+                            <vs-checkbox
+                                color="#073f68"
+                                v-model="barcode_lector"
+                                style="margin-top: 0px;"
+                            >
                                 Lector de código de barras
                             </vs-checkbox>
                             <div class="row">
                                 <!-- Input principal -->
-                                <div class="col-md-12 d-flex align-items-center" style="gap: 8px;">
+                                <div
+                                    class="col-md-12 d-flex align-items-center"
+                                    style="gap: 8px;"
+                                >
                                     <div class="col-11">
                                         <div style="flex: 1;">
-                                            <el-select v-if="!barcode_lector" v-model="form.item_id"
-                                                :loading="loading_search" :remote-method="searchRemoteItems" filterable
-                                                placeholder="Buscar Producto o Servicio" remote @change="changeItem"
-                                                style="width: 100%;">
-                                                <el-option v-for="option in items" :key="option.id" :value="option.id"
-                                                    :label="option.full_description"></el-option>
+                                            <el-select
+                                                v-if="!barcode_lector"
+                                                v-model="form.item_id"
+                                                :loading="loading_search"
+                                                :remote-method="
+                                                    searchRemoteItems
+                                                "
+                                                filterable
+                                                placeholder="Buscar Producto o Servicio"
+                                                remote
+                                                @change="changeItem"
+                                                style="width: 100%;"
+                                            >
+                                                <el-option
+                                                    v-for="option in items"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="
+                                                        option.full_description
+                                                    "
+                                                ></el-option>
                                             </el-select>
                                         </div>
                                         <!-- Input del lector de código de barras -->
-                                        <div v-if="barcode_lector" style="flex: 1;">
-                                            <div style="display: flex; align-items: center; gap: 8px;">
-                                                <el-tooltip class="item" effect="dark"
-                                                    content="Lector de código de barras" placement="top">
-                                                    <i class="fas fa-barcode fa-lg"></i>
+                                        <div
+                                            v-if="barcode_lector"
+                                            style="flex: 1;"
+                                        >
+                                            <div
+                                                style="display: flex; align-items: center; gap: 8px;"
+                                            >
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Lector de código de barras"
+                                                    placement="top"
+                                                >
+                                                    <i
+                                                        class="fas fa-barcode fa-lg"
+                                                    ></i>
                                                 </el-tooltip>
-                                                <el-input ref="input_barcode" v-model="input_barcode"
+                                                <el-input
+                                                    ref="input_barcode"
+                                                    v-model="input_barcode"
                                                     placeholder="Buscar producto por código de barras o QR"
-                                                    @input="searchItemsDebounce" style="width: 100%;">
+                                                    @input="searchItemsDebounce"
+                                                    style="width: 100%;"
+                                                >
                                                 </el-input>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-1">
-                                        <el-tooltip class="item" effect="dark"
-                                            content="Agregar Nuevo Producto o Servicio" placement="top">
-                                            <button type="primary" class="btn_guardarsmall"
-                                                @click.prevent="showDialogNewItem = true">
-                                                <i class="fas fa-plus fa-xs"></i>
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Agregar Nuevo Producto o Servicio"
+                                            placement="top"
+                                        >
+                                            <button
+                                                type="primary"
+                                                class="btn_guardarsmall"
+                                                @click.prevent="
+                                                    showDialogNewItem = true
+                                                "
+                                            >
+                                                <i
+                                                    class="fas fa-plus fa-xs"
+                                                ></i>
                                             </button>
                                         </el-tooltip>
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="col-6">
                         <div class="row">
                             <div class="col-6 text-center">
-                                <el-tooltip slot="append" class="item" effect="dark" content="Ver Stock del Producto"
-                                    placement="bottom" :disabled="!form.item_id">
+                                <el-tooltip
+                                    slot="append"
+                                    class="item"
+                                    effect="dark"
+                                    content="Ver Stock del Producto"
+                                    placement="bottom"
+                                    :disabled="!form.item_id"
+                                >
                                     <div>
                                         <label>
                                             <i class="fas fa-warehouse"></i>
                                             Stock
                                         </label>
-                                        <span>{{ parseFloat(selectedProductStock).toFixed(2) }}</span>
+                                        <span>{{
+                                            parseFloat(
+                                                selectedProductStock
+                                            ).toFixed(2)
+                                        }}</span>
                                     </div>
                                 </el-tooltip>
                             </div>
                             <div class="col-6">
                                 <label>
-                                    <el-tooltip class="item" effect="dark" content="Precio de venta" placement="top">
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Precio de venta"
+                                        placement="top"
+                                    >
                                         <i class="fas fa-tag"></i>
                                     </el-tooltip>
                                     Precio Venta
@@ -86,55 +155,101 @@
                                     :precision="2"
                                     :step="0.01"
                                     :min="0"
-                                    @input="form.sale_unit_price = Number(form.sale_unit_price);"
+                                    @input="
+                                        form.sale_unit_price = Number(
+                                            form.sale_unit_price
+                                        )
+                                    "
                                 >
                                 </el-input-number>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
 
                 <!-- Fila 2 -->
                 <div class="row">
                     <div class="col-md-6 mb-1">
-                        <div class="form-group" :class="{ 'has-danger': errors.warehouse_id }">
-                            <div class="d-flex align-items-center" style="gap: 10px;">
-                                <label style="margin-bottom: 0;"><i class="fas fa-warehouse"></i> Almacén</label>
-                                <el-select v-model="form.warehouse_id" filterable style="flex: 1;">
-                                    <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
-                                        :label="option.description"></el-option>
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.warehouse_id }"
+                        >
+                            <div
+                                class="d-flex align-items-center"
+                                style="gap: 10px;"
+                            >
+                                <label style="margin-bottom: 0;"
+                                    ><i class="fas fa-warehouse"></i>
+                                    Almacén</label
+                                >
+                                <el-select
+                                    v-model="form.warehouse_id"
+                                    filterable
+                                    style="flex: 1;"
+                                >
+                                    <el-option
+                                        v-for="option in warehouses"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                    ></el-option>
                                 </el-select>
                             </div>
-                            <small class="form-control-feedback" v-if="errors.warehouse_id"
-                                v-text="errors.warehouse_id[0]"></small>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.warehouse_id"
+                                v-text="errors.warehouse_id[0]"
+                            ></small>
                         </div>
                     </div>
                     <div class="col-md-6 mb-1">
-                        <div class="form-group" :class="{
-                            'has-danger': errors.affectation_igv_type_id
-                        }">
-                            <div class="d-flex align-items-center" style="gap: 10px;">
-                                <label class="control-label mb-0"><i class="fas fa-percentage"></i> Afectación
-                                    IGV</label>
-                                <vs-checkbox color="#073f68" v-model="change_affectation_igv_type_id"
-                                    style="margin-top: 0px;">
+                        <div
+                            class="form-group"
+                            :class="{
+                                'has-danger': errors.affectation_igv_type_id
+                            }"
+                        >
+                            <div
+                                class="d-flex align-items-center"
+                                style="gap: 10px;"
+                            >
+                                <label class="control-label mb-0"
+                                    ><i class="fas fa-percentage"></i>
+                                    Afectación IGV</label
+                                >
+                                <vs-checkbox
+                                    color="#073f68"
+                                    v-model="change_affectation_igv_type_id"
+                                    style="margin-top: 0px;"
+                                >
                                     Editar
                                 </vs-checkbox>
-                                <el-select v-model="form.affectation_igv_type_id"
-                                    :disabled="!change_affectation_igv_type_id" filterable
-                                    style="flex: 1; height: 40px;" popper-class="custom-igv-select-dropdown">
-                                    <el-option v-for="option in affectation_igv_types" :key="option.id"
-                                        :value="option.id" :label="option.description"
-                                        :selected="option.description === 'Exonerado - Operación Onerosa'"
-                                        style="height: 40px; display: flex; align-items: center;"></el-option>
+                                <el-select
+                                    v-model="form.affectation_igv_type_id"
+                                    :disabled="!change_affectation_igv_type_id"
+                                    filterable
+                                    style="flex: 1; height: 40px;"
+                                    popper-class="custom-igv-select-dropdown"
+                                >
+                                    <el-option
+                                        v-for="option in affectation_igv_types"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.description"
+                                        :selected="
+                                            option.description ===
+                                                'Exonerado - Operación Onerosa'
+                                        "
+                                        style="height: 40px; display: flex; align-items: center;"
+                                    ></el-option>
                                 </el-select>
                             </div>
 
-                            <small class="form-control-feedback" v-if="errors.affectation_igv_type_id"
-                                v-text="errors.affectation_igv_type_id[0]"></small>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.affectation_igv_type_id"
+                                v-text="errors.affectation_igv_type_id[0]"
+                            ></small>
                         </div>
                     </div>
                 </div>
@@ -143,48 +258,96 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-center align-items-center"
-                                style="background-color: #1e5a85; padding: 8px;">
-                                <h5 class="mb-0 text-white text-center w-100">Datos de la Compra</h5>
+                            <div
+                                class="card-header d-flex justify-content-center align-items-center"
+                                style="background-color: #1e5a85; padding: 8px;"
+                            >
+                                <h5 class="mb-0 text-white text-center w-100">
+                                    Datos de la Compra
+                                </h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="form-group" :class="{ 'has-danger': errors.quantity }">
-                                            <label class="control-label"><i class="fas fa-sort-numeric-up"></i>
-                                                Cantidad</label>
-                                            <el-input style="width: 100%;" v-model="form.quantity" name="quantity"
-                                                @input.native="onInput" @change="updateRealQuantity"></el-input>
-                                            <small class="form-control-feedback" v-if="errors.quantity"
-                                                v-text="errors.quantity[0]"></small>
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.quantity
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                ><i
+                                                    class="fas fa-sort-numeric-up"
+                                                ></i>
+                                                Cantidad</label
+                                            >
+                                            <el-input
+                                                style="width: 100%;"
+                                                v-model="form.quantity"
+                                                name="quantity"
+                                                @input.native="onInput"
+                                                @change="updateRealQuantity"
+                                            ></el-input>
+                                            <small
+                                                class="form-control-feedback"
+                                                v-if="errors.quantity"
+                                                v-text="errors.quantity[0]"
+                                            ></small>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group" :class="{ 'has-danger': errors.unit_price }">
-                                            <label class="control-label"><i class="fas fa-dollar-sign"></i>
-                                                P.Unitario</label>
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.unit_price
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                ><i
+                                                    class="fas fa-dollar-sign"
+                                                ></i>
+                                                P.Unitario</label
+                                            >
                                             <el-input-number
                                                 style="width: 100%;"
                                                 v-model="form.unit_price"
-                                                :precision="2"
-                                                :step="0.01"
-                                                @input="updatePriceTotal">
+                                                :min="0.001"
+                                                @input="updatePriceTotal"
+                                            >
                                             </el-input-number>
-                                            <small class="form-control-feedback" v-if="errors.unit_price"
-                                                v-text="errors.unit_price[0]"></small>
+                                            <small
+                                                class="form-control-feedback"
+                                                v-if="errors.unit_price"
+                                                v-text="errors.unit_price[0]"
+                                            ></small>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group" :class="{
-                                            'has-danger': errors.total_price
-                                        }">
-                                            <label class="control-label"><i class="fas fa-dollar-sign"></i>
-                                                Total</label>
-                                            <el-input style="width: 100%;" :disabled="!insertTotalPrice"
-                                                @input="updateUnitPrice" v-model="form.total_price"></el-input>
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.total_price
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                ><i
+                                                    class="fas fa-dollar-sign"
+                                                ></i>
+                                                Total</label
+                                            >
+                                            <el-input-number
+                                                style="width: 100%;"
+                                                :disabled="!insertTotalPrice"
+                                                :min="0.001"
+                                                @input="updateUnitPrice"
+                                                v-model="form.total_price"
+                                            ></el-input-number>
                                             <small>
-                                                <vs-checkbox color="#073f68" v-model="insertTotalPrice"
-                                                    style="margin-top: 0px;">
+                                                <vs-checkbox
+                                                    color="#073f68"
+                                                    v-model="insertTotalPrice"
+                                                    style="margin-top: 0px;"
+                                                >
                                                     Manual
                                                 </vs-checkbox>
                                             </small>
@@ -196,179 +359,345 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-center align-items-center"
-                                style="background-color: #1e5a85; padding: 8px;">
-                                <h5 class="mb-0 text-white text-center w-100">Embalaje</h5>
+                            <div
+                                class="card-header d-flex justify-content-center align-items-center"
+                                style="background-color: #1e5a85; padding: 8px;"
+                            >
+                                <h5 class="mb-0 text-white text-center w-100">
+                                    Embalaje
+                                </h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label class="control-label"><i class="fas fa-box"></i> Cantidad</label>
-                                        <el-input controls="false" style="width: 100%;" @change="updateRealQuantity"
-                                            @input.native="onInput" name="multi" :disabled="!noIsUnid"
-                                            v-model="unids"></el-input>
-
+                                        <label class="control-label"
+                                            ><i class="fas fa-box"></i>
+                                            Cantidad</label
+                                        >
+                                        <el-input
+                                            controls="false"
+                                            style="width: 100%;"
+                                            @change="updateRealQuantity"
+                                            @input.native="onInput"
+                                            name="multi"
+                                            :disabled="!noIsUnid"
+                                            v-model="unids"
+                                        ></el-input>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label"> Contenedor</label>
-                                        <el-input style="width: 100%;" v-model="form.max_quantity_description"
-                                            :disabled="!noIsUnid" placeholder="Ejmp. Caja, Saco, Balde, etc">
+                                        <label class="control-label">
+                                            Contenedor</label
+                                        >
+                                        <el-input
+                                            style="width: 100%;"
+                                            v-model="
+                                                form.max_quantity_description
+                                            "
+                                            :disabled="!noIsUnid"
+                                            placeholder="Ejmp. Caja, Saco, Balde, etc"
+                                        >
                                         </el-input>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label text-center font-weight-bold text-dark"><i
-                                                class="fas fa-calculator"></i>Total
-                                            Global</label>
-                                        <el-input style="width: 100%;" :readonly="!noIsUnid"
-                                            v-model="form.real_quantity"></el-input>
+                                        <label
+                                            class="control-label text-center font-weight-bold text-dark"
+                                            ><i class="fas fa-calculator"></i
+                                            >Total Global</label
+                                        >
+                                        <el-input
+                                            style="width: 100%;"
+                                            :readonly="!noIsUnid"
+                                            v-model="form.real_quantity"
+                                        ></el-input>
                                     </div>
                                     <div>
                                         <small>
-                                            <vs-checkbox color="#073f68" v-model="noIsUnid" @change="changeNoIsUnid"
-                                                style="margin-top: 0px;">
+                                            <vs-checkbox
+                                                color="#073f68"
+                                                v-model="noIsUnid"
+                                                @change="changeNoIsUnid"
+                                                style="margin-top: 0px;"
+                                            >
                                                 Escoger si no son unidades
                                             </vs-checkbox>
                                         </small>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-
-                <div class="row mb-3" v-if="
-                    form.item &&
-                    (form.item.lots_enabled ||
-                        form.item.series_enabled ||
-                        form.item.has_color_size)">
+                <div
+                    class="row mb-3"
+                    v-if="
+                        form.item &&
+                            (form.item.lots_enabled ||
+                                form.item.series_enabled ||
+                                form.item.has_color_size)
+                    "
+                >
                     <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-center align-items-center"
-                                style="background-color: #1e5a85; padding: 8px;">
-                                <h5 class="mb-0 text-white text-center w-100">Tratamiento Especial</h5>
+                            <div
+                                class="card-header d-flex justify-content-center align-items-center"
+                                style="background-color: #1e5a85; padding: 8px;"
+                            >
+                                <h5 class="mb-0 text-white text-center w-100">
+                                    Tratamiento Especial
+                                </h5>
                             </div>
                             <div class="card-body" style="padding: 4px;">
-
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th class="text-center" style="padding: 4px; width: 120px;">Ingresar</th>
-                                            <th class="text-center" style="padding: 4px; width: 120px;">Descargar</th>
-                                            <th class="text-center" style="padding: 4px; width: 120px;">Importar</th>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px; width: 120px;"
+                                            >
+                                                Ingresar
+                                            </th>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px; width: 120px;"
+                                            >
+                                                Descargar
+                                            </th>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px; width: 120px;"
+                                            >
+                                                Importar
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td class="text-center">
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.series_enabled">
-                                                        <div class="form-group"
-                                                            :class="{ 'has-danger': errors.lot_code }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .series_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lot_code
+                                                            }"
+                                                        >
                                                             <div>
-                                                                <el-button class="btn btnsdr-series-colores"
-                                                                    icon="fas fa-barcode icon" style="margin-top:2%;"
-                                                                    type="primary" @click.prevent="clickLotcode">
+                                                                <el-button
+                                                                    class="btn btnsdr-series-colores"
+                                                                    icon="fas fa-barcode icon"
+                                                                    style="margin-top:2%;"
+                                                                    type="primary"
+                                                                    @click.prevent="
+                                                                        clickLotcode
+                                                                    "
+                                                                >
                                                                     Series
                                                                 </el-button>
-                                                                <small class="form-control-feedback"
-                                                                    v-if="errors.has_color_size"
-                                                                    v-text="errors.has_color_size[0]"></small>
+                                                                <small
+                                                                    class="form-control-feedback"
+                                                                    v-if="
+                                                                        errors.has_color_size
+                                                                    "
+                                                                    v-text="
+                                                                        errors
+                                                                            .has_color_size[0]
+                                                                    "
+                                                                ></small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.lots_enabled">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.lots_enabled
-                                                        }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .lots_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lots_enabled
+                                                            }"
+                                                        >
                                                             <el-button
                                                                 class="btn btnsdr-lotes d-flex align-items-center justify-content-center gap-2"
                                                                 style="background-color: #e6e6fa; margin-top:2%;"
-                                                                type="primary" icon="fas fa-sign-in-alt icon"
-                                                                @click.prevent="clickLotGroupCode">
+                                                                type="primary"
+                                                                icon="fas fa-sign-in-alt icon"
+                                                                @click.prevent="
+                                                                    clickLotGroupCode
+                                                                "
+                                                            >
                                                                 Lotes
                                                             </el-button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.has_color_size">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.has_color_size
-                                                        }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .has_color_size
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.has_color_size
+                                                            }"
+                                                        >
                                                             <div>
-                                                                <button class="btn btnsdr-tallas-colores"
-                                                                    style="margin-top:2%;" type="primary" :disabled="!form.item_id ||
-                                                                        colorSizeImported
-                                                                        " @click.prevent="clickColorSize">
-                                                                    <i class="fas fa-tshirt"></i>
-                                                                    Color & talla
+                                                                <button
+                                                                    class="btn btnsdr-tallas-colores"
+                                                                    style="margin-top:2%;"
+                                                                    type="primary"
+                                                                    :disabled="
+                                                                        !form.item_id ||
+                                                                            colorSizeImported
+                                                                    "
+                                                                    @click.prevent="
+                                                                        clickColorSize
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-tshirt"
+                                                                    ></i>
+                                                                    Color &
+                                                                    talla
                                                                 </button>
-                                                                <small class="form-control-feedback"
-                                                                    v-if="errors.has_color_size"
-                                                                    v-text="errors.has_color_size[0]"></small>
+                                                                <small
+                                                                    class="form-control-feedback"
+                                                                    v-if="
+                                                                        errors.has_color_size
+                                                                    "
+                                                                    v-text="
+                                                                        errors
+                                                                            .has_color_size[0]
+                                                                    "
+                                                                ></small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </td>
                                             <td class="text-center">
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center align-items-center"
-                                                        v-if="form.item.series_enabled">
-                                                        <div class="form-group"
-                                                            :class="{ 'has-danger': errors.lot_code }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center align-items-center"
+                                                        v-if="
+                                                            form.item
+                                                                .series_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lot_code
+                                                            }"
+                                                        >
                                                             <div
-                                                                class="d-flex justify-content-center align-items-center">
-                                                                <el-tooltip class="item" effect="dark"
+                                                                class="d-flex justify-content-center align-items-center"
+                                                            >
+                                                                <el-tooltip
+                                                                    class="item"
+                                                                    effect="dark"
                                                                     content="Descargar Formato de Excel"
-                                                                    placement="top">
-                                                                    <a href="/formats/series_compras.xlsx"
-                                                                        class="text-success d-inline-flex align-items-center gap-1">
-                                                                        <i class="fas fa-file-excel fa-2x"></i>
+                                                                    placement="top"
+                                                                >
+                                                                    <a
+                                                                        href="/formats/series_compras.xlsx"
+                                                                        class="text-success d-inline-flex align-items-center gap-1"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-excel fa-2x"
+                                                                        ></i>
                                                                     </a>
                                                                 </el-tooltip>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.lots_enabled">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.lots_enabled
-                                                        }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .lots_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lots_enabled
+                                                            }"
+                                                        >
                                                             <div
-                                                                class="d-flex align-items-center justify-content-center">
-                                                                <el-tooltip class="item" effect="dark"
+                                                                class="d-flex align-items-center justify-content-center"
+                                                            >
+                                                                <el-tooltip
+                                                                    class="item"
+                                                                    effect="dark"
                                                                     content="Descargar Formato de Excel"
-                                                                    placement="top">
-                                                                    <a href="/formats/lots_group_compras.xlsx"
-                                                                        class="text-success d-inline-flex align-items-center gap-1">
-                                                                        <i class="fas fa-file-excel fa-2x"></i>
+                                                                    placement="top"
+                                                                >
+                                                                    <a
+                                                                        href="/formats/lots_group_compras.xlsx"
+                                                                        class="text-success d-inline-flex align-items-center gap-1"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-excel fa-2x"
+                                                                        ></i>
                                                                     </a>
                                                                 </el-tooltip>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.has_color_size">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.has_color_size
-                                                        }">
-                                                            <div class="d-flex gap-3">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .has_color_size
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.has_color_size
+                                                            }"
+                                                        >
+                                                            <div
+                                                                class="d-flex gap-3"
+                                                            >
                                                                 <!-- <el-tooltip class="item" effect="dark"
                                                                     content="Descargar Formato de Excel"
                                                                     placement="top">
@@ -377,12 +706,19 @@
                                                                         <i class="fas fa-file-excel fa-2x"></i>
                                                                     </a>
                                                                 </el-tooltip> -->
-                                                                <el-tooltip class="item" effect="dark"
+                                                                <el-tooltip
+                                                                    class="item"
+                                                                    effect="dark"
                                                                     content="Descargar Formato de Excel con codigo familia"
-                                                                    placement="top">
-                                                                    <a href="/formats/color_talla_compras_code.xlsx"
-                                                                        class="text-success d-inline-flex align-items-center gap-1">
-                                                                        <i class="fas fa-file-excel fa-2x"></i>
+                                                                    placement="top"
+                                                                >
+                                                                    <a
+                                                                        href="/formats/color_talla_compras_code.xlsx"
+                                                                        class="text-success d-inline-flex align-items-center gap-1"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-file-excel fa-2x"
+                                                                        ></i>
                                                                     </a>
                                                                 </el-tooltip>
                                                             </div>
@@ -391,59 +727,126 @@
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center align-items-center"
-                                                        v-if="form.item.series_enabled">
-                                                        <div class="form-group"
-                                                            :class="{ 'has-danger': errors.lot_code }">
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center align-items-center"
+                                                        v-if="
+                                                            form.item
+                                                                .series_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lot_code
+                                                            }"
+                                                        >
                                                             <div
-                                                                class="d-flex justify-content-center align-items-center">
-                                                                <el-button class="btn_canjearsmall"
+                                                                class="d-flex justify-content-center align-items-center"
+                                                            >
+                                                                <el-button
+                                                                    class="btn_canjearsmall"
                                                                     icon="fas fa-upload icon"
-                                                                    @click.prevent="$refs.file.click()"></el-button>
-                                                                <input type="file" @change="uploadExcel"
-                                                                    style="visibility:hidden;" ref="file"
-                                                                    accept=".xlsx,.xls" />
+                                                                    @click.prevent="
+                                                                        $refs.file.click()
+                                                                    "
+                                                                ></el-button>
+                                                                <input
+                                                                    type="file"
+                                                                    @change="
+                                                                        uploadExcel
+                                                                    "
+                                                                    style="visibility:hidden;"
+                                                                    ref="file"
+                                                                    accept=".xlsx,.xls"
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.lots_enabled">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.lots_enabled
-                                                        }">
-                                                            <div class="d-flex justify-content-center">
-                                                                <el-button class="btn_canjearsmall"
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .lots_enabled
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.lots_enabled
+                                                            }"
+                                                        >
+                                                            <div
+                                                                class="d-flex justify-content-center"
+                                                            >
+                                                                <el-button
+                                                                    class="btn_canjearsmall"
                                                                     icon="fas fa-upload icon"
-                                                                    @click.prevent="$refs.file.click()"></el-button>
-                                                                <input type="file" @change="uploadExcelGroup"
-                                                                    style="visibility:hidden;" ref="file"
-                                                                    accept=".xlsx,.xls" />
+                                                                    @click.prevent="
+                                                                        $refs.file.click()
+                                                                    "
+                                                                ></el-button>
+                                                                <input
+                                                                    type="file"
+                                                                    @change="
+                                                                        uploadExcelGroup
+                                                                    "
+                                                                    style="visibility:hidden;"
+                                                                    ref="file"
+                                                                    accept=".xlsx,.xls"
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="col-md-4 d-flex justify-content-center"
-                                                        v-if="form.item.has_color_size">
-                                                        <div class="form-group" :class="{
-                                                            'has-danger': errors.has_color_size
-                                                        }">
-                                                            <div class="d-flex justify-content-center">
-                                                                <el-button class="btn_canjearsmall"
+                                                <div
+                                                    class="d-flex justify-content-center"
+                                                >
+                                                    <div
+                                                        class="col-md-4 d-flex justify-content-center"
+                                                        v-if="
+                                                            form.item
+                                                                .has_color_size
+                                                        "
+                                                    >
+                                                        <div
+                                                            class="form-group"
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.has_color_size
+                                                            }"
+                                                        >
+                                                            <div
+                                                                class="d-flex justify-content-center"
+                                                            >
+                                                                <el-button
+                                                                    class="btn_canjearsmall"
                                                                     icon="fas fa-upload icon"
-                                                                    @click.prevent="$refs.file.click()"></el-button>
-                                                                <input type="file" @change="uploadExcelColorSize"
-                                                                    style="visibility:hidden;" ref="file"
-                                                                    accept=".xlsx,.xls" />
+                                                                    @click.prevent="
+                                                                        $refs.file.click()
+                                                                    "
+                                                                ></el-button>
+                                                                <input
+                                                                    type="file"
+                                                                    @change="
+                                                                        uploadExcelColorSize
+                                                                    "
+                                                                    style="visibility:hidden;"
+                                                                    ref="file"
+                                                                    accept=".xlsx,.xls"
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </td>
                                         </tr>
                                     </tbody>
@@ -452,12 +855,15 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-
-                            <div class="col-md-12" v-if="
-                                form.item_unit_types && form.item_unit_types.length > 0
-                            ">
-                                <div style="margin:3px" class="table-responsive">
-                                    <!-- <h6 class="separator-title">
+                        <div
+                            class="col-md-12"
+                            v-if="
+                                form.item_unit_types &&
+                                    form.item_unit_types.length > 0
+                            "
+                        >
+                            <div style="margin:3px" class="table-responsive">
+                                <!-- <h6 class="separator-title">
                                         Listado de Precios
                                         <el-tooltip class="item" effect="dark"
                                             content="Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades"
@@ -465,43 +871,72 @@
                                             <i class="fa fa-info-circle"></i>
                                         </el-tooltip>
                                     </h6> -->
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" style="padding: 4px;">Unidad</th>
-                                                <th class="text-center" style="padding: 4px;">Descripción</th>
-                                                <th class="text-center" style="padding: 4px;">Factor</th>
-                                                <th style="padding: 4px;"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(row, index) in form.item_unit_types" :key="index">
-                                                <td class="text-center">
-                                                    {{ row.unit_type_id }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ row.description }}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ row.quantity_unit }}
-                                                </td>
-                                                <td class="series-table-actions text-end">
-                                                    <button type="button" :class="`btn waves-effect waves-light btn-sm ${row.selected
-                                                        ? 'btn-primary'
-                                                        : 'btn-success'
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px;"
+                                            >
+                                                Unidad
+                                            </th>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px;"
+                                            >
+                                                Descripción
+                                            </th>
+                                            <th
+                                                class="text-center"
+                                                style="padding: 4px;"
+                                            >
+                                                Factor
+                                            </th>
+                                            <th style="padding: 4px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(row,
+                                            index) in form.item_unit_types"
+                                            :key="index"
+                                        >
+                                            <td class="text-center">
+                                                {{ row.unit_type_id }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ row.description }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ row.quantity_unit }}
+                                            </td>
+                                            <td
+                                                class="series-table-actions text-end"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    :class="
+                                                        `btn waves-effect waves-light btn-sm ${
+                                                            row.selected
+                                                                ? 'btn-primary'
+                                                                : 'btn-success'
                                                         } `
-                                                        " @click.prevent="selectedPrice(row)">
-                                                        <i class="el-icon-check"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                    "
+                                                    @click.prevent="
+                                                        selectedPrice(row)
+                                                    "
+                                                >
+                                                    <i
+                                                        class="el-icon-check"
+                                                    ></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        
+                        </div>
                     </div>
-
                 </div>
 
                 <!-- <div class="row" style="margin: 5px; 
@@ -673,21 +1108,29 @@
             </div>
             <!-- Boton Cerrar y Agregar -->
             <div class="col-md-12">
-                <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <div
+                    class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                >
                     <!-- Botón Cerrar -->
-                    <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">
+                    <el-button
+                        class="btn_cancelarsmall"
+                        icon="fas fa-times fa-lg"
+                        @click.prevent="close()"
+                    >
                         <span>Cerrar</span>
                     </el-button>
                     <!-- Botón Guardar -->
-                    <el-button class="btn_guardarsmall" icon="fas fa-plus fa-lg" type="primary" native-type="submit"
-                        :loading="loading_submit">
+                    <el-button
+                        class="btn_guardarsmall"
+                        icon="fas fa-plus fa-lg"
+                        type="primary"
+                        native-type="submit"
+                        :loading="loading_submit"
+                    >
                         <span>Agregar</span>
                     </el-button>
                 </div>
             </div>
-
-
-
         </form>
         <item-form
             :showDialog.sync="showDialogNewItem"
@@ -701,15 +1144,37 @@
             :lots="lots"
             @addRowLot="addRowLot"
         ></lots-form>
-        <item-form :showDialog.sync="showDialogNewItem" :external="true" @add="addRowItems"></item-form>
-        <lots-form :showDialog.sync="showDialogLots" :stock="form.quantity" :lots="lots" @addRowLot="addRowLot">
+        <item-form
+            :showDialog.sync="showDialogNewItem"
+            :external="true"
+            @add="addRowItems"
+        ></item-form>
+        <lots-form
+            :showDialog.sync="showDialogLots"
+            :stock="form.quantity"
+            :lots="lots"
+            @addRowLot="addRowLot"
+        >
         </lots-form>
-        <lots-group-form :showDialog.sync="showDialogLotsGroup" :stock="form.quantity" :lotsGroup.sync="lotsGroup"
-            @addRowLot="addRowLotGroup"></lots-group-form>
-        <color-size-form :internalId="form.item.internal_id" :showDialog.sync="showColorSize" :stock="form.quantity"
-            :colorSizes="color_size" @addRowColorSize="addRowColorSize" :recordId="form.item_id">
+        <lots-group-form
+            :showDialog.sync="showDialogLotsGroup"
+            :stock="form.quantity"
+            :lotsGroup.sync="lotsGroup"
+            @addRowLot="addRowLotGroup"
+        ></lots-group-form>
+        <color-size-form
+            :internalId="form.item.internal_id"
+            :showDialog.sync="showColorSize"
+            :stock="form.quantity"
+            :colorSizes="color_size"
+            @addRowColorSize="addRowColorSize"
+            :recordId="form.item_id"
+        >
         </color-size-form>
-        <warehouses-detail :showDialog.sync="showWarehousesDetail" :warehouses="warehousesDetail">
+        <warehouses-detail
+            :showDialog.sync="showWarehousesDetail"
+            :warehouses="warehousesDetail"
+        >
         </warehouses-detail>
     </el-dialog>
 </template>
@@ -730,6 +1195,7 @@ import ColorSizeForm from "../../items/partials/color_size.vue";
 import readXlsxFile from "read-excel-file";
 import WarehousesDetail from "./select_warehouse.vue";
 import moment from "moment";
+import { min } from "lodash";
 
 export default {
     props: [
@@ -797,14 +1263,16 @@ export default {
                 });
             }
         },
-        'form.quantity'(val) {
+        "form.quantity"(val) {
             if (!this.insertTotalPrice) {
-                this.form.total_price = (val || 0) * (this.form.unit_price || 0);
+                this.form.total_price =
+                    (val || 0) * (this.form.unit_price || 0);
             }
         },
         insertTotalPrice(val) {
             if (!val) {
-                this.form.total_price = (this.form.quantity || 0) * (this.form.unit_price || 0);
+                this.form.total_price =
+                    (this.form.quantity || 0) * (this.form.unit_price || 0);
             }
         }
     },
@@ -1269,14 +1737,14 @@ export default {
                 }
                 // Actualizar total automáticamente si no es manual
                 if (!this.insertTotalPrice) {
-                    this.form.total_price = (this.form.quantity || 0) * (this.form.unit_price || 0);
+                    this.form.total_price =
+                        (this.form.quantity || 0) * (this.form.unit_price || 0);
                 }
             } else {
                 this.selectedProductStock = 0; // Reset stock to 0 if no product is selected
             }
         },
         async clickAddItem() {
-
             if (!this.form.item_id || !this.form.item) {
                 return this.$showSAlert(
                     "Alerta",
@@ -1285,12 +1753,18 @@ export default {
                 );
             }
             // Validación de total en 0
-            if (this.form.total_price === 0 || this.form.total_price === null || this.form.total_price === undefined) {
+            if (
+                this.form.total_price === 0 ||
+                this.form.total_price === null ||
+                this.form.total_price === undefined
+            ) {
                 // Restaurar precio unitario si es posible
                 if (this.form.item && this.form.item.purchase_unit_price) {
                     this.form.unit_price = this.form.item.purchase_unit_price;
                 }
-                return Swal.fire("No se puede agregar un Producto o Servicios con Valor 0");
+                return Swal.fire(
+                    "No se puede agregar un Producto o Servicios con Valor 0"
+                );
             }
             this.insertTotalPrice = false;
 
