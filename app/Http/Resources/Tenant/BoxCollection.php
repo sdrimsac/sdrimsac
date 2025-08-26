@@ -81,7 +81,7 @@ class BoxCollection extends ResourceCollection
                 'customerNumber' => $customerNumber,
                 'subcategories'     => $row->subcategories,
                 'group_id'          => $row->group_id,
-                'reference'        => $row->cash->reference_number,
+                'reference'        => ($row->cash) ? $row->cash->reference_number : '',
                 'category_id'       => $row->category_id,
                 'subcategory_id'    => $row->subcategory_id,
                 'amount'            => $amount,
