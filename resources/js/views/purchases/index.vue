@@ -24,6 +24,27 @@
 
                 <div class="data-table-visible-columns d-flex align-items-center">
                     <!--  -->
+                    <el-button type="success" class="btn_excelsmall "
+                        disabled style="font-weight: bold; font-size: 1.1rem;">
+                        <i class="fas fa-wallet"></i>
+                        Efectivo: S/ {{ Number(paymentMethods.Efectivo).toFixed(2) }}
+                    </el-button>
+                    <el-button class="btn_excelsmallmetthod"
+                        disabled style="font-weight: bold; font-size: 1.1rem; background-color: orange; border-color: orange !important;">
+                        <i class="fas fa-wallet"></i>
+                        Culqui: S/ {{ Number(paymentMethods.Culqui).toFixed(2) }}
+                    </el-button>
+                    <el-button type="info" class="btn_excelsmallmetthod"
+                        disabled style="font-weight: bold; font-size: 1.1rem; background-color: #17a2b8; border-color: #17a2b8 !important;">
+                        <i class="fas fa-wallet"></i>
+                        Plin: S/ {{ Number(paymentMethods.PLIN).toFixed(2) }}
+                    </el-button>
+                    <el-button type="secondary" class="btn_excelsmallmetthod"
+                        disabled
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #8e44ad; border-color: #8e44ad; color: #fff !important;">
+                        <i class="fas fa-wallet"></i>
+                        Yape: S/ {{ Number(paymentMethods.YAPE).toFixed(2) }}
+                    </el-button>
                     <el-button v-if="configuration.sale_note_credit_penalty" type="success" class="btn_excelsmall "
                         disabled style="font-weight: bold; font-size: 1.1rem;">
                         <i class="fas fa-wallet"></i>
@@ -512,6 +533,8 @@ export default {
         return {
             showImportColorSizeDialog: false,
             total: 0,
+            // Ensure paymentMethods is reactive and has default keys used in the template
+            paymentMethods: { Efectivo: 0, Culqui: 0, PLIN: 0, YAPE: 0 },
             showDialogVoided: false,
             resource: "purchases",
             recordId: null,
@@ -565,12 +588,34 @@ export default {
             this.showImportColorSizeDialog = true;
         },
         getAvaibleCash() {
-            this.$http("/caja/cash-transfer/available?with_all=1").then(
-                response => {
-                    console.log("🚀 ~ this.$http ~ response:", response);
-                    this.total = response.data;
-                }
-            );
+            this.$http("/caja/cash-transfer/available?with_all=1")
+                .then(response => {
+                    // Guardar los métodos de pago y sus montos en un objeto
+                    const data = response.data || {};
+                    let total = 0;
+                    // Keep defaults for known keys to avoid undefined in template
+                    const paymentMethods = { Efectivo: 0, Culqui: 0, Plin: 0, yape: 0 };
+                    if (Array.isArray(data)) {
+                        // support [{ method, amount }, { method, amount }]
+                        data.forEach(item => {
+                            const method = item.method || item.name || item[0];
+                            const amount = item.amount || item.value || item[1] || 0;
+                            if (!method) return;
+                            paymentMethods[method] = Number(amount) || 0;
+                            total += Number(amount) || 0;
+                        });
+                    } else {
+                        Object.entries(data).forEach(([method, amount]) => {
+                            paymentMethods[method] = Number(amount) || 0;
+                            total += Number(amount) || 0;
+                        });
+                    }
+                    this.total = total;
+                    this.paymentMethods = paymentMethods;
+                })
+                .catch(() => {
+                    // If request fails, keep default values
+                });
         },
         calculate(item) {
             let {

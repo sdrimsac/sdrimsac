@@ -193,13 +193,14 @@
                                     <th>METODO DE PAGO</th>
                                     <th>MONTO</th>
                                     <th>OBS.</th>
-                                    <!-- <th>TOTAL</th> -->
+                                    <th>TOTAL</th>
                                     <th>ESTADO</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(record, idx) in records" :key="idx">
+                                <tr v-for="(record, idx) in records" :key="idx"
+                                    :style="{ background: groupColors[(record.cash_id || (record.cash && record.cash.id))] || 'transparent' }">
                                     <td>{{ customIndex(idx) }}</td>
                                     <td>
                                         {{ record.cash.date_opening }}
@@ -225,8 +226,14 @@
                                     <td>{{ record.user_name }}</td>
                                     <td>{{ record.method }}</td>
                                     <td>{{ record.amount }}</td>
-                                    <td>{{ record.comment }}</td>
-                                    <td>{{ record.status_description }}</td>
+                                        <td>{{ record.comment }}</td>
+                                        <!-- TOTAL: show only on first row of the cash group and span rows -->
+                                        <template v-if="firstIndexByCash[ (record.cash_id || (record.cash && record.cash.id)) ] === idx">
+                                            <td :rowspan="groupCounts[ (record.cash_id || (record.cash && record.cash.id)) ] || 1" class="cash-total-cell">
+                                                {{ (record.total || 0).toFixed(2) }}
+                                            </td>
+                                        </template>
+                                        <td>{{ record.status_description }}</td>
                                     <td>
                                         <template
                                             v-if="
@@ -247,7 +254,6 @@
                                                 ></el-button>
                                             </el-tooltip>
                                         </template>
-                                        <!-- boton danger para mandar a observacion el ingreso -->
                                         <template v-if="record.status == 1">
                                             <el-tooltip
                                                 :content="
@@ -342,7 +348,14 @@ export default {
             },
             columns: [],
             users: [],
-            references_principal: []
+            references_principal: [],
+            // counts of records per cash_id
+            groupCounts: {},
+            // index of first occurrence per cash_id
+            firstIndexByCash: {}
+            ,
+            // background color per cash_id
+            groupColors: {}
         };
     },
     methods: {
@@ -454,9 +467,51 @@ export default {
                 let {
                     data: { data, meta }
                 } = response;
-                this.records = data;
+
+                // Group by cash_id and sum amounts
+                const totalsByCash = data.reduce((acc, item) => {
+                    const cashId = item.cash_id || (item.cash && item.cash.id);
+                    const amount = parseFloat(item.amount) || 0;
+                    if (!cashId) return acc;
+                    if (!acc[cashId]) acc[cashId] = 0;
+                    acc[cashId] += amount;
+                    return acc;
+                }, {});
+
+                // Attach total to each record that shares the same cash_id
+                this.records = data.map(item => {
+                    const cashId = item.cash_id || (item.cash && item.cash.id);
+                    return Object.assign({}, item, {
+                        total: cashId ? (totalsByCash[cashId] || 0) : (parseFloat(item.amount) || 0)
+                    });
+                });
+
+                // compute group counts and first index per cash_id
+                this.groupCounts = this.records.reduce((acc, item, idx) => {
+                    const cashId = item.cash_id || (item.cash && item.cash.id);
+                    if (!cashId) return acc;
+                    acc[cashId] = (acc[cashId] || 0) + 1;
+                    return acc;
+                }, {});
+
+                this.firstIndexByCash = this.records.reduce((acc, item, idx) => {
+                    const cashId = item.cash_id || (item.cash && item.cash.id);
+                    if (!cashId) return acc;
+                    if (acc[cashId] === undefined) acc[cashId] = idx;
+                    return acc;
+                }, {});
+
+                // assign a pastel color per cash group deterministically
+                const palette = [
+                    '#fbe9e7','#fff3e0','#fffde7','#f1f8e9','#e8f5e9','#e8f0f7','#f3e5f5','#fce4ec'
+                ];
+                this.groupColors = Object.keys(this.groupCounts).reduce((acc, key, index) => {
+                    acc[key] = palette[index % palette.length];
+                    return acc;
+                }, {});
+
                 this.references_principal = Array.from(
-                    new Set(data.map(item => item.ref_principal))
+                    new Set(this.records.map(item => item.ref_principal))
                 );
                 console.log(
                     "🚀 ~ getRecords ~ this.references_principal:",
@@ -477,3 +532,12 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.cash-total-cell{
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    border-left: 3px solid rgba(0,0,0,0.08);
+}
+</style>

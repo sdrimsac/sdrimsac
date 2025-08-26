@@ -406,7 +406,6 @@ class PurchaseController extends Controller
         return $identity_document_type_id;
     }
 
-
     public function tables()
     {
         $suppliers = $this->table('suppliers');
@@ -416,7 +415,40 @@ class PurchaseController extends Controller
         $discount_types = ChargeDiscountType::whereType('discount')->whereLevel('item')->get();
         $charge_types = ChargeDiscountType::whereType('charge')->whereLevel('item')->get();
         $company = Company::active();
-        $payment_method_types = PaymentMethodType::all();
+        // Obtener métodos de pago
+        $payment_method_types = PaymentMethodType::where('has_card', 0)->get();
+
+        /* if (auth()->user()->is_arca == 1) {
+            $arcaCash = Cash::where('user_id', auth()->id())
+            ->where('state', 1)
+            ->latest()
+            ->first();
+
+            $payment_method_balances = [];
+
+            if ($arcaCash) {
+            $boxes = Box::where('cash_id', $arcaCash->id)
+                ->where('type', 1)
+                ->get();
+            foreach ($payment_method_types as $method) {
+                // Normaliza el nombre del método para comparar sin importar mayúsculas/minúsculas
+                $method_name = strtolower(trim($method->description));
+                // Busca en boxes tanto el nombre normalizado como el original
+                $amount = $boxes->filter(function ($box) use ($method_name) {
+                return strtolower(trim($box->method)) === $method_name;
+                })->sum('amount');
+                $payment_method_balances[$method->id] = $amount;
+            }
+            }
+            foreach ($payment_method_types as $method) {
+            $method->available_amount = $payment_method_balances[$method->id] ?? 0;
+            }
+        } else {
+            foreach ($payment_method_types as $method) {
+            $method->available_amount = 0;
+            }
+        } */
+
         $payment_destinations = $this->getPaymentDestinations() ?? [];
         $customers = $this->getPersons('customers');
 
@@ -690,23 +722,6 @@ class PurchaseController extends Controller
                 // --- Validación usuario arca ---
                 $isArca = auth()->user()->is_arca == 1;
                 $arcaCash = null;
-                /*if ($isArca) {
-                    $arcaCash = Cash::where('user_id', auth()->id())
-                        ->where('state', 1)
-                        ->latest()
-                        ->first();
-
-                    if (!$arcaCash) {
-                        throw new Exception("No tiene caja aperturada.");
-                    }
-
-                    $totalCompra = $doc->total;
-                    if ($arcaCash->balance < $totalCompra) {
-                        $faltante = $totalCompra - $arcaCash->balance;
-                        throw new Exception("Saldo insuficiente. Faltan S/{$faltante} para realizar la compra.");
-                    }
-                }*/
-
                 if ($isArca) {
                     // Obtener la caja abierta del usuario arca
                     $arcaCash = Cash::where('user_id', auth()->id())
@@ -720,7 +735,6 @@ class PurchaseController extends Controller
 
                     // Calcular el saldo total disponible de esa caja sumando todos los box
                     $totalDisponible = Box::where('cash_id', $arcaCash->id)
-                        ->where('state', 1)
                         ->sum('amount');
 
                     $totalCompra = $doc->total;
@@ -737,7 +751,8 @@ class PurchaseController extends Controller
                     if ($isArca) {
                         // Tomar la caja abierta
                         $box = Box::where('cash_id', $arcaCash->id)
-                            ->where('state', 1)
+                            ->where('state', 0)
+                            ->where('type', 1)
                             ->orderBy('id')
                             ->first();
 

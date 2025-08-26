@@ -12,12 +12,14 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\CashTransfer;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\PaymentMethodType;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Report\Exports\CashTransferExport;
 
 class CashTransferController extends Controller
@@ -95,16 +97,15 @@ class CashTransferController extends Controller
             if ($column == 'date_of_issue') {
                 if ($end_date) {
                     $boxes = $boxes->where('date', '>=', $value)->where('date', '<=', $end_date);
-                }else{
+                } else {
                     $boxes = $boxes->where('date', $value);
                 }
-
-            }else{
+            } else {
                 $boxes = $boxes->where($column, 'like', "%{$value}%");
             }
         }
-        
-        $boxes  = $boxes  ->get()
+
+        $boxes  = $boxes->get()
             ->transform(function ($box) {
                 $income = $box->incomes ? $box->amount : 0;
                 $expense = $box->expenses ? $box->amount : 0;
@@ -135,13 +136,14 @@ class CashTransferController extends Controller
             });
         return $boxes;
     }
-    public function export_report(Request $request){
+    public function export_report(Request $request)
+    {
         $boxes = $this->get_records_report($request);
         $company = Company::first();
         return (new CashTransferExport)
-                ->records($boxes)
-                ->company($company)
-                ->download('Reporte_de_transferencias_' . Carbon::now() . '.xlsx');
+            ->records($boxes)
+            ->company($company)
+            ->download('Reporte_de_transferencias_' . Carbon::now() . '.xlsx');
     }
     public function records_report(Request $request)
     {
@@ -215,7 +217,7 @@ class CashTransferController extends Controller
             $box->description = 'Transferencia de caja principal';
             $box->method = 'Efectivo';
             $box->save();
-            (new WhatsappController)->sendMessageOne($user_destination->telephone, $message,$user->establishment_id);
+            (new WhatsappController)->sendMessageOne($user_destination->telephone, $message, $user->establishment_id);
             event(new InsertCashEvent($amount, $cash_destination_id));
             DB::connection('tenant')->commit();
             return [
@@ -232,12 +234,12 @@ class CashTransferController extends Controller
         }
     }
 
-    public function available()
+    /* public function available()
     {
         $cash_principal = Cash::where('principal', 1)->where('user_id', auth()->id())
             ->where('state', 1)
             ->first();
-        if(!$cash_principal) return 0;
+        if (!$cash_principal) return 0;
         $all_cash = $cash_principal->beginning_balance ?? 0;
         $all_incomes = Box::where('cash_id', $cash_principal->id)->where('incomes', 1)->sum('amount');
         $all_expenses = Box::where('cash_id', $cash_principal->id)->where('expenses', 1)->sum('amount');
@@ -247,8 +249,82 @@ class CashTransferController extends Controller
         $all_cash -= $all_expenses;
         $all_cash -= $all_transfer;
         return $all_cash;
-    }
-    public function destroy()
+    } */
+
+    /* public function available()
     {
+        $cash_principal = Cash::where('principal', 1)
+            ->where('user_id', auth()->id())
+            ->where('state', 1)
+            ->first();
+
+        if (!$cash_principal) {
+            return [];
+        }
+
+        // Lista de métodos de pago soportados
+        $payment_methods = PaymentMethodType::where('has_card', 0)->get();
+
+        $saldos = [];
+
+        foreach ($payment_methods as $method) {
+            $incomes = Box::where('cash_id', $cash_principal->id)
+                ->where('incomes', 1)
+                ->where('method', $method->id)
+                ->sum('amount');
+
+            $expenses = Box::where('cash_id', $cash_principal->id)
+                ->where('expenses', 1)
+                ->where('method', $method->id)
+                ->sum('amount');
+
+            $saldos[$method->name] = $incomes - $expenses;
+        }
+
+        return $saldos;
+    } */
+
+    public function available()
+    {
+        auth()->user();
+        $cash_principal = Cash::where('principal', 1)
+            ->where('user_id', auth()->id())
+            ->where('state', 1)
+            ->first();
+
+        if (!$cash_principal) {
+            return ['error' => 'No hay caja principal abierta'];
+        }
+
+        $payment_methods = PaymentMethodType::all();
+
+        $saldos = [];
+
+        foreach ($payment_methods as $method) {
+            // Ingresos por método
+            $incomes = Box::where('cash_id', $cash_principal->id)
+                ->where('incomes', 1)
+                ->where('method', $method->description)
+                ->sum('amount');
+
+            Log::info("Ingresos por método {$method->description}: {$incomes}");
+
+            // Gastos por método
+            $expenses = Box::where('cash_id', $cash_principal->id)
+                ->where('expenses', 1)
+                ->where('method', $method->description)
+                ->sum('amount');
+
+            $transfer = CashTransfer::where('cash_principal_id', $cash_principal->id)
+                ->sum('amount');
+
+            $saldo = ($incomes - $expenses) - $transfer;
+
+            $saldos[$method->description ?? $method->name] = $saldo;
+        }
+
+        return $saldos;
     }
+
+    public function destroy() {}
 }

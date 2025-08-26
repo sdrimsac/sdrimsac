@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Finance\Traits; 
+namespace Modules\Finance\Traits;
 
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\BankAccount;
@@ -18,60 +18,77 @@ use Modules\Finance\Models\IncomePayment;
 
 
 trait FinanceTrait
-{ 
+{
 
-    public function getPaymentDestinations(){
-        
+    public function getPaymentDestinations()
+    {
+
         $bank_accounts = self::getBankAccounts();
         $cash = $this->getCash();
         return collect($bank_accounts)->push($cash);
-
     }
 
 
-    private static function getBankAccounts(){
+    private static function getBankAccounts()
+    {
 
-        return BankAccount::get()->transform(function($row) {
+        return BankAccount::get()->transform(function ($row) {
             return [
                 'id' => $row->id,
                 'cash_id' => null,
                 'description' => "{$row->bank->description} - {$row->currency_type_id} - {$row->description}",
             ];
         });
-
     }
 
-
-    public function getCash(){
-
+    public function getCash()
+    {
         $user = auth()->user();
         $cash = null;
 
         if ($user->type === 'admin' || $user->type === 'superadmin') {
-            $cash = Cash::whereIn('user_id', function($query) {
-                $query->select('id')
-                      ->from('users')
-                      ->whereIn('type', ['admin', 'superadmin']);
-            })->get()->last();
+
+            // si es admin y tiene is_arca, busca solo su propia caja
+            if ($user->type === 'admin' && $user->is_arca) {
+                $cash = Cash::where('user_id', $user->id)->latest()->first();
+            } else {
+                // si no es is_arca, busca cualquier caja de admin/superadmin
+                $cash = Cash::whereIn('user_id', function ($query) {
+                    $query->select('id')
+                        ->from('users')
+                        ->whereIn('type', ['admin', 'superadmin']);
+                })->latest()->first();
+            }
         } else {
-            $cash = Cash::where('user_id', $user->id)->get()->last();
+            // usuario normal, solo su propia caja
+            $cash = Cash::where('user_id', $user->id)->latest()->first();
         }
 
-        if($cash){
+        if ($cash) {
+            // determinar descripción según si es arca o general
+            $descripcion = ($user->type === 'admin' && $user->is_arca)
+                ? "CAJA ARCA"
+                : "CAJA GENERAL";
+
+            // si tiene reference_number, se concatena
+            if ($cash->reference_number) {
+                $descripcion .= " - {$cash->reference_number}";
+            }
+
             return [
                 'id' => 'cash',
                 'cash_id' => $cash->id,
-                'description' => ($cash->reference_number) ? "CAJA GENERAL - {$cash->reference_number}" : "CAJA GENERAL",
+                'description' => $descripcion,
             ];
-        } else {
-            return null;
         }
 
+        return null;
     }
 
-    public function createGlobalPayment($model, $row){
+    public function createGlobalPayment($model, $row)
+    {
 
-        $destination = $this->getDestinationRecord($row); 
+        $destination = $this->getDestinationRecord($row);
         $company = Company::active();
 
         $model->global_payment()->create([
@@ -79,21 +96,19 @@ trait FinanceTrait
             'destination_id' => $destination['destination_id'],
             'destination_type' => $destination['destination_type'],
         ]);
-
     }
 
-    public function getDestinationRecord($row){
-        
-        if($row['payment_destination_id'] === 'cash'){
+    public function getDestinationRecord($row)
+    {
+
+        if ($row['payment_destination_id'] === 'cash') {
 
             $destination_id = $this->getCash()['cash_id'];
             $destination_type = Cash::class;
-
-        }else{
+        } else {
 
             $destination_id = $row['payment_destination_id'];
             $destination_type = BankAccount::class;
-
         }
 
         return [
@@ -102,55 +117,58 @@ trait FinanceTrait
         ];
     }
 
-    
-    public function deleteAllPayments($payments){
+
+    public function deleteAllPayments($payments)
+    {
 
         foreach ($payments as $payment) {
             $payment->delete();
         }
-
     }
 
-    public function getCollectionPaymentTypes(){
+    public function getCollectionPaymentTypes()
+    {
 
         return [
-            ['id'=> DocumentPayment::class, 'description' => 'COMPROBANTES (CPE)'],
-            ['id'=> SaleNotePayment::class, 'description' => 'NOTA DE VENTA'],
-            ['id'=> PurchasePayment::class, 'description' => 'COMPRAS'],
-            ['id'=> ExpensePayment::class, 'description' => 'GASTOS'],
-            ['id'=> QuotationPayment::class, 'description' => 'COTIZACIÓN'],
-            ['id'=> ContractPayment::class, 'description' => 'CONTRATO'],
-            ['id'=> IncomePayment::class, 'description' => 'INGRESO'],
+            ['id' => DocumentPayment::class, 'description' => 'COMPROBANTES (CPE)'],
+            ['id' => SaleNotePayment::class, 'description' => 'NOTA DE VENTA'],
+            ['id' => PurchasePayment::class, 'description' => 'COMPRAS'],
+            ['id' => ExpensePayment::class, 'description' => 'GASTOS'],
+            ['id' => QuotationPayment::class, 'description' => 'COTIZACIÓN'],
+            ['id' => ContractPayment::class, 'description' => 'CONTRATO'],
+            ['id' => IncomePayment::class, 'description' => 'INGRESO'],
         ];
     }
 
-    public function getCollectionDestinationTypes(){
+    public function getCollectionDestinationTypes()
+    {
 
         return [
-            ['id'=> Cash::class, 'description' => 'CAJA GENERAL'],
-            ['id'=> BankAccount::class, 'description' => 'CUENTA BANCARIA'],
+            ['id' => Cash::class, 'description' => 'CAJA GENERAL'],
+            ['id' => BankAccount::class, 'description' => 'CUENTA BANCARIA'],
         ];
     }
 
-    public function getDatesOfPeriod($request){
+    public function getDatesOfPeriod($request)
+    {
 
         $period = $request['period'];
         $date_start = $request['date_start'];
         $date_end = $request['date_end'];
         $month_start = $request['month_start'];
         $month_end = $request['month_end'];
-        
+
         $d_start = null;
         $d_end = null;
 
         switch ($period) {
             case 'month':
-                $d_start = Carbon::parse($month_start.'-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_start.'-01')->endOfMonth()->format('Y-m-d');
+                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
+                $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
                 break;
             case 'between_months':
-                $d_start = Carbon::parse($month_start.'-01')->format('Y-m-d');
-                $d_end = Carbon::parse($month_end.'-01')->endOfMonth()->format('Y-m-d');
+                $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
+                $d_end = Carbon::parse($month_end . '-01')->endOfMonth()->format('Y-m-d');
                 break;
             case 'date':
                 $d_start = $date_start;
@@ -168,52 +186,53 @@ trait FinanceTrait
         ];
     }
 
-    
-    public function getBalanceByCash($cash){
- 
+
+    public function getBalanceByCash($cash)
+    {
+
         $document_payment = $this->getSumPayment($cash, DocumentPayment::class);
-        $expense_payment = $this->getSumPayment($cash, ExpensePayment::class); 
+        $expense_payment = $this->getSumPayment($cash, ExpensePayment::class);
         $sale_note_payment = $this->getSumPayment($cash, SaleNotePayment::class);
-        $purchase_payment = $this->getSumPayment($cash, PurchasePayment::class); 
-        $quotation_payment = $this->getSumPayment($cash, QuotationPayment::class); 
-        $contract_payment = $this->getSumPayment($cash, ContractPayment::class); 
-        $income_payment = $this->getSumPayment($cash, IncomePayment::class); 
+        $purchase_payment = $this->getSumPayment($cash, PurchasePayment::class);
+        $quotation_payment = $this->getSumPayment($cash, QuotationPayment::class);
+        $contract_payment = $this->getSumPayment($cash, ContractPayment::class);
+        $income_payment = $this->getSumPayment($cash, IncomePayment::class);
 
         $entry = $document_payment + $sale_note_payment + $quotation_payment + $contract_payment + $income_payment;
         $egress = $expense_payment + $purchase_payment;
-        
+
         $balance = $entry - $egress;
 
         return [
 
             'id' => 'cash',
             'description' => "CAJA GENERAL",
-            'expense_payment' => number_format($expense_payment,2, ".", ""),
-            'sale_note_payment' => number_format($sale_note_payment,2, ".", ""),
-            'quotation_payment' => number_format($quotation_payment,2, ".", ""),
-            'contract_payment' => number_format($contract_payment,2, ".", ""),
-            'income_payment' => number_format($income_payment,2, ".", ""),
-            'document_payment' => number_format($document_payment,2, ".", ""),
-            'purchase_payment' => number_format($purchase_payment,2, ".", ""),
-            'balance' => number_format($balance,2, ".", "")
-            
-        ];
+            'expense_payment' => number_format($expense_payment, 2, ".", ""),
+            'sale_note_payment' => number_format($sale_note_payment, 2, ".", ""),
+            'quotation_payment' => number_format($quotation_payment, 2, ".", ""),
+            'contract_payment' => number_format($contract_payment, 2, ".", ""),
+            'income_payment' => number_format($income_payment, 2, ".", ""),
+            'document_payment' => number_format($document_payment, 2, ".", ""),
+            'purchase_payment' => number_format($purchase_payment, 2, ".", ""),
+            'balance' => number_format($balance, 2, ".", "")
 
+        ];
     }
 
-    
-    
-    public function getBalanceByBankAcounts($bank_accounts){
 
-        $records = $bank_accounts->map(function($row){
+
+    public function getBalanceByBankAcounts($bank_accounts)
+    {
+
+        $records = $bank_accounts->map(function ($row) {
 
             $document_payment = $this->getSumPayment($row->global_destination, DocumentPayment::class);
-            $expense_payment = $this->getSumPayment($row->global_destination, ExpensePayment::class); 
+            $expense_payment = $this->getSumPayment($row->global_destination, ExpensePayment::class);
             $sale_note_payment = $this->getSumPayment($row->global_destination, SaleNotePayment::class);
-            $purchase_payment = $this->getSumPayment($row->global_destination, PurchasePayment::class); 
-            $quotation_payment = $this->getSumPayment($row->global_destination, QuotationPayment::class); 
-            $contract_payment = $this->getSumPayment($row->global_destination, ContractPayment::class); 
-            $income_payment = $this->getSumPayment($row->global_destination, IncomePayment::class); 
+            $purchase_payment = $this->getSumPayment($row->global_destination, PurchasePayment::class);
+            $quotation_payment = $this->getSumPayment($row->global_destination, QuotationPayment::class);
+            $contract_payment = $this->getSumPayment($row->global_destination, ContractPayment::class);
+            $income_payment = $this->getSumPayment($row->global_destination, IncomePayment::class);
 
             $entry = $document_payment + $sale_note_payment + $quotation_payment + $contract_payment + $income_payment;
             $egress = $expense_payment + $purchase_payment;
@@ -222,107 +241,103 @@ trait FinanceTrait
             return [
 
                 'id' => $row->id,
-                'description' => "{$row->bank->description} - {$row->currency_type_id} - {$row->description}", 
-                'expense_payment' => number_format($expense_payment,2, ".", ""),
-                'sale_note_payment' => number_format($sale_note_payment,2, ".", ""),
-                'quotation_payment' => number_format($quotation_payment,2, ".", ""),
-                'contract_payment' => number_format($contract_payment,2, ".", ""),
-                'document_payment' => number_format($document_payment,2, ".", ""),
-                'purchase_payment' => number_format($purchase_payment,2, ".", ""),
-                'income_payment' => number_format($income_payment,2, ".", ""),
-                'balance' => number_format($balance,2, ".", "")
-                
-            ];
+                'description' => "{$row->bank->description} - {$row->currency_type_id} - {$row->description}",
+                'expense_payment' => number_format($expense_payment, 2, ".", ""),
+                'sale_note_payment' => number_format($sale_note_payment, 2, ".", ""),
+                'quotation_payment' => number_format($quotation_payment, 2, ".", ""),
+                'contract_payment' => number_format($contract_payment, 2, ".", ""),
+                'document_payment' => number_format($document_payment, 2, ".", ""),
+                'purchase_payment' => number_format($purchase_payment, 2, ".", ""),
+                'income_payment' => number_format($income_payment, 2, ".", ""),
+                'balance' => number_format($balance, 2, ".", "")
 
-        }); 
+            ];
+        });
 
         return $records;
-        
     }
 
     public function getSumPayment($record, $model)
     {
-        return $record->where('payment_type', $model)->sum(function($row){
+        return $record->where('payment_type', $model)->sum(function ($row) {
             return $this->calculateTotalCurrencyType($row->payment->associated_record_payment, $row->payment->payment);
         });
     }
-    
+
 
     public function calculateTotalCurrencyType($record, $payment)
     {
         return ($record->currency_type_id === 'USD') ? $payment * $record->exchange_rate_sale : $payment;
     }
 
-    
+
     public function getRecordsByPaymentMethodTypes($payment_method_types)
     {
-        
-        $records = $payment_method_types->map(function($row){
+
+        $records = $payment_method_types->map(function ($row) {
 
             $document_payment = $this->getSumByPMT($row->document_payments);
             $sale_note_payment = $this->getSumByPMT($row->sale_note_payments);
-            $purchase_payment = $this->getSumByPMT($row->purchase_payments); 
-            $quotation_payment = $this->getSumByPMT($row->quotation_payments); 
-            $contract_payment = $this->getSumByPMT($row->contract_payments); 
-            $income_payment = $this->getSumByPMT($row->income_payments); 
+            $purchase_payment = $this->getSumByPMT($row->purchase_payments);
+            $quotation_payment = $this->getSumByPMT($row->quotation_payments);
+            $contract_payment = $this->getSumByPMT($row->contract_payments);
+            $income_payment = $this->getSumByPMT($row->income_payments);
 
             return [
 
                 'id' => $row->id,
-                'description' => $row->description, 
+                'description' => $row->description,
                 'expense_payment' => '-',
-                'sale_note_payment' => number_format($sale_note_payment,2, ".", ""),
-                'document_payment' => number_format($document_payment,2, ".", ""),
-                'purchase_payment' => number_format($purchase_payment,2, ".", ""),
-                'quotation_payment' => number_format($quotation_payment,2, ".", ""),
-                'contract_payment' => number_format($contract_payment,2, ".", ""),
-                'income_payment' => number_format($income_payment,2, ".", ""),
-                
-            ];
+                'sale_note_payment' => number_format($sale_note_payment, 2, ".", ""),
+                'document_payment' => number_format($document_payment, 2, ".", ""),
+                'purchase_payment' => number_format($purchase_payment, 2, ".", ""),
+                'quotation_payment' => number_format($quotation_payment, 2, ".", ""),
+                'contract_payment' => number_format($contract_payment, 2, ".", ""),
+                'income_payment' => number_format($income_payment, 2, ".", ""),
 
-        }); 
+            ];
+        });
 
         return $records;
     }
 
-    
+
     public function getRecordsByExpenseMethodTypes($expense_method_types)
     {
-        
-        $records = $expense_method_types->map(function($row){
+
+        $records = $expense_method_types->map(function ($row) {
 
             // dd($row->expense_payments);
-            $expense_payment = $this->getSumByPMT($row->expense_payments); 
+            $expense_payment = $this->getSumByPMT($row->expense_payments);
 
             return [
 
                 'id' => $row->id,
-                'description' => $row->description, 
-                'expense_payment' => number_format($expense_payment,2, ".", ""),
+                'description' => $row->description,
+                'expense_payment' => number_format($expense_payment, 2, ".", ""),
                 'sale_note_payment' => '-',
                 'document_payment' => '-',
                 'quotation_payment' => '-',
                 'contract_payment' => '-',
                 'income_payment' => '-',
                 'purchase_payment' => '-'
-                
-            ];
 
-        }); 
+            ];
+        });
 
         return $records;
     }
 
     public function getSumByPMT($records)
     {
-        return $records->sum(function($row){
+        return $records->sum(function ($row) {
             return $this->calculateTotalCurrencyType($row->associated_record_payment, $row->payment);
         });
     }
 
     public function getTotalsPaymentMethodType($records_by_pmt, $records_by_emt)
     {
-        
+
         $t_documents = 0;
         $t_sale_notes = 0;
         $t_quotations = 0;
@@ -339,24 +354,21 @@ trait FinanceTrait
             $t_contracts += $value['contract_payment'];
             $t_purchases += $value['purchase_payment'];
             $t_income += $value['income_payment'];
-
         }
 
         foreach ($records_by_emt as $value) {
 
             $t_expenses += $value['expense_payment'];
-            
         }
 
         return [
-            't_documents' => number_format($t_documents,2, ".", ""),
-            't_sale_notes' => number_format($t_sale_notes,2, ".", ""),
-            't_quotations' => number_format($t_quotations,2, ".", ""),
-            't_contracts' => number_format($t_contracts,2, ".", ""),
-            't_purchases' => number_format($t_purchases,2, ".", ""),
-            't_expenses' => number_format($t_expenses,2, ".", ""),
-            't_income' => number_format($t_income,2, ".", ""),
+            't_documents' => number_format($t_documents, 2, ".", ""),
+            't_sale_notes' => number_format($t_sale_notes, 2, ".", ""),
+            't_quotations' => number_format($t_quotations, 2, ".", ""),
+            't_contracts' => number_format($t_contracts, 2, ".", ""),
+            't_purchases' => number_format($t_purchases, 2, ".", ""),
+            't_expenses' => number_format($t_expenses, 2, ".", ""),
+            't_income' => number_format($t_income, 2, ".", ""),
         ];
-
     }
 }
