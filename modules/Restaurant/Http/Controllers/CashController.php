@@ -171,6 +171,7 @@ class CashController extends Controller
             'message' => 'Ingreso aceptado con éxito'
         ];
     }
+
     public function index_main()
     {
         $cash_id = null;
@@ -202,21 +203,25 @@ class CashController extends Controller
 
             // Calcular totales por método de pago
             foreach ($payment_methods as $method => $value) {
-                $payment_methods[$method] = Box::where('cash_id', $cash_id)
+                $income = Box::where('cash_id', $cash_id)
                     ->where('incomes', 1)
                     ->where('method', $method)
                     ->sum('amount');
+
+                $expense = Box::where('cash_id', $cash_id)
+                    ->where('expenses', 1)
+                    ->where('method', $method)
+                    ->sum('amount');
+
+                // El saldo de este método de pago
+                $payment_methods[$method] = $income - $expense;
             }
-            Log::info("Cash report generated", [
-                'cash_id' => $cash_id,
-                'total' => $total,
-                'payment_methods' => $payment_methods
-            ]);
         }
         $configuration = Configuration::first();
 
         return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));
     }
+    
     public function index_report_closed_cash()
     {
         $configuration = Configuration::first();
