@@ -58,6 +58,7 @@ use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use App\Traits\JobReportTrait;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
+use CashOpeningBalances;
 use GuzzleHttp\Psr7\Response;
 use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
@@ -69,10 +70,14 @@ use Modules\Item\Models\CategoryItem;
 use Modules\Report\Exports\GainReportExport;
 use Modules\Report\Exports\GananciaReportExport;
 use Modules\Restaurant\Events\GenerateExcelReportJob;
+use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Http\Requests\ExpensesRequest;
 use Modules\Restaurant\Http\Resources\CashIncomePrincipalCollection;
 use Modules\Restaurant\Http\Resources\ReportCollection;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\BoxesDetail;
+use Modules\Restaurant\Models\CashOpeningBalance;
+use Modules\Restaurant\Models\CashOpeningBalances as ModelsCashOpeningBalances;
 use Modules\Restaurant\Models\CashOrderSession;
 use Modules\Restaurant\Models\Orden;
 use Mpdf\Mpdf;
@@ -118,12 +123,11 @@ class CashController extends Controller
     }
     public function accept_register($id)
     {
-
         $cash_income_principal = CashIncomePrincipal::findOrFail($id);
         $cash = $cash_income_principal->cash;
         $amount = $cash_income_principal->amount;
         $user_id = $cash_income_principal->cash->user_id;
-        $method = $cash_income_principal->method;
+        $method = $cash_income_principal->method ?? 'Efectivo';
         $user = User::findOrFail($user_id);
         $user_name = $user->name;
         $establishment_id = $user->establishment_id;
@@ -175,6 +179,18 @@ class CashController extends Controller
             ->orderBy('id', 'desc')
             ->first();
         $total = 0;
+        $payment_methods = [
+            'Efectivo' => 0,
+            'Yape' => 0,
+            'Plin' => 0,
+            'Tarjeta' => 0,
+            'Transferencia' => 0,
+            'Deposito Bancario' => 0,
+            'Culqui' => 0,
+            'izipay' => 0,
+            'nubiz' => 0
+            // Agrega otros métodos si es necesario
+        ];
 
         if ($cash) {
             $cash_id = $cash->id;
@@ -183,11 +199,23 @@ class CashController extends Controller
             $begging_balance = $cash->beginning_balance;
             $cash_transfer = $cash->cash_transfers->sum('amount');
             $total = $incomes - $expenses + $begging_balance - $cash_transfer;
-            // $total = $incomes - $expenses;
+
+            // Calcular totales por método de pago
+            foreach ($payment_methods as $method => $value) {
+                $payment_methods[$method] = Box::where('cash_id', $cash_id)
+                    ->where('incomes', 1)
+                    ->where('method', $method)
+                    ->sum('amount');
+            }
+            Log::info("Cash report generated", [
+                'cash_id' => $cash_id,
+                'total' => $total,
+                'payment_methods' => $payment_methods
+            ]);
         }
         $configuration = Configuration::first();
 
-        return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total'));
+        return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));
     }
     public function index_report_closed_cash()
     {
@@ -2327,7 +2355,6 @@ class CashController extends Controller
 
     public function store(CashRequest $request)
     {
-
         $configuration = Configuration::first();
         if ($configuration->only_cash_by_establishment) {
             $result = $this->checkIfHasOpenCash();
@@ -2414,11 +2441,44 @@ class CashController extends Controller
             'updated_at' => now(),
         ]);
 
+        // Si la caja abierta es principal
+        if ($cash->principal) {
+
+            // Buscar la última caja principal cerrada
+            $last_principal_cash = Cash::where('principal', true)
+                ->where('id', '<>', $cash->id)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($last_principal_cash) {
+
+                // Traer los balances de apertura de la última caja principal
+                $balances = CashOpeningBalance::where('cash_id', $last_principal_cash->id)->get();
+
+                foreach ($balances as $balance) {
+
+                    // Insertar en Box como ingreso
+                    Box::create([
+                        'cash_id' => $cash->id, // 👉 ahora lo registras en la nueva caja
+                        'amount' => $balance->amount,
+                        'type' => 1,
+                        'incomes' => true,
+                        'date' => date('Y-m-d'),
+                        'method' => $balance->method ?? 'Efectivo',
+                        'group_id' => 1,
+                        'subcategory_id' => 1,
+                        'category_id' => 1,
+                        'soap_type_id' => '01',
+                        'description' => 'Saldo de la caja anterior por método ' . ($balance->method ?? 'Efectivo'),
+                        'state' => 1,
+                        'user_id' => auth()->user()->id,
+                    ]);
+                }
+            }
+        }
 
         $this->insertStock($cash->id);
-        // aqui llamo a una funcion de otro controlador para registrar el stock del producto 
-        // $this->registerStock($request->input('id'), $request->input('beginning_balance'));
-        //crea un mensaje con el nombre del usuario y el monto con el cual está abriendo caja
+
         $user = User::find($cash->user_id);
         $name = $user->name;
         $amount = $cash->beginning_balance;
@@ -2437,6 +2497,52 @@ class CashController extends Controller
             "cash_id" => $cash->id,
             'success' => true,
             'message' => ($id) ? 'Caja actualizada con éxito' : 'Caja aperturada con éxito'
+        ];
+    }
+
+    public function boxClose(ExpensesRequest $request)
+    {
+        $configuration = Configuration::first();
+        $cash_id = $request->cashid;
+        if ($request->expenses && $request->method == "Efectivo") {
+            $available_cash = $this->avaible_cash($cash_id);
+            if ($request->amount > $available_cash) {
+                return response([
+                    'success' => false,
+                    'message' => 'Efectivo insuficiente'
+                ], 400);
+            }
+        }
+        $company = Company::first();
+        $id          = $request->input('id');
+        $box         = Box::firstOrNew(['id' => $id]);
+        $box->cash_id = $cash_id;
+        $box->fill($request->all());
+        $box->date = Carbon::parse($request->input('date'))->format('Y-m-d');
+        $box->user_id = auth()->user()->id;
+        $box->soap_type_id = $company->soap_type_id;
+        $box->establishment_id = auth()->user()->establishment_id;
+        $box->save();
+        BoxesDetail::where('boxes_id', $box->id)->delete();
+        if (isset($request->items)) {
+            foreach ($request->items as $item) {
+                $detail = new BoxesDetail([
+                    "item_detail_id" => $item["item_detail_id"],
+                    "quantity" => $item["quantity"],
+                    "price" => $item["price"],
+                    "price_extra" => $item["extra_price"],
+                    "boxes_id" => $box->id
+                ]);
+                $detail->save();
+            }
+        }
+        if ($configuration->print_incomes_expenses) {
+            event(new PrintEvent($box->id, "box", true, 0));
+        }
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Actualizado con éxito' : 'Registrado con éxito',
+            'data'    => $box
         ];
     }
 
@@ -2517,6 +2623,7 @@ class CashController extends Controller
             ->company(Company::active())
             ->download('Reporte_Caja_Principal.xlsx');
     }
+
     public function records_principal(Request $request)
     {
         $column = $request->column;
@@ -2539,6 +2646,37 @@ class CashController extends Controller
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
+
+    /* public function records_principal(Request $request)
+    {
+        $column = $request->column;
+        $value = $request->value;
+        $state = $request->input('status');
+        $user_id_principal = auth()->user()->id;
+
+        $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
+            $query->where('user_id', $user_id_principal);
+        })
+            ->whereHas('cash', function ($query) use ($column, $value) {
+                if ($column && $value) {
+                    $query->where($column, 'like', $value);
+                }
+            });
+
+        if ($state) {
+            $records = $records->where('status', $state);
+        }
+
+        // 👇 agrupamos por cash_id
+        $records = $records
+            ->selectRaw('cash_id, SUM(amount) as total_amount, MIN(created_at) as created_at')
+            ->groupBy('cash_id')
+            ->orderBy('created_at', 'desc');
+
+        return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
+    } */
+
+
     function generaIncomeAdjust($cash_id, $amount)
     {
         $box = new Box();
@@ -2626,7 +2764,7 @@ class CashController extends Controller
             ->where('cash_id', $id)  //->where('method', 'Efectivo')
             ->where('expenses', 0)
             ->get();
-    
+
         $totalsByMethod = Box::select('method', DB::raw('SUM(amount) as total'))
             ->where('cash_id', $id)
             ->where('expenses', 0) // Solo ingresos
@@ -2667,6 +2805,33 @@ class CashController extends Controller
         $fqdn = $hostname->fqdn;
         $cash->is_loading_report = true;
         $cash->save();
+
+        if ($cash->principal == 1) {
+            Log::info('Generando ajustes de apertura de caja al cerrar');
+            if (isset($totalsByMethod) && $totalsByMethod->count() > 0) {
+                foreach ($totalsByMethod as $tm) {
+                    $method_name = $tm->method ?? 'Efectivo';
+                    $amount_by_method = floatval($tm->total);
+
+                    if ($amount_by_method == 0) continue;
+
+                    CashOpeningBalance::create([
+                        'cash_id' => $cash->id,
+                        'user_id' => $cash->user_id,
+                        'amount' => $amount_by_method,
+                        'method' => $method_name,
+                    ]);
+                }
+            } else {
+                CashOpeningBalance::create([
+                    'cash_id' => $cash->id,
+                    'user_id' => $cash->user_id,
+                    'amount' => $all_cash,
+                    'method' => 'Efectivo',
+                ]);
+            }
+        }
+
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
         if ($configuration->yape_report) {
             WhatsappSendCashYapeReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);

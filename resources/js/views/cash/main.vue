@@ -19,10 +19,43 @@
                 <div class="d-flex justify-content-end align-items-center">
                     <el-button
                         class="ms-2"
+                        style="font-size: 1.5rem; font-weight: bold; color: #28a745;"
+                    >
+                        <span>
+                            Efectivo: S/ {{ payment_methods.Efectivo }}
+                        </span>
+                    </el-button>
+                    <el-button
+                        class="ms-2"
+                        style="font-size: 1.5rem; font-weight: bold; color: orange;"
+                    >
+                        <span>
+                            Culqui: S/ {{ payment_methods.Culqui }}
+                        </span>
+                    </el-button>
+                    <el-button
+                        class="ms-2"
+                        style="font-size: 1.5rem; font-weight: bold; color: #00bfff;"
+                    >
+                        <span>
+                            Plin: S/ {{ payment_methods.Plin }}
+                        </span>
+                    </el-button>
+                    <el-button
+                        class="ms-2"
+                        style="font-size: 1.5rem; font-weight: bold; color: #800080;"
+                    >
+                        <span>
+                            Yape: S/ {{ payment_methods.Yape }}
+                        </span>
+                    </el-button>
+
+                    <el-button
+                        class="ms-2"
                         style="font-size: 1.5rem; font-weight: bold;"
                     >
                         <span>
-                            Efectivo disponible: S/ {{ total.toFixed(2) }}
+                            Disponible: S/ {{ total.toFixed(2) }}
                         </span>
                     </el-button>
                     <button
@@ -160,6 +193,7 @@
                                     <th>METODO DE PAGO</th>
                                     <th>MONTO</th>
                                     <th>OBS.</th>
+                                    <!-- <th>TOTAL</th> -->
                                     <th>ESTADO</th>
                                     <th></th>
                                 </tr>
@@ -276,7 +310,7 @@ const CashForm = () => import("./partials/form.vue");
 const CloseCash = () => import("./partials/closecash.vue");
 import queryString from "query-string";
 export default {
-    props: ["configuration", "cashid", "total"],
+    props: ["configuration", "cashid", "total", "payment_methods"],
     components: {
         CashForm,
         CloseCash
