@@ -177,7 +177,7 @@ class CashController extends Controller
         ];
     }
 
-    public function index_main()
+    /* public function index_main()
     {
         $cash_id = null;
         $cash = Cash::where('user_id', auth()->user()->id)
@@ -222,6 +222,69 @@ class CashController extends Controller
                 $payment_methods[$method] = $income - $expense;
             }
         }
+        $configuration = Configuration::first();
+
+        return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));
+    } */
+
+    public function index_main()
+    {
+        $cash_id = null;
+        $total = 0;
+        $payment_methods = [];
+
+        $cash = Cash::where('user_id', auth()->user()->id)
+            ->where('state', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            $cash_id = $cash->id;
+
+            $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
+            $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
+            $begging_balance = $cash->beginning_balance;
+            $cash_transfer = $cash->cash_transfers->sum('amount');
+            $total = $incomes - $expenses + $begging_balance - $cash_transfer;
+
+            // 📌 Traemos todos los métodos únicos de pago que existen en esta caja
+            $all_methods = Box::where('cash_id', $cash_id)
+                ->pluck('method')
+                ->unique();
+
+            // 🔄 Normalizamos solo los métodos que sean "CUENTA SOLES-XXXXXXXXXX"
+            $normalized_methods = $all_methods->map(function ($method) {
+                if (preg_match('/^CUENTA SOLES-\d+$/', $method)) {
+                    return 'Transferencia';
+                }
+                return $method;
+            });
+
+            // Inicializamos cada método con 0
+            foreach ($normalized_methods as $method) {
+                $payment_methods[$method] = 0;
+            }
+
+            // Calculamos saldo de cada método
+            foreach ($all_methods as $original_method) {
+                $normalized = preg_match('/^CUENTA SOLES-\d+$/', $original_method) ? 'Transferencia' : $original_method;
+
+                $income = Box::where('cash_id', $cash_id)
+                    ->where('incomes', 1)
+                    ->where('method', $original_method)
+                    ->sum('amount');
+
+                $expense = Box::where('cash_id', $cash_id)
+                    ->where('expenses', 1)
+                    ->where('method', $original_method)
+                    ->sum('amount');
+
+                $payment_methods[$normalized] += $income - $expense;
+            }
+
+            Log::info('Métodos de pago calculados: ' . json_encode($payment_methods));
+        }
+
         $configuration = Configuration::first();
 
         return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));

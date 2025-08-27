@@ -19,6 +19,33 @@
         <div class="data-table-visible-columns d-flex align-items-center">
             <!--  -->
             <el-button
+                class="btn_excelsmallmetthod"
+                style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+            >
+                <span> Transferencia: S/ {{ paymentMethods.Transferencia }} </span>
+            </el-button>
+            <el-button
+                v-if="paymentMethods.IZYPAY > 0"
+                class="btn_excelsmallmetthod"
+                style="font-weight: bold; font-size: 1.1rem; background-color: #ff0000; border-color: #ff0000; color: #fff !important;"
+            >
+                <span> Izipay: S/ {{ paymentMethods.IZYPAY }} </span>
+            </el-button>
+            <el-button
+                v-if="paymentMethods.OPENPAY > 0"
+                class="btn_excelsmallmetthod"
+                style="font-weight: bold; font-size: 1.1rem; background: linear-gradient(135deg, #2196f3 50%, #2ecc71 50%); border-color: #2196f3; color: #fff !important;"
+            >
+                <span> OpenPay: S/ {{ paymentMethods.OPENPAY }} </span>
+            </el-button>
+            <el-button
+                v-if="paymentMethods.NIUBIZ > 0"
+                class="btn_excelsmallmetthod"
+                style="font-weight: bold; font-size: 1.1rem; background-color: #2196f3; border-color: #2196f3; color: #fff !important;"
+            >
+                <span> Niubiz: S/ {{ paymentMethods.NIUBIZ }} </span>
+            </el-button>
+            <el-button
                 v-if="paymentMethods && Number(paymentMethods.Efectivo) > 0"
                 type="success"
                 class="btn_excelsmall "
@@ -1532,7 +1559,16 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
-            paymentMethods: { Efectivo: 0, Culqui: 0, PLIN: 0, YAPE: 0 },
+            paymentMethods: {
+                Efectivo: 0,
+                Culqui: 0,
+                PLIN: 0,
+                YAPE: 0,
+                NIUBIZ: 0,
+                OPENPAY: 0,
+                IZYPAY: 0,
+                Transferencia: 0
+            },
             showImportColorSizeDialog: false,
             showImportDialog: false,
             listApart: false,
@@ -1677,15 +1713,17 @@ export default {
         getAvaibleCash() {
             this.$http("/caja/cash-transfer/available?with_all=1")
                 .then(response => {
-                    // Guardar los métodos de pago y sus montos en un objeto
                     const data = response.data || {};
                     let total = 0;
-                    // Keep defaults for known keys to avoid undefined in template
                     const paymentMethods = {
                         Efectivo: 0,
                         Culqui: 0,
                         Plin: 0,
-                        yape: 0
+                        yape: 0,
+                        NIUBIZ: 0,
+                        OPENPAY: 0,
+                        IZYPAY: 0,
+                        Transferencia: 0
                     };
                     if (Array.isArray(data)) {
                         // support [{ method, amount }, { method, amount }]

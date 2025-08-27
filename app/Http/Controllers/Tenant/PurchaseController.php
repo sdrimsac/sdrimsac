@@ -1117,10 +1117,12 @@ class PurchaseController extends Controller
 
         return response()->file($temp, $this->generalPdfResponseFileHeaders($purchase->filename));
     }
+    
     private function reloadPDF($purchase, $format, $filename)
     {
         $this->createPdf($purchase, $format, $filename);
     }
+
     public function createPdf($purchase = null, $format_pdf = null, $filename = null)
     {
 

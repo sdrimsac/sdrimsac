@@ -34,7 +34,35 @@
                 <div
                     class="data-table-visible-columns d-flex align-items-center"
                 >
-                    <!--  -->
+                    <el-button
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+                    >
+                        <span>
+                            Transferencia: S/ {{ paymentMethods.Transferencia }}
+                        </span>
+                    </el-button>
+                    <el-button
+                      v-if="paymentMethods.IZYPAY > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #ff0000; border-color: #ff0000; color: #fff !important;"
+                    >
+                        <span> Izipay: S/ {{ paymentMethods.IZYPAY }} </span>
+                    </el-button>
+                    <el-button
+                    v-if="paymentMethods.OPENPAY > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background: linear-gradient(135deg, #2196f3 50%, #2ecc71 50%); border-color: #2196f3; color: #fff !important;"
+                    >
+                        <span> OpenPay: S/ {{ paymentMethods.OPENPAY }} </span>
+                    </el-button>
+                    <el-button
+                    v-if="paymentMethods.NIUBIZ > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #2196f3; border-color: #2196f3; color: #fff !important;"
+                    >
+                        <span> Niubiz: S/ {{ paymentMethods.NIUBIZ }} </span>
+                    </el-button>
                     <el-button
                         v-if="
                             paymentMethods &&
@@ -796,7 +824,7 @@ export default {
             showImportColorSizeDialog: false,
             total: 0,
             // Ensure paymentMethods is reactive and has default keys used in the template
-            paymentMethods: { Efectivo: 0, Culqui: 0, PLIN: 0, YAPE: 0 },
+            paymentMethods: { Efectivo: 0, Culqui: 0, PLIN: 0, YAPE: 0, NIUBIZ: 0, OPENPAY: 0, IZYPAY: 0, Transferencia: 0 },
             showDialogVoided: false,
             resource: "purchases",
             recordId: null,
@@ -860,7 +888,11 @@ export default {
                         Efectivo: 0,
                         Culqui: 0,
                         Plin: 0,
-                        yape: 0
+                        yape: 0,
+                        NIUBIZ: 0,
+                        OPENPAY: 0,
+                        IZYPAY: 0,
+                        Transferencia: 0
                     };
                     if (Array.isArray(data)) {
                         // support [{ method, amount }, { method, amount }]

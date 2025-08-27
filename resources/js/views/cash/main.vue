@@ -17,14 +17,14 @@
 
             <template v-else>
                 <div class="d-flex justify-content-end align-items-center">
-                    <!-- <el-button
+                    <el-button
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
                         <span>
-                            Banco: S/ {{ payment_methods.Efectivo }}
+                            Transferencia: S/ {{ payment_methods.Transferencia }}
                         </span>
-                    </el-button> -->
+                    </el-button>
                     <el-button
                       v-if="payment_methods['TARJETA: IZYPAY'] > 0"
                         class="btn_excelsmallmetthod"
