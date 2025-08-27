@@ -738,7 +738,7 @@ class PurchaseController extends Controller
                     if ($isArca) {
                         // Tomar la caja abierta
                         $box = Box::where('cash_id', $arcaCash->id)
-                            ->where('state', 0)
+                            ->where('state', 1)
                             ->where('type', 1)
                             ->orderBy('id')
                             ->first();
