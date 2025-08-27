@@ -420,12 +420,22 @@ export default {
             this.titleDialog = this.recordId
                 ? "Editar Ingreso Caja"
                 : "Nueva Ingreso Caja";
+
+            // Ensure form is initialized/reset when dialog opens
+            this.initForm();
+
+            // If editing, load the record and overwrite form
             if (this.recordId) {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
                     });
+            } else {
+                // If not editing, set default payment method (first method) when available
+                if (this.payment_methods && this.payment_methods.length) {
+                    this.form.method = this.payment_methods[0].description;
+                }
             }
         },
         submit() {
@@ -456,6 +466,16 @@ export default {
         close() {
             this.$emit("update:showDialog", false);
             this.initForm();
+        }
+    }
+    ,
+    watch: {
+        // If payment methods are loaded/changed after component is created/opened,
+        // ensure a default method is selected for a new form.
+        payment_methods(newVal) {
+            if (!this.recordId && (!this.form.method || this.form.method === null) && newVal && newVal.length) {
+                this.form.method = newVal[0].description;
+            }
         }
     }
 };

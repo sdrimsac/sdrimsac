@@ -1,3 +1,4 @@
+<!-- ingreso de caja arca o principal -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -49,7 +50,7 @@
                             <th>Subcategoria</th>
                             <th>Fecha</th>
                             <th>Efectivo</th>
-                            <th class="text-end">Acciones</th>
+                            <!-- <th class="text-end">Acciones</th> -->
                         </tr>
 
                         <tr></tr>
@@ -62,7 +63,7 @@
                             <td>{{ row.date }}</td>
                             <td>{{ row.amount }}</td>
 
-                            <td class="text-end">
+                            <!-- <td class="text-end">
                                 <button
                                     type="button"
                                     class="btn waves-effect waves-light btn-sm btn-primary"
@@ -77,7 +78,7 @@
                                 >
                                     Eliminar
                                 </button>
-                            </td>
+                            </td> -->
                         </tr>
                     </data-table>
                 </div>

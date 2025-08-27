@@ -7,7 +7,7 @@
     if ($document->document_type_id == 'GU75' && $document->series == null) {
         $tittle = $document->series_guia . '-' . str_pad($document->number_guia, 8, '0', STR_PAD_LEFT);
     } else {
-        $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT); 
+        $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     }
 @endphp
 <html>
@@ -18,6 +18,13 @@
 </head>
 
 <body>
+    @if ($document->state_type->id == '11')
+        {{-- Watermark moved further left and more diagonal --}}
+        <div style="position: absolute; left: 10%; top: 28%; transform: translate(-50%, -50%) rotate(-45deg); transform-origin: center; text-align: center; width: 85%; z-index: 1000; pointer-events: none;">
+            <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png'))) }}"
+                alt="anulado" style="opacity: 0.25; width: 100%; max-width: 500px; display: block; margin: 0 auto;" />
+        </div>
+    @endif
     <table class="full-width">
         <tr>
             @if ($company->logo)
@@ -146,7 +153,7 @@
                         @endif
                     </td>
                     <td class="text-center align-top">{{ $row->item->unit_type_id }}</td>
-                    <td class="text-center align-top">{{ $row->warehouse->description}}</td>
+                    <td class="text-center align-top">{{ $row->warehouse->description }}</td>
                     <td class="text-left">
 
                         @if ($row->name_product_pdf)
@@ -184,10 +191,11 @@
                                 </small>
                             @endforeach
                         @endif
-                        @if(isset($row->item->max_quantity) && isset($row->item->max_quantity_description))
+                        @if (isset($row->item->max_quantity) && isset($row->item->max_quantity_description))
                             <br>
                             <small>
-                                <strong>{{ $row->item->max_quantity_description }}:</strong> {{ $row->item->max_quantity }}
+                                <strong>{{ $row->item->max_quantity_description }}:</strong>
+                                {{ $row->item->max_quantity }}
                             </small>
                         @endif
                         @if (!empty($row->item->presentation))

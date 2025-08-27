@@ -13,7 +13,7 @@ class Purchase extends ModelTenant
 {
     // use SoftDeletes;
 
-    protected $with = ['user', 'soap_type', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'purchase_payments','suppliers'];
+    protected $with = ['user', 'soap_type', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'purchase_payments', 'suppliers'];
     protected $fillable = [
         'user_id',
         'external_id',
@@ -75,103 +75,103 @@ class Purchase extends ModelTenant
 
     public function getEstablishmentAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setEstablishmentAttribute($value)
     {
-        $this->attributes['establishment'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['establishment'] = (is_null($value)) ? null : json_encode($value);
     }
 
 
     public function getSupplierAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setSupplierAttribute($value)
     {
-        $this->attributes['supplier'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['supplier'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getChargesAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setChargesAttribute($value)
     {
-        $this->attributes['charges'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['charges'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getDiscountsAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setDiscountsAttribute($value)
     {
-        $this->attributes['discounts'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['discounts'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getPrepaymentsAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setPrepaymentsAttribute($value)
     {
-        $this->attributes['prepayments'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['prepayments'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getGuidesAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setGuidesAttribute($value)
     {
-        $this->attributes['guides'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['guides'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getRelatedAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setRelatedDocumentsAttribute($value)
     {
-        $this->attributes['related'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['related'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getPerceptionAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setPerceptionAttribute($value)
     {
-        $this->attributes['perception'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['perception'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getDetractionAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setDetractionAttribute($value)
     {
-        $this->attributes['detraction'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['detraction'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function getLegendsAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setLegendsAttribute($value)
     {
-        $this->attributes['legends'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['legends'] = (is_null($value)) ? null : json_encode($value);
     }
 
     public function user()
@@ -183,7 +183,7 @@ class Purchase extends ModelTenant
     {
         return $this->hasMany(PurchasePayment::class);
     }
-
+    
     public function soap_type()
     {
         return $this->belongsTo(SoapType::class);
@@ -195,7 +195,8 @@ class Purchase extends ModelTenant
     }
 
 
-    public function establishment(){
+    public function establishment()
+    {
         return $this->belongsTo(Establishment::class);
     }
     public function group()
@@ -208,12 +209,14 @@ class Purchase extends ModelTenant
         return $this->belongsTo(DocumentType::class, 'document_type_id');
     }
 
+
     public function currency_type()
     {
         return $this->belongsTo(CurrencyType::class, 'currency_type_id');
     }
 
-    public function suppliers() {
+    public function suppliers()
+    {
         return $this->belongsTo(Person::class, 'supplier_id');
     }
 
@@ -224,7 +227,7 @@ class Purchase extends ModelTenant
 
     public function getNumberFullAttribute()
     {
-        return $this->series.'-'.$this->number;
+        return $this->series . '-' . $this->number;
     }
 
     public function kardex()
@@ -262,7 +265,7 @@ class Purchase extends ModelTenant
 
     public function scopeWhereStateTypeAccepted($query)
     {
-        return $query->whereIn('state_type_id', ['01','03','05','07','13']);
+        return $query->whereIn('state_type_id', ['01', '03', '05', '07', '13']);
     }
 
     public function payments()
@@ -270,8 +273,8 @@ class Purchase extends ModelTenant
         return $this->hasMany(PurchasePayment::class);
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Person::class, 'customer_id');
     }
-
 }

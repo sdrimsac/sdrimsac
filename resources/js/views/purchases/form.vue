@@ -19,6 +19,7 @@
         <div class="data-table-visible-columns d-flex align-items-center">
             <!--  -->
             <el-button
+                v-if="paymentMethods && Number(paymentMethods.Efectivo) > 0"
                 type="success"
                 class="btn_excelsmall "
                 disabled
@@ -28,6 +29,7 @@
                 Efectivo: S/ {{ Number(paymentMethods.Efectivo).toFixed(2) }}
             </el-button>
             <el-button
+                v-if="paymentMethods && Number(paymentMethods.Culqui) > 0"
                 class="btn_excelsmallmetthod"
                 disabled
                 style="font-weight: bold; font-size: 1.1rem; background-color: orange; border-color: orange !important;"
@@ -36,6 +38,7 @@
                 Culqui: S/ {{ Number(paymentMethods.Culqui).toFixed(2) }}
             </el-button>
             <el-button
+                v-if="paymentMethods && Number(paymentMethods.PLIN) > 0"
                 type="info"
                 class="btn_excelsmallmetthod"
                 disabled
@@ -45,6 +48,7 @@
                 Plin: S/ {{ Number(paymentMethods.PLIN).toFixed(2) }}
             </el-button>
             <el-button
+                v-if="paymentMethods && Number(paymentMethods.YAPE) > 0"
                 type="secondary"
                 class="btn_excelsmallmetthod"
                 disabled
@@ -54,6 +58,7 @@
                 Yape: S/ {{ Number(paymentMethods.YAPE).toFixed(2) }}
             </el-button>
             <el-button
+                v-if="total && Number(total) > 0"
                 type="success"
                 class="btn_excelsmall "
                 disabled
@@ -1549,6 +1554,7 @@ export default {
             errors: {},
             aux_supplier_id: null,
             total_amount: 0,
+            total: 0,
             document_types: [],
             currency_types: [],
             discount_types: [],

@@ -50,18 +50,26 @@ trait FinanceTrait
 
             // si es admin y tiene is_arca, busca solo su propia caja
             if ($user->type === 'admin' && $user->is_arca) {
-                $cash = Cash::where('user_id', $user->id)->latest()->first();
+                $cash = Cash::where('user_id', $user->id)
+                    ->whereNull('date_closed') // ✅ valida que esté abierta
+                    ->latest()
+                    ->first();
             } else {
-                // si no es is_arca, busca cualquier caja de admin/superadmin
                 $cash = Cash::whereIn('user_id', function ($query) {
                     $query->select('id')
                         ->from('users')
                         ->whereIn('type', ['admin', 'superadmin']);
-                })->latest()->first();
+                })
+                    ->whereNull('date_closed') // ✅ solo abiertas
+                    ->latest()
+                    ->first();
             }
         } else {
             // usuario normal, solo su propia caja
-            $cash = Cash::where('user_id', $user->id)->latest()->first();
+            $cash = Cash::where('user_id', $user->id)
+                ->whereNull('date_closed')
+                ->latest()
+                ->first();
         }
 
         if ($cash) {

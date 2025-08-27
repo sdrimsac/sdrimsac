@@ -17,53 +17,80 @@
 
             <template v-else>
                 <div class="d-flex justify-content-end align-items-center">
+                    <!-- <el-button
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+                    >
+                        <span>
+                            Banco: S/ {{ payment_methods.Efectivo }}
+                        </span>
+                    </el-button> -->
                     <el-button
-                        class="ms-2"
-                        style="font-size: 1.5rem; font-weight: bold; color: #28a745;"
+                      v-if="payment_methods['TARJETA: IZYPAY'] > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #ff0000; border-color: #ff0000; color: #fff !important;"
+                    >
+                        <span> Izipay: S/ {{ payment_methods['TARJETA: IZYPAY'] }} </span>
+                    </el-button>
+                    <el-button
+                    v-if="payment_methods['TARJETA: OPENPAY'] > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background: linear-gradient(135deg, #2196f3 50%, #2ecc71 50%); border-color: #2196f3; color: #fff !important;"
+                    >
+                        <span> OpenPay: S/ {{ payment_methods['TARJETA: OPENPAY'] }} </span>
+                    </el-button>
+                    <el-button
+                    v-if="payment_methods['TARJETA: NIUBIZ'] > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #2196f3; border-color: #2196f3; color: #fff !important;"
+                    >
+                        <span> Niubiz: S/ {{ payment_methods['TARJETA: NIUBIZ'] }} </span>
+                    </el-button>
+                    <el-button
+                    v-if="payment_methods.Efectivo > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #4caf50; border-color: #4caf50; color: #fff !important;"
                     >
                         <span>
                             Efectivo: S/ {{ payment_methods.Efectivo }}
                         </span>
                     </el-button>
                     <el-button
-                        class="ms-2"
-                        style="font-size: 1.5rem; font-weight: bold; color: orange;"
+                    v-if="payment_methods.Culqui > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #ff9800; border-color: #ff9800; color: #fff !important;"
                     >
-                        <span>
-                            Culqui: S/ {{ payment_methods.Culqui }}
-                        </span>
+                        <span> Culqui: S/ {{ payment_methods.Culqui }} </span>
                     </el-button>
                     <el-button
-                        class="ms-2"
-                        style="font-size: 1.5rem; font-weight: bold; color: #00bfff;"
+                    v-if="payment_methods.Plin > 0"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
-                        <span>
-                            Plin: S/ {{ payment_methods.Plin }}
-                        </span>
+                        <span> Plin: S/ {{ payment_methods.Plin }} </span>
                     </el-button>
                     <el-button
-                        class="ms-2"
-                        style="font-size: 1.5rem; font-weight: bold; color: #800080;"
+                    v-if="payment_methods.Yape > 0"
+                        type="secondary"
+                        class="btn_excelsmallmetthod"
+                        style="font-weight: bold; font-size: 1.1rem; background-color: #8e44ad; border-color: #8e44ad; color: #fff !important;"
                     >
-                        <span>
-                            Yape: S/ {{ payment_methods.Yape }}
-                        </span>
+                        <i class="fas fa-wallet"></i>
+                        Yape: S/ {{ payment_methods.Yape }}
                     </el-button>
-
                     <el-button
-                        class="ms-2"
+                        class="bg-primary btn_excelsmallmetthod"
                         style="font-size: 1.5rem; font-weight: bold;"
                     >
-                        <span>
-                            Disponible: S/ {{ total.toFixed(2) }}
-                        </span>
+                        <span> Disponible: S/ {{ formattedTotal }} </span>
                     </el-button>
+                    &nbsp;&nbsp;
                     <button
                         v-if="!configuration.health_network"
                         type="button"
                         class="btn btn-danger btn-icon btn-icon-start w-100 w-md-auto me-3"
                         style="color: #fff;"
-                        @click.prevent="clickClose()"
+                        @click.prevent="clickCloseCash()"
                     >
                         <span>Cerrar caja</span>
                     </button>
@@ -199,41 +226,160 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(record, idx) in records" :key="idx"
-                                    :style="{ background: groupColors[(record.cash_id || (record.cash && record.cash.id))] || 'transparent' }">
+                                <tr
+                                    v-for="(record, idx) in records"
+                                    :key="idx"
+                                    :style="{
+                                        background:
+                                            groupColors[
+                                                record.cash_id ||
+                                                    (record.cash &&
+                                                        record.cash.id)
+                                            ] || 'transparent'
+                                    }"
+                                >
                                     <td>{{ customIndex(idx) }}</td>
-                                    <td>
-                                        {{ record.cash.date_opening }}
-                                    </td>
-                                    <td
-                                        :class="
-                                            `${
-                                                references_principal.findIndex(
-                                                    item =>
-                                                        item ==
-                                                        record.ref_principal
-                                                ) %
-                                                    2 ==
-                                                0
-                                                    ? 'text-secondary'
-                                                    : 'text-success'
-                                            }`
+                                    <!-- FECHA DE APERTURA: show only on first row of the cash group and span rows -->
+                                    <template
+                                        v-if="
+                                            firstIndexByCash[
+                                                record.cash_id ||
+                                                    (record.cash && record.cash.id)
+                                            ] === idx
                                         "
                                     >
-                                        {{ record.ref_principal }}
-                                    </td>
-                                    <td>{{ record.cash.reference_number }}</td>
-                                    <td>{{ record.user_name }}</td>
+                                        <td
+                                            class="group-cell"
+                                            :rowspan="
+                                                groupCounts[
+                                                    record.cash_id ||
+                                                        (record.cash && record.cash.id)
+                                                ] || 1
+                                            "
+                                        >
+                                            {{ record.cash.date_opening }}
+                                        </td>
+                                    </template>
+                                    <template
+                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                    >
+                                        <td>{{ record.cash.date_opening }}</td>
+                                    </template>
+
+                                    <!-- CODIGO PRINCIPAL: grouped like total, preserve class binding -->
+                                    <template
+                                        v-if="
+                                            firstIndexByCash[
+                                                record.cash_id ||
+                                                    (record.cash && record.cash.id)
+                                            ] === idx
+                                        "
+                                    >
+                                        <td
+                                            class="group-cell"
+                                            :rowspan="
+                                                groupCounts[
+                                                    record.cash_id ||
+                                                        (record.cash && record.cash.id)
+                                                ] || 1
+                                            "
+                                            :class="references_principal.findIndex(item => item == record.ref_principal) % 2 == 0 ? 'text-secondary' : 'text-success'"
+                                        >
+                                            {{ record.ref_principal }}
+                                        </td>
+                                    </template>
+                                    <template
+                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                    >
+                                        <td :class="references_principal.findIndex(item => item == record.ref_principal) % 2 == 0 ? 'text-secondary' : 'text-success'">
+                                            {{ record.ref_principal }}
+                                        </td>
+                                    </template>
+
+                                    <!-- CAJA (reference_number): grouped -->
+                                    <template
+                                        v-if="
+                                            firstIndexByCash[
+                                                record.cash_id ||
+                                                    (record.cash && record.cash.id)
+                                            ] === idx
+                                        "
+                                    >
+                                        <td
+                                            class="group-cell"
+                                            :rowspan="
+                                                groupCounts[
+                                                    record.cash_id ||
+                                                        (record.cash && record.cash.id)
+                                                ] || 1
+                                            "
+                                        >
+                                            {{ record.cash.reference_number }}
+                                        </td>
+                                    </template>
+                                    <template
+                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                    >
+                                        <td>{{ record.cash.reference_number }}</td>
+                                    </template>
+
+                                    <!-- USUARIO (user_name): grouped -->
+                                    <template
+                                        v-if="
+                                            firstIndexByCash[
+                                                record.cash_id ||
+                                                    (record.cash && record.cash.id)
+                                            ] === idx
+                                        "
+                                    >
+                                        <td
+                                            class="group-cell"
+                                            :rowspan="
+                                                groupCounts[
+                                                    record.cash_id ||
+                                                        (record.cash && record.cash.id)
+                                                ] || 1
+                                            "
+                                        >
+                                            {{ record.user_name }}
+                                        </td>
+                                    </template>
+                                    <template
+                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                    >
+                                        <td>{{ record.user_name }}</td>
+                                    </template>
                                     <td>{{ record.method }}</td>
                                     <td>{{ record.amount }}</td>
-                                        <td>{{ record.comment }}</td>
-                                        <!-- TOTAL: show only on first row of the cash group and span rows -->
-                                        <template v-if="firstIndexByCash[ (record.cash_id || (record.cash && record.cash.id)) ] === idx">
-                                            <td :rowspan="groupCounts[ (record.cash_id || (record.cash && record.cash.id)) ] || 1" class="cash-total-cell">
-                                                {{ (record.total || 0).toFixed(2) }}
-                                            </td>
-                                        </template>
-                                        <td>{{ record.status_description }}</td>
+                                    <td>{{ record.comment }}</td>
+                                    <!-- TOTAL: show only on first row of the cash group and span rows -->
+                                    <template
+                                        v-if="
+                                            firstIndexByCash[
+                                                record.cash_id ||
+                                                    (record.cash &&
+                                                        record.cash.id)
+                                            ] === idx
+                                        "
+                                    >
+                                        <td
+                                            :rowspan="
+                                                groupCounts[
+                                                    record.cash_id ||
+                                                        (record.cash &&
+                                                            record.cash.id)
+                                                ] || 1
+                                            "
+                                            class="cash-total-cell"
+                                        >
+                                            {{
+                                                safeNumber(
+                                                    record.total
+                                                ).toFixed(2)
+                                            }}
+                                        </td>
+                                    </template>
+                                    <td>{{ record.status_description }}</td>
                                     <td>
                                         <template
                                             v-if="
@@ -326,6 +472,11 @@ export default {
             this.cash_id = this.cashid;
             this.has_cash = true;
         }
+        // initialize localTotal from prop without mutating the prop
+        if (this.total !== undefined && this.total !== null) {
+            const n = Number(this.total);
+            this.localTotal = isNaN(n) ? 0 : n;
+        }
     },
     mounted() {
         this.getRecords();
@@ -334,6 +485,8 @@ export default {
     },
     data() {
         return {
+            // don't mutate incoming `total` prop directly; keep a local copy
+            localTotal: 0,
             has_cash: false,
             pagination: {},
             showDialogClose: false,
@@ -352,17 +505,39 @@ export default {
             // counts of records per cash_id
             groupCounts: {},
             // index of first occurrence per cash_id
-            firstIndexByCash: {}
-            ,
+            firstIndexByCash: {},
             // background color per cash_id
             groupColors: {}
         };
     },
     methods: {
+        // helper to safely convert values to numbers
+        safeNumber(value) {
+            const n = Number(value);
+            return isNaN(n) ? 0 : n;
+        },
         getAvaibleCash() {
             this.$http("/caja/cash-transfer/available").then(response => {
-                this.total = response.data;
-                console.log("🚀 ~ getAvaibleCash ~ this.total:", this.total);
+                // response.data may be a number or an object like { total: 123 }
+                let val = 0;
+                if (
+                    response &&
+                    response.data !== undefined &&
+                    response.data !== null
+                ) {
+                    if (typeof response.data === "object") {
+                        val = Number(
+                            response.data.total || response.data.amount || 0
+                        );
+                    } else {
+                        val = Number(response.data);
+                    }
+                }
+                this.localTotal = isNaN(val) ? 0 : val;
+                console.log(
+                    "🚀 ~ getAvaibleCash ~ this.localTotal:",
+                    this.localTotal
+                );
             });
         },
         exportRecords() {
@@ -482,7 +657,9 @@ export default {
                 this.records = data.map(item => {
                     const cashId = item.cash_id || (item.cash && item.cash.id);
                     return Object.assign({}, item, {
-                        total: cashId ? (totalsByCash[cashId] || 0) : (parseFloat(item.amount) || 0)
+                        total: cashId
+                            ? totalsByCash[cashId] || 0
+                            : parseFloat(item.amount) || 0
                     });
                 });
 
@@ -494,21 +671,35 @@ export default {
                     return acc;
                 }, {});
 
-                this.firstIndexByCash = this.records.reduce((acc, item, idx) => {
-                    const cashId = item.cash_id || (item.cash && item.cash.id);
-                    if (!cashId) return acc;
-                    if (acc[cashId] === undefined) acc[cashId] = idx;
-                    return acc;
-                }, {});
+                this.firstIndexByCash = this.records.reduce(
+                    (acc, item, idx) => {
+                        const cashId =
+                            item.cash_id || (item.cash && item.cash.id);
+                        if (!cashId) return acc;
+                        if (acc[cashId] === undefined) acc[cashId] = idx;
+                        return acc;
+                    },
+                    {}
+                );
 
                 // assign a pastel color per cash group deterministically
                 const palette = [
-                    '#fbe9e7','#fff3e0','#fffde7','#f1f8e9','#e8f5e9','#e8f0f7','#f3e5f5','#fce4ec'
+                    "#fbe9e7",
+                    "#fff3e0",
+                    "#fffde7",
+                    "#f1f8e9",
+                    "#e8f5e9",
+                    "#e8f0f7",
+                    "#f3e5f5",
+                    "#fce4ec"
                 ];
-                this.groupColors = Object.keys(this.groupCounts).reduce((acc, key, index) => {
-                    acc[key] = palette[index % palette.length];
-                    return acc;
-                }, {});
+                this.groupColors = Object.keys(this.groupCounts).reduce(
+                    (acc, key, index) => {
+                        acc[key] = palette[index % palette.length];
+                        return acc;
+                    },
+                    {}
+                );
 
                 this.references_principal = Array.from(
                     new Set(this.records.map(item => item.ref_principal))
@@ -528,16 +719,134 @@ export default {
         },
         updateCashId(id) {
             this.cash_id = id;
+        },
+
+        // Accept an optional payload to directly close the cash without opening the dialog
+        // payload: { id, difference, final_balance, counter }
+        async clickCloseCash(payload = null) {
+            // If a payload is provided, call the close endpoint directly
+            if (payload && payload.id) {
+                return await this.postClose(payload);
+            }
+
+            const h = this.$createElement;
+            this.$msgbox({
+                title: "Cerrar caja",
+                type: "warning",
+                message: h("p", null, [
+                    h(
+                        "p",
+                        { style: "text-align: justify; font-size:15px" },
+                        `${
+                            this.difference == 0
+                                ? "¿Está seguro de cerrar la caja?"
+                                : "¿Está seguro de cerrar la caja,  sin realizar el conteo en efectivo?"
+                        }`
+                    )
+                ]),
+
+                showCancelButton: true,
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                beforeClose: async (action, instance, done) => {
+                    if (action === "confirm") {
+                        instance.confirmButtonLoading = true;
+                        instance.confirmButtonText = "Cerrando...";
+                        // gather data from this component (if available)
+                        const body = {
+                            id: this.cash_id || this.recordId,
+                            final_balance: this.final_balance || 0,
+                            counter: this.count || {},
+                            difference: this.difference || 0
+                        };
+                        await this.postClose(body, instance, done);
+                        instance.confirmButtonLoading = false;
+                    } else {
+                        done();
+                    }
+                }
+            })
+                .then(action => {})
+                .catch(action => {});
+        },
+
+        async createRegister(instance, done) {
+            // kept for compatibility: delegate to postClose using current component data
+            const body = {
+                id: this.recordId || this.cash_id,
+                final_balance: this.final_balance || 0,
+                counter: this.count || {},
+                difference: this.difference || 0
+            };
+            await this.postClose(body, instance, done);
+        },
+
+        // centralised close logic used both when a payload is provided or via the dialog
+        async postClose(body, instance = null, done = null) {
+            try {
+                this.loading = true;
+                const response = await this.$http.post(
+                    `/caja/worker/cash/close`,
+                    body
+                );
+
+                if (response.data && response.data.success) {
+                    this.$eventHub.$emit("reloadData");
+                    this.open_cash = true;
+                    this.$toast.success(
+                        response.data.message || "Caja cerrada"
+                    );
+                    // try to hide button if component supports it
+                    if (this.ocultarBoton) this.ocultarBoton();
+                    if (this.fromBox) {
+                        this.$emit("updateCashId", null);
+                    }
+                } else {
+                    console.log(response);
+                }
+            } catch (error) {
+                console.log(error);
+                this.$toast.error("Ocurrió un error al cerrar la caja");
+            } finally {
+                if (instance) {
+                    instance.confirmButtonLoading = false;
+                    instance.confirmButtonText = "Iniciar prueba";
+                }
+                this.loading = false;
+                if (done) done();
+            }
+
+            if (body && body.id) {
+                window.open(
+                    `/caja/report-boxes/reports_resumen_type?cash_id=${body.id}`,
+                    "_blank"
+                );
+            }
+            console.log("Recargando..");
+            location.reload();
+            this.closeDialog();
+        }
+    },
+    computed: {
+        formattedTotal() {
+            return this.safeNumber(this.localTotal).toFixed(2);
         }
     }
 };
 </script>
 
 <style scoped>
-.cash-total-cell{
+.cash-total-cell {
     font-weight: 700;
     text-align: center;
     vertical-align: middle;
-    border-left: 3px solid rgba(0,0,0,0.08);
+    border-left: 3px solid rgba(0, 0, 0, 0.08);
+}
+/* group-cell: used for grouped cells (rowspan) to center content */
+.group-cell {
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    padding: 0.75rem; /* match table cell padding */
 }
 </style>

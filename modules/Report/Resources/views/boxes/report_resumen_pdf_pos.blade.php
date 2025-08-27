@@ -448,14 +448,14 @@
                     </td>
                     <td width="40%" style="vertical-align: top">
                         <table class="border f12">
-                            <tr>
+                            {{-- <tr>
                                 <td>
                                     <span class="f12">SALDO DE APERTURA</span>
                                 </td>
                                 <td class="right">
                                     <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
                                 </td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 <td>
                                     <span class="f12">VENTAS EFECTIVO</span>

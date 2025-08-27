@@ -66,29 +66,40 @@ class PurchasePaymentController extends Controller
             $purchase=Purchase::where('id',$request->purchase_id)->first();
             //$document_type=DocumentType::where('id',$request->document_type_id)->first();
             $company=Company::first();
-            if($request->payment_method_type_id=="01"){
+            // Create a Box record when the payment destination is cash.
+            // This allows payment methods like Yape, Plin, etc. that are treated as cash
+            // in the UI (payment_destination_id === 'cash').
+            $payment_destination = $request->input('payment_destination_id');
+
+            if ($payment_destination === 'cash') {
                 $sub_category = Subcategory::where('id', 2)->first();
-                if(!$sub_category){
+                if (!$sub_category) {
                     $sub_category = Subcategory::create([
                         'id' => 2,
                         'subcategory' => 'Compras',
                     ]);
                 }
-            $boxes=Box::create([
-                'purchase_id' => $purchase->id,
-                'group_id'=>2,
-                'category_id'=>2,
-                'subcategory_id'=>2,
-                'amount'=> $request->payment,
-                'date'=>$request->date_of_payment,
-                'type'=>'2',
-                'state'=>'1',
-                'method'=>$payment->description,
-                'user_id'=>auth()->user()->id,  
-                'state'=>'1',           
-                'description'=>"PAGO DE COMPRA Nº" .$purchase->document_type->description ." ". $purchase->series."-".$purchase->number,
-                'soap_type_id'=>$company->soap_type_id  
-                ]);        
+
+                // get current cash info (may be null)
+                $cash_info = $this->getCash();
+                $cash_id = ($cash_info && isset($cash_info['cash_id'])) ? $cash_info['cash_id'] : null;
+
+                $boxes = Box::create([
+                    'purchase_id' => $purchase->id,
+                    'group_id' => 2,
+                    'category_id' => 2,
+                    'subcategory_id' => 2,
+                    'amount' => $request->payment,
+                    'date' => $request->date_of_payment,
+                    'type' => '2',
+                    'state' => '1',
+                    'expenses' => '1',
+                    'method' => optional($payment)->description,
+                    'user_id' => auth()->user()->id,
+                    'description' => "Pago de compra " . $purchase->document_type->description . " " . $purchase->series . "-" . $purchase->number . " con " . optional($payment)->description,
+                    'soap_type_id' => $company->soap_type_id,
+                    'cash_id' => $cash_id,
+                ]);
             }
             $this->createGlobalPayment($record, $request->all());
             $this->saveFiles($record, $request, 'purchases');

@@ -281,13 +281,15 @@
                                                 ></i>
                                                 Cantidad</label
                                             >
-                                            <el-input
+                                            <el-input-number
                                                 style="width: 100%;"
                                                 v-model="form.quantity"
+                                                :min="1"
                                                 name="quantity"
                                                 @input.native="onInput"
                                                 @change="updateRealQuantity"
-                                            ></el-input>
+                                            >
+                                            </el-input-number>
                                             <small
                                                 class="form-control-feedback"
                                                 v-if="errors.quantity"
@@ -1144,11 +1146,6 @@
             :lots="lots"
             @addRowLot="addRowLot"
         ></lots-form>
-        <item-form
-            :showDialog.sync="showDialogNewItem"
-            :external="true"
-            @add="addRowItems"
-        ></item-form>
         <lots-form
             :showDialog.sync="showDialogLots"
             :stock="form.quantity"

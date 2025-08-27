@@ -1525,7 +1525,7 @@
                                                                 warehouse.id
                                                             ).stock
                                                         "
-                                                        :disabled="!!recordId || form.has_color_size || is_prurchase"
+                                                        :disabled="!!recordId || form.has_color_size || is_prurchase === true"
                                                         min="0"
                                                         @input="
                                                             calculateTotalStock

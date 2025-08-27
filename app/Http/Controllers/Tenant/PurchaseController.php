@@ -418,37 +418,6 @@ class PurchaseController extends Controller
         // Obtener métodos de pago
         $payment_method_types = PaymentMethodType::where('has_card', 0)->get();
 
-        /* if (auth()->user()->is_arca == 1) {
-            $arcaCash = Cash::where('user_id', auth()->id())
-            ->where('state', 1)
-            ->latest()
-            ->first();
-
-            $payment_method_balances = [];
-
-            if ($arcaCash) {
-            $boxes = Box::where('cash_id', $arcaCash->id)
-                ->where('type', 1)
-                ->get();
-            foreach ($payment_method_types as $method) {
-                // Normaliza el nombre del método para comparar sin importar mayúsculas/minúsculas
-                $method_name = strtolower(trim($method->description));
-                // Busca en boxes tanto el nombre normalizado como el original
-                $amount = $boxes->filter(function ($box) use ($method_name) {
-                return strtolower(trim($box->method)) === $method_name;
-                })->sum('amount');
-                $payment_method_balances[$method->id] = $amount;
-            }
-            }
-            foreach ($payment_method_types as $method) {
-            $method->available_amount = $payment_method_balances[$method->id] ?? 0;
-            }
-        } else {
-            foreach ($payment_method_types as $method) {
-            $method->available_amount = 0;
-            }
-        } */
-
         $payment_destinations = $this->getPaymentDestinations() ?? [];
         $customers = $this->getPersons('customers');
 
@@ -723,7 +692,6 @@ class PurchaseController extends Controller
                 $isArca = auth()->user()->is_arca == 1;
                 $arcaCash = null;
                 if ($isArca) {
-                    // Obtener la caja abierta del usuario arca
                     $arcaCash = Cash::where('user_id', auth()->id())
                         ->where('state', 1)
                         ->latest()
@@ -733,15 +701,34 @@ class PurchaseController extends Controller
                         throw new Exception("No tiene caja aperturada.");
                     }
 
-                    // Calcular el saldo total disponible de esa caja sumando todos los box
-                    $totalDisponible = Box::where('cash_id', $arcaCash->id)
-                        ->sum('amount');
-
                     $totalCompra = $doc->total;
+                    $totalEnviado = collect($data['payments'])->sum('payment');
 
-                    if ($totalDisponible < $totalCompra) {
-                        $faltante = $totalCompra - $totalDisponible;
-                        throw new Exception("Saldo insuficiente. Faltan S/{$faltante} para realizar la compra.");
+                    if ($totalEnviado != $totalCompra) {
+                        throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
+                    }
+
+                    foreach ($data['payments'] as $payment) {
+                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+
+                        // saldo real disponible en ese método
+                        $saldoDisponible = Box::where('cash_id', $arcaCash->id)
+                            ->where('method', $payment_method->description)
+                            ->selectRaw("
+                                    SUM(
+                                        CASE 
+                                            WHEN type = 1 THEN amount 
+                                            WHEN type = 2 THEN -amount 
+                                            ELSE 0 
+                                        END
+                                    ) as saldo
+                                ")
+                            ->value('saldo') ?? 0;
+
+                        if ($saldoDisponible < $payment['payment']) {
+                            $faltante = $payment['payment'] - $saldoDisponible;
+                            throw new Exception("Saldo insuficiente en {$payment_method->description}. Faltan S/{$faltante} puede agregar un método de pago con fondos para completar el monto y poder finalizar la compra");
+                        }
                     }
                 }
 
@@ -778,7 +765,7 @@ class PurchaseController extends Controller
                             'type' => 2, // Egreso
                             'soap_type_id' => Company::active()->soap_type_id,
                             'user_id' => auth()->id(),
-                            'description' => "Compra realizada {$doc->series}-{$doc->number} descontada del arca",
+                            'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del arca para el método de pago  ({$payment_method->description})",
                             'purchase_id' => $doc->id,
                             'currency_type_id' => $doc->currency_type_id,
                             'method' => $payment_method->description,
@@ -1471,57 +1458,71 @@ class PurchaseController extends Controller
                     throw new Exception("El usuario arca no tiene una caja aperturada.");
                 }
 
-                // Registrar devolución en box
+                // Registrar devolución en box según métodos de pago de la compra
+                if ($obj->purchase_payments && $obj->purchase_payments->count() > 0) {
+                    foreach ($obj->purchase_payments as $payment) {
+                        $method = $payment->payment_method_type->description ?? 'Efectivo';
+                        Box::create([
+                            'cash_id'          => $arcaCash->id,
+                            'date'             => now(),
+                            'amount'           => $payment->payment,
+                            'expenses'         => 0,
+                            'incomes'          => 1,
+                            'group_id'         => 1,
+                            'category_id'      => 2,
+                            'subcategory_id'   => 1,
+                            'state'            => 1,
+                            'type'             => 1,
+                            'soap_type_id'     => Company::active()->soap_type_id,
+                            'user_id'          => $user->id,
+                            'description'      => "Devolución por anulación de compra {$obj->series}-{$obj->number} con método {$method}",
+                            'purchase_id'      => $obj->id,
+                            'currency_type_id' => $obj->currency_type_id,
+                            'method'           => $method,
+                        ]);
+                    }
+                } else {
+
+                    Box::create([
+                        'cash_id'        => $arcaCash->id,
+                        'date'           => now(),
+                        'amount'         => $obj->total,
+                        'expenses'       => 0,
+                        'incomes'        => 1,
+                        'group_id'       => 1,
+                        'category_id'    => 2,
+                        'subcategory_id' => 1,
+                        'state'          => 1,
+                        'type'           => 1,
+                        'soap_type_id'   => Company::active()->soap_type_id,
+                        'user_id'        => $user->id,
+                        'description'    => "Devolución por anulación de compra {$obj->series}-{$obj->number}",
+                        'purchase_id'    => $obj->id,
+                        'currency_type_id' => $obj->currency_type_id,
+                        'method'         => 'Efectivo',
+                    ]);
+                }
+
+                /* // Registrar devolución en box
                 Box::create([
                     'cash_id'        => $arcaCash->id,
                     'date'           => now(),
-                    'amount'         => $obj->total, // 👈 monto total de la compra anulada
+                    'amount'         => $obj->total,
                     'expenses'       => 0,
-                    'incomes'         => 1,           // ingreso
+                    'incomes'         => 1,
                     'group_id'       => 1,
                     'category_id'    => 2,
                     'subcategory_id' => 1,
                     'state'          => 1,
-                    'type'           => 1, // 1 = ingreso
+                    'type'           => 1,
                     'soap_type_id'   => Company::active()->soap_type_id,
                     'user_id'        => $user->id,
                     'description'    => "Devolución por anulación de compra {$obj->series}-{$obj->number}",
                     'purchase_id'    => $obj->id,
                     'currency_type_id' => $obj->currency_type_id,
                     'method'         => 'Efectivo',
-                ]);
+                ]); */
             }
-
-            /*if ($user->is_arca == 1) {
-                $box = Box::where('user_id', $user->id)->where('establishment_id', $establishment->id)->first();
-
-                if ($box) {
-                    $box->final_balance += $obj->total; // se devuelve el monto
-                    $box->save();
-
-                    // Registrar movimiento en box (opcional pero recomendable)
-                    if ($obj->total > 0) {
-                        Box::create([
-                            'cash_id'        => auth()->user()->cash_id,
-                            'date'           => now(),
-                            'amount'         => $obj->total, // monto de la compra que anulaste
-                            'expenses'       => 0,
-                            'group_id'       => 2, // depende de tu lógica de grupos
-                            'category_id'    => 2,
-                            'subcategory_id' => 1,
-                            'state'          => 1,
-                            'type'           => 1, // ingreso (ya que devuelves el dinero)
-                            'soap_type_id'   => '01',
-                            'user_id'        => auth()->id(),
-                            'description'    => "Devolución por anulación de compra {$obj->id}",
-                            'purchase_id'    => $obj->id,
-                            'currency_type_id' => $obj->currency_type_id,
-                            'method'         => 'cash', // 👈 obligatorio ya que tu tabla lo pide
-                        ]);
-                    }
-                }
-            }*/
-
             DB::connection('tenant')->commit();
 
             return [
