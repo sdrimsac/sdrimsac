@@ -18,36 +18,45 @@
             <template v-else>
                 <div class="d-flex justify-content-end align-items-center">
                     <el-button
+                    v-if="payment_methods.Transferencia > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
                         <span>
-                            Transferencia: S/ {{ payment_methods.Transferencia }}
+                            Transferencia: S/
+                            {{ payment_methods.Transferencia }}
                         </span>
                     </el-button>
                     <el-button
-                      v-if="payment_methods['TARJETA: IZYPAY'] > 0"
+                        v-if="payment_methods['TARJETA: IZYPAY'] > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #ff0000; border-color: #ff0000; color: #fff !important;"
                     >
-                        <span> Izipay: S/ {{ payment_methods['TARJETA: IZYPAY'] }} </span>
+                        <span>
+                            Izipay: S/ {{ payment_methods["TARJETA: IZYPAY"] }}
+                        </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods['TARJETA: OPENPAY'] > 0"
+                        v-if="payment_methods['TARJETA: OPENPAY'] > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background: linear-gradient(135deg, #2196f3 50%, #2ecc71 50%); border-color: #2196f3; color: #fff !important;"
                     >
-                        <span> OpenPay: S/ {{ payment_methods['TARJETA: OPENPAY'] }} </span>
+                        <span>
+                            OpenPay: S/
+                            {{ payment_methods["TARJETA: OPENPAY"] }}
+                        </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods['TARJETA: NIUBIZ'] > 0"
+                        v-if="payment_methods['TARJETA: NIUBIZ'] > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #2196f3; border-color: #2196f3; color: #fff !important;"
                     >
-                        <span> Niubiz: S/ {{ payment_methods['TARJETA: NIUBIZ'] }} </span>
+                        <span>
+                            Niubiz: S/ {{ payment_methods["TARJETA: NIUBIZ"] }}
+                        </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods.Efectivo > 0"
+                        v-if="payment_methods.Efectivo > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #4caf50; border-color: #4caf50; color: #fff !important;"
                     >
@@ -56,21 +65,21 @@
                         </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods.Culqui > 0"
+                        v-if="payment_methods.Culqui > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #ff9800; border-color: #ff9800; color: #fff !important;"
                     >
                         <span> Culqui: S/ {{ payment_methods.Culqui }} </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods.Plin > 0"
+                        v-if="payment_methods.Plin > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
                         <span> Plin: S/ {{ payment_methods.Plin }} </span>
                     </el-button>
                     <el-button
-                    v-if="payment_methods.Yape > 0"
+                        v-if="payment_methods.Yape > 0"
                         type="secondary"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #8e44ad; border-color: #8e44ad; color: #fff !important;"
@@ -79,10 +88,11 @@
                         Yape: S/ {{ payment_methods.Yape }}
                     </el-button>
                     <el-button
+                        v-if="total > 0"
                         class="bg-primary btn_excelsmallmetthod"
                         style="font-size: 1.5rem; font-weight: bold;"
                     >
-                        <span> Disponible: S/ {{ formattedTotal }} </span>
+                        <span> Disponible: S/ {{ total }} </span>
                     </el-button>
                     &nbsp;&nbsp;
                     <button
@@ -244,7 +254,8 @@
                                         v-if="
                                             firstIndexByCash[
                                                 record.cash_id ||
-                                                    (record.cash && record.cash.id)
+                                                    (record.cash &&
+                                                        record.cash.id)
                                             ] === idx
                                         "
                                     >
@@ -253,7 +264,8 @@
                                             :rowspan="
                                                 groupCounts[
                                                     record.cash_id ||
-                                                        (record.cash && record.cash.id)
+                                                        (record.cash &&
+                                                            record.cash.id)
                                                 ] || 1
                                             "
                                         >
@@ -261,7 +273,12 @@
                                         </td>
                                     </template>
                                     <template
-                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                        v-else-if="
+                                            !(
+                                                record.cash_id ||
+                                                (record.cash && record.cash.id)
+                                            )
+                                        "
                                     >
                                         <td>{{ record.cash.date_opening }}</td>
                                     </template>
@@ -271,7 +288,8 @@
                                         v-if="
                                             firstIndexByCash[
                                                 record.cash_id ||
-                                                    (record.cash && record.cash.id)
+                                                    (record.cash &&
+                                                        record.cash.id)
                                             ] === idx
                                         "
                                     >
@@ -280,18 +298,46 @@
                                             :rowspan="
                                                 groupCounts[
                                                     record.cash_id ||
-                                                        (record.cash && record.cash.id)
+                                                        (record.cash &&
+                                                            record.cash.id)
                                                 ] || 1
                                             "
-                                            :class="references_principal.findIndex(item => item == record.ref_principal) % 2 == 0 ? 'text-secondary' : 'text-success'"
+                                            :class="
+                                                references_principal.findIndex(
+                                                    item =>
+                                                        item ==
+                                                        record.ref_principal
+                                                ) %
+                                                    2 ==
+                                                0
+                                                    ? 'text-secondary'
+                                                    : 'text-success'
+                                            "
                                         >
                                             {{ record.ref_principal }}
                                         </td>
                                     </template>
                                     <template
-                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                        v-else-if="
+                                            !(
+                                                record.cash_id ||
+                                                (record.cash && record.cash.id)
+                                            )
+                                        "
                                     >
-                                        <td :class="references_principal.findIndex(item => item == record.ref_principal) % 2 == 0 ? 'text-secondary' : 'text-success'">
+                                        <td
+                                            :class="
+                                                references_principal.findIndex(
+                                                    item =>
+                                                        item ==
+                                                        record.ref_principal
+                                                ) %
+                                                    2 ==
+                                                0
+                                                    ? 'text-secondary'
+                                                    : 'text-success'
+                                            "
+                                        >
                                             {{ record.ref_principal }}
                                         </td>
                                     </template>
@@ -301,7 +347,8 @@
                                         v-if="
                                             firstIndexByCash[
                                                 record.cash_id ||
-                                                    (record.cash && record.cash.id)
+                                                    (record.cash &&
+                                                        record.cash.id)
                                             ] === idx
                                         "
                                     >
@@ -310,7 +357,8 @@
                                             :rowspan="
                                                 groupCounts[
                                                     record.cash_id ||
-                                                        (record.cash && record.cash.id)
+                                                        (record.cash &&
+                                                            record.cash.id)
                                                 ] || 1
                                             "
                                         >
@@ -318,9 +366,16 @@
                                         </td>
                                     </template>
                                     <template
-                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                        v-else-if="
+                                            !(
+                                                record.cash_id ||
+                                                (record.cash && record.cash.id)
+                                            )
+                                        "
                                     >
-                                        <td>{{ record.cash.reference_number }}</td>
+                                        <td>
+                                            {{ record.cash.reference_number }}
+                                        </td>
                                     </template>
 
                                     <!-- USUARIO (user_name): grouped -->
@@ -328,7 +383,8 @@
                                         v-if="
                                             firstIndexByCash[
                                                 record.cash_id ||
-                                                    (record.cash && record.cash.id)
+                                                    (record.cash &&
+                                                        record.cash.id)
                                             ] === idx
                                         "
                                     >
@@ -337,7 +393,8 @@
                                             :rowspan="
                                                 groupCounts[
                                                     record.cash_id ||
-                                                        (record.cash && record.cash.id)
+                                                        (record.cash &&
+                                                            record.cash.id)
                                                 ] || 1
                                             "
                                         >
@@ -345,7 +402,12 @@
                                         </td>
                                     </template>
                                     <template
-                                        v-else-if="!(record.cash_id || (record.cash && record.cash.id))"
+                                        v-else-if="
+                                            !(
+                                                record.cash_id ||
+                                                (record.cash && record.cash.id)
+                                            )
+                                        "
                                     >
                                         <td>{{ record.user_name }}</td>
                                     </template>
@@ -591,10 +653,19 @@ export default {
                 const response = await this.$http(
                     `/cash/main_cash/accept/${id}`
                 );
+                // Si la respuesta tiene success === false, mostrar el mensaje y no continuar
+                if (response.data && response.data.success === false) {
+                    this.$toast.error(
+                        response.data.message || "No se pudo aceptar el ingreso"
+                    );
+                    return;
+                }
                 if (response.status == 200) {
                     this.$toast.success("Se acepto el ingreso");
                     this.getAvaibleCash();
                     this.getRecords();
+                } else {
+                    this.$toast.error("No se pudo aceptar el ingreso");
                 }
             } catch (e) {
                 this.$toast.error("Ocurrio un error");
@@ -740,7 +811,7 @@ export default {
                         `${
                             this.difference == 0
                                 ? "¿Está seguro de cerrar la caja?"
-                                : "¿Está seguro de cerrar la caja,  sin realizar el conteo en efectivo?"
+                                : "¿Está seguro de cerrar la caja?"
                         }`
                     )
                 ]),
@@ -826,12 +897,12 @@ export default {
             location.reload();
             this.closeDialog();
         }
-    },
-    computed: {
+    }
+    /* computed: {
         formattedTotal() {
             return this.safeNumber(this.localTotal).toFixed(2);
         }
-    }
+    } */
 };
 </script>
 

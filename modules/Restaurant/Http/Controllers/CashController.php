@@ -121,7 +121,82 @@ class CashController extends Controller
             'message' => 'Observación registrada con éxito'
         ];
     }
+
     public function accept_register($id)
+    {
+        $cash_income_principal = CashIncomePrincipal::findOrFail($id);
+        $cash = $cash_income_principal->cash;
+        $amount = $cash_income_principal->amount;
+        $user_id = $cash_income_principal->cash->user_id;
+        $method = $cash_income_principal->method ?? 'Efectivo';
+        $user = User::findOrFail($user_id);
+        $user_name = $user->name;
+        $establishment_id = $user->establishment_id;
+        $establishment = Establishment::findOrFail($establishment_id);
+        $establishment_description = $establishment->description;
+        $principal_cash_id = $cash_income_principal->cash_principal_id;
+        $cash_principal = Cash::findOrFail($principal_cash_id);
+
+        if ($cash_principal->user->is_arca != 1) {
+            return [
+                'success' => false,
+                'message' => 'El usuario no tiene permisos de Caja Arca.'
+            ];
+        }
+
+        $caja_principal_abierta = Cash::where('user_id', $cash_principal->user_id)
+            ->where('principal', 1)
+            ->where('state', 1)
+            ->first();
+
+        if (!$caja_principal_abierta) {
+            return [
+                'success' => false,
+                'message' => 'No existe una Caja Arca principal abierta para aceptar este ingreso.'
+            ];
+        }
+
+        $user_name_principal = $cash_principal->user->name;
+        $description_cash = $cash->reference_number;
+        $description = "Ingreso de la caja $description_cash del usuario $user_name del establecimiento $establishment_description";
+        $soap_type_id = Company::first()->soap_type_id;
+
+        Box::create([
+            'cash_id' => $caja_principal_abierta->id,
+            'amount' => $amount,
+            'type' => 1,
+            'incomes' => true,
+            'date' => date('Y-m-d'),
+            'method' => $method,
+            'group_id' => 1,
+            'subcategory_id' => 1,
+            'category_id' => 1,
+            'soap_type_id' => $soap_type_id,
+            'description' => $description,
+            'state' => 1,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        $cash_income_principal->status = 3;
+        $cash_income_principal->save();
+
+        $total = (new CashTransferController)->available()['total'] ?? 0;
+        $amount = (float) $cash_income_principal->amount;
+
+        $total_withouth_income = $total - $amount;
+        $income = $amount;
+
+        $message = "El usuario $user_name_principal hasta la fecha " . date('d-m-Y') . " / " . date('h:i A') . " contaba con monto de S/ $total_withouth_income y ha aceptado ingreso de cierre de caja de usuario $user_name S/ $income, actualizando un saldo de S/ $total";
+        $website = $this->getTenantWebsite();
+        WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $establishment_id);
+
+        return [
+            'success' => true,
+            'message' => 'Ingreso aceptado con éxito'
+        ];
+    }
+
+    /*public function accept_register($id)
     {
         $cash_income_principal = CashIncomePrincipal::findOrFail($id);
         $cash = $cash_income_principal->cash;
@@ -156,9 +231,9 @@ class CashController extends Controller
         ]);
         $cash_income_principal->status = 3;
         $cash_income_principal->save();
-        /* $total = (new CashTransferController)->available();
-        $total_withouth_income = $total - $amount;
-        $income = $amount; */
+        //$total = (new CashTransferController)->available();
+        //$total_withouth_income = $total - $amount;
+        //$income = $amount;
         $total = (new CashTransferController)->available()['total'] ?? 0;
         $amount = (float) $cash_income_principal->amount;
 
@@ -175,7 +250,7 @@ class CashController extends Controller
             'success' => true,
             'message' => 'Ingreso aceptado con éxito'
         ];
-    }
+    }*/
 
     /* public function index_main()
     {
@@ -247,12 +322,10 @@ class CashController extends Controller
             $cash_transfer = $cash->cash_transfers->sum('amount');
             $total = $incomes - $expenses + $begging_balance - $cash_transfer;
 
-            // 📌 Traemos todos los métodos únicos de pago que existen en esta caja
             $all_methods = Box::where('cash_id', $cash_id)
                 ->pluck('method')
                 ->unique();
 
-            // 🔄 Normalizamos solo los métodos que sean "CUENTA SOLES-XXXXXXXXXX"
             $normalized_methods = $all_methods->map(function ($method) {
                 if (preg_match('/^CUENTA SOLES-\d+$/', $method)) {
                     return 'Transferencia';
@@ -260,12 +333,10 @@ class CashController extends Controller
                 return $method;
             });
 
-            // Inicializamos cada método con 0
             foreach ($normalized_methods as $method) {
                 $payment_methods[$method] = 0;
             }
 
-            // Calculamos saldo de cada método
             foreach ($all_methods as $original_method) {
                 $normalized = preg_match('/^CUENTA SOLES-\d+$/', $original_method) ? 'Transferencia' : $original_method;
 
@@ -281,8 +352,6 @@ class CashController extends Controller
 
                 $payment_methods[$normalized] += $income - $expense;
             }
-
-            Log::info('Métodos de pago calculados: ' . json_encode($payment_methods));
         }
 
         $configuration = Configuration::first();

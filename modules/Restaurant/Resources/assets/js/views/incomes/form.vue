@@ -139,12 +139,13 @@
                             :class="{ 'has-danger': errors.method }"
                         >
                             <label class="control-label">Metodo de Pgo </label>
-                            <el-select v-model="form.method" clearable>
+                            <el-select v-model="form.method" clearable :disabled="true">
                                 <el-option
                                     v-for="option in payment_methods"
                                     :key="option.id"
                                     :value="option.description"
                                     :label="option.description"
+                                    
                                 ></el-option>
                             </el-select>
                             <small
@@ -185,6 +186,7 @@
                                 style="width:100%"
                                 value-format="yyyy-MM-dd"
                                 type="date"
+                                :disabled="true"
                             >
                             </el-date-picker>
                             <small

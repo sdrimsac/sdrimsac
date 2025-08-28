@@ -2947,6 +2947,13 @@
                                                                                         <i ref="creditListIcon"
                                                                                             class="fa fa-money-check-alt fa-lg"></i>
                                                                                         Arca con metodos de pagos
+                                                                                        <el-tooltip class="item"
+                                                                                            effect="dark"
+                                                                                            content="Al activar esta opcion se podra realizar la compra con los metodos de pago en arca solo param arca"
+                                                                                            placement="top-start">
+                                                                                            <i
+                                                                                                class="fa fa-info-circle fa-lg"></i>
+                                                                                        </el-tooltip>
                                                                                     </label>
                                                                                     <el-switch v-model="form.methods_arca_cash
                                                                                         " active-text="SI"

@@ -19,6 +19,7 @@
         <div class="data-table-visible-columns d-flex align-items-center">
             <!--  -->
             <el-button
+                v-if="paymentMethods.Transferencia > 0"
                 class="btn_excelsmallmetthod"
                 style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
             >
@@ -156,7 +157,9 @@
                                                 >
                                                     <el-option
                                                         v-for="option in document_types"
-                                                        :key="option.id"
+                                                        :key="
+                                                            'doc-' + option.id
+                                                        "
                                                         :value="option.id"
                                                         :label="
                                                             option.description
@@ -500,7 +503,10 @@
                                                     >
                                                         <el-option
                                                             v-for="option in currency_types"
-                                                            :key="option.id"
+                                                            :key="
+                                                                'mon-' +
+                                                                    option.id
+                                                            "
                                                             :value="option.id"
                                                             :label="
                                                                 option.description
@@ -702,7 +708,10 @@
                                             <tr
                                                 v-for="(row,
                                                 index) in form.payments"
-                                                :key="index"
+                                                :key="
+                                                    'payment-' +
+                                                        (row.id || index)
+                                                "
                                             >
                                                 <!-- Forma de pago -->
                                                 <td style="padding: 2px;">
@@ -720,12 +729,10 @@
                                                         style="min-width: 90px;"
                                                     >
                                                         <el-option
-                                                            v-for="option in payment_method_types"
-                                                            :key="option.id"
+                                                            v-for="(option, optIndex) in payment_method_types"
+                                                            :key="'cel-' + option.id + '-p-' + index + '-o-' + optIndex"
                                                             :value="option.id"
-                                                            :label="
-                                                                `${option.description}`
-                                                            "
+                                                            :label="`${option.description}`"
                                                         ></el-option>
                                                     </el-select>
                                                 </td>
@@ -740,12 +747,10 @@
                                                         style="min-width: 90px;"
                                                     >
                                                         <el-option
-                                                            v-for="option in payment_destinations"
-                                                            :key="option.id"
+                                                            v-for="(option, optIndex) in payment_destinations"
+                                                            :key="'dest-' + option.id + '-p-' + index + '-o-' + optIndex"
                                                             :value="option.id"
-                                                            :label="
-                                                                option.description
-                                                            "
+                                                            :label="option.description"
                                                         ></el-option>
                                                     </el-select>
                                                 </td>
@@ -995,7 +1000,16 @@
                                     <tbody>
                                         <tr
                                             v-for="(row, index) in form.items"
-                                            :key="index"
+                                            :key="
+                                                'item-' +
+                                                    (row.item &&
+                                                    (row.item.internal_id ||
+                                                        row.item.id)
+                                                        ? row.item
+                                                              .internal_id ||
+                                                          row.item.id
+                                                        : index)
+                                            "
                                         >
                                             <td>{{ index + 1 }}</td>
                                             <td>
@@ -1020,8 +1034,13 @@
                                                     <small
                                                         class="text-primary"
                                                         v-for="(lot,
-                                                        index) in row.lots"
-                                                        :key="index"
+                                                        lotIndex) in row.lots"
+                                                        :key="
+                                                            'lot-' +
+                                                                (lot.series ||
+                                                                    lot.id ||
+                                                                    lotIndex)
+                                                        "
                                                     >
                                                         <b>Serie:</b>
                                                         {{ lot.series }}
@@ -1038,12 +1057,17 @@
                                                     <br />
                                                     <small
                                                         class="text-primary"
-                                                        v-for="(lot,
-                                                        index) in row.lots_group"
-                                                        :key="index"
+                                                        v-for="(lg,
+                                                        lgIndex) in row.lots_group"
+                                                        :key="
+                                                            'lotgroup-' +
+                                                                (lg.code ||
+                                                                    lg.id ||
+                                                                    lgIndex)
+                                                        "
                                                     >
                                                         <b>Lote:</b>
-                                                        {{ lot.code }}
+                                                        {{ lg.code }}
                                                     </small>
                                                 </template>
 
@@ -1057,14 +1081,22 @@
                                                     <br />
                                                     <small
                                                         class="text-primary"
-                                                        v-for="(color,
-                                                        index) in row.color_size"
-                                                        :key="index"
+                                                        v-for="(cs,
+                                                        csIndex) in row.color_size"
+                                                        :key="
+                                                            'color-' +
+                                                                (cs.color ||
+                                                                    cs.id ||
+                                                                    csIndex) +
+                                                                '-size-' +
+                                                                (cs.size ||
+                                                                    csIndex)
+                                                        "
                                                     >
                                                         <b>Color:</b>
-                                                        {{ color.color }}
+                                                        {{ cs.color }}
                                                         <b>Talla:</b>
-                                                        {{ color.size }}
+                                                        {{ cs.size }}
                                                     </small>
                                                 </template>
 
@@ -2263,7 +2295,9 @@ export default {
             const usedMethods = this.form.payments
                 .map(p => p.payment_method_type_id)
                 .filter(Boolean);
-            const duplicates = usedMethods.filter((v, i, a) => a.indexOf(v) !== i);
+            const duplicates = usedMethods.filter(
+                (v, i, a) => a.indexOf(v) !== i
+            );
             if (duplicates.length > 0) {
                 return {
                     success: false,
@@ -2322,7 +2356,8 @@ export default {
                 id: null,
                 purchase_id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
-                payment_method_type_id: this.findFirstUnusedPaymentMethod() || "01",
+                payment_method_type_id:
+                    this.findFirstUnusedPaymentMethod() || "01",
                 reference: null,
                 payment_destination_id:
                     this.payment_destinations.length == 0 ? null : "cash",
@@ -2407,7 +2442,8 @@ export default {
         changePaymentMethodType(flag_submit = true, index = null) {
             try {
                 if (index === null || !this.form.payments[index]) return;
-                const selectedId = this.form.payments[index].payment_method_type_id;
+                const selectedId = this.form.payments[index]
+                    .payment_method_type_id;
                 if (!selectedId) return;
 
                 // Count occurrences
@@ -2418,9 +2454,10 @@ export default {
 
                 if (count > 1) {
                     // show error and revert this row to a fallback (first unused) or null
-                    const method = _.find(this.payment_method_types, {
-                        id: selectedId
-                    }) || {};
+                    const method =
+                        _.find(this.payment_method_types, {
+                            id: selectedId
+                        }) || {};
                     const label = method.description || selectedId;
                     this.$toast.error(
                         `Forma de pago repetida: ${label}. Seleccione otro método.`
@@ -3092,7 +3129,7 @@ export default {
             // Recalcular totales al final (solo una vez)
             this.calculateTotal();
         }
-    },
+    }
 
     /* computed: {
         // Amount available in cash (Efectivo key may be 'Efectivo' or 'Efectivo' with case)

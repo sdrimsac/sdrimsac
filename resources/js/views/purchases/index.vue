@@ -35,6 +35,7 @@
                     class="data-table-visible-columns d-flex align-items-center"
                 >
                     <el-button
+                    v-if="paymentMethods.Transferencia > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
@@ -117,7 +118,7 @@
                         style="font-weight: bold; font-size: 1.1rem;"
                     >
                         <i class="fas fa-wallet"></i>
-                        Efectivo disponible: S/ {{ Number(total).toFixed(2) }}
+                        disponible: S/ {{ Number(total).toFixed(2) }}
                     </el-button>
                     <el-button
                         type="primary"

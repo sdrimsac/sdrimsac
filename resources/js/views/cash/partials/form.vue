@@ -1,228 +1,322 @@
 <template>
-  <el-dialog
-    :title="titleDialog"
-    :visible="showDialog"
-    @close="close"
-    @open="create"
-    :data-keyboard="false"
-    :closeOnPressEscape="dontClose"
-    :closeOnClickModal="dontClose"
-  >
-    <form autocomplete="off" @submit.prevent="submit">
-      <div class="form-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="control-label">Cajero</label>
-              <!--<el-input v-model="form.user" readonly> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
-              <el-select :disabled="disableUser" v-model="form.user_id">
-                <el-option
-                  v-for="option in users"
-                  :key="option.id"
-                  :value="option.id"
-                  :label="option.name"
-                ></el-option>
-              </el-select>
-              <small class="form-control-feedback" v-if="errors.user" v-text="errors.user[0]"></small>
-            </div>
-          </div>
-          <div class="col-md-6" v-if="!disableUser">
-            <div class="form-group" :class="{ 'has-danger': errors.beginning_balance }">
-              <label class="control-label">Saldo inicial de Apertura</label>
-              <el-input v-model="form.beginning_balance">
-                <i slot="prefix" class="el-icon-edit-outline"></i>
-              </el-input>
-              <small
-                class="form-control-feedback"
-                v-if="errors.beginning_balance"
-                v-text="errors.beginning_balance[0]"
-              ></small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group" :class="{ 'has-danger': errors.reference_number }">
-              <label class="control-label">Seleccionar Turno de Apertura</label>
-              <el-select v-model="form.turn_id">
-                <el-option
-                  v-for="option in turnsTable"
-                  :key="option.id"
-                  :value="option.id"
-                  :label="option.turn_desc"
-                ></el-option>
-              </el-select>
+    <el-dialog
+        :title="titleDialog"
+        :visible="showDialog"
+        @close="close"
+        @open="create"
+        :data-keyboard="false"
+        :closeOnPressEscape="dontClose"
+        :closeOnClickModal="dontClose"
+    >
+        <form autocomplete="off" @submit.prevent="submit">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Cajero</label>
+                            <!--<el-input v-model="form.user" readonly> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
+                            <el-select
+                                :disabled="disableUser"
+                                v-model="form.user_id"
+                            >
+                                <el-option
+                                    v-for="option in users"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.user"
+                                v-text="errors.user[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6" v-if="!disableUser">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.beginning_balance }"
+                        >
+                            <label class="control-label"
+                                >Saldo inicial de Apertura</label
+                            >
+                            <el-input v-model="form.beginning_balance">
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i>
+                            </el-input>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.beginning_balance"
+                                v-text="errors.beginning_balance[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.reference_number }"
+                        >
+                            <label class="control-label"
+                                >Seleccionar Turno de Apertura</label
+                            >
+                            <el-select v-model="form.turn_id">
+                                <el-option
+                                    v-for="option in turnsTable"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.turn_desc"
+                                ></el-option>
+                            </el-select>
 
-              <small
-                class="form-control-feedback"
-                v-if="errors.reference_number"
-                v-text="errors.reference_number[0]"
-              ></small>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.reference_number"
+                                v-text="errors.reference_number[0]"
+                            ></small>
+                        </div>
+                    </div> -->
+                    <div class="col-md-6 mb-2">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.reference_number }"
+                        >
+                            <label class="control-label"
+                                >Turno de Apertura Detectado</label
+                            >
+                            <el-input
+                                v-model="turnName"
+                                readonly
+                                placeholder="Turno detectado automáticamente"
+                            ></el-input>
+                            <el-select
+                                v-model="form.turn_id"
+                                style="display:none"
+                            >
+                                <el-option
+                                    v-for="option in turnsTable"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.turn_desc"
+                                ></el-option>
+                            </el-select>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.reference_number"
+                                v-text="errors.reference_number[0]"
+                            ></small>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-actions text-end pt-2 pb-2">
-        <el-button @click.prevent="close()">Cancelar</el-button>
-        <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
-      </div>
-    </form>
-  </el-dialog>
+            <div class="form-actions text-end pt-2 pb-2">
+                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                    >Guardar</el-button
+                >
+            </div>
+        </form>
+    </el-dialog>
 </template>
 
 <script>
 export default {
-  props: [
-    "showDialog",
-    "recordId",
-    "typeUser",
-    "fromBox",
-    "principal",
-    "configuration"
-  ],
-  data() {
-    return {
-      loading_submit: false,
-      titleDialog: null,
-      resource: "caja/worker/cash",
-      errors: {},
-      form: {},
-      user: {},
-      all_departments: [],
-      all_provinces: [],
-      all_districts: [],
-      provinces: [],
-      districts: [],
-      identity_document_types: [],
-      users: [],
-      turnsTable: [],
-      dontClose: false
-    };
-  },
-  async created() {
-    await this.$http.get(`/${this.resource}/tables`).then(response => {
-      this.users = response.data.users;
-      this.user = response.data.user;
-      this.turnsTable = response.data.turnsTable;
-    });
-
-    this.initForm();
-  },
-  computed: {
-    disableUser() {
-      if (this.typeUser == "admin" || this.typeUser === "superadmin") {
-        return false;
-      }
-      return true;
-    }
-  },
-  methods: {
-    ocultarBoton() {
-      this.$emit("ocultarBoton");
+    props: [
+        "showDialog",
+        "recordId",
+        "typeUser",
+        "fromBox",
+        "principal",
+        "configuration"
+    ],
+    data() {
+        return {
+            loading_submit: false,
+            titleDialog: null,
+            resource: "caja/worker/cash",
+            errors: {},
+            form: {},
+            user: {},
+            all_departments: [],
+            all_provinces: [],
+            all_districts: [],
+            provinces: [],
+            districts: [],
+            identity_document_types: [],
+            users: [],
+            turnsTable: [],
+            dontClose: false
+        };
     },
-
-    initForm() {
-      this.errors = {};
-      this.form = {
-        id: null,
-        user_id: this.user.id,
-        // user: null,
-        date_opening: null,
-        time_opening: null,
-        date_closed: null,
-        time_closed: null,
-        beginning_balance: 0,
-        final_balance: 0,
-        income: 0,
-        state: true,
-        reference_number: null
-      };
-    },
-    create() {
-      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
-      if (this.recordId) {
-        this.$http
-          .get(`/${this.resource}/record/${this.recordId}`)
-          .then(response => {
-            this.form = response.data.data;
-          });
-      } else {
-        console.log(this.configuration);
-        let { pass_final_balance_cash_principal } = this.configuration;
-        this.form.user_id = this.user.id; //sesion
-        if (pass_final_balance_cash_principal) {
-          this.getFinalBalanceLastPrincipal();
-        }
-
-        //this.form.user = this.user.name
-      }
-    },
-    getFinalBalanceLastPrincipal() {
-      this.$http
-        .get(`/${this.resource}/final_balance_last_principal`)
-        .then(response => {
-          // this.form.beginning_balance = response.data.balance;
-          let { data } = response;
-          let { success, balance } = data;
-          if (success) {
-            this.form.beginning_balance = balance.total_sales;
-            this.$toast.success("Se ingreso el saldo anterior correctamente");
-          }
+    async created() {
+        await this.$http.get(`/${this.resource}/tables`).then(response => {
+            this.users = response.data.users;
+            this.user = response.data.user;
+            this.turnsTable = response.data.turnsTable;
         });
+
+        this.initForm();
     },
-    async openingCashCkeck() {
-      let response = await this.$http.get(
-        `/${this.resource}/opening_cash_check/${this.form.user_id}`
-      );
+    computed: {
+        disableUser() {
+            if (this.typeUser == "admin" || this.typeUser === "superadmin") {
+                return false;
+            }
+            return true;
+        },
 
-      let cash = response.data.cash;
-      return cash ? true : false;
-    },
-    async submit() {
-      this.loading_submit = true;
-
-      if (this.form.turn_id == undefined) {
-        this.$toast.warning(
-          `La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion`
-        );
-
-        this.loading_submit = false;
-        return false;
-      }
-      if (!this.recordId) {
-        if (await this.openingCashCkeck()) {
-          this.$toast.warning(
-            "No puede crear caja, porfavor cierre caja para el usuario definido"
-          );
-
-          this.loading_submit = false;
-          return false;
+        turnName() {
+            // Detecta el turno automáticamente según la hora actual y lo asigna a form.turn_id
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            let label = "";
+            let id = null;
+            if (hour >= 6 && (hour < 12 || (hour === 11 && minute <= 59))) {
+                label = "Mañana";
+                const turno = this.turnsTable.find(t =>
+                    t.turn_desc.toLowerCase().includes("mañana")
+                );
+                id = turno ? turno.id : null;
+            } else if (
+                hour >= 12 &&
+                (hour < 18 || (hour === 17 && minute <= 59))
+            ) {
+                label = "Tarde";
+                const turno = this.turnsTable.find(t =>
+                    t.turn_desc.toLowerCase().includes("tarde")
+                );
+                id = turno ? turno.id : null;
+            } else if (hour >= 18 || hour < 6) {
+                label = "Noche";
+                const turno = this.turnsTable.find(t =>
+                    t.turn_desc.toLowerCase().includes("noche")
+                );
+                id = turno ? turno.id : null;
+            }
+            // Asigna el turno detectado al select oculto
+            if (id && this.form.turn_id !== id) {
+                this.form.turn_id = id;
+            }
+            return label;
         }
-      }
-      this.form.principal = this.principal;
-      this.$http
-        .post(`/${this.resource}`, this.form)
-        .then(response => {
-          console.log(response);
-          if (response.data.success) {
-            window.location.reload();
-          } else {
-            this.$toast.error(response.data.message);
-          }
-        })
-        .catch(error => {
-          if (error.response.status === 422) {
-            this.errors = error.response.data;
-          } else {
-            console.log(error);
-          }
-        })
-        .then(() => {
-          this.loading_submit = false;
-        });
     },
-    close() {
-      this.$emit("update:showDialog", false);
-      this.initForm();
+    methods: {
+        ocultarBoton() {
+            this.$emit("ocultarBoton");
+        },
+
+        initForm() {
+            this.errors = {};
+            this.form = {
+                id: null,
+                user_id: this.user.id,
+                // user: null,
+                date_opening: null,
+                time_opening: null,
+                date_closed: null,
+                time_closed: null,
+                beginning_balance: 0,
+                final_balance: 0,
+                income: 0,
+                state: true,
+                reference_number: null
+            };
+        },
+        create() {
+            this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
+            if (this.recordId) {
+                this.$http
+                    .get(`/${this.resource}/record/${this.recordId}`)
+                    .then(response => {
+                        this.form = response.data.data;
+                    });
+            } else {
+                console.log(this.configuration);
+                let { pass_final_balance_cash_principal } = this.configuration;
+                this.form.user_id = this.user.id; //sesion
+                if (pass_final_balance_cash_principal) {
+                    this.getFinalBalanceLastPrincipal();
+                }
+
+                //this.form.user = this.user.name
+            }
+        },
+        getFinalBalanceLastPrincipal() {
+            this.$http
+                .get(`/${this.resource}/final_balance_last_principal`)
+                .then(response => {
+                    // this.form.beginning_balance = response.data.balance;
+                    let { data } = response;
+                    let { success, balance } = data;
+                    if (success) {
+                        this.form.beginning_balance = balance.total_sales;
+                        this.$toast.success(
+                            "Se ingreso el saldo anterior correctamente"
+                        );
+                    }
+                });
+        },
+        async openingCashCkeck() {
+            let response = await this.$http.get(
+                `/${this.resource}/opening_cash_check/${this.form.user_id}`
+            );
+
+            let cash = response.data.cash;
+            return cash ? true : false;
+        },
+        async submit() {
+            this.loading_submit = true;
+
+            if (this.form.turn_id == undefined) {
+                this.$toast.warning(
+                    `La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion`
+                );
+
+                this.loading_submit = false;
+                return false;
+            }
+            if (!this.recordId) {
+                if (await this.openingCashCkeck()) {
+                    this.$toast.warning(
+                        "No puede crear caja, porfavor cierre caja para el usuario definido"
+                    );
+
+                    this.loading_submit = false;
+                    return false;
+                }
+            }
+            this.form.principal = this.principal;
+            this.$http
+                .post(`/${this.resource}`, this.form)
+                .then(response => {
+                    console.log(response);
+                    if (response.data.success) {
+                        window.location.reload();
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data;
+                    } else {
+                        console.log(error);
+                    }
+                })
+                .then(() => {
+                    this.loading_submit = false;
+                });
+        },
+        close() {
+            this.$emit("update:showDialog", false);
+            this.initForm();
+        }
     }
-  }
 };
 </script>

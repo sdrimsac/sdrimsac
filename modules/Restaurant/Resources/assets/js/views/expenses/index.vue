@@ -1,3 +1,4 @@
+<!-- Listado de Egresos Caja  -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -48,9 +49,11 @@
                             <th>Descripcion</th>
 
                             <th>Detalle de lista</th>
+                            <th>Referencia</th>
+                            <th>Metodo de Pago</th>
                             <th>Fecha</th>
-                            <th>Efectivo</th>
-                            <th class="text-end">Acciones</th>
+                            <th>Monto</th>
+                            <!-- <th class="text-end">Acciones</th> -->
                         </tr>
 
                         <tr></tr>
@@ -69,10 +72,12 @@
                                     </el-button>
                                 </template>
                             </td>
+                            <td>{{ row.reference }}</td>
+                            <td>{{ row.method }}</td>
                             <td>{{ row.date }}</td>
                             <td>{{ row.amount }}</td>
 
-                            <td class="text-end" v-if="!row.purchase_id">
+                            <!-- <td class="text-end" v-if="!row.purchase_id">
                                 <button
                                     type="button"
                                     class="btn waves-effect waves-light btn-sm btn-primary"
@@ -87,7 +92,7 @@
                                 >
                                     Eliminar
                                 </button>
-                            </td>
+                            </td> -->
                         </tr>
                     </data-table>
                 </div>

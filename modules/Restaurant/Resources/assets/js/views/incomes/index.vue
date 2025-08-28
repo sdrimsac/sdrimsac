@@ -47,9 +47,12 @@
                             <th>Descripcion</th>
                             <th>Grupo</th>
                             <th>Categoria</th>
-                            <th>Subcategoria</th>
+                            <th>Referencia</th>
+                            <th>Metodo de Pago</th>
+                            
+                            <!-- <th>Subcategoria</th> -->
                             <th>Fecha</th>
-                            <th>Efectivo</th>
+                            <th>Monto</th>
                             <!-- <th class="text-end">Acciones</th> -->
                         </tr>
 
@@ -59,7 +62,9 @@
                             <td>{{ row.description }}</td>
                             <td>{{ row.groups }}</td>
                             <td>{{ row.categories.category }}</td>
-                            <td>{{ row.subcategories.subcategory }}</td>
+                            <!-- <td>{{ row.subcategories.subcategory }}</td> -->
+                            <td>{{ row.reference }}</td>
+                            <td>{{ row.method }}</td>
                             <td>{{ row.date }}</td>
                             <td>{{ row.amount }}</td>
 

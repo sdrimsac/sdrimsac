@@ -139,10 +139,10 @@
                             :class="{ 'has-danger': errors.method }"
                         >
                             <label class="control-label">Metodo </label>
-                            <el-select v-model="form.method" clearable>
+                            <el-select v-model="form.method" clearable :disabled="true">
                                 <el-option
-                                    v-for="option in payment_methods"
-                                    :key="option.id"
+                                    v-for="(option, idx) in payment_methods"
+                                    :key="(option && option.id !== undefined) ? (String(option.id) + '_' + idx) : idx"
                                     :value="option.description"
                                     :label="option.description"
                                 ></el-option>
@@ -165,6 +165,7 @@
                                 :precision="2"
                                 :controls="false"
                                 class="w-100"
+                                
                             ></el-input-number>
                             <small
                                 class="text-danger"
@@ -185,6 +186,7 @@
                                 style="width:100%"
                                 value-format="yyyy-MM-dd"
                                 type="date"
+                                :disabled="true"
                             >
                             </el-date-picker>
                             <small
@@ -276,7 +278,10 @@ export default {
             this.array_subcategorias = response.data.subcategory;
             this.array_company = response.data.company;
             this.payment_methods = response.data.methods;
-            this.form.method = this.payment_methods[0].description;
+            // defensively set default method only when available
+            if (this.payment_methods && this.payment_methods.length) {
+                this.form.method = this.payment_methods[0].description;
+            }
             this.form.soap_type_id = this.array_company.soap_type_id;
         });
         //            await this.$http.get(`/${this.resource}/record`)
@@ -417,12 +422,21 @@ export default {
             this.titleDialog = this.recordId
                 ? "Editar Egresos Caja"
                 : "Nueva Egresos Caja";
+
+            // Ensure form is initialized/reset when dialog opens
+            this.initForm();
+
             if (this.recordId) {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
                     });
+            } else {
+                // If not editing, set default payment method (first method) when available
+                if (this.payment_methods && this.payment_methods.length) {
+                    this.form.method = this.payment_methods[0].description;
+                }
             }
         },
         submit() {

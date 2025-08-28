@@ -195,6 +195,7 @@
             @endif
         </cac:Party>
     </cac:AccountingCustomerParty>
+     {{-- detraccion --}}
     @if ($document->detraction)
         @php($detraction = $document->detraction)
         <cac:PaymentMeans>
