@@ -420,6 +420,7 @@ class PurchaseController extends Controller
 
         $payment_destinations = $this->getPaymentDestinations() ?? [];
         $customers = $this->getPersons('customers');
+        $configurations = Configuration::first();
 
         return compact(
             'suppliers',
@@ -431,7 +432,8 @@ class PurchaseController extends Controller
             'company',
             'payment_method_types',
             'payment_destinations',
-            'customers'
+            'customers',
+            'configurations'
         );
     }
     public function item_id()
@@ -689,32 +691,34 @@ class PurchaseController extends Controller
                 }
 
                 // --- Validación usuario arca ---
-                $isArca = auth()->user()->is_arca == 1;
-                $arcaCash = null;
-                if ($isArca) {
-                    $arcaCash = Cash::where('user_id', auth()->id())
-                        ->where('state', 1)
-                        ->latest()
-                        ->first();
+                $configuration = Configuration::first();
+                if ($configuration->methods_arca_cash) {
+                    $isArca = auth()->user()->is_arca == 1;
+                    $arcaCash = null;
+                    if ($isArca) {
+                        $arcaCash = Cash::where('user_id', auth()->id())
+                            ->where('state', 1)
+                            ->latest()
+                            ->first();
 
-                    if (!$arcaCash) {
-                        throw new Exception("No tiene caja aperturada.");
-                    }
+                        if (!$arcaCash) {
+                            throw new Exception("No tiene caja aperturada.");
+                        }
 
-                    $totalCompra = $doc->total;
-                    $totalEnviado = collect($data['payments'])->sum('payment');
+                        $totalCompra = $doc->total;
+                        $totalEnviado = collect($data['payments'])->sum('payment');
 
-                    if ($totalEnviado != $totalCompra) {
-                        throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
-                    }
+                        if ($totalEnviado != $totalCompra) {
+                            throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
+                        }
 
-                    foreach ($data['payments'] as $payment) {
-                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                        foreach ($data['payments'] as $payment) {
+                            $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
 
-                        // saldo real disponible en ese método
-                        $saldoDisponible = Box::where('cash_id', $arcaCash->id)
-                            ->where('method', $payment_method->description)
-                            ->selectRaw("
+                            // saldo real disponible en ese método
+                            $saldoDisponible = Box::where('cash_id', $arcaCash->id)
+                                ->where('method', $payment_method->description)
+                                ->selectRaw("
                                     SUM(
                                         CASE 
                                             WHEN type = 1 THEN amount 
@@ -723,11 +727,12 @@ class PurchaseController extends Controller
                                         END
                                     ) as saldo
                                 ")
-                            ->value('saldo') ?? 0;
+                                ->value('saldo') ?? 0;
 
-                        if ($saldoDisponible < $payment['payment']) {
-                            $faltante = $payment['payment'] - $saldoDisponible;
-                            throw new Exception("Saldo insuficiente en {$payment_method->description}. Faltan S/{$faltante} puede agregar un método de pago con fondos para completar el monto y poder finalizar la compra");
+                            if ($saldoDisponible < $payment['payment']) {
+                                $faltante = $payment['payment'] - $saldoDisponible;
+                                throw new Exception("Saldo insuficiente en {$payment_method->description}. Faltan S/{$faltante} puede agregar un método de pago con fondos para completar el monto y poder finalizar la compra");
+                            }
                         }
                     }
                 }
@@ -735,50 +740,52 @@ class PurchaseController extends Controller
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
 
-                    if ($isArca) {
-                        // Tomar la caja abierta
-                        $box = Box::where('cash_id', $arcaCash->id)
-                            ->where('state', 1)
-                            ->where('type', 1)
-                            ->orderBy('id')
-                            ->first();
+                    if ($configuration->methods_arca_cash) {
+                        if ($isArca) {
+                            // Tomar la caja abierta
+                            $box = Box::where('cash_id', $arcaCash->id)
+                                ->where('state', 1)
+                                ->where('type', 1)
+                                ->orderBy('id')
+                                ->first();
 
-                        if (!$box) {
-                            throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
+                            if (!$box) {
+                                throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
+                            }
+
+                            // Descontar el monto
+                            $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                            //$box->amount = $payment['payment'];
+                            //$box->save();
+
+                            // Registrar movimiento en la caja
+                            Box::create([
+                                'cash_id' => $arcaCash->id,
+                                'date' => $record_payment->date_of_payment,
+                                'amount' => $payment['payment'],
+                                'expenses' => 1,
+                                'group_id' => 2,
+                                'category_id' => 2,
+                                'subcategory_id' => 1,
+                                'state' => 1,
+                                'type' => 2, // Egreso
+                                'soap_type_id' => Company::active()->soap_type_id,
+                                'user_id' => auth()->id(),
+                                'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del arca para el método de pago  ({$payment_method->description})",
+                                'purchase_id' => $doc->id,
+                                'currency_type_id' => $doc->currency_type_id,
+                                'method' => $payment_method->description,
+                            ]);
                         }
-
-                        // Descontar el monto
-                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
-                        //$box->amount = $payment['payment'];
-                        //$box->save();
-
-                        // Registrar movimiento en la caja
-                        Box::create([
-                            'cash_id' => $arcaCash->id,
-                            'date' => $record_payment->date_of_payment,
-                            'amount' => $payment['payment'],
-                            'expenses' => 1,
-                            'group_id' => 2,
-                            'category_id' => 2,
-                            'subcategory_id' => 1,
-                            'state' => 1,
-                            'type' => 2, // Egreso
-                            'soap_type_id' => Company::active()->soap_type_id,
-                            'user_id' => auth()->id(),
-                            'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del arca para el método de pago  ({$payment_method->description})",
-                            'purchase_id' => $doc->id,
-                            'currency_type_id' => $doc->currency_type_id,
-                            'method' => $payment_method->description,
-                        ]);
                     }
-
+                    
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }
                 }
 
                 // --- Envío WhatsApp si aplica ---
-                $configuration = Configuration::first();
+
                 if ($configuration->sale_note_credit_penalty && $isArca) {
                     $total = (new CashTransferController)->available();
                     if ($total > 0) {
@@ -1117,7 +1124,7 @@ class PurchaseController extends Controller
 
         return response()->file($temp, $this->generalPdfResponseFileHeaders($purchase->filename));
     }
-    
+
     private function reloadPDF($purchase, $format, $filename)
     {
         $this->createPdf($purchase, $format, $filename);

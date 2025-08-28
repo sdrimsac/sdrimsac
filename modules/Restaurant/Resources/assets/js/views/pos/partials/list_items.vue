@@ -30,7 +30,7 @@
 
                 <!-- Título de la derecha con el valor de form.total, añadiendo el simbolo 'S/' -->
                 <span style="font-size: px; color: #333; text-align: right;">
-                    S/ {{ form.total.toFixed(2) }}
+                    S/ {{ form.total }}
                 </span>
             </div>
         </template>
@@ -61,7 +61,7 @@
                 <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;">{{ item.location }}</td>
                 <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;">{{ item.sale_unit_price }}</td>
                 <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;">{{ item.quantity }}</td>
-                <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;">{{ item.total.toFixed(2) }}</td>
+                <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;">{{ formatNumber(item.total) }}</td>
             </tr>
         </tbody>
     </table>
@@ -99,7 +99,16 @@ export default {
     },
     methods: {
         open() {
-            this.items = this.form.items;
+            // Guard against form or form.items being undefined
+            this.items = (this.form && Array.isArray(this.form.items)) ? this.form.items : [];
+        },
+        // Safe formatter that handles undefined/null/non-number values
+        formatNumber(value) {
+            const n = Number(value);
+            if (Number.isFinite(n)) {
+                return n.toFixed(2);
+            }
+            return '0.00';
         },
         close() {
             this.$emit("update:showDialog", false);

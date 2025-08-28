@@ -2931,6 +2931,40 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    <div class="col-md-3 mb-2">
+                                                                        <div class="card h-100">
+                                                                            <div class="card-body d-flex flex-column"
+                                                                                style="padding: 7px;">
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1">
+                                                                                    <label class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.methods_arca_cash
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }">
+                                                                                        <i ref="creditListIcon"
+                                                                                            class="fa fa-money-check-alt fa-lg"></i>
+                                                                                        Arca con metodos de pagos
+                                                                                    </label>
+                                                                                    <el-switch v-model="form.methods_arca_cash
+                                                                                        " active-text="SI"
+                                                                                        inactive-text="NO"
+                                                                                        :active-color="'#28a745'
+                                                                                            " :inactive-color="'#6c757d'
+                                                                                                " @change="
+                                                                                                    () =>
+                                                                                                        submit(
+                                                                                                            'Arca con metodos de pagos',
+                                                                                                            form.methods_arca_cash,
+                                                                                                            'creditListIcon'
+                                                                                                        )
+                                                                                                "></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

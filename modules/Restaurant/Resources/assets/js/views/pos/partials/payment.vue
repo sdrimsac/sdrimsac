@@ -1963,7 +1963,6 @@ label {
 <script>
 // import * as shajs from 'sha.js';
 import _ from "lodash";
-import printjs from "print-js";
 //import CardBrandsForm from "../../../../../../../../resources/js/views/card_brands/form.vue";
 // import SaleNotesOptions from '../../sale_notes/partials/options.vue'
 //import OptionsForm from './options.vue'
@@ -2472,6 +2471,11 @@ export default {
                 this.discount_amount = value;
                 this.inputDiscountAmount();
             }
+        },
+        // Safe numeric conversion helper: returns finite Number or 0
+        toNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : 0;
         },
 
         reCalculateTotal() {
@@ -4332,63 +4336,62 @@ export default {
             }
 
             this.form.items.forEach(row => {
-                total_discount += parseFloat(row.total_discount);
-                total_charge += parseFloat(row.total_charge);
+                // use safe numeric conversion to avoid NaN when values are undefined/null
+                total_discount += this.toNumber(row.total_discount);
+                total_charge += this.toNumber(row.total_charge);
 
                 if (row.affectation_igv_type_id === "10") {
-                    total_taxed += parseFloat(row.total_value);
+                    total_taxed += this.toNumber(row.total_value);
                 }
                 if (row.affectation_igv_type_id === "20") {
-                    total_exonerated += parseFloat(row.total_value);
+                    total_exonerated += this.toNumber(row.total_value);
                 }
                 if (row.affectation_igv_type_id === "30") {
-                    total_unaffected += parseFloat(row.total_value);
+                    total_unaffected += this.toNumber(row.total_value);
                 }
                 if (row.affectation_igv_type_id === "40") {
-                    total_exportation += parseFloat(row.total_value);
+                    total_exportation += this.toNumber(row.total_value);
                 }
                 if (
                     ["11", "12", "13", "14", "15", "16"].includes(
                         row.affectation_igv_type_id
                     )
                 ) {
-                    let unit_value = row.total_value / row.quantity;
-                    let total_value_partial = unit_value * row.quantity;
+                    // guard against undefined values and division by zero
+                    let unit_value = this.toNumber(row.total_value) / (this.toNumber(row.quantity) || 1);
+                    let total_value_partial = unit_value * this.toNumber(row.quantity);
+                    // ensure ternary applies only to the plastic bag taxes
                     row.total_taxes =
-                        row.total_value -
+                        this.toNumber(row.total_value) -
                         total_value_partial +
-                        isNaN(parseFloat(row.total_plastic_bag_taxes))
+                        (isNaN(parseFloat(row.total_plastic_bag_taxes))
                             ? 0.0
-                            : parseFloat(row.total_plastic_bag_taxes);
+                            : this.toNumber(row.total_plastic_bag_taxes));
                     row.total_igv =
-                        total_value_partial * (row.percentage_igv / 100);
+                        total_value_partial * (this.toNumber(row.percentage_igv) / 100);
                     row.total_base_igv = total_value_partial;
-                    total_value -= row.total_value;
-                    total += parseFloat(row.total);
+                    total_value -= this.toNumber(row.total_value);
+                    total += this.toNumber(row.total);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
                         row.affectation_igv_type_id
                     ) < 0
                 ) {
-                    total_free += parseFloat(row.total_value);
+                    total_free += this.toNumber(row.total_value);
                 }
                 if (
                     ["10", "20", "30", "40"].indexOf(
                         row.affectation_igv_type_id
                     ) > -1
                 ) {
-                    total_igv += parseFloat(row.total_igv);
-                    total += parseFloat(row.total);
+                    total_igv += this.toNumber(row.total_igv);
+                    total += this.toNumber(row.total);
                 }
                 if (!["21", "37"].includes(row.affectation_igv_type_id)) {
-                    total_value += row.total_value;
+                    total_value += this.toNumber(row.total_value);
                 }
-                total_plastic_bag_taxes += isNaN(
-                    parseFloat(row.total_plastic_bag_taxes)
-                )
-                    ? 0.0
-                    : parseFloat(row.total_plastic_bag_taxes);
+                total_plastic_bag_taxes += this.toNumber(row.total_plastic_bag_taxes);
             });
 
             this.form.total_exportation = _.round(total_exportation, 2);

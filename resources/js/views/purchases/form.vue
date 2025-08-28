@@ -797,7 +797,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-12 mt-2">
+                                <div class="col-md-12 mt-2" v-if="configurations.methods_arca_cash">
                                     <div style="display:flex; gap:1.5rem; align-items:center;">
                                         <div>
                                             <label class="fw-bold">Total:</label>
@@ -1642,6 +1642,7 @@ export default {
             status: false,
             array_estados: [],
             array_pedidos: [],
+            configurations: [],
             timestamp: 0,
             listar_pedidos: [],
             data: [],
@@ -1666,6 +1667,7 @@ export default {
             this.discount_types = response.data.discount_types;
             this.payment_method_types = response.data.payment_method_types;
             this.payment_destinations = response.data.payment_destinations;
+            this.configurations = response.data.configurations;
             this.payment_destinations = this.payment_destinations.filter(
                 item => item != null
             );
@@ -3017,8 +3019,8 @@ export default {
             // Recalcular totales al final (solo una vez)
             this.calculateTotal();
         }
-    }
-    ,
+    },
+
     computed: {
         // Amount available in cash (Efectivo key may be 'Efectivo' or 'Efectivo' with case)
         cashAvailable() {
