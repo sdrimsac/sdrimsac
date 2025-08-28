@@ -23,9 +23,9 @@ trait FinanceTrait
     public function getPaymentDestinations()
     {
 
-        $bank_accounts = self::getBankAccounts();
+        //$bank_accounts = self::getBankAccounts();
         $cash = $this->getCash();
-        return collect($bank_accounts)->push($cash);
+        return collect()->push($cash);
     }
 
 

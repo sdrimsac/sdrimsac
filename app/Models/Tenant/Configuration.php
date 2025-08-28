@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'methods_arca_cash',
         'printing_comanda',
         'menaje_barra',
         'delivery_caja',
@@ -342,6 +343,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'methods_arca_cash' => 'boolean',
         'printing_comanda' => 'boolean',
         'menaje_barra' => 'boolean',
         'delivery_caja' => 'boolean',
@@ -627,6 +629,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'methods_arca_cash' => (bool)$this->methods_arca_cash,
             'printing_comanda' => (bool)$this->printing_comanda,
             'menaje_barra' => (bool)$this->menaje_barra,
             'delivery_caja' => (bool)$this->delivery_caja,

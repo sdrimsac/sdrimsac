@@ -798,11 +798,27 @@
                                     </table>
                                 </div>
                                 <div class="col-md-12 mt-2">
-                                    <div>
-                                        <label for="">Total:</label>
-                                        <label for="">Resta:</label>
+                                    <div style="display:flex; gap:1.5rem; align-items:center;">
+                                        <div>
+                                            <label class="fw-bold">Total:</label>
+                                            <div>
+                                                <span v-if="currency_type && currency_type.symbol">{{ currency_type.symbol }}</span>
+                                                <span>{{ Number(form.total || 0).toFixed(2) }}</span>
+                                            </div>
                                         </div>
-                                
+
+                                        <div>
+                                            <label class="fw-bold">Resta:</label>
+                                            <div>
+                                                <span v-if="currency_type && currency_type.symbol">{{ currency_type.symbol }}</span>
+                                                <span :style="{ color: isShortage ? 'red' : 'inherit', 'font-weight': isShortage ? '700' : '400' }">{{ remainingAfterCash.toFixed(2) }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="true" style="margin-left: auto; text-align: right;">
+                                            <small>Disponible Efectivo: <strong>{{ currency_type && currency_type.symbol ? currency_type.symbol : '' }}{{ Number(cashAvailable).toFixed(2) }}</strong></small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2216,6 +2232,25 @@ export default {
                 };
             }
 
+            // Prevent duplicate payment methods (each payment_method_type_id must be unique)
+            const methodCounts = {};
+            this.form.payments.forEach(p => {
+                const id = p.payment_method_type_id;
+                if (!id) return;
+                methodCounts[id] = (methodCounts[id] || 0) + 1;
+            });
+
+            const duplicateId = Object.keys(methodCounts).find(k => methodCounts[k] > 1);
+            if (duplicateId) {
+                // try to get friendly description
+                const method = _.find(this.payment_method_types, { id: duplicateId }) || {};
+                const methodLabel = method.description || duplicateId;
+                return {
+                    success: false,
+                    message: `No puede repetir una forma de pago. El método "${methodLabel}" está repetido, por favor agregue otro método de pago.`
+                };
+            }
+
             return {
                 success: true,
                 message: null
@@ -2225,16 +2260,31 @@ export default {
             this.form.payments.splice(index, 1);
         },
         clickAddPayment() {
+            // Try to preselect a payment method that hasn't been used yet
+            const firstUnused = this.findFirstUnusedPaymentMethod();
             this.form.payments.push({
                 id: null,
                 purchase_id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
-                payment_method_type_id: "01",
+                payment_method_type_id: firstUnused || "01",
                 reference: null,
                 payment_destination_id:
                     this.payment_destinations.length == 0 ? null : "cash",
                 payment: 0
             });
+            // If the newly added method is Efectivo, auto-fill with available cash (capped by remaining)
+            const newIndex = this.form.payments.length - 1;
+            this.updatePaymentAmountForRow(newIndex);
+        },
+
+        // Return the id of the first payment method not yet used in form.payments
+        findFirstUnusedPaymentMethod() {
+            const used = this.form.payments.map(p => p.payment_method_type_id).filter(Boolean);
+            const available = this.payment_method_types.map(m => m.id);
+            for (let id of available) {
+                if (!used.includes(id)) return id;
+            }
+            return null;
         },
         initInputPerson() {
             this.input_person = {
@@ -2291,19 +2341,50 @@ export default {
             }
         },
         changePaymentMethodType(flag_submit = true, index = null) {
-            let payment_method_type = _.find(this.payment_method_types, {
-                id: this.form.payments[index].payment_method_type_id
-            });
-            if (payment_method_type.number_days) {
-                this.form.date_of_issue = moment()
-                    .add(payment_method_type.number_days, "days")
-                    .format("YYYY-MM-DD");
-                this.changeDateOfIssue();
-            } else {
-                if (flag_submit) {
-                    this.form.date_of_issue = moment().format("YYYY-MM-DD");
-                    this.changeDateOfIssue();
+            // Prevent selecting a payment method already used in other rows
+            try {
+                const selectedId = this.form.payments[index].payment_method_type_id;
+                if (selectedId) {
+                    const count = this.form.payments.reduce((acc, p, idx) => {
+                        if (p.payment_method_type_id === selectedId) {
+                            acc++;
+                        }
+                        return acc;
+                    }, 0);
+
+                    if (count > 1) {
+                        // find a fallback unused method
+                        const fallback = this.findFirstUnusedPaymentMethod();
+                        const method = _.find(this.payment_method_types, { id: selectedId }) || {};
+                        const label = method.description || selectedId;
+                        this.$toast.error(`Forma de pago repetida: ${label}. Seleccione otro método.`);
+                        // revert to a fallback or null
+                        this.form.payments[index].payment_method_type_id = fallback || null;
+                        // try to set amount for the reverted method
+                        this.updatePaymentAmountForRow(index);
+                        return;
+                    }
                 }
+
+                let payment_method_type = _.find(this.payment_method_types, {
+                    id: this.form.payments[index].payment_method_type_id
+                });
+                if (payment_method_type && payment_method_type.number_days) {
+                    this.form.date_of_issue = moment()
+                        .add(payment_method_type.number_days, "days")
+                        .format("YYYY-MM-DD");
+                    this.changeDateOfIssue();
+                } else {
+                    if (flag_submit) {
+                        this.form.date_of_issue = moment().format("YYYY-MM-DD");
+                        this.changeDateOfIssue();
+                    }
+                }
+
+                // After changing the method, update the payment amount when appropriate
+                this.updatePaymentAmountForRow(index);
+            } catch (e) {
+                // safe fallback
             }
         },
         inputTotalPerception() {
@@ -2648,7 +2729,49 @@ export default {
         setTotalDefaultPayment() {
             if (this.form.payments.length > 0) {
                 this.form.payments[0].payment = this.form.total;
+                // also update any pago efectivo rows to reflect cashAvailable capped by remaining
+                this.form.payments.forEach((p, idx) => {
+                    this.updatePaymentAmountForRow(idx);
+                });
             }
+        },
+
+        // Try to map a friendly name to a payment_method_type_id
+        paymentMethodIdByName(name) {
+            if (!name) return null;
+            const found = this.payment_method_types.find(m => (m.description || '').toLowerCase() === name.toLowerCase());
+            return found ? found.id : null;
+        },
+
+        // Update payment amount for a specific row index when method is Efectivo
+        updatePaymentAmountForRow(index) {
+            try {
+                if (!this.form.payments[index]) return;
+                const row = this.form.payments[index];
+                // Determine which id corresponds to 'Efectivo' (by description)
+                const efectivoId = this.paymentMethodIdByName('Efectivo') || this.paymentMethodIdByName('EFECTIVO') || this.paymentMethodIdByName('efectivo');
+                if (!efectivoId) return;
+                if (row.payment_method_type_id === efectivoId || row.payment_method_type_id === '01' /* fallback common id */) {
+                    // Calculate remaining to pay (total - sum of other payments)
+                    const remaining = this.getRemainingAmountExcludingRow(index);
+                    const fill = Math.min(Number(this.cashAvailable || 0), Number(remaining || 0));
+                    // Only set if greater than zero (or zero to clear)
+                    row.payment = Number(fill);
+                }
+            } catch (e) {
+                // ignore
+            }
+        },
+
+        // Remaining amount excluding a particular payment row (useful to cap auto-fill)
+        getRemainingAmountExcludingRow(index) {
+            const total = Number(this.form.total || 0);
+            let sumOther = 0;
+            this.form.payments.forEach((p, idx) => {
+                if (idx === index) return;
+                sumOther += Number(p.payment || 0);
+            });
+            return Math.max(0, total - sumOther);
         },
         calculatePerception() {
             let supplier = _.find(this.all_suppliers, {
@@ -2893,6 +3016,26 @@ export default {
 
             // Recalcular totales al final (solo una vez)
             this.calculateTotal();
+        }
+    }
+    ,
+    computed: {
+        // Amount available in cash (Efectivo key may be 'Efectivo' or 'Efectivo' with case)
+        cashAvailable() {
+            // ensure number
+            const val = this.paymentMethods && (this.paymentMethods.Efectivo || this.paymentMethods.Efectivo === 0 ? this.paymentMethods.Efectivo : this.paymentMethods.Efectivo) ;
+            return Number(val || 0);
+        },
+        // Remaining amount after using available cash towards total
+        remainingAfterCash() {
+            const total = Number(this.form.total || 0);
+            const cash = Number(this.cashAvailable || 0);
+            // By default, consider Efectivo is applied first
+            return Number(Math.max(0, total - cash));
+        },
+        isShortage() {
+            // shortage when remaining after cash > 0
+            return this.remainingAfterCash > 0;
         }
     }
 };
