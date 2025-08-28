@@ -2440,6 +2440,8 @@ class CashController extends Controller
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
         $cash_user = User::find(auth()->user()->id);
+
+        $initial_balance = (float) $request->beginning_balance;
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $tab_single = (bool) $establishment->tab_single;
@@ -2470,6 +2472,7 @@ class CashController extends Controller
         }
         $cash = Cash::firstOrNew(['id' => $id]);
         $cash->fill($request->all());
+        $cash->beginning_balance = 0;
 
         if (!$id) {
             $cash->date_opening = date('Y-m-d');
@@ -2501,9 +2504,6 @@ class CashController extends Controller
                 $cash->reference_number = "NOCHE-" . date('H:i') . '-DIFF';
             }
         }
-        //</Preparamos la cadena de texto que guardanermos en el parametro 'reference_number) >
-        $initial_balance = (float)$request->beginning_balance;
-        $cash->beginning_balance = 0;
 
         $cash->save();
 
@@ -2517,7 +2517,7 @@ class CashController extends Controller
             'updated_at' => now(),
         ]);
 
-        if ($cash->beginning_balance > 0 && !$cash->principal) {
+        /* if ($cash->beginning_balance > 0 && !$cash->principal) {
             Box::create([
                 'cash_id' => $cash->id,
                 'amount' => $initial_balance,
@@ -2527,6 +2527,24 @@ class CashController extends Controller
                 'method' => 'Efectivo',
                 'group_id' => 1,
                 'subcategory_id' => 1,
+                'category_id' => 1,
+                'soap_type_id' => '01',
+                'description' => 'Saldo de apertura',
+                'state' => 1,
+                'user_id' => auth()->user()->id,
+            ]);
+        } */
+
+        if ($initial_balance > 0) {
+            Box::create([
+                'cash_id' => $cash->id,
+                'amount' => $initial_balance,
+                'type' => 1,
+                'incomes' => true,
+                'date' => date('Y-m-d'),
+                'method' => 'Efectivo',
+                'subcategory_id' => 1,
+                'group_id' => 1,
                 'category_id' => 1,
                 'soap_type_id' => '01',
                 'description' => 'Saldo de apertura',
@@ -3029,23 +3047,24 @@ class CashController extends Controller
 
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
 
-        if ($cash->principal == 1) {
-            $totalsByMethod = Box::select(
-                'method',
-                DB::raw('SUM(CASE WHEN incomes = 1 THEN amount ELSE 0 END) as total_incomes'),
-                DB::raw('SUM(CASE WHEN expenses = 1 THEN amount ELSE 0 END) as total_expenses')
-            )
-                ->where('cash_id', $id)
-                ->where('expenses', 0)
-                ->groupBy('method')
-                ->get();
-        } else {
+        /* if ($cash->principal == 1) { */
+        // Aggregate amounts per payment method. Consider `type` as well because sales
+        // may be stored with type=1 (sale) but incomes/expenses flags may be 0.
+        $totalsByMethod = Box::select(
+            'method',
+            DB::raw("SUM(CASE WHEN (type = 1 OR incomes = 1) THEN amount ELSE 0 END) as total_incomes"),
+            DB::raw("SUM(CASE WHEN (type = 2 OR expenses = 1) THEN amount ELSE 0 END) as total_expenses")
+        )
+            ->where('cash_id', $id)
+            ->groupBy('method')
+            ->get();
+        /* } else { */
 
-            $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
-                ->where('cash_id', $id)
-                ->where('expenses', 0)
-                ->get();
-        }
+        $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
+            ->where('cash_id', $id)
+            ->where('expenses', 0)
+            ->get();
+        /* } */
 
         if ($cash->principal == 1) {
 
@@ -3160,9 +3179,14 @@ class CashController extends Controller
                 if (isset($totalsByMethod) && $totalsByMethod->count() > 0) {
                     foreach ($totalsByMethod as $tm) {
                         $method_name = $tm->method ?? 'SIN METODO';
-                        $amount_by_method = floatval($tm->total);
-                        // Saltar montos cero
-                        if ($amount_by_method == 0) continue;
+
+                        // Compute amount as incomes minus expenses for this method
+                        $income = floatval($tm->total_incomes ?? 0);
+                        $expense = floatval($tm->total_expenses ?? 0);
+                        $amount_by_method = $income - $expense;
+
+                        // Skip zero amounts
+                        if (abs($amount_by_method) < 0.00001) continue;
 
                         CashIncomePrincipal::create([
                             'cash_principal_id' => $cash_principal_id,

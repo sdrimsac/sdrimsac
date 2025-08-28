@@ -22,7 +22,9 @@
                 class="btn_excelsmallmetthod"
                 style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
             >
-                <span> Transferencia: S/ {{ paymentMethods.Transferencia }} </span>
+                <span>
+                    Transferencia: S/ {{ paymentMethods.Transferencia }}
+                </span>
             </el-button>
             <el-button
                 v-if="paymentMethods.IZYPAY > 0"
@@ -794,6 +796,13 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <div>
+                                        <label for="">Total:</label>
+                                        <label for="">Resta:</label>
+                                        </div>
+                                
                                 </div>
                             </div>
                         </div>
