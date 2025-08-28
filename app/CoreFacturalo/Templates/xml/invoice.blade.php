@@ -210,6 +210,12 @@
             <cbc:PaymentPercent>{{ $detraction->percentage }}</cbc:PaymentPercent>
             <cbc:Amount currencyID="PEN">{{ $detraction->amount }}</cbc:Amount>
         </cac:PaymentTerms>
+        <sac:AdditionalInformation xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAdditionalInformation-1">
+            <sac:AdditionalMonetaryTotal>
+                <cbc:ID>{{ $detraction->detraction_type_id }}</cbc:ID>
+                <cbc:PayableAmount currencyID="PEN">{{ $detraction->amount }}</cbc:PayableAmount>
+            </sac:AdditionalMonetaryTotal>
+        </sac:AdditionalInformation>
     @endif
     @if ($document->payment_condition_id === '01')
         <cac:PaymentTerms>

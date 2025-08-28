@@ -130,7 +130,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-if="form.is_prico">
+                                <div class="col-md-3" v-if="configuration.detraction">
                                     <div class="form-group" :class="{ 'has-danger': errors.detraction_account }">
                                         <label class="control-label font-weight-bold" style="color: #073f68;">
                                             <i class="fas fa-file-invoice-dollar"></i> Cuenta de Detracción
