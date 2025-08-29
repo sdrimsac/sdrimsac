@@ -317,16 +317,30 @@ class ConfigurationController extends Controller
             'message' => 'Usuario eliminado de la lista de excluidos'
         ];
     }
-    public function store(ConfigurationRequest $request)
+    /* public function store(ConfigurationRequest $request)
     {
         $id = $request->input('id');
         $configuration = Configuration::find($id);
         $configuration->fill($request->all());
         $configuration->save();
 
-        // Verifica si el campo 'restaurant' está presente y es true en el request
-        if ($request->has('restaurant') && $request->input('restaurant')) {
-            $this->activateRestaurant(new Request());
+        return [
+            'success' => true,
+            'message' => 'Configuración actualizada',
+            'data' => $configuration
+        ];
+    } */
+
+    public function store(ConfigurationRequest $request)
+    {
+        $id = $request->input('id');
+        $configuration = Configuration::find($id);
+        $configuration->fill($request->all());
+        //dd($request->all());
+        $configuration->save();
+
+        if ($configuration->restaurant) {
+            $this->check_and_set_restaurant();
         }
 
         return [
