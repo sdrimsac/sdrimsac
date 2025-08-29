@@ -690,7 +690,7 @@ class PurchaseController extends Controller
                     }
                 }
 
-                // --- Validación usuario arca ---
+                $isArca = false;
                 $configuration = Configuration::first();
                 if ($configuration->methods_arca_cash) {
                     $isArca = auth()->user()->is_arca == 1;
@@ -778,7 +778,7 @@ class PurchaseController extends Controller
                             ]);
                         }
                     }
-                    
+
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }
