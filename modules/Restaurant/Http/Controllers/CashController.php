@@ -430,7 +430,6 @@ class CashController extends Controller
                 }
             }
         }
-        dump($banks);
 
         $configuration = Configuration::first();
 
