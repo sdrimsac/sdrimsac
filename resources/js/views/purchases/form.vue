@@ -668,6 +668,11 @@
                                                 <th
                                                     style="padding: 4px; white-space: nowrap;"
                                                 >
+                                                    Cuentas Bancarias
+                                                </th>
+                                                <th
+                                                    style="padding: 4px; white-space: nowrap;"
+                                                >
                                                     Forma de pago
                                                 </th>
                                                 <th
@@ -729,10 +734,52 @@
                                                         style="min-width: 90px;"
                                                     >
                                                         <el-option
-                                                            v-for="(option, optIndex) in payment_method_types"
-                                                            :key="'cel-' + option.id + '-p-' + index + '-o-' + optIndex"
+                                                            v-for="(option,
+                                                            optIndex) in payment_method_types"
+                                                            :key="
+                                                                'cel-' +
+                                                                    option.id +
+                                                                    '-p-' +
+                                                                    index +
+                                                                    '-o-' +
+                                                                    optIndex
+                                                            "
                                                             :value="option.id"
-                                                            :label="`${option.description}`"
+                                                            :label="
+                                                                `${option.description}`
+                                                            "
+                                                        ></el-option>
+                                                    </el-select>
+                                                </td>
+                                                <td style="padding: 2px;">
+                                                    <el-select
+                                                        v-model="
+                                                            row.payment_method_type_id
+                                                        "
+                                                        @change="
+                                                            changePaymentMethodType(
+                                                                true,
+                                                                index
+                                                            )
+                                                        "
+                                                        class="custom-input"
+                                                        style="min-width: 90px;"
+                                                    >
+                                                        <el-option
+                                                            v-for="(option,
+                                                            optIndex) in payment_method_types"
+                                                            :key="
+                                                                'cel-' +
+                                                                    option.id +
+                                                                    '-p-' +
+                                                                    index +
+                                                                    '-o-' +
+                                                                    optIndex
+                                                            "
+                                                            :value="option.id"
+                                                            :label="
+                                                                `${option.description}`
+                                                            "
                                                         ></el-option>
                                                     </el-select>
                                                 </td>
@@ -747,10 +794,20 @@
                                                         style="min-width: 90px;"
                                                     >
                                                         <el-option
-                                                            v-for="(option, optIndex) in payment_destinations"
-                                                            :key="'dest-' + option.id + '-p-' + index + '-o-' + optIndex"
+                                                            v-for="(option,
+                                                            optIndex) in payment_destinations"
+                                                            :key="
+                                                                'dest-' +
+                                                                    option.id +
+                                                                    '-p-' +
+                                                                    index +
+                                                                    '-o-' +
+                                                                    optIndex
+                                                            "
                                                             :value="option.id"
-                                                            :label="option.description"
+                                                            :label="
+                                                                option.description
+                                                            "
                                                         ></el-option>
                                                     </el-select>
                                                 </td>

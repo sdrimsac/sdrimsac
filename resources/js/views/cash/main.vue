@@ -17,15 +17,18 @@
 
             <template v-else>
                 <div class="d-flex justify-content-end align-items-center">
-                    <el-button
-                        class="btn_excelsmallmetthod"
-                        style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
-                    >
-                        <span>
-                            BCP: S/
-                            {{ banks.BCP }}
-                        </span>
-                    </el-button>
+                    <template v-for="(amount, name) in banks">
+                        <el-button
+                            class="btn_excelsmallmetthod"
+                            style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+                            :key="name"
+                            v-if="amount > 0"
+                        >
+                            <span>
+                                {{ name }}: S/ {{ amount }}
+                            </span>
+                        </el-button>
+                    </template>
                     <el-button
                         v-if="payment_methods['TARJETA: IZYPAY'] > 0"
                         class="btn_excelsmallmetthod"
