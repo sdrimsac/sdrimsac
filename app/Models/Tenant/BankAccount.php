@@ -22,6 +22,7 @@ class BankAccount extends ModelTenant
         'status',
         'balance',
         'user_id',
+        'abbreviation',
         'created_at',
         'updated_at',
     ];

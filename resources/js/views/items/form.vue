@@ -1626,7 +1626,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Lista de Precios" name="price-list">
+                    <el-tab-pane label="Lista de Precios" name="price-list" v-if="form.series_enabled === false">
                         <div class="row">
                             <div
                                 v-if="form.unit_type_id != 'ZZ'"

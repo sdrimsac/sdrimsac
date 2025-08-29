@@ -29,6 +29,7 @@
                             <thead>
                                 <tr class="bg-primary text-white">
                                     <th class="text-center">#</th>
+                                    <th class="text-center">Abreviatura</th>
                                     <th class="text-center">Descripción</th>
                                     <th class="text-center">Imagen</th>
                                     <th class="text-center">Acciones</th>
@@ -38,6 +39,7 @@
                                 <tr v-for="(row, index) in records" :key="index"
                                     :class="index % 2 === 0 ? 'table-row-even' : 'table-row-odd'">
                                     <td class="text-center">{{ index + 1 }}</td>
+                                    <td class="text-center">{{ row.abbreviation }}</td>
                                     <td class="text-center">{{ row.description }}</td>
                                     <td class="text-center">
                                         <template v-if="row.image">

@@ -68,6 +68,15 @@
                         <small class="form-control-feedback" v-if="errors.balance" v-text="errors.balance[0]"></small>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group" :class="{'has-danger': errors.abbreviation}">
+                        <label class="control-label">
+                            <i class="fas fa-balance-scale"></i> Abreviatura
+                        </label>
+                        <el-input v-model="form.abbreviation"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                        <small class="form-control-feedback" v-if="errors.abbreviation" v-text="errors.abbreviation[0]"></small>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">

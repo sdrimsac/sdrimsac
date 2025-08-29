@@ -18,13 +18,12 @@
             <template v-else>
                 <div class="d-flex justify-content-end align-items-center">
                     <el-button
-                    v-if="payment_methods.Transferencia > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
                     >
                         <span>
-                            Transferencia: S/
-                            {{ payment_methods.Transferencia }}
+                            BCP: S/
+                            {{ banks.BCP }}
                         </span>
                     </el-button>
                     <el-button
@@ -524,7 +523,7 @@ const CashForm = () => import("./partials/form.vue");
 const CloseCash = () => import("./partials/closecash.vue");
 import queryString from "query-string";
 export default {
-    props: ["configuration", "cashid", "total", "payment_methods"],
+    props: ["configuration", "cashid", "total", "payment_methods", "banks"],
     components: {
         CashForm,
         CloseCash

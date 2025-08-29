@@ -302,7 +302,7 @@ class CashController extends Controller
         return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));
     } */
 
-    public function index_main()
+    /* public function index_main()
     {
         $cash_id = null;
         $total = 0;
@@ -357,7 +357,86 @@ class CashController extends Controller
         $configuration = Configuration::first();
 
         return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods'));
+    } */
+
+    public function index_main()
+    {
+        $cash_id = null;
+        $total = 0;
+        $payment_methods = [];
+        $banks = [];
+
+        $cash = Cash::where('user_id', auth()->user()->id)
+            ->where('state', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            $cash_id = $cash->id;
+
+            $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
+            $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
+            $begging_balance = $cash->beginning_balance;
+            $cash_transfer = $cash->cash_transfers->sum('amount');
+            $total = $incomes - $expenses + $begging_balance - $cash_transfer;
+
+            $all_methods = Box::where('cash_id', $cash_id)
+                ->pluck('method')
+                ->unique();
+
+            foreach ($all_methods as $original_method) {
+                $normalized = $original_method;
+
+                // Detectar si es cuenta bancaria
+                if (str_contains($original_method, '-')) {
+                    $parts = explode('-', $original_method);
+                    $number = end($parts);
+
+                    // Buscar directamente en bank_accounts
+                    $account = BankAccount::where('number', $number)->first();
+
+                    if ($account) {
+                        // Ahora la abreviación viene de bank_accounts.abbreviation
+                        $normalized = $account->abbreviation ?? 'Banco';
+                    } else {
+                        $normalized = 'Cuenta desconocida - ' . $number;
+                    }
+
+                    // Guardar el cálculo en $banks
+                    $income = Box::where('cash_id', $cash_id)
+                        ->where('incomes', 1)
+                        ->where('method', $original_method)
+                        ->sum('amount');
+
+                    $expense = Box::where('cash_id', $cash_id)
+                        ->where('expenses', 1)
+                        ->where('method', $original_method)
+                        ->sum('amount');
+
+                    $banks[$normalized] = ($banks[$normalized] ?? 0) + ($income - $expense);
+                } else {
+                    // Métodos normales (efectivo, plin, yape, etc.)
+                    $income = Box::where('cash_id', $cash_id)
+                        ->where('incomes', 1)
+                        ->where('method', $original_method)
+                        ->sum('amount');
+
+                    $expense = Box::where('cash_id', $cash_id)
+                        ->where('expenses', 1)
+                        ->where('method', $original_method)
+                        ->sum('amount');
+
+                    $payment_methods[$normalized] = ($payment_methods[$normalized] ?? 0) + ($income - $expense);
+                }
+            }
+        }
+        /* dump($banks); */
+
+        $configuration = Configuration::first();
+
+        return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total', 'payment_methods', 'banks'));
     }
+
 
     public function index_report_closed_cash()
     {

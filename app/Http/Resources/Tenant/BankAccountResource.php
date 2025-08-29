@@ -18,6 +18,7 @@ class BankAccountResource extends JsonResource
             'id' => $this->id,
             'bank_id' => $this->bank_id,
             'description' => $this->description,
+            'abbreviation' => $this->abbreviation,
             'number' => $this->number,
             'cci' => $this->cci,
             'currency_type_id' => $this->currency_type_id,

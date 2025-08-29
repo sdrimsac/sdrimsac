@@ -17,6 +17,7 @@ class BankCollection extends ResourceCollection
         return $this->collection->transform(function($row, $key) {
             return [
                 'id' => $row->id,
+                'abbreviation' => $row->abbreviation,
                 'description' => $row->description,
                 'image' => $row->image ? '/storage/banks/'.$row->image : '',
             ];

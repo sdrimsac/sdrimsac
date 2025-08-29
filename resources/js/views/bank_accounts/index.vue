@@ -39,10 +39,12 @@
                 <thead>
                     <tr class="bg-primary text-white">
                         <th class="text-white">#</th>
+
                         <th class="text-white">Descripción</th>
                         <th class="text-white text-center">Creado Por</th>
                         <th class="text-white text-center">Número</th>
                         <th class="text-white text-center">Balance</th>
+                        <th class="text-white text-center">Abreviatura</th>
                         <th class="text-end text-white">Acciones</th>
                     </tr>
                 </thead>
@@ -60,6 +62,8 @@
 
                         <!-- Balance -->
                         <td class="text-center">{{ row.balance }}</td>
+
+                        <td class="text-center">{{ row.abbreviation }}</td>
 
                         <!-- Acciones -->
                         <td class="text-end">

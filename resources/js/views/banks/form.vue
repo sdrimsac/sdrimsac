@@ -18,6 +18,15 @@
                         <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="form-group" :class="{'has-danger': errors.abbreviation}">
+                        <label class="control-label">
+                            <i class="fas fa-align-left"></i> Abreviatura
+                        </label>
+                        <el-input v-model="form.abbreviation" ref="abbreviationInput"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                        <small class="form-control-feedback" v-if="errors.abbreviation" v-text="errors.abbreviation[0]"></small>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">

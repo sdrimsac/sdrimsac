@@ -19,6 +19,7 @@ class BankAccountCollection extends ResourceCollection
                 'id' => $row->id,
                 'bank_description' => $row->bank->description,
                 'description' => $row->description,
+                'abbreviation' => $row->abbreviation,
                 'number' => $row->number,
                 'cci' => $row->cci,
                 'currency_type_description' => $row->currency_type->description,
