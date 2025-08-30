@@ -700,10 +700,11 @@
                                                 >
                                                     <a
                                                         href="#"
-                                                        @click.prevent="
-                                                            clickAddPayment
-                                                        "
-                                                        class="text-white font-weight-bold"
+                                                        @click.prevent="!form.is_bank && clickAddPayment()"
+                                                        :class="['text-white', 'font-weight-bold', { 'disabled': form.is_bank }]"
+                                                        :aria-disabled="form.is_bank"
+                                                        tabindex="0"
+                                                    :style="{ pointerEvents: form.is_bank ? 'none' : 'auto', opacity: form.is_bank ? 0.5 : 1 }"
                                                     >
                                                         <i
                                                             class="fas fa-plus"
@@ -724,34 +725,24 @@
                                                 "
                                             >
                                                 <td v-if="configurations.methods_arca_cash">
+                                                    <!-- Checkbox de Transferencia arriba -->
                                                     <el-checkbox
                                                         v-model="form.is_bank"
                                                         @change="changeBankAccount"
-                                                    ></el-checkbox>
-                                                    <label
-                                                        for="banks"
-                                                        class="mb-0 ms-2"
+                                                        :disabled="disableBankCheckbox"
                                                     >
-                                                        Transferencia /
-                                                        Depositos
-                                                    </label>
+                                                        <span style="color: #073f68; font-weight: bold;">Transferencia / Depósitos</span>
+                                                    </el-checkbox>
+                                                    <!-- Mostrar cuentas bancarias solo si transferencia está activa -->
                                                     <el-select
-                                                        :disabled="
-                                                            !form.is_bank
-                                                        "
-                                                        v-model="
-                                                            form.bank_account_id
-                                                        "
-                                                        @change="
-                                                            changeBankAccount
-                                                        "
+                                                        v-if="form.is_bank"
+                                                        v-model="form.bank_account_id"
+                                                        @change="changeBankAccount"
                                                     >
                                                         <el-option
                                                             v-for="bank in bank_accounts"
                                                             :key="bank.id"
-                                                            :label="
-                                                                `${bank.description}-${bank.number}`
-                                                            "
+                                                            :label="`${bank.description}-${bank.number}`"
                                                             :value="bank.id"
                                                         >
                                                         </el-option>
@@ -760,11 +751,11 @@
                                                 <!-- Forma de pago -->
                                                 <td style="padding: 2px;" v-if="!form.is_bank">
                                                     <el-select
-                                                        
                                                         v-model="row.payment_method_type_id"
                                                         @change="changePaymentMethodType(true, index)"
                                                         class="custom-input"
                                                         style="min-width: 90px;"
+                                                        :disabled="form.is_bank"
                                                     >
                                                         <el-option
                                                             v-for="(option,
@@ -778,37 +769,24 @@
                                                                     optIndex
                                                             "
                                                             :value="option.id"
-                                                            :label="
-                                                                `${option.description}`
-                                                            "
+                                                            :label="`${option.description}`"
                                                         ></el-option>
                                                     </el-select>
                                                 </td>
                                                 <!-- Destino -->
                                                 <td style="padding: 2px;">
                                                     <el-select
-                                                        v-model="
-                                                            row.payment_destination_id
-                                                        "
+                                                        v-model="row.payment_destination_id"
                                                         filterable
                                                         class="custom-input"
                                                         style="min-width: 90px;"
+                
                                                     >
                                                         <el-option
-                                                            v-for="(option,
-                                                            optIndex) in payment_destinations"
-                                                            :key="
-                                                                'dest-' +
-                                                                    option.id +
-                                                                    '-p-' +
-                                                                    index +
-                                                                    '-o-' +
-                                                                    optIndex
-                                                            "
+                                                            v-for="(option, optIndex) in payment_destinations"
+                                                            :key="'dest-' + option.id + '-p-' + index + '-o-' + optIndex"
                                                             :value="option.id"
-                                                            :label="
-                                                                option.description
-                                                            "
+                                                            :label="option.description"
                                                         ></el-option>
                                                     </el-select>
                                                 </td>
@@ -860,89 +838,21 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- <div
+                                <div
                                     class="col-md-12 mt-2"
                                     v-if="configurations.methods_arca_cash"
                                 >
                                     <div
-                                        style="display:flex; gap:1.5rem; align-items:center;"
+                                        style="display: flex; gap: 1.5rem; align-items: center; justify-content: flex-end;"
                                     >
                                         <div>
-                                            <label class="fw-bold"
-                                                >Total:</label
-                                            >
-                                            <div>
-                                                <span
-                                                    v-if="
-                                                        currency_type &&
-                                                            currency_type.symbol
-                                                    "
-                                                    >{{
-                                                        currency_type.symbol
-                                                    }}</span
-                                                >
-                                                <span>{{
-                                                    Number(
-                                                        form.total || 0
-                                                    ).toFixed(2)
-                                                }}</span>
+                                            <label class="fw-bold">Resta:</label>
+                                            <div style="color: #ff0000; font-weight: bold;">
+                                                {{ currency_type.symbol }} {{ remainingAmount.toFixed(2) }}
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <label class="fw-bold"
-                                                >Resta:</label
-                                            >
-                                            <div>
-                                                <span
-                                                    v-if="
-                                                        currency_type &&
-                                                            currency_type.symbol
-                                                    "
-                                                    >{{
-                                                        currency_type.symbol
-                                                    }}</span
-                                                >
-                                                <span
-                                                    :style="{
-                                                        color: isShortage
-                                                            ? 'red'
-                                                            : 'inherit',
-                                                        'font-weight': isShortage
-                                                            ? '700'
-                                                            : '400'
-                                                    }"
-                                                    >{{
-                                                        remainingAfterCash.toFixed(
-                                                            2
-                                                        )
-                                                    }}</span
-                                                >
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            v-if="true"
-                                            style="margin-left: auto; text-align: right;"
-                                        >
-                                            <small
-                                                >Disponible Efectivo:
-                                                <strong
-                                                    >{{
-                                                        currency_type &&
-                                                        currency_type.symbol
-                                                            ? currency_type.symbol
-                                                            : ""
-                                                    }}{{
-                                                        Number(
-                                                            cashAvailable
-                                                        ).toFixed(2)
-                                                    }}</strong
-                                                ></small
-                                            >
                                         </div>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1906,19 +1816,18 @@ export default {
                     return;
                 }
 
-                // If payments array is present, reduce each row to only date_of_payment and payment
+                // Si hay pagos, solo actualiza los campos necesarios, pero NO limpiar payment_destination_id
                 const today = moment().format("YYYY-MM-DD");
                 if (Array.isArray(this.form.payments) && this.form.payments.length > 0) {
                     this.form.payments.forEach((row, idx) => {
                         const paymentValue = parseFloat(row.payment) || parseFloat(this.form.total) || 0;
-                        // Keep only date_of_payment and payment; set others to null to avoid sending extra data
                         row.date_of_payment = today;
                         row.payment = paymentValue;
                         row.id = null;
                         row.purchase_id = null;
                         row.payment_method_type_id = null;
                         row.reference = null;
-                        row.payment_destination_id = null;
+                        // NO limpiar row.payment_destination_id
                     });
                 }
 
@@ -3295,26 +3204,19 @@ export default {
             // Recalcular totales al final (solo una vez)
             this.calculateTotal();
         }
+    },
+    computed: {
+        disableBankCheckbox() {
+            return this.form.payments && this.form.payments.length > 1;
+        },
+        remainingAmount() {
+        // Suma los pagos ingresados
+        const totalPayments = Array.isArray(this.form.payments)
+            ? this.form.payments.reduce((sum, p) => sum + (parseFloat(p.payment) || 0), 0)
+            : 0;
+        // Resta al total de la compra
+        return (parseFloat(this.form.total) || 0) - totalPayments;
     }
-
-    /* computed: {
-        // Amount available in cash (Efectivo key may be 'Efectivo' or 'Efectivo' with case)
-        cashAvailable() {
-            // ensure number
-            const val = this.paymentMethods && (this.paymentMethods.Efectivo || this.paymentMethods.Efectivo === 0 ? this.paymentMethods.Efectivo : this.paymentMethods.Efectivo) ;
-            return Number(val || 0);
-        },
-        // Remaining amount after using available cash towards total
-        remainingAfterCash() {
-            const total = Number(this.form.total || 0);
-            const cash = Number(this.cashAvailable || 0);
-            // By default, consider Efectivo is applied first
-            return Number(Math.max(0, total - cash));
-        },
-        isShortage() {
-            // shortage when remaining after cash > 0
-            return this.remainingAfterCash > 0;
-        }
-    } */
+    }
 };
 </script>

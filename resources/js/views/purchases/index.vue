@@ -824,7 +824,6 @@ export default {
         return {
             showImportColorSizeDialog: false,
             total: 0,
-            // Ensure paymentMethods is reactive and has default keys used in the template
             paymentMethods: {
                 Efectivo: 0,
                 Culqui: 0,
@@ -887,7 +886,6 @@ export default {
         clickImportColorSize() {
             this.showImportColorSizeDialog = true;
         },
-        
         getAvaibleCash() {
             this.$http("/caja/cash-transfer/available?with_all=1")
             .then(response => {
