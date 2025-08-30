@@ -2718,7 +2718,7 @@ class CashController extends Controller
 
                     // Insertar en Box como ingreso
                     Box::create([
-                        'cash_id' => $cash->id, // 👉 ahora lo registras en la nueva caja
+                        'cash_id' => $cash->id,
                         'amount' => $balance->amount,
                         'type' => 1,
                         'incomes' => true,
@@ -2740,7 +2740,9 @@ class CashController extends Controller
 
         $user = User::find($cash->user_id);
         $name = $user->name;
-        $amount = $cash->beginning_balance;
+        //$amount = $cash->boxes->sum('amount');
+        $box_apertura = $cash->boxes()->where('incomes', 1)->first();
+        $amount = $box_apertura ? $box_apertura->amount : 0;
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
         $area = Area::find($user->area_id);

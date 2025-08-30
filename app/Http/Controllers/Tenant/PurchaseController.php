@@ -74,6 +74,13 @@ class PurchaseController extends Controller
     use StorageDocument;
     use JobReportTrait;
 
+    /**
+     * Purchase instance used by some helper methods (e.g., createPdf).
+     * Declared to avoid undefined property notices from static analysis.
+     * @var \App\Models\Tenant\Purchase|null
+     */
+    protected $purchase = null;
+
 
     public function ne76_correlative()
     {
@@ -711,9 +718,25 @@ class PurchaseController extends Controller
                         if ($totalEnviado != $totalCompra) {
                             throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
                         }
+                        /* foreach ($data['payments'] as $payment) {
 
-                        foreach ($data['payments'] as $payment) {
                             $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+
+                            $boxData = $data['boxes'][$index] ?? null;
+
+                            // Determinar nombre del método de pago de forma defensiva
+                            if (is_array($boxData) && !empty($boxData['method'])) {
+                                $methodName = $boxData['method'];
+                            } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                                $methodName = $boxData->method;
+                            } else {
+                                $methodName = $payment_method ? $payment_method->description : 'Método no encontrado';
+                            }
+
+                            if (!$payment_method) {
+                                // Método de pago no encontrado: informar y detener
+                                throw new Exception("Método de pago con id {$payment['payment_method_type_id']} no encontrado al validar saldo disponible.");
+                            }
 
                             // saldo real disponible en ese método
                             $saldoDisponible = Box::where('cash_id', $arcaCash->id)
@@ -733,56 +756,146 @@ class PurchaseController extends Controller
                                 $faltante = $payment['payment'] - $saldoDisponible;
                                 throw new Exception("Saldo insuficiente en {$payment_method->description}. Faltan S/{$faltante} puede agregar un método de pago con fondos para completar el monto y poder finalizar la compra");
                             }
+                        } */
+
+                        foreach ($data['payments'] as $index => $payment) {
+
+                            // buscar el método por id si viene
+                            $payment_method = null;
+                            $boxData = $data['boxes'][$index] ?? null;
+
+                            if (!empty($payment['payment_method_type_id'])) {
+                                $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                            } else {
+                                // Si no viene el id, intentar resolver después
+                                Log::warning('payment_method_type_id ausente en payment, se intentará derivar desde boxData', [
+                                    'index' => $index,
+                                    'payment' => $payment,
+                                    'boxData' => $boxData
+                                ]);
+                            }
+
+                            // determinar nombre del método (priorizar boxData.method)
+                            if (is_array($boxData) && !empty($boxData['method'])) {
+                                $methodName = $boxData['method'];
+                            } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                                $methodName = $boxData->method;
+                            } else {
+                                $methodName = $payment_method ? $payment_method->description : null;
+                            }
+
+                            // si no hay id, intentar resolver PaymentMethodType por descripción
+                            if (!$payment_method && !empty($methodName)) {
+                                $payment_method = PaymentMethodType::where('description', $methodName)->first();
+                                if ($payment_method) {
+                                    Log::info('Se resolvió payment_method_type por descripción', [
+                                        'index' => $index,
+                                        'methodName' => $methodName,
+                                        'payment_method_id' => $payment_method->id
+                                    ]);
+                                }
+                            }
+
+                            // 👉 Si sigue sin haber payment_method_type_id y es cuenta bancaria, poner por defecto "01"
+                            if (!$payment_method && !empty($methodName) && stripos($methodName, 'CUENTA') !== false) {
+                                $payment_method = PaymentMethodType::find('01'); // Efectivo
+                                Log::info('Se asignó payment_method_type_id=01 por defecto al tratarse de cuenta bancaria', [
+                                    'index' => $index,
+                                    'methodName' => $methodName
+                                ]);
+                            }
+
+                            // decidir qué usar para la consulta de saldo
+                            $methodToQuery = $payment_method ? $payment_method->description : $methodName;
+
+                            if (empty($methodToQuery)) {
+                                Log::error('No se pudo determinar el método de pago para validar saldo disponible', [
+                                    'index' => $index,
+                                    'payment' => $payment,
+                                    'boxData' => $boxData
+                                ]);
+                                throw new Exception("Método de pago no encontrado al validar saldo disponible.");
+                            }
+
+                            // calcular saldo en Box usando la descripción/etiqueta
+                            $saldoDisponible = Box::where('cash_id', $arcaCash->id)
+                                ->where('method', $methodToQuery)
+                                ->selectRaw("
+                        SUM(
+                            CASE
+                                WHEN type = 1 THEN amount
+                                WHEN type = 2 THEN -amount
+                                ELSE 0
+                            END
+                        ) as saldo
+                    ")
+                                ->value('saldo') ?? 0;
+
+                            if ($saldoDisponible < $payment['payment']) {
+                                $faltante = number_format($payment['payment'] - $saldoDisponible, 2);
+                                throw new Exception("Saldo insuficiente en {$methodToQuery}. Faltan S/ {$faltante}. Puede usar otro método de pago con fondos para completar la compra.");
+                            }
                         }
                     }
                 }
 
-                foreach ($data['payments'] as $payment) {
+                foreach ($data['payments'] as $index => $payment) {
+                    $payment['payment_method_type_id'] = $payment['payment_method_type_id'] ?? '01';
                     $record_payment = $doc->purchase_payments()->create($payment);
 
-                    if ($configuration->methods_arca_cash) {
-                        if ($isArca) {
-                            // Tomar la caja abierta
-                            $box = Box::where('cash_id', $arcaCash->id)
-                                ->where('state', 1)
-                                ->where('type', 1)
-                                ->orderBy('id')
-                                ->first();
+                    if ($configuration->methods_arca_cash && $isArca) {
+                        // Tomar la caja abierta
+                        $box = Box::where('cash_id', $arcaCash->id)
+                            ->where('state', 1)
+                            ->where('type', 1)
+                            ->orderBy('id')
+                            ->first();
 
-                            if (!$box) {
-                                throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
-                            }
-
-                            // Descontar el monto
-                            $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
-                            //$box->amount = $payment['payment'];
-                            //$box->save();
-
-                            // Registrar movimiento en la caja
-                            Box::create([
-                                'cash_id' => $arcaCash->id,
-                                'date' => $record_payment->date_of_payment,
-                                'amount' => $payment['payment'],
-                                'expenses' => 1,
-                                'group_id' => 2,
-                                'category_id' => 2,
-                                'subcategory_id' => 1,
-                                'state' => 1,
-                                'type' => 2, // Egreso
-                                'soap_type_id' => Company::active()->soap_type_id,
-                                'user_id' => auth()->id(),
-                                'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del arca para el método de pago  ({$payment_method->description})",
-                                'purchase_id' => $doc->id,
-                                'currency_type_id' => $doc->currency_type_id,
-                                'method' => $payment_method->description,
-                            ]);
+                        if (!$box) {
+                            throw new Exception("No hay saldo disponible en la caja para realizar la compra.");
                         }
+
+                        // Obtenemos método de pago
+                        $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+
+                        // Revisamos si vino el dato desde el frontend
+                        $boxData = $data['boxes'][$index] ?? null;
+                        Log::info('Box Data', ['index' => $index, 'boxData' => $boxData, 'payment' => $payment, 'payment_method' => $payment_method]);
+
+                        // Determinar nombre del método de pago de forma defensiva
+                        if (is_array($boxData) && !empty($boxData['method'])) {
+                            $methodName = $boxData['method'];
+                        } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                            $methodName = $boxData->method;
+                        } else {
+                            $methodName = $payment_method ? $payment_method->description : 'Método no encontrado';
+                        }
+
+                        // Registrar movimiento en la caja (egreso)
+                        Box::create([
+                            'cash_id' => $arcaCash->id,
+                            'date' => $record_payment->date_of_payment,
+                            'amount' => $payment['payment'],
+                            'expenses' => 1,
+                            'group_id' => 2,
+                            'category_id' => 2,
+                            'subcategory_id' => 1,
+                            'state' => 1,
+                            'type' => 2, // Egreso
+                            'soap_type_id' => Company::active()->soap_type_id,
+                            'user_id' => auth()->id(),
+                            'description' => "Compra realizada con el número de documento {$doc->series}-{$doc->number} descontada del arca para el método de pago ({$methodName})",
+                            'purchase_id' => $doc->id,
+                            'currency_type_id' => $doc->currency_type_id,
+                            'method' => $methodName,
+                        ]);
                     }
 
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }
                 }
+
 
                 // --- Envío WhatsApp si aplica ---
 
@@ -991,38 +1104,57 @@ class PurchaseController extends Controller
                     throw new Exception($message);
                 }
 
-                foreach ($data['payments'] as $payment) {
-                    $record_payment = $doc->purchase_payments()->create($payment);
+                        foreach ($data['payments'] as $index => $payment) {
 
-                    // Create box record only for non-admin users
-                    if (!$isAdminOrSuperadmin && $cash !== true) {
-                        $box = new Box;
-                        $box->cash_id = $cash->id;
-                        $box->date = $record_payment->date_of_payment;
-                        $box->amount = $record_payment->payment;
-                        $box->expenses = 1;
-                        $box->group_id = 2;
-                        $box->category_id = 2;
-                        $box->subcategory_id = 1;
-                        $box->state = 1;
-                        $box->type = 2;
-                        $box->soap_type_id = $soap_type_id;
-                        $box->user_id = auth()->id();
-                        $box->description = 'Compra ' . $doc->series . '-' . $doc->number;
-                        $payment_method_id  = $record_payment->payment_method_type_id;
-                        $payment_method = PaymentMethodType::find($payment_method_id);
-                        $box->method = $payment_method->description;
-                        $box->purchase_id = $doc->id;
-                        $box->currency_type_id = $doc->currency_type_id;
-                        $box->save();
-                    }
+                            // buscar el método de pago en la tabla PaymentMethodType si viene el id
+                            $payment_method = null;
+                            $boxData = $data['boxes'][$index] ?? null;
 
-                    if (isset($payment['payment_destination_id'])) {
-                        $this->createGlobalPayment($record_payment, $payment);
-                    }
-                }
+                            if (!empty($payment['payment_method_type_id'])) {
+                                $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
+                            } else {
+                                // loguear que no vino el id para facilitar debugging del frontend
+                                Log::warning('payment_method_type_id ausente en payment, se intentará derivar desde boxData', ['index' => $index, 'payment' => $payment, 'boxData' => $boxData]);
+                            }
 
-                if (!$doc->filename) {
+                            // Determinar nombre del método de pago (priorizar dato enviado por frontend en boxes)
+                            if (is_array($boxData) && !empty($boxData['method'])) {
+                                $methodName = $boxData['method'];
+                            } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
+                                $methodName = $boxData->method;
+                            } else {
+                                $methodName = $payment_method ? $payment_method->description : null;
+                            }
+
+                            // Si no encontramos el PaymentMethodType por id, intentar buscar por descripción
+                            if (!$payment_method && !empty($methodName)) {
+                                $payment_method = PaymentMethodType::where('description', $methodName)->first();
+                                if ($payment_method) {
+                                    Log::info('Se resolvió payment_method_type por descripción', ['index' => $index, 'methodName' => $methodName, 'payment_method_id' => $payment_method->id]);
+                                }
+                            }
+
+                            // Determinar cadena a usar para consultar el saldo en boxes
+                            $methodToQuery = $payment_method ? $payment_method->description : $methodName;
+
+                            if (empty($methodToQuery)) {
+                                // No se puede determinar método de pago para validar saldo
+                                Log::error('No se pudo determinar el método de pago para validar saldo disponible', ['index' => $index, 'payment' => $payment, 'boxData' => $boxData]);
+                                throw new Exception("Método de pago no encontrado al validar saldo disponible.");
+                            }
+
+                            // saldo disponible en esa caja y método (usando la descripción/etiqueta del método)
+                            $saldoDisponible = Box::where('cash_id', $arcaCash->id)
+                                ->where('method', $methodToQuery)
+                                ->selectRaw("\n                                            SUM(\n                                                CASE \n                                                    WHEN type = 1 THEN amount \n                                                    WHEN type = 2 THEN -amount \n                                                    ELSE 0 \n                                                END\n                                            ) as saldo\n                                        ")
+                                ->value('saldo') ?? 0;
+
+                            // validar saldo
+                            if ($saldoDisponible < $payment['payment']) {
+                                $faltante = number_format($payment['payment'] - $saldoDisponible, 2);
+                                throw new Exception("Saldo insuficiente en {$methodToQuery}. Faltan S/ {$faltante}. Puede usar otro método de pago con fondos para completar la compra.");
+                            }
+                        }
                     $this->setFilename($doc);
                 }
 
@@ -1197,12 +1329,14 @@ class PurchaseController extends Controller
 
         $this->uploadFile($filename, $pdf->output('', 'S'), 'purchase');
     }
+    
     private function createFilename($purchase)
     {
 
         $name = [$purchase->series, $purchase->number, $purchase->id, date('Ymd')];
         return join('-', $name);
     }
+
     private function setFilename($purchase)
     {
 
@@ -1210,10 +1344,12 @@ class PurchaseController extends Controller
         $purchase->filename = join('-', $name);
         $purchase->save();
     }
+
     public function uploadFile($filename, $file_content, $file_type)
     {
         $this->uploadStorage($filename, $file_content, $file_type);
     }
+
     public function update(PurchaseRequest $request)
     {
         //dd();
@@ -1303,6 +1439,7 @@ class PurchaseController extends Controller
             ],
         ];
     }
+
     public function updateStock($id)
     {
         $saldo_stock = 0.00;
@@ -1896,7 +2033,7 @@ class PurchaseController extends Controller
 
                 $doc->purchase_payments()->create([
                     'date_of_payment' => $data['date_of_issue'],
-                    'payment_method_type_id' => $data['payment_method_type_id'],
+                    'payment_method_type_id' => $data['payment_method_type_id'] ?? '01',
                     'payment' => $data['total'],
                 ]);
 

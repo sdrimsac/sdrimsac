@@ -24,9 +24,7 @@
                             :key="name"
                             v-if="amount > 0"
                         >
-                            <span>
-                                {{ name }}: S/ {{ amount }}
-                            </span>
+                            <span> {{ name }}: S/ {{ amount }} </span>
                         </el-button>
                     </template>
                     <el-button
@@ -652,10 +650,10 @@ export default {
                         type: "warning"
                     }
                 );
+                // Si llega aquí, el usuario dio "Aceptar"
                 const response = await this.$http(
                     `/cash/main_cash/accept/${id}`
                 );
-                // Si la respuesta tiene success === false, mostrar el mensaje y no continuar
                 if (response.data && response.data.success === false) {
                     this.$toast.error(
                         response.data.message || "No se pudo aceptar el ingreso"
@@ -663,16 +661,20 @@ export default {
                     return;
                 }
                 if (response.status == 200) {
-                    this.$toast.success("Se acepto el ingreso");
+                    this.$toast.success("Se aceptó el ingreso");
                     this.getAvaibleCash();
                     this.getRecords();
                 } else {
                     this.$toast.error("No se pudo aceptar el ingreso");
                 }
             } catch (e) {
-                this.$toast.error("Ocurrio un error");
+                // Solo mostrar error si NO fue cancelación
+                if (e !== "cancel" && e !== "close") {
+                    this.$toast.error("Ocurrió un error");
+                }
             }
         },
+
         async sendToObservation() {
             try {
                 const response = await this.$http.post(

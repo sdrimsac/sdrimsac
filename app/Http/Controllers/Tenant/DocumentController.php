@@ -2139,6 +2139,7 @@ class DocumentController extends Controller
             ];
         }
     }
+    
     private function saveItemWarranty($document, $items)
     {
         foreach ($items as $item) {

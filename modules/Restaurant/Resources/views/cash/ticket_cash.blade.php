@@ -310,7 +310,7 @@
         </table>
 
         <table class="table border-bottom">
-            <tr>
+            {{-- <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700" style="border: solid 1px black;">
                     SALDO INICIAL
@@ -318,7 +318,7 @@
                 <td class="text-left " style="border: solid 1px black;">
                     {{ formatMoney($cash->beginning_balance,$currency_type) }}
                 </td>
-            </tr>
+            </tr> --}}
             <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700" style="border: solid 1px black;">

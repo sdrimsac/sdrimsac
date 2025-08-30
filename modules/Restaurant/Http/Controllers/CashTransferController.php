@@ -7,6 +7,7 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Resources\Tenant\CashTransferCollection;
 use App\Http\Resources\Tenant\CashTransferCollectionReport;
 use App\Http\Resources\Tenant\CashTransferResource;
+use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\CashTransfer;
@@ -24,9 +25,6 @@ use Modules\Report\Exports\CashTransferExport;
 
 class CashTransferController extends Controller
 {
-
-
-
     public function index()
     {
         $configuration = Configuration::first();
@@ -329,6 +327,60 @@ class CashTransferController extends Controller
     //  return $saldos;
     //}
 
+    //public function available()
+    //{
+    //    $cash_principal = Cash::where('principal', 1)
+    //        ->where('user_id', auth()->id())
+    //        ->where('state', 1)
+    //        ->first();
+
+    //    if (!$cash_principal) {
+    //        return ['error' => 'No hay caja principal abierta'];
+    //    }
+
+    //    $banks = BankAccount::where('user_id', auth()->id())->get();
+
+    //    $payment_methods = PaymentMethodType::all();
+    //    $saldos = [];
+
+    //    foreach ($payment_methods as $method) {
+
+    //        $methodName = $method->description ?? $method->name;
+            //$methodName = preg_replace('/^TARJETA:\s*/', '', $methodName);
+
+    //        if ($methodName === 'Transferencia') {
+    //            $incomes = Box::where('cash_id', $cash_principal->id)
+    //                ->where('incomes', 1)
+    //                ->where('method', 'like', 'CUENTA SOLES%')
+    //                ->sum('amount');
+
+    //            $expenses = Box::where('cash_id', $cash_principal->id)
+    //                ->where('expenses', 1)
+    //                ->where('method', 'like', 'CUENTA SOLES%')
+    //                ->sum('amount');
+    //        } else {
+    //            $incomes = Box::where('cash_id', $cash_principal->id)
+    //                ->where('incomes', 1)
+    //                ->where('method', $method->description)
+    //                ->sum('amount');
+
+    //            $expenses = Box::where('cash_id', $cash_principal->id)
+    //                ->where('expenses', 1)
+    //                ->where('method', $method->description)
+    //                ->sum('amount');
+    //        }
+
+    //        $transfer = CashTransfer::where('cash_principal_id', $cash_principal->id)
+    //            ->sum('amount');
+
+    //        $saldo = ($incomes - $expenses) - $transfer;
+
+    //        $saldos[$methodName] = $saldo;
+    //    }
+
+    //    return $saldos;
+    //}
+
     public function available()
     {
         $cash_principal = Cash::where('principal', 1)
@@ -340,26 +392,17 @@ class CashTransferController extends Controller
             return ['error' => 'No hay caja principal abierta'];
         }
 
+        $banks = BankAccount::where('user_id', auth()->id())->get();
+
         $payment_methods = PaymentMethodType::all();
         $saldos = [];
 
         foreach ($payment_methods as $method) {
-
             $methodName = $method->description ?? $method->name;
             $methodName = preg_replace('/^TARJETA:\s*/', '', $methodName);
 
-            // 👇 Aquí diferenciamos Transferencia de los demás
-            if ($methodName === 'Transferencia') {
-                $incomes = Box::where('cash_id', $cash_principal->id)
-                    ->where('incomes', 1)
-                    ->where('method', 'like', 'CUENTA SOLES%')
-                    ->sum('amount');
-
-                $expenses = Box::where('cash_id', $cash_principal->id)
-                    ->where('expenses', 1)
-                    ->where('method', 'like', 'CUENTA SOLES%')
-                    ->sum('amount');
-            } else {
+            // 🔹 Métodos normales (Efectivo, Yape, Plin, etc.)
+            if ($methodName !== 'Transferencia') {
                 $incomes = Box::where('cash_id', $cash_principal->id)
                     ->where('incomes', 1)
                     ->where('method', $method->description)
@@ -369,20 +412,46 @@ class CashTransferController extends Controller
                     ->where('expenses', 1)
                     ->where('method', $method->description)
                     ->sum('amount');
+
+                $transfer = CashTransfer::where('cash_principal_id', $cash_principal->id)
+                    ->sum('amount');
+
+                $saldos[$methodName] = ($incomes - $expenses) - $transfer;
             }
+        }
+
+        // 🔹 Procesamos las cuentas bancarias por abbreviation
+        $bankSaldos = [];
+
+        foreach ($banks as $bank) {
+            $bankNumber = $bank->number;
+            $bankAbbreviation = $bank->abbreviation;
+
+            // Buscar ingresos/egresos donde el método contenga el número de cuenta
+            $incomes = Box::where('cash_id', $cash_principal->id)
+                ->where('incomes', 1)
+                ->where('method', 'like', "%{$bankNumber}%")
+                ->sum('amount');
+
+            $expenses = Box::where('cash_id', $cash_principal->id)
+                ->where('expenses', 1)
+                ->where('method', 'like', "%{$bankNumber}%")
+                ->sum('amount');
 
             $transfer = CashTransfer::where('cash_principal_id', $cash_principal->id)
                 ->sum('amount');
 
             $saldo = ($incomes - $expenses) - $transfer;
 
-            $saldos[$methodName] = $saldo;
+            // Guardamos en el array usando la abbreviation como clave
+            $bankSaldos[$bankAbbreviation] = $saldo;
         }
 
-        return $saldos;
+        return [
+            'metodos' => $saldos,
+            'banks'   => $bankSaldos,
+        ];
     }
-
-
 
     public function destroy() {}
 }

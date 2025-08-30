@@ -317,19 +317,6 @@ class ConfigurationController extends Controller
             'message' => 'Usuario eliminado de la lista de excluidos'
         ];
     }
-    /* public function store(ConfigurationRequest $request)
-    {
-        $id = $request->input('id');
-        $configuration = Configuration::find($id);
-        $configuration->fill($request->all());
-        $configuration->save();
-
-        return [
-            'success' => true,
-            'message' => 'Configuración actualizada',
-            'data' => $configuration
-        ];
-    } */
 
     public function store(ConfigurationRequest $request)
     {

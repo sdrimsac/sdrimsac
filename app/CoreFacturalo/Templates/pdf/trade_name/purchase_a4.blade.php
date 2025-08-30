@@ -20,7 +20,8 @@
 <body>
     @if ($document->state_type->id == '11')
         {{-- Watermark moved further left and more diagonal --}}
-        <div style="position: absolute; left: 10%; top: 28%; transform: translate(-50%, -50%) rotate(-45deg); transform-origin: center; text-align: center; width: 85%; z-index: 1000; pointer-events: none;">
+        <div
+            style="position: absolute; left: 10%; top: 28%; transform: translate(-50%, -50%) rotate(-45deg); transform-origin: center; text-align: center; width: 85%; z-index: 1000; pointer-events: none;">
             <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png'))) }}"
                 alt="anulado" style="opacity: 0.25; width: 100%; max-width: 500px; display: block; margin: 0 auto;" />
         </div>
@@ -311,6 +312,25 @@
             </tr>
         </table>
     @endif
+
+   {{--  <div>
+        <strong>Depuración: Condición actual = {{ var_export($document->payment_condition_id, true) }}</strong>
+    </div>
+    @if (trim($document->payment_condition_id) == '01')
+        <tr>
+            <td>
+                <strong>PAGOS:</strong>
+            </td>
+        </tr>
+        @foreach ($boxes as $box)
+            <tr>
+                <td colspan="4" class="text-left font-bold desc" style="white-space: nowrap;">
+                    {{ $box->method }}:
+                    {{ $document->currency_type->symbol }}
+                    {{ number_format(abs($box->amount), 2, '.', '') }}</td>
+            </tr>
+        @endforeach
+    @endif --}}
 
     @if ($payments->count())
         <table class="full-width">

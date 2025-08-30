@@ -34,31 +34,31 @@
                 <div
                     class="data-table-visible-columns d-flex align-items-center"
                 >
+                    <template v-for="(amount, bankName) in banks">
+                        <el-button
+                            v-if="amount > 0"
+                            class="btn_excelsmallmetthod"
+                            style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+                        >
+                            <span> {{ bankName }}: S/ {{ amount }} </span>
+                        </el-button>
+                    </template>
                     <el-button
-                    v-if="paymentMethods.Transferencia > 0"
-                        class="btn_excelsmallmetthod"
-                        style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
-                    >
-                        <span>
-                            Transferencia: S/ {{ paymentMethods.Transferencia }}
-                        </span>
-                    </el-button>
-                    <el-button
-                      v-if="paymentMethods.IZYPAY > 0"
+                        v-if="paymentMethods.IZYPAY > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #ff0000; border-color: #ff0000; color: #fff !important;"
                     >
                         <span> Izipay: S/ {{ paymentMethods.IZYPAY }} </span>
                     </el-button>
                     <el-button
-                    v-if="paymentMethods.OPENPAY > 0"
+                        v-if="paymentMethods.OPENPAY > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background: linear-gradient(135deg, #2196f3 50%, #2ecc71 50%); border-color: #2196f3; color: #fff !important;"
                     >
                         <span> OpenPay: S/ {{ paymentMethods.OPENPAY }} </span>
                     </el-button>
                     <el-button
-                    v-if="paymentMethods.NIUBIZ > 0"
+                        v-if="paymentMethods.NIUBIZ > 0"
                         class="btn_excelsmallmetthod"
                         style="font-weight: bold; font-size: 1.1rem; background-color: #2196f3; border-color: #2196f3; color: #fff !important;"
                     >
@@ -825,7 +825,16 @@ export default {
             showImportColorSizeDialog: false,
             total: 0,
             // Ensure paymentMethods is reactive and has default keys used in the template
-            paymentMethods: { Efectivo: 0, Culqui: 0, PLIN: 0, YAPE: 0, NIUBIZ: 0, OPENPAY: 0, IZYPAY: 0, Transferencia: 0 },
+            paymentMethods: {
+                Efectivo: 0,
+                Culqui: 0,
+                PLIN: 0,
+                YAPE: 0,
+                NIUBIZ: 0,
+                OPENPAY: 0,
+                IZYPAY: 0,
+                Transferencia: 0
+            },
             showDialogVoided: false,
             resource: "purchases",
             recordId: null,
@@ -878,7 +887,73 @@ export default {
         clickImportColorSize() {
             this.showImportColorSizeDialog = true;
         },
+        
         getAvaibleCash() {
+            this.$http("/caja/cash-transfer/available?with_all=1")
+            .then(response => {
+                const data = response.data || {};
+                let total = 0;
+                // Inicializa los métodos de pago y bancos
+                const paymentMethods = {
+                Efectivo: 0,
+                Culqui: 0,
+                PLIN: 0,
+                YAPE: 0,
+                NIUBIZ: 0,
+                OPENPAY: 0,
+                IZYPAY: 0,
+                Transferencia: 0
+                };
+                const banks = {};
+
+                // Procesa los métodos de pago
+                if (data.metodos && typeof data.metodos === "object") {
+                Object.entries(data.metodos).forEach(([method, amount]) => {
+                    // Normaliza el nombre del método si es necesario
+                    if (paymentMethods.hasOwnProperty(method)) {
+                    paymentMethods[method] = Number(amount) || 0;
+                    }
+                    total += Number(amount) || 0;
+                });
+                }
+
+                // Procesa los bancos
+                if (data.banks && typeof data.banks === "object") {
+                Object.entries(data.banks).forEach(([bank, amount]) => {
+                    banks[bank] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                });
+                // Si quieres sumar todos los bancos en Transferencia:
+                const transferenciaTotal = Object.values(data.banks).reduce((acc, val) => acc + Number(val || 0), 0);
+                paymentMethods.Transferencia = transferenciaTotal;
+                }
+
+                // Si el formato anterior (array o objeto plano)
+                if (!data.metodos && !data.banks) {
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                    const method = item.method || item.name || item[0];
+                    const amount = item.amount || item.value || item[1] || 0;
+                    if (!method) return;
+                    paymentMethods[method] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                    });
+                } else {
+                    Object.entries(data).forEach(([method, amount]) => {
+                    paymentMethods[method] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                    });
+                }
+                }
+
+                this.total = total;
+                this.paymentMethods = paymentMethods;
+                this.banks = banks;
+            })
+            .catch(() => {});
+        },
+
+        /* getAvaibleCash() {
             this.$http("/caja/cash-transfer/available?with_all=1")
                 .then(response => {
                     // Guardar los métodos de pago y sus montos en un objeto
@@ -917,7 +992,8 @@ export default {
                 .catch(() => {
                     // If request fails, keep default values
                 });
-        },
+        }, */
+
         calculate(item) {
             let {
                 quantity,

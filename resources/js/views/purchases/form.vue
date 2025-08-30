@@ -18,15 +18,17 @@
         </div>
         <div class="data-table-visible-columns d-flex align-items-center">
             <!--  -->
-            <el-button
-                v-if="paymentMethods.Transferencia > 0"
-                class="btn_excelsmallmetthod"
-                style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
-            >
-                <span>
-                    Transferencia: S/ {{ paymentMethods.Transferencia }}
-                </span>
-            </el-button>
+            <template v-for="(amount, bankName) in banks">
+                <el-button
+                    v-if="amount > 0"
+                    class="btn_excelsmallmetthod"
+                    style="font-weight: bold; font-size: 1.1rem; background-color: #00bfff; border-color: #00bfff; color: #fff !important;"
+                >
+                    <span>
+                        {{ bankName }}: S/ {{ amount }}
+                    </span>
+                </el-button>
+            </template>
             <el-button
                 v-if="paymentMethods.IZYPAY > 0"
                 class="btn_excelsmallmetthod"
@@ -666,11 +668,14 @@
                                         <thead class="bg-primary text-white">
                                             <tr>
                                                 <th
+                                                v-if="configurations.methods_arca_cash"
+                                                    
                                                     style="padding: 4px; white-space: nowrap;"
                                                 >
                                                     Cuentas Bancarias
                                                 </th>
                                                 <th
+                                                    v-if="!form.is_bank"
                                                     style="padding: 4px; white-space: nowrap;"
                                                 >
                                                     Forma de pago
@@ -718,50 +723,46 @@
                                                         (row.id || index)
                                                 "
                                             >
-                                                <!-- Forma de pago -->
-                                                <td style="padding: 2px;">
+                                                <td v-if="configurations.methods_arca_cash">
+                                                    <el-checkbox
+                                                        v-model="form.is_bank"
+                                                        @change="changeBankAccount"
+                                                    ></el-checkbox>
+                                                    <label
+                                                        for="banks"
+                                                        class="mb-0 ms-2"
+                                                    >
+                                                        Transferencia /
+                                                        Depositos
+                                                    </label>
                                                     <el-select
+                                                        :disabled="
+                                                            !form.is_bank
+                                                        "
                                                         v-model="
-                                                            row.payment_method_type_id
+                                                            form.bank_account_id
                                                         "
                                                         @change="
-                                                            changePaymentMethodType(
-                                                                true,
-                                                                index
-                                                            )
+                                                            changeBankAccount
                                                         "
-                                                        class="custom-input"
-                                                        style="min-width: 90px;"
                                                     >
                                                         <el-option
-                                                            v-for="(option,
-                                                            optIndex) in payment_method_types"
-                                                            :key="
-                                                                'cel-' +
-                                                                    option.id +
-                                                                    '-p-' +
-                                                                    index +
-                                                                    '-o-' +
-                                                                    optIndex
-                                                            "
-                                                            :value="option.id"
+                                                            v-for="bank in bank_accounts"
+                                                            :key="bank.id"
                                                             :label="
-                                                                `${option.description}`
+                                                                `${bank.description}-${bank.number}`
                                                             "
-                                                        ></el-option>
+                                                            :value="bank.id"
+                                                        >
+                                                        </el-option>
                                                     </el-select>
                                                 </td>
-                                                <td style="padding: 2px;">
+                                                <!-- Forma de pago -->
+                                                <td style="padding: 2px;" v-if="!form.is_bank">
                                                     <el-select
-                                                        v-model="
-                                                            row.payment_method_type_id
-                                                        "
-                                                        @change="
-                                                            changePaymentMethodType(
-                                                                true,
-                                                                index
-                                                            )
-                                                        "
+                                                        
+                                                        v-model="row.payment_method_type_id"
+                                                        @change="changePaymentMethodType(true, index)"
                                                         class="custom-input"
                                                         style="min-width: 90px;"
                                                     >
@@ -1733,6 +1734,8 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            items: [],
+            banks: [],
             paymentMethods: {
                 Efectivo: 0,
                 Culqui: 0,
@@ -1797,7 +1800,8 @@ export default {
             data: [],
             form: {
                 series_guia: "",
-                number_guia: ""
+                number_guia: "",
+                is_bank: false
             },
             percentage_igv: null
         };
@@ -1807,6 +1811,7 @@ export default {
     },
     async created() {
         //     setInterval(this.getNow, 1000);
+        await this.getBankAccounts();
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
             this.document_types = response.data.document_types_invoice;
@@ -1886,43 +1891,147 @@ export default {
         }
     },
     methods: {
+        changeBankAccount() {
+            // Use form.is_bank (checkbox) to determine behavior
+            if (this.form.is_bank) {
+                const bank_account = this.bank_accounts.find(
+                    b => b.id == this.form.bank_account_id
+                );
+
+                // Safety: if no bank_account found, avoid accessing its properties
+                if (!bank_account) {
+                    // clear boxes and do nothing else
+                    this.form.boxes = [];
+                    this.$forceUpdate();
+                    return;
+                }
+
+                // If payments array is present, reduce each row to only date_of_payment and payment
+                const today = moment().format("YYYY-MM-DD");
+                if (Array.isArray(this.form.payments) && this.form.payments.length > 0) {
+                    this.form.payments.forEach((row, idx) => {
+                        const paymentValue = parseFloat(row.payment) || parseFloat(this.form.total) || 0;
+                        // Keep only date_of_payment and payment; set others to null to avoid sending extra data
+                        row.date_of_payment = today;
+                        row.payment = paymentValue;
+                        row.id = null;
+                        row.purchase_id = null;
+                        row.payment_method_type_id = null;
+                        row.reference = null;
+                        row.payment_destination_id = null;
+                    });
+                }
+
+                // amount in boxes must be the total of the sale
+                // Prefer explicit form.total, otherwise sum item totals as a fallback
+                let totalAmount = parseFloat(this.form.total) || 0;
+                if (!totalAmount && Array.isArray(this.form.items) && this.form.items.length > 0) {
+                    const itemsSum = this.form.items.reduce((s, it) => {
+                        const t = parseFloat(it.total) || 0;
+                        const alt = (parseFloat(it.total_value) || 0) + (parseFloat(it.total_igv) || 0);
+                        return s + (t || alt || 0);
+                    }, 0);
+                    totalAmount = itemsSum || totalAmount;
+                }
+
+                // Build box object with required shape
+                const bankLabel = `${bank_account.description || ''}-${bank_account.number || ''}`.trim();
+                this.form.boxes = [
+                    {
+                        id: null,
+                        amount: totalAmount,
+                        bank_account_id: bank_account.id || null,
+                        date: new Date().toISOString(),
+                        method: bankLabel || 'Efectivo',
+                        method_payment_id: '01',
+                        number_operation: this.form.reference_number || null
+                    }
+                ];
+            } else {
+                // Revert: restore a sensible default payment method for first row and clear boxes
+                if (Array.isArray(this.form.payments) && this.form.payments.length > 0) {
+                    const fallback = this.findFirstUnusedPaymentMethod();
+                    this.form.payments.forEach((row, idx) => {
+                        row.payment_method_type_id = idx === 0 ? fallback || null : null;
+                    });
+                }
+                this.form.boxes = [];
+            }
+
+            this.$forceUpdate();
+        },
+        async getBankAccounts() {
+            const response = await this.$http.get(`/bank_accounts/records`);
+            if (response.status == 200) {
+                this.bank_accounts = response.data.data;
+                if (this.bank_accounts.length > 0) {
+                    this.form.bank_account_id = this.bank_accounts[0].id;
+                }
+            }
+        },
         getAvaibleCash() {
             this.$http("/caja/cash-transfer/available?with_all=1")
-                .then(response => {
-                    const data = response.data || {};
-                    let total = 0;
-                    const paymentMethods = {
-                        Efectivo: 0,
-                        Culqui: 0,
-                        Plin: 0,
-                        yape: 0,
-                        NIUBIZ: 0,
-                        OPENPAY: 0,
-                        IZYPAY: 0,
-                        Transferencia: 0
-                    };
-                    if (Array.isArray(data)) {
-                        // support [{ method, amount }, { method, amount }]
-                        data.forEach(item => {
-                            const method = item.method || item.name || item[0];
-                            const amount =
-                                item.amount || item.value || item[1] || 0;
-                            if (!method) return;
-                            paymentMethods[method] = Number(amount) || 0;
-                            total += Number(amount) || 0;
-                        });
-                    } else {
-                        Object.entries(data).forEach(([method, amount]) => {
-                            paymentMethods[method] = Number(amount) || 0;
-                            total += Number(amount) || 0;
-                        });
+            .then(response => {
+                const data = response.data || {};
+                let total = 0;
+                // Inicializa los métodos de pago y bancos
+                const paymentMethods = {
+                Efectivo: 0,
+                Culqui: 0,
+                PLIN: 0,
+                YAPE: 0,
+                NIUBIZ: 0,
+                OPENPAY: 0,
+                IZYPAY: 0,
+                Transferencia: 0
+                };
+                const banks = {};
+
+                // Procesa los métodos de pago
+                if (data.metodos && typeof data.metodos === "object") {
+                Object.entries(data.metodos).forEach(([method, amount]) => {
+                    // Normaliza el nombre del método si es necesario
+                    if (paymentMethods.hasOwnProperty(method)) {
+                    paymentMethods[method] = Number(amount) || 0;
                     }
-                    this.total = total;
-                    this.paymentMethods = paymentMethods;
-                })
-                .catch(() => {
-                    // If request fails, keep default values
+                    total += Number(amount) || 0;
                 });
+                }
+
+                // Procesa los bancos
+                if (data.banks && typeof data.banks === "object") {
+                Object.entries(data.banks).forEach(([bank, amount]) => {
+                    banks[bank] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                });
+                // Si quieres sumar todos los bancos en Transferencia:
+                const transferenciaTotal = Object.values(data.banks).reduce((acc, val) => acc + Number(val || 0), 0);
+                paymentMethods.Transferencia = transferenciaTotal;
+                }
+
+                // Si el formato anterior (array o objeto plano)
+                if (!data.metodos && !data.banks) {
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                    const method = item.method || item.name || item[0];
+                    const amount = item.amount || item.value || item[1] || 0;
+                    if (!method) return;
+                    paymentMethods[method] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                    });
+                } else {
+                    Object.entries(data).forEach(([method, amount]) => {
+                    paymentMethods[method] = Number(amount) || 0;
+                    total += Number(amount) || 0;
+                    });
+                }
+                }
+
+                this.total = total;
+                this.paymentMethods = paymentMethods;
+                this.banks = banks;
+            })
+            .catch(() => {});
         },
 
         /* handleImportData(data) {
