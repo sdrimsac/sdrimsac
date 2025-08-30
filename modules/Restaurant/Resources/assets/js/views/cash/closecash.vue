@@ -8,7 +8,7 @@
         @open="dateclosed"
         :before-close="closeDialog"
         v-loading="loading"
-        width="800px"
+        width="900px"
     >
         <!-- Encabezado -->
         <el-row :gutter="10" style="margin-bottom: 1px;">
@@ -49,36 +49,40 @@
             <el-col :span="12">
                 <el-card shadow="hover" style="padding:1px;">
                     <div class="header">
-                        <span>Billetes</span>
+                        <span style="font-size: 1.3em; color: #222;">Billetes</span>
                         <!-- <img src="/billetes.png" width="30" height="20" /> -->
                     </div>
                     <el-row
                         v-for="b in [10, 20, 50, 100, 200]"
                         :key="b"
                         align="middle"
-                        style="margin-bottom:5px;"
+                        style="margin-bottom:10px;"
                     >
-                        <el-col :span="8"
+                        <!-- <el-col :span="8"
                             ><strong>S/ {{ b }}</strong></el-col
-                        >
+                        ><el-col :span="8"> -->
+                        <el-col :span="8">
+                            <strong style="font-size: 1.3em; color: #222;">S/ {{ b }}</strong>
+                        </el-col>
                         <el-col :span="8">
                             <el-input
                                 size="mini"
                                 v-model="count[b]"
                                 placeholder="0"
                                 @input="updateFinalBalance(count[b], b)"
+                                style="font-size: 1.3em; color: #222;"
                             />
                         </el-col>
                         <el-col :span="8" class="text-right">
-                            <span>{{ ((count[b] || 0) * b).toFixed(2) }}</span>
+                            <span style="font-size: 1.3em; color: #222;">{{ ((count[b] || 0) * b).toFixed(2) }}</span>
                         </el-col>
                     </el-row>
                     <br />
                     <br />
                     <div class="total-row">
-                        <span>Total:</span>
+                        <span style="font-size: 1.3em; color: #222;">Total:</span>
                         <span class="float-right"
-                            ><strong>{{ totalBills.toFixed(2) }}</strong></span
+                            ><strong style="font-size: 1.3em; color: #222;">{{ totalBills.toFixed(2) }}</strong></span
                         >
                     </div>
                 </el-card>
@@ -93,27 +97,28 @@
                         v-for="m in [0.1, 0.2, 0.5, 1, 2, 5]"
                         :key="m"
                         align="middle"
-                        style="margin-bottom:5px;"
+                        style="margin-bottom:10px;"
                     >
-                        <el-col :span="8"
-                            ><strong>S/ {{ m }}</strong></el-col
-                        >
+                        <el-col :span="8">
+                            <strong style="font-size: 1.3em; color: #222;">S/ {{ m }}</strong>
+                        </el-col>
                         <el-col :span="8">
                             <el-input
                                 size="mini"
                                 v-model="count[m]"
                                 placeholder="0"
                                 @input="updateFinalBalance(count[m], m, true)"
+                                style="font-size: 1.3em; color: #222;"
                             />
                         </el-col>
                         <el-col :span="8" class="text-right">
-                            <span>{{ ((count[m] || 0) * m).toFixed(2) }}</span>
+                            <span style="font-size: 1.3em; color: #222;">{{ ((count[m] || 0) * m).toFixed(2) }}</span>
                         </el-col>
                     </el-row>
                     <div class="total-row">
-                        <span>Total:</span>
+                        <span style="font-size: 1.3em; color: #222;">Total:</span>
                         <span class="float-right"
-                            ><strong>{{ totalCoins.toFixed(2) }}</strong></span
+                            ><strong style="font-size: 1.3em; color: #222;">{{ totalCoins.toFixed(2) }}</strong></span
                         >
                     </div>
                 </el-card>
@@ -123,12 +128,13 @@
         <!-- Resumen y acciones -->
         <el-row :gutter="10" style="margin-top:5px; align-items: center;">
             <el-col :span="8" style="display: flex; align-items: center;">
-                <span style="margin-right: 8px;">Conteo:</span>
+                <span style="font-size: 1.3em; color: #222; margin-right: 8px;">Conteo:</span>
                 <el-input
                     :value="final_balance.toFixed(2)"
                     readonly
                     size="mini"
-                    style="flex: 1;"
+                    style="flex: 1; font-size: 1.3em; color: #222;"
+                    
                 ></el-input>
             </el-col>
             <el-col
@@ -139,7 +145,7 @@
                 "
                 style="display: flex; align-items: center;"
             >
-                <span style="margin-right: 8px;">Diferencia:</span>
+                <span style="font-size: 1.3em; color: #222; margin-right: 8px;">Diferencia:</span>
                 <el-input
                     :class="difference < 0 ? 'text-danger-difference' : ''"
                     :value="
@@ -149,7 +155,7 @@
                     "
                     readonly
                     size="mini"
-                    style="flex: 1;"
+                    style="flex: 1; font-size: 1.3em; color: #222;"
                 ></el-input>
             </el-col>
             <el-col

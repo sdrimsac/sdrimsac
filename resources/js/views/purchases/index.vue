@@ -822,6 +822,7 @@ export default {
     },
     data() {
         return {
+            banks: [],
             showImportColorSizeDialog: false,
             total: 0,
             paymentMethods: {

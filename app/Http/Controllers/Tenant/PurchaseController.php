@@ -1329,7 +1329,7 @@ class PurchaseController extends Controller
 
         $this->uploadFile($filename, $pdf->output('', 'S'), 'purchase');
     }
-    
+
     private function createFilename($purchase)
     {
 
@@ -1547,13 +1547,42 @@ class PurchaseController extends Controller
             DB::connection('tenant')->beginTransaction();
 
             $obj = Purchase::find($id);
-            $obj->state_type_id = 11; // anulado
+            $obj->state_type_id = 11;
             $obj->save();
 
             $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
             $type = "App\Models\Tenant\Purchase";
 
             foreach ($obj->items as $item) {
+                $inventoryKardex = InventoryKardex::where('item_id', $item->item_id)
+                    ->where('inventory_kardexable_type', $type)->where('inventory_kardexable_id', $id)->first();
+                $item->purchase->inventory_kardex()->create([
+                    'date_of_issue' => date('Y-m-d'),
+                    'item_id' => $item->item_id,
+                    'warehouse_id' => $inventoryKardex->warehouse_id,
+                    'quantity' => -$item->quantity,
+                    'user_id' => isset(auth()->user()->id) ? auth()->user()->id : null,
+                ]);
+                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $inventoryKardex->warehouse_id]])->first();
+                if (!$wr) {
+                    throw new Exception("No se encontró stock en el almacén para el producto {$item->item->description}");
+                }
+                // 🚨 Validación correcta
+                if ($wr->stock < $item->quantity) {
+                    throw new Exception("No se puede anular, el stock actual ({$wr->stock}) es menor a lo ingresado en la compra ({$item->quantity}).");
+                }
+                /* if ($wr->stock == 0 || $wr->stock < $item->quantity) {
+                    throw new Exception("El stock del producto {$item->item->description} no es suficiente para anular la compra");
+                } */
+                $wr->stock =  $wr->stock - $item->quantity;
+                $wr->save();
+                $it = Item::find($item->item_id);
+                $it->stock -= $item->quantity;
+                $it->save();
+                $this->removeDetailItems($item);
+            }
+
+            /* foreach ($obj->items as $item) {
                 $inventoryKardex = InventoryKardex::where('item_id', $item->item_id)
                     ->where('inventory_kardexable_type', $type)
                     ->where('inventory_kardexable_id', $id)
@@ -1586,7 +1615,7 @@ class PurchaseController extends Controller
                 $it->save();
 
                 $this->removeDetailItems($item);
-            }
+            } */
 
             /**
              * 💰 Devolver el monto al box solo si el usuario es ARCA
@@ -1648,26 +1677,6 @@ class PurchaseController extends Controller
                         'method'         => 'Efectivo',
                     ]);
                 }
-
-                /* // Registrar devolución en box
-                Box::create([
-                    'cash_id'        => $arcaCash->id,
-                    'date'           => now(),
-                    'amount'         => $obj->total,
-                    'expenses'       => 0,
-                    'incomes'         => 1,
-                    'group_id'       => 1,
-                    'category_id'    => 2,
-                    'subcategory_id' => 1,
-                    'state'          => 1,
-                    'type'           => 1,
-                    'soap_type_id'   => Company::active()->soap_type_id,
-                    'user_id'        => $user->id,
-                    'description'    => "Devolución por anulación de compra {$obj->series}-{$obj->number}",
-                    'purchase_id'    => $obj->id,
-                    'currency_type_id' => $obj->currency_type_id,
-                    'method'         => 'Efectivo',
-                ]); */
             }
             DB::connection('tenant')->commit();
 

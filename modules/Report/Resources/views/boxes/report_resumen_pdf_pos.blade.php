@@ -312,7 +312,7 @@
                     <div>
 
                         <span style="font-size: 15px !important;">CODIGO DE APERTURA:
-                            {{ $cash->reference_number }} - {{$cash->id}}</span>
+                            {{ $cash->reference_number }} - {{ $cash->id }}</span>
                     </div>
                 </td>
             </tr>
@@ -448,14 +448,16 @@
                     </td>
                     <td width="40%" style="vertical-align: top">
                         <table class="border f12">
-                            {{-- <tr>
-                                <td>
-                                    <span class="f12">SALDO DE APERTURA</span>
-                                </td>
-                                <td class="right">
-                                    <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
-                                </td>
-                            </tr> --}}
+                            @if (!$configuration->methods_arca_cash)
+                                <tr>
+                                    <td>
+                                        <span class="f12">SALDO DE APERTURA</span>
+                                    </td>
+                                    <td class="right">
+                                        <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
+                                    </td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td>
                                     <span class="f12">VENTAS EFECTIVO</span>
@@ -1823,7 +1825,7 @@
             {{-- @dd($stock_init_report['product']) --}}
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
-                    STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA 
+                    STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
                 </span>
                 <table class="border">
                     <thead>

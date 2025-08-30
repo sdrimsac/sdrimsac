@@ -2619,7 +2619,12 @@ class CashController extends Controller
         }
         $cash = Cash::firstOrNew(['id' => $id]);
         $cash->fill($request->all());
-        $cash->beginning_balance = 0;
+        if ($configuration->methods_arca_cash) {
+            $cash->beginning_balance = 0;
+        } else {
+           
+            $cash->beginning_balance = $initial_balance;
+        }
 
         if (!$id) {
             $cash->date_opening = date('Y-m-d');
@@ -2664,25 +2669,7 @@ class CashController extends Controller
             'updated_at' => now(),
         ]);
 
-        /* if ($cash->beginning_balance > 0 && !$cash->principal) {
-            Box::create([
-                'cash_id' => $cash->id,
-                'amount' => $initial_balance,
-                'type' => 1,
-                'incomes' => true,
-                'date' => date('Y-m-d'),
-                'method' => 'Efectivo',
-                'group_id' => 1,
-                'subcategory_id' => 1,
-                'category_id' => 1,
-                'soap_type_id' => '01',
-                'description' => 'Saldo de apertura',
-                'state' => 1,
-                'user_id' => auth()->user()->id,
-            ]);
-        } */
-
-        if ($initial_balance > 0) {
+        if ($initial_balance > 0 && $configuration->methods_arca_cash) {
             Box::create([
                 'cash_id' => $cash->id,
                 'amount' => $initial_balance,
