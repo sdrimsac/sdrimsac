@@ -3514,7 +3514,33 @@ class BoxesController extends Controller
                         INNER JOIN sale_note_items ON sale_notes.id = sale_note_items.sale_note_id  WHERE      boxes.cash_id = ?', [$cash_id]);
 
         $datosSeries = [];
+
         if (!empty($seriesDocs)) {
+            foreach ($seriesDocs as $value) {
+                $detalleSell = json_decode($value->item, true);
+                foreach ($detalleSell['lots'] as $valueDetalle) {
+                    $key = $value->doc_series . '-' . $value->doc_number . '-' . $valueDetalle['series'];
+                    $datosSeries[$key] = [$value->doc_series . '-' . $value->doc_number, $detalleSell['description'], $valueDetalle['series']];
+                }
+            }
+        }
+
+        if (!empty($seriesSalesNotes)) {
+            foreach ($seriesSalesNotes as $value) {
+                $detalleSalesNotes = json_decode($value->item, true);
+                if (isset($detalleSalesNotes['lots'])) {
+                    foreach ($detalleSalesNotes['lots'] as $valueDetalle) {
+                        $key = $value->salenotes_series . '-' . $value->salenotes_number . '-' . $valueDetalle['series'];
+                        $datosSeries[$key] = [$value->salenotes_series . '-' . $value->salenotes_number, $detalleSalesNotes['description'], $valueDetalle['series']];
+                    }
+                }
+            }
+        }
+
+        $datosSeries = array_values($datosSeries);
+
+
+        /* if (!empty($seriesDocs)) {
             foreach ($seriesDocs as $key => $value) {
                 $detalleSell =  json_decode($value->item, true);
                 foreach ($detalleSell['lots'] as $key => $valueDetalle) {
@@ -3532,7 +3558,8 @@ class BoxesController extends Controller
                     }
                 }
             }
-        }
+        } */
+
         $receipts = $this->get_receipts($cash_id); // receipts
         $quantity_receipts = count($receipts);
         $total_receipts = $receipts->sum('amount');
