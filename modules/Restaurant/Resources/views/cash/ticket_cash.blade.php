@@ -38,9 +38,8 @@
 </style>
 @php
     $currency_type = $is_usd ? '$' : 'S/';
-    function formatMoney($money,$currency_type)
+    function formatMoney($money, $currency_type)
     {
-    
         return $currency_type . number_format($money, 2);
     }
 @endphp
@@ -112,7 +111,7 @@
                     DINERO INICIAL
                 </td>
                 <td class="text-left " style="border: solid 1px black; width: 50%">
-                    {{ formatMoney($cash->beginning_balance,$currency_type) }}
+                    {{ formatMoney($cash->beginning_balance, $currency_type) }}
                 </td>
             </tr>
             @isset($cash->difference)
@@ -125,8 +124,8 @@
                             {{ formatMoney($cash->difference) }}
                         </td>
 
-                    </tr>--}}
-                @endif 
+                    </tr> --}}
+                @endif
             @endisset
         </table>
 
@@ -143,7 +142,7 @@
                             {{ strtoupper($detail['desc']) }}
                         </td>
                         <td class="text-left " style="border: solid 1px black;">
-                            {{ formatMoney($detail['sum'],$currency_type) }}
+                            {{ formatMoney($detail['sum'], $currency_type) }}
 
                         </td>
 
@@ -154,7 +153,7 @@
             <tr>
                 <td class="text-left lead-font-weight-700 " style="border: solid 1px black;">TOTAL</td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($sales_amount,$currency_type) }}
+                    {{ formatMoney($sales_amount, $currency_type) }}
                 </td>
                 <td class="text-left" colspan="2"></td>
             </tr>
@@ -221,7 +220,7 @@
                 </td>
                 <td class="text-left lead-font-weight-700 " style="border: solid 1px black;">ENTRADAS</td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($incomes_expenses_cash['incomes']['amount'],$currency_type) }}
+                    {{ formatMoney($incomes_expenses_cash['incomes']['amount'], $currency_type) }}
 
                 </td>
             </tr>
@@ -231,7 +230,7 @@
                 </td>
                 <td class="text-left lead-font-weight-700 " style="border: solid 1px black;">SALIDAS</td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($incomes_expenses_cash['expenses']['amount'],$currency_type) }}
+                    {{ formatMoney($incomes_expenses_cash['expenses']['amount'], $currency_type) }}
 
                 </td>
             </tr>
@@ -251,7 +250,7 @@
                 <td class="text-left " style="border: solid 1px black;">
                     {{ formatMoney(
                         $incomes_expenses_cash['incomes']['amount'] + $sales_amount - $incomes_expenses_cash['expenses']['amount'],
-                        $currency_type
+                        $currency_type,
                     ) }}
                 </td>
             </tr>
@@ -270,7 +269,7 @@
                         {{ strtoupper($document) }}
                     </td>
                     <td class="text-left " style="border: solid 1px black;">
-                        {{ formatMoney($amount,$currency_type) }}
+                        {{ formatMoney($amount, $currency_type) }}
                     </td>
                 </tr>
             @endforeach
@@ -284,13 +283,13 @@
                 @foreach ($counter as $coin => $value)
                     <tr>
                         <td class="text-left lead-font-weight-700 " style="border: solid 1px black;">
-                            {{ formatMoney($coin,$currency_type) }}
+                            {{ formatMoney($coin, $currency_type) }}
                         </td>
                         <td class="text-left " style="border: solid 1px black;">
-                            {{ formatMoney($value,$currency_type) }}
+                            {{ formatMoney($value, $currency_type) }}
                         </td>
                         <td class="text-left " style="border: solid 1px black;">
-                            {{ formatMoney($coin * $value,$currency_type) }}
+                            {{ formatMoney($coin * $value, $currency_type) }}
                         </td>
                     </tr>
                 @endforeach
@@ -304,28 +303,30 @@
                     TOTAL
                 </td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($total_coins,$currency_type) }}
+                    {{ formatMoney($total_coins, $currency_type) }}
                 </td>
             </tr>
         </table>
 
         <table class="table border-bottom">
-            {{-- <tr>
+            @if (!$configuration->methods_arca_cash)
+                <tr>
 
-                <td colspan="2" class="text-left lead-font-weight-700" style="border: solid 1px black;">
-                    SALDO INICIAL
-                </td>
-                <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($cash->beginning_balance,$currency_type) }}
-                </td>
-            </tr> --}}
+                    <td colspan="2" class="text-left lead-font-weight-700" style="border: solid 1px black;">
+                        SALDO INICIAL
+                    </td>
+                    <td class="text-left " style="border: solid 1px black;">
+                        {{ formatMoney($cash->beginning_balance, $currency_type) }}
+                    </td>
+                </tr>
+            @endif
             <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700" style="border: solid 1px black;">
                     EFECTIVO
                 </td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($total_cash,$currency_type) }}
+                    {{ formatMoney($total_cash, $currency_type) }}
                 </td>
             </tr>
             <tr>
@@ -334,7 +335,7 @@
                     VIRTUAL
                 </td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($total_coins_virtual,$currency_type) }}
+                    {{ formatMoney($total_coins_virtual, $currency_type) }}
                 </td>
             </tr>
             <tr>
@@ -343,7 +344,7 @@
                     BANCO
                 </td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($total_coins_bank,$currency_type) }}
+                    {{ formatMoney($total_coins_bank, $currency_type) }}
                 </td>
             </tr>
             <tr>
@@ -352,7 +353,7 @@
                     GASTOS
                 </td>
                 <td class="text-left " style="border: solid 1px black;">
-                    {{ formatMoney($incomes_expenses_cash['expenses']['amount'],$currency_type) }}
+                    {{ formatMoney($incomes_expenses_cash['expenses']['amount'], $currency_type) }}
                 </td>
             </tr>
             <tr>
@@ -367,7 +368,7 @@
                             $total_coins_virtual +
                             $cash->beginning_balance -
                             $incomes_expenses_cash['expenses']['amount'],
-                        $currency_type
+                        $currency_type,
                     ) }}
                 </td>
             </tr>
@@ -421,7 +422,7 @@
                                                 0,
                                             );
                                         @endphp
-                                         {{ $currency_type . number_format($total, 2) }}
+                                        {{ $currency_type . number_format($total, 2) }}
                                     </td>
                                 </tr>
                             </tbody>
