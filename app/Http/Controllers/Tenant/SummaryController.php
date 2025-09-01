@@ -47,9 +47,15 @@ class SummaryController extends Controller
 
     public function records(Request $request)
     {
+        $query = Summary::query()->where('summary_status_type_id', '1');
 
-        $records = Summary::where([['summary_status_type_id', '1'], [$request->column, 'like', "%{$request->value}%"]])
-            ->latest();
+        if ($request->column === 'identifier' && $request->value) {
+            $query->where('identifier', 'like', "%{$request->value}%");
+        } elseif ($request->column === 'date_of_issue' && $request->value) {
+            $query->where('date_of_issue', 'like', "%{$request->value}%");
+        }
+
+        $records = $query->latest();
 
         return new SummaryCollection($records->paginate(config('tenant.items_per_page')));
     }
