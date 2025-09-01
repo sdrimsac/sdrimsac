@@ -2727,9 +2727,13 @@ class CashController extends Controller
 
         $user = User::find($cash->user_id);
         $name = $user->name;
-        //$amount = $cash->boxes->sum('amount');
-        $box_apertura = $cash->boxes()->where('incomes', 1)->first();
+        if ($configuration->methods_arca_cash) {
+            $box_apertura = $cash->boxes()->where('incomes', 1)->first();
         $amount = $box_apertura ? $box_apertura->amount : 0;
+        } else {
+            $amount = $cash->boxes->sum('amount');
+        }
+    
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
         $area = Area::find($user->area_id);

@@ -96,6 +96,7 @@ class OptionController extends Controller
     {
         Document::where('id', '<>', null)->update(['orden_id' => null]);
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
+
         DB::connection('tenant')->table('hotel_rent_documents')->delete();
         DB::connection('tenant')->table('toll')->delete();
         DB::connection('tenant')->table('configurations')->update(['item_variation_id' => null]);
@@ -125,9 +126,9 @@ class OptionController extends Controller
         DB::connection('tenant')->table('sale_note_payments')->delete();
         DB::connection('tenant')->table('document_items')->delete();
         DB::connection('tenant')->table('dispatch_items')->delete();
+        DB::connection('tenant')->table('dispatches')->delete();
         DB::connection('tenant')->table('document_payments')->delete();
         DB::connection('tenant')->table('documents')->delete();
-        DB::connection('tenant')->table('dispatches')->delete();
         DB::connection('tenant')->table('sale_notes')->delete();
         DB::connection('tenant')->table('purchase_items')->delete();
         DB::connection('tenant')->table('purchase_payments')->delete();

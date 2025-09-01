@@ -21,11 +21,15 @@
                 </div>
             </el-col>
             <el-col :span="12" class="text-right">
-                <div
+                <!-- <div>
                     v-if="
                         configuration.view_daily_cash ||
                             configuration.view_daily_cash_pin
                     "
+
+                </div> -->
+                <div
+                    
                 >
                     <label style="color: darkgreen;"
                         >Total Ventas en Efectivo</label

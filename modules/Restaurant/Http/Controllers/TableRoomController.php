@@ -420,7 +420,7 @@ class TableRoomController extends Controller
                 (new WhatsappController)->sendMessageAll($message);
                 return [
                     'success' => false,
-                    'message' => 'El código fue dado de baja porque la habitación ya fue desocupada o cancelada.'
+                    'message' => 'El código fue dado de baja porque la habitación ya fue desocupada o anulada.'
                 ];
             } else {
                 $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
