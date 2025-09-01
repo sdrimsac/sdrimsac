@@ -47,7 +47,7 @@
                         <th>Ticket</th>
                         <th class="text-center">Descargas</th>
                         <th class="text-end">Acciones</th>
-                    <tr>
+                    </tr>
                     <tr slot-scope="{ index, row }" >
                         <td>{{ index  }}</td>
                         <td class="text-center">{{ row.date_of_issue }}</td>

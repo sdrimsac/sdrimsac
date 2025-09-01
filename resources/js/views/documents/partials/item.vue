@@ -27,9 +27,7 @@
                                 >
                             </label>
 
-                            <template
-                                v-if="!search_item_by_barcode"
-                            >
+                            <template v-if="!search_item_by_barcode">
                                 <div
                                     class="el-input el-input-group el-input-group--append"
                                 >
@@ -105,11 +103,12 @@
                             <small
                                 class="badge text-primary w-100"
                                 v-if="form.item_id != null"
-                                >
+                            >
                                 <!-- <strong>    Establecimiento: {{ getWarehouseDescription }}</strong> -->
-                                <br>
+                                <br />
 
-                                Ubicacion: {{ form.item ? form.item.location : '' }}<br
+                                Ubicacion:
+                                {{ form.item ? form.item.location : "" }}<br
                             /></small>
 
                             <template v-if="!is_client">
@@ -183,9 +182,12 @@
                                 @focus="$event.target.select()"
                                 ref="cantidad"
                                 v-model="form.quantity"
-                                :min="0.00"
+                                :min="0.0"
                                 :precision="2"
-                                :disabled="form.item.has_color_size || form.item.series_enabled"
+                                :disabled="
+                                    form.item.has_color_size ||
+                                        form.item.series_enabled
+                                "
                                 @keyup.enter.native="
                                     focusPrecio();
                                     calculateQuantity();
@@ -255,11 +257,14 @@
                                 form.lots_group.length > 0
                         "
                     >
-                        <a
+                        <!-- <a
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickLotGroup"
                             >[&#10004; Seleccionar lote]</a
+                        > -->
+                        <el-button type="primary" @click.prevent="clickLotGroup"
+                            >Seleccionar lote</el-button
                         >
                     </div>
 
@@ -269,11 +274,16 @@
                         v-if="form.item_id && form.item.series_enabled"
                     >
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
-                        <a
+                        <!-- <a
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickSelectLots"
                             >[&#10004; Seleccionar series]</a
+                        > -->
+                        <el-button
+                            type="primary"
+                            @click.prevent="clickSelectLots"
+                            >Seleccionar serie</el-button
                         >
                     </div>
 
@@ -282,11 +292,16 @@
                         class="col-md-3 col-sm-3"
                         v-if="form.item_id && form.item.has_color_size"
                     >
-                        <a
+                        <!-- <a
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickSelectColor"
                             >[&#10004; Seleccionar Talla Color]</a
+                        > -->
+                        <el-button
+                            type="primary"
+                            @click.prevent="clickSelectColor"
+                            >Seleccionar Talla Color</el-button
                         >
                     </div>
 
@@ -350,7 +365,8 @@
                                     <tbody>
                                         <tr
                                             v-for="(row,
-                                            index) in form.item_unit_types" :key="index"
+                                            index) in form.item_unit_types"
+                                            :key="index"
                                         >
                                             <td class="text-center">
                                                 {{ row.unit_type_id }}
@@ -427,7 +443,8 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.discounts" :key="index"
+                                                    index) in form.discounts"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -521,7 +538,8 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.charges" :key="index"
+                                                    index) in form.charges"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -609,7 +627,8 @@
                                             <tbody>
                                                 <tr
                                                     v-for="(row,
-                                                    index) in form.attributes" :key="index"
+                                                    index) in form.attributes"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -711,7 +730,6 @@
             :showDialog.sync="showDialogSelectLots"
             :lots="lotsItem"
             @addRowSelectLot="addRowSelectLot"
-
         >
         </select-lots-form>
         <color-form
@@ -806,6 +824,9 @@ export default {
             item_select: null,
             agregar_item: false,
             form_control: {},
+            form: {
+                name_product_pdf: ""
+            },
             editors: {
                 classic: ClassicEditor
             }
@@ -815,7 +836,7 @@ export default {
     async created() {
         this.initForm();
         /* this.$http.get(`/${this.resource}/item/tables?fromAdmin=1`).then(response => { */
-        this.$http.get(`/${this.resource}/item/tables`).then(response => {    
+        this.$http.get(`/${this.resource}/item/tables`).then(response => {
             this.all_items = response.data.items;
             this.operation_types = response.data.operation_types;
             this.all_affectation_igv_types =
@@ -861,7 +882,10 @@ export default {
                         this.items_select = response.data[0];
 
                         this.items = response.data;
-                        console.log("ver si llega datos a esta seccion", this.items);
+                        console.log(
+                            "ver si llega datos a esta seccion",
+                            this.items
+                        );
                         this.loading_search = false;
 
                         this.enabledSearchItemsBarcode();
@@ -1213,6 +1237,7 @@ export default {
             this.form.item_unit_types = precios.item_unit_types;
             this.form.unit_price_value = this.form.item.sale_unit_price;
             this.lotsItem = this.form.item.lots;
+            console.log("ver que datos llega aqui item", this.lotsItem);
             if (this.form.item.color_size) {
                 this.colorSizeItem = JSON.parse(
                     JSON.stringify(this.form.item.color_size)
@@ -1295,7 +1320,6 @@ export default {
             } */
             if (this.colorSizeItem && this.colorSizeItem.length > 0) {
                 if (!this.selectedColor || !this.selectedSize) {
- 
                     this.agregar_item = false;
                     this.$toast.info("Por favor, seleccione talla y color.");
                     return;
@@ -1305,12 +1329,11 @@ export default {
                     this.agregar_item = false;
                     this.$toast.warning("Ingrese la cantidad a vender.");
                     return;
-                }/*  else {
+                } /*  else {
                     this.agregar_item = true;
                 } */
             }
             this.agregar_item = true;
-            
         },
         updateprice() {
             if (this.configuration.refresh_price_sales == true) {
@@ -1367,18 +1390,14 @@ export default {
                 this.percentage_igv / 100
             );
             this.row = JSON.parse(JSON.stringify(row_calculate));
-            let select_lots = await _.filter(this.row.item.lots, {
-                has_sale: true
-            });
-            let un_select_lots = await _.filter(this.row.item.lots, {
-                has_sale: false
-            });
-
+            // Usar el array sincronizado de series seleccionadas
+            let select_lots = this.selectedLots || [];
             if (this.form.item.series_enabled) {
-                if (select_lots.length != this.form.quantity)
+                if (select_lots.length !== this.form.quantity) {
                     return this.$toast.error(
                         "La cantidad de series seleccionadas son diferentes a la cantidad a vender"
                     );
+                }
             }
 
             this.form.item.is_stock = this.form.stock;
@@ -1511,19 +1530,45 @@ export default {
             this.showDialogLots = true;
         },
         async clickSelectLots() {
-            console.log(this.form.item.warehouses);
-            let itemWarehouseId = this.form.item.warehouses.find(item => item.checked).warehouse_id;
+            console.log("obteniendo los alamcenes", this.form.item.warehouses);
+            let itemWarehouseId = this.form.item.warehouses.find(
+                item => item.checked
+            ).warehouse_id;
             console.log("el itemWarehouseId", itemWarehouseId);
-            this.lotsItem = this.form.item.lots.filter(item => item.warehouse_id == itemWarehouseId);
+            const lotsArray = Array.isArray(this.form.item.lots)
+                ? this.form.item.lots
+                : Object.values(this.form.item.lots || {});
+            console.log("lotsArray (convertido):", lotsArray);
+            this.lotsItem = lotsArray.filter(
+                item => item.warehouse_id == itemWarehouseId
+            );
+            console.log("Lotes filtrados para el modal:", this.lotsItem);
             this.showDialogSelectLots = true;
+
+            /* const lotsArray = Array.isArray(this.form.item.lots) ? this.form.item.lots : [];
+            console.log("lotsArray asadasdasd:", lotsArray);
+            //this.lotsItem = lotsArray.filter(item => item.warehouse_id == itemWarehouseId);
+            this.lotsItem = this.form.item.lots;
+            console.log("Lotes en el item:", this.lotsItem);
+            this.showDialogSelectLots = true; */
         },
-        addRowSelectLot(lots) {
+        /* addRowSelectLot(lots) {
+            console.log("lotes seleccionados en el modal al padre:", lots);
             lots = lots.filter(item => item.has_sale == true);
             //this.lots
             //fue al elegir, todas las series => this.lots
             this.lots = lots;
             this.form.quantity = this.lots.length;
             this.calculateQuantity();
+        }, */
+        addRowSelectLot(lots) {
+            console.log("lotes seleccionados en el modal al padre:", lots);
+            lots = lots.filter(item => item.has_sale == true);
+            this.lots = lots;
+            console.log("lotes seleccionados el padre", lots);
+            this.form.quantity = this.lots.length;
+            this.calculateQuantity();
+            this.selectedLots = this.lots;
         },
         async clickSelectColor() {
             this.showDialogSelectColor_size = true;

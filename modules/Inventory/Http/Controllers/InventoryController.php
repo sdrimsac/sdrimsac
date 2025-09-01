@@ -415,7 +415,6 @@ class InventoryController extends Controller
             if ($type == 'input' && count($lots) > 0) {
                 foreach ($lots as $lot) {
                     $existing_lot = ItemLot::where('item_id', $item_id)
-                        ->where('warehouse_id', $warehouse_id)
                         ->where('series', $lot['series'])
                         ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
                         ->first();

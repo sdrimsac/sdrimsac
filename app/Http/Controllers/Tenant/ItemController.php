@@ -2362,6 +2362,87 @@ class ItemController extends Controller
     {
         try {
             // Contar cuántos almacenes están asociados al producto
+            $warehouseCount = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $id)
+                ->count();
+
+            // Si hay solo un almacén asociado y no se pasó warehouse_id, utilizar ese almacén por defecto
+            if ($warehouseCount === 1 && $warehouse_id === null) {
+                $warehouse_id = DB::connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->value('warehouse_id');
+            }
+
+            // Validar si el producto tiene stock en ese almacén
+            $stock = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $id)
+                ->where('warehouse_id', $warehouse_id)
+                ->value('stock');
+
+            if ($stock > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede inhabilitar el producto. Todavía tiene stock en este almacén (' . $stock . ').'
+                ], 400);
+            }
+
+            // Si hay un solo almacén
+            if ($warehouseCount === 1) {
+                $updated = DB::connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->update(['active' => false]);
+
+                if ($updated) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'El producto ha sido inhabilitado en el almacén único.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo inhabilitar el producto en el almacén único.'
+                    ], 400);
+                }
+            }
+            // Si hay más de un almacén
+            else if ($warehouseCount > 1) {
+                $updated = DB::connection('tenant')->table('item_warehouse')
+                    ->where('item_id', $id)
+                    ->where('warehouse_id', $warehouse_id)
+                    ->update(['active' => false]);
+
+                if ($updated) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'El producto ha sido inhabilitado en el almacén seleccionado.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No se pudo inhabilitar el producto en el almacén seleccionado.'
+                    ], 400);
+                }
+            }
+
+            // Si no se encontró ningún almacén
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron almacenes asociados al producto.'
+            ], 400);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error inesperado, no se pudo inhabilitar el producto.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /*public function disableItem($id, $warehouse_id = null)
+    {
+        try {
+            // Contar cuántos almacenes están asociados al producto
             $warehouseCount = DB::Connection('tenant')->table('item_warehouse')
                 ->where('item_id', $id)
                 ->count();
@@ -2425,7 +2506,7 @@ class ItemController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-    }
+    }*/
 
     public function enableItem($id, $warehouse_id = null)
     {

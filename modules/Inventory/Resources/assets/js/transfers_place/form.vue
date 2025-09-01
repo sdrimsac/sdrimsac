@@ -520,7 +520,6 @@
                                     </span>
                                     <el-select
                                         v-model="form.printer"
-                                        :disabled="isDisabled"
                                         style="flex: 1;"
                                     >
                                         <el-option
@@ -639,6 +638,8 @@ export default {
         if (savedIsDisabled !== null) {
             this.isDisabled = savedIsDisabled === "true";
         }
+
+        
     },
 
     async created() {
@@ -647,6 +648,10 @@ export default {
             this.warehouses = response.data.warehouses;
             this.items = response.data.items;
         });
+
+        if (this.establishments && this.establishments.length > 0) {
+            this.form.printer = this.establishments[0].id;
+        }
 
         await this.initForm();
         this.initFormAdd();

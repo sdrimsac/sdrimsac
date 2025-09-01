@@ -148,6 +148,13 @@
                                 </el-option>
                             </el-select>
                         </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2" v-if="resource == 'summaries'"> 
+                            <label for="warehouse" class="d-flex align-items-center mb-1">
+                                <span class="mr-2"><i class="el-icon-location-outline"></i></span>
+                                <span>Filtro por Identificador</span>
+                            </label>
+                            <el-input v-model="search.identifier" placeholder="" @input="getRecords"></el-input>
+                        </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 pb-2" v-if="resource == 'items'">
                             <label class="d-flex align-items-center mb-1">
                                 <span class="mr-2"><i class="el-icon-s-check"></i></span>
@@ -755,7 +762,8 @@ export default {
                 column: null,
                 value: null,
                 active: null,
-                status: null
+                status: null,
+                identifier: null
             },
             columns: [],
             records: [],
@@ -961,6 +969,7 @@ export default {
                 warehouse_id: this.search.warehouse_id,
                 area_id: this.search.area_id,
                 status: this.search.status
+                    ,identifier: this.search.identifier
             });
         },
         changeClearInput() {

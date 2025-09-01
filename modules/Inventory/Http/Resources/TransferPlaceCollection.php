@@ -36,8 +36,10 @@ class TransferPlaceCollection extends ResourceCollection
                         'id' => $o->id,
                         'description' => $o->item->description ?? "-",
                         'quantity' => $o->quantity,
-                        'lots_enabled' => (bool)$o->item->lots_enabled,
-                        'lots' => $o->item->item_lots->where('has_sale', false)->where('warehouse_id', $row->warehouse_destination_id)->transform(function ($row) {
+                        //'lots_enabled' => (bool)$o->item->lots_enabled,
+                        'has_series' => (bool)$o->item->has_series,
+
+                        'series_lots' => $o->item->item_lots->where('has_sale', false)->where('warehouse_id', $row->warehouse_destination_id)->transform(function($row) {
                             return [
                                 'id' => $row->id,
                                 'series' => $row->series,
@@ -45,7 +47,7 @@ class TransferPlaceCollection extends ResourceCollection
                                 'item_id' => $row->item_id,
                                 'warehouse_id' => $row->warehouse_id,
                                 'has_sale' => (bool)$row->has_sale,
-                                'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                                'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code:null):null
                             ];
                         }),
                     ];
