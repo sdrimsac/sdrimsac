@@ -47,12 +47,14 @@ class SummaryController extends Controller
 
     public function records(Request $request)
     {
-        $query = Summary::query()->where('summary_status_type_id', '1');
+        //dump($request->all());
+        $query = Summary::query();
 
-        if ($request->column === 'identifier' && $request->value) {
-            $query->where('identifier', 'like', "%{$request->value}%");
-        } elseif ($request->column === 'date_of_issue' && $request->value) {
-            $query->where('date_of_issue', 'like', "%{$request->value}%");
+        if ($request->filled('identifier')) {
+            $query->where('identifier', 'like', "%{$request->identifier}%");
+        }
+        if ($request->filled('date_of_issue')) {
+            $query->where('date_of_issue', 'like', "%{$request->date_of_issue}%");
         }
 
         $records = $query->latest();
