@@ -2,7 +2,7 @@
     <el-dialog
         :title="titleDialog"
         width="35%"
-        :visible.sync="showDialog"
+        :visible.sync="localShowDialog"
         @open="create"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
@@ -94,7 +94,7 @@
                 <span
                     >Cargar Series
                     <el-tooltip
-                        content="Carga las SERIES chekeadas a la lista de Traslados"
+                        content="Agregar las SERIES seleccionadas a la lista de Traslados"
                         placement="top"
                     >
                         <i class="fas fa-info-circle" style="color: red;"></i>
@@ -116,13 +116,22 @@ export default {
             form: {},
             series: "",
             loading_submit: false,
-            localLots: []
+            localLots: [],
+            localShowDialog: false
         };
     },
     async created() {
         console.log("created ver como llega", this.lots);
     },
     watch: {
+        showDialog: {
+            immediate: true,
+            handler(val) {
+                this.localShowDialog = val;
+            }
+        }
+    },
+    /* watch: {
         lots: {
             immediate: true,
             handler(newLots) {
@@ -132,16 +141,21 @@ export default {
                     this.localLots = [];
                 }
             }
+        },
+        showDialog: {
+            immediate: true,
+            handler(val) {
+                this.localShowDialog = val;
+            }
         }
-    },
+    }, */
     methods: {
         create() {},
         async submit() {
-            let val_lots = await this.validateLots()
-            if(!val_lots.success)
-            return this.$toast.error(val_lots.message);
-            await this.$emit('addRowLot', this.lots);
-            await this.$emit('update:showDialog', false)
+            let val_lots = await this.validateLots();
+            if (!val_lots.success) return this.$toast.error(val_lots.message);
+            await this.$emit("addRowLot", this.lots);
+            await this.$emit("update:showDialog", false);
         },
         close() {
             this.$emit("update:showDialog", false);

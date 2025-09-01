@@ -11,6 +11,8 @@
         top="2vh"
     >
         <form autocomplete="off" @submit.prevent="submit">
+            <!-- DEBUG: Mostrar valores clave para Series -->
+            
             <div class="form-body p-2">
                 <!-- Panel General -->
                 <el-tabs
@@ -1056,7 +1058,7 @@
                                         <!-- Maneja Series -->
                                         <div
                                             class="col-12 col-lg-4 col-xl-3"
-                                            v-if="configuration.series_enabled"
+                                            v-if="configuration.series_enabled && form.has_color_size === false"
                                         >
                                             <div
                                                 v-if="form.unit_type_id != 'ZZ'"
@@ -1087,7 +1089,7 @@
                                         <!-- Maneja Lotes -->
                                         <div
                                             class="col-12 col-lg-4 col-xl-3"
-                                            v-if="configuration.lots_enabled"
+                                            v-if="configuration.lots_enabled && form.series_enabled === false"
                                         >
                                             <div
                                                 v-if="form.unit_type_id != 'ZZ'"
@@ -1114,7 +1116,7 @@
                                         <div
                                             class="col-12 col-lg-4 col-xl-3"
                                             v-if="
-                                                configuration.color_size_enabled
+                                                configuration.color_size_enabled && form.series_enabled === false
                                             "
                                         >
                                             <div
@@ -1482,7 +1484,7 @@
                                                 <th
                                                     v-if="
                                                         form.unit_type_id !=
-                                                            'ZZ'
+                                                            'ZZ' && form.series_enabled === false && form.has_color_size === false
                                                     "
                                                 >
                                                     Stock Inicial
@@ -1516,7 +1518,7 @@
                                                 <td
                                                     v-if="
                                                         form.unit_type_id !=
-                                                            'ZZ'
+                                                            'ZZ' && form.series_enabled === false && form.has_color_size === false
                                                     "
                                                 >
                                                     <el-input
@@ -3572,6 +3574,7 @@ export default {
                 lots: [],
                 attributes: [],
                 series_enabled: false,
+                has_color_size: false, // <-- Valor por defecto
                 area_id: 2,
                 model: null,
                 quality: null,
@@ -3868,6 +3871,11 @@ export default {
                     100;
         },
         async submit() {
+            // Validar que ninguna cantidad en item_price_ranges sea 0
+            if (this.form.item_unit_types.some(r => r.quantity === 0 || r.quantity === null || r.quantity === undefined)) {
+                this.$toast.error("No puede guardar: hay una cantidad en la lista de precios igual a cero.");
+                return false;
+            }
             if (!this.validatePriceRange()) {
                 this.$toast.warning("Ingrese los rangos de precios");
                 return false;

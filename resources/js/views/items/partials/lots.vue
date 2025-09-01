@@ -29,7 +29,7 @@
                             </td>
                             <td>
                                 <div class="form-group mb-2 mr-2">
-                                    <el-select v-model="row.state">
+                                    <el-select v-model="row.state" :disabled="true">
                                         <el-option v-for="(option,
                                             index) in states" :key="index" :value="option" :label="option"></el-option>
                                     </el-select>

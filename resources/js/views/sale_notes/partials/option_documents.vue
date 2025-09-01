@@ -11,7 +11,7 @@
             @close="clickClose"
             :show-close="true"
             append-to-body
-            >   
+        >
             <div class="row" v-loading="loading_documents">
                 <div class="col-lg-12">
                     <div class="row">
@@ -22,14 +22,20 @@
                                     <div class="col-lg-12">
                                         <div
                                             class="form-group"
-                                            :class="{ 'has-danger': errors.document_type_id }"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.document_type_id
+                                            }"
                                         >
                                             <label class="control-label"
-                                                ><i class="el-icon-user"></i> Cliente/Empresa
+                                                ><i class="el-icon-user"></i>
+                                                Cliente/Empresa
                                                 <a
                                                     href="#"
                                                     class="text-primary"
-                                                    @click.prevent="showDialogNewPerson = true"
+                                                    @click.prevent="
+                                                        showDialogNewPerson = true
+                                                    "
                                                     >[+ Nuevo]</a
                                                 >
                                             </label>
@@ -42,8 +48,12 @@
                                                 popper-class="el-select-customers"
                                                 dusk="customer_id"
                                                 placeholder="Escriba el nombre o número de documento del cliente"
-                                                :remote-method="searchRemoteCustomers"
-                                                @keyup.enter.native="keyupCustomer"
+                                                :remote-method="
+                                                    searchRemoteCustomers
+                                                "
+                                                @keyup.enter.native="
+                                                    keyupCustomer
+                                                "
                                                 :loading="loading_search"
                                             >
                                                 <el-option
@@ -57,7 +67,9 @@
                                             <small
                                                 class="text-danger"
                                                 v-if="errors.document_type_id"
-                                                v-text="errors.document_type_id[0]"
+                                                v-text="
+                                                    errors.document_type_id[0]
+                                                "
                                             ></small>
                                         </div>
                                     </div>
@@ -67,15 +79,28 @@
                                             <div class="form-group">
                                                 <div class="col-lg-12">
                                                     <div class="form-group">
-                                                        <label class="control-label">
-                                                            <i class="el-icon-document"></i> Observaciones
+                                                        <label
+                                                            class="control-label"
+                                                        >
+                                                            <i
+                                                                class="el-icon-document"
+                                                            ></i>
+                                                            Observaciones
                                                         </label>
                                                         <el-input
                                                             type="textarea"
-                                                            :autosize="{ minRows: 2, maxRows: 2 }"
-                                                            v-model="document.additional_information"
+                                                            :autosize="{
+                                                                minRows: 2,
+                                                                maxRows: 2
+                                                            }"
+                                                            v-model="
+                                                                document.additional_information
+                                                            "
                                                         >
-                                                            <i slot="prefix" class="el-icon-edit-outline"></i>
+                                                            <i
+                                                                slot="prefix"
+                                                                class="el-icon-edit-outline"
+                                                            ></i>
                                                         </el-input>
                                                     </div>
                                                 </div>
@@ -87,28 +112,46 @@
                                                 <div class="col-lg-12">
                                                     <div
                                                         class="form-group"
-                                                        :class="{ 'has-danger': errors.operation_type_id }"
+                                                        :class="{
+                                                            'has-danger':
+                                                                errors.operation_type_id
+                                                        }"
                                                     >
-                                                        <label class="control-label">Tipo Operación </label>
+                                                        <label
+                                                            class="control-label"
+                                                            >Tipo Operación
+                                                        </label>
                                                         <el-select
-                                                            v-model="document.operation_type_id"
-                                                            @change="changeOperationType"
+                                                            v-model="
+                                                                document.operation_type_id
+                                                            "
+                                                            @change="
+                                                                changeOperationType
+                                                            "
                                                         >
                                                             <el-option
                                                                 v-for="option in operation_types"
                                                                 :key="option.id"
-                                                                :value="option.id"
-                                                                :label="option.description"
+                                                                :value="
+                                                                    option.id
+                                                                "
+                                                                :label="
+                                                                    option.description
+                                                                "
                                                             ></el-option>
                                                         </el-select>
                                                         <small
                                                             class="form-control-feedback"
-                                                            v-if="errors.operation_type_id"
-                                                            v-text="errors.operation_type_id[0]"
+                                                            v-if="
+                                                                errors.operation_type_id
+                                                            "
+                                                            v-text="
+                                                                errors
+                                                                    .operation_type_id[0]
+                                                            "
                                                         ></small>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -122,11 +165,18 @@
                                     <div class="col-lg-12">
                                         <div
                                             class="form-group"
-                                            :class="{ 'has-danger': errors.document_type_id }"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.document_type_id
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                >Tipo de Comprobante</label
                                             >
-                                            <label class="control-label">Tipo de Comprobante</label>
                                             <el-select
-                                                v-model="document.document_type_id"
+                                                v-model="
+                                                    document.document_type_id
+                                                "
                                                 @change="changeDocumentType"
                                                 popper-class="el-select-document_type"
                                                 dusk="document_type_id"
@@ -142,9 +192,15 @@
                                             <small
                                                 class="text-danger"
                                                 v-if="errors.document_type_id"
-                                                v-text="errors.document_type_id[0]"
+                                                v-text="
+                                                    errors.document_type_id[0]
+                                                "
                                             ></small>
-                                            <el-checkbox  v-model="generate_dispatch">Generar Guía Remisión</el-checkbox>
+                                            <el-checkbox
+                                                v-model="generate_dispatch"
+                                                >Generar Guía
+                                                Remisión</el-checkbox
+                                            >
                                         </div>
                                     </div>
                                     <!-- serie del CPE  y Fecha de Emisión-->
@@ -153,21 +209,34 @@
                                             <div class="col-lg-6">
                                                 <div
                                                     class="form-group"
-                                                    :class="{ 'has-danger': errors.series_id }"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.series_id
+                                                    }"
                                                 >
-                                                    <label class="control-label">Serie</label>
-                                                    <el-select v-model="document.series_id">
+                                                    <label class="control-label"
+                                                        >Serie</label
+                                                    >
+                                                    <el-select
+                                                        v-model="
+                                                            document.series_id
+                                                        "
+                                                    >
                                                         <el-option
                                                             v-for="option in series"
                                                             :key="option.id"
                                                             :value="option.id"
-                                                            :label="option.number"
+                                                            :label="
+                                                                option.number
+                                                            "
                                                         ></el-option>
                                                     </el-select>
                                                     <small
                                                         class="text-danger"
                                                         v-if="errors.series_id"
-                                                        v-text="errors.series_id[0]"
+                                                        v-text="
+                                                            errors.series_id[0]
+                                                        "
                                                     ></small>
                                                 </div>
                                             </div>
@@ -176,15 +245,44 @@
                                             <div class="col-lg-6">
                                                 <div
                                                     class="form-group"
-                                                    :class="{ 'has-danger': errors.operation_type_id }"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.operation_type_id
+                                                    }"
                                                 >
-                                                    <label class="control-label">Fecha </label>
-                                                    <el-input
-                                                        v-model="document.date_of_issue"
+                                                    <label class="control-label"
+                                                        >Fecha
+                                                    </label>
+                                                    <el-date-picker
+                                                    v-model="
+                                                            document.date_of_issue
+                                                        "
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    format="dd-MM-yyyy"
+                                                    :clearable="false"
+                                                    style="width: 100%;"
+                                                    :readonly="
+                                                        this.configuration
+                                                            .restrict_receipt_date
+                                                    "
+                                                ></el-date-picker>
+
+                                                    <!-- <el-input
+                                                        v-model="
+                                                            document.date_of_issue
+                                                        "
                                                         type="date"
-                                                        disabled
+                                                        value-format="yyyy-MM-dd"
+                                                        format="dd-MM-yyyy"
+                                                        :clearable="false"
+                                                        style="width: 100%;"
+                                                        :readonly="
+                                                            this.configuration
+                                                                .restrict_receipt_date
+                                                        "
                                                     >
-                                                    </el-input>
+                                                    </el-input> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -198,8 +296,12 @@
                 <div class="col-lg-12 mt-3">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="text-success font-weight-bold mb-0">Detalle</h6>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <h6 class="text-success font-weight-bold mb-0">
+                                    Detalle
+                                </h6>
                                 <el-button
                                     class="submit"
                                     type="success"
@@ -212,46 +314,73 @@
                                     <i class="el-icon-document"></i> Generar CPE
                                 </el-button>
                             </div>
-                            <div class="col-lg-12" v-if="document.items.length > 0">
+                            <div
+                                class="col-lg-12"
+                                v-if="document.items.length > 0"
+                            >
                                 <div class="row mt-2">
                                     <div class="col-md-12">
-                                        
                                         <div class="table-responsive">
                                             <table class="table" width="100%">
-                                                <thead style="background-color: #073f68; color: white;">
+                                                <thead
+                                                    style="background-color: #073f68; color: white;"
+                                                >
                                                     <tr>
-                                                        <th class="text-white">#</th>
-                                                        <th class="text-white">Cantidad</th>
-                                                        <th class="text-white">Producto</th>
-                                                        <th class="text-white">Precio</th>
-                                                        <th class="text-white">Importe</th>
-                                                        <th class="text-white">Acciones</th>
+                                                        <th class="text-white">
+                                                            #
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Cantidad
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Producto
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Precio
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Importe
+                                                        </th>
+                                                        <th class="text-white">
+                                                            Acciones
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr
-                                                        v-for="(row, index) in document.items"
+                                                        v-for="(row,
+                                                        index) in document.items"
                                                         :key="index"
                                                     >
                                                         <td>{{ index + 1 }}</td>
-                                                        
-                                                        <td>{{ row.quantity }}</td>
+
                                                         <td>
-                                                            {{ row.item.description }}
+                                                            {{ row.quantity }}
+                                                        </td>
+                                                        <td>
+                                                            {{
+                                                                row.item
+                                                                    .description
+                                                            }}
                                                             <br /><small>{{
-                                                                row.affectation_igv_type
+                                                                row
+                                                                    .affectation_igv_type
                                                                     .description
                                                             }}</small>
                                                         </td>
                                                         <td class="text-center">
-                                                            {{ parseFloat(row.item.sale_unit_price).toFixed(2) }}
+                                                            {{
+                                                                parseFloat(
+                                                                    row.item
+                                                                        .sale_unit_price
+                                                                ).toFixed(2)
+                                                            }}
                                                         </td>
                                                         <td class="text-end">
                                                             {{
-                                                                
-                                                                    row.quantity *
-                                                                    row.item.sale_unit_price
-                                                                
+                                                                row.quantity *
+                                                                    row.item
+                                                                        .sale_unit_price
                                                             }}
                                                         </td>
                                                         <td class="text-center">
@@ -259,10 +388,14 @@
                                                                 type="button"
                                                                 class="btn btn-sm btn-danger"
                                                                 @click.prevent="
-                                                                    clickRemoveItem(index)
+                                                                    clickRemoveItem(
+                                                                        index
+                                                                    )
                                                                 "
                                                             >
-                                                                <i class="fa fa-trash"></i>
+                                                                <i
+                                                                    class="fa fa-trash"
+                                                                ></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -271,22 +404,33 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <h5 class="text-success font-weight-bold">
-                                            Total Importe: S/ {{
-                                                document.items.reduce((total, row) => {
-                                                    return total + (row.quantity * row.item.sale_unit_price);
-                                                }, 0).toFixed(2)
+                                    <div
+                                        class="d-flex justify-content-end mt-3"
+                                    >
+                                        <h5
+                                            class="text-success font-weight-bold"
+                                        >
+                                            Total Importe: S/
+                                            {{
+                                                document.items
+                                                    .reduce((total, row) => {
+                                                        return (
+                                                            total +
+                                                            row.quantity *
+                                                                row.item
+                                                                    .sale_unit_price
+                                                        );
+                                                    }, 0)
+                                                    .toFixed(2)
                                             }}
                                         </h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
-                
+
                 <!-- <div class="col-lg-8 mt-3">
                     <div
                         class="form-group"
@@ -333,7 +477,7 @@
                     >Generar</el-button
                 >
             </div> -->
-            
+
             <document-options
                 :showDialog.sync="showDialogDocumentOptions"
                 :recordId="documentNewId"
@@ -402,7 +546,9 @@ export default {
             operation_types: [],
             input_person: {},
             showDialogNewPerson: false,
-            document_type_03_filter: null
+            document_type_03_filter: null,
+            minDate: null,
+            maxDate: null
         };
     },
     created() {
@@ -411,6 +557,13 @@ export default {
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
         });
+
+        // Calcular fechas permitidas
+        const today = new Date();
+        const max = new Date();
+        max.setDate(today.getDate() - 2); // 2 días atrás
+        this.maxDate = max.toISOString().split("T")[0];
+        this.minDate = "2000-01-01"; // Cambia si necesitas un mínimo diferente
 
         // Ensure the customer name is rendered based on the provided ID
         if (this.document.customer_id) {
@@ -423,6 +576,12 @@ export default {
         }
     },
     methods: {
+        validateDate(e) {
+            // Si la fecha seleccionada es mayor a la máxima, la corrige
+            if (this.document.date_of_issue > this.maxDate) {
+                this.document.date_of_issue = this.maxDate;
+            }
+        },
         initForm() {
             this.generate = this.showGenerate ? true : false;
             this.errors = {};

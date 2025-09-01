@@ -212,21 +212,19 @@
                                                         "
                                                     ></el-option>
                                                 </el-select>
-                                                <a
+                                                <el-button
                                                     v-if="
                                                         form_add.item_id &&
                                                             form_add.series_enabled
                                                     "
-                                                    href="#"
-                                                    class="text-center font-weight-bold text-info"
                                                     @click.prevent="
                                                         clickLotcodeOutput
                                                     "
+                                                    class="btn bg-primary text-white"
                                                 >
-                                                    [&#10004; Seleccionar
-                                                    series]
-                                                </a>
-                                                <a
+                                                    seleccionar series
+                                                </el-button>
+                                                <el-button
                                                     v-if="
                                                         form_add.item_id &&
                                                             form_add.lots_enabled
@@ -236,10 +234,10 @@
                                                     @click.prevent="
                                                         clickLotescodeOutput
                                                     "
-                                                    >[&#10004; Seleccionar
-                                                    cantidad en lotes]</a
                                                 >
-                                                <a
+                                                    seleccionar lotes
+                                                </el-button>
+                                                <el-button
                                                     v-if="
                                                         form_add.item_id &&
                                                             has_color_size
@@ -249,9 +247,8 @@
                                                     @click.prevent="
                                                         clickColorcodeOutput
                                                     "
-                                                    >[&#10004; Seleccionar Talla
-                                                    & Color]</a
                                                 >
+                                                </el-button>
                                             </div>
                                         </div>
 
@@ -422,10 +419,9 @@
                                                             Color:
                                                             {{ tag.color }}
                                                             Talla:
-                                                            {{ tag.size }}                                                            Cantidad:
-                                                            {{
-                                                                tag.quantity
-                                                            }}
+                                                            {{ tag.size }}
+                                                            Cantidad:
+                                                            {{ tag.quantity }}
                                                         </el-tag>
                                                     </template>
                                                     <template
@@ -552,7 +548,6 @@
                                 </el-button>
 
                                 <el-button
-                                    
                                     class="btn_guardarsmall"
                                     icon="fas fa-save fa-lg"
                                     type="primary"
@@ -790,9 +785,10 @@ export default {
         },
         addRowOutputLot(lots) {
             let row = this.items.find(x => x.id == this.form_add.item_id);
-
             row.lots = lots.filter(l => l.has_sale);
             this.form_add.quantity = row.lots.length;
+            // Cierra el modal correctamente
+            this.showDialogLotsOutput = false;
         },
         addRowOutputLote(lotes) {
             let row = this.items.find(x => x.id == this.form_add.item_id);
@@ -961,9 +957,8 @@ export default {
                     .map(m => ({
                         ...m,
                         quantity: m.selectedQuantity
-                    })),                color_size: this.form_add.color_size.filter(
-                    c => c.quantity > 0
-                )
+                    })),
+                color_size: this.form_add.color_size.filter(c => c.quantity > 0)
             });
 
             this.initFormAdd();
@@ -972,34 +967,59 @@ export default {
         clickColorcodeOutput() {
             if (this.has_color_size) {
                 // Si color_size no es array o está vacío, cargarlo desde el backend
-                if (!Array.isArray(this.form_add.color_size) || this.form_add.color_size.length === 0) {
-                    console.log("PADRE: color_size vacío o no es array, debería estar con datos");                    // Usar la URL correcta para cargar tallas y colores
-                    this.$http.get(`/item-color-size/recordsCash?${this.getQueryParameters()}`)
+                if (
+                    !Array.isArray(this.form_add.color_size) ||
+                    this.form_add.color_size.length === 0
+                ) {
+                    console.log(
+                        "PADRE: color_size vacío o no es array, debería estar con datos"
+                    ); // Usar la URL correcta para cargar tallas y colores
+                    this.$http
+                        .get(
+                            `/item-color-size/recordsCash?${this.getQueryParameters()}`
+                        )
                         .then(response => {
                             // Inicializar con los datos del backend - ajustado para la estructura que viene del API
                             if (response.data) {
                                 // Si response.data es un array, usarlo directamente
                                 if (Array.isArray(response.data)) {
                                     this.form_add.color_size = response.data;
-                                } 
+                                }
                                 // Si response.data.data es un array, usar ese (estructura mostrada en el ejemplo)
-                                else if (response.data.data && Array.isArray(response.data.data)) {
-                                    this.form_add.color_size = response.data.data;
+                                else if (
+                                    response.data.data &&
+                                    Array.isArray(response.data.data)
+                                ) {
+                                    this.form_add.color_size =
+                                        response.data.data;
                                 }
                                 // Si response.data.color_size es un array, usar ese (estructura anterior)
-                                else if (response.data.color_size && Array.isArray(response.data.color_size)) {
-                                    this.form_add.color_size = response.data.color_size;
+                                else if (
+                                    response.data.color_size &&
+                                    Array.isArray(response.data.color_size)
+                                ) {
+                                    this.form_add.color_size =
+                                        response.data.color_size;
                                 }
-                                
-                                console.log("PADRE: Datos recibidos de la API:", response.data);
-                                console.log("PADRE: color_size después de asignar:", this.form_add.color_size);
+
+                                console.log(
+                                    "PADRE: Datos recibidos de la API:",
+                                    response.data
+                                );
+                                console.log(
+                                    "PADRE: color_size después de asignar:",
+                                    this.form_add.color_size
+                                );
                             }
                             // Ahora inicializar quantity y abrir el modal
                             this.initializeColorSizeQuantity();
                             this.showDialogColorOutput = true;
                         })
                         .catch(error => {
-                            console.error("Error cargando tallas y colores:", error);
+                            console.error(
+                                "Error cargando tallas y colores:",
+                                error
+                            );
                             this.showDialogColorOutput = true;
                         });
                 } else {
@@ -1020,7 +1040,11 @@ export default {
             this.showDialogLotesOutput = true;
         },
         clickLotcodeOutput() {
-            this.showDialogLotsOutput = true;
+            // Forzar el cierre antes de abrir para evitar quedarse pegado
+            this.showDialogLotsOutput = false;
+            this.$nextTick(() => {
+                this.showDialogLotsOutput = true;
+            });
         },
         initForm() {
             this.errors = {};
@@ -1030,7 +1054,8 @@ export default {
                 description: null,
                 items: []
             };
-        },        getQueryParameters() {
+        },
+        getQueryParameters() {
             // No necesitas queryString.stringify, puedes construir la query tú mismo
             return `warehouse_id=${this.form.warehouse_id}&item_id=${this.form_add.item_id}`;
         },
@@ -1081,6 +1106,10 @@ export default {
         close() {
             this.initForm();
             this.initFormAdd();
+            // Cerrar modales secundarios
+            this.showDialogLotsOutput = false;
+            this.showDialogLotesOutput = false;
+            this.showDialogColorOutput = false;
             this.$emit("update:showDialog", false);
         },
         initializeColorSizeQuantity() {
@@ -1088,15 +1117,18 @@ export default {
             if (!Array.isArray(this.form_add.color_size)) {
                 this.form_add.color_size = [];
             }
-            
+
             // Para cada elemento en color_size, asegurarse que quantity sea un número
             this.form_add.color_size.forEach(row => {
                 if (typeof row.quantity !== "number") {
                     this.$set(row, "quantity", 0);
                 }
             });
-            
-            console.log("PADRE: color_size inicializado:", this.form_add.color_size);
+
+            console.log(
+                "PADRE: color_size inicializado:",
+                this.form_add.color_size
+            );
         }
     }
 };

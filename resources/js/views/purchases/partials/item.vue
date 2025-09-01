@@ -1146,13 +1146,6 @@
             :lots="lots"
             @addRowLot="addRowLot"
         ></lots-form>
-        <lots-form
-            :showDialog.sync="showDialogLots"
-            :stock="form.quantity"
-            :lots="lots"
-            @addRowLot="addRowLot"
-        >
-        </lots-form>
         <lots-group-form
             :showDialog.sync="showDialogLotsGroup"
             :stock="form.quantity"

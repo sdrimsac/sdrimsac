@@ -82,6 +82,20 @@
                             </el-select>
                         </div>
                     </div>
+                    <div class="col-lg-2 col-md-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">Estado</label>
+                                <el-select
+                                    class="w-100"
+                                    v-model="search.active"
+                                    clearable
+                                    @change="getRecords"
+                                >
+                                    <el-option :key="true" :value="true" label="Activo"></el-option>
+                                    <el-option :key="false" :value="false" label="Desactivado"></el-option>
+                                </el-select>
+                        </div>
+                    </div>
                     <div class="col-lg-2 col-md-2 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100"
@@ -126,13 +140,13 @@
                             >
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
                             <el-checkbox v-model="search.active"
                                 >Activo</el-checkbox
                             >
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-lg-4 col-md-4 col-md-4 col-sm-12">
                         <el-button
@@ -148,9 +162,8 @@
                             type="success"
                             @click="excel"
                             :loading="loading_submit"
-                            
-                            >
-    <i class="fas fa-file-excel"></i>
+                        >
+                            <i class="fas fa-file-excel"></i>
                             Excel</el-button
                         >
 
@@ -214,6 +227,10 @@ export default {
     },
     data() {
         return {
+            states: [
+                { id: true, description: "Activo" },
+                { id: false, description: "Desactivo" }
+            ],
             items: [],
             warehouses: [],
             loading_submit: false,
@@ -299,14 +316,14 @@ export default {
                 1
             );
         },
-         excel() {
+        excel() {
             let url = `/${this.resource}/excel?${this.getQueryParameters()}`;
             if (this.fromAdmin) {
                 url = `/${
                     this.resource
                 }/excel?${this.getQueryParameters()}&fromAdmin=true`;
             }
-           window.open(url, "_blank");
+            window.open(url, "_blank");
         },
         getRecords() {
             if (this.time) {
