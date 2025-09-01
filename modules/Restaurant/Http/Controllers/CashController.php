@@ -2622,7 +2622,7 @@ class CashController extends Controller
         if ($configuration->methods_arca_cash) {
             $cash->beginning_balance = 0;
         } else {
-           
+
             $cash->beginning_balance = $initial_balance;
         }
 
@@ -2727,13 +2727,22 @@ class CashController extends Controller
 
         $user = User::find($cash->user_id);
         $name = $user->name;
-        if ($configuration->methods_arca_cash) {
+        /* if ($configuration->methods_arca_cash) {
             $box_apertura = $cash->boxes()->where('incomes', 1)->first();
-        $amount = $box_apertura ? $box_apertura->amount : 0;
+            $amount = $box_apertura ? $box_apertura->amount : 0;
         } else {
-            $amount = $cash->boxes->sum('amount');
+            //$amount = $cash->boxes->sum('amount');
+            $amount = $cash->beginning_balance;
+        } */
+
+        if ($configuration->methods_arca_cash) {
+            $cash->load('boxes');
+            $box_apertura = $cash->boxes()->where('incomes', 1)->first();
+            $amount = $box_apertura ? $box_apertura->amount : 0;
+        } else {
+            $amount = $cash->beginning_balance;
         }
-    
+
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
         $area = Area::find($user->area_id);
