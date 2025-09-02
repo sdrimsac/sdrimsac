@@ -3872,10 +3872,10 @@ export default {
         },
         async submit() {
             // Validar que ninguna cantidad en item_price_ranges sea 0
-            if (this.form.item_unit_types.some(r => r.quantity === 0 || r.quantity === null || r.quantity === undefined)) {
+            /* if (this.form.item_unit_types.some(r => r.quantity === 0 || r.quantity === null || r.quantity === undefined)) {
                 this.$toast.error("No puede guardar: hay una cantidad en la lista de precios igual a cero.");
                 return false;
-            }
+            } */
             if (!this.validatePriceRange()) {
                 this.$toast.warning("Ingrese los rangos de precios");
                 return false;
@@ -3889,6 +3889,7 @@ export default {
                 );
                 return false;
             }
+            
             if (!this.form.category_id) {
                 this.$showSAlert(
                     "ALERTA",

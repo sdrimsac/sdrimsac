@@ -221,7 +221,9 @@ class CashController extends Controller
         }
 
         if ($configuration->health_network) {
+
             $caja_principal = $cash_principal;
+
         } else {
             $caja_principal = Cash::where('user_id', $cash_principal->user_id)
                 ->where('principal', 1)
@@ -497,7 +499,7 @@ class CashController extends Controller
 
                     $banks[$normalized] = ($banks[$normalized] ?? 0) + ($income - $expense);
                 } else {
-                    // Métodos normales (efectivo, plin, yape, etc.)
+
                     $income = Box::where('cash_id', $cash_id)
                         ->where('incomes', 1)
                         ->where('method', $original_method)
