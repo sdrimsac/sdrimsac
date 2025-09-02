@@ -628,6 +628,24 @@
                                                 ></i>
                                             </el-tooltip>
                                         </el-radio-button>
+                                        <el-radio-button
+                                            :label="10"
+                                            plain
+                                            class="mb-2 me-2"
+                                            style="font-size: 16px;"
+                                        >
+                                            50x25
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="La medida de la etiqueta de 50mm x 25mm solo esta disponible para 1 columnas x etiqueta solo nombre del producto y precios"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-radio-button>
                                     </el-radio-group>
                                 </div>
                             </div>
@@ -1601,6 +1619,53 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div
+                                    v-if="modeloSeleccionado === 'Modelo10'"
+                                    class="d-flex flex-row justify-content-center preview-container"
+                                >
+                                    <div
+                                        class="border d-flex flex-row align-items-center h150 w300 overflow-hidden bg-white"
+                                    >
+                                        <div
+                                            class="d-flex flex-column align-items-center p-2"
+                                            style="width: 100%;"
+                                        >
+                                            <span
+                                                class="text-center"
+                                                style="font-size: 12px;"
+                                            >
+                                                {{
+                                                    product.descripcion ||
+                                                        "DESCRIPCION"
+                                                }}
+                                            </span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type == 'Precio venta'
+                                                            ? '#E6A23C'
+                                                            : '#000'
+                                                    }`
+                                                "
+                                                class="text-center"
+                                                >S/.
+                                                {{ sale_code || "N/D" }}</span
+                                            >
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type != 'Precio venta'
+                                                            ? '#409EFF'
+                                                            : '#000'
+                                                    }; margin-left: auto; display: block; text-align: right;`
+                                                "
+                                                >{{
+                                                    purchase_code || "N/D"
+                                                }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-12">
                                 <div
@@ -2459,7 +2524,7 @@ export default {
             showDialog: false,
             showDialogNewItem: false,
             establishment: [],
-            activeTab: "normal", // Default tab
+            activeTab: "normal",
             establishment: null,
             lector_barcode: false,
             item_for_barcode: null,
@@ -2532,6 +2597,8 @@ export default {
                     return "Modelo8";
                 case 9:
                     return "Modelo9";
+                case 10:
+                    return "Modelo10";
                 default:
                     return null;
             }
