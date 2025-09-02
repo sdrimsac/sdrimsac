@@ -213,15 +213,15 @@
                     <li>
                         <a class="{{ $path[0] === 'transport' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.transport.index') }}">
-                            <i class="fa fa-solid fa-ruler" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span style="font-size: 1em; ">Transporte Vehiculos</span>
+                            <i class="icofont-truck" style="font-size: 1.5em; margin-right: 10px;"></i>
+                            <span style="font-size: 1em;">Vehículos de Transporte</span>
                         </a>
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'driver' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.driver.index') }}">
-                            <i class="fa fa-solid fa-ruler" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                            <span style="font-size: 1em; ">Conductores</span>
+                            <i class="icofont-user-alt-3" style="font-size: 1.5em; margin-right: 10px;"></i>
+                            <span style="font-size: 1em;">Conductores</span>
                         </a>
                     </li>
 
@@ -350,7 +350,7 @@
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('transfers_place.index') }}">
-                                <i class="icofont-truck" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <i class="icofont-exchange" style="font-size: 1.5em; margin-right: 10px;"></i>
                                 <span class="label" style="font-size: 1em; ">Traslados
                                 </span>
                             </a>

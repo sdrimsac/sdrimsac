@@ -1,26 +1,7 @@
 <!-- Listado de Transacciones -->
 <template>
 <div>
-    <div class="container-fluid p-l-0 p-r-0">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-6">
-                    <h6>
-                        <span>{{ title }}</span>
-                    </h6>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <span class="text-muted">{{ title }}</span>
-                        </li>
-                    </ol>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    
     <div class="container-fluid p-l-0 p-r-0">
         <div class="card mb-0">
             <div class="card-header bg-primary">
@@ -28,15 +9,14 @@
 
             </div>
             <div class="data-table-visible-columns">
-                <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickCreate()">
-                    <i class="fas fa-list-ul fa-lg"></i>
+                <el-button type="primary" class="btn_guardarsmall" href="javascript:void(0)" @click.prevent="clickCreate()">
+                    
                     <i class="fas fa-plus"></i>
-                    Nueva Transacción
+                    Nuevo
                 </el-button>
             </div>
 
             <div class="card-body">
-
                 <data-table :resource="resource" class="table-striped">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>

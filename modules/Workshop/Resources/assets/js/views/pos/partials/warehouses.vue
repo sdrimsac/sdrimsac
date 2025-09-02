@@ -12,7 +12,7 @@
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
         <el-tabs tab-position="top" type="card" v-model="activeName" @tab-click="getRecords">
-          <el-tab-pane label="Ultimas Ventas" name="sales_">
+          <el-tab-pane label="Últimas Ventas" name="sales_">
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped">
@@ -46,7 +46,7 @@
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="Ultimas Compras" name="purchases_">
+          <el-tab-pane label="Últimas Compras" name="purchases_">
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped">

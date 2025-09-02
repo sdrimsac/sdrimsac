@@ -3,387 +3,235 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0" v-loading="loading">
             <div class="card mb-0">
-                <div
-                    class="card-header bg-primary d-flex align-items-center"
-                    style="padding: 15px;"
-                >
-                    <h4
-                        class="my-0 text-white d-flex align-items-center"
-                        style="font-size: 1.5rem; font-weight: bold;"
-                    >
-                        <i
-                            class="fas fa-box-open"
-                            style="font-size: 2rem; margin-right: 0.5rem;"
-                        ></i>
-                        Listado de Productos Inventario
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="fas fa-box-open" style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                        Listado de Productos
                     </h4>
                 </div>
 
                 <div class="data-table-visible-columns d-flex align-items-center">
-                    <el-button
-                        type="primary"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickSaleOffert()"
-                        v-if="config.sale_offert"
-                    >
+                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                        @click.prevent="clickSaleOffert()" v-if="config.sale_offert">
                         <i class="fas fa-tag"></i>
                         Ofertas de ventas
                     </el-button>
-                    <el-button
-                        type="primary"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickBonus()"
-                        v-if="config.consolidated_quotations"
-                    >
+                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                        @click.prevent="clickBonus()" v-if="config.consolidated_quotations">
                         <i class="fas fa-gift"></i>
                         Bonificaciones
                     </el-button>
-                    <el-button
-                     v-if="config.unique_code_unit_types"
-                        type="primary"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickGenerate()"
-                    >
+                    <el-button v-if="config.unique_code_unit_types" type="primary" class="btn_buscar"
+                        style="margin-right: 5px;" href="javascript:void(0)" @click.prevent="clickGenerate()">
                         <!-- <i class="fa fa-plus"></i> -->
                         Generar Codigo de Familia
                     </el-button>
-                    <el-button
-                        type="primary"
-                        class="btn_buscar"
-                        style="margin-right: 5px;"
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate()"
-                    >
+                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                        @click.prevent="clickCreate()">
                         <i class="fa fa-plus"></i>
                         Nuevo
                     </el-button>
                     <div class="dropdown">
-                        <button
-                            class="btn_buscar"
-                            style="margin-right: 5px;"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            aria-haspopup="true"
-                        >
-                            <i data-cs-icon="more-horizontal"></i>
+                        <button class="btn_buscar" type="Primary" data-bs-toggle="dropdown" aria-expanded="false"
+                            aria-haspopup="true" style="margin-right: 5px;">
+                            <i class="fa fa-upload me-2"></i>
+                            Importar
                         </button>
-                        <div
-                            class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
-                            v-if="typeUser === 'admin' || typeUser === 'superadmin'"
-                        >
-                            <a
-                                class="dropdown-item text-success"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImport()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar Productos
-                            </a>
-                            <a
-                                v-if="config.quantity_prices"
-                                class="dropdown-item text-warning"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportListPriceRange()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar Precios
-                                por rango de cantidad
-                            </a>
-                            <a
-                                class="dropdown-item text-primary"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportListPrice()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar Política
-                                de Precios
-                            </a>
-                            <a
-                                v-if="config.quantity_prices"
-                                class="dropdown-item text-dark"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportListPriceUnitType()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar Precios
-                                por rango de cantidad en política de precio
-                            </a>
-                            <a
-                                class="dropdown-item text-danger"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportStockProducto()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar Stock de
-                                Producto
-                            </a>
-                            <a
-                                class="dropdown-item text-danger"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportStockItem()"
-                            >
-                                <i class="fa fa-upload me-2"></i> Importar stock para cargar mas stock
-                                
-                            </a>
-                            <a
-                                class="dropdown-item"
-                                href="javascript:void(0)"
-                                @click.prevent="clickImportPointsValue()"
-                                style="color:orange"
-                            >
-                                <i class="fa fa-upload"></i> Valor de puntos
-                            </a>
+                        <div class="dropdown-menu p-2 custom-dropdown-bg"
+                            v-if="typeUser === 'admin' || typeUser === 'superadmin'">
+                            <div class="d-flex flex-column" style="width: 180px;">
+                                <el-button type="primary" size="mini" class="btn_buscarsmall mb-2"
+                                    style="margin: 0px 0px 8px 10px;" @click.prevent="clickImport()">
+                                    <i class="fa fa-box-open me-2"></i> Productos
+                                </el-button>
+                                <el-button v-if="config.quantity_prices" type="primary" size="mini"
+                                    class="btn_buscarsmall mb-2" @click.prevent="clickImportListPriceRange()">
+                                    <i class="fa fa-layer-group me-2"></i> Precios por rango
+                                </el-button>
+                                <el-button type="primary" size="mini" class="btn_buscarsmall mb-2 w-100"
+                                    @click.prevent="clickImportListPrice()">
+                                    <i class="fa fa-tags me-2"></i> Política de Precios
+                                </el-button>
+                                <el-button v-if="config.quantity_prices" type="primary" size="mini"
+                                    class="btn_buscarsmall mb-2  w-100" @click.prevent="clickImportListPriceUnitType()">
+                                    <i class="fa fa-cubes me-2"></i> Precios por rango en política
+                                </el-button>
+                                <el-button type="primary" size="mini" class="btn_buscarsmall mb-2  w-100"
+                                    @click.prevent="clickImportStockProducto()">
+                                    <i class="fa fa-dolly me-2"></i> Stock de Producto
+                                </el-button>
+                                <el-button type="primary" size="mini" class="btn_buscarsmall mb-2  w-100"
+                                    @click.prevent="clickImportStockItem()">
+                                    <i class="fa fa-plus-square me-2"></i> Stock adicional
+                                </el-button>
+                                <el-button type="primary" size="mini" class="btn_buscarsmall mb-2  w-100"
+                                    @click.prevent="clickImportPointsValue()">
+                                    <i class="fa fa-star me-2"></i> Valor de puntos
+                                </el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-body">
-                    <data-table
-                        :typeUser="typeUser"
-                        :resource="resource"
-                        :config="config"
-                        @clickReport="clickReport"
-                        @clickReportForImport="clickReportForImport"
-                        class="table-striped"
-                        ref="dataTable"
-                    >
+                    <data-table :typeUser="typeUser" :resource="resource" :config="config" @clickReport="clickReport"
+                        @clickReportForImport="clickReportForImport" class="table-striped" ref="dataTable">
                         <tr slot="heading" width="100%" class="bg-primary">
-                            <th class="text-white">#</th>
-                            <th class="text-white">Acciones</th>
-                            <th class="text-white">Registro Actividad</th>
-                            <th class="text-white ">Cód. Interno</th>
-                            <th class="text-white text-center">Unidad</th>
-                            <th class="text-white text-center">Nombre</th>
+                            <th class="text-white" style="width: 10px;">#</th>
+                            <th class="text-white" style="width: 50px;">Acciones</th>
+                            <th class="text-white" style="width: 150px;">Registro Actividad</th>
+                            <th class="text-white text-center" style="width: 150px;">Cód. Interno</th>
+                            <th class="text-white text-center" style="width: 20px;">Unidad</th>
+                            <th class="text-white text-center" style="width: 600px;">Producto o Servicio</th>
                             <!-- <th class="text-white">Descripción</th> -->
-                            <th class="text-white">Ubicacion</th>
-                            <th class="text-left text-white">Stock</th>
-                            <th class="text-white">
+                            <th class="text-white" style="width: 40px;">Ubicación</th>
+                            <th class="text-center text-white" style="width: 20px;">Stock</th>
+                            <th class="text-white" style="width: 100px;">
                                 P.Venta
                             </th>
                             <!-- <th class="text-end text-white">P.Unitario (Venta) establecimiento</th> -->
-                            <th
-                                v-if="typeUser != 'seller'"
-                                class="text-end text-white"
-                            >
+                            <th v-if="typeUser != 'seller'" class="text-end text-white" style="width: 100px;">
                                 P.Compra
                             </th>
                             <!-- <th class="text-center text-white">Tiene Igv</th> -->
-                            <th class="text-white text-center">Estado</th>
+                            <th class="text-white text-center" style="width: 100px;">Estado</th>
                         </tr>
 
-                        <tr
-                            slot-scope="{ index, row }"
-                            :class="{ disable_color: !row.active }"
-                        >
+                        <tr slot-scope="{ index, row }" :class="{ disable_color: !row.active }">
                             <td>{{ index + 1 }}</td>
                             <td class="text-start">
                                 <template>
-                                    <button
-                                        class="btn btnsdr-acciones btnsdr-acciones:hover"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                        style="height: 50px; font-size: 1.2rem;"
-                                    >
-                                        <span
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            data-bs-delay="0"
-                                            title
-                                            data-bs-original-title="Item Count"
-                                            aria-label="Item Count"
-                                        >
+                                    <div class="dropdown">
+                                        <button class="btn_buscarsmall" type="Primary" data-bs-toggle="dropdown"
+                                            aria-expanded="false" aria-haspopup="true" style="margin-right: 5px;">
                                             Acciones
-                                        </span>
-                                    </button>
-                                    <div
-                                        class="dropdown-menu dropdown-menu-end"
-                                    >
-                                        <!-- Editar -->
-                                        <a
-                                            type="button"
-                                            class="dropdown-item text-secondary"
-                                            @click.prevent="clickCreate(row.id)"
-                                        >
-                                            <i
-                                                class="fa fa-edit fa-lg me-2"
-                                            ></i>
-                                            <!-- Espaciado entre icono y texto -->
-                                            Editar
-                                        </a>
+                                        </button>
+                                        <div class="dropdown-menu p-2 custom-dropdown-bg">
+                                            <div class="d-flex flex-column" style="width: 120px;">
+                                                <el-button type="primary" size="mini"
+                                                    class="btn_buscarsmall d-flex align-items-center"
+                                                    style="margin: 0px 0px 8px 10px;"
+                                                    @click.prevent="clickCreate(row.id)">
+                                                    <i class="fa fa-edit fa-lg me-2"></i> Editar
+                                                </el-button>
+                                                <el-button type="danger" size="mini"
+                                                    class="btn_buscarsmall mb-2 d-flex align-items-center"
+                                                    @click.prevent="clickDelete(row.id)">
+                                                    <i class="fa fa-trash fa-lg me-2"></i> Eliminar
+                                                </el-button>
+                                                <el-button v-if="row.warehouses.some(warehouse => warehouse.active)"
+                                                    type="warning" size="mini"
+                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                    @click.prevent="clickDisableItem(row.id)">
+                                                    <i class="fas fa-toggle-off fa-lg me-2"></i> Inhabilitar
+                                                </el-button>
+                                                <el-button v-else type="success" size="mini"
+                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                    @click.prevent="clickEnableItem(row.id)">
+                                                    <i class="fas fa-toggle-on fa-lg me-2"></i> Habilitar
+                                                </el-button>
+                                                <el-button type="info" size="mini"
+                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                    @click.prevent="clickDisguise(row.id)">
+                                                    <i class="fas fa-eye-slash fa-lg me-2"></i> Desactivar
+                                                </el-button>
+                                                <el-tooltip content="Agregar este producto a todos los Almacenes" placement="top">
+                                                    <!-- typeUser == 'superadmin' &&  -->
+                                                    <el-button 
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        v-if="!row.is_in_all_warehouses" type="primary" 
+                                                        @click.prevent="clickAddProductToWarehouses(row.id)">
+                                                        <i class="fas fa-warehouse fa-lg me-2"></i>Agregar
+                                                    </el-button>
+                                                </el-tooltip>
+                                                <el-tooltip
+                                                    content="Agregar Política de Precios de Producto en todos los establecimintos"
+                                                    placement="top">
+                                                    <el-button type="primary" size="mini"
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        @click.prevent="clickPolitica(row.id)">
+                                                        <i class="fas fa-balance-scale fa-lg me-2"></i> PPP
+                                                    </el-button>
+                                                </el-tooltip>
 
-                                        <!-- Eliminar -->
-                                        <a
-                                            type="button"
-                                            class="dropdown-item text-danger"
-                                            @click.prevent="clickDelete(row.id)"
-                                        >
-                                            <i
-                                                class="fa fa-trash fa-lg me-2"
-                                            ></i>
-                                            Eliminar
-                                        </a>
-
-                                        <div class="dropdown-divider"></div>
-                                        <!-- Divisor entre acciones -->
-
-                                        <!-- Inhabilitar -->
-                                        <a
-                                            type="button"
-                                            class="dropdown-item"
-                                            @click.prevent="
-                                                clickDisableItem(row.id)
-                                            "
-                                            v-if="
-                                                row.warehouses.some(
-                                                    warehouse =>
-                                                        warehouse.active
-                                                )
-                                            "
-                                        >
-                                            <i
-                                                class="fas fa-toggle-off text-warning fa-lg me-2"
-                                            ></i>
-                                            Inhabilitar
-                                        </a>
-
-                                        <!-- Habilitar -->
-                                        <a
-                                            type="button"
-                                            class="dropdown-item"
-                                            @click.prevent="
-                                                clickEnableItem(row.id)
-                                            "
-                                            v-else
-                                        >
-                                            <i
-                                                class="fas fa-toggle-on text-success fa-lg me-2"
-                                            ></i>
-                                            Habilitar
-                                        </a>
-                                        <a
-                                            type="button"
-                                            class="dropdown-item text-succcess"
-                                            @click.prevent="
-                                                clickDisguise(row.id)
-                                            "
-                                        >
-                                            <i
-                                                class="fas fa-toggle-on fa-lg me-2"
-                                            ></i>
-                                            Desactivar
-                                        </a>
-                                        <a
-                                            type="button"
-                                            class="dropdown-item text-succcess"
-                                            @click.prevent="
-                                                clickPolitica(row.id)
-                                            "
-                                        >
-                                            <!-- <i
-                                                class="fas fa-toggle-on fa-lg me-2"
-                                            ></i> -->
-                                            Politica en Todo Almacenes
-                                        </a>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </template>
                             </td>
                             <td>
-                                <template
-                                    v-if="
-                                        row.last_register &&
-                                            row.last_register.user
-                                    "
-                                    class="text-center"
-                                >
-                                    <span
-                                        class="text-center fw-bold"
-                                        style="font-family: Arial, sans-serif;"
-                                        >{{ row.last_register.user }}</span
-                                    >
+                                <template v-if="
+                                    row.last_register &&
+                                    row.last_register.user
+                                " class="text-center">
+                                    <span class="text-center fw-bold" style="font-family: Arial, sans-serif;">{{
+                                        row.last_register.user }}</span>
                                     :
                                     <br />
-                                    <span
-                                        class="text-primary"
-                                        style="font-family: Arial, sans-serif;"
-                                        >{{
-                                            row.last_register.description
-                                        }}</span
-                                    >
+                                    <span class="text-primary" style="font-family: Arial, sans-serif;">{{
+                                        row.last_register.description
+                                    }}</span>
                                     <br />
-                                    <span
-                                        :class="
-                                            `${
-                                                row.last_register.date_time
-                                                    .is24Hours
-                                                    ? 'text-danger'
-                                                    : ''
-                                            }`
-                                        "
-                                        style="font-family: Arial, sans-serif;"
-                                    >
-                                        {{ row.last_register.created_at }}
+                                    <span style="font-family: Arial, sans-serif;">
+                                        <span style="color: #007bff;">
+                                            {{ row.last_register.created_at.split(' ')[0] }}
+                                        </span>
+                                        <span style="color: #dc3545; margin-left: 4px;">
+                                            {{ row.last_register.created_at.split(' ')[1] }}
+                                        </span>
                                     </span>
                                 </template>
                             </td>
 
                             <td class="text-center">{{ row.internal_id }}</td>
                             <td class="text-center">{{ row.unit_type_id }}</td>
-                            <td class="text-center">
-                                {{ row.description }}
+                            <td class="text-left">
+                                <span style="font-weight: bold; font-size: 1.2em;">{{ row.description }}</span>
                                 <br />
                                 {{ row.second_name }}
                             </td>
                             <!-- <td>{{ row.second_name }}</td> -->
                             <td>{{ row.location }}</td>
                             <td>
-                                <div
-                                    v-if="config.product_only_location == true"
-                                >
+                                <div v-if="config.product_only_location == true">
                                     {{ row.stock }}
                                 </div>
                                 <div v-else>
-                                    <template
-                                        v-if="
-                                            typeUser == 'seller' &&
-                                                row.unit_type_id != 'ZZ'
-                                        "
-                                        >{{ row.stock }}</template
-                                    >
-                                    <template
-                                        v-else-if="
-                                            typeUser != 'seller' &&
-                                                row.unit_type_id != 'ZZ'
-                                        "
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-info"
-                                            @click.prevent="
-                                                clickWarehouseDetail(
-                                                    row.id,
-                                                    row.has_series,
-                                                    row.warehouses,
-                                                    row.unit_type,
-                                                    row
-                                                )
-                                            "
-                                        >
-                                            <i class="fa fa-search"></i>
-                                        </button>
+                                    <template v-if="
+                                        typeUser == 'seller' &&
+                                        row.unit_type_id != 'ZZ'
+                                    ">{{ row.stock }}</template>
+                                    <template v-else-if="
+                                        typeUser != 'seller' &&
+                                        row.unit_type_id != 'ZZ'
+                                    ">
+                                        <el-tooltip content="Ver STOCK del producto y Almacenes" placement="top">
+                                            <button
+                                                type="primary"
+                                                class="btn_guardarsmall"
+                                                style="width: 30px; padding: 1px;"
+                                                @click.prevent="
+                                                    clickWarehouseDetail(
+                                                        row.id,
+                                                        row.has_series,
+                                                        row.warehouses,
+                                                        row.unit_type,
+                                                        row
+                                                    )
+                                                "
+                                            >
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        </el-tooltip>
                                     </template>
                                 </div>
                             </td>
-                            
+
                             <td v-if="row.warehouse_prices.length > 0">
                                 <table>
                                     <tbody>
-                                        <tr
-                                            v-for="price in row.warehouse_prices"
-                                            :key="price.id"
-                                        >
+                                        <tr v-for="price in row.warehouse_prices" :key="price.id">
                                             <td v-if="price.warehouse_id">
                                                 {{ price.price }}
                                             </td>
@@ -400,88 +248,56 @@
                             </td>
 
                             <td class="text-center">
-                                <button
-                                    class="btn"
-                                    :style="{
-                                        color: 'white',
-                                        backgroundColor:
-                                            Array.isArray(row.warehouses) &&
+                                <button class="btn_guardarsmall" :style="{
+                                    color: 'white',
+                                    backgroundColor:
+                                        Array.isArray(row.warehouses) &&
                                             row.warehouses.some(
                                                 warehouse => warehouse.active
                                             )
-                                                ? 'green'
-                                                : 'red',
-                                        fontWeight: 'bold',
-                                        width: '110px'
-                                    }"
-                                >
+                                            ? 'green'
+                                            : 'red',
+                                    fontWeight: 'bold',
+                                    width: '110px'
+                                }">
                                     {{
                                         Array.isArray(row.warehouses) &&
-                                        row.warehouses.some(
-                                            warehouse => warehouse.active
-                                        )
+                                            row.warehouses.some(
+                                                warehouse => warehouse.active
+                                            )
                                             ? "Habilitado"
                                             : "Inhabilitado"
                                     }}
                                 </button>
 
-                                <el-button
-                                    v-if="
-                                        typeUser == 'superadmin' &&
-                                            !row.is_in_all_warehouses
-                                    "
-                                    type="primary"
-                                    @click.prevent="
-                                        clickAddProductToWarehouses(row.id)
-                                    "
-                                    >Agregar a todos los almacenes</el-button
-                                >
+                                <!-- <el-button v-if="
+                                    typeUser == 'superadmin' &&
+                                    !row.is_in_all_warehouses
+                                 " type="primary" @click.prevent="
+                                    clickAddProductToWarehouses(row.id)
+                                    ">Agregar a todos los almacenes
+                                </el-button> -->
                             </td>
                         </tr>
                     </data-table>
                 </div>
 
-                <items-form
-                    :showDialog.sync="showDialog"
-                    :recordId.sync="recordId"
-                    :typeUser.sync="typeUser"
-                ></items-form>
-                <sale-offert
-                    :showDialog.sync="showSaleOffertDialog"
-                    :recordId.sync="recordId"
-                ></sale-offert>
-                <items-import
-                    :showDialog.sync="showImportDialog"
-                ></items-import>
-                <items-import-points-value
-                    :showDialog.sync="showImportPointsValueDialog"
-                ></items-import-points-value>
-                <warehouses-detail
-                    :showDialog.sync="showWarehousesDetail"
-                    :unit_type.sync="unit_type"
-                    :warehouses="warehousesDetail"
-                    :hasSerie="hasSerie"
-                    :itemId="itemId"
-                    :item="currentItem"
-                    :config="config"
-                    :user="user"
-                    :allWarehouses="warehouses"
-                ></warehouses-detail>
+                <items-form :showDialog.sync="showDialog" :recordId.sync="recordId"
+                    :typeUser.sync="typeUser"></items-form>
+                <sale-offert :showDialog.sync="showSaleOffertDialog" :recordId.sync="recordId"></sale-offert>
+                <items-import :showDialog.sync="showImportDialog"></items-import>
+                <items-import-points-value :showDialog.sync="showImportPointsValueDialog"></items-import-points-value>
+                <warehouses-detail :showDialog.sync="showWarehousesDetail" :unit_type.sync="unit_type"
+                    :warehouses="warehousesDetail" :hasSerie="hasSerie" :itemId="itemId" :item="currentItem"
+                    :config="config" :user="user" :allWarehouses="warehouses"></warehouses-detail>
                 <items-import-list-price-range-unit-type
-                    :showDialog.sync="showImportListPriceUnitTypeDialog"
-                ></items-import-list-price-range-unit-type>
+                    :showDialog.sync="showImportListPriceUnitTypeDialog"></items-import-list-price-range-unit-type>
                 <items-import-list-price-range
-                    :showDialog.sync="showImportListPriceRangeDialog"
-                ></items-import-list-price-range>
-                <items-import-list-price
-                    :showDialog.sync="showImportListPriceDialog"
-                ></items-import-list-price>
+                    :showDialog.sync="showImportListPriceRangeDialog"></items-import-list-price-range>
+                <items-import-list-price :showDialog.sync="showImportListPriceDialog"></items-import-list-price>
                 <items-import-stock-producto
-                    :showDialog.sync="showImportStockProductoDialog"
-                ></items-import-stock-producto>
-                <items-import-list
-                    :showDialog.sync="showImportStockListDialog"
-                ></items-import-list>
+                    :showDialog.sync="showImportStockProductoDialog"></items-import-stock-producto>
+                <items-import-list :showDialog.sync="showImportStockListDialog"></items-import-list>
             </div>
             <bonus-modal :showDialog.sync="showBonusDialog"></bonus-modal>
         </div>
@@ -630,7 +446,7 @@ export default {
             let { column, value, warehouse_id, area_id, active } = query;
             window.open(
                 `/items/excel-for-import?column=${column || ""}&value=${value ||
-                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
+                ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
                 "_blank"
             );
         },
@@ -638,7 +454,7 @@ export default {
             let { column, value, warehouse_id, area_id, active } = query;
             window.open(
                 `/items/excel?column=${column || ""}&value=${value ||
-                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
+                ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id || ""}&active=${active || ""}`,
                 "_blank"
             );
         },
@@ -657,7 +473,7 @@ export default {
                         this.$toast.error("No se guardaron los cambios");
                     }
                 })
-                .catch(error => {});
+                .catch(error => { });
             this.$eventHub.$emit("reloadData");
         },
         clickWarehouseDetail(id, hasSerie, warehouses, unit_type, item, active) {
@@ -688,7 +504,7 @@ export default {
                         this.$toast.error("No se generó el código de familia");
                     }
                 })
-                .catch(error => {});
+                .catch(error => { });
         },
 
         clickImport() {

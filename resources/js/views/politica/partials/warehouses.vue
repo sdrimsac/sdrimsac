@@ -423,7 +423,7 @@ export default {
     },
     open() {
       this.total = this.warehouses.reduce((a, b) => a + Number(b.stock), 0);
-      this.titleDialog = `Stock de producto: ${this.item.description} ${this.item.internal_id}`;
+      this.titleDialog = `Stock de Producto: ${this.item.internal_id} ${this.item.description} `;
       if (this.hasSerie) {
         this.getSeries();
       }

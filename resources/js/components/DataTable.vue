@@ -136,7 +136,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2" v-if="resource == 'items'">
+                        <div class="col-lg-3 col-md-3 col-sm-12 pb-2" v-if="resource == 'items' && configuration.restaurant">
                             <label for="warehouse" class="d-flex align-items-center mb-1">
                                 <span class="mr-2"><i class="el-icon-location-outline"></i></span>
                                 <span>Área/Zona</span>
@@ -730,6 +730,7 @@
 <script>
 import moment from "moment";
 import queryString from "query-string";
+import Configuration_numbers from "../views/configurations/configuration_numbers.vue";
 
 export default {
     props: {
@@ -764,6 +765,7 @@ export default {
                 active: null,
                 status: null,
                 identifier: null
+
             },
             columns: [],
             records: [],
@@ -772,17 +774,19 @@ export default {
             time: null,
             warehouses: [],
             areas: [],
-            loading: false
+            loading: false,
+            configuration: {}
         };
+
     },
     computed: {},
     created() {
         //realiza una peticion get para obtener los datos de la tabla
-        /* if (this.resource == "items") {
+         if (this.resource == "items") {
             this.$http.get("items/tables").then(response => {
-                this.configuration = response.data;
+                this.configuration = response.data.configuration;
             });
-        } */
+        }
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });

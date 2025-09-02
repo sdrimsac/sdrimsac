@@ -1,15 +1,15 @@
 <template>
     <div class="card card-collapsed">
-        <div class="card-header bg-primary">
+        <div class="card-header bg-primary" style="padding: 8px;">
             <h4 class="my-0 text-white">
-                <i class="fas fa-sitemap"></i> Vehiculos de Transporte
+            <i class="icofont-truck"></i> Vehículos de Transporte
             </h4>
         </div>
         <div class="data-table-visible-columns">
-            <el-button type="primary" class="" @click.prevent="clickCreate()">
-                <i class="fas fa-sitemap fa-lg"></i>
+            <el-button type="primary" class="btn_guardarsmall" @click.prevent="clickCreate()">
+               
                 <i class="fa fa-plus"></i>
-                Nuevo Transporte
+                Nuevo
             </el-button>
         </div>
         <div class="card-body">

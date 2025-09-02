@@ -98,17 +98,20 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
-                    Cancelar</el-button
-                >
-                <el-button
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                >
-                    Guardar</el-button
-                >
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <el-button class="btn_cancelarsmall" type="primary" icon="fas fa-times fa-lg" @click.prevent="close()">
+                        Cancelar
+                    </el-button>
+                    <el-button
+                        class="btn_guardarsmall"
+                        icon="fas fa-save fa-lg"
+                        type="primary"
+                        native-type="submit"
+                        :loading="loading_submit"
+                    >
+                        Guardar
+                    </el-button>
+                </div>
             </div>
         </form>
     </el-dialog>
@@ -170,8 +173,8 @@ export default {
         },
         create() {
             this.titleDialog = this.recordId
-                ? "Editar Vehiculo de Transporte"
-                : "Nueva Vehiculo de transporte";
+                ? "Editar Vehículo de Transporte"
+                : "Nuevo Vehículo de Transporte";
             if (this.recordId) {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)

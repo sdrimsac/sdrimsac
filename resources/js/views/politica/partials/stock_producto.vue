@@ -44,16 +44,16 @@
                     <div class="col-12 mt-4 mb-2" v-if="form.warehouse_id">
                         <a class=" mr-auto" :href="`/items/import_stock_format?warehouse_id=${form.warehouse_id}`" target="_new">
                             <span class="mr-2">
-                                
-                                Descargar AQUI el formato</span>
-                            <i class="fa fa-download"></i>
+
+                                Descarga AQUÍ el formato</span>
+                            
                         </a>
                     </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
-                <el-button icon="fas fa-hourglass-half fa-lg" id=buttonProcesar type="primary" native-type="submit" :disabled="loading_submit" :loading="loading_submit"> Procesar</el-button>
+                <el-button class="btn_cancelarsmall" type="primary" icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button class="btn_guardarsmall" type="primary" icon="fas fa-hourglass-half fa-lg" id=buttonProcesar native-type="submit" :disabled="loading_submit" :loading="loading_submit"> Procesar</el-button>
             </div>
         </form>
     </el-dialog>
