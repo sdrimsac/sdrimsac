@@ -121,7 +121,7 @@ class Functions
         return join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration]);
     } */
 
-    public static function identifier($soap_type_id, $date_of_issue, $model)
+    /* public static function identifier($soap_type_id, $date_of_issue, $model)
     {
         $same_rucs = CompanySameRuc::all();
         $path = explode('\\', $model);
@@ -139,7 +139,7 @@ class Functions
             $numeration += 1;
 
             // ✅ Diferenciar por aplicativo
-            $suffix = auth()->user()->company->id; // o el uuid de la BD, o un campo que identifique el aplicativo
+            $suffix = auth()->user()->company->id;
         } else {
             $documents = $model::where('soap_type_id', $soap_type_id)
                 ->where('date_of_issue', $date_of_issue)
@@ -154,7 +154,44 @@ class Functions
         return $suffix
             ? join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration, $suffix])
             : join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration]);
+    } */
+
+    public static function identifier($soap_type_id, $date_of_issue, $model)
+    {
+        $same_rucs = CompanySameRuc::all();
+        $path = explode('\\', $model);
+        $last = array_pop($path);
+
+        $table = $last === 'Voided' ? 'voided' : 'summaries';
+
+        if (count($same_rucs) > 0) {
+            $numeration = 0;
+            foreach ($same_rucs as $same_ruc) {
+                $query = "SELECT COUNT(*) as total FROM " . $same_ruc->uuid . "." . $table . " WHERE soap_type_id = ? AND date_of_issue = ?";
+                $result = DB::select($query, [$soap_type_id, $date_of_issue]);
+                $numeration += $result[0]->total;
+            }
+            $numeration += 1;
+
+            // 🔑 Diferenciar por tenant
+            $currentDb = DB::connection('tenant')->getDatabaseName();
+            $sameRuc = CompanySameRuc::where('uuid', $currentDb)->first();
+            $suffix = $sameRuc ? $sameRuc->website_id : $currentDb;
+        } else {
+            $documents = $model::where('soap_type_id', $soap_type_id)
+                ->where('date_of_issue', $date_of_issue)
+                ->get();
+            $numeration = count($documents) + 1;
+            $suffix = null;
+        }
+
+        $prefix = $last === 'Voided' ? 'RA' : 'RC';
+
+        return $suffix
+            ? join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration, $suffix])
+            : join('-', [$prefix, Carbon::parse($date_of_issue)->format('Ymd'), $numeration]);
     }
+
 
     public static function valueKeyInArray($inputs, $key, $default = null)
     {
