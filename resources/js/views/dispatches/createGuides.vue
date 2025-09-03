@@ -3,7 +3,7 @@
     <el-dialog
         title="Nueva Guía de Remisión"
         :visible.sync="localShowDialog"
-        width="70%"
+        width="80%"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :append-to-body="true"
@@ -931,6 +931,7 @@
                                                             {{ color.size }}
                                                         </small>
                                                     </template>
+                                                    
                                                     <template
                                                         v-if="row.categoriaMadera"
                                                     >
@@ -1696,7 +1697,21 @@ export default {
                 lots = it.lots.map(l => ({ ...l }));
             }
 
+            // Incorporar color_size (tallas/colores) igual que en create.vue
+            const color_size = Array.isArray(it.color_size)
+                ? JSON.parse(JSON.stringify(it.color_size))
+                : [];
+
+            // Generar uid para facilitar tracking (alineado con create.vue)
+            const _uid =
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .slice(2);
+
             this.form.items.push({
+                _uid,
                 attributes: attributes,
                 description: it.description,
                 internal_id: it.internal_id,
@@ -1707,11 +1722,12 @@ export default {
                 id: it.id,
                 IdLoteSelected: it.IdLoteSelected || "",
                 lot_group: lot_group || null,
+                color_size,
                 // Enviar ambas claves por compatibilidad (el backend usa 'lots')
                 lots: lots,
                 selected_series: Array.isArray(it.selected_series)
                     ? it.selected_series.map(s => ({ ...s }))
-                    : undefined
+                    : (lots ? lots.map(l => ({ ...l })) : [])
             });
         },
         keyupCustomer() {
