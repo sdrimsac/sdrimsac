@@ -231,7 +231,10 @@ export default {
 
             // Ajustar cantidad a cantidad de series elegidas (mínimo 1)
             this.form.quantity = seleccionadas.length || 1;
-            this.form.selected_series = seleccionadas;
+            // Canonical: guardar en lots
+            this.form.lots = seleccionadas.map(s => ({ ...s }));
+            // Alias compatibilidad
+            this.form.selected_series = this.form.lots;
 
             // Sincronizar el estado local del item (para que al clonar incluya flags de lots)
             if (this.item && Array.isArray(this.item.lots)) {
@@ -272,6 +275,10 @@ export default {
                 this.all_unit_types.find(ut => ut.id == this.item.unit_type_id)
                     ?.description || "";
             // console.log("🚀 ~ onChangeItem ~ this.item:", this.item)
+            // Limpiar selecciones anteriores para que no se mezclen entre items distintos
+            this.form.lots = [];
+            this.form.selected_series = [];
+            this.form.selected_color_size = [];
         },
         addRowLotGroup(id) {
             console.log("que datos llega aqui", id);
@@ -292,7 +299,14 @@ export default {
                 if (seleccionados.length) {
                     const total = seleccionados.reduce((acc, r) => acc + Number(r.selectedQuantity || 0), 0);
                     this.form.quantity = total;
-                    this.form.selected_color_size = seleccionados; // guardar detalle para uso posterior
+                    // Normalizar: convertir selectedQuantity -> quantity (lo que espera el backend)
+                    const normalizados = seleccionados.map(({ selectedQuantity, ...rest }) => ({
+                        ...rest,
+                        quantity: Number(selectedQuantity)
+                    }));
+                    this.form.selected_color_size = normalizados; // detalle listo para enviar
+                } else {
+                    this.form.selected_color_size = [];
                 }
             }
         },
@@ -306,6 +320,8 @@ export default {
             this.form.quantity = 1;
             this.form.IdLoteSelected = null;
             this.form.selected_color_size = [];
+            this.form.lots = [];
+            this.form.selected_series = [];
         },
         close() {
             this.$emit("update:dialogVisible", false);
@@ -338,18 +354,16 @@ export default {
                 item.IdLoteSelected = this.form.IdLoteSelected || null;
 
                 // Series seleccionadas (si fueron cargadas desde modal series)
-                if (Array.isArray(this.form.selected_series) && this.form.selected_series.length) {
-                    // Guardar arreglo explícito bajo la clave que el padre espera: selected_series
-                    item.selected_series = JSON.parse(JSON.stringify(this.form.selected_series));
-                    console.log("ver datos de series", item.selected_series);
-
-                    // Mantener lots completos con flags (si se quisiera solo las seleccionadas descomentar la siguiente línea)
-                    // item.lots = item.lots.filter(l => l.has_sale);
+                if (item.series_enabled && Array.isArray(this.form.lots) && this.form.lots.length) {
+                    const selectedLots = this.form.lots.map(s => ({ ...s }));
+                    item.lots = selectedLots; // backend
+                    item.selected_series = selectedLots; // compatibilidad
+                    console.log("Series seleccionadas (lots) ->", item.lots);
                 }
 
-                // Talla/Color seleccionados
                 if (Array.isArray(this.form.selected_color_size) && this.form.selected_color_size.length) {
-                    item.color_size = JSON.parse(JSON.stringify(this.form.selected_color_size));
+                    // Ya vienen normalizados con 'quantity'. Clonar para no mutar referencia.
+                    item.color_size = this.form.selected_color_size.map(cs => ({ ...cs }));
                 }
 
                 const quantity = this.form.quantity;

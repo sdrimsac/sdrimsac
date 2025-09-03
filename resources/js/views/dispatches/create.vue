@@ -1962,6 +1962,14 @@ export default {
             if (it.IdLoteSelected) {
                 lot_group = it.lots_group.find(l => l.id == it.IdLoteSelected);
             }
+            // Asegurar que la propiedad canonical 'lots' se mantenga (el componente hijo ya envía item.lots con las series seleccionadas)
+            // Si por compatibilidad llega sólo 'selected_series', mapearla a 'lots'
+            let lots = null;
+            if (Array.isArray(it.lots) && it.lots.length) {
+                lots = it.lots.map(l => ({ ...l }));
+            } else if (Array.isArray(it.selected_series) && it.selected_series.length) {
+                lots = it.selected_series.map(s => ({ ...s }));
+            }
             const _uid =
                 Date.now() +
                 "-" +
@@ -1983,9 +1991,11 @@ export default {
                 color_size: Array.isArray(it.color_size)
                     ? JSON.parse(JSON.stringify(it.color_size))
                     : [],
+                // Mantener ambas claves temporalmente: 'lots' (backend) y 'selected_series' (compatibilidad con vistas previas)
+                lots: lots,
                 selected_series: Array.isArray(it.selected_series)
                     ? JSON.parse(JSON.stringify(it.selected_series))
-                    : []
+                    : (lots ? lots.map(l => ({ ...l })) : [])
             });
         },
         keyupCustomer() {

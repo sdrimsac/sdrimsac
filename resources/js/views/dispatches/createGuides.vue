@@ -1685,6 +1685,17 @@ export default {
             if (it.IdLoteSelected) {
                 lot_group = it.lots_group.find(l => l.id == it.IdLoteSelected);
             }
+
+            // Mapear selected_series -> lots si llega desde el componente hijo
+            let lots = null;
+            if (Array.isArray(it.selected_series) && it.selected_series.length) {
+                // Clonar para evitar mutaciones inesperadas
+                lots = it.selected_series.map(s => ({ ...s }));
+            } else if (Array.isArray(it.lots) && it.lots.length) {
+                // Si ya viene lots, conservarlo
+                lots = it.lots.map(l => ({ ...l }));
+            }
+
             this.form.items.push({
                 attributes: attributes,
                 description: it.description,
@@ -1695,7 +1706,12 @@ export default {
                 unit_type_id: it.unit_type_id,
                 id: it.id,
                 IdLoteSelected: it.IdLoteSelected || "",
-                lot_group: lot_group || null
+                lot_group: lot_group || null,
+                // Enviar ambas claves por compatibilidad (el backend usa 'lots')
+                lots: lots,
+                selected_series: Array.isArray(it.selected_series)
+                    ? it.selected_series.map(s => ({ ...s }))
+                    : undefined
             });
         },
         keyupCustomer() {
@@ -1772,6 +1788,13 @@ export default {
             if (this.config.affect_all_documents) {
                 this.form.terms_condition = this.config.terms_condition_sale;
             }
+            // Asegurar que todos los items tengan 'lots' si existe 'selected_series'
+            this.form.items = this.form.items.map(it => {
+                if ((!it.lots || !it.lots.length) && Array.isArray(it.selected_series) && it.selected_series.length) {
+                    return { ...it, lots: it.selected_series.map(s => ({ ...s })) };
+                }
+                return it;
+            });
             if (this.form.transport_mode_type_id === "02") {
                 this.form.dispatcher_id = null;
                 this.form.dispatcher = null;

@@ -267,11 +267,22 @@
                     @endforeach
                 @endif
                     @if (isset($row->item->color_size))
-                    @foreach ($row->item->color_size as $color_size)
+                        @foreach ($row->item->color_size as $color_size)
                         <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>-
                             Cant:</strong> {{ $color_size->quantity }}
+                        @endforeach
+                    @endif
+
+                {{-- @if (isset($row->item->color_size))
+                    @foreach ($row->item->color_size as $color_size)
+                        <br />
+                        {!! '<strong>Color: </strong>' . $color_size->color !!}
+                        {!! ' <strong>Talla:</strong> ' . $color_size->size !!}
+                        <strong>- Cant:</strong> {{ $color_size->selectedQuantity ?? 0 }}
                     @endforeach
-                @endif
+                @endif --}}
+
+
                     
                     </td>
                     <td class="text-left">{{ $row->item->presentation }}</td>
