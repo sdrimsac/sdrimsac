@@ -22,6 +22,11 @@ class SellerCollection extends ResourceCollection
             $total_sales = $documents_total + $sale_notes_total;
             $commission_percentage = $row->commission_percentage;
             $commission_earned = round($total_sales * ($commission_percentage / 100), 2);
+
+            // Total de cantidades vendidas (sumatoria de quantity de las relaciones)
+            $sold_items_quantity = $row->soldItems ? $row->soldItems->sum('quantity') : 0;
+            $sales_items_quantity = $row->salesItems ? $row->salesItems->sum('quantity') : 0;
+            $total_quantity_sold = $sold_items_quantity + $sales_items_quantity;
             return [
                 'id' => $row->id,
                 'name' => $row->name,
@@ -34,6 +39,8 @@ class SellerCollection extends ResourceCollection
                 'documents_total' => $row->documents_total ?? 0,
                 'sale_notes_total' => $row->sale_notes_total ?? 0,
                 'total_sales' => ($row->documents_total ?? 0) + ($row->sale_notes_total ?? 0),
+                // Nuevo campo: total de cantidad vendida
+                'total_quantity_sold' => $total_quantity_sold,
                 'created_at' => $row->created_at,
                 'created_at' => Carbon::parse($row->created_at)->format('Y-m-d H:i'),
                 'updated_at' => $row->updated_at,

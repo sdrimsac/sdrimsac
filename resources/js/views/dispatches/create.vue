@@ -3,986 +3,1302 @@
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-body">
             <form autocomplete="off" @submit.prevent="submit">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Establecimiento -->
-                                <div class="col-lg-12">
-                                    <div
-                                        :class="{ 'has-danger': errors.establishment }"
-                                        class="form-group"
-                                    >
-                                        <label class="control-label">
-                                            <i
-                                                class="fas fa-warehouse red-icon"
-                                            ></i>
-                                            Establecimiento
-                                        </label>
-                                        <el-select
-                                            v-model="form.establishment_id"
-                                            @change="changeEstablishment"
-                                            :disabled="pos"
-                                            clearable
-                                            placeholder="Seleccione un establecimiento"
-                                        >
-                                            <el-option
-                                                v-for="(option, idx) in establishments"
-                                                :key="idx"
-                                                :label="option.description"
-                                                :value="option.id"
-                                            ></el-option>
-                                        </el-select>
-                                        <small
-                                            v-if="errors.establishment"
-                                            class="form-control-feedback"
-                                            v-text="errors.establishment[0]"
-                                        ></small>
-                                    </div>
-                                </div>
-                                <!-- Número de Orden de Pedido -->
-                                <!-- <div class="col-lg-6" v-if="!order_form_id">
-                                    <div
-                                        :class="{
-                                            'has-danger': errors.order_form_external
-                                        }"
-                                        class="form-group"
-                                    >
-                                        <label class="control-label">
-                                            Orden/Pedido
-                                            <el-tooltip
-                                                class="item"
-                                                content="Pedidos externos"
-                                                effect="dark"
-                                                placement="top"
-                                            >
-                                                <i class="fa fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </label>
-                                        <el-input
-                                            v-model="form.order_form_external"
-                                        ></el-input>
-                                        <small
-                                            v-if="errors.order_form_external"
-                                            class="form-control-feedback"
-                                            v-text="errors.order_form_external[0]"
-                                        ></small>
-                                    </div>
-                                </div> -->
-                            </div>
-                            <!-- Cliente -->
-                            <div
-                            :class="{ 'has-danger': errors.customer_id }"
-                            class="form-group"
-                            >
-                            <label class="control-label">
-                                <i class="fas fa-user"></i>
-                                Cliente
-                                <a
-                                href="#"
-                                @click.prevent="showDialogNewPerson = true"
-                                >
-                                [+ Nuevo]
-                                </a>
-                            </label>
-                            <el-select
-                                v-model="form.customer_id"
-                                :loading="loading_search"
-                                :remote-method="searchRemoteCustomers"
-                                filterable
-                                placeholder="Escriba el nombre o número de documento del cliente"
-                                popper-class="el-select-customers"
-                                remote
-                                @change="changeCustomer"
-                                @keyup.enter.native="keyupCustomer"
-                            >
-                                <el-option
-                                v-for="(option, idx) in customers"
-                                :key="idx"
-                                :label="option.description"
-                                :value="option.id"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                v-if="errors.customer_id"
-                                class="form-control-feedback"
-                                v-text="errors.customer_id[0]"
-                            ></small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <!-- Serie y Correlativo de Guía de Remisión -->
-                                <div class="col-lg-12">
-                                    <div
-                                    :class="{ 'has-danger': errors.series }"
-                                    class="form-group"
-                                    >
-                                    <label class="control-label">
-                                        <i class="fas fa-list-ol"></i>
-                                        Guía de Remisión Nro.
-                                    </label>
-                                    <el-select
-                                        v-model="form.series"
-                                        @change="getCorrelative"
-                                        :disabled="pos"
-                                    >
-                                        <el-option
-                                        v-for="(option, idx) in series"
-                                        :key="idx"
-                                        :label="option.correlative"
-                                        :value="option.number"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        v-if="errors.series"
-                                        class="form-control-feedback"
-                                        v-text="errors.series[0]"
-                                    ></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <!-- Fecha de emisión -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Establecimiento -->
+                                    <div class="col-lg-4">
                                         <div
-                                            :class="{ 'has-danger': errors.date_of_issue }"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.establishment
+                                            }"
                                             class="form-group"
                                         >
                                             <label class="control-label">
-                                                <i class="fas fa-calendar-alt red-icon"></i>
-                                                F. Emisión
+                                                <i
+                                                    class="fas fa-warehouse red-icon"
+                                                ></i>
+                                                Establecimiento
                                             </label>
-                                            <el-date-picker
-                                                v-model="form.date_of_issue"
-                                                :clearable="false"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                                :disabled="true"
-                                                class="w-100"
-                                            ></el-date-picker>
+                                            <el-select
+                                                v-model="form.establishment_id"
+                                                @change="changeEstablishment"
+                                                :disabled="pos"
+                                                clearable
+                                                placeholder="Seleccione un establecimiento"
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in establishments"
+                                                    :key="idx"
+                                                    :label="option.description"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
                                             <small
-                                                v-if="errors.date_of_issue"
+                                                v-if="errors.establishment"
                                                 class="form-control-feedback"
-                                                v-text="errors.date_of_issue[0]"
+                                                v-text="errors.establishment[0]"
                                             ></small>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-12 d-flex justify-content-center align-items-center">
-                                    <div class="form-group text-center w-100">
-                                        <el-button
-                                            icon="fas fa-file-alt fa-lg"
-                                            v-if="form.items.length > 0"
-                                            :loading="loading_submit"
-                                            native-type="submit"
-                                            type=""
-                                            class="btn_agregar"
-                                            style="border-radius: 8px; background-color: turquoise; border-color: blue;"
+                                    <div class="col-lg-4">
+                                        <div
+                                            :class="{
+                                                'has-danger': errors.series
+                                            }"
+                                            class="form-group"
                                         >
-                                            Generar
-                                            <el-tooltip
-                                                class="item"
-                                                content="Genera la Guía de Remisión a partir de un CPE"
-                                                effect="dark"
-                                                placement="top"
+                                            <label class="control-label">
+                                                <i class="fas fa-list-ol"></i>
+                                                Guía de Remisión Nro.
+                                            </label>
+                                            <el-select
+                                                v-model="form.series"
+                                                @change="getCorrelative"
+                                                :disabled="pos"
                                             >
-                                                <i class="fas fa-info-circle"></i>
-                                            </el-tooltip>
-                                        </el-button>
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in series"
+                                                    :key="idx"
+                                                    :label="option.correlative"
+                                                    :value="option.number"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                v-if="errors.series"
+                                                class="form-control-feedback"
+                                                v-text="errors.series[0]"
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <!-- Fecha de emisión -->
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.date_of_issue
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-alt red-icon"
+                                                    ></i>
+                                                    F. Emisión
+                                                </label>
+                                                <el-date-picker
+                                                    v-model="form.date_of_issue"
+                                                    :clearable="false"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :disabled="true"
+                                                    class="w-100"
+                                                ></el-date-picker>
+                                                <small
+                                                    v-if="errors.date_of_issue"
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors.date_of_issue[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        </div>
-        
-        
-        <form autocomplete="off" @submit.prevent="submit">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <!-- <h5 class="card-title"><span style="color: blue; font-weight: bold;">Datos del Traslado</span></h5> -->
-                    <div class="row">
-                        <!-- Fecha de Traslado -->
-                        <div class="col-lg-4">
-                            <div
-                                :class="{
-                                    'has-danger': errors.date_of_shipping
-                                }"
-                                class="form-group"
-                            >
-                                <label class="control-label">
-                                    <i class="fas fa-calendar-alt red-icon"></i>
-                                    Fecha de traslado
-                                </label>
-                                <el-date-picker
-                                    v-model="form.date_of_shipping"
-                                    :clearable="false"
-                                    type="date"
-                                    value-format="yyyy-MM-dd"
-                                ></el-date-picker>
-                                <small
-                                    v-if="errors.date_of_shipping"
-                                    class="form-control-feedback"
-                                    v-text="errors.date_of_shipping[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <!-- Modo de Traslado -->
-                        <div class="col-lg-4">
+                                <!-- Cliente -->
                                 <div
                                     :class="{
-                                        'has-danger': errors.transport_mode_type_id
+                                        'has-danger': errors.customer_id
                                     }"
                                     class="form-group"
                                 >
-                                    <label class="control-label"
-                                        >Modo de traslado</label
-                                    >
-                                    <el-select
-                                        v-model="form.transport_mode_type_id"
-                                    >
-                                        <el-option
-                                            v-for="(option,
-                                            idx) in transportModeTypes"
-                                            :key="idx"
-                                            :label="option.description"
-                                            :value="option.id"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        v-if="errors.transport_mode_type_id"
-                                        class="form-control-feedback"
-                                        v-text="errors.transport_mode_type_id[0]"
-                                    ></small>
-                                </div>
-                        </div>
-                        <!-- Motivo de Traslado -->
-                        <div class="col-lg-4">
-                            <div
-                                    :class="{
-                                        'has-danger': errors.transfer_reason_type_id
-                                    }"
-                                    class="form-group"
-                                >
-                                    <label class="control-label"
-                                        >Motivo de traslado
-                                    </label>
-                                    <el-select
-                                        v-model="form.transfer_reason_type_id"
-                                        @change="changeTransferReasonType"
-                                    >
-                                        <el-option
-                                            v-for="(option,
-                                            idx) in transferReasonTypes"
-                                            :key="idx"
-                                            :label="option.description"
-                                            :value="option.id"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        v-if="errors.transfer_reason_type_id"
-                                        class="form-control-feedback"
-                                        v-text="errors.transfer_reason_type_id[0]"
-                                    ></small>
-                                </div>
-                        </div>
-                        <!-- Descripción de motivo de traslado -->
-                        <div class="col-lg-12">
-                            <div
-                                :class="{
-                                    'has-danger':
-                                        errors.transfer_reason_description
-                                }"
-                                class="form-group"
-                            >
-                                <label class="control-label">
-                                    <i class="fas fa-align-left"></i>
-                                    Descripción de motivo de traslado
-                                </label>
-                                <el-input
-                                    v-model="form.transfer_reason_description"
-                                    :rows="3"
-                                    maxlength="100"
-                                    placeholder="Descripción de motivo de traslado..."
-                                    type="textarea"
-                                ></el-input>
-                                <small
-                                    v-if="errors.transfer_reason_description"
-                                    class="form-control-feedback"
-                                    v-text="
-                                        errors.transfer_reason_description[0]
-                                    "
-                                ></small>
-                            </div>
-                        </div>
-                        <!-- numero de DAM -->
-                        <template v-if="form.transfer_reason_type_id === '09'">
-                            <div class="col-lg-12">
-                                <div
-                                    :class="{
-                                        'has-danger': errors['related.number']
-                                    }"
-                                    class="form-group"
-                                >
-                                    <label class="control-label"
-                                        >Número de documento (DAM)
-                                        <el-tooltip
-                                            class="item"
-                                            content="Formato del campo: XXXX-XX-XXX-XXXXXX, Ejemplo: 0001-01-002-001234"
-                                            effect="dark"
-                                            placement="top"
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                        <span class="text-danger"> *</span>
-                                    </label>
-                                    <el-input
-                                        v-model="form.related.number"
-                                        placeholder="0001-01-002-001234"
-                                    ></el-input>
-                                    <small
-                                        v-if="errors['related.number']"
-                                        class="form-control-feedback"
-                                        v-text="errors['related.number'][0]"
-                                    ></small>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div
-                                    :class="{
-                                        'has-danger':
-                                            errors['related.document_type_id']
-                                    }"
-                                    class="form-group"
-                                >
-                                    <label class="control-label"
-                                        >Tipo documento relacionado<span
-                                            class="text-danger"
-                                        >
-                                            *</span
-                                        ></label
-                                    >
-                                    <el-select
-                                        v-model="form.related.document_type_id"
-                                        disabled
-                                    >
-                                        <el-option
-                                            v-for="(option,
-                                            idx) in related_document_types"
-                                            :key="idx"
-                                            :label="option.description"
-                                            :value="option.id"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        v-if="
-                                            errors['related.document_type_id']
-                                        "
-                                        class="form-control-feedback"
-                                        v-text="
-                                            errors[
-                                                'related.document_type_id'
-                                            ][0]
-                                        "
-                                    ></small>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </form>
-        
-        <div class="card mb-3">
-            <div class="card-body">
-                <form autocomplete="off" @submit.prevent="submit">
-                    <div class="row">
-                        <!-- Unidad de medida -->
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
-                            <div class="form-group">
-                                <div
-                                    :class="{ 'has-danger': errors.unit_type_id }"
-                                    class="form-group"
-                                    >
-                                    <label class="control-label"
-                                        >Unidad
-                                        <el-tooltip
-                                            class="item"
-                                            content="Este dato es obligatorio, y representa a la unidad de medida del producto que se está enviando"
-                                            effect="dark"
-                                            placement="top"
-                                        >
-                                            <i class="fas fa-exclamation-circle text-danger"></i>
-                                        </el-tooltip>
-                                        </label
-                                    >
-                                    <el-select v-model="form.unit_type_id">
-                                        <el-option
-                                            v-for="(option, idx) in unitTypes"
-                                            :key="idx"
-                                            :label="option.description"
-                                            :value="option.id"
-                                        ></el-option>
-                                    </el-select>
-                                    <small
-                                        v-if="errors.unit_type_id"
-                                        class="form-control-feedback"
-                                        v-text="errors.unit_type_id[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Peso bruto -->
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
-                            <div class="form-group">
-                                <div
-                                    :class="{ 'has-danger': errors.total_weight }"
-                                    class="form-group"
-                                    >
-                                    <label class="control-label w-100"
-                                        >Peso
-                                        <el-tooltip
-                                            class="item"
-                                            content="Este dato es obligatorio, y representa el Peso Bruto total del producto que se está enviando"
-                                            effect="dark"
-                                            placement="top"
-                                        >
-                                            <i class="fas fa-exclamation-circle text-danger"></i>
-                                        </el-tooltip>
-                                        </label
-                                    >
-                                    <el-input
-                                        class="w-100"
-                                        v-model.number="form.total_weight"
-                                        :maxlength="10"
-                                        :min="0"
-                                        @input="form.total_weight = form.total_weight.replace(/[^0-9.]/g, '')"
-                                    ></el-input>
-                                    <small
-                                        v-if="errors.total_weight"
-                                        class="form-control-feedback"
-                                        v-text="errors.total_weight[0]"
-                                    ></small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Numero de Paquetes -->
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
-                                <div class="form-group">
-                                    <div
-                                        :class="{
-                                            'has-danger': errors.packages_number
-                                        }"
-                                        class="form-group"
-                                    >
-                                        <label class="control-label w-100"
-                                            >Pq.
-                                            <el-tooltip
-                                                class="item"
-                                                content="Este dato es obligatorio, y representa el número de Paquetes que se está enviando"
-                                                effect="dark"
-                                                placement="top"
-                                                >
-                                                <i class="fas fa-exclamation-circle text-danger"></i>
-                                            </el-tooltip>
-                                            
-                                        </label>
-                                        <el-input
-                                            class="w-100"
-                                            v-model.number="form.packages_number"
-                                            :maxlength="10"
-                                            :min="0"
-                                            @input="form.packages_number = form.packages_number.replace(/[^0-9]/g, '')"
-                                        ></el-input>
-                                        <small
-                                            v-if="errors.packages_number"
-                                            class="form-control-feedback"
-                                            v-text="errors.packages_number[0]"
-                                        ></small>
-                                    </div>
-                                </div>
-                        </div>
-                        
-                        <!-- Observaciones -->
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="form-group">
-                                <div
-                                    :class="{ 'has-danger': errors.observations }"
-                                    class="form-group"
-                                    >
                                     <label class="control-label">
-                                        <i class="fas fa-comment"></i>
-                                        Observaciones
+                                        <i class="fas fa-user"></i>
+                                        Cliente
+                                        <a
+                                            href="#"
+                                            @click.prevent="
+                                                showDialogNewPerson = true
+                                            "
+                                        >
+                                            [+ Nuevo]
+                                        </a>
                                     </label>
-                                    <el-input
-                                        v-model="form.observations"
-                                        :rows="3"
-                                        maxlength="250"
-                                        placeholder="Observaciones..."
-                                        type="textarea"
-                                    ></el-input>
+                                    <el-select
+                                        v-model="form.customer_id"
+                                        :loading="loading_search"
+                                        :remote-method="searchRemoteCustomers"
+                                        filterable
+                                        placeholder="Escriba el nombre o número de documento del cliente"
+                                        popper-class="el-select-customers"
+                                        remote
+                                        @change="changeCustomer"
+                                        @keyup.enter.native="keyupCustomer"
+                                    >
+                                        <el-option
+                                            v-for="(option, idx) in customers"
+                                            :key="idx"
+                                            :label="option.description"
+                                            :value="option.id"
+                                        ></el-option>
+                                    </el-select>
                                     <small
-                                        v-if="errors.observations"
+                                        v-if="errors.customer_id"
                                         class="form-control-feedback"
-                                        v-text="errors.observations[0]"
+                                        v-text="errors.customer_id[0]"
                                     ></small>
                                 </div>
                             </div>
                         </div>
-                    </div>  
-                </form>
-                
-            </div>
-        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div
+                                            :class="{
+                                                'has-danger':
+                                                    errors.date_of_shipping
+                                            }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label w-100">
+                                                <i
+                                                    class="fas fa-calendar-alt red-icon"
+                                                ></i>
+                                                Fecha de traslado
+                                            </label>
+                                            <el-date-picker
+                                                v-model="form.date_of_shipping"
+                                                :clearable="false"
+                                                type="date"
+                                                value-format="yyyy-MM-dd"
+                                            ></el-date-picker>
+                                            <small
+                                                v-if="errors.date_of_shipping"
+                                                class="form-control-feedback"
+                                                v-text="
+                                                    errors.date_of_shipping[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <!-- Modo de Traslado -->
+                                    <div class="col-lg-4">
+                                        <div
+                                            :class="{
+                                                'has-danger':
+                                                    errors.transport_mode_type_id
+                                            }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label"
+                                                >Modo de traslado</label
+                                            >
+                                            <el-select
+                                                v-model="
+                                                    form.transport_mode_type_id
+                                                "
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in transportModeTypes"
+                                                    :key="idx"
+                                                    :label="option.description"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                v-if="
+                                                    errors.transport_mode_type_id
+                                                "
+                                                class="form-control-feedback"
+                                                v-text="
+                                                    errors
+                                                        .transport_mode_type_id[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <!-- Motivo de Traslado -->
+                                    <div class="col-lg-4">
+                                        <div
+                                            :class="{
+                                                'has-danger':
+                                                    errors.transfer_reason_type_id
+                                            }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label"
+                                                >Motivo de traslado
+                                            </label>
+                                            <el-select
+                                                v-model="
+                                                    form.transfer_reason_type_id
+                                                "
+                                                @change="
+                                                    changeTransferReasonType
+                                                "
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in transferReasonTypes"
+                                                    :key="idx"
+                                                    :label="option.description"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                v-if="
+                                                    errors.transfer_reason_type_id
+                                                "
+                                                class="form-control-feedback"
+                                                v-text="
+                                                    errors
+                                                        .transfer_reason_type_id[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <!-- Descripción de motivo de traslado -->
+                                    <div class="col-lg-12">
+                                        <div
+                                            :class="{
+                                                'has-danger':
+                                                    errors.transfer_reason_description
+                                            }"
+                                            class="form-group"
+                                        >
+                                            <label class="control-label">
+                                                <i
+                                                    class="fas fa-align-left"
+                                                ></i>
+                                                Descripción de motivo de
+                                                traslado
+                                            </label>
+                                            <el-input
+                                                v-model="
+                                                    form.transfer_reason_description
+                                                "
+                                                :rows="3"
+                                                maxlength="100"
+                                                placeholder="Descripción de motivo de traslado..."
+                                                type="textarea"
+                                            ></el-input>
+                                            <small
+                                                v-if="
+                                                    errors.transfer_reason_description
+                                                "
+                                                class="form-control-feedback"
+                                                v-text="
+                                                    errors
+                                                        .transfer_reason_description[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <template
+                                        v-if="
+                                            form.transfer_reason_type_id ===
+                                                '09'
+                                        "
+                                    >
+                                        <div class="col-lg-12">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors['related.number']
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label"
+                                                    >Número de documento (DAM)
+                                                    <el-tooltip
+                                                        class="item"
+                                                        content="Formato del campo: XXXX-XX-XXX-XXXXXX, Ejemplo: 0001-01-002-001234"
+                                                        effect="dark"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                    <span class="text-danger">
+                                                        *</span
+                                                    >
+                                                </label>
+                                                <el-input
+                                                    v-model="
+                                                        form.related.number
+                                                    "
+                                                    placeholder="0001-01-002-001234"
+                                                ></el-input>
+                                                <small
+                                                    v-if="
+                                                        errors['related.number']
+                                                    "
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors[
+                                                            'related.number'
+                                                        ][0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors[
+                                                            'related.document_type_id'
+                                                        ]
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label"
+                                                    >Tipo documento
+                                                    relacionado<span
+                                                        class="text-danger"
+                                                    >
+                                                        *</span
+                                                    ></label
+                                                >
+                                                <el-select
+                                                    v-model="
+                                                        form.related
+                                                            .document_type_id
+                                                    "
+                                                    disabled
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in related_document_types"
+                                                        :key="idx"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                        :value="option.id"
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    v-if="
+                                                        errors[
+                                                            'related.document_type_id'
+                                                        ]
+                                                    "
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors[
+                                                            'related.document_type_id'
+                                                        ][0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div
+                                        class="col-lg-2 col-md-2 col-sm-6 col-6"
+                                    >
+                                        <div class="form-group">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.unit_type_id
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label"
+                                                    >Unidad
+                                                    <el-tooltip
+                                                        class="item"
+                                                        content="Este dato es obligatorio, y representa a la unidad de medida del producto que se está enviando"
+                                                        effect="dark"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fas fa-exclamation-circle text-danger"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-select
+                                                    v-model="form.unit_type_id"
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in unitTypes"
+                                                        :key="idx"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                        :value="option.id"
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    v-if="errors.unit_type_id"
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors.unit_type_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Peso bruto -->
+                                    <div
+                                        class="col-lg-2 col-md-2 col-sm-6 col-6"
+                                    >
+                                        <div class="form-group">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.total_weight
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Peso
+                                                    <el-tooltip
+                                                        class="item"
+                                                        content="Este dato es obligatorio, y representa el Peso Bruto total del producto que se está enviando"
+                                                        effect="dark"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fas fa-exclamation-circle text-danger"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model.number="
+                                                        form.total_weight
+                                                    "
+                                                    :maxlength="10"
+                                                    :min="0"
+                                                    @input="
+                                                        form.total_weight = form.total_weight.replace(
+                                                            /[^0-9.]/g,
+                                                            ''
+                                                        )
+                                                    "
+                                                ></el-input>
+                                                <small
+                                                    v-if="errors.total_weight"
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors.total_weight[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
 
-        <!-- Punto de Partida y Llegada -->
-        <div class="card-body">
-            <form autocomplete="off" @submit.prevent="submit">
-            <div class="form-body">
-            </div>
-            <div class="row">
-            <!-- Punto de Partida -->
-            <div class="col-md-6">
-                <div class="card">
-                <div class="card-body">
-                <div
-                    :class="{
-                    'has-danger': errors.origin_address_id
-                    }"
-                    class="form-group"
-                >
-                    <label class="control-label"
-                    >
-                    <i class="fas fa-map-marker-alt"></i>
-                    Punto de Partida
-                    <a
-                    href="#"
-                    @click.prevent="
-                    showDialogOriginAddressForm = true
-                    "
-                    >[+ Nuevo]</a
-                    ></label
-                    >
-                    <el-select
-                    v-model="form.origin_address_id"
-                    placeholder="Seleccionar punto de partida"
-                    >
-                    <el-option
-                    v-for="(option,
-                    idx) in origin_addresses"
-                    :key="idx"
-                    :label="option.address"
-                    :value="option.id"
-                    ></el-option>
-                            </el-select>
-                            <small
-                            v-if="errors.origin_address_id"
-                            class="form-control-feedback"
-                            v-text="errors.origin_address_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <!-- Punto de Llegada -->
-                <div class="col-md-6">
-                    <div class="card">
-                    <div class="card-body">
-                        <div
-                        :class="{
-                            'has-danger': errors.delivery_address_id
-                        }"
-                        class="form-group"
-                        >
-                        <label class="control-label">
-                            <i class="fas fa-flag-checkered"></i>
-                            Punto de llegada
-                            <a
-                            href="#"
-                            v-if="form.customer_id"
-                            @click.prevent="
-                                showDialogDeliveryAddressForm = true
-                            "
-                            >[+ Nuevo]
-                            </a>
-                        </label>
-                        <el-select
-                            v-model="form.delivery_address_id"
-                            placeholder="Seleccionar punto de llegada"
-                        >
-                            <el-option
-                            v-for="(option,
-                            idx) in delivery_addresses"
-                            :key="idx"
-                            :label="option.address"
-                            :value="option.id"
-                            ></el-option>
-                        </el-select>
-                        <small
-                            v-if="errors.delivery_address_id"
-                            class="form-control-feedback"
-                            v-text="errors.delivery_address_id[0]"
-                        ></small>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-             
-                <hr />
-                
-                <!-- Para revisar -->
-                <!-- <div class="col-lg-5">
-                            <div :class="{'has-danger': errors.origin}"
-                                 class="form-group">
-                                <label class="control-label">Ubigeo<span class="text-danger"> *</span></label>
-                                <el-cascader v-model="origin.location_id"
-                                     :options="locations"
-                                     filterable></el-cascader>
-                                <small v-if="errors.origin"
-                                   class="form-control-feedback"
-                                   v-text="errors.origin.location_id[0]"></small>
-                            </div>
-                            </div>
-                            <div class="col-lg-7">
-                            <div :class="{'has-danger': errors['origin.address']}"
-                                 class="form-group">
-                                <label class="control-label">Dirección<span class="text-danger"> *</span></label>
-                                <el-input v-model="origin.address"
-                                      :maxlength="100"
-                                      placeholder="Dirección..."></el-input>
-                                <small v-if="errors['origin.address']"
-                                   class="form-control-feedback"
-                                   v-text="errors['origin.address'][0]"></small>
-                            </div>
-                            </div> -->
-                
-               
-                <div class="card">
-                
-                <div class="card-body">
-                    <div class="row">
-                    <!-- Datos del transportista condicionado -->
-                    <template v-if="form.transport_mode_type_id === '01'">
-                        <div class="col-lg-12">
-                        <label class="control-label font-bold">
-                            Datos del transportista
-                            <a
-                            v-if="can_add_new_product"
-                            href="#"
-                            @click.prevent="
-                                showDialogDispatcherForm = true
-                            "
-                            >[+ Nuevo]</a
-                            >
-                        </label>
-                        <span class="text-danger"> *</span>
-                        <div
-                            :class="{
-                            'has-danger': errors.dispatcher_id
-                            }"
-                            class="form-group"
-                        >
-                            <el-select
-                            v-model="form.dispatcher_id"
-                            clearable
-                            placeholder="Seleccionar transportista"
-                            >
-                            <el-option
-                                v-for="(option, idx) in dispatchers"
-                                :key="idx"
-                                :label="
-                                option.number +
-                                    ' - ' +
-                                    option.name +
-                                    ' - ' +
-                                    option.number_mtc
-                                "
-                                :value="option.id"
-                            ></el-option>
-                            </el-select>
-                            <small
-                            v-if="errors.dispatcher_id"
-                            class="form-control-feedback"
-                            v-text="errors.dispatcher_id[0]"
-                            ></small>
-                        </div>
-                        </div>
-                    </template>
+                                    <!-- Numero de Paquetes -->
+                                    <div
+                                        class="col-lg-2 col-md-2 col-sm-6 col-6"
+                                    >
+                                        <div class="form-group">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.packages_number
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Pq.
+                                                    <el-tooltip
+                                                        class="item"
+                                                        content="Este dato es obligatorio, y representa el número de Paquetes que se está enviando"
+                                                        effect="dark"
+                                                        placement="top"
+                                                    >
+                                                        <i
+                                                            class="fas fa-exclamation-circle text-danger"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model.number="
+                                                        form.packages_number
+                                                    "
+                                                    :maxlength="10"
+                                                    :min="0"
+                                                    @input="
+                                                        form.packages_number = form.packages_number.replace(
+                                                            /[^0-9]/g,
+                                                            ''
+                                                        )
+                                                    "
+                                                ></el-input>
+                                                <small
+                                                    v-if="
+                                                        errors.packages_number
+                                                    "
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors
+                                                            .packages_number[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                    <template v-if="form.transport_mode_type_id === '02'">
-                        <!-- Conductor -->
-                        <div class="col-lg-12">
-                        <label class="control-label">
-                            <i class="fas fa-user-tie"></i>
-                            Conductor
-                            <el-tooltip
-                            class="item"
-                            content="Este dato es obligatorio"
-                            effect="dark"
-                            placement="top"
-                            >
-                            <i class="fas fa-exclamation-circle text-danger"></i>
-                            </el-tooltip>
-                            <a
-                            v-if="can_add_new_product"
-                            href="#"
-                            @click.prevent="
-                                showDialogDriverForm = true
-                            "
-                            >[+ Nuevo]</a
-                            >
-                        </label>
-                        
-                        <div
-                            :class="{ 'has-danger': errors.driver_id }"
-                            class="form-group"
-                        >
-                            <el-select
-                            v-model="form.driver_id"
-                            clearable
-                            placeholder="Seleccionar conductor"
-                            >
-                            <el-option
-                                v-for="(option, idx) in drivers"
-                                :key="idx"
-                                :label="
-                                option.number +
-                                    ' - ' +
-                                    option.name +
-                                    ' - ' +
-                                    option.license
-                                "
-                                :value="option.id"
-                            ></el-option>
-                            </el-select>
-                            <small
-                            v-if="errors.dispacher"
-                            class="form-control-feedback"
-                            v-text="errors.dispacher[0]"
-                            ></small>
+                                    <!-- Observaciones -->
+                                    <div
+                                        class="col-lg-6 col-md-6 col-sm-12 col-12"
+                                    >
+                                        <div class="form-group">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.observations
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-comment"
+                                                    ></i>
+                                                    Observaciones
+                                                </label>
+                                                <el-input
+                                                    v-model="form.observations"
+                                                    :rows="3"
+                                                    maxlength="250"
+                                                    placeholder="Observaciones..."
+                                                    type="textarea"
+                                                ></el-input>
+                                                <small
+                                                    v-if="errors.observations"
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors.observations[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <!-- <div class="col-md-6">
+                            <form autocomplete="off" @submit.prevent="submit">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div> -->
+                        <!-- <div class="col-lg-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <form
+                                        autocomplete="off"
+                                        @submit.prevent="submit"
+                                    >
+                                        <div class="row">
+                                        
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-md-12">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.origin_address_id
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-map-marker-alt"
+                                                    ></i>
+                                                    Punto de Partida
+                                                    <a
+                                                        href="#"
+                                                        @click.prevent="
+                                                            showDialogOriginAddressForm = true
+                                                        "
+                                                        >[+ Nuevo]</a
+                                                    ></label
+                                                >
+                                                <el-select
+                                                    v-model="
+                                                        form.origin_address_id
+                                                    "
+                                                    placeholder="Seleccionar punto de partida"
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in origin_addresses"
+                                                        :key="idx"
+                                                        :label="option.address"
+                                                        :value="option.id"
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    v-if="
+                                                        errors.origin_address_id
+                                                    "
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors
+                                                            .origin_address_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.delivery_address_id
+                                                }"
+                                                class="form-group"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-flag-checkered"
+                                                    ></i>
+                                                    Punto de llegada
+                                                    <a
+                                                        href="#"
+                                                        v-if="form.customer_id"
+                                                        @click.prevent="
+                                                            showDialogDeliveryAddressForm = true
+                                                        "
+                                                        >[+ Nuevo]
+                                                    </a>
+                                                </label>
+                                                <el-select
+                                                    v-model="
+                                                        form.delivery_address_id
+                                                    "
+                                                    placeholder="Seleccionar punto de llegada"
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in delivery_addresses"
+                                                        :key="idx"
+                                                        :label="option.address"
+                                                        :value="option.id"
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    v-if="
+                                                        errors.delivery_address_id
+                                                    "
+                                                    class="form-control-feedback"
+                                                    v-text="
+                                                        errors
+                                                            .delivery_address_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="card-body">
+                            <form autocomplete="off" @submit.prevent="submit">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <!-- Datos del transportista condicionado -->
+                                                <template
+                                                    v-if="
+                                                        form.transport_mode_type_id ===
+                                                            '01'
+                                                    "
+                                                >
+                                                    <div class="col-lg-12">
+                                                        <label
+                                                            class="control-label font-bold"
+                                                        >
+                                                            Datos del
+                                                            transportista
+                                                            <a
+                                                                v-if="
+                                                                    can_add_new_product
+                                                                "
+                                                                href="#"
+                                                                @click.prevent="
+                                                                    showDialogDispatcherForm = true
+                                                                "
+                                                                >[+ Nuevo]</a
+                                                            >
+                                                        </label>
+                                                        <span
+                                                            class="text-danger"
+                                                        >
+                                                            *</span
+                                                        >
+                                                        <div
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.dispatcher_id
+                                                            }"
+                                                            class="form-group"
+                                                        >
+                                                            <el-select
+                                                                v-model="
+                                                                    form.dispatcher_id
+                                                                "
+                                                                clearable
+                                                                placeholder="Seleccionar transportista"
+                                                            >
+                                                                <el-option
+                                                                    v-for="(option,
+                                                                    idx) in dispatchers"
+                                                                    :key="idx"
+                                                                    :label="
+                                                                        option.number +
+                                                                            ' - ' +
+                                                                            option.name +
+                                                                            ' - ' +
+                                                                            option.number_mtc
+                                                                    "
+                                                                    :value="
+                                                                        option.id
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                            <small
+                                                                v-if="
+                                                                    errors.dispatcher_id
+                                                                "
+                                                                class="form-control-feedback"
+                                                                v-text="
+                                                                    errors
+                                                                        .dispatcher_id[0]
+                                                                "
+                                                            ></small>
+                                                        </div>
+                                                    </div>
+                                                </template>
 
-                        
-                        <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                               <!-- Vehículo -->
-                               <div
-                                :class="{
-                                'has-danger': errors.transport_id
-                                }"
-                                class="form-group"
-                            >
-                                <label class="control-label">
-                                <i class="fas fa-shipping-fast"></i>
-                                Vehículo
-                                <a
-                                    v-if="can_add_new_product"
-                                    href="#"
-                                    @click.prevent="
-                                    showDialogTransportForm = true
-                                    "
-                                    >[+ Nuevo]</a
-                                >
-                                </label>
-                                <el-select
-                                v-model="form.transport_id"
-                                clearable
-                                placeholder="Seleccionar vehículo"
-                                >
-                                <el-option
-                                    v-for="(option, idx) in transports"
-                                    :key="idx"
-                                    :label="
-                                    option.plate_number +
-                                        ' - ' +
-                                        option.model +
-                                        ' - ' +
-                                        option.brand
-                                    "
-                                    :value="option.id"
-                                ></el-option>
-                                </el-select>
-                                <small
-                                v-if="errors.transport_id"
-                                class="form-control-feedback"
-                                v-text="errors.transport_id[0]"
-                                ></small>
+                                                <template
+                                                    v-if="
+                                                        form.transport_mode_type_id ===
+                                                            '02'
+                                                    "
+                                                >
+                                                    <!-- Conductor -->
+                                                    <div class="col-lg-4">
+                                                        <label
+                                                            class="control-label"
+                                                        >
+                                                            <i
+                                                                class="fas fa-user-tie"
+                                                            ></i>
+                                                            Conductor
+                                                            <el-tooltip
+                                                                class="item"
+                                                                content="Este dato es obligatorio"
+                                                                effect="dark"
+                                                                placement="top"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-exclamation-circle text-danger"
+                                                                ></i>
+                                                            </el-tooltip>
+                                                            <a
+                                                                v-if="
+                                                                    can_add_new_product
+                                                                "
+                                                                href="#"
+                                                                @click.prevent="
+                                                                    showDialogDriverForm = true
+                                                                "
+                                                                >[+ Nuevo]</a
+                                                            >
+                                                        </label>
+
+                                                        <div
+                                                            :class="{
+                                                                'has-danger':
+                                                                    errors.driver_id
+                                                            }"
+                                                            class="form-group"
+                                                        >
+                                                            <el-select
+                                                                v-model="
+                                                                    form.driver_id
+                                                                "
+                                                                clearable
+                                                                placeholder="Seleccionar conductor"
+                                                            >
+                                                                <el-option
+                                                                    v-for="(option,
+                                                                    idx) in drivers"
+                                                                    :key="idx"
+                                                                    :label="
+                                                                        option.number +
+                                                                            ' - ' +
+                                                                            option.name +
+                                                                            ' - ' +
+                                                                            option.license
+                                                                    "
+                                                                    :value="
+                                                                        option.id
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                            <small
+                                                                v-if="
+                                                                    errors.dispacher
+                                                                "
+                                                                class="form-control-feedback"
+                                                                v-text="
+                                                                    errors
+                                                                        .dispacher[0]
+                                                                "
+                                                            ></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <!-- Vehículo -->
+                                                            <div
+                                                                :class="{
+                                                                    'has-danger':
+                                                                        errors.transport_id
+                                                                }"
+                                                                class="form-group"
+                                                            >
+                                                                <label
+                                                                    class="control-label"
+                                                                >
+                                                                    <i
+                                                                        class="fas fa-shipping-fast"
+                                                                    ></i>
+                                                                    Vehículo
+                                                                    <a
+                                                                        v-if="
+                                                                            can_add_new_product
+                                                                        "
+                                                                        href="#"
+                                                                        @click.prevent="
+                                                                            showDialogTransportForm = true
+                                                                        "
+                                                                        >[+
+                                                                        Nuevo]</a
+                                                                    >
+                                                                </label>
+                                                                <el-select
+                                                                    v-model="
+                                                                        form.transport_id
+                                                                    "
+                                                                    clearable
+                                                                    placeholder="Seleccionar vehículo"
+                                                                >
+                                                                    <el-option
+                                                                        v-for="(option,
+                                                                        idx) in transports"
+                                                                        :key="
+                                                                            idx
+                                                                        "
+                                                                        :label="
+                                                                            option.plate_number +
+                                                                                ' - ' +
+                                                                                option.model +
+                                                                                ' - ' +
+                                                                                option.brand
+                                                                        "
+                                                                        :value="
+                                                                            option.id
+                                                                        "
+                                                                    ></el-option>
+                                                                </el-select>
+                                                                <small
+                                                                    v-if="
+                                                                        errors.transport_id
+                                                                    "
+                                                                    class="form-control-feedback"
+                                                                    v-text="
+                                                                        errors
+                                                                            .transport_id[0]
+                                                                    "
+                                                                ></small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label
+                                                                class="control-label"
+                                                            >
+                                                                <i
+                                                                    class="fas fa-id-card"
+                                                                ></i>
+                                                                N° Placa
+                                                                Semirremolque</label
+                                                            >
+                                                            <el-input
+                                                                v-model="
+                                                                    form
+                                                                        .secondary_license_plates
+                                                                        .semitrailer
+                                                                "
+                                                            ></el-input>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- <div class="row">
+                                    <div class="card">
+                                        <div class="card-body"> -->
+                                <div class="row">
+                                    <div
+                                        class="col-md-12 d-flex justify-content-end"
+                                    >
+                                        <button
+                                            class="btn-agregar"
+                                            type="button"
+                                            @click.prevent="
+                                                showDialogAddItems = true
+                                            "
+                                        >
+                                            <i class="fas fa-plus-circle"></i>
+                                            Agregar Producto
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-bordered table-hover"
+                                        >
+                                            <thead
+                                                style="background-color: #073f68; color: white;"
+                                            >
+                                                <tr>
+                                                    <th
+                                                        class="text-white text-center"
+                                                    >
+                                                        #
+                                                    </th>
+                                                    <th
+                                                        class="text-white  text-center"
+                                                    >
+                                                        Cantidad
+                                                    </th>
+                                                    <th
+                                                        class="text-white  text-center"
+                                                    >
+                                                        Unidad
+                                                    </th>
+                                                    <th class="text-white  ">
+                                                        Descripción
+                                                    </th>
+                                                    <th
+                                                        class="text-white  text-center"
+                                                        v-if="
+                                                            configuration.maderera
+                                                        "
+                                                    >
+                                                        Pies
+                                                    </th>
+                                                    <th
+                                                        class="text-white  text-center"
+                                                    >
+                                                        Acciones
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="(row,
+                                                    index) in form.items"
+                                                    :key="
+                                                        row._uid ||
+                                                            `${row.item_id ||
+                                                                row.id}-${
+                                                                row.unit_type_id
+                                                            }-${row.IdLoteSelected ||
+                                                                'none'}`
+                                                    "
+                                                    class="align-middle"
+                                                >
+                                                    <td class="text-center">
+                                                        {{ index + 1 }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{
+                                                            getFormatQuantity(
+                                                                row.quantity
+                                                            )
+                                                        }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ row.unit_type_id }}
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="font-weight-bold"
+                                                            >{{
+                                                                row.description
+                                                            }}</span
+                                                        >
+                                                        <!-- <template
+                                                            v-if="
+                                                                row.lots &&
+                                                                    row.lots
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-muted"
+                                                                v-for="(lot,
+                                                                index) in row.lots"
+                                                                :key="
+                                                                    'ser-' +
+                                                                        (lot.id ||
+                                                                            lot.series ||
+                                                                            index)
+                                                                "
+                                                            >
+                                                                <b>Serie:</b>
+                                                                {{ lot.series }}
+                                                            </small>
+                                                        </template> -->
+                                                        <template
+                                                            v-if="
+                                                                (row.lots &&
+                                                                    row.lots
+                                                                        .length) ||
+                                                                    (row.selected_series &&
+                                                                        row
+                                                                            .selected_series
+                                                                            .length)
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <!-- Preferir selected_series si existe, caso contrario lots -->
+                                                            <small
+                                                                class="text-muted"
+                                                                v-for="(lot,
+                                                                index) in row.selected_series &&
+                                                                row
+                                                                    .selected_series
+                                                                    .length
+                                                                    ? row.selected_series
+                                                                    : row.lots"
+                                                                :key="
+                                                                    'ser-' +
+                                                                        (lot.id ||
+                                                                            lot.series ||
+                                                                            lot.lot_code ||
+                                                                            index)
+                                                                "
+                                                            >
+                                                                <b>Serie:</b>
+                                                                {{
+                                                                    lot.series ||
+                                                                        lot.lot_code ||
+                                                                        lot.code ||
+                                                                        lot.number
+                                                                }}
+                                                            </small>
+                                                        </template>
+                                                        <template
+                                                            v-if="
+                                                                row.lots_group &&
+                                                                    row
+                                                                        .lots_group
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-muted"
+                                                                v-for="(lot,
+                                                                index) in row.lots_group"
+                                                                :key="
+                                                                    'lg-' +
+                                                                        (lot.id ||
+                                                                            lot.code ||
+                                                                            index)
+                                                                "
+                                                            >
+                                                                <b>Lote:</b>
+                                                                {{ lot.code }}
+                                                            </small>
+                                                        </template>
+                                                        <template
+                                                            v-if="
+                                                                row.color_size &&
+                                                                    row
+                                                                        .color_size
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-muted"
+                                                                v-for="(color,
+                                                                index) in row.color_size"
+                                                                :key="
+                                                                    'cs-' +
+                                                                        (color.id ||
+                                                                            color.color +
+                                                                                '-' +
+                                                                                color.size +
+                                                                                '-' +
+                                                                                index)
+                                                                "
+                                                            >
+                                                                <b>Color:</b>
+                                                                {{
+                                                                    color.color
+                                                                }}
+                                                                <b>Talla:</b>
+                                                                {{ color.size }}
+                                                            </small>
+                                                        </template>
+                                                        <template
+                                                            v-if="
+                                                                row.categoriaMadera
+                                                            "
+                                                        >
+                                                            <span>
+                                                                -
+                                                                {{
+                                                                    `${row.categoriaMadera.selectedGrosor} X ${row.categoriaMadera.selectedAncho} X ${row.categoriaMadera.selectedLargo}`
+                                                                }}
+                                                            </span>
+                                                        </template>
+                                                    </td>
+                                                    <td
+                                                        v-if="
+                                                            configuration.maderera
+                                                        "
+                                                        class="text-right"
+                                                    >
+                                                        <template
+                                                            v-if="
+                                                                row.categoriaMadera
+                                                            "
+                                                        >
+                                                            {{
+                                                                row.categoriaMadera.fot.toFixed(
+                                                                    2
+                                                                )
+                                                            }}
+                                                        </template>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button
+                                                            class="btn btn-sm btn-danger"
+                                                            type="button"
+                                                            @click.prevent="
+                                                                clickRemoveItem(
+                                                                    index
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-trash-alt"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{ totalQuantity }}</td>
+                                                    <td colspan="2"></td>
+                                                    <td
+                                                        v-if="
+                                                            configuration.maderera
+                                                        "
+                                                        class="text-right font-weight-bold"
+                                                    >
+                                                        {{ totalPies }}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="form-actions text-right mt-4">
+                                <el-button
+                                    icon="fas fa-times fa-lg"
+                                    class="bg-danger"
+                                    @click.prevent="close()"
+                                >
+                                    Cancelar</el-button
+                                >
+
+                                <el-button
+                                    icon="fas fa-file-alt fa-lg"
+                                    v-if="form.items.length > 0"
+                                    :loading="loading_submit"
+                                    native-type="submit"
+                                    type=""
+                                    class="btn_agregar"
+                                    style="border-radius: 8px; background-color: turquoise; border-color: blue;"
+                                >
+                                    Generar
+                                    <el-tooltip
+                                        class="item"
+                                        content="Genera la Guía de Remisión a partir de un CPE"
+                                        effect="dark"
+                                        placement="top"
+                                    >
+                                        <i class="fas fa-info-circle"></i>
+                                    </el-tooltip>
+                                </el-button>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">
-                                <i class="fas fa-id-card"></i>
-                                N° Placa Semirremolque</label
-                                >
-                                <el-input
-                                v-model="
-                                    form.secondary_license_plates
-                                    .semitrailer
-                                "
-                                ></el-input>
-                            </div>
-                        </div>
-                        </div>
-                            
-                       
-                        
-                    </template>
                     </div>
                 </div>
-                </div>
-                <hr />
-                <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                    <div class="col-md-12 d-flex justify-content-end">
-                        <button
-                        class="btn-agregar"
-                        type="button"
-                        @click.prevent="showDialogAddItems = true"
-                        >
-                        <i class="fas fa-plus-circle"></i> Agregar Producto
-                        </button>
-                    </div>
-                    </div>
-                    <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                        <thead style="background-color: #073f68; color: white;">
-                            <tr>
-                            <th  class="text-white text-center">#</th>
-                            <th  class="text-white  text-center">Cantidad</th>
-                            <th  class="text-white  text-center">Unidad</th>
-                            <th  class="text-white  ">Descripción</th>
-                            <th  class="text-white  text-center"v-if="configuration.maderera">Pies</th>
-                            <th  class="text-white  text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr 
-                            v-for="(row, index) in form.items"
-                            :key="index"
-                            class="align-middle"
-                            >
-                            <td class="text-center">{{ index + 1 }}</td>
-                            <td class="text-center">{{ getFormatQuantity(row.quantity) }}</td>
-                            <td class="text-center">{{ row.unit_type_id }}</td>
-                            <td>
-                                <span class="font-weight-bold">{{ row.description }}</span>
-                                <template v-if="row.lots && row.lots.length > 0">
-                                <br />
-                                <small
-                                    class="text-muted"
-                                    v-for="(lot, index) in row.lots"
-                                    :key="index"
-                                >
-                                    <b>Serie:</b> {{ lot.series }}
-                                </small>
-                                </template>
-                                <template v-if="row.lots_group && row.lots_group.length > 0">
-                                <br />
-                                <small
-                                    class="text-muted"
-                                    v-for="(lot, index) in row.lots_group"
-                                    :key="index"
-                                >
-                                    <b>Lote:</b> {{ lot.code }}
-                                </small>
-                                </template>
-                                <template v-if="row.color_size && row.color_size.length > 0">
-                                <br />
-                                <small
-                                    class="text-muted"
-                                    v-for="(color, index) in row.color_size"
-                                    :key="index"
-                                >
-                                    <b>Color:</b> {{ color.color }} <b>Talla:</b> {{ color.size }}
-                                </small>
-                                </template>
-                                <template v-if="row.categoriaMadera">
-                                <span>
-                                    - {{
-                                    `${row.categoriaMadera.selectedGrosor} X ${row.categoriaMadera.selectedAncho} X ${row.categoriaMadera.selectedLargo}`
-                                    }}
-                                </span>
-                                </template>
-                            </td>
-                            <td v-if="configuration.maderera" class="text-right">
-                                <template v-if="row.categoriaMadera">
-                                {{ row.categoriaMadera.fot.toFixed(2) }}
-                                </template>
-                            </td>
-                            <td class="text-center">
-                                <button
-                                class="btn btn-sm btn-danger"
-                                type="button"
-                                @click.prevent="clickRemoveItem(index)"
-                                >
-                                <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                            <td></td>
-                            <td class="text-right font-weight-bold">{{ totalQuantity }}</td>
-                            <td colspan="2"></td>
-                            <td v-if="configuration.maderera" class="text-right font-weight-bold">
-                                {{ totalPies }}
-                            </td>
-                            <td></td>
-                            </tr>
-                            <tr>
-                            <!-- <td colspan="6" class="text-center">
-                                <button
-                                class="btn btn-primary"
-                                type="button"
-                                @click.prevent="showDialogAddItems = true"
-                                >
-                                <i class="fas fa-plus-circle"></i> Agregar Producto
-                                </button>
-                            </td> -->
-                            </tr>
-                        </tfoot>
-                        </table>
-                    </div>
-                    </div>
-                </div>
-                </div>
-                <!-- <div class="col-lg-12"></div>
-                <div class="form-actions text-right mt-4">
-                    <el-button
-                    icon="fas fa-times fa-lg"
-                    @click.prevent="close()"
-                    >
-                    Cancelar</el-button
-                    >
-                    <el-button
-                    icon="fas fa-save fa-lg"
-                    v-if="form.items.length > 0"
-                    :loading="loading_submit"
-                    native-type="submit"
-                    type="primary"
-                    >
-                    Generar</el-button>
-                </div>
-                </div> -->
             </form>
         </div>
 
@@ -1020,6 +1336,7 @@
 
         <items
             :dialogVisible.sync="showDialogAddItems"
+            :item="item"
             @addItem="addItem"
         ></items>
 
@@ -1036,7 +1353,7 @@
         ></item-form>
         <lots-group
             v-if="item"
-            :lotsGroup="item.lots_group"
+            :lots_group="item.lots_group"
             :quantity="quantity"
             :showDialog.sync="showDialogLots"
             @addRowLotGroup="addRowLotGroup"
@@ -1645,7 +1962,14 @@ export default {
             if (it.IdLoteSelected) {
                 lot_group = it.lots_group.find(l => l.id == it.IdLoteSelected);
             }
+            const _uid =
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .slice(2);
             this.form.items.push({
+                _uid,
                 attributes: attributes,
                 description: it.description,
                 internal_id: it.internal_id,
@@ -1655,7 +1979,13 @@ export default {
                 unit_type_id: it.unit_type_id,
                 id: it.id,
                 IdLoteSelected: it.IdLoteSelected || "",
-                lot_group: lot_group || null
+                lot_group: lot_group || null,
+                color_size: Array.isArray(it.color_size)
+                    ? JSON.parse(JSON.stringify(it.color_size))
+                    : [],
+                selected_series: Array.isArray(it.selected_series)
+                    ? JSON.parse(JSON.stringify(it.selected_series))
+                    : []
             });
         },
         keyupCustomer() {

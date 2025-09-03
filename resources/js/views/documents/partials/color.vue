@@ -14,7 +14,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(row, index) in color_size_" :key="index" width="100%">
+                        <tr v-for="(row, index) in color_size_" :key="row.id ? 'cs-'+row.id : 'cs-'+row.color+'-'+row.size" width="100%">
                             <td>
                                 {{ row.size }}
                             </td>
@@ -28,10 +28,17 @@
                                 {{ row.price }}
                             </td>
                             <td class="text-center">
-                                <el-input type="text" placeholder="ingrese cantidad" v-model.number="row.selectedQuantity" maxlength="8" show-word-limit>
-                                </el-input>
+                                <el-input-number
+                                    type="text"
+                                    placeholder="cantidad"
+                                    v-model.number="row.selectedQuantity"
+                                    maxlength="8"
+                                    show-word-limit
+                                    controls-position="right"
+                                    :min="0"
+                                >
+                                </el-input-number>
                             </td>
-                            <br />
                         </tr>
                     </tbody>
                 </table>
@@ -66,24 +73,46 @@ export default {
     },
     async created() {},
     watch: {
-
-        color_size(val) {
-            this.color_size_ = val
+        color_size: {
+            handler(val) {
+                // Clonar para evitar mutaciones reactivas inesperadas y forzar actualización
+                this.color_size_ = Array.isArray(val)
+                    ? val.map(r => ({ ...r }))
+                    : [];
+            },
+            deep: true,
+            immediate: true
         }
     },
     methods: {
-        create() {},
+        create() {
+            // Asegurar que al abrir el modal se tenga una copia fresca
+            if (!this.color_size_ || this.color_size_.length === 0) {
+                this.color_size_ = Array.isArray(this.color_size)
+                    ? this.color_size.map(r => ({ ...r }))
+                    : [];
+            }
+        },
         async submit() {
-            let hasValidQuantity = this.color_size_.some(row => row.selectedQuantity > 0);
-            if (!hasValidQuantity) {
+            // Filtrar solo filas con cantidad válida (>0) y definida
+            const selectedRows = this.color_size_.filter(row => row.selectedQuantity != null && row.selectedQuantity !== '' && Number(row.selectedQuantity) > 0);
+
+            if (selectedRows.length === 0) {
                 return this.$toast.error('Debe ingresar al menos una cantidad mayor a 0.');
             }
+
+            // Emitir únicamente las filas con cantidades válidas
+            this.$emit("addRowSelectColor_size", selectedRows);
             this.$toast.success('Producto agregado exitosamente a la lista de venta.');
 
-            this.close();
+            this.close(false); // evitar emitir de nuevo lista completa
         },
-        close() {
-            this.$emit("addRowSelectColor_size", this.color_size_);
+        close(emitSelection = true) {
+            // Al cerrar desde el botón (no desde submit) opcionalmente emitir solo las filas con cantidad válida
+            if (emitSelection) {
+                const selectedRows = this.color_size_.filter(row => row.selectedQuantity != null && row.selectedQuantity !== '' && Number(row.selectedQuantity) > 0);
+                this.$emit("addRowSelectColor_size", selectedRows);
+            }
             this.$emit("update:showDialog", false);
         },
         async clickCancelSubmit() {}

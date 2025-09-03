@@ -486,84 +486,92 @@ class DispatchController extends Controller
      */
     public function tables(Request $request)
     {
+        // Preparar warehouse al inicio (se usa en los transforms)
+        $establishment_id = auth()->user()->establishment_id;
+        $warehouse = ModuleWarehouse::where('establishment_id', $establishment_id)->first();
+
+        // Closure reutilizable para mapear items con estructura consistente
+        $mapItem = function ($row) use ($warehouse) {
+            $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
+
+            $lots_group = collect($row->lots_group ?? [])->map(function ($lg) {
+                return [
+                    'id' => $lg->id,
+                    'code' => $lg->code,
+                    'quantity' => $lg->quantity,
+                    'date_of_due' => $lg->date_of_due,
+                    'checked' => false,
+                ];
+            });
+
+            $lots = collect($row->item_lots ?? [])->where('has_sale', false)->map(function ($lot) {
+                return [
+                    'id' => $lot->id,
+                    'series' => $lot->series,
+                    'date' => $lot->date,
+                    'item_id' => $lot->item_id,
+                    'warehouse_id' => $lot->warehouse_id,
+                    'has_sale' => (bool)$lot->has_sale,
+                    'lot_code' => ($lot->item_loteable_type) ? (isset($lot->item_loteable->lot_code) ? $lot->item_loteable->lot_code : null) : null,
+                ];
+            })->values();
+
+            $warehouses_data = collect(method_exists($row, 'getDataWarehouses') ? $row->getDataWarehouses() : []);
+
+            $color_size_filtered = collect($row->color_size ?? [])->where('warehouse_id', optional($warehouse)->id)->map(function ($cs) {
+                return [
+                    'id' => $cs->id,
+                    'color' => $cs->color,
+                    'size' => $cs->size,
+                    'stock' => $cs->stock,
+                    'price' => $cs->price,
+                ];
+            })->values();
+
+            return [
+                'id' => $row->id,
+                'full_description' => $full_description,
+                'description' => $row->description,
+                'model' => $row->model,
+                'internal_id' => $row->internal_id,
+                'currency_type_id' => $row->currency_type_id,
+                'currency_type_symbol' => $row->currency_type->symbol ?? null,
+                'sale_unit_price' => $row->sale_unit_price,
+                'purchase_unit_price' => $row->purchase_unit_price,
+                'unit_type_id' => $row->unit_type_id,
+                'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                'attributes' => $row->attributes ? $row->attributes : [],
+                'has_igv' => (bool)$row->has_igv,
+                'lots_group' => $lots_group,
+                'lots' => $lots,
+                'warehouses' => $warehouses_data,
+                'lots_enabled' => (bool)$row->lots_enabled,
+                'series_enabled' => (bool)$row->series_enabled,
+                'color_size' => $color_size_filtered,
+                'has_color_size' => (bool)($row->has_color_size ?? false),
+            ];
+        };
+
         $itemsFromSummary = null;
         if ($request->itemIds) {
             $itemsFromSummary = Item::query()
-                ->with('lots_group')
+                ->with(['lots_group', 'item_lots', 'color_size', 'warehouses.warehouse'])
                 ->whereIn('id', $request->itemIds)
                 ->where('item_type_id', '01')
                 ->orderBy('description')
                 ->get()
-                ->transform(function ($row) {
-                    $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
-
-                    return [
-                        'id' => $row->id,
-                        'full_description' => $full_description,
-                        'description' => $row->description,
-                        'model' => $row->model,
-                        'internal_id' => $row->internal_id,
-                        'currency_type_id' => $row->currency_type_id,
-                        'currency_type_symbol' => $row->currency_type->symbol,
-                        'sale_unit_price' => $row->sale_unit_price,
-                        'purchase_unit_price' => $row->purchase_unit_price,
-                        'unit_type_id' => $row->unit_type_id,
-                        'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
-                        'attributes' => $row->attributes ? $row->attributes : [],
-                        'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
-                        'has_igv' => $row->has_igv,
-                        'lots_group' => $row->lots_group->each(function ($lot) {
-                            return [
-                                'id' => $lot->id,
-                                'code' => $lot->code,
-                                'quantity' => $lot->quantity,
-                                'date_of_due' => $lot->date_of_due,
-                                'checked' => false
-                            ];
-                        }),
-                        'lots' => [],
-                        'lots_enabled' => (bool)$row->lots_enabled,
-                    ];
-                });
+                ->map($mapItem);
         }
+
         $items = Item::query()
-            ->with('lots_group')
+            ->with(['lots_group', 'item_lots', 'color_size', 'warehouses.warehouse'])
             ->where('item_type_id', '01')
             ->where('active', 1)
             ->orderBy('description')
             ->take(20)
             ->get()
-            ->transform(function ($row) {
-                $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
-                return [
-                    'id' => $row->id,
-                    'full_description' => $full_description,
-                    'description' => $row->description,
-                    'model' => $row->model,
-                    'internal_id' => $row->internal_id,
-                    'currency_type_id' => $row->currency_type_id,
-                    'currency_type_symbol' => $row->currency_type->symbol,
-                    'sale_unit_price' => $row->sale_unit_price,
-                    'purchase_unit_price' => $row->purchase_unit_price,
-                    'unit_type_id' => $row->unit_type_id,
-                    'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
-                    'attributes' => $row->attributes ? $row->attributes : [],
-                    'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
-                    'has_igv' => $row->has_igv,
-                    'lots_group' => $row->lots_group->each(function ($lot) {
-                        return [
-                            'id' => $lot->id,
-                            'code' => $lot->code,
-                            'quantity' => $lot->quantity,
-                            'date_of_due' => $lot->date_of_due,
-                            'checked' => false
-                        ];
-                    }),
-                    'lots' => [],
-                    'lots_enabled' => (bool)$row->lots_enabled,
-                    'warehouses' => $row->getDataWarehouses(),
-                ];
-            });
+            ->map($mapItem);
 
         $identities = ['6', '4', '1', '0'];
 
@@ -647,6 +655,110 @@ class DispatchController extends Controller
             'related_document_types',
             'itemsFromSummary'
         );
+    }
+
+    public function searchItems(Request $request)
+    {
+
+        // dd($request->all());
+        $establishment_id = auth()->user()->establishment_id;
+        $warehouse = ModuleWarehouse::where('establishment_id', $establishment_id)->first();
+
+        $items_not_services = $this->getItemsNotServices($request);
+        $items_services = $this->getItemsServices($request);
+        //aqui hay un return, cuando hay un return el codigo abajo de él no se ejectua
+        return self::TransformToModal($items_not_services->merge($items_services));
+        $all_items = $items_not_services->merge($items_services);
+
+        $items = collect($all_items)->transform(function ($row) use ($warehouse) {
+
+            $detail = $this->getFullDescription($row, $warehouse);
+            $warehouses = collect($row->warehouses)->transform(function ($row) use ($warehouse) {
+                return [
+                    'warehouse_description' => $row->warehouse->description,
+                    'stock' => $row->stock,
+                    'warehouse_id' => $row->warehouse_id,
+                    'checked' => ($row->warehouse_id == $warehouse->id) ? true : false,
+                    'active' => ($row->active) ? true : false,
+                ];
+            });
+
+            if (!$warehouses->contains('checked', true) && $warehouses->count() > 0) {
+                $warehouses->first()->checked = true;
+            }
+            return [
+                'id' => $row->id,
+                'origin' => $row->origin,
+                'full_description' => $detail['full_description'],
+                'brand' => $detail['brand'],
+                'category' => $detail['category'],
+                'stock' => $detail['stock'],
+                'internal_id' => $row->internal_id,
+                'description' => $row->description,
+                'currency_type_id' => $row->currency_type_id,
+                'currency_type_symbol' => $row->currency_type->symbol,
+                'sale_unit_price' => round($row->sale_unit_price, 2),
+                'purchase_unit_price' => $row->purchase_unit_price,
+                'unit_type_id' => $row->unit_type_id,
+                'sale_affectation_igv_type_id' => $row->sale_affectation_igv_type_id,
+                'purchase_affectation_igv_type_id' => $row->purchase_affectation_igv_type_id,
+                'calculate_quantity' => (bool) $row->calculate_quantity,
+                'has_igv' => (bool) $row->has_igv,
+                'amount_plastic_bag_taxes' => $row->amount_plastic_bag_taxes,
+                'item_unit_types' => collect($row->item_unit_types)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'description' => "{$row->description}",
+                        'item_id' => $row->item_id,
+                        'unit_type_id' => $row->unit_type_id,
+                        'quantity_unit' => $row->quantity_unit,
+                        'price1' => $row->price1,
+                        'price2' => $row->price2,
+                        'price3' => $row->price3,
+                        'price_default' => $row->price_default,
+                    ];
+                }),
+
+                'attributes' => $row->attributes ? $row->attributes : [],
+                'lots_group' => collect($row->lots_group)->transform(function ($row) {
+                    return [
+                        'id'  => $row->id,
+                        'code' => $row->code,
+                        'quantity' => $row->quantity,
+                        'date_of_due' => $row->date_of_due,
+                        'checked'  => false
+                    ];
+                }),
+                // 'lots' => $row->item_lots->where('has_sale', false)->where('warehouse_id', $warehouse->id)->transform(function($row) {
+                'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'series' => $row->series,
+                        'date' => $row->date,
+                        'item_id' => $row->item_id,
+                        'warehouse_id' => $row->warehouse_id,
+                        'has_sale' => (bool)$row->has_sale,
+                        'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                    ];
+                }),
+
+                'lots_enabled' => (bool) $row->lots_enabled,
+                'series_enabled' => (bool) $row->series_enabled,
+                'warehouses' => $warehouses,
+                'color_size' => $row->color_size->where('warehouse_id', $warehouse->id)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'color' => $row->color,
+                        'size' => $row->size,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                    ];
+                }),
+
+
+            ];
+        })->take(20);
+        return compact('items');
     }
 
     public function downloadExternal($type, $external_id)

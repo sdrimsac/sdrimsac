@@ -1047,7 +1047,7 @@
             ></item-form>
             <lots-group
                 v-if="item"
-                :lotsGroup="item.lots_group"
+                :lots_group="item.lots_group"
                 :quantity="quantity"
                 :showDialog.sync="showDialogLots"
                 @addRowLotGroup="addRowLotGroup"

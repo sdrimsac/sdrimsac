@@ -272,7 +272,7 @@
                         <div
                             :class="
                                 form.transfer_reason_type_id === '09'
-                                    ? 'col-lg-12'
+                                    ? 'col-lg-6'
                                     : 'col-lg-6'
                             "
                         >
@@ -1019,7 +1019,8 @@
                     </div>
                 </div>
                 <div class="form-actions text-right mt-4">
-                    <el-button @click.prevent="close()">Cancelar</el-button>
+                    <!-- <el-button type="button success" @click.prevent="close()">Cancelar</el-button> -->
+                    <el-button type="button success" @click.prevent="close()">Cancelar</el-button>
                     <el-button
                         v-if="form.items.length > 0"
                         :loading="loading_submit"

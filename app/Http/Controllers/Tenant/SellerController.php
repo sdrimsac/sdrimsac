@@ -105,99 +105,6 @@ class SellerController extends Controller
         return $query->orderBy('id', 'desc');
     }
 
-    /* public function getRecords(Request $request)
-    {
-        $date_of_issue = $request->input('date_of_issue');
-        $month_start = $request->input('month_start');
-        $active = $request->input('active', 1);
-        $date_start = $request->input('date_start');
-        $date_end = $request->input('date_end');
-
-        $query = Seller::query()
-            ->withSum(['documents as documents_total' => function ($query) use ($date_of_issue, $month_start, $date_start, $date_end) {
-                //if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                //    $query->whereDate('date_of_issue', $date_of_issue);
-                //} elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                //    $month_start_date = "{$month_start}-01";
-                //    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                //    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                //}
-                if (!empty($date_start) && !empty($date_end)) {
-                    $query->whereBetween('date_of_issue', [$date_start, $date_end]);
-                } elseif (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                    $query->whereDate('date_of_issue', $date_of_issue);
-                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                    $month_start_date = "{$month_start}-01";
-                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                }
-            }], 'total')
-            ->withSum(['saleNotes as sale_notes_total' => function ($query) use ($date_of_issue, $month_start, $date_start, $date_end) {
-                //if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                //    $query->whereDate('date_of_issue', $date_of_issue);
-                //} elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                //    $month_start_date = "{$month_start}-01";
-                //    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                //    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                //}
-
-                if (!empty($date_start) && !empty($date_end)) {
-                    $query->whereBetween('date_of_issue', [$date_start, $date_end]);
-                } elseif (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                    $query->whereDate('date_of_issue', $date_of_issue);
-                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                    $month_start_date = "{$month_start}-01";
-                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                    $query->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                }
-            }], 'total')
-            ->with(['soldItems' => function ($query) use ($date_of_issue, $month_start, $date_start, $date_end) {
-                //if (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                //    $query->whereHas('document', function ($q) use ($date_of_issue) {
-                //        $q->whereDate('date_of_issue', $date_of_issue);
-                //    });
-                //} elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                //    $month_start_date = "{$month_start}-01";
-                //    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                //    $query->whereHas('document', function ($q) use ($month_start_date, $month_end_date) {
-                //        $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                //    });
-                //} 
-
-                if (!empty($date_start) && !empty($date_end)) {
-                    $query->whereHas('document', function ($q) use ($date_start, $date_end) {
-                        $q->whereBetween('date_of_issue', [$date_start, $date_end]);
-                    });
-                } elseif (!empty($date_of_issue) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_of_issue)) {
-                    $query->whereHas('document', function ($q) use ($date_of_issue) {
-                        $q->whereDate('date_of_issue', $date_of_issue);
-                    });
-                } elseif (!empty($month_start) && preg_match('/^\d{4}-\d{2}$/', $month_start)) {
-                    $month_start_date = "{$month_start}-01";
-                    $month_end_date = date("Y-m-t", strtotime($month_start_date));
-                    $query->whereHas('document', function ($q) use ($month_start_date, $month_end_date) {
-                        $q->whereBetween('date_of_issue', [$month_start_date, $month_end_date]);
-                    });
-                }
-            }]);
-
-        if ($request->has('active')) {
-            $active = $request->input('active');
-            $query->where('active', $active);
-        } else {
-            $query->where('active', 1);
-        }
-
-        if ($request->has('column') && $request->has('value') && !empty($request->value)) {
-            $column = $request->input('column');
-            if (in_array($column, ['name', 'document'])) {
-                $query->where($column, 'like', '%' . $request->value . '%');
-            }
-        }
-
-        return $query->orderBy('id', 'desc');
-    } */
-
     public function getRecordsProduct(Request $request)
     {
         $date_of_issue = $request->input('date_of_issue');
@@ -374,55 +281,45 @@ class SellerController extends Controller
         if ($records->isEmpty()) {
             return response()->json(['message' => 'No hay datos para exportar.'], 204);
         }
-        /* $processedRecords = $records->map(function ($seller) {
-            return [
-                'seller_id' => $seller->id,
-                'name' => $seller->name,
-                'sold_items' => $seller->soldItems->map(function ($item) {
+        $processedRecords = $records->map(function ($seller) {
+            /**
+             * Problema original:
+             * Se obtenía el error "Call to a member function getKey() on array" porque al usar ->merge() sobre
+             * una Collection Eloquent con elementos transformados a arrays, Laravel intentaba tratar cada elemento
+             * como un modelo (usa getKey). Forzamos ahora Collections base y usamos concat.
+             */
+
+            $soldItems = $seller->soldItems
+                ->map(function ($item) {
                     return [
                         'item_id' => $item->item_id,
-                        'description' => $item->item->description,
-                        'quantity' => $item->quantity,
-                        'unit_price' => $item->unit_price,
-                        'total_price' => $item->quantity * $item->unit_price,
-                    ];
-                }),
-                'salesItems' => $seller->salesItems->map(function ($item) {
-                    return [
-                        'item_id' => $item->item_id,
-                        'description' => $item->item->description,
-                        'quantity' => $item->quantity,
-                        'unit_price' => $item->unit_price,
-                        'total_price' => $item->quantity * $item->unit_price,
+                        'description' => $item->item->description ?? '', // accessor devuelve objeto o null
+                        'quantity' => (float) $item->quantity,
+                        'unit_price' => (float) $item->unit_price,
+                        'total_price' => (float) $item->quantity * (float) $item->unit_price,
                     ];
                 })
-            ];
-        }); */
-        $processedRecords = $records->map(function ($seller) {
-            // Merge sold_items and salesItems into one collection
-            $combinedItems = $seller->soldItems->map(function ($item) {
-                return [
-                    'item_id' => $item->item_id,
-                    'description' => $item->item->description,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->unit_price,
-                    'total_price' => $item->quantity * $item->unit_price,
-                ];
-            })->merge($seller->salesItems->map(function ($item) {
-                return [
-                    'item_id' => $item->item_id,
-                    'description' => $item->item->description,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->unit_price,
-                    'total_price' => $item->quantity * $item->unit_price,
-                ];
-            }));
+                ->toBase(); // Convertimos a Support\Collection
 
-            // Return the processed data for each seller
+            $saleNoteItems = $seller->salesItems
+                ->map(function ($item) {
+                    return [
+                        'item_id' => $item->item_id,
+                        'description' => $item->item->description ?? '',
+                        'quantity' => (float) $item->quantity,
+                        'unit_price' => (float) $item->unit_price,
+                        'total_price' => (float) $item->quantity * (float) $item->unit_price,
+                    ];
+                })
+                ->toBase();
+
+            // Usamos concat para evitar lógicas de merge de Eloquent (keys de modelos)
+            $combinedItems = $soldItems->concat($saleNoteItems)->values();
+
             return [
                 'seller_id' => $seller->id,
                 'name' => $seller->name,
-                'combined_items' => $combinedItems
+                'combined_items' => $combinedItems,
             ];
         });
 

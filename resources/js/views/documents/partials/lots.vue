@@ -35,7 +35,7 @@
                         <tbody>
                             <tr
                                 v-for="(row, index) in lots_"
-                                :key="index"
+                                :key="row.id ? 'lot-'+row.id : 'lot-'+(row.lot_code||'')+'-'+(row.series||index)"
                                 width="100%"
                             >
                                 <!-- <td>{{index}}</td> -->
