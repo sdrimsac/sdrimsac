@@ -631,6 +631,29 @@ export default {
         isDisabled(newValue) {
             // Guarda el estado en localStorage cuando cambie
             localStorage.setItem("isDisabled", newValue);
+        },
+        establishments: {
+            handler(list) {
+                if (!this.form || this.form.printer) return;
+                const ests = list || [];
+                const est1 = ests.find(e => e.id == 1);
+                const first = ests.length > 0 ? ests[0] : null;
+                this.$set(this.form, 'printer', est1 ? est1.id : first ? first.id : null);
+            },
+            immediate: true
+        },
+        establishments: {
+            immediate: true,
+            handler(list) {
+                if (!this.form.printer) {
+                    const est1 = (list || []).find(e => e.id == 1);
+                    this.form.printer = est1
+                        ? est1.id
+                        : list[0]
+                        ? list[0].id
+                        : null;
+                }
+            }
         }
     },
     mounted() {
@@ -638,8 +661,6 @@ export default {
         if (savedIsDisabled !== null) {
             this.isDisabled = savedIsDisabled === "true";
         }
-
-        
     },
 
     async created() {
@@ -648,11 +669,7 @@ export default {
             this.warehouses = response.data.warehouses;
             this.items = response.data.items;
         });
-
-        if (this.establishments && this.establishments.length > 0) {
-            this.form.printer = this.establishments[0].id;
-        }
-
+    // La impresora por defecto ahora se setea dentro de initForm()
         await this.initForm();
         this.initFormAdd();
 
@@ -1051,7 +1068,7 @@ export default {
                 this.showDialogLotsOutput = true;
             });
         },
-        initForm() {
+        /* initForm() {
             this.errors = {};
             this.form = {
                 warehouse_id: null,
@@ -1059,7 +1076,21 @@ export default {
                 description: null,
                 items: []
             };
+        }, */
+        initForm() {
+            this.errors = {};
+            const ests = this.establishments || [];
+            const est1 = ests.find(e => e.id == 1); // == por si viene string
+            const defaultPrinter = est1 ? est1.id : ests[0] ? ests[0].id : null;
+            this.form = {
+                warehouse_id: null,
+                warehouse_destination_id: null,
+                description: null,
+                items: [],
+                printer: defaultPrinter
+            };
         },
+
         getQueryParameters() {
             // No necesitas queryString.stringify, puedes construir la query tú mismo
             return `warehouse_id=${this.form.warehouse_id}&item_id=${this.form_add.item_id}`;
