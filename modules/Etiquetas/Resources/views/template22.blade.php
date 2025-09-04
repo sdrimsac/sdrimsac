@@ -52,10 +52,10 @@
     @for ($i = 0; $i < $stock; $i++)
         <div class="label-container">
 
-            <div class="description-section" style="font-size:12px;">
+            <div class="description-section" style="font-size:10px;">
                 {{ substr($description, 0, 60) }}
             </div>
-            <div style="text-align:center;font-size:14px;margin:0px;padding:0px;">
+            <div style="text-align:center;font-size:24px;margin:0px;padding:0px;">
                 S/. {{ $sale_code }}
             </div>
             <div style="text-align:right;font-size:10px;margin:0px;padding-right:10px;">
