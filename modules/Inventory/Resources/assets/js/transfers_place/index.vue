@@ -1,6 +1,6 @@
+<!-- Listado de Traslados por aceptar -->
 <template>
     <div>
-
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
@@ -45,18 +45,70 @@
                                     {{ row.code }}
                                 </td>
                                 <td>
-                                    <el-popover placement="right" width="400" trigger="click">
-                                        <el-table :data="row.detail">
-                                            <el-table-column width="260" property="description" label="Producto"></el-table-column>
-                                            <el-table-column width="100" property="quantity" label="Cantidad"></el-table-column>
-                                            <el-table-column fixed="right" label="Series" width="120">
+                                    <!-- Popover principal que muestra el detalle de productos (y dentro cada lote / serie / talla-color) -->
+                                    <el-popover placement="right" width="650" trigger="click">
+                                        <el-table :data="row.detail" size="mini" border>
+                                            <el-table-column width="240" property="description" label="Producto"></el-table-column>
+                                            <el-table-column width="90" property="quantity" label="Cant."></el-table-column>
+                                            <el-table-column label="Detalle" min-width="300">
                                                 <template slot-scope="scope">
-                                                    <el-popover placement="right" width="150" trigger="click">
-                                                        <el-table :data="scope.row.lots" width="80">
-                                                            <el-table-column prop="series" label="Series" width="180"></el-table-column>
+                                                    <!-- LOTES -->
+                                                    <div v-if="scope.row.lots_enabled" class="mb-1">
+                                                        <strong style="font-size:11px;">Lotes:</strong>
+                                                        <el-table
+                                                            v-if="scope.row.series_lots && scope.row.series_lots.lotes && scope.row.series_lots.lotes.length"
+                                                            :data="scope.row.series_lots.lotes"
+                                                            size="mini"
+                                                            :show-header="false"
+                                                            style="width:100%; margin-top:2px;"
+                                                        >
+                                                            <el-table-column prop="code" label="Código" width="120"></el-table-column>
+                                                            <el-table-column prop="quantity" label="Cant." width="60"></el-table-column>
+                                                            <el-table-column prop="date_of_due" label="Vence" width="100"></el-table-column>
                                                         </el-table>
-                                                        <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
-                                                    </el-popover>
+                                                        <span v-else style="font-size:11px; color:#888;">Sin lotes</span>
+                                                    </div>
+                                                    <!-- SERIES -->
+                                                    <div v-if="scope.row.series_enabled" class="mb-1">
+                                                        <strong style="font-size:11px;">Series:</strong>
+                                                        <div v-if="scope.row.series_lots && scope.row.series_lots.series && scope.row.series_lots.series.length" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:2px;">
+                                                            <el-tag
+                                                                v-for="(ser, i) in scope.row.series_lots.series"
+                                                                :key="ser.id || i"
+                                                                type="info"
+                                                                size="mini"
+                                                                :disable-transitions="true"
+                                                            >{{ ser.series }}</el-tag>
+                                                        </div>
+                                                        <span v-else style="font-size:11px; color:#888;">Sin series</span>
+                                                    </div>
+                                                    <!-- TALLA / COLOR -->
+                                                    <div v-if="scope.row.has_color_size" class="mb-1">
+                                                        <strong style="font-size:11px;">Talla / Color:</strong>
+                                                        <el-table
+                                                            v-if="scope.row.series_lots && scope.row.series_lots.color_size && scope.row.series_lots.color_size.length"
+                                                            :data="scope.row.series_lots.color_size"
+                                                            size="mini"
+                                                            :show-header="false"
+                                                            style="width:100%; margin-top:2px;"
+                                                        >
+                                                            <el-table-column label="Código" width="120">
+                                                                <template slot-scope="cs">{{ cs.row.code }}</template>
+                                                            </el-table-column>
+                                                            <el-table-column label="Talla" width="60">
+                                                                <template slot-scope="cs">{{ cs.row.size }}</template>
+                                                            </el-table-column>
+                                                            <el-table-column label="Color" width="90">
+                                                                <template slot-scope="cs">{{ cs.row.color }}</template>
+                                                            </el-table-column>
+                                                            <el-table-column label="Cant." width="60">
+                                                                <template slot-scope="cs">{{ cs.row.quantity }}</template>
+                                                            </el-table-column>
+                                                        </el-table>
+                                                        <span v-else style="font-size:11px; color:#888;">Sin talla/color</span>
+                                                    </div>
+                                                    <!-- Si no hay ningún detalle adicional -->
+                                                    <div v-if="!scope.row.lots_enabled && !scope.row.series_enabled && !scope.row.has_color_size" style="font-size:11px; color:#888;">Sin detalle</div>
                                                 </template>
                                             </el-table-column>
                                         </el-table>

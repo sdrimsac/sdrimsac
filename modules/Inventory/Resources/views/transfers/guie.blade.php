@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de traslado</title>
+    <title>Guía de traslado</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="{{ $company->name }}" />
+    <meta name="description" content="Guía de traslado #{{ format_serie($transfer->id) }}" />
 </head>
 <?php
 function format_serie($id)
@@ -25,229 +28,88 @@ function format_serie($id)
 ?>
 <style>
     html {
-        font-family: sans-serif;
+        font-family: 'DejaVu Sans', Arial, sans-serif;
         font-size: 11px;
+        color: #1F1F1F;
     }
 
-    table {
-        width: 100%;
-        border-spacing: 0;
+    body { margin:0; padding:0; }
 
+    @page { margin: 18px 20px 25px 20px; }
+
+    #page-wrapper { width:100%; }
+
+    #register {
+        border: 2px solid #111;
+        padding: 14px 16px 18px 16px;
+        box-sizing: border-box;
+        width:100%;
+        border-radius: 4px;
+        position: relative;
+        min-height: 96%;
     }
 
-    .table {
-        /* border: 0.1px solid #ccc; */
+    .doc-header {
+        width:100%;
+        border-bottom: 2px solid #444;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        display: flex;
+        align-items: flex-start;
+    }
+    .company-block { width:60%; }
+    .company-name { font-size:15px; font-weight:700; letter-spacing:.5px; }
+    .doc-meta { width:40%; text-align:right; font-size:11px; }
+    .doc-title { font-size:16px; font-weight:700; margin-top:4px; }
+    .code-box { border:1px solid #888; padding:4px 6px; display:inline-block; border-radius:3px; background:#f7f7f7; }
+
+    table { width:100%; border-spacing:0; border-collapse: collapse; }
+    .items-table thead th { background:#efefef; font-weight:600; font-size:10px; letter-spacing:.5px; }
+    .items-table th, .items-table td { border:1px solid #c7c7c7; padding:4px 5px; vertical-align: top; }
+    .items-table tbody tr:nth-child(even){ background:#fafafa; }
+    .col-number { width:32px; text-align:center; }
+    .col-desc { width:65%; }
+    .col-qty { width:90px; text-align:center; white-space:nowrap; }
+    .lot-line { font-size:9px; color:#444; }
+    .qty-factor { display:block; font-size:8px; color:#666; line-height:1.1; }
+
+    .section-box { border:1px solid #bbb; padding:6px 8px; border-radius:3px; margin-top:6px; }
+    .label { font-weight:600; }
+    .footer-sign { margin-top:30px; display:flex; justify-content:space-between; }
+    .sign-box { width:32%; text-align:center; font-size:10px; }
+    .sign-line { margin-top:35px; border-top:1px solid #333; padding-top:2px; }
+
+    .header_title2 { font-size: 14px !important; }
+    .small { font-size: 8px !important; }
+    .description_preparacion { font-size: 10px !important; }
+    .text-center { text-align:center; }
+    .muted { color:#666; }
+    .badge { background:#444; color:#fff; padding:1px 5px; border-radius:3px; font-size:10px; }
+    .meta-grid { width:100%; margin-top:4px; }
+    .meta-grid td { font-size:10px; padding:2px 0; }
+
+    /* Numeración páginas (dompdf) se agrega con script php abajo */
+
+    /* Watermark opcional */
+    .watermark {
+        position: absolute;
+        top:40%;
+        left:50%;
+        transform:translate(-50%, -50%) rotate(-25deg);
+        font-size:70px;
+        font-weight:700;
+        color:rgba(0,0,0,0.04);
+        pointer-events:none;
+        white-space:nowrap;
     }
 
-    .celda {
-        text-align: left;
-        padding: 5px;
-        border: 0.1px solid #ccc;
-    }
+    /* Evitar cortes raros */
+    .avoid-break { page-break-inside: avoid; }
+    .items-table tr { page-break-inside: avoid; }
 
-    .celda_left {
-        text-align: left;
+    /* Compatibilidad impresión */
+    td, th { font-size:10px; }
 
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_center {
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_right {
-        text-align: right;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    tr:nth-child(even) {}
-
-    .nth-child {
-        background-color: transparent;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid rgb(49, 49, 49);
-    }
-
-    th {
-        padding: 5px;
-        text-align: center;
-        border-color: #409EFF;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .headers {
-        padding: 5px !important;
-        /* border-bottom:0.1px solid #ccc; */
-        height: 25px;
-    }
-
-    .title {
-        font-weight: bold;
-        padding: 5px;
-        font-size: 20px !important;
-        text-decoration: underline;
-    }
-
-    p>strong {
-        margin-left: 5px;
-        font-size: 13px;
-    }
-
-    thead {
-
-        color: #000;
-        text-align: center;
-    }
-
-    .title {
-        font-weight: bold;
-        padding: 3px;
-        font-size: 20px !important;
-        text-decoration: underline;
-    }
-
-    .encabezado {
-        background-color: #eee;
-        text-transform: uppercase;
-        padding: 2px;
-        padding-left: 2px;
-    }
-
-    .categoria {
-        background-color: #eee;
-        text-transform: uppercase;
-        padding: 5px;
-        padding-left: 50px;
-    }
-
-    .celda_loop {
-        width: 10% !important;
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_descrip {
-        width: 60% !important;
-        text-align: left;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_date {
-        width: 30% !important;
-        text-align: center;
-        padding: 5px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .celda_left {
-        text-align: left;
-        padding: 2px;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    p>strong {
-        margin-left: 5px;
-        font-size: 11px;
-    }
-
-    header {
-        position: fixed;
-        height: 1cm;
-        color: #000;
-        text-align: center;
-        padding: 10px;
-        font-size: 12px;
-        font-family: arial;
-
-    }
-
-    footer {
-        position: fixed;
-        bottom: 10px;
-        height: 0.8cm;
-        color: #000;
-        text-align: center;
-        font-size: 11px;
-        padding: 12px;
-        font-family: Arial;
-        padding: 10px;
-    }
-
-    .sinbordes {
-        border: 0px !important;
-        height: 15px !important;
-    }
-
-    h5 {
-        padding: 0px !important;
-        margin: 0px !important;
-    }
-
-    @page {
-        margin: 5px;
-    }
-
-    td,
-    th {
-        font-size: 10px !important;
-        height: 15px;
-    }
-
-    .small {
-        font-size: 8px !important;
-    }
-
-    .company_logo_ticket {
-        max-width: 150px;
-        max-height: 70px;
-    }
-
-    .description {
-        font-size: 13px;
-    }
-
-    .description_preparacion {
-        font-size: 11px !important;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .header_title {
-        font-size: 20px !important;
-    }
-
-    .header_title0 {
-
-        font-size: 12px !important;
-    }
-
-    .header_title1 {
-
-        font-size: 10px !important;
-    }
-
-    .under_line {
-        text-decoration: underline;
-    }
-
-    .cell_number {
-        width: 10% !important;
-        /* border: 0.1px solid #ccc; */
-    }
-
-    .header_title2 {
-
-        font-size: 14px !important;
-    }
 </style>
 <?php
 function format($it)
@@ -285,111 +147,115 @@ function format($it)
 ?>
 
 <body>
+<div id="page-wrapper">
     <div id="register">
+        <div class="watermark">{{ $company->trade_name ?? $company->name }}</div>
+        <div class="doc-header">
+            <div class="company-block">
+                <div class="company-name">
+                    {{ $company->trade_name ? $company->trade_name : $company->name }}
+                </div>
+                <table class="meta-grid">
+                    <tr>
+                        <td class="label" style="width:80px">RUC:</td>
+                        <td>{{ $company->number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Dirección:</td>
+                        <td>{{ $company->address ?? '—' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Tel:</td>
+                        <td>{{ $company->telephone ?? '—' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="doc-meta">
+                <div class="doc-title">GUÍA DE TRASLADO</div>
+                <div class="code-box">GT-{{ format_serie($transfer->id) }}</div>
+                <div style="margin-top:6px;">
+                    <span class="label">Fecha:</span> {{ $transfer->created_at->format('d/m/Y') }}<br>
+                    <span class="label">Código:</span> {{ $transfer->code }}
+                </div>
+            </div>
+        </div>
 
-        <table border="0" style="border:0px solid;width:90%">
-            <thead>
+        <div class="section-box avoid-break" style="margin-top:4px;">
+            <table style="width:100%;">
                 <tr>
-                    <th colspan="4" class="header_title">
-                        @if ($company->trade_name)
-                            {{ $company->trade_name }}
-                        @else
-                            {{ $company->name }}
-                        @endif
-                    </th>
+                    <td style="width:50%; vertical-align:top;">
+                        <span class="label">Enviado por:</span><br>
+                        {{ $transfer->sender->name }}
+                    </td>
+                    <td style="width:50%; vertical-align:top;">
+                        <span class="label">Almacenes:</span><br>
+                        <strong>Origen:</strong> {{ $transfer->warehouse->description }}<br>
+                        <strong>Destino:</strong> {{ $transfer->warehouse_destination->description }}
+                    </td>
                 </tr>
-                <tr>
-                    <th colspan="4" class="header_title2">
-                        GUIA DE TRASLADO GT-{{ format_serie($transfer->id) }}
-                    </th>
-                </tr>
-                <tr>
+            </table>
+        </div>
 
-                    <th colspan="3" class="header_title0">
-                        ENVIADO: {{ $transfer->sender->name }}
-                    </th>
-                    <th class="header_title0">
-                        FECHA: {{ $transfer->created_at->format('d/m/Y') }}
-                    </th>
-                </tr>
-                <tr>
-                    <th class="celda_left header_title0" colspan="4">
-                        SALIDA:
-                        <strong>
-                            {{ $transfer->warehouse->description }}
-
-                        </strong><br>
-                        DESTINO:
-                        <strong>
-                            {{ $transfer->warehouse_destination->description }}
-                        </strong>
-                    </th>
-                </tr>
-
-            </thead>
-
-
-        </table>
-
-        <table border="0" style="border:0px solid;width:90%; margin-top: 10px;">
-            <thead>
-                <tr>
-                    <th class="header_title1">#</th>
-                    <th class="header_title1">PRODUCTO</th>
-                    <th class="header_title1">CANTIDAD</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div style="margin-top:10px;" class="avoid-break">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th class="col-number">#</th>
+                        <th class="col-desc">Producto</th>
+                        <th class="col-qty">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
                 @foreach ($transfer->detail as $idx => $it)
                     <tr>
-                        <td class="description_preparacion">{{ $idx + 1 }}</td>
-                        <td class="description_preparacion">
-                            <b>
-
-                                {{ $it->item->description }}
-                            </b><br>
-
-
+                        <td class="col-number">{{ $idx + 1 }}</td>
+                        <td class="col-desc">
+                            <strong>{{ $it->item->description }}</strong>
                             @if (isset($it->series_lots))
                                 @foreach ($it->series_lots['lotes'] as $lot)
-                                    <br><small>Lote: {{ $lot['code'] }} - Cant. {{ $lot['quantity'] }}</small>
+                                    <div class="lot-line">Lote: {{ $lot['code'] }} - Cant. {{ $lot['quantity'] }}</div>
                                 @endforeach
                             @endif
                         </td>
-                        <td class="celda_center description_preparacion">
+                        <td class="col-qty">
                             @if (isset($it->item->max_quantity))
                                 {{ format($it) }}
-                                <div style="padding:0px">
-                                    <small style="padding:0px" class="small">
-                                        {{ $it->quantity }} unds
-                                    </small>
-                                    <small style="padding:0px" class="small">
-                                        {{ $it->item->max_quantity }} factor
-                                    </small>
-                                </div>
+                                <span class="qty-factor">{{ $it->quantity }} unds</span>
+                                <span class="qty-factor">Factor {{ $it->item->max_quantity }}</span>
                             @else
                                 {{ $it->quantity }} {{ $it->item->unit_type_id }}
                             @endif
                         </td>
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
-        <table border="0" style="border:0px solid;width:90%; margin-top: 10px;">
-            <tbody>
-                <tr>
-                    <td colspan="3" class="header_title0">
-                        Código de traslado: <strong>
-                            <span class="header_title2">
+                </tbody>
+            </table>
+        </div>
 
-                                {{ $transfer->code }}
-                            </span>
-                        </strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="footer-sign">
+            <div class="sign-box">
+                <div class="sign-line">Entregado por</div>
+            </div>
+            <div class="sign-box">
+                <div class="sign-line">Transportista</div>
+            </div>
+            <div class="sign-box">
+                <div class="sign-line">Recibido por</div>
+            </div>
+        </div>
+
+        <div style="margin-top:18px; font-size:9px; color:#555; text-align:right;">
+            Generado: {{ now()->format('d/m/Y H:i') }}
+        </div>
     </div>
+</div>
+
+@php
+    // Numeración de páginas para dompdf
+    if (isset($pdf)) {
+        $pdf->page_script('if ($PAGE_COUNT > 1) { $font = $fontMetrics->get_font("DejaVu Sans", "normal"); $pdf->text($pdf->get_width() - 70, $pdf->get_height() - 25, "Página $PAGE_NUM de $PAGE_COUNT", $font, 8); }');
+    }
+@endphp
 
 </body>
 

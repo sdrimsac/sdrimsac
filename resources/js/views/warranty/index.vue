@@ -32,7 +32,7 @@
                         <th class="text-white">#</th>
                         <th class="text-white">Código</th>
                         <th class="text-white">Producto</th>
-                        <th class="text-white">Serie Numero</th>
+                        <th class="text-white">CPE</th>
                         <th class="text-white">Cliente</th>
                         <th class="text-white">Serie Vendida</th>
                         <th class="text-white">Fecha Inicio Garantia</th>

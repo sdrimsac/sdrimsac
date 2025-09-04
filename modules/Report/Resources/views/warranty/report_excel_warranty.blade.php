@@ -44,6 +44,8 @@
                         <td class="encabezado" style="border: 1px solid black;">#</td>
                         <td class="encabezado" style="border: 1px solid black">CODIGO</td>
                         <td class="encabezado" style="border: 1px solid black">PRODUCTO</td>
+                        <td class="encabezado" style="border: 1px solid black">SERIE VENDIDA</td>
+                        <td class="encabezado" style="border: 1px solid black">CPE</td>
                         <td class="encabezado" style="border: 1px solid black">CLIENTE</td>
                         <td class="encabezado" style="border: 1px solid black">FECHA DE INICIO DE GARANTIA</td>
                         <td class="encabezado" style="border: 1px solid black">TIEMPO DE GARANTIA</td>
@@ -56,6 +58,8 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $row['internal_id'] }}</td>
                             <td>{{ $row['description'] }}</td>
+                            <td>{{ $row['serie_vendida'] }}</td>
+                            <td>{{ $row['serie'] }}</td>
                             <td>{{ $row['customer_name'] }}</td>
                             <td>{{ $row['warranty_start_date'] }}</td>
                             <td>{{ $row['month_day'] }} meses</td>

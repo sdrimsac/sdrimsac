@@ -59,9 +59,6 @@ class TransferPlaceController extends Controller
         } else {
             $records = TransferPlace::latest();
         }
-
-
-
         return new TransferPlaceCollection($records->paginate(config('tenant.items_per_page')));
     }
 

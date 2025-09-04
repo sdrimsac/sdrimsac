@@ -104,6 +104,7 @@ class WarrantyCollection extends ResourceCollection
 
                 'item_id' => $item->id ?? null,
                 'internal_id' => $item->internal_id ?? null,
+                'description' => $item->description ?? null,
 
                 'serie_vendida' => $serie_vendida,
 
