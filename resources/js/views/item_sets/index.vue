@@ -10,7 +10,7 @@
                         class="fas fa-boxes"
                         style="font-size: 2rem; margin-right: 0.5rem;"
                     ></i>
-                  Productos Compuestos o Recetas
+                  Productos Compuestos
                 </h4>
             </div>
             

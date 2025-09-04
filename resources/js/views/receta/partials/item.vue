@@ -92,7 +92,7 @@ export default {
     data() {
         return {
             titleDialog: "Agregar Producto",
-            resource: "item-sets",
+            resource: "receta",
             errors: {},
             form: {},
             individual_items: [],

@@ -179,8 +179,13 @@
                                         </el-select>
                                         <small
                                             class="form-control-feedback"
-                                            v-if="errors.sale_affectation_igv_type_id"
-                                            v-text="errors.sale_affectation_igv_type_id[0]"
+                                            v-if="
+                                                errors.sale_affectation_igv_type_id
+                                            "
+                                            v-text="
+                                                errors
+                                                    .sale_affectation_igv_type_id[0]
+                                            "
                                         ></small>
                                     </div>
                                 </div>
@@ -189,7 +194,9 @@
                                 <div class="col-md-3" v-show="recordId == null">
                                     <div
                                         class="form-group"
-                                        :class="{ 'has-danger': errors.warehouse_id }"
+                                        :class="{
+                                            'has-danger': errors.warehouse_id
+                                        }"
                                     >
                                         <label class="control-label">
                                             Almacén
@@ -199,7 +206,9 @@
                                                 content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento"
                                                 placement="top"
                                             >
-                                                <i class="fa fa-info-circle"></i>
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
                                             </el-tooltip>
                                         </label>
                                         <el-select
@@ -226,7 +235,9 @@
                                 <div class="col-md-3">
                                     <div
                                         class="form-group"
-                                        :class="{ 'has-danger': errors.unit_type_id }"
+                                        :class="{
+                                            'has-danger': errors.unit_type_id
+                                        }"
                                     >
                                         <label class="control-label"
                                             >Unidad</label
@@ -264,9 +275,14 @@
                                 <div class="col-md-3">
                                     <div
                                         class="form-group"
-                                        :class="{ 'has-danger': errors.currency_type_id }"
+                                        :class="{
+                                            'has-danger':
+                                                errors.currency_type_id
+                                        }"
                                     >
-                                        <label class="control-label">Moneda</label>
+                                        <label class="control-label"
+                                            >Moneda</label
+                                        >
                                         <el-select
                                             v-model="form.currency_type_id"
                                             dusk="currency_type_id"
@@ -305,13 +321,17 @@
                                                     v-model="
                                                         form.sale_affectation_igv_type_id
                                                     "
-                                                    @change="changeAffectationIgvType"
+                                                    @change="
+                                                        changeAffectationIgvType
+                                                    "
                                                 >
                                                     <el-option
                                                         v-for="option in affectation_igv_types"
                                                         :key="option.id"
                                                         :value="option.id"
-                                                        :label="option.description"
+                                                        :label="
+                                                            option.description
+                                                        "
                                                     ></el-option>
                                                 </el-select>
                                                 <small
@@ -333,16 +353,22 @@
                                 <div class="col-md-3">
                                     <div
                                         class="form-group"
-                                        :class="{ 'has-danger': errors.sale_unit_price }"
+                                        :class="{
+                                            'has-danger': errors.sale_unit_price
+                                        }"
                                     >
                                         <label class="control-label"
                                             >Precio de Venta
-                                            <span class="text-danger">*</span></label
+                                            <span class="text-danger"
+                                                >*</span
+                                            ></label
                                         >
                                         <el-input
                                             v-model="form.sale_unit_price"
                                             dusk="sale_unit_price"
-                                            @input="calculatePercentageOfProfitBySale"
+                                            @input="
+                                                calculatePercentageOfProfitBySale
+                                            "
                                         ></el-input>
                                         <small
                                             class="form-control-feedback"
@@ -353,125 +379,127 @@
                                 </div>
 
                                 <!-- Agregar productos -->
-                                <div class="col-md-6 mt-4 d-flex align-items-start justify-content-end">
+                                <div
+                                    class="col-md-6 mt-4 d-flex align-items-start justify-content-end"
+                                >
                                     <el-button
                                         class="btn-agregar btn-agregar:hover"
                                         type="primary"
                                         icon="plus"
-                                        @click.prevent="showDialogAddItem = true"
+                                        @click.prevent="
+                                            showDialogAddItem = true
+                                        "
                                     >
                                         <i class="fas fa-plus-circle fa-lg"></i>
                                         Agregar Productos
                                     </el-button>
                                 </div>
-                             </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-
-                                <!-- Imagen -->
-                                <div class="row col-md-12 justify-content-center">
-                                    <div class="col-md-12 text-center">
-                                        <div class="form-group">
-                                            <label class="control-label"
-                                                >Imágen
-                                                <span class="text-danger"></span
-                                            ></label>
-                                            <el-upload
-                                                class="avatar-uploader"
-                                                :data="{ type: 'items' }"
-                                                :headers="headers"
-                                                :action="`/${resource}/upload`"
-                                                :show-file-list="false"
-                                                :on-success="onSuccess"
-                                            >
-                                                <img
-                                                    v-if="form.image_url"
-                                                    :src="form.image_url"
-                                                    class="avatar"
-                                                />
-                                                <i
-                                                    v-else
-                                                    class="el-icon-plus avatar-uploader-icon"
-                                                ></i>
-                                            </el-upload>
-                                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <!-- Imagen -->
+                            <div class="row col-md-12 justify-content-center">
+                                <div class="col-md-12 text-center">
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Imágen
+                                            <span class="text-danger"></span
+                                        ></label>
+                                        <el-upload
+                                            class="avatar-uploader"
+                                            :data="{ type: 'items' }"
+                                            :headers="headers"
+                                            :action="`/${resource}/upload`"
+                                            :show-file-list="false"
+                                            :on-success="onSuccess"
+                                        >
+                                            <img
+                                                v-if="form.image_url"
+                                                :src="form.image_url"
+                                                class="avatar"
+                                            />
+                                            <i
+                                                v-else
+                                                class="el-icon-plus avatar-uploader-icon"
+                                            ></i>
+                                        </el-upload>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                </div>
 
-                    <!-- Productos  Agregados -->
-                    <div class="row">
-                        <div
-                            class="col-md-12 mt-2"
-                            v-if="form.individual_items.length > 0"
-                        >
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr slot="heading" class="bg-primary">
-                                            <th class="text-white">#</th>
-                                            <th class="font-weight-bold text-white">
-                                                Descripción
-                                            </th>
-                                            <th
-                                                class="text-white text-center font-weight-bold"
-                                            >
-                                                Precio Unitario
-                                            </th>
-                                            <th
-                                                class="text-white text-right font-weight-bold"
-                                            >
-                                                Cantidad
-                                            </th>
-                                            <th class="text-white text-end">
-                                                Acciones
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(row,
-                                            index) in form.individual_items"
-                                            :key="index"
+                <!-- Productos  Agregados -->
+                <div class="row">
+                    <div
+                        class="col-md-12 mt-2"
+                        v-if="form.individual_items.length > 0"
+                    >
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr slot="heading" class="bg-primary">
+                                        <th class="text-white">#</th>
+                                        <th class="font-weight-bold text-white">
+                                            Descripción
+                                        </th>
+                                        <th
+                                            class="text-white text-center font-weight-bold"
                                         >
-                                            <td>{{ index + 1 }}</td>
-                                            <td>{{ row.full_description }}</td>
-                                            <td class="text-center">
-                                                {{
-                                                    parseFloat(
-                                                        row.quantity
-                                                    ).toFixed(2)
-                                                }}
-                                                {{ row.unit_type_description }}
-                                            </td>
+                                            Precio Unitario
+                                        </th>
+                                        <th
+                                            class="text-white text-right font-weight-bold"
+                                        >
+                                            Cantidad
+                                        </th>
+                                        <th class="text-white text-end">
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="(row,
+                                        index) in form.individual_items"
+                                        :key="index"
+                                    >
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ row.full_description }}</td>
+                                        <td class="text-center">
+                                            {{
+                                                parseFloat(
+                                                    row.quantity
+                                                ).toFixed(2)
+                                            }}
+                                            {{ row.unit_type_description }}
+                                        </td>
 
-                                            <td class="text-right">
-                                                {{ row.quantity }}
-                                                {{ row.unit_type_description }}
-                                            </td>
+                                        <td class="text-right">
+                                            {{ row.quantity }}
+                                            {{ row.unit_type_description }}
+                                        </td>
 
-                                            <td class="text-right">
-                                                <button
-                                                    type="button"
-                                                    class="btn waves-effect waves-light btn-xs btn-danger"
-                                                    @click.prevent="
-                                                        clickRemoveItem(index)
-                                                    "
-                                                >
-                                                    x
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <td class="text-right">
+                                            <button
+                                                type="button"
+                                                class="btn waves-effect waves-light btn-xs btn-danger"
+                                                @click.prevent="
+                                                    clickRemoveItem(index)
+                                                "
+                                            >
+                                                x
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <!-- <div
+                    </div>
+                    <!-- <div
                             class="col-md-3"
                             v-show="recordId == null && form.unit_type_id != 'ZZ'"
                         >
@@ -489,37 +517,36 @@
                             </div>
                         </div> -->
 
-                        <item-set-form-item
-                            :warehouse_id.sync="form.warehouse_id"
-                            :showDialog.sync="showDialogAddItem"
-                            @add="addRow"
-                        ></item-set-form-item>
-                    </div>
-
+                    <item-set-form-item
+                        :warehouse_id.sync="form.warehouse_id"
+                        :showDialog.sync="showDialogAddItem"
+                        @add="addRow"
+                    ></item-set-form-item>
                 </div>
+            </div>
 
-                <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-                    <!-- Botón Cancelar -->
-                    <el-button
-                        class="btn-cancel btn-cancel:hover"
-                        icon="fas fa-times fa-lg"
-                        @click.prevent="close()"
-                    >
-                        <span>Cancelar</span>
-                    </el-button>
-                    <!-- Botón Guardar -->
-                    <el-button
-                        class="btn-save btn-save:hover"
-                        icon="fas fa-save fa-lg"
-                        type="primary"
-                        native-type="submit"
-                        :loading="loading_submit"
-                    >
-                        <span>Guardar</span>
-                    </el-button>
-                </div>
-
-            
+            <div
+                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+            >
+                <!-- Botón Cancelar -->
+                <el-button
+                    class="btn-cancel btn-cancel:hover"
+                    icon="fas fa-times fa-lg"
+                    @click.prevent="close()"
+                >
+                    <span>Cancelar</span>
+                </el-button>
+                <!-- Botón Guardar -->
+                <el-button
+                    class="btn-save btn-save:hover"
+                    icon="fas fa-save fa-lg"
+                    type="primary"
+                    native-type="submit"
+                    :loading="loading_submit"
+                >
+                    <span>Guardar</span>
+                </el-button>
+            </div>
         </form>
     </el-dialog>
 </template>
@@ -738,8 +765,8 @@ export default {
                     ? this.affectation_igv_types[0].id
                     : null;
             this.titleDialog = this.recordId
-                ? "Editar Item Compuesto o Receta"
-                : "Nuevo Item Compuesto o Receta";
+                ? "Editar Item Compuesto"
+                : "Nuevo Item Compuesto";
             if (this.recordId) {
                 this.$http
                     .get(`/${this.resource}/record/${this.recordId}`)

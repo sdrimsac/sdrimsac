@@ -208,6 +208,12 @@ class ItemSetController extends Controller
                     'description' => $row->description, 
                     'sale_unit_price' => $row->sale_unit_price,
                     'unit_type_description' => $unit_type_description,
+                    'lots_enabled' => $row->lots_enabled,
+                    'series_enabled' => $row->series_enabled,
+                    'has_color_size' => $row->has_color_size,
+                    'lots' => $row->lots,
+                    'lots_group' => $row->lots_group,
+                    'color_size' => $row->color_size,
                 ];
             });
 

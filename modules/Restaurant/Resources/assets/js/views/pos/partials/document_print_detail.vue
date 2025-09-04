@@ -1,7 +1,7 @@
 <!-- Comprobantes  Caja -->
 <template>
     <div v-loading="loading" class="">
-        <div class="container table-responsive col-md-12">
+        <div class="table-responsive col-md-12">
             <table
                 class="table table-hover table-striped table-bordered table-responsive"
                 style="width: 100%; white-space: nowrap; font-size: 14px;"
@@ -23,7 +23,7 @@
                         </th>
                         <th
                             v-if="
-                                configuration.restaurant && 
+                                configuration.restaurant &&
                                     (type == 'documents' || type == 'saleNotes')
                             "
                             class="text-white"
@@ -113,99 +113,81 @@
                                 </el-button>
                             </el-tooltip>
 
-                            <div class="dropdown">
-                                <button
+                            <el-dropdown>
+                                <el-button
+                                    type="primary"
                                     v-if="
                                         data.state_type_id != '11' &&
                                             data.state_type_id != '13'
                                     "
-                                    class="btn btn-primary btn-sm dropdown-toggle"
-                                    type="button"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                
                                 >
-                                    <i class="fas fa-list"></i>
-                                </button>
-                                <div class="dropdown-menu p-1" style="max-height: 250px; overflow-y: auto;">
-                                    <template>
-                                        <!-- Anulado Interno -->
-                                        <el-button
-                                            append-to-body
-                                            class="dropdown-item d-flex align-items-center"
-                                            style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            v-if="
-                                                data.state_type_id == '01' &&
-                                                    configuration.caja_actions &&
-                                                    configuration.internal_voided
-                                            "
-                                            type="text"
-                                            @click="
-                                                clickDeleteDocument(data.id)
-                                            "
-                                        >
-                                            <i
-                                                class="el-icon-close me-2"
-                                                style="color: white; margin-right: 10px;"
-                                            ></i>
-                                            <span>Anulado Interno</span>
-                                        </el-button>
-
-                                        <!-- Anular SUNAT -->
-                                        <el-button
-                                            class="dropdown-item d-flex align-items-center"
-                                            style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            v-if="
-                                                data.document_type_id == '01' &&
-                                                    data.document_type_id ==
-                                                        '03' &&
-                                                    data.state_type_id ==
-                                                        '05' &&
-                                                    configuration.anulate_sunat_cash
-                                            "
-                                            type="text"
-                                            @click="clickVoided(data.id)"
-                                        >
-                                            <i
-                                                class="el-icon-warning me-2"
-                                                style="color: black; margin-right: 10px;"
-                                            ></i>
-                                            <span>Anular SUNAT</span>
-                                        </el-button>
-
-                                        <!-- Nota de Crédito -->
-                                        <el-button
-                                            class="dropdown-item d-flex align-items-center"
-                                            style="background-color: #17a2b8; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            v-if="data.state_type_id == '05'"
-                                            type="text"
-                                            @click="clickNote(data.id)"
-                                        >
-                                            <i
-                                                class="el-icon-document me-2"
-                                                style="color: white; margin-right: 10px;"
-                                            ></i>
-                                            <span>Nota de Crédito</span>
-                                        </el-button>
-
-                                        <!-- Pagos Pendientes -->
-                                        <el-button
-                                            class="dropdown-item d-flex align-items-center"
-                                            style="background-color: #52c41a; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                            v-if="data.is_credit"
-                                            type="text"
-                                            @click="clickPayment(data.id)"
-                                        >
-                                            <i
-                                                class="el-icon-money me-2"
-                                                style="color: white; margin-right: 10px;"
-                                            ></i>
-                                            <span>Pagos CPE</span>
-                                        </el-button>
-                                    </template>
-
-                                    <!-- Reenviar CPE -->
+                                    Acciones<i
+                                        class="el-icon-arrow-down el-icon--right"
+                                    ></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-button
+                                        append-to-body
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            data.state_type_id == '01' &&
+                                                configuration.caja_actions &&
+                                                configuration.internal_voided
+                                        "
+                                        type="text"
+                                        @click="clickDeleteDocument(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-close me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Anulado Interno</span>
+                                    </el-button>
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            data.document_type_id == '01' &&
+                                                data.document_type_id == '03' &&
+                                                data.state_type_id == '05' &&
+                                                configuration.anulate_sunat_cash
+                                        "
+                                        type="text"
+                                        @click="clickVoided(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-warning me-2"
+                                            style="color: black; margin-right: 10px;"
+                                        ></i>
+                                        <span>Anular SUNAT</span>
+                                    </el-button>
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #17a2b8; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="data.state_type_id == '05'"
+                                        type="text"
+                                        @click="clickNote(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-document me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Nota de Crédito</span>
+                                    </el-button>
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #52c41a; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="data.is_credit"
+                                        type="text"
+                                        @click="clickPayment(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-money me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Pagos CPE</span>
+                                    </el-button>
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #1890ff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
@@ -223,8 +205,6 @@
                                         ></i>
                                         <span>Reenviar CPE</span>
                                     </el-button>
-
-                                    <!-- Validar CPE -->
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #13c2c2; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
@@ -242,8 +222,6 @@
                                         ></i>
                                         <span>Validar CPE</span>
                                     </el-button>
-
-                                    <!-- Generar Guia de Remisión -->
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #228B22; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
@@ -262,7 +240,6 @@
                                         <span>Generar Guía</span>
                                     </el-button>
 
-                                    <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
                                     <template v-if="type !== 'quotations'">
                                         <el-tooltip
                                             content="Envio y descarga por WhatsApp CPE"
@@ -350,8 +327,161 @@
                                             </el-button>
                                         </el-tooltip>
                                     </template>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+
+                            <!-- <div class="dropdown">
+                                <button
+                                    v-if="
+                                        data.state_type_id != '11' &&
+                                            data.state_type_id != '13'
+                                    "
+                                    class="btn btn-primary btn-sm dropdown-toggle"
+                                    type="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <div
+                                    class="dropdown-menu"
+                                    style="max-height: 250px; overflow-y: auto;"
+                                >
+                                    <template>
+                                        
+                                        <el-button
+                                            append-to-body
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="
+                                                data.state_type_id == '01' &&
+                                                    configuration.caja_actions &&
+                                                    configuration.internal_voided
+                                            "
+                                            type="text"
+                                            @click="
+                                                clickDeleteDocument(data.id)
+                                            "
+                                        >
+                                            <i
+                                                class="el-icon-close me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Anulado Interno</span>
+                                        </el-button>
+
+                                        
+                                        <el-button
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #ffcc00; color: black; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="
+                                                data.document_type_id == '01' &&
+                                                    data.document_type_id ==
+                                                        '03' &&
+                                                    data.state_type_id ==
+                                                        '05' &&
+                                                    configuration.anulate_sunat_cash
+                                            "
+                                            type="text"
+                                            @click="clickVoided(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-warning me-2"
+                                                style="color: black; margin-right: 10px;"
+                                            ></i>
+                                            <span>Anular SUNAT</span>
+                                        </el-button>
+
+                                       
+                                        <el-button
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #17a2b8; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="data.state_type_id == '05'"
+                                            type="text"
+                                            @click="clickNote(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-document me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Nota de Crédito</span>
+                                        </el-button>
+
+                                        
+                                        <el-button
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #52c41a; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="data.is_credit"
+                                            type="text"
+                                            @click="clickPayment(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-money me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Pagos CPE</span>
+                                        </el-button>
+                                    </template>
+
+                                   
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #1890ff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            type == 'documents' &&
+                                                data.state_type_id != '11' &&
+                                                data.state_type_id != '13'
+                                        "
+                                        type="text"
+                                        @click="clickSendOnline(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-refresh me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Reenviar CPE</span>
+                                    </el-button>
+
+                                    
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #13c2c2; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            type == 'documents' &&
+                                                data.state_type_id != '11' &&
+                                                data.state_type_id != '13'
+                                        "
+                                        type="text"
+                                        @click="clickValidarCpe(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-check me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Validar CPE</span>
+                                    </el-button>
+
+                                    
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #228B22; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            data.state_type_id != '11' &&
+                                                data.state_type_id != '13' &&
+                                                cash_id
+                                        "
+                                        type="text"
+                                        @click="clickGenerateGuie(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-truck me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Generar Guía</span>
+                                    </el-button>
                                 </div>
-                            </div>
+                            </div> -->
                         </td>
 
                         <!-- Menu Notas de Venta -->
@@ -399,26 +529,19 @@
                                     </el-button>
                                 </el-tooltip>
                             </template>
-
-                            <div class="dropdown-as-select d-inline-block">
-                                <button
+                            <el-dropdown>
+                                <el-button
+                                    type="primary"
                                     v-if="
                                         data.state_type_id != '11' &&
                                             data.state_type_id != '13'
                                     "
-                                    class="btn btn-primary btn-sm dropdown-toggle"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
                                 >
-                                    <i class="fas fa-list"></i>
-                                </button>
-                                <div
-                                    class="dropdown-menu p-1"
-                                    style="background-color: #6c757d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
-                                >
-                                    <!-- Anular Internamente -->
+                                    Acciones<i
+                                        class="el-icon-arrow-down el-icon--right"
+                                    ></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
                                     <template v-if="configuration.caja_actions">
                                         <el-button
                                             class="dropdown-item d-flex align-items-center"
@@ -436,7 +559,6 @@
                                             <span>Anular </span>
                                         </el-button>
                                     </template>
-                                    <!-- Generar CPE (boletas facturas) -->
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #007bff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
@@ -474,9 +596,153 @@
                                         ></i>
                                         <span>Generar Guía</span>
                                     </el-button>
+                                    <template v-if="type !== 'quotations'">
+                                        <el-tooltip
+                                            content="Enviar por WhatsApp"
+                                            placement="top"
+                                        >
+                                            <el-button
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13'
+                                                "
+                                                size="mini"
+                                                type="success"
+                                                class="me-1"
+                                                circle
+                                                @click="clickOpenWhatsapp(data)"
+                                            >
+                                                <i class="fab fa-whatsapp"></i>
+                                            </el-button>
+                                        </el-tooltip>
+                                        <el-tooltip
+                                            content="Imprimir"
+                                            placement="top"
+                                        >
+                                            <el-button
+                                                v-if="
+                                                    data.state_type_id !=
+                                                        '11' &&
+                                                        data.state_type_id !=
+                                                            '13' &&
+                                                        configuration.print_document_cash
+                                                "
+                                                size="mini"
+                                                type="primary"
+                                                class="me-1"
+                                                circle
+                                                @click="
+                                                    print(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
+                                            >
+                                                <i class="fas fa-print"></i>
+                                            </el-button>
+                                        </el-tooltip>
+                                        <el-tooltip
+                                            content="Previsualizar PDF"
+                                            placement="top"
+                                        >
+                                            <el-button
+                                                size="mini"
+                                                type="danger"
+                                                circle
+                                                style="border: 2px solid white;"
+                                                @click="
+                                                    previsualitation(
+                                                        data.external_id,
+                                                        data.document_type_id
+                                                    )
+                                                "
+                                            >
+                                                <i class="far fa-file-pdf"></i>
+                                            </el-button>
+                                        </el-tooltip>
+                                    </template>
+                                </el-dropdown-menu>
+                            </el-dropdown>
 
-                                    <!-- Pagos Pendientes -->
-                                    <!-- <el-button
+                            <!-- <div class="dropdown-as-select d-inline-block">
+                                <button
+                                    v-if="
+                                        data.state_type_id != '11' &&
+                                            data.state_type_id != '13'
+                                    "
+                                    class="btn btn-primary btn-sm dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <div
+                                    class="dropdown-menu p-1"
+                                    style="background-color: #6c757d; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+                                >
+                                    
+                                    <template v-if="configuration.caja_actions">
+                                        <el-button
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #ff4d4f; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
+                                            v-if="
+                                                data.state_type_id != '11' &&
+                                                    data.state_type_id != '13'
+                                            "
+                                            @click="clickVoidedNote(data)"
+                                        >
+                                            <i
+                                                class="el-icon-close me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Anular </span>
+                                        </el-button>
+                                    </template>
+                                    
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #007bff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            data.state_type_id != '11' &&
+                                                data.state_type_id != '13' &&
+                                                !data.changed &&
+                                                cash_id
+                                        "
+                                        @click="clickGenerate(data.id)"
+                                    >
+                                        <i
+                                            class="el-icon-document me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Generar CPE</span>
+                                    </el-button>
+
+                                    
+                                    <el-button
+                                        class="dropdown-item d-flex align-items-center"
+                                        style="background-color: #28a745; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
+                                        v-if="
+                                            data.state_type_id != '11' &&
+                                                data.state_type_id != '13' &&
+                                                cash_id
+                                        "
+                                        @click="
+                                            clickGenerateGuie(data.id, '80')
+                                        "
+                                    >
+                                        <i
+                                            class="el-icon-truck me-2"
+                                            style="color: white; margin-right: 10px;"
+                                        ></i>
+                                        <span>Generar Guía</span>
+                                    </el-button>
+
+                                   
+                                    <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #17a2b8; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; margin-right: 5px; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="data.paid == 0 && !data.is_credit"
@@ -487,8 +753,8 @@
                                             style="color: white; margin-right: 10px;"
                                         ></i>
                                         <span>Pagos</span>
-                                    </el-button> -->
-                                    <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
+                                    </el-button>
+                                    
                                     <template v-if="type !== 'quotations'">
                                         <el-tooltip
                                             content="Enviar por WhatsApp"
@@ -557,7 +823,7 @@
                                         </el-tooltip>
                                     </template>
                                 </div>
-                            </div>
+                            </div> -->
                         </td>
 
                         <!-- Menu Cotizaciones -->
@@ -588,8 +854,152 @@
                                         ></i>
                                     </el-button>
 
+                                    <el-dropdown>
+                                        <el-button
+                                            type="primary"
+                                            v-if="data.state_type_id != '11'"
+                                        >
+                                            Acciones<i
+                                                class="el-icon-arrow-down el-icon--right"
+                                            ></i>
+                                        </el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-button
+                                                v-if="cash_id"
+                                                class="dropdown-item d-flex align-items-center"
+                                                style="background-color: #6f42c1; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                                @click="
+                                                    clickOptionsQuotation(
+                                                        data.id
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="el-icon-document me-2"
+                                                    style="color: white; margin-right: 10px;"
+                                                ></i>
+                                                <span>Generar CPE</span>
+                                            </el-button>
+
+                                            <!-- Editar -->
+                                            <el-button
+                                                class="dropdown-item d-flex align-items-center"
+                                                style="background-color: #007bff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                                v-if="!configuration.maderera"
+                                                @click="
+                                                    clickEditQuotation(data.id)
+                                                "
+                                            >
+                                                <i
+                                                    class="el-icon-edit me-2"
+                                                    style="color: white; margin-right: 10px;"
+                                                ></i>
+                                                <span>Editar</span>
+                                            </el-button>
+                                            <el-button
+                                                v-if="cash_id"
+                                                class="dropdown-item d-flex align-items-center"
+                                                style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                                @click="
+                                                    clickAnulateQuotation(
+                                                        data.id
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="el-icon-delete me-2"
+                                                    style="color: white; margin-right: 10px;"
+                                                ></i>
+                                                <span>Anular</span>
+                                            </el-button>
+                                            <el-button
+                                                v-if="cash_id"
+                                                class="dropdown-item d-flex align-items-center"
+                                                style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                                @click="clickQotations(data.id)"
+                                            >
+                                                <i
+                                                    class="el-icon-delete me-2"
+                                                    style="color: white; margin-right: 10px;"
+                                                ></i>
+                                                <span>Formatos pdf</span>
+                                            </el-button>
+                                            <template>
+                                                <!-- Envia Cotización por WhatsApp -->
+                                                <el-tooltip
+                                                    content="Enviar por WhatsApp"
+                                                    placement="top"
+                                                >
+                                                    <el-button
+                                                        size="mini"
+                                                        type="success"
+                                                        class="me-1"
+                                                        circle
+                                                        @click="
+                                                            clickOpenWhatsapp(
+                                                                data
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fab fa-whatsapp"
+                                                        ></i>
+                                                    </el-button>
+                                                </el-tooltip>
+
+                                                <!-- Imprimir Cotizacion -->
+                                                <el-tooltip
+                                                    content="Imprimir"
+                                                    placement="top"
+                                                >
+                                                    <el-button
+                                                        v-if="
+                                                            configuration.print_document_cash
+                                                        "
+                                                        size="mini"
+                                                        type="primary"
+                                                        class="me-1"
+                                                        circle
+                                                        @click="
+                                                            print(
+                                                                data.external_id,
+                                                                data.document_type_id
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fas fa-print"
+                                                        ></i>
+                                                    </el-button>
+                                                </el-tooltip>
+                                                <!-- Previsualizar cotización -->
+                                                <el-tooltip
+                                                    content="Previsualizar PDF"
+                                                    placement="top"
+                                                >
+                                                    <el-button
+                                                        size="mini"
+                                                        type="danger"
+                                                        circle
+                                                        style="border: 2px solid white;"
+                                                        @click="
+                                                            previsualitation(
+                                                                data.external_id,
+                                                                data.document_type_id
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="far fa-file-pdf"
+                                                        ></i>
+                                                    </el-button>
+                                                </el-tooltip>
+                                            </template>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+
                                     <!-- Acciones de Cotización -->
-                                    <button
+                                    <!-- <button
                                         v-if="data.state_type_id != '11'"
                                         class="btn btn-primary btn-sm dropdown-toggle"
                                         type="button"
@@ -598,14 +1008,14 @@
                                         aria-expanded="false"
                                     >
                                         <i class="fas fa-list"></i>
-                                    </button>
-                                    <div
+                                    </button> -->
+                                    <!-- <div
                                         class="dropdown-menu p-1"
                                         style="background-color: #6c757d; 
                                          border-radius: 8px; 
                                          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
                                     >
-                                        <!-- Generar CPE a partir de una Cotización -->
+                                      
                                         <el-button
                                             v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
@@ -621,7 +1031,7 @@
                                             <span>Generar CPE</span>
                                         </el-button>
 
-                                        <!-- Editar -->
+                                       
                                         <el-button
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #007bff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
@@ -635,11 +1045,7 @@
                                             <span>Editar</span>
                                         </el-button>
 
-                                        <!-- v-if="
-                                                data.document_type_id == '01' &&
-                                                data.state_type_id == '05'  
-                                            " -->
-                                        <!-- Anular -->
+                                        
                                         <el-button
                                             v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
@@ -667,9 +1073,9 @@
                                             <span>Formatos pdf</span>
                                         </el-button>
 
-                                        <!-- Botones Redondos Whatsap Reimprimir Previsualizar -->
+                                       
                                         <template>
-                                            <!-- Envia Cotización por WhatsApp -->
+                                            
                                             <el-tooltip
                                                 content="Enviar por WhatsApp"
                                                 placement="top"
@@ -689,7 +1095,7 @@
                                                 </el-button>
                                             </el-tooltip>
 
-                                            <!-- Imprimir Cotizacion -->
+                                            
                                             <el-tooltip
                                                 content="Imprimir"
                                                 placement="top"
@@ -712,7 +1118,7 @@
                                                     <i class="fas fa-print"></i>
                                                 </el-button>
                                             </el-tooltip>
-                                            <!-- Previsualizar cotización -->
+                                        
                                             <el-tooltip
                                                 content="Previsualizar PDF"
                                                 placement="top"
@@ -735,7 +1141,7 @@
                                                 </el-button>
                                             </el-tooltip>
                                         </template>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </template>
                         </td>
@@ -752,24 +1158,12 @@
                                 <div class="dropdown-as-select d-inline-block">
                                     <!-- Si esta Anulado  muestra este boton de Previsualizar -->
 
-                                    <!-- Acciones de Cotización -->
-                                    <button
-                                        v-if="data.state_type_id != '11'"
-                                        class="btn btn-primary btn-sm dropdown-toggle"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <i class="fas fa-list"></i>
-                                    </button>
-                                    <div
-                                        class="dropdown-menu p-1"
-                                        style="background-color: #6c757d; 
-                                         border-radius: 8px; 
-                                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
-                                    >
-                                        <el-button
+                                    <el-dropdown>
+  <el-button type="primary" v-if="data.state_type_id != '11'">
+    Acciones<i class="el-icon-arrow-down el-icon--right"></i>
+  </el-button>
+  <el-dropdown-menu slot="dropdown">
+    <el-button
                                             v-if="cash_id"
                                             class="dropdown-item d-flex align-items-center"
                                             style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
@@ -793,7 +1187,48 @@
                                             ></i> -->
                                             <span>WhatsApp</span>
                                         </el-button>
-                                    </div>
+  </el-dropdown-menu>
+</el-dropdown>
+
+                                    <!-- Acciones de Cotización -->
+                                    <!-- <button
+                                        v-if="data.state_type_id != '11'"
+                                        class="btn btn-primary btn-sm dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="fas fa-list"></i>
+                                    </button> -->
+                                    <!-- <div
+                                        class="dropdown-menu p-1"
+                                        style="background-color: #6c757d; 
+                                         border-radius: 8px; 
+                                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);"
+                                    >
+                                        <el-button
+                                            v-if="cash_id"
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: #dc3545; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            @click="openPdfGuides(data.id)"
+                                        >
+                                            <i
+                                                class="el-icon-delete me-2"
+                                                style="color: white; margin-right: 10px;"
+                                            ></i>
+                                            <span>Formatos pdf</span>
+                                        </el-button>
+                                        <el-button
+                                            v-if="cash_id"
+                                            class="dropdown-item d-flex align-items-center"
+                                            style="background-color: seagreen; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
+                                            @click="whatsapp(data)"
+                                        >
+                                            
+                                            <span>WhatsApp</span>
+                                        </el-button>
+                                    </div> -->
                                 </div>
                             </template>
                         </td>
@@ -1493,5 +1928,4 @@ export default {
     background: none !important;
     color: #dc3545 !important;
 }
-
 </style>
