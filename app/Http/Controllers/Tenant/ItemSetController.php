@@ -30,6 +30,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemWarehouse;
+use Modules\Item\Models\ItemLot;
 use PSpell\Config;
 
 class ItemSetController extends Controller
@@ -62,24 +63,23 @@ class ItemSetController extends Controller
     {
         return view('tenant.items.form');
     }
-    function create_internal_id(){
+    function create_internal_id()
+    {
         //buscar en items los que tengan la propiedad is_set en 1 y que su internal id empiece con pack#### osea pack seguido de 4 numeros
         $item = Item::where('is_set', 1)
-        ->where('internal_id', 'regexp', '^PACK[0-9]{4}')
-        ->orderBy('id', 'desc')
-        ->first();
-        ;
-        if($item == null){
+            ->where('internal_id', 'regexp', '^PACK[0-9]{4}')
+            ->orderBy('id', 'desc')
+            ->first();;
+        if ($item == null) {
             return "PACK0001";
-        }else{
+        } else {
             $internal_id = $item->internal_id;
             $internal_id = substr($internal_id, 4);
             $internal_id = intval($internal_id);
             $internal_id++;
             $internal_id = str_pad($internal_id, 4, "0", STR_PAD_LEFT);
-            return "PACK".$internal_id;
+            return "PACK" . $internal_id;
         }
-    
     }
     public function tables()
     {
@@ -119,7 +119,16 @@ class ItemSetController extends Controller
         return compact(
             'internal_id',
             'affectation_igv_type_id',
-            'warehouses','unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
+            'warehouses',
+            'unit_types',
+            'currency_types',
+            'attribute_types',
+            'areas',
+            'categories',
+            'system_isc_types',
+            'affectation_igv_types',
+            'individual_items'
+        );
     }
 
     public function record($id)
@@ -179,7 +188,7 @@ class ItemSetController extends Controller
             ->whereNotIsSet()
             ->whereIsActive();
 
-        if($configuration->restaurant) {
+        if ($configuration->restaurant) {
             $insumos_category = CategoryItem::where('name', 'INSUMOS')->first();
             $individual_items = $individual_items->where('category_id', $insumos_category->id);
         }
@@ -205,15 +214,15 @@ class ItemSetController extends Controller
                     'id' => $row->id,
                     'full_description' => $full_description,
                     'internal_id' => $row->internal_id,
-                    'description' => $row->description, 
+                    'description' => $row->description,
                     'sale_unit_price' => $row->sale_unit_price,
                     'unit_type_description' => $unit_type_description,
                     'lots_enabled' => $row->lots_enabled,
                     'series_enabled' => $row->series_enabled,
                     'has_color_size' => $row->has_color_size,
-                    'lots' => $row->lots,
+                    /* 'lots' => $row->lots,
                     'lots_group' => $row->lots_group,
-                    'color_size' => $row->color_size,
+                    'color_size' => $row->color_size, */
                 ];
             });
 
@@ -337,22 +346,24 @@ class ItemSetController extends Controller
         ];
     }
 
-    public function set_item_check_stock($id,$quantity = 1)
-    {
 
+    //modificacion para valdidar y obtner las lotes series y talla color se los items
+    /*  public function set_item_check_stock($id, $quantity = 1)
+    {
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $item_set = ItemSet::where('item_id', $id)->get();
         $message = "";
         $no_stock = false;
-        $item_set->each(function ($row) use (&$message,&$no_stock,$quantity,$establishment) {
+        $item_set->each(function ($row) use (&$message, &$no_stock, $quantity, $establishment) {
             $item = Item::find($row->individual_item_id);
+
             $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)->where('warehouse_id', $establishment->id)->first();
             $stock = $item_warehouse->stock;
             $stock_indivual = floatval($row->quantity) * floatval($quantity);
             if ($stock < $stock_indivual) {
                 $no_stock = true;
                 $difference = $stock_indivual -  $stock;
-                $message .= "El producto " . $item->description . " no tiene stock, tiene ".$stock." y falta ".$difference."\n";
+                $message .= "El producto " . $item->description . " no tiene stock, tiene " . $stock . " y falta " . $difference . "\n";
             }
         });
         if ($no_stock) {
@@ -366,7 +377,195 @@ class ItemSetController extends Controller
                 'message' => "El producto compuesto tiene stock suficiente"
             ];
         }
+    } */
+
+    /* public function set_item_check_stock($id, $quantity = 1)
+    {
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $item_set = ItemSet::where('item_id', $id)->get();
+
+        $message = "";
+        $no_stock = false;
+        $components = [];
+
+        $item_set->each(function ($row) use (&$message, &$no_stock, $quantity, $establishment, &$components) {
+            $item = Item::find($row->individual_item_id);
+
+            $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)
+                ->where('warehouse_id', $establishment->id)
+                ->first();
+
+            $stock = $item_warehouse->stock;
+            $stock_indivual = floatval($row->quantity) * floatval($quantity);
+
+            if ($stock < $stock_indivual) {
+                $no_stock = true;
+                $difference = $stock_indivual - $stock;
+                $message .= "El producto " . $item->description . " no tiene stock, tiene " . $stock . " y falta " . $difference . "\n";
+            }
+
+            $component = [
+                'id' => $item->id,
+                'description' => $item->description,
+                'stock' => $stock,
+                'quantity_required' => $stock_indivual,
+                'lots_enabled' => $item->lots_enabled,
+                'series_enabled' => $item->series_enabled,
+                'has_color_size' => $item->has_color_size,
+                'item_lot' => $item->item_lot,
+                'series' => $item->series,
+                'lots_group' => $item->lots_group,
+                'color_size' => $item->color_size,
+            ];
+
+            $components[] = $component;
+        });
+
+        if ($no_stock) {
+            return [
+                'success' => false,
+                'message' => $message,
+                'components' => $components
+            ];
+        } else {
+            return [
+                'success' => true,
+                'message' => "El producto compuesto tiene stock suficiente",
+                'components' => $components
+            ];
+        }
+    } */
+
+    /* public function set_item_check_stock($id, $quantity = 1)
+    {
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $item_set = ItemSet::where('item_id', $id)->get();
+
+        $message = "";
+        $no_stock = false;
+        $components = [];
+
+        $item_set->each(function ($row) use (&$message, &$no_stock, $quantity, $establishment, &$components) {
+            $item = Item::find($row->individual_item_id);
+
+            $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)
+                ->where('warehouse_id', $establishment->id)
+                ->first();
+
+            $stock = $item_warehouse->stock ?? 0;
+            $stock_indivual = floatval($row->quantity) * floatval($quantity);
+
+            if ($stock < $stock_indivual) {
+                $no_stock = true;
+                $difference = $stock_indivual - $stock;
+                $message .= "El producto " . $item->description . " no tiene stock, tiene " . $stock . " y falta " . $difference . "\n";
+            }
+
+            // ✅ Validar que tenga series, lotes o talla/color
+            if ($item->lots_enabled || $item->series_enabled || $item->has_color_size) {
+                $component = [
+                    'id' => $item->id,
+                    'description' => $item->description,
+                    'stock' => $stock,
+                    'quantity_required' => $stock_indivual,
+                    'lots_enabled' => (bool) $item->lots_enabled,
+                    'series_enabled' => (bool) $item->series_enabled,
+                    'has_color_size' => (bool) $item->has_color_size,
+                    'lots' => $item->lots ?? [],
+                    'lots_group' => $item->lots_group ?? [],
+                    'color_size' => $item->color_size ?? [],
+                ];
+
+                $components[] = $component;
+            }
+        });
+
+        if ($no_stock) {
+            return [
+                'success' => false,
+                'message' => $message,
+                'components' => $components
+            ];
+        } else {
+            return [
+                'success' => true,
+                'message' => "El producto compuesto tiene stock suficiente",
+                'components' => $components
+            ];
+        }
+    } */
+
+    public function set_item_check_stock($id, $quantity = 1)
+    {
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $item_set = ItemSet::where('item_id', $id)->get();
+
+        $message = "";
+        $no_stock = false;
+        $components = [];
+
+        $item_set->each(function ($row) use (&$message, &$no_stock, $quantity, $establishment, &$components) {
+            $item = Item::find($row->individual_item_id);
+
+            $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)
+                ->where('warehouse_id', $establishment->id)
+                ->first();
+
+            $stock = $item_warehouse->stock ?? 0;
+            $stock_indivual = floatval($row->quantity) * floatval($quantity);
+
+            if ($stock < $stock_indivual) {
+                $no_stock = true;
+                $difference = $stock_indivual - $stock;
+                $message .= "El producto " . $item->description . " no tiene stock, tiene " . $stock . " y falta " . $difference . "\n";
+            }
+
+            // ✅ Traer lotes/series disponibles (si aplica)
+            $lots = [];
+            if ($item->series_enabled) {
+                $lots = ItemLot::where('item_id', $item->id)
+                    ->where('has_sale', 0)
+                    ->where('state', 'Activo')
+                    ->get(['id', 'series', 'date', 'code_lots', 'warehouse_id'])
+                     // Agregar el nombre del almacén relacionado
+                    ->toArray();
+            }
+
+            // ✅ Validar que tenga series, lotes o talla/color
+            if ($item->lots_enabled || $item->series_enabled || $item->has_color_size) {
+                $component = [
+                    'id' => $item->id,
+                    'description' => $item->description,
+                    'stock' => $stock,
+                    'quantity_required' => $stock_indivual,
+                    'lots_enabled' => (bool) $item->lots_enabled,
+                    'series_enabled' => (bool) $item->series_enabled,
+                    'has_color_size' => (bool) $item->has_color_size,
+                    'series' => $lots,
+                    'lots' => $item->lots ?? [],
+                    'lots_group' => $item->lots_group ?? [],
+                    'color_size' => $item->color_size ?? [],
+                ];
+
+                $components[] = $component;
+            }
+        });
+
+        if ($no_stock) {
+            return [
+                'success' => false,
+                'message' => $message,
+                'components' => $components
+            ];
+        } else {
+            return [
+                'success' => true,
+                'message' => "El producto compuesto tiene stock suficiente",
+                'components' => $components
+            ];
+        }
     }
+
     public function upload(Request $request)
     {
         if ($request->hasFile('file')) {

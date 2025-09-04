@@ -184,7 +184,7 @@ export default {
     },
     methods: {
         getCashAvailable() {
-            this.$http.get(`/caja/cash-transfer/available`).then(response => {
+            this.$http.get(`/caja/cash-transfer/available-credit`).then(response => {
                 this.cashAvailable = response.data;
             });
         },

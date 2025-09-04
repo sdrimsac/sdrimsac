@@ -20,12 +20,12 @@ class LotItemCollection extends ResourceCollection
                 'id'          => $row->id,
                 'series' => $row->series,
                 'date'      => $row->date,
-                'item'     => $row->item,
-                'warehouse'    => $row->warehouse,
+                /* 'item'     => $row->item, */
                 'lote'    => $row->lote ? $row->lote->code : null,
                 'has_sale'    => (bool)$row->has_sale,
                 'active'    => $row->state,
                 'code_lots' => $row->code_lots,
+                'warehouse'    => $row->warehouse,
             ];
         });
     }

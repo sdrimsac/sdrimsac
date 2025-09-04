@@ -232,7 +232,7 @@ class CashTransferController extends Controller
         }
     }
 
-    /* public function available()
+    public function availableCredit()
     {
         $cash_principal = Cash::where('principal', 1)->where('user_id', auth()->id())
             ->where('state', 1)
@@ -247,7 +247,7 @@ class CashTransferController extends Controller
         $all_cash -= $all_expenses;
         $all_cash -= $all_transfer;
         return $all_cash;
-    } */
+    }
 
     /* public function available()
     {
@@ -346,7 +346,7 @@ class CashTransferController extends Controller
     //    foreach ($payment_methods as $method) {
 
     //        $methodName = $method->description ?? $method->name;
-            //$methodName = preg_replace('/^TARJETA:\s*/', '', $methodName);
+    //$methodName = preg_replace('/^TARJETA:\s*/', '', $methodName);
 
     //        if ($methodName === 'Transferencia') {
     //            $incomes = Box::where('cash_id', $cash_principal->id)
@@ -401,7 +401,6 @@ class CashTransferController extends Controller
             $methodName = $method->description ?? $method->name;
             $methodName = preg_replace('/^TARJETA:\s*/', '', $methodName);
 
-            // 🔹 Métodos normales (Efectivo, Yape, Plin, etc.)
             if ($methodName !== 'Transferencia') {
                 $incomes = Box::where('cash_id', $cash_principal->id)
                     ->where('incomes', 1)
@@ -427,7 +426,6 @@ class CashTransferController extends Controller
             $bankNumber = $bank->number;
             $bankAbbreviation = $bank->abbreviation;
 
-            // Buscar ingresos/egresos donde el método contenga el número de cuenta
             $incomes = Box::where('cash_id', $cash_principal->id)
                 ->where('incomes', 1)
                 ->where('method', 'like', "%{$bankNumber}%")
@@ -443,7 +441,6 @@ class CashTransferController extends Controller
 
             $saldo = ($incomes - $expenses) - $transfer;
 
-            // Guardamos en el array usando la abbreviation como clave
             $bankSaldos[$bankAbbreviation] = $saldo;
         }
 

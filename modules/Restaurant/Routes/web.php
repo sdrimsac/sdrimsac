@@ -192,6 +192,7 @@ Route::prefix('caja')->group(function () {
             });
             Route::get('/columns', 'CashTransferController@columns');
             Route::get('available', 'CashTransferController@available');
+            Route::get('available-credit', 'CashTransferController@availableCredit');
             Route::get('records', 'CashTransferController@records');
             Route::get('cashes', 'CashTransferController@cashes');
             Route::get('cashes-principal', 'CashTransferController@cashes_principal');

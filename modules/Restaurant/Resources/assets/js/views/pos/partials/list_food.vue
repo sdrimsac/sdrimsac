@@ -572,7 +572,8 @@
                                             data.item.is_set == 0 &&
                                                 data.item.unit_type_id !=
                                                     'ZZ' &&
-                                                configuration.show_stock_cash == true
+                                                configuration.show_stock_cash ==
+                                                    true
                                         "
                                         class="row justify-content-end"
                                         style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"
@@ -1056,6 +1057,10 @@
             :establishments="establishments"
             @updateColorSize="updateColorSize"
         ></show-color-size-product>
+        <item-set
+            :showDialog.sync="showDialogItemSet"
+            :item="currentItem"
+        ></item-set>
     </div>
 </template>
 <style>
@@ -1095,6 +1100,7 @@ import WarehousesDetail from "./warehouses.vue";
 import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
 import ImagesFood from "./images_food.vue";
+import itemSet from "./itemSet.vue";
 const ShowColorSizeProduct = () =>
     import("../partials/show_color_size_product.vue");
 import swal from "sweetalert2";
@@ -1104,7 +1110,8 @@ export default {
         UnitTypeModal,
         ModalUnitTypeId,
         ImagesFood,
-        ShowColorSizeProduct
+        ShowColorSizeProduct,
+        itemSet
     },
     props: [
         "lastQuery",
@@ -1132,6 +1139,7 @@ export default {
     ],
     data() {
         return {
+            showDialogItemSet: false,
             currentColorSize: null,
             limitQty: 0,
             showColorSize: false,
@@ -1689,13 +1697,28 @@ export default {
             }
         },
         async setItemCheckStock(id, quantity) {
-            //item-sets/check/{id}
+            let pass = true;
+            const response = await this.$http.get(
+                `/receta/check/${id}/${quantity}`
+            );
+            if (response.status == 200) {
+                const { success, message } = response.data;
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+            return pass;
+        },
+
+        async setItemPolicy(id, quantity) {
             let pass = true;
             const response = await this.$http.get(
                 `/item-sets/check/${id}/${quantity}`
             );
             if (response.status == 200) {
                 const { success, message } = response.data;
+                this.showDialogItemSet = true;
                 if (!success) {
                     this.$toast.error(message);
                     pass = false;
@@ -1710,7 +1733,6 @@ export default {
             selectSerie = false,
             categoria = null,
             color_size = []
-            
         ) {
             if (!this.canAddItem) {
                 this.$showSAlert(
@@ -1736,26 +1758,6 @@ export default {
                 return;
             }
 
-            /* let foodItem = this.listFoods[index]?.item;
-            if (foodItem && foodItem.codes_family) {
-                if (!this.barcode) {
-                    this.$message.error('Este producto solo puede ser seleccionado escaneando un código de barra de familia activo.');
-                    return;
-                }
-                // Buscar el item de la familia por el código escaneado
-                let validFamilyItem = null;
-                if (Array.isArray(foodItem.codes_family_items)) {
-                    validFamilyItem = foodItem.codes_family_items.find(i => i.code === this.barcode && i.active == 1);
-                }
-                if (!validFamilyItem) {
-                    this.$message.error('El código de familia escaneado no es válido o no está activo para este producto.');
-                    return;
-                }
-            } */
-
-            // Validar si el item requiere código de familia y solo permitir agregar si barcode es válido
-            
-
             this.selectedFood = JSON.parse(
                 JSON.stringify(this.listFoods[index])
             );
@@ -1767,7 +1769,9 @@ export default {
                 Array.isArray(this.selectedFood.item.item_codes) &&
                 this.barcode
             ) {
-                const foundCode = this.selectedFood.item.item_codes.find(c => c.code_barcode === this.barcode);
+                const foundCode = this.selectedFood.item.item_codes.find(
+                    c => c.code_barcode === this.barcode
+                );
                 if (foundCode) {
                     this.selectedFood.item.item_codes = [foundCode];
                     this.selectedFood.item.code_barcode = this.barcode;
@@ -1806,10 +1810,20 @@ export default {
                         );
                         qty += 1;
                     }
-                    let pass = await this.setItemCheckStock(
-                        this.selectedFood.item.id,
-                        qty
-                    );
+                    /* let pass = false; */
+                    
+                    /* if (this.configuration.restaurant) { */
+                        let pass = await this.setItemCheckStock(
+                            this.selectedFood.item.id,
+                            qty
+                        );
+                    /* } else {
+                        let pass = await this.setItemPolicy(
+                            this.selectedFood.item.id,
+                            qty
+                        );
+                    } */
+
                     if (!pass) {
                         return;
                     }
