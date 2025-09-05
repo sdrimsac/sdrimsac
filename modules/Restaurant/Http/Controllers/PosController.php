@@ -324,7 +324,7 @@ class PosController extends Controller
         if ($category_ins_id) {
             $foods = $foods->where('category_food_id', '<>', $category_ins_id);
         }
-        $configuration = Configuration::first();
+       /*  $configuration = Configuration::first(); */
         $hotels = $configuration->hotels;
         if ($configuration->ord_dscp) {
             $foods = $foods->orderByRaw("description LIKE ? DESC", ["{$value}%"])
@@ -335,6 +335,26 @@ class PosController extends Controller
         if ($configuration->ord_dscp) {
             $foods = $foods->orderBy('description', 'ASC');
         }
+
+        if ($configuration->favorite_items) {
+            // Subconsulta agregada para evitar duplicados y usar el total vendido por item
+            $salesSub = DB::connection('tenant')->table('item_sales_summary')
+                ->select('item_id', DB::raw('SUM(total_quantity) as total_quantity'))
+                ->groupBy('item_id');
+
+            $foods = $foods
+                ->reorder() // limpiar órdenes previas para que esta prioridad se respete
+                ->leftJoinSub($salesSub, 's', function ($join) {
+                    $join->on('s.item_id', '=', 'foods.item_id');
+                })
+                ->select('foods.*')
+                ->addSelect(DB::raw('IF(s.item_id IS NOT NULL, 1, 0) as has_sales')) // bandera
+                ->addSelect(DB::raw('IFNULL(s.total_quantity, 0) as total_quantity'))
+                ->orderByDesc('has_sales') // primero los que tienen ventas
+                ->orderByDesc('total_quantity') // dentro de esos, más vendidos primero
+                ->orderBy('foods.description', 'ASC'); // último criterio para los demás
+        }
+
         $all_foods = $configuration->all_items_pos;
         if ($all_foods) {
             $count_foods = Food::query()->count();

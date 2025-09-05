@@ -296,7 +296,7 @@ class DocumentController extends Controller
             foreach ($results as $result) {
                 //$this->line($result->Database);
                 if (
-                    strpos($result->Database, 'tenancy_') === 0 || 
+                    strpos($result->Database, 'tenancy_') === 0 ||
                     strpos($result->Database, 'facturador5_') === 0
                 ) {
                     $resultsPorDB = DB::select('
@@ -1669,10 +1669,8 @@ class DocumentController extends Controller
 
                 if ($note && $note->affected_document_id) {
                     $affected_document_id = $note->affected_document_id;
-                    Log::info("Eliminando Box para documento afectado: {$affected_document_id}");
                     Box::where('document_id', $affected_document_id)->delete();
                 } else {
-                    Log::warning("No se encontró Note o affected_document_id para el nuevo documento: {$document->id}");
                 }
             }
 
@@ -1769,11 +1767,8 @@ class DocumentController extends Controller
 
                 if ($note && $note->affected_document_id) {
                     $affected_document_id = $note->affected_document_id;
-                    Log::info("no hay id: {$affected_document_id}");
                 } else {
-
                     $affected_document_id = null;
-                    Log::info("es nulo: {$document_id}");
                 }
                 if ($affected_document_id) {
                     Box::where('document_id', $affected_document_id)->delete();
@@ -1977,7 +1972,6 @@ class DocumentController extends Controller
                                 $table->status_table_id = 5;
                                 $table->sendMessageDesocupied();
                                 $table->save();
-                                
                             }
                             DB::connection('tenant')->table('hotel_rent_item_services')->where('hotel_rent_item_id', $hotel_rent_item->id)->update(['active' => 0]);
                         } else {
@@ -1993,7 +1987,6 @@ class DocumentController extends Controller
                         // Limpia el extra_time ya facturado en cualquier caso
                         $hotel_rent_item->extra_time = 0;
                         $hotel_rent_item->save();
-                        
                     }
                 }
                 if ($request->hotel_rent_id) {
@@ -2095,6 +2088,63 @@ class DocumentController extends Controller
 
             // Call saveItemWarranty to check and save item warranties
             $this->saveItemWarranty($document, $request->items);
+            // --- Acumulador de ventas por ítem ---
+            // Reemplaza el intento anterior que usaba variables no definidas ($item_id, $quantity)
+            // Recorremos los items de la venta y sumamos la cantidad vendida en item_sales_summary.
+            // Requiere que la tabla item_sales_summary tenga un índice UNIQUE o PRIMARY KEY en item_id.
+            // Estructura sugerida de la tabla:
+            //   item_id BIGINT PRIMARY KEY
+            //   total_sold DECIMAL(15,2) DEFAULT 0
+            //   timestamps
+            /* if (isset($request->items) && is_array($request->items)) {
+                foreach ($request->items as $it) {
+                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+                    $itemId = $it['item_id'];
+                    $qty = (float) $it['quantity'];
+                    if ($qty <= 0) continue;
+
+                    DB::connection('tenant')->statement(
+                        'INSERT INTO item_sales_summary (item_id, total_sales, total_quantity, created_at, updated_at)
+                        VALUES (?, 0, ?, NOW(), NOW())
+                        ON DUPLICATE KEY UPDATE 
+                        total_quantity = total_quantity + VALUES(total_quantity),
+                        updated_at = NOW()',
+                        [$itemId, $qty]
+                    );
+                }
+            } */
+
+            if (isset($request->items) && is_array($request->items)) {
+                foreach ($request->items as $it) {
+                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+                    $itemId = $it['item_id'];
+                    $qty = (float) $it['quantity'];
+                    if ($qty <= 0) continue;
+
+                    $exists = DB::connection('tenant')
+                        ->table('item_sales_summary')
+                        ->where('item_id', $itemId)
+                        ->exists();
+
+                    if ($exists) {
+                        DB::connection('tenant')
+                            ->table('item_sales_summary')
+                            ->where('item_id', $itemId)
+                            ->increment('total_quantity', $qty, ['updated_at' => now()]);
+                    } else {
+                        DB::connection('tenant')
+                            ->table('item_sales_summary')
+                            ->insert([
+                                'item_id' => $itemId,
+                                'total_sales' => 0,
+                                'total_quantity' => $qty,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                    }
+                }
+            }
+
             DB::connection('tenant')->commit();
             $this->checkTotalAndSendMessage($document);
             $this->checkDuplicateAndSendMessage($document);
@@ -2139,7 +2189,7 @@ class DocumentController extends Controller
             ];
         }
     }
-    
+
     private function saveItemWarranty($document, $items)
     {
         foreach ($items as $item) {

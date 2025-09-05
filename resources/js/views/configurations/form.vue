@@ -4771,6 +4771,42 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-md-3 mb-2">
+                                                                        <div class="card h-100">
+                                                                            <div class="card-body d-flex flex-column"
+                                                                                style="padding: 7px;">
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1">
+                                                                                    <label class="control-label w-100">
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"></i>
+                                                                                        Productos favoritos de primero en caja 
+                                                                                        <el-tooltip class="item"
+                                                                                            effect="dark"
+                                                                                            content="Al activar esta opcion en caja se mostraran los item de primero los mas vendidos"
+                                                                                            placement="top-start">
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch v-model="form.favorite_items"
+                                                                                        active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="'#28a745'
+                                                                                            " :inactive-color="'#6c757d'
+                                                                                                " @change="
+                                                                                                    () =>
+                                                                                                        submit(
+                                                                                                            'items favoritos en caja',
+                                                                                                            form.favorite_items,
+                                                                                                            'favorite_items',
+                                                                                                            'lockIcon'
+                                                                                                        )
+                                                                                                "></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

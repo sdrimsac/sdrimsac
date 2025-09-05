@@ -1352,7 +1352,6 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
         try {
-            // Validar si el número ya existe, excluyendo el registro actual en caso de edición
             $series = $request->series;
             $number = $request->number;
             $date_of_issue = $request->date_of_issue;
@@ -1360,12 +1359,11 @@ class SaleNoteController extends Controller
             $total = $request->total;
             $customer_id = $request->customer_id;
 
-            // Buscar duplicados exactos considerando series, number, fecha, hora y total
             $existingDocument = SaleNote::where('series', $series)
                 ->where('number', $number)
-                ->where('state_type_id', '!=', '11') // No considerar anulados
+                ->where('state_type_id', '!=', '11')
                 ->when($request->id, function ($query) use ($request) {
-                    return $query->where('id', '!=', $request->id); // Excluir el registro actual en edición
+                    return $query->where('id', '!=', $request->id);
                 })
                 ->first();
 
@@ -1376,7 +1374,6 @@ class SaleNoteController extends Controller
                 ];
             }
 
-            // Validación adicional para detectar posibles duplicados por cliente, total y fecha
             $possibleDuplicate = SaleNote::where('date_of_issue', $date_of_issue)
                 ->where('customer_id', $customer_id)
                 ->where('total', $total)
@@ -1395,7 +1392,6 @@ class SaleNoteController extends Controller
                 ];
             }
 
-            // SaleNote::where('currency_type_id', 'USD')->update(['currency_type_id' => 'PEN']);
             $configuration = Configuration::first();
             DB::connection('tenant')->transaction(function () use ($request, $configuration) {
 
@@ -2052,8 +2048,6 @@ class SaleNoteController extends Controller
 
 
                 if ($request->generate === null || $request->generate === false) {
-
-
                 } else {
                     $this->dumpWithTime("generate 2");
                     $paid = 0;
@@ -2154,6 +2148,57 @@ class SaleNoteController extends Controller
             $this->checkDuplicateAndSendMessage($this->sale_note);
             if ($configuration->sale_edit) {
                 $this->checkEditAndSendMessage($this->sale_note);
+            }
+            /* if (isset($request->items) && is_array($request->items)) {
+                foreach ($request->items as $it) {
+                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+                    $itemId = $it['item_id'];
+                    $qty = (float) $it['quantity'];
+                    if ($qty <= 0) continue;
+
+                    DB::connection('tenant')->statement(
+                        'INSERT INTO item_sales_summary (item_id, total_sales, total_quantity, created_at, updated_at)
+                        VALUES (?, 0, ?, NOW(), NOW())
+                        ON DUPLICATE KEY UPDATE 
+                        total_quantity = total_quantity + VALUES(total_quantity),
+                        updated_at = NOW()',
+                        [$itemId, $qty]
+                    );
+                }
+            } */
+
+            if (isset($request->items) && is_array($request->items)) {
+                foreach ($request->items as $it) {
+                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+                    $itemId = $it['item_id'];
+                    $qty = (float) $it['quantity'];
+                    if ($qty <= 0) continue;
+
+                    // Verificar si ya existe el item_id
+                    $exists = DB::connection('tenant')
+                        ->table('item_sales_summary')
+                        ->where('item_id', $itemId)
+                        ->exists();
+
+                    if ($exists) {
+                        // Si ya existe -> sumar cantidad
+                        DB::connection('tenant')
+                            ->table('item_sales_summary')
+                            ->where('item_id', $itemId)
+                            ->increment('total_quantity', $qty, ['updated_at' => now()]);
+                    } else {
+                        // Si no existe -> crear registro nuevo
+                        DB::connection('tenant')
+                            ->table('item_sales_summary')
+                            ->insert([
+                                'item_id' => $itemId,
+                                'total_sales' => 0,
+                                'total_quantity' => $qty,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                    }
+                }
             }
 
             return [
