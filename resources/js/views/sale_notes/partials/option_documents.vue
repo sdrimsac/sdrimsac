@@ -262,27 +262,9 @@
                                                     format="dd-MM-yyyy"
                                                     :clearable="false"
                                                     style="width: 100%;"
-                                                    :readonly="
-                                                        this.configuration
-                                                            .restrict_receipt_date
-                                                    "
-                                                ></el-date-picker>
+                                                    :readonly="!!this.configuration.restrict_receipt_date"
 
-                                                    <!-- <el-input
-                                                        v-model="
-                                                            document.date_of_issue
-                                                        "
-                                                        type="date"
-                                                        value-format="yyyy-MM-dd"
-                                                        format="dd-MM-yyyy"
-                                                        :clearable="false"
-                                                        style="width: 100%;"
-                                                        :readonly="
-                                                            this.configuration
-                                                                .restrict_receipt_date
-                                                        "
-                                                    >
-                                                    </el-input> -->
+                                                ></el-date-picker>
                                                 </div>
                                             </div>
                                         </div>

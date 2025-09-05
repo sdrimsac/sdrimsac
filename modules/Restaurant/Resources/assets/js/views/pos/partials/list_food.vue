@@ -1060,6 +1060,8 @@
         <item-set
             :showDialog.sync="showDialogItemSet"
             :item="currentItem"
+            :components="itemSetComponents"
+            @addconfirm="addconfirm"
         ></item-set>
     </div>
 </template>
@@ -1140,6 +1142,10 @@ export default {
     data() {
         return {
             showDialogItemSet: false,
+            // Components for item sets (reactive to avoid Vue warn)
+            itemSetComponents: [],
+            // Context stored when an item-set modal interrupts addFood
+            pendingItemSetAdd: null,
             currentColorSize: null,
             limitQty: 0,
             showColorSize: false,
@@ -1335,6 +1341,68 @@ export default {
         }
     },
     methods: {
+        addconfirm(payload) {
+            // Payload esperado: { components: [...], total_quantity: Number, item_id: <id> }
+            console.log("addconfirm recibido (item set)", payload);
+
+            // Cerrar modal
+            this.showDialogItemSet = false;
+
+            // Validaciones básicas
+            if (!payload || !Array.isArray(payload.components) || !payload.total_quantity) {
+                console.warn("Payload inválido en addconfirm", payload);
+                return;
+            }
+
+            // Si por alguna razón no quedó selectedFood (ej: refresco), lo resolvemos por item_id
+            if (!this.selectedFood && payload.item_id) {
+                const idx = this.listFoods.findIndex(f => f.item && f.item.id == payload.item_id);
+                if (idx >= 0) {
+                    this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[idx]));
+                }
+            }
+
+            if (!this.selectedFood) {
+                console.warn("No hay selectedFood para completar item set");
+                return;
+            }
+
+            // Construir currentFood con la cantidad total confirmada
+            this.currentFood = {
+                id: this.selectedFood.id,
+                food: this.selectedFood,
+                observation: null,
+                price: this.selectedFood.price,
+                quantity: Number(payload.total_quantity) || 0,
+                // Guardamos los componentes seleccionados del set
+                item_set_components: JSON.parse(JSON.stringify(payload.components))
+            };
+
+            // Emitimos usando el mismo canal existente. No alteramos la firma para no romper al padre.
+            // Los componentes van embebidos en currentFood.item_set_components
+            this.$emit(
+                "insertOrden",
+                this.currentFood,
+                this.selectedFood.id,
+                null, // type
+                false, // selectSerie
+                null, // categoria
+                [] // color_size
+            );
+
+            this.$notify({
+                title: this.currentFood.food.description.toLowerCase(),
+                duration: 800,
+                iconClass: "el-icon-food",
+                message: "Item set agregado",
+                position: "bottom-left"
+            });
+
+            // Limpiar contexto
+            this.currentFood = { food: null, observation: null, quantity: 0, price: 0 };
+            this.selectedFood = null;
+            this.pendingItemSetAdd = null;
+        },
         async updateColorSize(idx, color_size) {
             console.log("updateColorSize ver que llega aqui", idx, color_size);
             let ordens = [...this.localOrden];
@@ -1716,14 +1784,24 @@ export default {
             const response = await this.$http.get(
                 `/item-sets/check/${id}/${quantity}`
             );
-            if (response.status == 200) {
-                const { success, message } = response.data;
-                this.showDialogItemSet = true;
+
+            if (response.status === 200) {
+                const { success, message, components } = response.data;
+
+                // ✅ Validar si components tiene algo
+                if (components && components.length > 0) {
+                    this.showDialogItemSet = true;
+                    this.itemSetComponents = components;
+                } else {
+                    this.showDialogItemSet = false;
+                }
+
                 if (!success) {
                     this.$toast.error(message);
                     pass = false;
                 }
             }
+
             return pass;
         },
 
@@ -1810,22 +1888,24 @@ export default {
                         );
                         qty += 1;
                     }
-                    /* let pass = false; */
-                    
-                    /* if (this.configuration.restaurant) { */
-                        let pass = await this.setItemCheckStock(
+                    let pass; // declare once and reuse
+                    if (this.configuration.restaurant) {
+                        pass = await this.setItemCheckStock(
                             this.selectedFood.item.id,
                             qty
                         );
-                    /* } else {
-                        let pass = await this.setItemPolicy(
+                    } else {
+                        pass = await this.setItemPolicy(
                             this.selectedFood.item.id,
                             qty
                         );
-                    } */
-
-                    if (!pass) {
-                        return;
+                    }
+                    if (pass === false) return;
+                    // Si el item-set requiere selección (modal abierto) detenemos aquí y guardamos contexto
+                    if (this.showDialogItemSet) {
+                        this.pendingItemSetAdd = { index, type, selectSerie, categoria, color_size };
+                        console.log("addFood pausado esperando confirmación de item set", this.pendingItemSetAdd);
+                        return; // Esperar a addconfirm
                     }
                 }
             } else {

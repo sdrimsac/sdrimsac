@@ -141,154 +141,169 @@
                             <td>{{ index }}</td>
                             <td class="text-end">
                                 <template v-if="row.state_type_id != 11">
-                                <div
-                                    
-                                    class="btn-toolbar mb-2"
-                                    role="toolbar"
-                                >
-                                    <div class="btn-group mb-1">
-                                        <button
-                                            class="btn btn-secondary btn-sm dropdown-toggle"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <div
-                                            class="dropdown-menu dropdown-menu-sm"
-                                        >
-                                            <a
-                                                href="!#"
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                                class="dropdown-item"
-                                                @click.prevent="
-                                                    clickDetail(row)
-                                                "
-                                            >
-                                                <i class="fas fa-trash"></i>
-                                                Ver detalle
-                                            </a>
-                                            <a
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        !row.is_credit &&
-                                                        !row.paid
-                                                "
-                                                class="dropdown-item"
-                                                @click.prevent="
-                                                    clickPayment(row.id)
-                                                "
+                                    <div
+                                        class="btn-toolbar mb-2"
+                                        role="toolbar"
+                                    >
+                                        <div class="btn-group mb-1">
+                                            <button
+                                                class="btn btn-secondary btn-sm dropdown-toggle"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false"
                                             >
                                                 <i
-                                                    class="fas fa-money-bill-alt"
+                                                    class="fas fa-ellipsis-v"
                                                 ></i>
-                                                Registrar Pago
-                                            </a>
-                                            <a
-                                                :href="
-                                                    `/dispatches/create_new/sale_note/${row.id}`
-                                                "
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                                class="dropdown-item"
+                                            </button>
+                                            <div
+                                                class="dropdown-menu dropdown-menu-sm"
                                             >
-                                                <i class="far fa-file-alt"></i>
-                                                Generar guía
-                                            </a>
-                                            
+                                                <button
+                                                    v-if="
+                                                        row.state_type_id !=
+                                                            '11' &&
+                                                            (user_type ==
+                                                                'admin' ||
+                                                                user_type ==
+                                                                    'superadmin')
+                                                    "
+                                                    class="dropdown-item"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickDetail(row)
+                                                    "
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                    Ver detalle
+                                                </button>
+                                                <button
+                                                    v-if="
+                                                        row.state_type_id !=
+                                                            '11' &&
+                                                            !row.is_credit &&
+                                                            !row.paid
+                                                    "
+                                                    class="dropdown-item"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickPayment(row.id)
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-money-bill-alt"
+                                                    ></i>
+                                                    Registrar Pago
+                                                </button>
+                                                <a
+                                                    :href="
+                                                        `/dispatches/create_new/sale_note/${row.id}`
+                                                    "
+                                                    v-if="
+                                                        row.state_type_id !=
+                                                            '11' &&
+                                                            (user_type ==
+                                                                'admin' ||
+                                                                user_type ==
+                                                                    'superadmin')
+                                                    "
+                                                    class="dropdown-item"
+                                                >
+                                                    <i
+                                                        class="far fa-file-alt"
+                                                    ></i>
+                                                    Generar guía
+                                                </a>
 
-                                            <el-button
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                                class="btn-danger"
-                                                @click.prevent="
-                                                    clickVoided(row.id)
-                                                "
-                                            >
-                                                <i class="fas fa-trash"></i>
-                                                Anular Nota de Venta
-                                            </el-button>
-                                            
-                                            <a
-                                                href="!#"
-                                                class="dropdown-item"
-                                                @click.prevent="
-                                                    clickCreate(row.id)
-                                                "
-                                                v-if="
-                                                    row.btn_generate &&
+                                                <button
+                                                    v-if="
                                                         row.state_type_id !=
                                                             '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                            >
-                                                <i
-                                                    class="fas fa-file-signature"
-                                                ></i>
-                                                Editar nota de Venta
-                                            </a>
-                                            
-                                            <a
-                                                href="!#"
-                                                class="dropdown-item"
-                                                @click.prevent="
-                                                    clickGenerate(row.id)
-                                                "
-                                                v-if="
-                                                    !row.changed &&
+                                                            (user_type ==
+                                                                'admin' ||
+                                                                user_type ==
+                                                                    'superadmin')
+                                                    "
+                                                    class="dropdown-item btn-danger"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickVoided(row.id)
+                                                    "
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                    Anular Nota de Venta
+                                                </button>
+
+                                                <button
+                                                    class="dropdown-item"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickCreate(row.id)
+                                                    "
+                                                    v-if="
+                                                        row.btn_generate &&
+                                                            row.state_type_id !=
+                                                                '11' &&
+                                                            (user_type ==
+                                                                'admin' ||
+                                                                user_type ==
+                                                                    'superadmin')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-signature"
+                                                    ></i>
+                                                    Editar nota de Venta
+                                                </button>
+
+                                                <button
+                                                    class="dropdown-item"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickGenerate(row.id)
+                                                    "
+                                                    v-if="
+                                                        !row.changed &&
+                                                            row.state_type_id !=
+                                                                '11' &&
+                                                            soapCompany !=
+                                                                '03' &&
+                                                            (user_type ==
+                                                                'admin' ||
+                                                                user_type ==
+                                                                    'superadmin')
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-excel"
+                                                    ></i>
+                                                    Generar Comprobante
+                                                </button>
+                                                <button
+                                                    v-if="
                                                         row.state_type_id !=
-                                                            '11' &&
-                                                        soapCompany != '03' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                            >
-                                                <i
-                                                    class="fas fa-file-excel"
-                                                ></i>
-                                                Generar Comprobante
-                                            </a>
-                                            <a
-                                                href="!#"
-                                                v-if="row.state_type_id != '11'"
-                                                class="dropdown-item"
-                                                @click.prevent="
-                                                    clickOptions(row.id)
-                                                "
-                                            >
-                                                <i class="fas fa-print"></i>
-                                                Imprimir Nota de Venta
-                                            </a>
+                                                            '11'
+                                                    "
+                                                    class="dropdown-item"
+                                                    type="button"
+                                                    @click.prevent="
+                                                        clickOptions(row.id)
+                                                    "
+                                                >
+                                                    <i class="fas fa-print"></i>
+                                                    Imprimir Nota de Venta
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </template>
                                 <template v-else>
                                     <el-button
-                                    
-                                    @click.prevent="clickOptions(row.id)"
-                                >
-                                    <i class="fas fa-print"></i>
-                                </el-button>
-
+                                        @click.prevent="clickOptions(row.id)"
+                                    >
+                                        <i class="fas fa-print"></i>
+                                    </el-button>
                                 </template>
                             </td>
                             <!-- <td v-if="row.state_type_id == '11'">
@@ -594,12 +609,14 @@
             :showDialog.sync="showDialogGenerate"
             :recordId="recordId"
             :showGenerate="true"
+            :configuration.sync="configuration"
             :showClose="false"
         ></sale-note-generate>
         <sale-note-detail
             :number="currentNumber"
             :saleNoteId="recordId"
             :showDialog.sync="showDialogDetail"
+            :configuration.sync="configuration"
             :boxes="boxes"
         ></sale-note-detail>
         <modal-generate-cpe
