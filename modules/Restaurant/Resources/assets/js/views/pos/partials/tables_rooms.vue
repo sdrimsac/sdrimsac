@@ -2145,6 +2145,8 @@ export default {
                 this.close2();
             }
         },
+
+
         async addDays() {
             await this.$http(
                 `/caja/rooms/add_days/${this.currentRoom.id}/${this.currentRoom.new_duration}`
@@ -2152,18 +2154,27 @@ export default {
             this.showAddDays = false;
             this.getRoomDetail(this.currentTable.id);
         },
-        close2() {
+        /* close2() {
             this.titleDialog = this.titleDialogOriginal;
             this.viewingRoom = false;
             this.currentTable = null;
             this.currentRoom = null;
-            this.isChangingRoom = false;
+            //this.isChangingRoom = false;
             this.showServices = false;
             this.showGuesses = false;
             this.showAddDays = false;
             this.showEditDate = false;
-            // Add any other state resets needed to ensure the list view is shown
+            
+        }, */
+
+        close2() {
+            this.titleDialog = this.titleDialogOriginal;
+            this.viewingRoom = false;
+            // this.currentTable = null;
+            this.currentRoom = null;
         },
+
+
         async sendToMaintenance(event, id) {
             event.stopPropagation();
             if (this.configuration.maintenance_workers) {
@@ -2508,9 +2519,9 @@ export default {
                         `/caja/rooms/send_to_avaible/${table.id}`
                     );
 
-                    /* if (response.status == 200) {
-                        this.getTables();
-                    } */
+                    //if (response.status == 200) {
+                     //   this.getTables();
+                    //}
                     if (response.status == 200) {
                         if (response.data && response.data.success === false) {
                             this.$showSAlert(
@@ -2533,6 +2544,7 @@ export default {
                 this.showRoom = true;
             }
         },
+
         updateTime() {
             this.tables.forEach(t => {
                 let now = new Date();
