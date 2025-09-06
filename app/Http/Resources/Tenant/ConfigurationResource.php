@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'is_grifo' => (bool)$this->is_grifo,
             'favorite_items' => (bool)$this->favorite_items,
             'methods_arca_cash' => (bool) $this->methods_arca_cash,
             'printing_comanda' => (bool) $this->printing_comanda,

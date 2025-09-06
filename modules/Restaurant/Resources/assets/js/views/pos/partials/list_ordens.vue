@@ -46,7 +46,11 @@
                     </button>
                     <!-- Recibir Mercaderia -->
                     <button
-                        v-if="configuration.receive_merchandise && !isSeller && configuration.translate_direct === false"
+                        v-if="
+                            configuration.receive_merchandise &&
+                                !isSeller &&
+                                configuration.translate_direct === false
+                        "
                         class="btn btn-primary pos-btn mb-2"
                         type="button"
                         @click="trigerFunction(2)"
@@ -280,7 +284,6 @@
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
                         {{ clientTableData.table_id }}
-
                     </strong>
                 </div>
 
@@ -546,7 +549,8 @@
                             v-if="
                                 localOrden.length > 0 &&
                                     configuration.restaurant_delivery &&
-                                    configuration.restaurant && !clientTableData.table
+                                    configuration.restaurant &&
+                                    !clientTableData.table
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -2535,7 +2539,9 @@
                                         </div>
                                         <div
                                             v-if="
-                                                ordens.length != 0 && !variation && isCreatingOrden == false
+                                                ordens.length != 0 &&
+                                                    !variation &&
+                                                    isCreatingOrden == false
                                             "
                                             class="mx-2 h4 txt-info p-10 f-w-700 d-flex align-items-center"
                                         >
@@ -4080,13 +4086,24 @@ export default {
                         } else {
                             this.$toast.success("Cargando productos");
                             // Determinar si el usuario pertenece a un establecimiento de tipo RESTAURANT
-                            const isRestaurantEst = (this.establishments && this.establishments.description)
-                                ? this.establishments.description.toString().toUpperCase().includes("RESTAURANT")
-                                : false;
-                            const sameEstablishment = (this.user && this.user.establishment_id && this.establishments && this.establishments.id)
-                                ? Number(this.user.establishment_id) === Number(this.establishments.id)
-                                : false;
-                            const printerDefault = isRestaurantEst && sameEstablishment;
+                            const isRestaurantEst =
+                                this.establishments &&
+                                this.establishments.description
+                                    ? this.establishments.description
+                                          .toString()
+                                          .toUpperCase()
+                                          .includes("RESTAURANT")
+                                    : false;
+                            const sameEstablishment =
+                                this.user &&
+                                this.user.establishment_id &&
+                                this.establishments &&
+                                this.establishments.id
+                                    ? Number(this.user.establishment_id) ===
+                                      Number(this.establishments.id)
+                                    : false;
+                            const printerDefault =
+                                isRestaurantEst && sameEstablishment;
                             this.$emit("paymentsOrden", {
                                 items: items,
                                 is_room: true,
@@ -4872,29 +4889,29 @@ export default {
         validStock(orden, quantity = 1) {
             // Si el item es un set (receta), no validar stock
             if (orden.food.item.is_set) {
-            return false;
+                return false;
             }
             if (this.configuration.quotation_stock) {
-            return false;
+                return false;
             }
             let qty = this.localOrden
-            .filter(o => o.id == orden.id)
-            .reduce((a, b) => a + Number(b.quantity), 0);
+                .filter(o => o.id == orden.id)
+                .reduce((a, b) => a + Number(b.quantity), 0);
             if (orden.type_id) {
-            qty += orden.type_quantity;
+                qty += orden.type_quantity;
             } else {
-            qty += quantity;
+                qty += quantity;
             }
             let stock = Number(orden.food.item.stock);
             let unit_type_id = orden.food.item.unit_type_id;
             if (
-            this.configuration.sales_stock == true &&
-            !this.quotation_stock &&
-            unit_type_id != "ZZ"
+                this.configuration.sales_stock == true &&
+                !this.quotation_stock &&
+                unit_type_id != "ZZ"
             ) {
-            if (qty > stock) {
-                return true;
-            }
+                if (qty > stock) {
+                    return true;
+                }
             }
             return false;
         },
@@ -5216,12 +5233,49 @@ export default {
         close() {
             this.$emit("update:localOrden", []);
         },
-        update_price(index, sale_unit_price) {
+
+        //aqui modificamos el precio
+        /* update_price(index, sale_unit_price) {
             let localOrden_update = this.localOrden;
-            localOrden_update[index].food.sale_unit_price = sale_unit_price;
+        
+            if (this.configuration.is_grifo){
+                localOrden_update[index].food.quantity = sale_unit_price / localOrden_update[index].food.price;
+                console.log(
+                "ver el precio modificado",
+                localOrden_update[index].food.quantity
+            );
+
+            } else {
+                localOrden_update[index].food.sale_unit_price = sale_unit_price;
+
+            }
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();
-        },
+        }, */
+
+        update_price(index, sale_unit_price) {
+  // Clonar para mantener reactividad
+  const items = [...this.localOrden];
+  const item = { ...items[index] };
+
+  if (this.configuration.is_grifo) {
+    const unit = Number(item.food.price) || 0; // precio unitario
+    const total = sale_unit_price != null ? Number(sale_unit_price) : Number(item.price) || 0; // importe ingresado
+    const newQty = unit > 0 ? Number((total / unit).toFixed(3)) : 0;
+    item.quantity = newQty; // actualizar la cantidad visible
+  } else {
+    const newPrice = Number(sale_unit_price);
+    if (!isNaN(newPrice)) {
+      item.price = newPrice; // precio de la línea usado en el total
+      if (item.food) item.food.sale_unit_price = newPrice; // opcional, si sincronizas con backend
+    }
+  }
+
+  items[index] = item;
+  this.$emit('update:localOrden', items);
+  this.calculateTotal();
+},
+
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {
                 if (orden.type_id) {

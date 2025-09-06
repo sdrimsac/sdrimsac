@@ -20,7 +20,8 @@ class LotItemCollection extends ResourceCollection
                 'id'          => $row->id,
                 'series' => $row->series,
                 'date'      => $row->date,
-                /* 'item'     => $row->item, */
+                'item'     => $row->item->internal_id,
+                'item_description' => $row->item->description,
                 'lote'    => $row->lote ? $row->lote->code : null,
                 'has_sale'    => (bool)$row->has_sale,
                 'active'    => $row->state,

@@ -2164,7 +2164,6 @@ export default {
             this.showGuesses = false;
             this.showAddDays = false;
             this.showEditDate = false;
-            
         }, */
 
         close2() {
@@ -2173,7 +2172,6 @@ export default {
             // this.currentTable = null;
             this.currentRoom = null;
         },
-
 
         async sendToMaintenance(event, id) {
             event.stopPropagation();

@@ -69,9 +69,9 @@
                                 <tr></tr>
                                 <tr slot-scope="{ index, row }">
                                     <td>{{ index }}</td>
-                                    <td>{{ row.item.internal_id }}</td>
+                                    <td>{{ row.item }}</td>
                                     <td>{{ row.series }}</td>
-                                    <td>{{ row.item.description }}</td>
+                                    <td>{{ row.item_description }}</td>
                                     <td>{{ row.date }}</td>
                                     <td>{{ row.warehouse.description }}</td>
                                     <td>{{ row.has_sale ? "Sí" : "No" }}</td>
