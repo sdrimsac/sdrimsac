@@ -8148,6 +8148,96 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.model_10
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                        }">
+                                                                            <i ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"></i>
+                                                                            Modelo
+                                                                            10
+                                                                            etiqueta
+                                                                            de
+                                                                            50x25
+                                                                            1
+                                                                            columna
+                                                                            sin
+                                                                            codigo
+                                                                            de
+                                                                            barra
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="modelo 10|"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.model_10
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'modelo 10',
+                                                                                                form.model_10,
+                                                                                                'creditNvShowPendingIcon'
+                                                                                            )
+                                                                                    "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.model_11
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                        }">
+                                                                            <i ref="creditNvShowPendingIcon"
+                                                                                class="fas fa-list tab-icon fa-lg"></i>
+                                                                            Modelo
+                                                                            11
+                                                                            etiqueta
+                                                                            de
+                                                                            100x50
+                                                                            1
+                                                                            columna
+                                                                            sin
+                                                                            codigo
+                                                                            de
+                                                                            barra
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="modelo 11"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.model_11
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'modelo 11',
+                                                                                                form.model_11,
+                                                                                                'creditNvShowPendingIcon'
+                                                                                            )
+                                                                                    "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

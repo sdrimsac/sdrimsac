@@ -458,7 +458,7 @@
                                         size="large"
                                     >
                                         <el-radio-button
-                                        v-if="configuration.model_01"
+                                            v-if="configuration.model_01"
                                             :label="1"
                                             plain
                                             class="mb-2 me-2"
@@ -477,7 +477,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_02"
+                                            v-if="configuration.model_02"
                                             :label="2"
                                             plain
                                             class="mb-2 me-2"
@@ -496,7 +496,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_03"
+                                            v-if="configuration.model_03"
                                             :label="3"
                                             plain
                                             class="mb-2 me-2"
@@ -515,7 +515,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_04"
+                                            v-if="configuration.model_04"
                                             :label="4"
                                             plain
                                             class="mb-2 me-2"
@@ -534,7 +534,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_05"
+                                            v-if="configuration.model_05"
                                             :label="5"
                                             plain
                                             class="mb-2 me-2"
@@ -553,7 +553,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_06"
+                                            v-if="configuration.model_06"
                                             :label="6"
                                             plain
                                             class="mb-2 me-2"
@@ -572,7 +572,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_07"
+                                            v-if="configuration.model_07"
                                             :label="7"
                                             plain
                                             class="mb-2 me-2"
@@ -591,7 +591,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_08"
+                                            v-if="configuration.model_08"
                                             :label="8"
                                             plain
                                             class="mb-2 me-2"
@@ -610,7 +610,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
-                                        v-if="configuration.model_09"
+                                            v-if="configuration.model_09"
                                             :label="9"
                                             plain
                                             class="mb-2 me-2"
@@ -629,6 +629,7 @@
                                             </el-tooltip>
                                         </el-radio-button>
                                         <el-radio-button
+                                            v-if="configuration.model_10"
                                             :label="10"
                                             plain
                                             class="mb-2 me-2"
@@ -639,6 +640,25 @@
                                                 class="item"
                                                 effect="dark"
                                                 content="La medida de la etiqueta de 50mm x 25mm solo esta disponible para 1 columnas x etiqueta solo nombre del producto y precios"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </el-radio-button>
+                                        <el-radio-button
+                                            v-if="configuration.model_11"
+                                            :label="11"
+                                            plain
+                                            class="mb-2 me-2"
+                                            style="font-size: 16px;"
+                                        >
+                                            100x50
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="La medida de la etiqueta de 100mm x 50mm solo esta disponible para 1 columnas x etiqueta solo nombre del producto y precios"
                                                 placement="top-start"
                                             >
                                                 <i
@@ -733,7 +753,10 @@
                             <div class="col-md-8">
                                 <br />
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo1' && configuration.model_01"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo1' &&
+                                            configuration.model_01
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -810,7 +833,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo2' && configuration.model_02"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo2' &&
+                                            configuration.model_02
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1023,7 +1049,10 @@
                                 </div>
 
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo3' && configuration.model_03"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo3' &&
+                                            configuration.model_03
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1082,7 +1111,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo4' && configuration.model_04"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo4' &&
+                                            configuration.model_04
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1167,7 +1199,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo5' && configuration.model_05"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo5' &&
+                                            configuration.model_05
+                                    "
                                     class="pdf-preview-container border d-flex preview-container"
                                     style="width: 600px; height: 150px; margin: 20px auto; background: white;"
                                 >
@@ -1280,7 +1315,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo6' && configuration.model_06"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo6' &&
+                                            configuration.model_06
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1407,7 +1445,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo7' && configuration.model_07"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo7' &&
+                                            configuration.model_07
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1454,7 +1495,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo8' && configuration.model_08"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo8' &&
+                                            configuration.model_08
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1499,7 +1543,10 @@
                                         </div>
 
                                         <!-- Description below image -->
-                                        <span class="text-center mb-2" style="font-size: 12px;">
+                                        <span
+                                            class="text-center mb-2"
+                                            style="font-size: 12px;"
+                                        >
                                             {{
                                                 product.descripcion ||
                                                     "DESCRIPCION DEL PRODUCTO"
@@ -1519,7 +1566,9 @@
                                             class="d-flex w-100 justify-content-between"
                                             style="font-size: 12px;"
                                         >
-                                            <span>{{ product.location || "S/L" }}</span>
+                                            <span>{{
+                                                product.location || "S/L"
+                                            }}</span>
                                             <span
                                                 :style="
                                                     `color:${
@@ -1535,7 +1584,10 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo9' && configuration.model_09"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo9' &&
+                                            configuration.model_09
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -1620,7 +1672,60 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="modeloSeleccionado === 'Modelo10'"
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo10' &&
+                                            configuration.model_10
+                                    "
+                                    class="d-flex flex-row justify-content-center preview-container"
+                                >
+                                    <div
+                                        class="border d-flex flex-row align-items-center h150 w300 overflow-hidden bg-white"
+                                    >
+                                        <div
+                                            class="d-flex flex-column align-items-center p-2"
+                                            style="width: 100%;"
+                                        >
+                                            <span
+                                                class="text-center"
+                                                style="font-size: 12px;"
+                                            >
+                                                {{
+                                                    product.descripcion ||
+                                                        "DESCRIPCION"
+                                                }}
+                                            </span>
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type == 'Precio venta'
+                                                            ? '#E6A23C'
+                                                            : '#000'
+                                                    }`
+                                                "
+                                                class="text-center"
+                                                >S/.
+                                                {{ sale_code || "N/D" }}</span
+                                            >
+                                            <span
+                                                :style="
+                                                    `color:${
+                                                        type != 'Precio venta'
+                                                            ? '#409EFF'
+                                                            : '#000'
+                                                    }; margin-left: auto; display: block; text-align: right;`
+                                                "
+                                                >{{
+                                                    purchase_code || "N/D"
+                                                }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    v-if="
+                                        modeloSeleccionado === 'Modelo11' &&
+                                            configuration.model_11
+                                    "
                                     class="d-flex flex-row justify-content-center preview-container"
                                 >
                                     <div
@@ -2599,6 +2704,8 @@ export default {
                     return "Modelo9";
                 case 10:
                     return "Modelo10";
+                case 11:
+                    return "Modelo11";
                 default:
                     return null;
             }
@@ -3108,7 +3215,7 @@ export default {
                     this.typeBarcode
                 )}&location=${this.product.location || ""}
                 &type=${this.modelType || ""}
-                `;
+                &width=${this.width}&height=${this.height}`;
                 console.log(endPoint);
                 let { etiquetadora } = this.establishment;
                 this.saveConfig();
@@ -3321,7 +3428,7 @@ export default {
                     company_name,
                     etiqueta,
                     establishment,
-                    configuration,
+                    configuration
                 } = response.data;
                 this.establishment = establishment;
                 this.codes = codigos;

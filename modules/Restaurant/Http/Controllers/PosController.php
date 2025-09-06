@@ -343,16 +343,16 @@ class PosController extends Controller
                 ->groupBy('item_id');
 
             $foods = $foods
-                ->reorder() // limpiar órdenes previas para que esta prioridad se respete
+                ->reorder()
                 ->leftJoinSub($salesSub, 's', function ($join) {
                     $join->on('s.item_id', '=', 'foods.item_id');
                 })
                 ->select('foods.*')
-                ->addSelect(DB::raw('IF(s.item_id IS NOT NULL, 1, 0) as has_sales')) // bandera
+                ->addSelect(DB::raw('IF(s.item_id IS NOT NULL, 1, 0) as has_sales'))
                 ->addSelect(DB::raw('IFNULL(s.total_quantity, 0) as total_quantity'))
-                ->orderByDesc('has_sales') // primero los que tienen ventas
-                ->orderByDesc('total_quantity') // dentro de esos, más vendidos primero
-                ->orderBy('foods.description', 'ASC'); // último criterio para los demás
+                ->orderByDesc('has_sales')
+                ->orderByDesc('total_quantity')
+                ->orderBy('foods.description', 'ASC');
         }
 
         $all_foods = $configuration->all_items_pos;

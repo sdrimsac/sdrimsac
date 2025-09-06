@@ -658,13 +658,17 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group" :class="{
-                                                        'has-danger':
-                                                            errors.soap_password
+                                                        'has-danger': errors.soap_password
                                                     }">
                                                         <label class="control-label">SOAP Password
                                                             <span class="text-danger">*</span></label>
-                                                        <el-input v-model="form.soap_password">
-                                                        </el-input>
+                                                        <el-input
+                                                            v-model="form.soap_password"
+                                                            :maxlength="50"
+                                                            show-password
+                                                            autocomplete="off"
+                                                            style="text-transform: none !important;"
+                                                        ></el-input>
                                                         <small class="text-danger" v-if="errors.soap_password"
                                                             v-text="errors.soap_password[0]"></small>
                                                     </div>

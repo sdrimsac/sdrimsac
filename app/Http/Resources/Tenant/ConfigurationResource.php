@@ -31,6 +31,8 @@ class ConfigurationResource extends JsonResource
             'model_07' => (bool) $this->model_07,
             'model_08' => (bool) $this->model_08,
             'model_09' => (bool) $this->model_09,
+            'model_10' => (bool) $this->model_10,
+            'model_11' => (bool) $this->model_11,
             'text_sale' => $this->text_sale,
             'unique_code_unit_types' => $this->unique_code_unit_types,
             'demo_pdf' => (bool) $this->demo_pdf,

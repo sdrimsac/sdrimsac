@@ -83,6 +83,9 @@ class EtiquetasController extends Controller
             if ($type == '10' && $format == '1' && $paper == '1') {
                 $template = 'template22';
             }
+            if ($type == '11' && $format == '1' && $paper == '1') {
+                $template = 'template23';
+            }
 
             $record = Item::where('description', $description)->first();
             $company = Company::first();
@@ -139,21 +142,16 @@ class EtiquetasController extends Controller
                 $height = 25;
                 $width = 50;
             }   
-            // if($company->number == '10465702449'){
-            //     $format = 1;
-            //     $width = 70;
-            //     $height = 35;
-            //     Log::info('formato 1');
-            //     $margin_left = 0;
-            //     $template = 'template6';
-            // }
+            if ($template === "template23") {
+                $height = 50;
+                $width = 100;
+            } 
+    
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
                     $width,
                     $height
-                    // $paper ==  1 ? 50 :  65,
-                    // $paper == 1 ? 25 : 23
                 ],
 
                 'margin_top' => $margin_top,
@@ -162,10 +160,7 @@ class EtiquetasController extends Controller
                 'margin_left' => $margin_left
             ]);
 
-
-            // $pdf->shrink_tables_to_fit = 0;
             $html = view('etiquetas::' . $template, compact(
-                // $html = view('etiquetas::templatetest', compact(
                 'type',
                 'record',
                 'stock',
@@ -186,7 +181,6 @@ class EtiquetasController extends Controller
 
             $pdf->WriteHTML($html);
             $pdf->Output('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
-            // $pdf->Stream('etiquetas_' . now()->format('Y_m_d') . '.pdf', 'D');
         } catch (Exception $e) {
             return response($e, 500);
         }
