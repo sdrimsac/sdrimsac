@@ -14,10 +14,7 @@
             <div class="form-body">
                 <br />
                 <div class="row">
-                    <div
-                        v-if="type === 'caja/observations'"
-                        class="col-md-12"
-                    >
+                    <div v-if="type === 'caja/observations'" class="col-md-12">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
@@ -26,10 +23,11 @@
                                 <i class="fas fa-info-circle mr-2"></i>
                                 Producto
                             </label>
-                            <el-select v-model="form.item_id" 
-                            clearable
-                            filterable
-                            placeholder="Seleccione un producto"
+                            <el-select
+                                v-model="form.item_id"
+                                clearable
+                                filterable
+                                placeholder="Seleccione un producto"
                             >
                                 <el-option
                                     v-for="(data, index) in items"
@@ -156,8 +154,8 @@
                                 </el-select>
                                 <small
                                     class="form-control-feedback"
-                                    v-if="errors.floor_id"
-                                    v-text="errors.floor_id[0]"
+                                    v-if="errors.tower_id"
+                                    v-text="errors.tower_id[0]"
                                 ></small>
                             </div>
                         </div>
@@ -187,7 +185,7 @@
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
                             <div
                                 class="form-group"
-                                :class="{ 'has-danger': errors.type_id }"
+                                :class="{ 'has-danger': errors.table_type_id }"
                             >
                                 <label class="control-label">
                                     <i class="fas fa-bed mr-2"></i> Tipo
@@ -205,8 +203,8 @@
                                 </el-select>
                                 <small
                                     class="form-control-feedback"
-                                    v-if="errors.type_id"
-                                    v-text="errors.type_id[0]"
+                                    v-if="errors.table_type_id"
+                                    v-text="errors.table_type_id[0]"
                                 ></small>
                             </div>
                         </div>
@@ -365,17 +363,21 @@
                                 ></small>
                             </div>
                         </div>
-                        <div class="col-md-4"
-                        v-if="
-                                type == 'caja/tables' && configurations.restaurant_delivery
-                            ">
+                        <div
+                            class="col-md-4"
+                            v-if="
+                                type == 'caja/tables' &&
+                                    configurations.restaurant_delivery
+                            "
+                        >
                             <label for="">Delivery</label>
                             <el-checkbox
-                                    v-model="form.is_delivery"
-                                    label="Delivery"
-                                >
-                                    <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa para delivery?
-                                </el-checkbox>
+                                v-model="form.is_delivery"
+                                label="Delivery"
+                            >
+                                <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa
+                                para delivery?
+                            </el-checkbox>
                         </div>
                         <template
                             v-if="
@@ -506,32 +508,32 @@
                                         Imágenes de la habitación (Máximo 5)
                                     </label>
                                     <div
-                                            class="d-block"
-                                            v-if="
-                                                form.images &&
-                                                    getTotalImagesCount < 5
+                                        class="d-block"
+                                        v-if="
+                                            form.images &&
+                                                getTotalImagesCount < 5
+                                        "
+                                    >
+                                        <input
+                                            type="file"
+                                            ref="fileInput"
+                                            accept="image/*"
+                                            class="d-none"
+                                            @change="handleImageUpload"
+                                        />
+                                        <button
+                                            @click.prevent="
+                                                $refs.fileInput.click()
                                             "
+                                            class="btn btn-primary"
                                         >
-                                            <input
-                                                type="file"
-                                                ref="fileInput"
-                                                accept="image/*"
-                                                class="d-none"
-                                                @change="handleImageUpload"
-                                            />
-                                            <button
-                                                @click.prevent="
-                                                    $refs.fileInput.click()
-                                                "
-                                                class="btn btn-primary"
-                                            >
-                                                <i class="fas fa-plus mr-2"></i>
-                                                Agregar imagen ({{
-                                                    5 - getTotalImagesCount
-                                                }}
-                                                restantes)
-                                            </button>
-                                        </div>
+                                            <i class="fas fa-plus mr-2"></i>
+                                            Agregar imagen ({{
+                                                5 - getTotalImagesCount
+                                            }}
+                                            restantes)
+                                        </button>
+                                    </div>
                                     <div class="d-flex flex-wrap gap-2 mt-2">
                                         <div
                                             v-for="(image,
@@ -555,13 +557,11 @@
                                                     "
                                                     class="btn btn-danger btn-sm position-absolute"
                                                     style="top: -10px; right: -10px;"
-
                                                 >
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
                                         </div>
-                                    
                                     </div>
 
                                     <small class="text-muted">
@@ -706,6 +706,10 @@ export default {
         this.initForm();
     },
     methods: {
+        parseId(val) {
+            const n = Number(val);
+            return isNaN(n) ? val : n;
+        },
         removeImageLocal(index) {
             this.form.images.splice(index, 1);
             this.$forceUpdate();
@@ -852,22 +856,22 @@ export default {
                 this.all_floors = floors;
                 this.all_towers = towers;
                 this.towers = towers;
-                let [tower] = towers;
-                let [floor] = floors;
-                this.form.tower_id = tower.id;
-                this.filterFloorsByTower(tower.id);
+                // Do not set defaults here; handle defaults in create() for new records only
             } else {
                 this.$toast.warning("Ocurrió un error");
             }
         },
         async getItems() {
-            const response = await this.$http("/caja/observations/items");
+            if (this.type == "caja/observations/items") {
+                const response = await this.$http("/caja/observations/items");
             if (response.status == 200) {
                 const { items } = response.data;
                 this.items = items;
-                
+
             } else {
                 this.$toast.warning("Ocurrió un error");
+            }
+
             }
         },
         filterFloorsByTower(tower_id) {
@@ -945,6 +949,13 @@ export default {
                 this.form = response.data.data;
                 this.form.images = [];
                 this.form.is_delivery = this.form.is_delivery == 1 || this.form.is_delivery == "1";
+                // Coerce IDs to numbers when possible to match option values
+                this.form.table_type_id = this.parseId(this.form.table_type_id);
+                this.form.tower_id = this.parseId(this.form.tower_id);
+                this.form.floor_id = this.parseId(this.form.floor_id);
+                this.form.area_id = this.parseId(this.form.area_id);
+                this.form.status_table_id = this.parseId(this.form.status_table_id);
+                this.form.establishment_id = this.parseId(this.form.establishment_id);
                 if (this.type === "caja/rooms") {
                     let { floor, description } = this.form;
                     this.detail = description;
@@ -969,29 +980,27 @@ export default {
             }
 
             if (this.type == "caja/rooms") {
-                let area = this.areas.find(
-                    area => area.description.toUpperCase() == "HOTEL"
-                );
-                if (area) {
-                    this.form.area_id = area.id;
-                }
-
                 if (!this.recordId) {
-                    let status = this.statusTable.find(
-                        status => status.description.toUpperCase() == "LIBRE"
+                    // Defaults only for new records
+                    const area = this.areas.find(
+                        a => a.description && a.description.toUpperCase() === "HOTEL"
                     );
-                    if (status) {
-                        this.form.status_table_id = status.id;
+                    if (area) this.form.area_id = area.id;
+
+                    const status = this.statusTable.find(
+                        st => st.description && st.description.toUpperCase() === "LIBRE"
+                    );
+                    if (status) this.form.status_table_id = status.id;
+
+                    if (this.types.length > 0) {
+                        this.form.table_type_id = this.types[0].id;
                     }
-                }
-                if (this.types.length > 0) {
-                    this.form.table_type_id = this.types[0].id;
-                }
-                let [tower] = this.towers;
-                this.form.tower_id = tower.id;
-                this.filterFloorsByTower(tower.id);
-                if (this.isRenta) {
-                    this.updatePrice();
+                    const [tower] = this.towers;
+                    if (tower) {
+                        this.form.tower_id = tower.id;
+                        this.filterFloorsByTower(tower.id);
+                    }
+                    if (this.isRenta) this.updatePrice();
                 }
             }
         },
@@ -1040,7 +1049,7 @@ export default {
             const file = event.target.files[0];
             if (!file) return;
 
-            // Validar tamaño (10MB máximo) 
+            // Validar tamaño (10MB máximo)
             if (file.size > 10 * 1024 * 1024) {
                 this.$toast.error("La imagen no debe superar los 10MB");
                 return;

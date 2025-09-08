@@ -447,23 +447,34 @@ export default {
             //}
         },
         async getTables() {
-            this.$http.get(`/caja/tables/tables-zone`).then(response => {
+            if (this.type == "caja/tables") {
+
+                this.$http.get(`/caja/tables/tables-zone`).then(response => {
                 let { zones } = response.data;
                 this.zones = zones;
             });
-            this.$http
+            }
+
+            if (this.type == "caja/areas"){
+                this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
                     this.areas = response.data.data;
                     console.log("rfrsfsdf", this.areas);
                 });
-            this.$http
+
+            }
+            if (this.type == "caja/status-tables") {
+                this.$http
                 .get(
                     `/caja/status-tables/records?column=description&page=1&value`
                 )
                 .then(response => {
                     this.statusTable = response.data.data;
                 });
+
+            }
+            
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;
             });
