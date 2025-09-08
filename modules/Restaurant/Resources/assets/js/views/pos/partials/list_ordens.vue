@@ -276,7 +276,7 @@
                 <div
                     class="row h5 text-white col-12"
                     style="padding-left: 25px"
-                    v-if="clientTableData.table && configuration.restaurant"
+                    v-if="clientTableData.table && configuration.restaurant && configuration.hotels"
                 >
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
@@ -701,7 +701,7 @@
                                     localOrden.length != 0 &&
                                     !isSeller &&
                                     (configuration.restaurant ||
-                                        configuration.modo_billar)
+                                        configuration.modo_billar || configuration.hotels)
                             "
                             class="btn btn-light mt-2"
                             type="button"

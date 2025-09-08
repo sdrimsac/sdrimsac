@@ -2010,41 +2010,44 @@ class OrdenController extends Controller
 
     public function DeliveryPrinter(Request $request)
     {
-        $orden_id = $request->id;
-        $orden = Orden::find($orden_id);
         $configuration = Configuration::first();
+        if ($configuration->restaruant) {
+            $orden_id = $request->id;
+            $orden = Orden::find($orden_id);
+            $configuration = Configuration::first();
 
-        if (!$orden) {
+            if (!$orden) {
+                return [
+                    'success' => false,
+                    'message' => 'Orden no encontrada'
+                ];
+            }
+
+            $id = $orden->id;
+            $establishment = Establishment::find(auth()->user()->establishment_id);
+
+            if ($configuration->delivery_caja) {
+                // Imprimir solo en caja
+                $area_id = $this->getBoxArea();
+                $area = Area::find($area_id);
+                $printer = $area->printer ?? $establishment->printer;
+                Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
+            }
+            if ($configuration->delivery_cocina) {
+                $area = Area::where('description', 'like', '%COCIN%')->first();
+                $area_id = $area ? $area->id : null;
+                $printer = $area && $area->printer ? $area->printer : $establishment->printer;
+                Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
+            }
+
             return [
-                'success' => false,
-                'message' => 'Orden no encontrada'
+                'success' => true,
+                'printer' => $printer,
+                'direct_printing' => (bool) $establishment->direct_printing,
+                'printer_serve' => $establishment->printer_serve,
+                'print'   => url('') . "/caja/delivery/ticket?id={$id}&establishment_id={$establishment->id}"
             ];
         }
-
-        $id = $orden->id;
-        $establishment = Establishment::find(auth()->user()->establishment_id);
-
-        if ($configuration->delivery_caja) {
-            // Imprimir solo en caja
-            $area_id = $this->getBoxArea();
-            $area = Area::find($area_id);
-            $printer = $area->printer ?? $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
-        }
-        if ($configuration->delivery_cocina) {
-            $area = Area::where('description', 'like', '%COCIN%')->first();
-            $area_id = $area ? $area->id : null;
-            $printer = $area && $area->printer ? $area->printer : $establishment->printer;
-            Event(new PrintEvent($orden->id, "D", true, $area_id, [], true, $establishment));
-        }
-
-        return [
-            'success' => true,
-            'printer' => $printer,
-            'direct_printing' => (bool) $establishment->direct_printing,
-            'printer_serve' => $establishment->printer_serve,
-            'print'   => url('') . "/caja/delivery/ticket?id={$id}&establishment_id={$establishment->id}"
-        ];
     }
 
     /* public function DeliveryPrinter(Request $request)
