@@ -532,6 +532,10 @@ const app = new Vue({
             import(
                 "../../modules/Billar/Resources/assets/js/views/pos/index.vue"
             ),
+        "tenant-grifo-pos": () =>
+            import(
+                "../../modules/Grifo/Resources/assets/js/views/pos/index.vue"
+            ),
         "tenant-dashboard-index": () =>
             import(
                 "../../modules/Dashboard/Resources/assets/js/views/index.vue"

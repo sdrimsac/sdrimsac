@@ -655,6 +655,48 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-2 mb-2" v-if="canSee">
+                                                                    <div class="card h-100">
+                                                                        <div class="card-body d-flex flex-column"
+                                                                            style="padding: 7px;">
+                                                                            <div class="form-group text-left flex-grow-1"
+                                                                                style="margin-left: 5px;">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <label class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.tap
+                                                                                                ? '#073f68'
+                                                                                                : '#6c757d'
+                                                                                        }">
+                                                                                        <i ref="quotationIcon"
+                                                                                            class="fas fa-gas-pump tab-icon"
+                                                                                            style="font-size: 2rem;"></i>
+                                                                                        Grifos
+                                                                                    </label>
+                                                                                    <vs-checkbox
+                                                                                        color="#073f68"
+                                                                                        v-model="form.tap"
+                                                                                        @change="() =>
+                                                                                            submit(
+                                                                                                'Habilitar Grifos',
+                                                                                                form.tap,
+                                                                                                'quotationIcon'
+                                                                                            )
+                                                                                        "
+                                                                                        :style="{
+                                                                                            width: 'auto',
+                                                                                            boxSizing: 'border-box',
+                                                                                            marginRight: '8px',
+                                                                                            border: form.tap ? 'none' : '2px solid #073f68',
+                                                                                            borderRadius: '8px',
+                                                                                            transition: 'border 0.2s'
+                                                                                        }"
+                                                                                    ></vs-checkbox>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

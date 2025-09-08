@@ -253,6 +253,8 @@ export default {
                         route = "caja/worker/rent-pos";
                     } else if (this.config.mode_salon) {
                         route = "caja/worker/salon-pos";
+                    } else if (this.config.tap) {
+                        route = "grifo/worker/dashboard-pos";
                     } else {
                         route = "caja/worker/dashboard-pos";
                     }

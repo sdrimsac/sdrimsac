@@ -27,6 +27,7 @@ class Item extends ModelTenant
     use RegisterMovementTrait;
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'calculate_price',
         'commission',
         'init_report',
         'warranty_end_date',

@@ -1331,7 +1331,7 @@
                                                 <div class="form-group">
                                                     <el-checkbox
                                                         v-model="form.codes_family
-                            "
+                                                        "
                                                         style="color: black;"
                                                     >
                                                         Tiene Codigo de Familia
@@ -1339,6 +1339,36 @@
                                                             class="item"
                                                             effect="dark"
                                                             content="aqui cuando se activa esta opcion el producto se visualizara en el reporte de ciere de caja se podra ver los productos con estock de venta cuanto se vendio durante el dia y cuanto sobro"
+                                                            placement="top"
+                                                        >
+                                                            <i
+                                                                class="fas fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </el-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-4 col-xl-3">
+                                            <div
+                                                v-if="
+                                                    form.unit_type_id != 'ZZ' &&
+                                                        typeUser ===
+                                                            'superadmin'
+                                                "
+                                                class="col-md-4 center-el-checkbox"
+                                            >
+                                                <div class="form-group">
+                                                    <el-checkbox
+                                                        v-model="form.calculate_price
+                                                        "
+                                                        style="color: black;"
+                                                    >
+                                                        Calcular Cantidad con precio de venta
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="al activar esta opcion se podra vender por montos para calcular la cantidad se tomara el precio de venta del producto"
                                                             placement="top"
                                                         >
                                                             <i
@@ -3582,6 +3612,7 @@ export default {
                 month_day: null,
                 init_report: 0,
                 codes_family: 0,
+                calculate_price: 0,
                 commission: 0,
                 warehouse_prices: [],
                 item_warehouses: []

@@ -1,0 +1,13 @@
+{
+    "name": "Grifo",
+    "alias": "grifo",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Grifo\\Providers\\GrifoServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

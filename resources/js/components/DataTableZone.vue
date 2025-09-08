@@ -295,7 +295,7 @@
                             class="col-lg-3 col-md-3 col-sm-12 pb-2"
                             v-if="
                                 resource == 'items' ||
-                                    resource == 'item-color-size'
+                                    resource == 'item-color-size' || resource == 'caja/rooms'
                             "
                         >
                             <label
@@ -652,6 +652,7 @@ export default {
                 this.floors = floors;
                 this.all_floors = floors;
                 this.table_types = table_types || tables_types || [];
+                this.warehouses = response.data.warehouses;
             });
         }
 

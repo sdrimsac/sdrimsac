@@ -567,7 +567,7 @@ export default {
   ],
   async created() {
     this.referenciaInput = this.referencia;
-    await this.getTags();
+    //await this.getTags();
   },
   components: {
     Pinform,

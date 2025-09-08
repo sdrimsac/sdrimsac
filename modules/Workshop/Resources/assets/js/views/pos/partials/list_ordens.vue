@@ -1799,7 +1799,7 @@ export default {
             };
         });
 
-        await this.getTags();
+        //await this.getTags();
         this.getCommercialTreatments();
         this.checkCashAvailable();
     },
@@ -2579,13 +2579,13 @@ export default {
             ordensModified[this.currentLocalOrden].observation = obs;
             this.$emit("update:localOrden", ordensModified);
         },
-        async getTags() {
+        /* async getTags() {
             const response = await this.$http("../observations/records");
             if (response.status == 200) {
                 const { data } = response;
                 this.tags = data;
             }
-        },
+        }, */
         async updateCashId(id) {
             this.$emit("update:cash_id", id);
         },

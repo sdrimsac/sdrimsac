@@ -2166,28 +2166,70 @@ class SaleNoteController extends Controller
                     );
                 }
             } */
+            if (!$configuration->tap) {
+                if (isset($request->items) && is_array($request->items)) {
+                    foreach ($request->items as $it) {
+                        if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+                        $itemId = $it['item_id'];
+                        $qty = (float) $it['quantity'];
+                        if ($qty <= 0) continue;
 
-            if (isset($request->items) && is_array($request->items)) {
+                        // Verificar si ya existe el item_id
+                        $exists = DB::connection('tenant')
+                            ->table('item_sales_summary')
+                            ->where('item_id', $itemId)
+                            ->exists();
+
+                        if ($exists) {
+                            // Si ya existe -> sumar cantidad
+                            DB::connection('tenant')
+                                ->table('item_sales_summary')
+                                ->where('item_id', $itemId)
+                                ->increment('total_quantity', $qty, ['updated_at' => now()]);
+                        } else {
+                            // Si no existe -> crear registro nuevo
+                            DB::connection('tenant')
+                                ->table('item_sales_summary')
+                                ->insert([
+                                    'item_id' => $itemId,
+                                    'total_sales' => 0,
+                                    'total_quantity' => $qty,
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]);
+                        }
+                    }
+                }
+            }
+
+
+
+            /* if (isset($request->items) && is_array($request->items)) {
                 foreach ($request->items as $it) {
                     if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
+
                     $itemId = $it['item_id'];
-                    $qty = (float) $it['quantity'];
+                    //$qty = (float) str_replace(',', '.', $it['quantity']);
+                    $qty = str_replace(',', '.', $it['quantity']);
+                    $qty = (float) $qty;
                     if ($qty <= 0) continue;
 
+                    $query = DB::connection('tenant')->table('item_sales_summary');
+
                     // Verificar si ya existe el item_id
-                    $exists = DB::connection('tenant')
-                        ->table('item_sales_summary')
-                        ->where('item_id', $itemId)
-                        ->exists();
+                    $exists = $query->where('item_id', $itemId)->exists();
 
                     if ($exists) {
-                        // Si ya existe -> sumar cantidad
+                        // Usar update + DB::raw para sumar decimales
                         DB::connection('tenant')
                             ->table('item_sales_summary')
                             ->where('item_id', $itemId)
-                            ->increment('total_quantity', $qty, ['updated_at' => now()]);
+                            ->update([
+                                'total_quantity' => DB::raw("total_quantity + " . $qty),
+                                'updated_at' => now(),
+                            ]);
                     } else {
-                        // Si no existe -> crear registro nuevo
+                        // Crear registro nuevo
                         DB::connection('tenant')
                             ->table('item_sales_summary')
                             ->insert([
@@ -2199,7 +2241,7 @@ class SaleNoteController extends Controller
                             ]);
                     }
                 }
-            }
+            } */
 
             return [
                 'success' => true,

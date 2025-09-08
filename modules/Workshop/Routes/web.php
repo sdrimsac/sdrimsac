@@ -4,11 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Workshop\Http\Controllers\CashController;
 use Modules\Workshop\Http\Controllers\ExportarController;
-use Modules\Workshop\Http\Controllers\ExportController;
 use Modules\Workshop\Http\Controllers\ObservationController;
 use Modules\Workshop\Http\Controllers\WorkshopController;
 use Modules\Workshop\Http\Controllers\TipoController;
-use Modules\Workshop\Http\Controllers\SellerController;
 use Modules\Workshop\Http\Controllers\VehiculoController;
 use Modules\Workshop\Http\Controllers\OrdenController;
 use Modules\Workshop\Http\Controllers\PersonalController;
@@ -16,7 +14,6 @@ use Modules\Workshop\Http\Controllers\ServicesDetailsController;
 use Modules\Workshop\Http\Controllers\ServicesController;
 use Modules\Workshop\Http\Controllers\HistorialController;
 use Modules\Workshop\Http\Controllers\HistorialItemController;
-use Modules\Workshop\Models\ServicesDetails;
 
 Route::get('vehiculo/check_pdf/{id}_{date}', [VehiculoController::class, 'check_pdf']);
 Route::get('/vehiculo/view_pdf/{id}_{timestamp}', [VehiculoController::class, 'view_pdf']);
@@ -37,24 +34,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('observations', [ObservationController::class, 'store']);
         Route::get('observations/record/{id}', [ObservationController::class, 'record']);
         Route::get('observations/{id}', [ObservationController::class, 'active']);
-
         Route::get('/mecanico', [PersonalController::class, 'index'])->name('tenant.workshop.mecanico');
         /* Route::get('/mecanico/columns', [SellerController::class, 'columns']); */
         Route::get('mecanico/records', [PersonalController::class, 'records']);
         Route::post('mecanico', [PersonalController::class, 'store']);
         Route::get('mecanico/record/{id}', [PersonalController::class, 'record']);
         Route::delete('mecanico/{mecanico}', [PersonalController::class, 'destroy']);
-
         Route::get('/exportar', [ExportarController::class, 'index'])->name('tenant.workshop.exportar');
         Route::get('exportar/records', [ExportarController::class, 'records']);
         Route::get('exportar/tables', [ExportarController::class, 'tables']);
-        
         Route::get('/tipo', [TipoController::class, 'index'])->name('tenant.workshop.tipo');
         Route::get('tipo/records', [TipoController::class, 'records']);
         Route::post('tipo', [TipoController::class, 'store']);
         Route::get('tipo/record/{id}', [TipoController::class, 'record']);
         Route::delete('tipo/{tipo}', [TipoController::class, 'destroy']);
-
         Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('tenant.workshop.vehiculo');
         Route::get('vehiculo/records', [VehiculoController::class, 'records']);
         Route::post('vehiculo', [VehiculoController::class, 'store']);
@@ -63,15 +56,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('vehiculo/record2/{id}', [VehiculoController::class, 'record2']);
         Route::get('vehiculo/payment/{id}', [VehiculoController::class, 'record_payment']);
         Route::delete('vehiculo/{tipo}', [VehiculoController::class, 'destroy']);
-
-        
-
         Route::post('items', [VehiculoController::class, 'setItems']);
-
         Route::get('ticket-entrega/{historial_id}', [VehiculoController::class, 'generarTicketEntrega'])
             ->name('tipo.entrega');
-
-
         Route::get('/servicesdetails', [ServicesDetailsController::class, 'index'])->name('tenant.workshop.servicesdetails');
         Route::get('servicesdetails/records', [ServicesDetailsController::class, 'records']);
         Route::get('servicesdetails/records-admin', [ServicesDetailsController::class, 'recordsAdmin']);
@@ -79,34 +66,28 @@ Route::middleware(['auth'])->group(function () {
         Route::post('servicesdetails', [ServicesDetailsController::class, 'store']);
         Route::get('servicesdetails/record/{id}', [ServicesDetailsController::class, 'record']);
         Route::delete('servicesdetails/{servicesdetails}', [ServicesDetailsController::class, 'destroy']);
-
         Route::get('/services', [ServicesController::class, 'index'])->name('tenant.workshop.services');
         Route::get('services/records', [ServicesController::class, 'records']);
         Route::post('services', [ServicesController::class, 'store']);
         Route::get('services/record/{id}', [ServicesController::class, 'record']);
         Route::delete('services/{services}', [ServicesController::class, 'destroy']);
-
         Route::get('/historial', [HistorialController::class, 'index'])->name('tenant.workshop.historial');
         Route::get('historial/records', [HistorialController::class, 'records']);
         Route::post('historial', [HistorialController::class, 'store']);
         Route::get('historial/record/{id}', [HistorialController::class, 'record']);
         Route::get('historial/record2/{id}', [HistorialController::class, 'record2']);
         Route::delete('historial/{services}', [HistorialController::class, 'destroy']);
-
         Route::get('/historialItem', [HistorialItemController::class, 'index'])->name('tenant.workshop.historialItem');
         Route::get('historialItem/records', [HistorialItemController::class, 'records']);
         Route::post('historialItem', [HistorialItemController::class, 'store']);
         Route::get('historialItem/record/{id}', [HistorialItemController::class, 'record']);
         Route::delete('historialItem/{services}', [HistorialItemController::class, 'destroy']);
-
         Route::get('/customers', [WorkshopController::class, 'searchCustomers']);
         Route::get('/customer/{id}', [WorkshopController::class, 'searchCustomerById']);
 
 
         Route::prefix('worker')->group(function () {
             Route::get('/dashboard-pos', [WorkshopController::class, 'pos']);
-
-            
             Route::get('print_last_document', [OrdenController::class, 'print_last_document']);
             Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
             Route::get('expenses', [WorkshopController::class, 'expenses'])->name('workshop.expenses.index')->middleware('just.worker');;
@@ -121,8 +102,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pos/listtables', [WorkshopController::class, 'listtables']);
             Route::get('pos/selecttabled/{idOrden}', [WorkshopController::class, 'electtabled']);
             Route::get('pos/foods', [WorkshopController::class, 'foods']);
-
-
             Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
             Route::get('cash/get-final-balance/{cash_id}', [CashController::class, 'getFinalBalance']);
             Route::get('cash/columns', [CashController::class, 'columns']);
@@ -148,9 +127,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('cash/search/customers', [CashController::class, 'searchCustomers']);
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
-
             Route::get('search_customers', [RestaurantController::class, 'search_customer']);
-
             // promociones nuevo
             Route::post('pos/processPromo', 'PromocionPorItemController@processPromo');
             Route::get('pos/showCliePromos', 'PromocionPorItemController@showCliePromos');

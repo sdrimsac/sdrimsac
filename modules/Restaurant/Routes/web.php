@@ -332,6 +332,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/records', 'TableRoomController@records');
         Route::get('rooms/add_days/{id}/{days}', 'TableRoomController@addDays');
         Route::get('rooms/tables', 'TableRoomController@get_tables');
+        Route::get('rooms/tables_caja', 'TableRoomController@get_tables_caja');
         Route::get('rooms/tablas', 'TableRoomController@tables');
         Route::get('rooms/orden/{id}', 'TableRoomController@get_ordens');
         Route::get('rooms/send_to_clean/{id}', 'TableRoomController@sendToclean');

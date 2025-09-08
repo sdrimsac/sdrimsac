@@ -121,6 +121,7 @@ class JustAdmin
                 $odontologia = (bool) $config->odontologia;
                 $rent = (bool) $config->mod_renta;
                 $salon = (bool) $config->mode_salon;
+                $tap = (bool) $config->tap;
 
                 if ($config->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
@@ -156,6 +157,9 @@ class JustAdmin
                     }
                     else if($salon){
                         $redirect_to .= 'salon-pos';
+                    }
+                    else if($tap){
+                        $redirect_to .= 'grifo-pos';
                     }
                     else{
                         $redirect_to .= 'dashboard-pos';

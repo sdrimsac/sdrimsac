@@ -31,5 +31,6 @@
     "Consignment": true,
     "Billar": true,
     "Workshop": true,
-    "Dental": true
+    "Dental": true,
+    "Grifo": true
 }

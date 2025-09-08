@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'tap',
         'is_grifo',
         'favorite_items',
         'methods_arca_cash',
@@ -347,6 +348,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'tap' => 'boolean',
         'is_grifo' => 'boolean',
         'favorite_items' => 'boolean',
         'methods_arca_cash' => 'boolean',
@@ -637,6 +639,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'tap' => (bool)$this->tap,
             'is_grifo' => (bool)$this->is_grifo,
             'favorite_items' => (bool)$this->favorite_items,
             'methods_arca_cash' => (bool)$this->methods_arca_cash,

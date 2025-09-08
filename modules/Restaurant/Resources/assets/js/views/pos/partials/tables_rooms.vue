@@ -2645,7 +2645,7 @@ export default {
         async getTables() {
             try {
                 this.loading = true;
-                const response = await this.$http(this.resource);
+                const response = await this.$http('/caja/rooms/tables_caja');
                 if (response.status == 200) {
                     const {
                         reserves,

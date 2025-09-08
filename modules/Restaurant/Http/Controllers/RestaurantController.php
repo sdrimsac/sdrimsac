@@ -558,6 +558,7 @@ class RestaurantController extends Controller
             $kitchen = false;
             $waiter = false;
             $estilista = false;
+            $grifo = false;
             $cleaner = false;
             $maintenance = false;
             $collector = false;
@@ -578,7 +579,11 @@ class RestaurantController extends Controller
                 $maintenance =  true;
             } else if (strtolower($user->worker_type->description) == "estilista") {
                 $estilista = true;
-            } else {
+            } else if (strtolower($user->worker_type->description) == "grifo") {
+                $grifo = true;
+                $pos = true;
+            }
+            else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $billar = strripos(strtolower($user->area->description), "billar");
@@ -599,6 +604,7 @@ class RestaurantController extends Controller
             }
 
             $response = [
+                'grifo' => $grifo,
                 'estilista' => $estilista,
                 'mechanic' => $mechanic,
                 'area' => $area,

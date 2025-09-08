@@ -2206,6 +2206,7 @@ class TableRoomController extends Controller
             'message' => ($id) ? 'Registro actualizado con éxito' : 'Registro creado con éxito'
         ];
     }
+
     public function get_tables()
     {
         $user = auth()->user();
@@ -2290,6 +2291,7 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
+        $warehouses = Warehouse::all();
 
         $reserves = HotelRentItem::where('is_reserve', true)
             ->where('was_cancel', false)
@@ -2317,7 +2319,127 @@ class TableRoomController extends Controller
             'towers',
             'floors',
             'tables_types',
-            'status'
+            'status',
+            'warehouses',
+        );
+    }
+
+    public function get_tables_caja()
+    {
+        $user = auth()->user();
+        $configuration = Configuration::first();
+        $credit_line_hotel_limit = $configuration->credit_line_hotel_limit ?? 150;
+        $time_to_leave = $configuration->alarm_to_end;
+        $services = RoomService::where('active', true)->get();
+        $establishment_id = $user->establishment_id;
+        $tables_types = TableType::where('active', true)->get();
+        $this->checkReserves($establishment_id);
+        $tables = Table::where('is_room', true)->where(function ($query) {
+            $query->where('establishment_id', auth()->user()->establishment_id)->orWhereNull('establishment_id');
+        })
+            ->get()
+
+            ->transform(function ($row) use ($time_to_leave, $credit_line_hotel_limit) {
+                $rent_month = false;
+
+                $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
+                    ->where('was_cancel', false)
+                    ->get()
+                    ->transform(function ($rent) {
+
+                        return [
+                            'checkin_date' => Carbon::parse($rent->checkin_date)->format('d/m/Y'),
+                            'checkin_time' => $rent->checkin_time,
+
+                        ];
+                    });
+                $table_id = $row->id;
+                $counter = null;
+                $date_of_out = null;
+                if ($row->status_table_id == 2) {
+                    //obtener el más reciente hotel_rent_item
+                    $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
+                        ->where('was_cancel', false)
+                        ->orderBy('checkin_date', 'desc')
+                        ->orderBy('checkin_time', 'desc')
+                        ->first();
+                    if ($hotel_rent_item) {
+                        $rent_month = (bool) $hotel_rent_item->is_month_rent;
+                        $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
+                        $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
+
+                        $date_of_out = Carbon::parse($checkout_date_estimated . ' ' . $checkout_time_estimated);
+                        $date_to_compare  = $date_of_out->copy();
+                        $now = Carbon::now()->addMinutes($time_to_leave);
+                        if ($now->gt($date_to_compare)) {
+                            $counter = true;
+                            $date_of_out = $date_of_out
+                                ->setTimezone('America/Lima')
+                                ->format('Y-m-d H:i:s');
+                        }
+                    }
+                }
+
+                return [
+                    'credit_line_hotel_limit' => $credit_line_hotel_limit,
+                    'has_frigobar' => $row->has_frigobar,
+                    'rent_month' => $rent_month,
+                    'date_of_out' => $date_of_out,
+                    'counter' => $counter,
+                    'reserves' => $reserves,
+                    'cleaning_start_date' => $row->cleaning_start_date,
+                    'is_cleaning' => $row->is_cleaning,
+                    'is_room' => $row->is_room,
+                    'price'            => $row->price,
+                    'id'                => $row->id,
+                    'number'            => $row->number,
+                    'floor_id'          => $row->floor_id,
+                    'area'              => $row->area,
+                    'type'              => $row->type,
+                    'floor'            =>  $row->floor,
+                    'status_table'     => $row->status_table,
+                    'status_table_id'     => $row->status_table_id,
+                    'establishment'     => $row->establishment ? $row->establishment->description : null,
+                    'establishment_id'  => $row->establishment_id,
+                    'description'      => $row->description,
+
+                ];
+            });
+        $towers = Tower::where('active', true)
+            ->where('establishment_id', auth()->user()->establishment_id)
+            ->get();
+        $floors = Floor::where('active', true)->get();
+        $status = StatusTable::where('active', true)->get();
+        $warehouses = Warehouse::all();
+
+        $reserves = HotelRentItem::where('is_reserve', true)
+            ->where('was_cancel', false)
+            ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
+            ->get()
+            ->transform(function ($rent) {
+                return [
+                    'checkin_date' => Carbon::parse($rent->checkin_date)->format('d/m/Y'),
+                    'checkin_time' => $rent->checkin_time,
+                    'customer_name' => $rent->hotel_rent->customer->name,
+                    'customer_number' => $rent->hotel_rent->customer->number,
+                    'room_number' => $rent->table->number,
+                    'room_state' => $rent->table->status_table->description,
+                    'room_state_id' => $rent->table->status_table_id,
+                    'cleaning' => $rent->table->is_cleaning,
+                    'tower' => $rent->table->floor->tower->name,
+                    'id' => $rent->id,
+                    'hotel_rent_id' => $rent->hotel_rent_id,
+                ];
+            });
+        return compact(
+            'services',
+            'reserves',
+            'tables',
+            'towers',
+            'floors',
+            'tables_types',
+            'status',
+            'warehouses',
         );
     }
     function transformCustomer($row)
@@ -2430,19 +2552,14 @@ class TableRoomController extends Controller
         $floor_id = $request->input('floor_id');
         $tower_id = $request->input('tower_id');
         $table_type_id = $request->input('table_type_id');
+        $establishment_id = $request->input('warehouse_id');
 
         $records = Table::where('is_room', true);
 
-        /* if ($column && $value) {
-            $records = $records->where($column, 'like', "%{$value}%");
-        } */
         if ($column && $value) {
             $records->where($column, 'like', "%{$value}%");
         }
 
-        /* if ($floor_id) {
-            $records = $records->where('floor_id', $floor_id);
-        } */
         if ($floor_id) {
             $records->where('floor_id', $floor_id);
         }
@@ -2451,19 +2568,13 @@ class TableRoomController extends Controller
                 $q->where('tower_id', $tower_id);
             });
         }
-
-        /* if ($tower_id) {
-            $records = $records->whereHas('floor', function ($q) use ($tower_id) {
-                $q->where('tower_id', $tower_id);
-            });
-        } */
+        if($establishment_id){
+            $records->where('establishment_id', $establishment_id);
+        }
+       
         if ($table_type_id) {
             $records->where('table_type_id', $table_type_id);
         }
-
-        /* f ($table_type_id) {
-            $records = $records->where('table_type_id', $table_type_id);
-        } */
 
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
     }

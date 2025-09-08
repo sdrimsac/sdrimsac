@@ -5235,46 +5235,47 @@ export default {
         },
 
         //aqui modificamos el precio
-        /* update_price(index, sale_unit_price) {
+        update_price(index, sale_unit_price) {
             let localOrden_update = this.localOrden;
-        
-            if (this.configuration.is_grifo){
-                localOrden_update[index].food.quantity = sale_unit_price / localOrden_update[index].food.price;
+            /* if (this.configuration.is_grifo) {
+                localOrden_update[index].food.quantity =
+                    sale_unit_price / localOrden_update[index].food.price;
                 console.log(
-                "ver el precio modificado",
-                localOrden_update[index].food.quantity
-            );
-
-            } else {
+                    "ver el precio modificado",
+                    localOrden_update[index].food.quantity
+                );
+            } else { */
                 localOrden_update[index].food.sale_unit_price = sale_unit_price;
-
-            }
+            /* } */
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();
+        },
+
+        /* update_price(index, sale_unit_price) {
+            // Clonar para mantener reactividad
+            const items = [...this.localOrden];
+            const item = { ...items[index] };
+
+            if (this.configuration.is_grifo) {
+                const unit = Number(item.food.price) || 0;
+                const total =
+                    sale_unit_price != null
+                        ? Number(sale_unit_price)
+                        : Number(item.price) || 0;
+                const newQty = unit > 0 ? Number((total / unit).toFixed(3)) : 0;
+                item.quantity = newQty;
+            } else {
+                const newPrice = Number(sale_unit_price);
+                if (!isNaN(newPrice)) {
+                    item.price = newPrice; 
+                    if (item.food) item.food.sale_unit_price = newPrice;
+                }
+            }
+
+            items[index] = item;
+            this.$emit("update:localOrden", items);
+            this.calculateTotal();
         }, */
-
-        update_price(index, sale_unit_price) {
-  // Clonar para mantener reactividad
-  const items = [...this.localOrden];
-  const item = { ...items[index] };
-
-  if (this.configuration.is_grifo) {
-    const unit = Number(item.food.price) || 0; // precio unitario
-    const total = sale_unit_price != null ? Number(sale_unit_price) : Number(item.price) || 0; // importe ingresado
-    const newQty = unit > 0 ? Number((total / unit).toFixed(3)) : 0;
-    item.quantity = newQty; // actualizar la cantidad visible
-  } else {
-    const newPrice = Number(sale_unit_price);
-    if (!isNaN(newPrice)) {
-      item.price = newPrice; // precio de la línea usado en el total
-      if (item.food) item.food.sale_unit_price = newPrice; // opcional, si sincronizas con backend
-    }
-  }
-
-  items[index] = item;
-  this.$emit('update:localOrden', items);
-  this.calculateTotal();
-},
 
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {

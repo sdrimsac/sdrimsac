@@ -124,7 +124,9 @@ class FoodCollection extends ResourceCollection
                 }
             }
             $weight = $item->weight;
+            $calculate_price = $item->calculate_price;
             return [
+                'calculate_price' => $calculate_price,
                 'weight' => $weight,
                 'color_size' => $color_size,
                 'categoria_madera_item' => $categoria_madera_item,

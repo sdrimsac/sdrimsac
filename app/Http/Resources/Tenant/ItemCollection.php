@@ -123,6 +123,7 @@ class ItemCollection extends ResourceCollection
             $image_url_small = $this->getImageUrl($row->image_small, 'items');
             
             return [
+                'calculate_price' => (bool)$row->calculate_price,
                 'codes_family' => $row->codes_family,
                 'commission' => $row->commission,
                 'last_register' => $last_register,
