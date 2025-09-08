@@ -157,7 +157,7 @@ class Table extends ModelTenant
         return $this->belongsTo(Floor::class);
     }
 
-    public function sendMessageDesocupied($word = "Anulada")
+    public function sendMessageDesocupied($word = "desocupada")
     {
         if ($this->is_room) {
             $number = $this->number;

@@ -1580,6 +1580,7 @@ class TableRoomController extends Controller
         ];
     }
     public function tablesCloseToLeave() {}
+
     public function tablesToLeave()
     {
         $configuration = Configuration::first();
@@ -2115,7 +2116,7 @@ class TableRoomController extends Controller
 
         $table = $hotel_rent_item->table;
         $table->status_table_id = 1;
-        $table->sendMessageDesocupied("cancelada");
+        $table->sendMessageDesocupied("anulada");
         $table->save();
 
         $items = $hotel_rent->items;
