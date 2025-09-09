@@ -407,6 +407,7 @@ export default {
             this.difference = (this.totalSales - this.final_balance).toFixed(2);
         },
         async clickCloseCash() {
+           
             const result = await Swal.fire({
                 title: "Cerrar caja",
                 text:
@@ -423,6 +424,7 @@ export default {
                 await this.createRegister({}, () => {});
             }
         },
+        
         async dateclosed() {
             console.log("dateclosed");
             this.totalCoins = 0;
@@ -477,10 +479,17 @@ export default {
                         this.$emit("updateCashId", null);
                     }
                 } else {
-                    console.log(response);
+                    const msg = response.data.message || "No se pudo cerrar la caja";
+                    if (this.$showSAlert) this.$showSAlert("ALERTA", msg, "warning");
                 }
             } catch (error) {
-                console.log(error);
+                // Manejar validación de habitaciones vencidas desde el backend (422)
+                const msg =
+                    (error && error.response && error.response.data && error.response.data.message)
+                        ? error.response.data.message
+                        : "Ocurrió un error al cerrar la caja";
+                if (this.$showSAlert) this.$showSAlert("ALERTA", msg, "warning");
+                else await Swal.fire({ title: "Alerta", text: msg, icon: "warning" });
             } finally {
                 instance.confirmButtonLoading = false;
                 instance.confirmButtonText = "Iniciar prueba";

@@ -276,7 +276,11 @@
                 <div
                     class="row h5 text-white col-12"
                     style="padding-left: 25px"
-                    v-if="clientTableData.table && configuration.restaurant && configuration.hotels"
+                    v-if="
+                        clientTableData.table &&
+                            configuration.restaurant &&
+                            configuration.hotels
+                    "
                 >
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
@@ -701,7 +705,8 @@
                                     localOrden.length != 0 &&
                                     !isSeller &&
                                     (configuration.restaurant ||
-                                        configuration.modo_billar || configuration.hotels)
+                                        configuration.modo_billar ||
+                                        configuration.hotels)
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -5076,7 +5081,60 @@ export default {
 
                     break;
                 case 3:
-                    if (this.cash_id) {
+                    // Cerrar caja: solo abrir el modal cuando TODAS las validaciones pasen.
+                    // Si se muestra alguna alerta o confirmación, NO abrir el modal de cierre.
+                    if (!this.cash_id) {
+                        this.showDialogCash = true;
+                        break;
+                    }
+
+                    // Validación de órdenes pendientes
+                    if (this.configuration.ordens_cash) {
+                        const data = await this.checkTables();
+                        if (data && data.success) {
+                            // Hay órdenes pendientes: mostrar confirmación y salir sin abrir el modal
+                            const { ordenes, total, items } = data;
+                            try {
+                                await this.$confirm(
+                                    `Existen ${ordenes} ordenes pendientes por cobrar, con un total de ${total} soles. Desea emitir una nota de venta por el total?`,
+                                    "Cerrar Caja",
+                                    {
+                                        confirmButtonText: "Emitir",
+                                        cancelButtonText: "Cerrar",
+                                        type: "warning"
+                                    }
+                                );
+                                this.$emit("sendOrdensAllTables", items);
+                            } catch (e) {
+                                // Usuario canceló: no hacer nada más
+                            }
+                            break; // No abrir modal
+                        }
+                        // Si no hay pendientes, continuar con las siguientes validaciones
+                    }
+
+                    // Validación de hoteles
+                    if (this.configuration.hotels) {
+                        const expiredCount = await this.checkExpiredRooms();
+                        if (expiredCount > 0) {
+                            const msg = `Tiene ${expiredCount} habitación(es) vencida(s). Debe liberar las habitaciones vencidas para poder cerrar la caja.`;
+                            if (this.$showSAlert)
+                                this.$showSAlert("ALERTA", msg, "warning");
+                            else
+                                await Swal.fire({
+                                    title: "Alerta",
+                                    text: msg,
+                                    icon: "warning"
+                                });
+                            break; // No abrir modal
+                        }
+                    }
+
+                    // Todas las validaciones pasaron: abrir modal para cerrar caja
+                    this.showDialogClose = true;
+                    break;
+
+                    /* if (this.cash_id) {
                         if (this.configuration.ordens_cash) {
                             let data = await this.checkTables();
                             if (!data.success) {
@@ -5100,10 +5158,23 @@ export default {
                         } else {
                             this.showDialogClose = true;
                         }
+
+                        if (this.configuration.hotels) {
+                            const expiredCount = await this.checkExpiredRooms();
+                            if (expiredCount > 0) {
+                                const msg = `Tiene ${expiredCount} habitación(es) vencida(s). Debe liberar las habitaciones vencidas para poder cerrar la caja.`;
+                                if (this.$showSAlert) this.$showSAlert("ALERTA", msg, "warning");
+                                else await Swal.fire({ title: "Alerta", text: msg, icon: "warning" });
+                                return;
+                            }
+                            
+                        } else {
+                            this.showDialogClose = true;
+                        }
+
                     } else {
                         this.showDialogCash = true;
-                    }
-                    break;
+                    } */
                 case 5:
                     if (!this.cash_id) {
                         this.$toast.error("Abra una caja");
@@ -5234,6 +5305,21 @@ export default {
             this.$emit("update:localOrden", []);
         },
 
+        async checkExpiredRooms() {
+            try {
+                const { data, status } = await this.$http.get(
+                    `/caja/rooms/tables_expired`
+                );
+                if (status === 200 && data && data.success) {
+                    return (
+                        data.count ??
+                        (Array.isArray(data.data) ? data.data.length : 0)
+                    );
+                }
+            } catch (e) {}
+            return 0;
+        },
+
         //aqui modificamos el precio
         update_price(index, sale_unit_price) {
             let localOrden_update = this.localOrden;
@@ -5245,7 +5331,7 @@ export default {
                     localOrden_update[index].food.quantity
                 );
             } else { */
-                localOrden_update[index].food.sale_unit_price = sale_unit_price;
+            localOrden_update[index].food.sale_unit_price = sale_unit_price;
             /* } */
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();

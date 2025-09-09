@@ -1620,6 +1620,75 @@ class TableRoomController extends Controller
             'data' => $tablesLeave
         ];
     }
+
+    /**
+     * Habitaciones vencidas: checkout_date_estimated/checkout_time_estimated ya pasaron,
+     * y siguen activas y sin cancelar. status_table_id distinto de disponible.
+     */
+    /* public function tablesExpired()
+    {
+        $nowDate = Carbon::now()->format('Y-m-d');
+        $nowTime = Carbon::now()->format('H:i:s');
+
+        $tablesExpired = Table::with(['hotel_rent_items' => function ($query) use ($nowDate, $nowTime) {
+            $query->where(function ($query) use ($nowDate, $nowTime) {
+                $query->where('checkout_date_estimated', '<', $nowDate)
+                    ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                        $query->where('checkout_date_estimated', '=', $nowDate)
+                            ->where('checkout_time_estimated', '<', $nowTime);
+                    });
+            })
+                ->where('active', true)
+                ->where('was_cancel', 0);
+        }])
+            ->whereHas('hotel_rent_items', function ($query) use ($nowDate, $nowTime) {
+                $query->where(function ($query) use ($nowDate, $nowTime) {
+                    $query->where('checkout_date_estimated', '<', $nowDate)
+                        ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                            $query->where('checkout_date_estimated', '=', $nowDate)
+                                ->where('checkout_time_estimated', '<', $nowTime);
+                        });
+                })
+                    ->where('active', true)
+                    ->where('was_cancel', 0);
+            })
+            ->where('is_room', true)
+            ->where('status_table_id', '<>', 1)
+            ->get();
+
+        return [
+            'success' => true,
+            'data' => $tablesExpired,
+            'count' => $tablesExpired->count(),
+        ];
+    } */
+
+    public function tablesExpired()
+    {
+        $nowDate = Carbon::now()->format('Y-m-d');
+        $nowTime = Carbon::now()->format('H:i:s');
+
+        $count = Table::whereHas('hotel_rent_items', function ($query) use ($nowDate, $nowTime) {
+            $query->where(function ($query) use ($nowDate, $nowTime) {
+                $query->where('checkout_date_estimated', '<', $nowDate)
+                    ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                        $query->where('checkout_date_estimated', '=', $nowDate)
+                            ->where('checkout_time_estimated', '<', $nowTime);
+                    });
+            })
+                ->where('active', true)
+                ->where('was_cancel', 0);
+        })
+            ->where('is_room', true)
+            ->where('status_table_id', '<>', 1)
+            ->count();
+
+        return [
+            'success' => true,
+            'count' => $count,
+        ];
+    }
+
     public function tablesToClean()
     {
         $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
@@ -2571,10 +2640,10 @@ class TableRoomController extends Controller
                 $q->where('tower_id', $tower_id);
             });
         }
-        if($establishment_id){
+        if ($establishment_id) {
             $records->where('establishment_id', $establishment_id);
         }
-       
+
         if ($table_type_id) {
             $records->where('table_type_id', $table_type_id);
         }

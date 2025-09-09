@@ -320,6 +320,8 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
+        // Habitaciones vencidas (checkout estimado pasado y aún activas)
+        Route::get('rooms/tables_expired', 'TableRoomController@tablesExpired');
         Route::get('rooms/check', 'TableRoomController@check');
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
