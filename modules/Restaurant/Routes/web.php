@@ -320,7 +320,6 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
-
         Route::get('rooms/check', 'TableRoomController@check');
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
@@ -340,7 +339,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/send_to_avaible/{id}', 'TableRoomController@sendToAvaible');
         Route::get('rooms/ordenById/{id}', 'TableRoomController@ordenById');
         Route::post('rooms/store/{type}', 'TableRoomController@storeType');
-        Route::get('rooms/cancel/{id}', 'TableRoomController@cancelRoom');
+        Route::post('rooms/cancel/{id}', 'TableRoomController@cancelRoom');
         Route::post('rooms/check_reserve', 'TableRoomController@check_reserve');
         Route::get('rooms/change_room/{to}/{from}', 'TableRoomController@changeRoom');
         Route::get('rooms/record/{id}', 'TableRoomController@record');

@@ -2097,15 +2097,17 @@ class TableRoomController extends Controller
         ];
     } */
 
-    public function cancelRoom($id)
+    public function cancelRoom($id, Request $request)
     {
+        $motivo = $request->input('motivo');
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent = $hotel_rent_item->hotel_rent;
 
-        $hotel_rent_item->checkout_date = date('Y-m-d');  // Fecha actual
+        $hotel_rent_item->checkout_date = date('Y-m-d');
         $hotel_rent_item->checkout_time = date('H:i:s');
 
         $hotel_rent_item->was_cancel = true;
+        $hotel_rent_item->motive_anulate = $motivo;
         $hotel_rent_item->save();
 
         DB::connection('tenant')

@@ -1997,22 +1997,29 @@ export default {
                 }
             } catch (e) {}
         },
-        async cancelRoom() {
+        
+        /* async cancelRoom() {
             try {
                 this.loading = true;
                 const result = await Swal.fire({
                     title: "¿Está seguro de anular la habitación?",
                     icon: "warning",
+                    input: "textarea",
+                    inputLabel: "Ingrese motivo de anulación",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
                     showCancelButton: true,
                     confirmButtonText: "Aceptar",
                     cancelButtonText: "Cancelar",
                     reverseButtons: true
                 });
+
                 if (!result.isConfirmed) {
                     this.loading = false;
                     return;
                 }
-                // Solo si acepta, lanzar la petición
+
                 const response = await this.$http(
                     `/caja/rooms/cancel/${this.currentRoom.id}`
                 );
@@ -2039,7 +2046,69 @@ export default {
             } finally {
                 this.loading = false;
             }
+        }, */
+
+        async cancelRoom() {
+            try {
+                this.loading = true;
+                const result = await Swal.fire({
+                    title: "¿Está seguro de anular la habitación?",
+                    icon: "warning",
+                    input: "textarea",
+                    inputLabel: "Ingrese motivo de anulación",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    inputValidator: value => {
+                        if (!value) {
+                            return "Debe ingresar un motivo de anulación";
+                        }
+                    }
+                });
+
+                if (!result.isConfirmed) {
+                    this.loading = false;
+                    return;
+                }
+
+                // aquí tomas el motivo
+                const motivo = result.value;
+
+                // Enviar el motivo al backend (POST recomendado)
+                const response = await this.$http.post(
+                    `/caja/rooms/cancel/${this.currentRoom.id}`,
+                    { motivo }
+                );
+
+                if (response.status == 200) {
+                    await Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Habitación cancelada",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    await this.getTables();
+                    setTimeout(() => {
+                        this.resetToListView();
+                        console.log("resetToListView ejecutado", {
+                            viewingRoom: this.viewingRoom,
+                            currentRoom: this.currentRoom,
+                            currentTable: this.currentTable
+                        });
+                    }, 150);
+                }
+            } catch (e) {
+                this.$toast.error("Error al cancelar la habitación");
+            } finally {
+                this.loading = false;
+            }
         },
+
         resetToListView() {
             this.titleDialog = this.titleDialogOriginal;
             this.viewingRoom = false;
@@ -2145,7 +2214,6 @@ export default {
                 this.close2();
             }
         },
-
 
         async addDays() {
             await this.$http(
@@ -2518,7 +2586,7 @@ export default {
                     );
 
                     //if (response.status == 200) {
-                     //   this.getTables();
+                    //   this.getTables();
                     //}
                     if (response.status == 200) {
                         if (response.data && response.data.success === false) {
@@ -2645,7 +2713,7 @@ export default {
         async getTables() {
             try {
                 this.loading = true;
-                const response = await this.$http('/caja/rooms/tables_caja');
+                const response = await this.$http("/caja/rooms/tables_caja");
                 if (response.status == 200) {
                     const {
                         reserves,
