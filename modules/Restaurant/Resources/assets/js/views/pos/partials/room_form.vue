@@ -244,6 +244,7 @@
                                 <div class="row">
                                     <div
                                         class="col-6 d-flex align-items-center"
+                                        v-if="room.month_price > 0"
                                     >
                                         <el-checkbox
                                             @change="changeMonthRent(room)"
@@ -288,7 +289,7 @@
                                         @change="
                                             filterFloors(room.tower_id, idx)
                                         "
-                                        :disabled="!form.customer_id"
+                                        :disabled="true"
                                     >
                                         <el-option
                                             v-for="option in towers"
@@ -344,13 +345,13 @@
                             <label for="quantity_persons">
                                 # Ocupantes
                                 <el-tooltip
-                                    content="Máximo 2 Ocupantes por habitación"
+                                    content="Puede fijar la cantidad o agregar ocupantes por nombre"
                                     placement="top"
                                     effect="dark"
                                 >
                                     <i
                                         class="fas fa-info-circle ml-1"
-                                        style="color: #ff4d4f;"
+                                        style="color: #409EFF;"
                                     ></i>
                                 </el-tooltip>
                             </label>
@@ -358,31 +359,27 @@
                                 v-model.number="room.quantity_persons"
                                 type="number"
                                 :min="1"
-                                :max="2"
                                 style="width: 100%;"
                                 size="small"
                                 :disabled="!form.customer_id"
                                 @input="
                                     val => {
-                                        if (val < 1) room.quantity_persons = 1;
-                                        else if (val > 2)
-                                            room.quantity_persons = 2;
+                                        // Solo enteros >= 1
+                                        let n = parseInt(val, 10);
+                                        if (isNaN(n) || n < 1) n = 1;
+                                        // Debe ser al menos el número de ocupantes con nombre
+                                        if (room.guesses && n < room.guesses.length) {
+                                            n = room.guesses.length;
+                                        }
+                                        room.quantity_persons = n;
                                     }
                                 "
                                 @keydown.native="
                                     e => {
-                                        // Permitir solo 1, 2, backspace, tab, flechas, delete
-                                        if (
-                                            ![
-                                                '1',
-                                                '2',
-                                                'Backspace',
-                                                'Tab',
-                                                'ArrowLeft',
-                                                'ArrowRight',
-                                                'Delete'
-                                            ].includes(e.key)
-                                        ) {
+                                        // Permitir dígitos, backspace, tab, flechas, delete
+                                        const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete'];
+                                        if (allowed.includes(e.key)) return;
+                                        if (!/^[0-9]$/.test(e.key)) {
                                             e.preventDefault();
                                         }
                                     }
@@ -883,6 +880,50 @@ export default {
         };
     },
     methods: {
+        // Obtiene un número seguro de un valor (prop numérica o dígitos en string)
+        _toNum(v) {
+            if (v === null || v === undefined) return NaN;
+            if (typeof v === "number") return v;
+            const m = String(v).match(/-?\d+/);
+            return m ? Number(m[0]) : NaN;
+        },
+        // Ordena pisos de una torre por claves conocidas o por dígitos en name; fallback por id
+        getOrderedFloorsForTower(towerId) {
+            const keys = ["order", "position", "level", "number", "floor_number", "sort", "index"];
+            const list = this.all_floors.filter(f => f.tower_id == towerId);
+            return list.sort((a, b) => {
+                let av = NaN, bv = NaN;
+                for (const k of keys) {
+                    if (k in a && k in b) {
+                        av = this._toNum(a[k]);
+                        bv = this._toNum(b[k]);
+                        if (!Number.isNaN(av) && !Number.isNaN(bv)) break;
+                    }
+                }
+                if (Number.isNaN(av) || Number.isNaN(bv)) {
+                    av = this._toNum(a.name);
+                    bv = this._toNum(b.name);
+                }
+                if (Number.isNaN(av) || Number.isNaN(bv)) {
+                    av = this._toNum(a.id);
+                    bv = this._toNum(b.id);
+                }
+                return av - bv;
+            });
+        },
+        // Ordena mesas (tables) por 'number' si es numérico; si no, por id
+        getOrderedTablesForFloor(floorId) {
+            const list = this.all_tables.filter(t => t.floor_id == floorId);
+            return list.sort((a, b) => {
+                let av = this._toNum(a.number);
+                let bv = this._toNum(b.number);
+                if (Number.isNaN(av) || Number.isNaN(bv)) {
+                    av = this._toNum(a.id);
+                    bv = this._toNum(b.id);
+                }
+                return av - bv;
+            });
+        },
         onAdvancesInput(room, val) {
             // Normaliza entradas vacías o no numéricas a 0
             if (val === '' || val === null || val === undefined) {
@@ -906,10 +947,10 @@ export default {
         },
         removeGuess(room, idx) {
             room.guesses.splice(idx, 1);
-            room.quantity_persons = room.guesses.length;
-            if (room.quantity_persons == 0) {
-                room.quantity_persons = 1;
-            }
+            // La cantidad mínima es 1 + ocupantes con nombre
+            const base = 1 + (room.guesses ? room.guesses.length : 0);
+            // No reducir por debajo del mínimo; mantener si el usuario fijó un número mayor
+            room.quantity_persons = Math.max(base, room.quantity_persons || 1);
             // this.calculateTotal();
         },
         discountService(room) {
@@ -941,9 +982,15 @@ export default {
             await this.checkDateReserve(room);
             this.calculateTotal();
         },
-        async changeTable(room) {
+        async changeTable(room, showAvailableMsg = false) {
             this.textLoading = "Verificando reserva...";
-            await this.checkDateReserve(room);
+            // Sincroniza month_price según la mesa seleccionada
+            const _table = this.all_tables.find(t => t.id == room.table_id);
+            room.month_price = Number((_table && _table.month_price) || 0);
+                if (!room.month_price) {
+                    room.is_month_rent = false;
+                }
+            await this.checkDateReserve(room, showAvailableMsg);
             this.showServices(room);
             this.calculateTotal();
         },
@@ -1008,14 +1055,39 @@ export default {
             this.calculateTotal();
         },
         filterFloors(tower_id, idx) {
-            this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
-            this.rooms[idx].floor_id = null;
+            // Filtra y ordena los pisos por torre seleccionada
+            const towerFloors = this.getOrderedFloorsForTower(tower_id);
+            this.floors = towerFloors;
+
+            // Mantiene el piso actual si sigue siendo válido; de lo contrario, selecciona el primero
+            const currentFloorId = this.rooms[idx].floor_id;
+            const hasValidCurrent = towerFloors.some(
+                f => f.id == currentFloorId
+            );
+            if (!hasValidCurrent) {
+                this.rooms[idx].floor_id = towerFloors.length ? towerFloors[0].id : null;
+            }
+
+            // Al cambiar de torre, limpia la mesa seleccionada y actualiza el listado de mesas según el piso vigente
             this.rooms[idx].table_id = null;
+            // Resetear opción mensual al cambiar de torre/piso
+            this.rooms[idx].month_price = 0;
+            this.rooms[idx].is_month_rent = false;
+            if (this.rooms[idx].floor_id) {
+                this.filterTables(this.rooms[idx].floor_id, idx);
+            } else {
+                this.tables = [];
+            }
+
             this.calculateTotal();
         },
         filterTables(floor_id, idx) {
-            this.tables = this.all_tables.filter(t => t.floor_id == floor_id);
+            // Filtrar y ordenar mesas por número/id
+            this.tables = this.getOrderedTablesForFloor(floor_id);
             this.rooms[idx].table_id = null;
+            // Al limpiar la mesa seleccionada también ocultar opción mensual
+            this.rooms[idx].month_price = 0;
+                this.rooms[idx].is_month_rent = false;
             this.calculateTotal();
         },
         initForm() {
@@ -1115,11 +1187,12 @@ export default {
                 c => c.id == this.rooms[idx].guess_id
             );
             this.rooms[idx].guesses.push(customer);
-            if (this.rooms[idx].guesses) {
-                this.rooms[idx].quantity_persons = this.rooms[
-                    idx
-                ].guesses.length;
-            }
+            // Si se agregan nombres, la cantidad mínima pasa a ser 1 + #nombres
+            const base = 1 + this.rooms[idx].guesses.length;
+            this.rooms[idx].quantity_persons = Math.max(
+                base,
+                this.rooms[idx].quantity_persons || 1
+            );
             this.rooms[idx].guess_id = null;
         },
         checkRoomIsExist({ tower_id, floor_id, table_id }) {
@@ -1144,6 +1217,7 @@ export default {
                 total: 0,
                 original_total: 0,
                 is_month_rent: false,
+                month_price: 0,
                 advances: 0,
                 guess_id: null,
                 tower_id,
@@ -1163,6 +1237,9 @@ export default {
                 room.has_frigobar = table.has_frigobar;
                 room.credit_line = this.credit_line_limit;
             }
+            if (table) {
+                room.month_price = Number(table.month_price || 0);
+            }
             this.rooms.push(room);
             this.calculateTotal();
             // if(!this.checkRoomIsExist(room)){
@@ -1176,6 +1253,35 @@ export default {
         },
         addEmptyRoom() {
             this.addRoom({ tower_id: null, floor_id: null, table_id: null });
+
+            // Autoseleccionar torre (y por consecuencia el piso por defecto de esa torre)
+            const idx = this.rooms.length - 1;
+            if (this.all_towers && this.all_towers.length > 0) {
+                const defaultTowerId = this.all_towers[0].id;
+                // Asegura que el combo de torres esté poblado
+                this.towers = this.all_towers;
+                // Asignar torre y refrescar pisos/mesas con lógica centralizada
+                this.rooms[idx].tower_id = defaultTowerId;
+                // Forzar actualización inmediata por si el componente no emite change al setear programáticamente
+                this.filterFloors(defaultTowerId, idx);
+
+                // Asegura que el primer piso quede seleccionado y las mesas se carguen
+                const towerFloors = this.getOrderedFloorsForTower(defaultTowerId);
+                if (towerFloors.length > 0) {
+                    const defaultFloorId = towerFloors[0].id;
+                    this.rooms[idx].floor_id = this.rooms[idx].floor_id || defaultFloorId;
+                    this.tables = this.getOrderedTablesForFloor(this.rooms[idx].floor_id);
+                    // Selecciona automáticamente la primera mesa disponible
+                    if (this.tables.length > 0) {
+                        this.rooms[idx].table_id = this.tables[0].id;
+                        // Inicializa servicios/totales sin mostrar alerta de disponibilidad
+                        this.changeTable(this.rooms[idx], true);
+                    }
+                } else {
+                    this.tables = [];
+                }
+            }
+
             if (this.form.customer_id && this.rooms.length > 1) {
                 this.showPackInput = true;
             }
@@ -1200,10 +1306,10 @@ export default {
             this.all_services = services;
             this.credit_line_limit = credit_line_hotel_limit || 150;
 
-            ///
-            // this.towers = towers;
-            // this.floors = floors;
-            // this.tables = tables;
+            // Inicializar opciones visibles
+            this.towers = towers;
+            this.floors = [];
+            this.tables = [];
         },
         createClient(idx = null) {
             this.idxRoom = idx;
@@ -1411,6 +1517,10 @@ export default {
                 }
                 let [room] = this.rooms;
                 this.showServices(room);
+            } else {
+                // Sin mesa preseleccionada: crear una habitación por defecto
+                // y autoseleccionar torre/piso para que se carguen las mesas
+                this.addEmptyRoom();
             }
             this.loading = false;
             // Lanzar alerta si no hay cliente seleccionado
@@ -1470,11 +1580,15 @@ export default {
                 Swal.fire("seleccionar  un huesped o Registrar uno nuevo");
                 return;
             }
-            if (room.guesses.length >= 2) {
-                Swal.fire("Máximo puedo agregar 2 ocupantes por habitación");
+            // Evitar duplicados por ID
+            if (room.guesses && room.guesses.some(g => g.id == room.guess_id)) {
+                Swal.fire("El ocupante ya fue agregado");
                 return;
             }
             this.addGuess(idx);
+            // Asegurar consistencia después de agregar
+            const base = 1 + (room.guesses ? room.guesses.length : 0);
+            room.quantity_persons = Math.max(base, room.quantity_persons || 1);
         }
     }
 };

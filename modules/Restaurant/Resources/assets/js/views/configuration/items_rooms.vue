@@ -17,6 +17,17 @@
                     placeholder="Número/Descripción"
                 ></el-input>
             </div>
+            <div class="col-12" v-if="type == 'towers'">
+                <label for="name">Almacen </label>
+                <el-select v-model="form.warehouse_id" filterable clearable>
+                    <el-option
+                        v-for="warehouse in warehouses"
+                        :key="warehouse.id"
+                        :label="warehouse.description"
+                        :value="warehouse.id"
+                    ></el-option>
+                </el-select>
+            </div>
             <div class="col-12" v-if="type == 'table_types'">
                 <label for="price">Precio</label>
                 <el-input
@@ -137,6 +148,7 @@ export default {
             all_towers: [],
             all_floors: [],
             all_table_types: [],
+            warehouses: [],
             floors: [],
             form: {
                 id: null,
@@ -238,6 +250,7 @@ export default {
                 this.all_towers = towers;
                 this.all_floors = floors;
                 this.all_table_types = table_types;
+                this.warehouses = response.data.warehouses;
                 let [tower] = towers;
                 this.floors = this.all_floors.filter(
                     floor => floor.tower_id == tower.id

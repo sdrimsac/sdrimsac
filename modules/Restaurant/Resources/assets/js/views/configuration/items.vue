@@ -248,7 +248,7 @@
                 <create-form-massive :types="types" :showDialog.sync="showDialogMassive" :areas="areas" :type="type"
                     :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :zones="zones"
                     :establishments="establishments"></create-form-massive>
-                <items-rooms :showDialog.sync="showItems" :type="typeItem"></items-rooms>
+                <items-rooms :showDialog.sync="showItems" :type="typeItem" :warehouses="warehouses"></items-rooms>
                 <items-tables :showDialog.sync="showItemsTables" :type="typeItem"></items-tables>
                 <promotions :showDialog.sync="showPromotions"></promotions>
                 <insumos :showDialog.sync="showInsumos"></insumos>.
@@ -455,16 +455,15 @@ export default {
             });
             }
 
-            if (this.type == "caja/areas"){
+            /* if (this.type == "caja/areas"){ */
                 this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
                     this.areas = response.data.data;
                     console.log("rfrsfsdf", this.areas);
                 });
-
-            }
-            if (this.type == "caja/status-tables") {
+            /* } */
+            /* if (this.type == "caja/status-tables") { */
                 this.$http
                 .get(
                     `/caja/status-tables/records?column=description&page=1&value`
@@ -473,7 +472,7 @@ export default {
                     this.statusTable = response.data.data;
                 });
 
-            }
+            /* } */
             
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;

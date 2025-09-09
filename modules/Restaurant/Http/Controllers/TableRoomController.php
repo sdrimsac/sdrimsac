@@ -790,16 +790,19 @@ class TableRoomController extends Controller
     } */
     public function cleaned($id)
     {
-        // Buscar el registro de mantenimiento con status = 3ta
-        $maintenance = TableUserMaintenance::where('table_id', $id)
-            ->where('status', 3)
-            ->first();
+        $configuration = Configuration::first();
+        if ($configuration->cleaning_tower) {
 
-        if (!$maintenance) {
-            return [
-                'success' => false,
-                'message' => 'No se puede  marcar como limpiada la habitación. el personal de limpieza debe confirmar que si realizo el trabajo atraves de su usuario asignado.'
-            ];
+            $maintenance = TableUserMaintenance::where('table_id', $id)
+                ->where('status', 3)
+                ->first();
+
+            if (!$maintenance) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede  marcar como limpiada la habitación. el personal de limpieza debe confirmar que si realizo el trabajo atraves de su usuario asignado.'
+                ];
+            }
         }
 
         $table = Table::find($id);
@@ -814,6 +817,7 @@ class TableRoomController extends Controller
             'message' => 'Habitación limpia'
         ];
     }
+
     /* public function sendToAvaible($id)
     {
         $table = Table::find($id);
@@ -1745,6 +1749,7 @@ class TableRoomController extends Controller
         $floors = Floor::where('active', true)->get();
         $tables = Table::where('is_room', true)->where('enabled', true);
         $services = RoomService::where('active', true)->get();
+        $warehouses = Warehouse::all();
 
         $tables = $tables->with('services')->get();
 
@@ -1765,7 +1770,8 @@ class TableRoomController extends Controller
             'towers',
             'floors',
             'tables',
-            'table_types'
+            'table_types',
+            'warehouses'
         );
     }
     public function ordenById($id)
@@ -2463,6 +2469,7 @@ class TableRoomController extends Controller
                     'is_cleaning' => $row->is_cleaning,
                     'is_room' => $row->is_room,
                     'price'            => $row->price,
+                    'month_price'      => $row->month_price,
                     'id'                => $row->id,
                     'number'            => $row->number,
                     'floor_id'          => $row->floor_id,
@@ -2484,8 +2491,13 @@ class TableRoomController extends Controller
         $status = StatusTable::where('active', true)->get();
         $warehouses = Warehouse::all();
 
+        // Solo traer reservas de la torre cuyo almacén (establishment_id) coincide con el del usuario autenticado
+        $user_establishment_id = auth()->user()->establishment_id;
         $reserves = HotelRentItem::where('is_reserve', true)
             ->where('was_cancel', false)
+            ->whereHas('table.floor.tower', function ($query) use ($user_establishment_id) {
+                $query->where('establishment_id', $user_establishment_id);
+            })
             ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
             ->get()
             ->transform(function ($rent) {
@@ -2503,6 +2515,7 @@ class TableRoomController extends Controller
                     'hotel_rent_id' => $rent->hotel_rent_id,
                 ];
             });
+
         return compact(
             'services',
             'reserves',

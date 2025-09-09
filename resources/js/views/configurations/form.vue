@@ -11672,6 +11672,35 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3 mb-2">
+                                                    <div class="card h-100">
+                                                        <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                            <div class="form-group text-left flex-grow-1">
+                                                                <label class="control-label w-100" :style="{
+                                                                    color: form.cleaning_tower
+                                                                        ? '#28a745'
+                                                                        : '#6c757d'
+                                                                }">
+                                                                    <i ref="wrenchIcon"
+                                                                        class="fas fa-wrench tab-icon"></i>
+                                                                    Activar Restricion para que no pueda liberar la habitacion si el usuario de limpieza no ha confirmado
+                                                                </label>
+                                                                <el-switch v-model="form.cleaning_tower
+                                                                    " active-text="Si" inactive-text="No"
+                                                                    :active-color="'#28a745'
+                                                                        " :inactive-color="'#6c757d'
+                                                                            " @change="
+                                                                                () =>
+                                                                                    submit(
+                                                                                        'Restricion para que no pueda liberar la habitacion si el usuario de limpieza no ha confirmado',
+                                                                                        form.cleaning_tower,
+                                                                                        'wrenchIcon'
+                                                                                    )
+                                                                            "></el-switch>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <br />
                                         </div>

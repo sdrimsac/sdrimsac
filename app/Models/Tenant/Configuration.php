@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'cleaning_tower',
         'tap',
         'is_grifo',
         'favorite_items',
@@ -348,6 +349,7 @@ class Configuration extends ModelTenant
         'direct_unit_type',
     ];
     protected $casts = [
+        'cleaning_tower' => 'boolean',
         'tap' => 'boolean',
         'is_grifo' => 'boolean',
         'favorite_items' => 'boolean',
@@ -639,6 +641,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'cleaning_tower' => (bool)$this->cleaning_tower,
             'tap' => (bool)$this->tap,
             'is_grifo' => (bool)$this->is_grifo,
             'favorite_items' => (bool)$this->favorite_items,

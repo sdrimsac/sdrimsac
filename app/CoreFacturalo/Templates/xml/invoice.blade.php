@@ -433,7 +433,6 @@
                     <cac:AllowanceCharge>
                         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                         <cbc:AllowanceChargeReasonCode>{{ $discount->discount_type_id }}</cbc:AllowanceChargeReasonCode>
-                        {{-- <cbc:AllowanceChargeReason>Descuento por promoción especial</cbc:AllowanceChargeReason> --}}
                         <cbc:MultiplierFactorNumeric>{{ $discount->factor }}</cbc:MultiplierFactorNumeric>
                         <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ $discount->amount }}</cbc:Amount>
                         <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ $discount->base }}</cbc:BaseAmount>
