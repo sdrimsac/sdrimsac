@@ -713,7 +713,9 @@ class OrdenController extends Controller
         $user = auth()->user();
         $printer = null;
 
-        //$mozo_name = null;
+        // Aseguramos la inicialización para evitar "Undefined variable" si no hay mozo asignado
+        $mozo_name = null;
+        
         if (!is_null($orden->mozo_id)) {
             $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $orden->mozo_id)->first();
             $mozo_name = $mozo ? $mozo->name : null;
@@ -790,8 +792,8 @@ class OrdenController extends Controller
             }
 
             // Asignamos los valores al objeto orden
-            $orden->mozo_name = $mozo_name;
-            $orden->zone_name = $zone_name;
+            $orden->mozo_name = $mozo_name ?? null;
+            $orden->zone_name = $zone_name ?? null;
 
             event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items, false, $precuenta, null, $re_printer));
             return [
@@ -977,6 +979,7 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
+
             $user = null;
             $ref = $request->ref;
             $mozo_id = $request->mozo_id ?? null;
