@@ -2440,6 +2440,7 @@ class DocumentController extends Controller
     {
         return ItemLot::where('item_id', $item_id)->where('has_sale', 0)->where('state', 'Activo')->count();
     }
+
     public function updateStock($id, $is_set = false)
     {
         if ($is_set == true) {
@@ -2644,6 +2645,7 @@ class DocumentController extends Controller
             ->establishment($establishment)
             ->download('Reporte_Ventas_' . Carbon::now() . '.xlsx');
     }
+
     public function excelVentas(Request $request)
     {
         ini_set('memory_limit', '10500M');
@@ -2663,6 +2665,7 @@ class DocumentController extends Controller
             // ->year($year)
             ->download('Reporte_productos_vendidos_' . Carbon::now() . '.xlsx');
     }
+
     public function import(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -3207,12 +3210,10 @@ class DocumentController extends Controller
         if ($value > $this->max_count_payment) {
             $this->max_count_payment = $value;
         }
-        // $this->max_count_payment = 20 ;//( $value > $this->max_count_payment) ? $value : $this->$max_count_payment;
     }
 
     private function transformReportPayment($resource)
     {
-
         $records = $resource->transform(function ($row) {
 
             $total_paid = collect($row->payments)->sum('payment');

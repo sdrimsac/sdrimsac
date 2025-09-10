@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\CoreFacturalo\Facturalo;
 use App\Models\Tenant\Summary;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 trait SummaryTrait
 {

@@ -3999,8 +3999,8 @@ export default {
             let factor = _.round(global_discount / total, 4);
             this.form.discounts = [
                 {
-                    discount_type_id: "03",
-                    description: "Descuentos globales que no afectan la base imponible del IGV/IVAP",
+                    discount_type_id: "00",
+                    description: "OTROS DESCUENTOS",
                     factor,
                     amount: global_discount,
                     base: total
@@ -4076,6 +4076,7 @@ export default {
                 this.enterAmount();
             }
         }, */
+
         discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
@@ -4093,9 +4094,9 @@ export default {
             let factor = _.round(global_discount / total, 4);
             this.form.discounts = [
                 {
-                    discount_type_id: "03",
+                    discount_type_id: "00",
                     description:
-                        "Descuentos globales que no afectan la base imponible del IGV/IVAP",
+                        "OTROS DESCUENTOS",
                     factor,
                     amount: global_discount,
                     base: total
@@ -4358,8 +4359,11 @@ export default {
                     )
                 ) {
                     // guard against undefined values and division by zero
-                    let unit_value = this.toNumber(row.total_value) / (this.toNumber(row.quantity) || 1);
-                    let total_value_partial = unit_value * this.toNumber(row.quantity);
+                    let unit_value =
+                        this.toNumber(row.total_value) /
+                        (this.toNumber(row.quantity) || 1);
+                    let total_value_partial =
+                        unit_value * this.toNumber(row.quantity);
                     // ensure ternary applies only to the plastic bag taxes
                     row.total_taxes =
                         this.toNumber(row.total_value) -
@@ -4368,7 +4372,8 @@ export default {
                             ? 0.0
                             : this.toNumber(row.total_plastic_bag_taxes));
                     row.total_igv =
-                        total_value_partial * (this.toNumber(row.percentage_igv) / 100);
+                        total_value_partial *
+                        (this.toNumber(row.percentage_igv) / 100);
                     row.total_base_igv = total_value_partial;
                     total_value -= this.toNumber(row.total_value);
                     total += this.toNumber(row.total);
@@ -4391,7 +4396,9 @@ export default {
                 if (!["21", "37"].includes(row.affectation_igv_type_id)) {
                     total_value += this.toNumber(row.total_value);
                 }
-                total_plastic_bag_taxes += this.toNumber(row.total_plastic_bag_taxes);
+                total_plastic_bag_taxes += this.toNumber(
+                    row.total_plastic_bag_taxes
+                );
             });
 
             this.form.total_exportation = _.round(total_exportation, 2);
@@ -4965,9 +4972,12 @@ export default {
             // Validación de montos según tipo de documento
             // Para Factura (01) y Boleta (03) el monto ingresado (incluyendo pagos divididos)
             // debe ser exactamente igual al Total a cobrar
-            const enteredAmount = (parseFloat(form.enter_amount) || 0) + this.totalPayments();
+            const enteredAmount =
+                (parseFloat(form.enter_amount) || 0) + this.totalPayments();
             const totalAmount = parseFloat(form.total) || 0;
-            const isInvoiceOrReceipt = ["01", "03"].includes(form.document_type_id);
+            const isInvoiceOrReceipt = ["01", "03"].includes(
+                form.document_type_id
+            );
             if (isInvoiceOrReceipt) {
                 // Solo validar si el monto ingresado es menor al total a cobrar
                 if (enteredAmount < totalAmount - 0.009) {
