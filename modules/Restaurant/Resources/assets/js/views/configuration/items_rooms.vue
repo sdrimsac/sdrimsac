@@ -19,12 +19,12 @@
             </div>
             <div class="col-12" v-if="type == 'towers'">
                 <label for="name">Almacen </label>
-                <el-select v-model="form.warehouse_id" filterable clearable>
+        <el-select v-model="form.establishment_id" filterable clearable>
                     <el-option
                         v-for="warehouse in warehouses"
                         :key="warehouse.id"
                         :label="warehouse.description"
-                        :value="warehouse.id"
+            :value="warehouse.establishment_id"
                     ></el-option>
                 </el-select>
             </div>
@@ -46,7 +46,7 @@
                     <el-option
                         v-for="tower in all_towers"
                         :key="tower.id"
-                        :label="tower.description"
+                        :label="tower.name"
                         :value="tower.id"
                     ></el-option>
                 </el-select>
@@ -153,7 +153,8 @@ export default {
             form: {
                 id: null,
                 name: null,
-                tower_id: null
+                tower_id: null,
+                establishment_id: null
             }
         };
     },
@@ -162,7 +163,8 @@ export default {
             this.form = {
                 id: null,
                 name: null,
-                tower_id: null
+                tower_id: null,
+                establishment_id: null
             };
         },
         setTitle() {

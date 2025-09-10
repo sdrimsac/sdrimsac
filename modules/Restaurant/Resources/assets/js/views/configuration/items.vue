@@ -248,7 +248,7 @@
                 <create-form-massive :types="types" :showDialog.sync="showDialogMassive" :areas="areas" :type="type"
                     :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :zones="zones"
                     :establishments="establishments"></create-form-massive>
-                <items-rooms :showDialog.sync="showItems" :type="typeItem" :warehouses="warehouses"></items-rooms>
+                <items-rooms :showDialog.sync="showItems" :type="typeItem"></items-rooms>
                 <items-tables :showDialog.sync="showItemsTables" :type="typeItem"></items-tables>
                 <promotions :showDialog.sync="showPromotions"></promotions>
                 <insumos :showDialog.sync="showInsumos"></insumos>.
