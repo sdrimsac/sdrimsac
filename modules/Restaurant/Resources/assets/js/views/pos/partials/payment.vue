@@ -4077,7 +4077,7 @@ export default {
             }
         }, */
 
-        discountGlobal() {
+        /* discountGlobal() {
             // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
@@ -4165,6 +4165,206 @@ export default {
                 this.form.document_type_id == "80"
             ) {
             } else {
+                this.form.enter_amount = this.form.total;
+                this.enterAmount();
+            }
+        }, */
+
+        /* discountGlobal() {
+            let global_discount = parseFloat(this.discount_amount) || 0;
+            let total = parseFloat(this.form.total);
+            let base = parseFloat(this.form.total_value);
+
+            if (global_discount > total) {
+                this.discount_amount = 0;
+                this.$forceUpdate();
+                return this.$toast.error(
+                    "El descuento no puede ser mayor al total"
+                );
+            }
+
+            // Variables auxiliares
+            let global_discount_amount = global_discount;
+            let global_discount_amount_without_rounding = global_discount;
+
+            // Si el descuento afecta la base imponible
+            if (this.configuration.discount_with_base_variant) {
+                global_discount_amount = Number(
+                    (global_discount / 1.18).toFixed(2)
+                );
+                global_discount_amount_without_rounding =
+                    global_discount / 1.18;
+            }
+
+            // Factor de descuento
+            let factor = _.round(global_discount_amount / base, 4);
+
+            // Registrar en form.discounts (esto es lo que se va al XML)
+            this.form.discounts = [
+                {
+                    discount_type_id: "02",
+                    description:
+                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                    factor,
+                    amount: global_discount_amount,
+                    base
+                }
+            ];
+
+            this.form.total_discount = global_discount;
+
+            // Recalcular impuestos y totales
+            let new_base = this.form.total_value_without_rounding;
+            this.form.total_taxed = _.round(
+                new_base - global_discount_amount_without_rounding,
+                2
+            );
+
+            let total_taxed_without_rounding =
+                new_base - global_discount_amount_without_rounding;
+
+            this.form.total_value = this.form.total_taxed;
+
+            if (this.configuration.affectation_igv_type_id == "10") {
+                this.form.total_igv = _.round(
+                    total_taxed_without_rounding * (this.percentage_igv / 100),
+                    2
+                );
+            } else {
+                this.form.total_igv = 0;
+            }
+
+            // Impuestos (ISC + IGV + ICBPER)
+            this.form.total_taxes = _.round(
+                this.form.total_igv +
+                    this.form.total_isc +
+                    this.form.total_plastic_bag_taxes,
+                2
+            );
+
+            this.form.total = _.round(
+                this.form.total_taxed + this.form.total_taxes,
+                2
+            );
+
+            this.form.subtotal = this.form.total;
+
+            // Monto de pago
+            if (
+                !(
+                    this.configuration.sale_note_credit_cash &&
+                    this.form.document_type_id == "80"
+                )
+            ) {
+                this.form.enter_amount = this.form.total;
+                this.enterAmount();
+            }
+        }, */
+
+        discountGlobal() {
+            let global_discount = parseFloat(this.discount_amount) || 0;
+            let total = parseFloat(this.form.total);
+            let base = parseFloat(this.form.total_value);
+
+            if (global_discount > total) {
+                this.discount_amount = 0;
+                this.$forceUpdate();
+                return this.$toast.error(
+                    "El descuento no puede ser mayor al total"
+                );
+            }
+
+            // Caso 1: descuento sobre base imponible
+            if (this.configuration.discount_with_base_variant) {
+                let global_discount_amount = Number(
+                    (global_discount / 1.18).toFixed(2)
+                );
+                let global_discount_amount_without_rounding =
+                    global_discount / 1.18;
+
+                let factor = _.round(global_discount_amount / base, 4);
+
+                this.form.discounts = [
+                    {
+                        discount_type_id: "02",
+                        description:
+                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                        factor,
+                        amount: global_discount_amount,
+                        base
+                    }
+                ];
+
+                this.form.total_discount = global_discount;
+
+                let new_base = this.form.total_value_without_rounding;
+                this.form.total_taxed = _.round(
+                    new_base - global_discount_amount_without_rounding,
+                    2
+                );
+
+                let total_taxed_without_rounding =
+                    new_base - global_discount_amount_without_rounding;
+
+                this.form.total_value = this.form.total_taxed;
+
+                if (this.configuration.affectation_igv_type_id == "10") {
+                    this.form.total_igv = _.round(
+                        total_taxed_without_rounding *
+                            (this.percentage_igv / 100),
+                        2
+                    );
+                } else {
+                    this.form.total_igv = 0;
+                }
+
+                this.form.total_taxes = _.round(
+                    this.form.total_igv +
+                        this.form.total_isc +
+                        this.form.total_plastic_bag_taxes,
+                    2
+                );
+
+                this.form.total = _.round(
+                    this.form.total_taxed + this.form.total_taxes,
+                    2
+                );
+
+                this.form.subtotal = this.form.total;
+            }
+            // Caso 2: descuento sobre total (lo que SUNAT espera)
+            else {
+                let new_total = _.round(total - global_discount, 2);
+                let new_base = _.round(new_total / 1.18, 2);
+                let new_igv = _.round(new_total - new_base, 2);
+
+                this.form.discounts = [
+                    {
+                        discount_type_id: "02",
+                        description:
+                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                        factor: _.round(global_discount / total, 4),
+                        amount: global_discount,
+                        base: total
+                    }
+                ];
+
+                this.form.total_discount = global_discount;
+                this.form.total_value = new_base;
+                this.form.total_taxed = new_base;
+                this.form.total_igv = new_igv;
+                this.form.total_taxes = new_igv;
+                this.form.total = new_total;
+                this.form.subtotal = new_total;
+            }
+
+            // Monto de pago
+            if (
+                !(
+                    this.configuration.sale_note_credit_cash &&
+                    this.form.document_type_id == "80"
+                )
+            ) {
                 this.form.enter_amount = this.form.total;
                 this.enterAmount();
             }

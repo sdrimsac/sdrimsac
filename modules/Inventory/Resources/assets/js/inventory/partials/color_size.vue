@@ -60,8 +60,7 @@
                             </td>
                             <td>
                                 <el-input
-                                    type="number"
-                                    step="0.01"
+                                    type="text"
                                     v-model="row.code"
                                 ></el-input>
                             </td>
@@ -99,12 +98,20 @@ export default {
         addColorSize() {
             if (this.verifyCompleteData()) {
                 this.sortItems();
-                this.$emit("addRowColorSize", this.colorSizes);
-                console.log("ver que datos esta pasando en el color size", this.colorSizes);
+                // Emit a cloned array to avoid future mutations affecting parent
+                const payload = this.colorSizes.map(item => ({ ...item }));
+                this.$emit("addRowColorSize", payload);
+                // Limpiar el formulario para que al volver a abrir esté vacío
+                this.resetForm();
                 this.close();
             } else {
                 this.$toast.warning("Debe llenar todos los campos");
             }
+        },
+        resetForm() {
+            this.colorSizes = [];
+            // Agregar fila en blanco para nueva entrada
+            this.addMoreColorSizes();
         },
         verifyCompleteData() {
             //verificar si todos los campos estan llenos

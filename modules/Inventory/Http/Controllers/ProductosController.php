@@ -358,6 +358,7 @@ class InventoryController extends Controller
                     $color = $row["color"];
                     $size = $row["size"];
                     $price = $row["price"];
+                    $code = isset($row["code"]) ? $row["code"] : null;
                     $color_size_exist = ItemColorSize::where('item_id', $item_id)
                         ->where('warehouse_id', $warehouse_id)
                         ->where('color', $color)
@@ -368,6 +369,9 @@ class InventoryController extends Controller
                         if ($price != null || $price != '' || $price != 0) {
                             $color_size_exist->price = $price;
                         }
+                        if ($code !== null && $code !== '') {
+                            $color_size_exist->code = $code;
+                        }
                         $color_size_exist->save();
                     } else {
                         ItemColorSize::create([
@@ -376,7 +380,8 @@ class InventoryController extends Controller
                             'stock' => $stock,
                             'color' => $color,
                             'size' => $size,
-                            'price' => $price
+                            'price' => $price,
+                            'code' => $code
                         ]);
                     }
                 }

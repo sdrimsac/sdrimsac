@@ -490,7 +490,8 @@ export default {
                 lots_enabled: false,
                 series_enabled: false,
                 lots: [],
-                date_of_due: null
+                date_of_due: null,
+                color_size: []
             };
         },
         async create() {
