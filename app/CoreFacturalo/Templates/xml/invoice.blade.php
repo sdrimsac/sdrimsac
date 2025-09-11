@@ -9,9 +9,9 @@
             return str_replace(',', '.', $string);
         }
     }
-    if ($document->total_free > 0) {
+    if($document->total_free > 0){
         foreach ($document->items as $item) {
-            if (in_array($item->affectation_igv_type_id, ['11', '12', '13', '14', '15', '16'])) {
+            if (in_array($item->affectation_igv_type_id, ["11", "12", "13", "14", "15", "16"])) {
                 $total_igv_free += $item->total_igv;
             }
         }
@@ -20,9 +20,9 @@
     $total_igv_free = number_format($total_igv_free, 2, '.', '');
     $amount_discount = 0;
     $discount_without_base = 0;
-    if ($document->discounts) {
+    if($document->discounts){
         foreach ($document->discounts as $discount) {
-            if ($discount->discount_type_id == 3) {
+            if($discount->discount_type_id == 3){
                 $discount_without_base += $discount->amount;
             }
             $amount_discount = $discount->discount_type_id == 2 ? $document->total_value : $discount->base;
@@ -45,7 +45,7 @@
     <cbc:ID>{{ $document->series }}-{{ $document->number }}</cbc:ID>
     <cbc:IssueDate>{{ $document->date_of_issue }}</cbc:IssueDate>
     <cbc:IssueTime>{{ $document->time_of_issue }}</cbc:IssueTime>
-    @if ($document->payment_condition_id === '02' && count($document->fee) > 0)
+    @if($document->payment_condition_id === '02' && count($document->fee) > 0)
         <cbc:DueDate>{{ $document->fee[0]->date->format('Y-m-d') }}</cbc:DueDate>
     @elseif($invoice->date_of_due)
         <cbc:DueDate>{{ $invoice->date_of_due->format('Y-m-d') }}</cbc:DueDate>
@@ -195,7 +195,7 @@
             @endif
         </cac:Party>
     </cac:AccountingCustomerParty>
-    {{-- detraccion --}}
+     {{-- detraccion --}}
     @if ($document->detraction)
         @php($detraction = $document->detraction)
         <cac:PaymentMeans>
@@ -253,10 +253,9 @@
             <cac:AllowanceCharge>
                 <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
                 <cbc:AllowanceChargeReasonCode>{{ $charge->charge_type_id }}</cbc:AllowanceChargeReasonCode>
-                <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($charge->factor) }}</cbc:MultiplierFactorNumeric>
+                <cbc:MultiplierFactorNumeric>{{replaceCommaWithDot($charge->factor) }}</cbc:MultiplierFactorNumeric>
                 <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($charge->amount) }}</cbc:Amount>
-                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">
-                    {{ replaceCommaWithDot($charge->base) }}</cbc:BaseAmount>
+                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($charge->base) }}</cbc:BaseAmount>
             </cac:AllowanceCharge>
         @endforeach
     @endif
@@ -266,10 +265,8 @@
                 <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                 <cbc:AllowanceChargeReasonCode>{{ $discount->discount_type_id }}</cbc:AllowanceChargeReasonCode>
                 <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($discount->factor) }}</cbc:MultiplierFactorNumeric>
-                <cbc:Amount currencyID="{{ $document->currency_type_id }}">
-                    {{ replaceCommaWithDot($discount->amount) }}</cbc:Amount>
-                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">
-                    {{ replaceCommaWithDot($discount->base) }}</cbc:BaseAmount>
+                <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->amount )}}</cbc:Amount>
+                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->base) }}</cbc:BaseAmount>
             </cac:AllowanceCharge>
         @endforeach
     @endif
@@ -399,7 +396,7 @@
             <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total }}</cbc:TaxInclusiveAmount>
         @endif
         @if ($discount_without_base > 0)
-            <cbc:AllowanceTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_discount }}</cbc:AllowanceTotalAmount>
+            <cbc:AllowanceTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $discount_without_base }}</cbc:AllowanceTotalAmount>
         @endif
         @if ($document->total_charges > 0)
             <cbc:ChargeTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_charges }}</cbc:ChargeTotalAmount>
@@ -444,7 +441,6 @@
         <cbc:PayableAmount currencyID="{{ $document->currency_type_id }}">
             {{ number_format($document->total, 2, '.', '') }}</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
-
     @foreach ($document->items as $row)
         <cac:InvoiceLine>
             <cbc:ID>{{ $loop->iteration }}</cbc:ID>
@@ -512,8 +508,7 @@
                 @if ($row->total_other_taxes > 0)
                     <cac:TaxSubtotal>
                         <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_base_other_taxes }}</cbc:TaxableAmount>
-                        <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_other_taxes }}
-                        </cbc:TaxAmount>
+                        <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_other_taxes }}</cbc:TaxAmount>
                         <cac:TaxCategory>
                             <cbc:Percent>{{ $row->percentage_other_taxes }}</cbc:Percent>
                             <cac:TaxScheme>
@@ -526,12 +521,10 @@
                 @endif
                 @if ($row->total_plastic_bag_taxes > 0)
                     <cac:TaxSubtotal>
-                        <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">
-                            {{ $row->total_plastic_bag_taxes }}</cbc:TaxAmount>
+                        <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_plastic_bag_taxes }}</cbc:TaxAmount>
                         <cbc:BaseUnitMeasure unitCode="NIU">{{ round($row->quantity, 0) }}</cbc:BaseUnitMeasure>
                         <cac:TaxCategory>
-                            <cbc:PerUnitAmount currencyID="{{ $document->currency_type_id }}">
-                                {{ $row->item->amount_plastic_bag_taxes }}</cbc:PerUnitAmount>
+                            <cbc:PerUnitAmount currencyID="{{ $document->currency_type_id }}">{{ $row->item->amount_plastic_bag_taxes }}</cbc:PerUnitAmount>
                             <cac:TaxScheme>
                                 <cbc:ID>7152</cbc:ID>
                                 <cbc:Name>ICBPER</cbc:Name>
@@ -549,7 +542,7 @@
                     </cbc:Description>
                 @else
                     <cbc:Description>
-                        @if ($row->name_product_pdf)
+                        @if($row->name_product_pdf)
                             <![CDATA[{{ $row->name_product_pdf }}]]>
                         @else
                             <![CDATA[{{ $row->item->description }}]]>
