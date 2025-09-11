@@ -462,6 +462,8 @@ class PosController extends Controller
 
         $categories_to_show = [];
         $brands = Brand::all();
+        
+        $transport_places = [];
         if ($config->tap) {
             $transport_places = TransportPlace::all();
         }
