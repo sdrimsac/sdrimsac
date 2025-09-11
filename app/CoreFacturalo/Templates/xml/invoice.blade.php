@@ -339,8 +339,7 @@
         @endif
         @if ($document->total_free > 0)
             <cac:TaxSubtotal>
-                <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_free }}
-                </cbc:TaxableAmount>
+                <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_free }}</cbc:TaxableAmount>
                 <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $total_igv_free }}</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cac:TaxScheme>
@@ -366,8 +365,7 @@
         @endif
         @if ($document->total_other_taxes > 0)
             <cac:TaxSubtotal>
-                <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_other_taxes }}
-                </cbc:TaxableAmount>
+                <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_other_taxes }}</cbc:TaxableAmount>
                 <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">
                     {{ $document->total_base_other_taxes }}</cbc:TaxAmount>
                 <cac:TaxCategory>
@@ -498,10 +496,8 @@
                     </cac:TaxSubtotal>
                 @endif
                 <cac:TaxSubtotal>
-                    <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_base_igv }}
-                    </cbc:TaxableAmount>
-                    <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_igv }}
-                    </cbc:TaxAmount>
+                    <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_base_igv }}</cbc:TaxableAmount>
+                    <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_igv }}</cbc:TaxAmount>
                     <cac:TaxCategory>
                         <cbc:Percent>{{ $row->percentage_igv }}</cbc:Percent>
                         <cbc:TaxExemptionReasonCode>{{ $row->affectation_igv_type_id }}</cbc:TaxExemptionReasonCode>
@@ -515,8 +511,7 @@
                 </cac:TaxSubtotal>
                 @if ($row->total_other_taxes > 0)
                     <cac:TaxSubtotal>
-                        <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">
-                            {{ $row->total_base_other_taxes }}</cbc:TaxableAmount>
+                        <cbc:TaxableAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_base_other_taxes }}</cbc:TaxableAmount>
                         <cbc:TaxAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_other_taxes }}
                         </cbc:TaxAmount>
                         <cac:TaxCategory>
