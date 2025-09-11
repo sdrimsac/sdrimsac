@@ -460,14 +460,11 @@
     @foreach ($document->items as $row)
         <cac:InvoiceLine>
             <cbc:ID>{{ $loop->iteration }}</cbc:ID>
-            <cbc:InvoicedQuantity unitCode="{{ $row->item->unit_type_id }}">{{ $row->quantity }}
-            </cbc:InvoicedQuantity>
-            <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}
-            </cbc:LineExtensionAmount>
+            <cbc:InvoicedQuantity unitCode="{{ $row->item->unit_type_id }}">{{ $row->quantity }}</cbc:InvoicedQuantity>
+            <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}</cbc:LineExtensionAmount>
             <cac:PricingReference>
                 <cac:AlternativeConditionPrice>
-                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}
-                    </cbc:PriceAmount>
+                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}</cbc:PriceAmount>
                     <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
                 </cac:AlternativeConditionPrice>
             </cac:PricingReference>
