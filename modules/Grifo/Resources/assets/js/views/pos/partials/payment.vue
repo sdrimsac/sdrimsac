@@ -445,7 +445,7 @@
                                         class="form-row d-flex align-items-center justify-content-between flex-wrap"
                                     >
                                         <!-- Observaciones -->
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <label for="observations"
                                                 >Observaciones</label
                                             >
@@ -459,7 +459,7 @@
                                         </div>
 
                                         <!-- Vendedor -->
-                                        <div class="col-6">
+                                        <div class="col-3">
                                             <label for="seller">Vendedor</label>
                                             <el-select
                                                 v-model="form.seller_id"
@@ -472,6 +472,25 @@
                                                     idx) in sellers"
                                                     :key="idx"
                                                     :label="option.name"
+                                                    :value="option.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="seller">Placa</label>
+                                            <el-select
+                                                v-model="form.transport_place_id"
+                                                class="w-100"
+                                                placeholder="Seleccionar Placa"
+                                                size="large"
+                                                clearable
+                                                filterable
+                                            >
+                                                <el-option
+                                                    v-for="(option,
+                                                    idx) in transport_places"
+                                                    :key="idx"
+                                                    :label="option.plate"
                                                     :value="option.id"
                                                 ></el-option>
                                             </el-select>
@@ -2020,7 +2039,8 @@ export default {
         "percentage_igv",
         "all_customers",
         "personalWhatsapp",
-        "sellers"
+        "sellers",
+        "transport_places"
     ],
     watch: {
         all_customers(newCustomer, _) {

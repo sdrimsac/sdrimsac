@@ -1304,6 +1304,7 @@
                                 clientSaleNoteDiscount
                             "
                             :sellers="sellers"
+                            :transport_places="transport_places"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
                             :affectation_igv_types="affectation_igv_types"
@@ -2470,6 +2471,7 @@ export default {
             divided_items: false,
             showDialogWarranty: false,
             ordenToPrint: [],
+            transport_places: [],
             cotizarConfirmado: false,
             digitalPayMessage: null,
             quality: false,
@@ -7053,6 +7055,7 @@ export default {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
+                this.transport_places = response.data.transport_places;
                 this.users = response.data.users;
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({

@@ -52,6 +52,7 @@ use App\Models\Tenant\ItemMedidaAlto;
 use App\Models\Tenant\ItemMedidaGrosor;
 use App\Models\Tenant\ItemMedidaAncho;
 use App\Models\Tenant\PromotionDocumentCustomer;
+use App\Models\Tenant\TransportPlace;
 use Modules\Item\Models\Brand;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\TableType;
@@ -461,6 +462,10 @@ class PosController extends Controller
 
         $categories_to_show = [];
         $brands = Brand::all();
+        if ($config->tap) {
+            $transport_places = TransportPlace::all();
+        }
+        
         if($config->maderera){
             $categoria_madera = CategoriaMadera::all();
             $medida_alto = ItemMedidaAlto::all();
@@ -620,6 +625,7 @@ class PosController extends Controller
             'medida_ancho',
             'medida_grosor',
             'categoria_madera',
+            'transport_places'
 
         );
     }

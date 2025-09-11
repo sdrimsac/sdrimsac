@@ -4094,9 +4094,9 @@ export default {
             let factor = _.round(global_discount / total, 4);
             this.form.discounts = [
                 {
-                    discount_type_id: "00",
+                    discount_type_id: "02",
                     description:
-                        "OTROS DESCUENTOS",
+                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
                     factor,
                     amount: global_discount,
                     base: total

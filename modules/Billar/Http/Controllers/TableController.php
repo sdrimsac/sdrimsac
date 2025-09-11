@@ -147,6 +147,7 @@ class TableController extends Controller
             'data' => $tables
         ];
     }
+    
     public function get_tables()
     {
         ini_set('memory_limit', '2500M');
@@ -159,6 +160,7 @@ class TableController extends Controller
 
         return compact('tables');
     }
+
     public function get_ordens($id)
     {
         $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)

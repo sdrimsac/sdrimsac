@@ -2579,8 +2579,8 @@
                                                     <div
                                                         class="overflow-hidden w-100 card shadow-lg p-3"
                                                         style="
-                              box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
-                            "
+                                                        box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
+                                                        "
                                                     >
                                                         <h3
                                                             class="lead font-weight-light fw-bold"
@@ -4681,12 +4681,8 @@ export default {
             }
 
             let newQty = sub / unitBase;
-            // Redondeo: en grifo se suele usar 3 decimales en cantidad
-            if (this.configuration && this.configuration.is_grifo) {
-                newQty = Number(newQty.toFixed(3));
-            } else {
-                newQty = Number(newQty.toFixed(2));
-            }
+            // Siempre usar 3 decimales al recalcular por subtotal para no alterar el total ingresado
+            newQty = Number(newQty.toFixed(3));
 
             if (!isFinite(newQty) || newQty <= 0) {
                 this.$toast.error("Cantidad resultante no válida");
@@ -4895,7 +4891,11 @@ export default {
                     }
                 }
             }
-
+            // Mostrar siempre 3 decimales en cantidad
+            const q = Number(this.localOrden[idx].quantity);
+            if (!isNaN(q)) {
+                this.localOrden[idx].quantity = q.toFixed(3);
+            }
             this.calculateTotal();
         },
         showOrdensPending() {
@@ -5352,6 +5352,10 @@ export default {
                 localOrden_quantity[index].quantity =
                     Number(localOrden_quantity[index].quantity) + 1;
             }
+            // Formatear a 3 decimales para mostrar
+            localOrden_quantity[index].quantity = Number(
+                localOrden_quantity[index].quantity
+            ).toFixed(3);
             localOrden_quantity[index].price = this.getPriceRange(
                 localOrden_quantity[index]
             );
@@ -5378,6 +5382,10 @@ export default {
                     localOrden_quantity[index].quantity =
                         Number(localOrden_quantity[index].quantity) - 1;
                 }
+                // Formatear a 3 decimales para mostrar
+                localOrden_quantity[index].quantity = Number(
+                    localOrden_quantity[index].quantity
+                ).toFixed(3);
                 localOrden_quantity[index].price = this.getPriceRange(
                     localOrden_quantity[index]
                 );

@@ -812,15 +812,23 @@
             @endphp
             @foreach ($document->items as $row)
                 <tr>
-                    <td class="text-center desc-9 align-top">
-                        @if ((int) $row->quantity != $row->quantity)
-                            {{ number_format($row->quantity, 2) }}
+                    {{-- <td class="text-center desc-9 align-top">
+                        @if ((int) $row->quantity != $row->quantity && $configuration->is_grifo)
+                            {{ number_format($row->quantity, 3) }}
                         @else
-                            @if (isset($row->unit_qty))
-                                {{ number_format($row->quantity, 2) }}
+                            @if (isset($row->unit_qty) && $configuration->is_grifo)
+                                {{ number_format($row->quantity, 3) }}
                             @else
                                 {{ number_format($row->quantity, 2) }}
                             @endif
+                        @endif
+                    </td> --}}
+
+                    <td class="text-center desc-9 align-top">
+                        @if ($configuration->tap)
+                            {{ number_format($row->quantity, 3) }}
+                        @else
+                            {{ number_format($row->quantity, 2) }}
                         @endif
                     </td>
 
