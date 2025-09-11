@@ -388,7 +388,7 @@
             </cac:TaxSubtotal>
         @endif
     </cac:TaxTotal>
-    {{-- <cac:LegalMonetaryTotal>
+    <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_value }}</cbc:LineExtensionAmount>
         @if ($discount_without_base > 0)
             <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{$amount_discount  }}</cbc:TaxInclusiveAmount>
@@ -405,41 +405,6 @@
             <cbc:PrepaidAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_prepayment }}</cbc:PrepaidAmount>
         @endif
         <cbc:PayableAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total }}</cbc:PayableAmount>
-    </cac:LegalMonetaryTotal> --}}
-    <cac:LegalMonetaryTotal>
-        {{-- LineExtensionAmount: base neta (valor venta después del descuento si aplica) --}}
-        <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">
-            {{ number_format($document->total_value, 2, '.', '') }}</cbc:LineExtensionAmount>
-
-        {{-- TaxInclusiveAmount:
-         - Si el descuento afecta la base (discount_without_base == 0) => mostrar bruto antes del descuento (total + total_discount)
-         - Si el descuento NO afecta la base => mostrar el total (no cambia) --}}
-        @if ($discount_without_base == 0 && $document->total_discount > 0)
-            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">
-                {{ number_format($document->total + $document->total_discount, 2, '.', '') }}</cbc:TaxInclusiveAmount>
-        @else
-            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">
-                {{ number_format($document->total, 2, '.', '') }}</cbc:TaxInclusiveAmount>
-        @endif
-
-        {{-- AllowanceTotalAmount: si existe descuento global (mostrar siempre si total_discount > 0) --}}
-        @if ($document->total_discount > 0)
-            <cbc:AllowanceTotalAmount currencyID="{{ $document->currency_type_id }}">
-                {{ number_format($document->total_discount, 2, '.', '') }}</cbc:AllowanceTotalAmount>
-        @endif
-
-        @if ($document->total_charges > 0)
-            <cbc:ChargeTotalAmount currencyID="{{ $document->currency_type_id }}">
-                {{ number_format($document->total_charges, 2, '.', '') }}</cbc:ChargeTotalAmount>
-        @endif
-
-        @if ($document->total_prepayment > 0)
-            <cbc:PrepaidAmount currencyID="{{ $document->currency_type_id }}">
-                {{ number_format($document->total_prepayment, 2, '.', '') }}</cbc:PrepaidAmount>
-        @endif
-        {{-- PayableAmount: total a pagar --}}
-        <cbc:PayableAmount currencyID="{{ $document->currency_type_id }}">
-            {{ number_format($document->total, 2, '.', '') }}</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
     @foreach ($document->items as $row)
         <cac:InvoiceLine>
