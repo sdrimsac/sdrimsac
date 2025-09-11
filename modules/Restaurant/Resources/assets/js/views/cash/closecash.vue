@@ -29,6 +29,7 @@
 
                 </div> -->
                 <div
+                    v-if="configuration.ocultar_clients"
                     
                 >
                     <label style="color: darkgreen;"
@@ -275,7 +276,7 @@
 }
 </style>
 <script>
-//'../../../../components/DataTable.vue'
+//'../../../../components/DataTable.vu
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 ///mixins/deletable'
 import SeriesBillsDialog from "./series_bills.vue";
