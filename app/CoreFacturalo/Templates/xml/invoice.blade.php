@@ -50,8 +50,7 @@
     @elseif($invoice->date_of_due)
         <cbc:DueDate>{{ $invoice->date_of_due->format('Y-m-d') }}</cbc:DueDate>
     @endif
-    <cbc:InvoiceTypeCode listID="{{ $invoice->operation_type_id }}">{{ $document->document_type_id }}
-    </cbc:InvoiceTypeCode>
+    <cbc:InvoiceTypeCode listID="{{ $invoice->operation_type_id }}">{{ $document->document_type_id }}</cbc:InvoiceTypeCode>
     @foreach ($document->legends as $leg)
         <cbc:Note languageLocaleID="{{ $leg->code }}">
             <![CDATA[{{ $leg->value }}]]>
