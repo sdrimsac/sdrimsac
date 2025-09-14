@@ -154,6 +154,30 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
+
+    /* public function recordsByIds(Request $request)
+    {
+        // verificar si el internal_id enviado existe si exsite debe devolver el registro
+
+        $ids = $request->ids;
+        $items = Item::whereIn('id', $ids)->get();
+        return new ItemCollection($items);
+    } */
+
+    public function recordsByIds(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return response()->json([], 200);
+        }
+
+        // Buscar por internal_id, no por id
+        $items = Item::whereIn('internal_id', $ids)->take(100)->get();
+
+        return new ItemCollection($items);
+    }
+
     public function importStockList(Request $request)
     {
         if ($request->hasFile('file')) {

@@ -519,6 +519,8 @@ if ($hostname) {
                 Route::post('items/update_price_cash_commercial_treatment', [ItemController::class, 'updatePriceCommercialTreatment']);
                 Route::post('items/update_price_cash_unit_type', [ItemController::class, 'updatePriceUnitType']);
 
+                Route::post('items/records-by-ids', [ItemController::class, 'recordsByIds']);
+
                 //ruta para probar si genera los codigos familia
                 Route::get('items/generate_family', [ItemController::class, 'generateCodes']);
 

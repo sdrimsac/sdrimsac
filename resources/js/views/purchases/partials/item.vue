@@ -1839,6 +1839,7 @@ export default {
                 this.$refs.input_barcode.focus();
             }
             this.$emit("add", this.row);
+            console.log("Item agregado:", this.row);
             this.colorSizeImported = false;
         },
         changeWarehouse(row) {
