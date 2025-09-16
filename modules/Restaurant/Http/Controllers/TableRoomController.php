@@ -1669,22 +1669,33 @@ class TableRoomController extends Controller
 
     public function tablesExpired()
     {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
         $nowDate = Carbon::now()->format('Y-m-d');
         $nowTime = Carbon::now()->format('H:i:s');
 
+        // Solo valida si el usuario pertenece al establecimiento del hotel
+        if (!$establishment_id) {
+            return [
+                'success' => true,
+                'count' => 0,
+            ];
+        }
+
         $count = Table::whereHas('hotel_rent_items', function ($query) use ($nowDate, $nowTime) {
-            $query->where(function ($query) use ($nowDate, $nowTime) {
-                $query->where('checkout_date_estimated', '<', $nowDate)
-                    ->orWhere(function ($query) use ($nowDate, $nowTime) {
-                        $query->where('checkout_date_estimated', '=', $nowDate)
-                            ->where('checkout_time_estimated', '<', $nowTime);
-                    });
+                $query->where(function ($query) use ($nowDate, $nowTime) {
+                    $query->where('checkout_date_estimated', '<', $nowDate)
+                        ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                            $query->where('checkout_date_estimated', '=', $nowDate)
+                                ->where('checkout_time_estimated', '<', $nowTime);
+                        });
+                })
+                    ->where('active', true)
+                    ->where('was_cancel', 0);
             })
-                ->where('active', true)
-                ->where('was_cancel', 0);
-        })
             ->where('is_room', true)
             ->where('status_table_id', '<>', 1)
+            ->where('establishment_id', $establishment_id)
             ->count();
 
         return [
