@@ -1810,6 +1810,7 @@
                                                                 </el-button-group>
                                                             </div>
                                                             <div
+                                                                v-if="establishments.conf && establishments.conf.show_discounts_payment && !isCreatingOrden"
                                                                 class="col-6 col-md-6"
                                                             >
                                                                 <label
