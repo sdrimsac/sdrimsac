@@ -559,9 +559,15 @@
                                         <label
                                             class="control-label text-success fs-5 fw-bold me-2"
                                         >
-                                            Desc. S/
+                                            {{
+                                                discount_mode === "amount"
+                                                    ? "Desc. S/"
+                                                    : "Desc. %"
+                                            }}
                                         </label>
+                                        <!-- Input para monto -->
                                         <input
+                                            v-if="discount_mode === 'amount'"
                                             class="form-control w-50 text-right"
                                             v-model="discount_amount"
                                             @input="validateAndProcess"
@@ -569,20 +575,32 @@
                                             placeholder="0.00"
                                             style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
                                         />
+                                        <!-- Input para porcentaje -->
+                                        <input
+                                            v-else
+                                            class="form-control w-50 text-right"
+                                            v-model.number="discount_percentage"
+                                            @input="inputDiscountAmount"
+                                            maxlength="6"
+                                            placeholder="0"
+                                            min="0"
+                                            max="100"
+                                            style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
+                                        />
                                     </div>
 
                                     <!-- Fila 2: Checkboxes alineados al lado derecho -->
                                     <div class="d-flex justify-content-end">
                                         <el-checkbox
-                                            v-model="discountTotal"
-                                            @change="reCalculateTotal"
+                                            v-model="usePercent"
+                                            @change="togglePercent"
                                             class="is-success text-success"
                                             style="transform: scale(0.8); margin-right: 10px;"
                                         >
                                             {{
-                                                discountTotal
-                                                    ? "del total"
-                                                    : "a la base"
+                                                usePercent
+                                                    ? "Porcentaje"
+                                                    : "Monto"
                                             }}
                                         </el-checkbox>
                                     </div>
@@ -1738,10 +1756,6 @@
             @add="addRow"
         ></multiple-payment-form>
 
-        <!-- <sale-notes-options :showDialog.sync="showDialogSaleNote"
-                                    :recordId="saleNotesNewId"
-                                    :showClose="true"></sale-notes-options>  -->
-
         <card-brands-form
             :showDialog.sync="showDialogNewCardBrand"
             :external="true"
@@ -2062,7 +2076,7 @@ export default {
             dialogWidth: "70%",
             hasPromotionText: null,
             paymentVariation: {
-                description: "Consumo",
+                description: "Por consumo",
                 price: 0
             },
             isRestaurantWarehouse: false,
@@ -2181,6 +2195,13 @@ export default {
             loading: false,
             enabled_discount: true,
             discount_amount: 0,
+            discount_percentage: 0,
+            discount_mode: "amount", // 'amount' | 'percent'
+            usePercent: false,
+            discount_input_percentage: 0, // porcentaje original ingresado para factor exacto
+            original_totals_snapshot: null,
+            discount_applied: false,
+            discount_dirty: false,
             loading_submit: false,
             showDialogOptions: false,
             showDialogMultiplePayment: false,
@@ -2836,6 +2857,100 @@ export default {
                     affectation != null && affectation != undefined
                         ? affectation
                         : i.sale_affectation_igv_type_id;
+                // Determinar descuento existente y reconstruir arreglo discounts si viene vacío
+                // Fallback jerárquico: primero nivel actual, luego nivel anidado i.item
+                const pickNumber = v =>
+                    v !== undefined &&
+                    v !== null &&
+                    v !== "" &&
+                    !isNaN(Number(v))
+                        ? Number(v)
+                        : 0;
+                let existingDiscountTotal = 0;
+                existingDiscountTotal =
+                    pickNumber(i.total_discount) ||
+                    pickNumber(i.discount_total) ||
+                    pickNumber(i.discount) ||
+                    (i.item
+                        ? pickNumber(i.item.total_discount) ||
+                          pickNumber(i.item.discount_total) ||
+                          pickNumber(i.item.discount)
+                        : 0);
+
+                // Construir discountsArray considerando también i.item.discounts
+                let discountsArray = [];
+                if (Array.isArray(i.discounts) && i.discounts.length) {
+                    discountsArray = JSON.parse(JSON.stringify(i.discounts));
+                } else if (
+                    i.item &&
+                    Array.isArray(i.item.discounts) &&
+                    i.item.discounts.length
+                ) {
+                    discountsArray = JSON.parse(
+                        JSON.stringify(i.item.discounts)
+                    );
+                }
+
+                // Si top-level está en cero pero nested item tenía descuentos, sincronizar
+                if (!existingDiscountTotal && discountsArray.length) {
+                    existingDiscountTotal = _.round(
+                        discountsArray.reduce(
+                            (a, d) => a + (Number(d.amount) || 0),
+                            0
+                        ),
+                        2
+                    );
+                }
+                const possibleOriginalPrice =
+                    i.original_price ||
+                    (i.item && i.item.original_price) ||
+                    i.sale_unit_price_original ||
+                    i.price_original ||
+                    i.sale_unit_price_before ||
+                    i.unit_price_before ||
+                    (i.item &&
+                        (i.item.sale_unit_price_original ||
+                            i.item.price_original)) ||
+                    null;
+                const qty = Number(i.quantity || 0);
+                const currentUnitPrice = Number(
+                    i.sale_unit_price || (i.item && i.item.sale_unit_price) || 0
+                );
+                if (
+                    discountsArray.length === 0 &&
+                    existingDiscountTotal > 0 &&
+                    possibleOriginalPrice &&
+                    qty > 0
+                ) {
+                    const originalP = Number(possibleOriginalPrice);
+                    const lineBase = originalP * qty;
+                    if (originalP > currentUnitPrice && lineBase > 0) {
+                        const factor = _.round(
+                            existingDiscountTotal / lineBase,
+                            5
+                        );
+                        discountsArray.push({
+                            discount_type_id: "00",
+                            description: "Descuento por item",
+                            factor,
+                            amount: _.round(existingDiscountTotal, 2),
+                            base: _.round(lineBase, 2)
+                        });
+                    }
+                }
+                // Si el arreglo tiene descuentos y total_discount está en cero, sincronizar
+                if (
+                    discountsArray.length &&
+                    (!existingDiscountTotal || existingDiscountTotal === 0)
+                ) {
+                    existingDiscountTotal = _.round(
+                        discountsArray.reduce(
+                            (a, d) => a + (Number(d.amount) || 0),
+                            0
+                        ),
+                        2
+                    );
+                }
                 return {
                     ...i,
                     warehouse_id: null,
@@ -2878,7 +2993,7 @@ export default {
                               (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
-                    total_discount: 0.0,
+                    total_discount: existingDiscountTotal,
                     total: i.sale_unit_price * i.quantity,
                     price_type_id: "01",
                     unit_price: i.sale_unit_price,
@@ -2888,7 +3003,7 @@ export default {
                     unit_price: i.sale_unit_price,
                     presentation: null,
                     charges: [],
-                    discounts: [],
+                    discounts: discountsArray,
                     attributes: [],
                     affectation_igv_type: affectation_igv_type_id
                 };
@@ -3476,8 +3591,18 @@ export default {
             this.input_person = {};
             this.customer = null;
             this.value = null;
+            // Reset de descuentos al abrir el modal
             this.enabled_discount = true;
-            this.discount_amount = 0;
+            this.discount_amount = "";
+            this.discount_percentage = "";
+            this.usePercent = false;
+            this.discount_mode = "amount";
+            this.discount_input_percentage = 0;
+            this.discount_applied = false;
+            this.discount_dirty = false;
+            this.original_totals_snapshot = null;
+            this.discount_base_amount = 0;
+            this.discount_igv_amount = 0;
             this.loading_submit = false;
             this.showDialogOptions = false;
             this.showDialogMultiplePayment = false;
@@ -3795,6 +3920,7 @@ export default {
             //     }
             // }
         },
+
         async clickSendWhatsapp(
             document_type_id,
             document_id,
@@ -3852,6 +3978,7 @@ export default {
                 }
             }
         },
+
         changeDateOfIssue() {
             let { days_before_emit } = this.configuration;
             //si el document es una factura verificar que la fecha de emision no sea menor a la fecha actual menos days_before_emit sin tomar en cuenta la hora
@@ -3934,34 +4061,134 @@ export default {
                 }
             }
         },
+        togglePercent() {
+            // Cambia entre modo porcentaje y monto
+            if (this.usePercent) {
+                this.discount_mode = "percent";
+            } else {
+                this.discount_mode = "amount";
+            }
+            // Reiniciar valores del otro modo para evitar residuales
+            if (this.discount_mode === "percent") {
+                this.discount_amount = 0;
+            } else {
+                this.discount_percentage = 0;
+            }
+            this.discount_dirty = true;
+            this.discount_applied = false;
+            this.original_totals_snapshot = null;
+            this.inputDiscountAmount();
+        },
         inputDiscountAmount() {
-            if (this.enabled_discount) {
+            if (!this.enabled_discount) return;
+
+            // Inicializar modo si no existe
+            if (!this.discount_mode) {
+                this.discount_mode = "amount";
+            }
+
+            let hasDiscount = false;
+            // Determinar base original (sin descuento) para evitar cascada
+            let baseTotalOriginal = null;
+            if (this.original_totals_snapshot && this.discount_applied) {
+                baseTotalOriginal = this.original_totals_snapshot.total;
+            }
+            const totalConIGV = parseFloat(
+                baseTotalOriginal != null
+                    ? baseTotalOriginal
+                    : this.form.total || 0
+            );
+            const baseActual = parseFloat(
+                this.original_totals_snapshot && this.discount_applied
+                    ? this.original_totals_snapshot.total_value
+                    : this.form.total_value || 0
+            ); // Base sin IGV
+
+            if (this.discount_mode === "percent") {
+                const pct = parseFloat(this.discount_percentage);
+                if (!isNaN(pct) && pct > 0) {
+                    const boundedPct = Math.min(Math.max(pct, 0), 100);
+                    this.discount_percentage = boundedPct;
+                    this.discount_input_percentage = boundedPct; // guardar porcentaje original para factor
+                    this.discount_dirty = true;
+                    this.discount_applied = false;
+                    // El porcentaje se aplica sobre el total (con IGV) para que el usuario entienda el impacto final
+                    const montoDescuentoTotal =
+                        totalConIGV * (boundedPct / 100);
+                    // Desagregar: base del descuento e IGV del descuento (solo si hay IGV y afecta)
+                    let baseDescuento = montoDescuentoTotal;
+                    let igvDescuento = 0;
+                    if (
+                        this.configuration.affectation_igv_type_id == "10" &&
+                        this.percentage_igv
+                    ) {
+                        // Fórmula: base = monto / (1 + igv%), igv = monto - base
+                        baseDescuento =
+                            montoDescuentoTotal /
+                            (1 + this.percentage_igv / 100);
+                        igvDescuento = montoDescuentoTotal - baseDescuento;
+                    }
+                    this.discount_amount = _.round(montoDescuentoTotal, 2);
+                    this.discount_base_amount = _.round(baseDescuento, 2);
+                    this.discount_igv_amount = _.round(igvDescuento, 2);
+                    hasDiscount = this.discount_amount > 0;
+                } else {
+                    this.discount_amount = 0;
+                    this.discount_base_amount = 0;
+                    this.discount_igv_amount = 0;
+                }
+            } else {
+                // amount
                 if (
                     this.discount_amount &&
                     !isNaN(this.discount_amount) &&
                     parseFloat(this.discount_amount) > 0
                 ) {
-                    this.form.total = this.form.total_value;
-                    if (this.discount_amount >= this.form.total)
-                        return Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text:
-                                "El monto de descuento debe ser menor al total de venta",
-                            timer: 3000,
-                            showConfirmButton: false,
-                            toast: true
-                        });
-
-                    this.reCalculateTotal();
-                    this.enterAmount();
-                } else {
-                    this.deleteDiscountGlobal();
-                    this.reCalculateTotal();
-                    this.enterAmount();
+                    this.discount_input_percentage = 0; // en modo monto directo no se usa
+                    // Si el usuario ingresa un monto directo y hay IGV, descomponer para mantener consistencia
+                    if (
+                        this.configuration.affectation_igv_type_id == "10" &&
+                        this.percentage_igv
+                    ) {
+                        const baseD =
+                            this.discount_amount /
+                            (1 + this.percentage_igv / 100);
+                        this.discount_dirty = true;
+                        this.discount_applied = false;
+                        const igvD = this.discount_amount - baseD;
+                        this.discount_base_amount = _.round(baseD, 2);
+                        this.discount_igv_amount = _.round(igvD, 2);
+                    } else {
+                        this.discount_base_amount = this.discount_amount;
+                        this.discount_igv_amount = 0;
+                    }
+                    hasDiscount = true;
                 }
             }
+
+            if (hasDiscount) {
+                this.form.total = totalConIGV;
+                //this.form.total = this.form.total_value; // Restaurar base antes de recalcular
+                if (this.discount_amount >= this.form.total) {
+                    this.discount_amount = 0;
+                    return Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "El descuento debe ser menor al total de venta",
+                        timer: 3000,
+                        showConfirmButton: false,
+                        toast: true
+                    });
+                }
+                this.reCalculateTotal();
+                this.enterAmount();
+            } else {
+                this.deleteDiscountGlobal();
+                this.reCalculateTotal();
+                this.enterAmount();
+            }
         },
+
         getTotalAffected() {
             let { items } = this.form;
             let total_affected = 0;
@@ -4078,195 +4305,121 @@ export default {
         }, */
 
         /* discountGlobal() {
-            // this.form.total = this.form.total_value;
-            let global_discount = parseFloat(this.discount_amount);
-            let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
-            if (global_discount > total) {
+            const global_discount = parseFloat(this.discount_amount) || 0;
+            const totalConIGVAntes = parseFloat(this.form.total) || 0;
+            const baseAntes = parseFloat(this.form.total_value) || 0;
+            const igvAntes = parseFloat(this.form.total_igv) || 0;
+
+            if (global_discount <= 0) return;
+            if (global_discount > totalConIGVAntes) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
-                return this.$toast.error(
-                    "El descuento no puede ser mayor al total"
-                );
+                return this.$toast.error('El descuento no puede ser mayor al total');
             }
-            // let total_value = parseFloat(this.form.total_value);
-            let new_total = total - global_discount;
-            let factor = _.round(global_discount / total, 4);
+
+            let global_discount = 0;
+
+            let baseDescPrecisa = 0;
+            let igvDescPreciso = 0;
+            if (this.configuration.affectation_igv_type_id == '10' && this.percentage_igv) {
+                baseDescPrecisa = global_discount / (1 + this.percentage_igv / 100);
+                igvDescPreciso = global_discount - baseDescPrecisa;
+            } else {
+                baseDescPrecisa = global_discount;
+                igvDescPreciso = 0;
+            }
+            // Redondeos comerciales (2 decimales) ajustando IGV para que la suma coincida con el descuento total
+            let baseDesc = _.round(baseDescPrecisa, 2);
+            let igvDesc = _.round(global_discount - baseDesc, 2);
+            // Si por redondeo la suma difiere, ajustar IGV
+            const sumaDesc = _.round(baseDesc + igvDesc, 2);
+            if (sumaDesc !== _.round(global_discount, 2)) {
+                // Ajustar en IGV (preferible) manteniendo la base
+                igvDesc = _.round(global_discount - baseDesc, 2);
+            }
+            this.discount_base_amount = baseDesc;
+            this.discount_igv_amount = igvDesc;
+
+            // Si todo es exonerado, sobreescribir a solo base
+            if (this.form.total_taxed <= 0 && this.form.total_exonerated > 0) {
+                baseDesc = _.round(global_discount, 2);
+                igvDesc = 0;
+                this.discount_base_amount = baseDesc;
+                this.discount_igv_amount = 0;
+            }
+
+            // Nuevo total después del descuento
+            const nuevoTotalConIGV = _.round(totalConIGVAntes - global_discount, 2);
+
+            // Recalcular base e IGV finales (solo si hay IGV aplicable)
+            let nuevaBase = baseAntes - baseDesc;
+            let nuevoIGV = igvAntes - igvDesc;
+            if (nuevaBase < 0) nuevaBase = 0;
+            if (nuevoIGV < 0) nuevoIGV = 0;
+
+            // Actualizar estructura SUNAT de discounts
+            // Factor: siempre baseDescPrecisa / baseAntes sin redondear primero => preserva porcentaje exacto
+            let factor = 0;
+            if (baseAntes > 0) {
+                factor = baseDescPrecisa / baseAntes;
+            }
+            // Si el usuario ingresó porcentaje explícito, forzar exactitud (ej: 21% -> 0.21) evitando arrastre binario
+            if (this.discount_input_percentage && this.discount_input_percentage > 0) {
+                factor = this.discount_input_percentage / 100;
+            }
+            factor = Number(factor.toFixed(5));
+
             this.form.discounts = [
                 {
-                    discount_type_id: "02",
-                    description:
-                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                    factor,
-                    amount: global_discount,
-                    base: total
-                }
-            ];
-            this.form.total_discount = global_discount;
-            if (this.discountTotal) {
-                this.form.total = new_total;
-            } else {
-                let global_discount_amount = global_discount;
-                let global_discount_amount_without_rounding = global_discount;
-                let { discount_with_base_variant } = this.configuration;
-                if (discount_with_base_variant) {
-                    global_discount_amount = Number(
-                        (global_discount / 1.18).toFixed(2)
-                    );
-                    global_discount_amount_without_rounding =
-                        global_discount / 1.18;
-                }
-                let factor = _.round(global_discount_amount / base, 4);
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor,
-                        amount: global_discount_amount,
-                        base
-                    }
-                ];
-
-                let new_base = this.form.total_value_without_rounding;
-
-                this.form.total_taxed = _.round(
-                    new_base - global_discount_amount_without_rounding,
-                    2
-                );
-                let total_taxed_without_rounding =
-                    new_base - global_discount_amount_without_rounding;
-                this.form.total_value = this.form.total_taxed;
-                if (this.configuration.affectation_igv_type_id == "10") {
-                    this.form.total_igv = _.round(
-                        total_taxed_without_rounding *
-                            (this.percentage_igv / 100),
-                        2
-                    );
-                } else {
-                    this.form.total_igv = 0;
-                }
-
-                //impuestos (isc + igv + icbper)
-                this.form.total_taxes = _.round(
-                    this.form.total_igv +
-                        this.form.total_isc +
-                        this.form.total_plastic_bag_taxes,
-                    2
-                );
-                this.form.total = _.round(
-                    this.form.total_taxed + this.form.total_taxes,
-                    2
-                );
-                this.form.subtotal = this.form.total;
-            }
-            if (
-                this.configuration.sale_note_credit_cash &&
-                this.form.document_type_id == "80"
-            ) {
-            } else {
-                this.form.enter_amount = this.form.total;
-                this.enterAmount();
-            }
-        }, */
-
-        /* discountGlobal() {
-            let global_discount = parseFloat(this.discount_amount) || 0;
-            let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
-
-            if (global_discount > total) {
-                this.discount_amount = 0;
-                this.$forceUpdate();
-                return this.$toast.error(
-                    "El descuento no puede ser mayor al total"
-                );
-            }
-
-            // Variables auxiliares
-            let global_discount_amount = global_discount;
-            let global_discount_amount_without_rounding = global_discount;
-
-            // Si el descuento afecta la base imponible
-            if (this.configuration.discount_with_base_variant) {
-                global_discount_amount = Number(
-                    (global_discount / 1.18).toFixed(2)
-                );
-                global_discount_amount_without_rounding =
-                    global_discount / 1.18;
-            }
-
-            // Factor de descuento
-            let factor = _.round(global_discount_amount / base, 4);
-
-            // Registrar en form.discounts (esto es lo que se va al XML)
-            this.form.discounts = [
-                {
-                    discount_type_id: "02",
-                    description:
-                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                    factor,
-                    amount: global_discount_amount,
-                    base
+                    discount_type_id: '02',
+                    description: 'Descuentos globales que afectan la base imponible del IGV/IVAP',
+                    factor: factor,
+                    amount: _.round(baseDesc, 2), // monto que afecta la base imponible
+                    base: _.round(baseAntes, 2)
                 }
             ];
 
-            this.form.total_discount = global_discount;
-
-            // Recalcular impuestos y totales
-            let new_base = this.form.total_value_without_rounding;
-            this.form.total_taxed = _.round(
-                new_base - global_discount_amount_without_rounding,
-                2
-            );
-
-            let total_taxed_without_rounding =
-                new_base - global_discount_amount_without_rounding;
-
-            this.form.total_value = this.form.total_taxed;
-
-            if (this.configuration.affectation_igv_type_id == "10") {
-                this.form.total_igv = _.round(
-                    total_taxed_without_rounding * (this.percentage_igv / 100),
-                    2
-                );
-            } else {
-                this.form.total_igv = 0;
+            this.form.total_discount = _.round(global_discount, 2);
+            this.form.total_value = _.round(nuevaBase, 2);
+            this.form.total_taxed = _.round(nuevaBase, 2); // asumimos todo gravado si había IGV
+            if (this.form.total_exonerated > 0 && this.form.total_taxed === 0) {
+                // Caso exonerado
+                this.form.total_exonerated = _.round(nuevaBase, 2);
             }
+            this.form.total_igv = _.round(nuevoIGV, 2);
+            this.form.total_taxes = _.round(nuevoIGV + (this.form.total_isc || 0) + (this.form.total_plastic_bag_taxes || 0), 2);
+            this.form.total = nuevoTotalConIGV;
+            this.form.subtotal = nuevoTotalConIGV;
 
-            // Impuestos (ISC + IGV + ICBPER)
-            this.form.total_taxes = _.round(
-                this.form.total_igv +
-                    this.form.total_isc +
-                    this.form.total_plastic_bag_taxes,
-                2
-            );
-
-            this.form.total = _.round(
-                this.form.total_taxed + this.form.total_taxes,
-                2
-            );
-
-            this.form.subtotal = this.form.total;
-
-            // Monto de pago
-            if (
-                !(
-                    this.configuration.sale_note_credit_cash &&
-                    this.form.document_type_id == "80"
-                )
-            ) {
+            if (!(this.configuration.sale_note_credit_cash && this.form.document_type_id == '80')) {
                 this.form.enter_amount = this.form.total;
                 this.enterAmount();
             }
         }, */
 
         discountGlobal() {
-            let global_discount = parseFloat(this.discount_amount) || 0;
-            let total = parseFloat(this.form.total);
-            let base = parseFloat(this.form.total_value);
+            const totalConIGVAntes = parseFloat(this.form.total) || 0;
+            const baseAntes = parseFloat(this.form.total_value) || 0;
+            const igvAntes = parseFloat(this.form.total_igv) || 0;
 
-            if (global_discount > total) {
+            // Determinar si el descuento es porcentaje o monto fijo
+            let global_discount = 0;
+            if (
+                this.discount_input_percentage &&
+                this.discount_input_percentage > 0
+            ) {
+                // Caso porcentaje
+                global_discount = _.round(
+                    (totalConIGVAntes * this.discount_input_percentage) / 100,
+                    2
+                );
+            } else {
+                // Caso monto fijo
+                global_discount = parseFloat(this.discount_amount) || 0;
+            }
+
+            if (global_discount <= 0) return;
+            if (global_discount > totalConIGVAntes) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
                 return this.$toast.error(
@@ -4274,91 +4427,92 @@ export default {
                 );
             }
 
-            // Caso 1: descuento sobre base imponible
-            if (this.configuration.discount_with_base_variant) {
-                let global_discount_amount = Number(
-                    (global_discount / 1.18).toFixed(2)
-                );
-                let global_discount_amount_without_rounding =
-                    global_discount / 1.18;
+            let baseDescPrecisa = 0;
+            let igvDescPreciso = 0;
+            if (
+                this.configuration.affectation_igv_type_id == "10" &&
+                this.percentage_igv
+            ) {
+                baseDescPrecisa =
+                    global_discount / (1 + this.percentage_igv / 100);
+                igvDescPreciso = global_discount - baseDescPrecisa;
+            } else {
+                baseDescPrecisa = global_discount;
+                igvDescPreciso = 0;
+            }
 
-                let factor = _.round(global_discount_amount / base, 4);
+            // Redondeos comerciales (2 decimales) ajustando IGV para que la suma coincida
+            let baseDesc = _.round(baseDescPrecisa, 2);
+            let igvDesc = _.round(global_discount - baseDesc, 2);
+            const sumaDesc = _.round(baseDesc + igvDesc, 2);
+            if (sumaDesc !== _.round(global_discount, 2)) {
+                igvDesc = _.round(global_discount - baseDesc, 2);
+            }
 
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor,
-                        amount: global_discount_amount,
-                        base
-                    }
-                ];
+            this.discount_base_amount = baseDesc;
+            this.discount_igv_amount = igvDesc;
 
-                this.form.total_discount = global_discount;
+            // Si todo es exonerado → todo el descuento va a la base
+            if (this.form.total_taxed <= 0 && this.form.total_exonerated > 0) {
+                baseDesc = _.round(global_discount, 2);
+                igvDesc = 0;
+                this.discount_base_amount = baseDesc;
+                this.discount_igv_amount = 0;
+            }
 
-                let new_base = this.form.total_value_without_rounding;
-                this.form.total_taxed = _.round(
-                    new_base - global_discount_amount_without_rounding,
-                    2
-                );
+            // Nuevo total después del descuento
+            const nuevoTotalConIGV = _.round(
+                totalConIGVAntes - global_discount,
+                2
+            );
 
-                let total_taxed_without_rounding =
-                    new_base - global_discount_amount_without_rounding;
+            // Recalcular base e IGV finales
+            let nuevaBase = baseAntes - baseDesc;
+            let nuevoIGV = igvAntes - igvDesc;
+            if (nuevaBase < 0) nuevaBase = 0;
+            if (nuevoIGV < 0) nuevoIGV = 0;
 
-                this.form.total_value = this.form.total_taxed;
+            // Calcular factor exacto
+            let factor = 0;
+            if (baseAntes > 0) {
+                factor = baseDescPrecisa / baseAntes;
+            }
+            if (
+                this.discount_input_percentage &&
+                this.discount_input_percentage > 0
+            ) {
+                factor = this.discount_input_percentage / 100;
+            }
+            factor = Number(factor.toFixed(5));
 
-                if (this.configuration.affectation_igv_type_id == "10") {
-                    this.form.total_igv = _.round(
-                        total_taxed_without_rounding *
-                            (this.percentage_igv / 100),
-                        2
-                    );
-                } else {
-                    this.form.total_igv = 0;
+            // Estructura de descuentos SUNAT
+            this.form.discounts = [
+                {
+                    discount_type_id: "02",
+                    description:
+                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                    factor: factor,
+                    amount: _.round(baseDesc, 2),
+                    base: _.round(baseAntes, 2)
                 }
+            ];
 
-                this.form.total_taxes = _.round(
-                    this.form.total_igv +
-                        this.form.total_isc +
-                        this.form.total_plastic_bag_taxes,
-                    2
-                );
-
-                this.form.total = _.round(
-                    this.form.total_taxed + this.form.total_taxes,
-                    2
-                );
-
-                this.form.subtotal = this.form.total;
+            this.form.total_discount = _.round(global_discount, 2);
+            this.form.total_value = _.round(nuevaBase, 2);
+            this.form.total_taxed = _.round(nuevaBase, 2); // asumimos gravado si había IGV
+            if (this.form.total_exonerated > 0 && this.form.total_taxed === 0) {
+                this.form.total_exonerated = _.round(nuevaBase, 2);
             }
-            // Caso 2: descuento sobre total (lo que SUNAT espera)
-            else {
-                let new_total = _.round(total - global_discount, 2);
-                let new_base = _.round(new_total / 1.18, 2);
-                let new_igv = _.round(new_total - new_base, 2);
+            this.form.total_igv = _.round(nuevoIGV, 2);
+            this.form.total_taxes = _.round(
+                nuevoIGV +
+                    (this.form.total_isc || 0) +
+                    (this.form.total_plastic_bag_taxes || 0),
+                2
+            );
+            this.form.total = nuevoTotalConIGV;
+            this.form.subtotal = nuevoTotalConIGV;
 
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor: _.round(global_discount / total, 4),
-                        amount: global_discount,
-                        base: total
-                    }
-                ];
-
-                this.form.total_discount = global_discount;
-                this.form.total_value = new_base;
-                this.form.total_taxed = new_base;
-                this.form.total_igv = new_igv;
-                this.form.total_taxes = new_igv;
-                this.form.total = new_total;
-                this.form.subtotal = new_total;
-            }
-
-            // Monto de pago
             if (
                 !(
                     this.configuration.sale_note_credit_cash &&
@@ -4512,6 +4666,19 @@ export default {
             if (!this.form.items || this.form.items.length == 0) {
                 return;
             }
+            // Si ya existe un snapshot (descuento aplicado) y se están recalculando los items sin cambiar el descuento, restaurar valores base antes de recomputar
+            if (
+                this.original_totals_snapshot &&
+                this.discount_applied &&
+                !this.discount_dirty
+            ) {
+                // Evitar que se consoliden nuevamente los valores con descuento como base
+                this.form.total = this.original_totals_snapshot.total;
+                this.form.total_value = this.original_totals_snapshot.total_value;
+                this.form.total_igv = this.original_totals_snapshot.total_igv;
+                this.form.total_taxed = this.original_totals_snapshot.total_taxed;
+                this.form.total_exonerated = this.original_totals_snapshot.total_exonerated;
+            }
             let total_discount = 0;
             let total_charge = 0;
 
@@ -4628,11 +4795,61 @@ export default {
                 this.enterAmount();
             } */
 
-            if (this.discount_amount) {
+            if (
+                this.discount_amount &&
+                (!this.discount_applied || this.discount_dirty)
+            ) {
+                // Antes de aplicar nuevamente, asegurar snapshot de base intacta
+                if (this.discount_dirty && this.original_totals_snapshot) {
+                    this.form.total = this.original_totals_snapshot.total;
+                    this.form.total_value = this.original_totals_snapshot.total_value;
+                    this.form.total_igv = this.original_totals_snapshot.total_igv;
+                    this.form.total_taxed = this.original_totals_snapshot.total_taxed;
+                    this.form.total_exonerated = this.original_totals_snapshot.total_exonerated;
+                }
                 this.discountGlobal();
             }
 
             console.log(this.form);
+
+            // Recalcular total_discount consolidado (descuentos por item + descuento global aplicado)
+            // 1. Sumar descuentos de cada item (item.total_discount)
+            let itemLevelDiscount = 0;
+            this.form.items.forEach(row => {
+                itemLevelDiscount += this.toNumber(row.total_discount);
+            });
+
+            // 2. Verificar si existe un descuento global en form.discounts (tipo 03 u otros) y sumar su monto
+            let globalLevelDiscount = 0;
+            if (
+                Array.isArray(this.form.discounts) &&
+                this.form.discounts.length
+            ) {
+                this.form.discounts.forEach(d => {
+                    // campos posibles: amount, amount_base, factor. Usamos amount si existe.
+                    if (d && d.amount)
+                        globalLevelDiscount += this.toNumber(d.amount);
+                });
+            }
+
+            // 3. Si se ingresó discount_amount manual (this.discount_amount) y no está reflejado en form.discounts, lo integramos.
+            // Evitar doble conteo: solo sumar si no hay descuento global ya registrado.
+            if (this.discount_amount && globalLevelDiscount === 0) {
+                // discount_amount representa un descuento total directo sobre la venta
+                globalLevelDiscount += this.toNumber(this.discount_amount);
+            }
+
+            // 4. Total consolidado
+            const consolidatedDiscount = _.round(
+                itemLevelDiscount + globalLevelDiscount,
+                2
+            );
+            this.form.total_discount = consolidatedDiscount;
+
+            // 5. (Opcional) Garantizar que total no sea negativo
+            if (this.form.total < 0) {
+                this.form.total = 0;
+            }
 
             console.log("Totales después del redondeo:", {
                 total_taxed: this.form.total_taxed,
@@ -4662,6 +4879,7 @@ export default {
                 this.ventalista = 0;
             }
         },
+
         chargeGlobal() {
             let base = parseFloat(this.form.total);
             let amount = parseFloat(this.chargeCredit.total_charge);
@@ -5233,11 +5451,87 @@ export default {
                     "El establecimiento no tiene series disponibles para el comprobante"
                 );
             }
+            // --- Sincronización de estructura de items antes de continuar ---
+            // Asegura que cada elemento en form.items tenga los campos a nivel superior (no sólo dentro de item)
+            const flattenItem = it => {
+                if (!it || typeof it !== "object") return it;
+                const nested =
+                    it.item && typeof it.item === "object" ? it.item : null;
+                // Lista de campos que queremos promover si faltan o están en cero en el nivel superior
+                const promoteFields = [
+                    "total_discount",
+                    "discount_total",
+                    "discount",
+                    "discounts",
+                    "original_price",
+                    "sale_unit_price_original",
+                    "price_original",
+                    "sale_unit_price_before",
+                    "unit_price_before"
+                ];
+                promoteFields.forEach(f => {
+                    if (
+                        (it[f] === undefined ||
+                            it[f] === null ||
+                            (Array.isArray(it[f]) && !it[f].length) ||
+                            (typeof it[f] === "number" && it[f] === 0)) &&
+                        nested &&
+                        nested[f] !== undefined
+                    ) {
+                        // Clonar arrays para evitar referencias compartidas
+                        it[f] = Array.isArray(nested[f])
+                            ? JSON.parse(JSON.stringify(nested[f]))
+                            : nested[f];
+                    }
+                });
+                // Si discounts está vacío pero hay total_discount y original_price -> construir
+                if (
+                    (!it.discounts || it.discounts.length === 0) &&
+                    Number(it.total_discount) > 0
+                ) {
+                    const qty = Number(it.quantity || nested?.quantity || 0);
+                    const originalP = Number(
+                        it.original_price || nested?.original_price || 0
+                    );
+                    if (qty > 0 && originalP > 0) {
+                        const lineBase = originalP * qty;
+                        const amount = Number(it.total_discount);
+                        const factor =
+                            lineBase > 0 ? _.round(amount / lineBase, 5) : 0;
+                        it.discounts = [
+                            {
+                                discount_type_id: "00",
+                                description: "Descuento por item",
+                                factor,
+                                amount: _.round(amount, 2),
+                                base: _.round(lineBase, 2)
+                            }
+                        ];
+                    }
+                }
+                // Alinear total_discount con suma de discounts si hay divergencia
+                if (Array.isArray(it.discounts) && it.discounts.length) {
+                    const sum = _.round(
+                        it.discounts.reduce(
+                            (a, d) => a + (Number(d.amount) || 0),
+                            0
+                        ),
+                        2
+                    );
+                    if (Math.abs(sum - Number(it.total_discount || 0)) > 0.01) {
+                        it.total_discount = sum;
+                    }
+                }
+                return it;
+            };
+            form.items = form.items.map(flattenItem);
+            // --- Fin sincronización ---
             // form.date_of_issue = moment().format("YYYY-MM-DD");
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
                 form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
+                console.log("es nota de venta paso por aqui");
                 this.resource_payments = "sale_note_payments";
                 this.resource_options = this.resource_documents;
             } else {
@@ -5635,6 +5929,15 @@ export default {
         },
         unlockButton() {
             this.isLocked = false;
+            // Limpiar campos de descuento al cerrar el modal
+            this.discount_amount = "";
+            this.discount_percentage = "";
+            this.usePercent = false;
+            this.discount_mode = "amount";
+            this.discount_input_percentage = 0;
+            this.discount_dirty = false;
+            this.discount_applied = false;
+            this.original_totals_snapshot = null;
         },
         async clickPrintPos(printerName, formatoPdf, userId = null) {
             try {

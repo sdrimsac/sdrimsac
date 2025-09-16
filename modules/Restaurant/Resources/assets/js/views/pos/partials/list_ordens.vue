@@ -1809,6 +1809,47 @@
                                                                     ></el-button>
                                                                 </el-button-group>
                                                             </div>
+                                                            <div
+                                                                class="col-6 col-md-6"
+                                                            >
+                                                                <label
+                                                                    for=""
+                                                                    class="fw-bold w-100"
+                                                                    >Descuentos</label
+                                                                >
+                                                                <el-input-number
+                                                                    v-model="
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .discount
+                                                                    "
+                                                                    controls-position="right"
+                                                                    :min="0"
+                                                                    :max="
+                                                                        9999999
+                                                                    "
+                                                                    @change="
+                                                                        calculateTotal
+                                                                    "
+                                                                ></el-input-number>
+                                                                <el-checkbox
+                                                                    v-model="
+                                                                        order_pend.discount
+                                                                    "
+                                                                    @change="
+                                                                        calculateTotal
+                                                                    "
+                                                                >
+                                                                    <span>
+                                                                        {{
+                                                                            order_pend.discount
+                                                                                ? "Porcentaje"
+                                                                                : "Monto"
+                                                                        }}
+                                                                    </span>
+                                                                </el-checkbox>
+                                                            </div>
                                                         </div>
                                                         <!-- Cantidad de productos en lista de venta directa -->
                                                         <div
@@ -2183,9 +2224,11 @@
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                         >
                                                                             {{
-                                                                                parseFloat(
-                                                                                    order_pend.price *
-                                                                                        order_pend.quantity
+                                                                                (order_pend._total_line !==
+                                                                                undefined
+                                                                                    ? order_pend._total_line
+                                                                                    : order_pend.price *
+                                                                                      order_pend.quantity
                                                                                 ).toFixed(
                                                                                     2
                                                                                 )
@@ -3526,6 +3569,13 @@ export default {
     },
 
     watch: {
+        showColorSize(val) {
+            if (!val) {
+                this.currentColorSize = null;
+                this.currentItem = null;
+                this.currentIdx = null;
+            }
+        },
         showPinRequest(newValue) {
             if (newValue) {
                 // Cuando se abre el diálogo, focus en el input oculto
@@ -3724,6 +3774,120 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        // Calcula importes de un item con descuento considerando si es gravado (IGV) o exonerado
+        _calcItemAmounts(order) {
+            console.log("Calculando importes para el item:", order); 
+            try {
+                const igvType = order.food.item.sale_affectation_igv_type_id; // '10' gravado, otros exoner/inafecto según SUNAT
+                const qty = Number(order.quantity) || 0;
+                const unitPrice = Number(order.price) || 0;
+                const lineTotal = qty * unitPrice; // Total antes de descuento
+                let discountInput = Number(order.food.item.discount) || 0; // valor ingreso
+                const isPercent = !!order.discount; // true => porcentaje
+                // Determinar monto de descuento
+                let discountAmount = 0;
+                if (isPercent) {
+                    // porcentaje sobre el total de la línea
+                    discountAmount = lineTotal * (discountInput / 100);
+                } else {
+                    discountAmount = discountInput; // monto directo
+                }
+                if (discountAmount > lineTotal) discountAmount = lineTotal; // no permitir negativo
+                // Monto luego del descuento
+                const netAfterDiscount = lineTotal - discountAmount;
+                // IGV 18% si es tipo 10 (gravado)
+                let base = 0,
+                    igv = 0,
+                    total = 0;
+                if (igvType == "10") {
+                    // Gravado
+                    // netAfterDiscount incluye IGV -> separar base e igv
+                    const factor = 1 + 0.18; // 18%
+                    base = netAfterDiscount / factor;
+                    igv = netAfterDiscount - base;
+                    total = base + igv; // = netAfterDiscount
+                } else {
+                    // Exonerado / Inafecto: todo es base, sin IGV
+                    base = netAfterDiscount;
+                    igv = 0;
+                    total = netAfterDiscount;
+                }
+                return {
+                    base: Number(base.toFixed(2)),
+                    igv: Number(igv.toFixed(2)),
+                    total: Number(total.toFixed(2)),
+                    discount_amount: Number(discountAmount.toFixed(2))
+                };
+            } catch (e) {
+                return { base: 0, igv: 0, total: 0, discount_amount: 0 };
+            }
+        },
+
+        _attachItemDiscounts(items) {
+            try {
+                items.forEach(item => {
+                    if (!item || !item.food || !item.food.item) return;
+
+                    const qty = Number(item.quantity) || 0;
+                    const unitPrice = Number(item.price) || 0;
+                    if (qty <= 0 || unitPrice < 0) return;
+
+                    const lineTotal = qty * unitPrice; // total original con IGV (si aplica)
+                    const igvType = item.food.item.sale_affectation_igv_type_id;
+                    const discountInput = Number(item.food.item.discount) || 0;
+                    const isPercent = !!item.discount; // true => porcentaje
+
+                    if (discountInput <= 0) return;
+
+                    // Calcular descuento ingresado
+                    let discountAmount = 0;
+                    if (isPercent) {
+                        discountAmount = lineTotal * (discountInput / 100);
+                    } else {
+                        discountAmount = discountInput;
+                    }
+
+                    if (discountAmount > lineTotal) discountAmount = lineTotal;
+
+                    let discountBase = discountAmount;
+                    let discountIgv = 0;
+                    let baseOriginal = lineTotal;
+
+                    if (igvType === "10") {
+                        // El descuento se ingresa con IGV, lo separamos en base e IGV
+                        discountBase = discountAmount / 1.18;
+                        discountIgv = discountAmount - discountBase;
+
+                        // La base imponible original (sin descuento)
+                        baseOriginal = lineTotal / 1.18;
+                    }
+
+                    const factor = _.round(discountBase / baseOriginal, 4);
+                    const amount = _.round(discountBase, 2);
+                    const base = _.round(baseOriginal, 2);
+
+                    item.discounts = [
+                        {
+                            discount_type_id: "00",
+                            description:
+                                "Descuento que afecta la base imponible del IGV/IVAP",
+                            factor,
+                            amount, // base imponible del descuento
+                            base
+                        }
+                    ];
+
+                    // Este es el descuento total con IGV (lo que el cliente ve)
+                    item.total_discount = _.round(discountAmount, 2);
+
+                    // Opcional: guardar también el IGV del descuento
+                    item.discount_igv = _.round(discountIgv, 2);
+                });
+            } catch (e) {
+                console.error("Error al adjuntar descuentos a los items:", e);
+            }
+        },
+
         /* openDeliveryForm() {
             this.allToCarry();
             this.showDeliveryForm = true;
@@ -5134,7 +5298,7 @@ export default {
                     this.showDialogClose = true;
                     break;
 
-                    /* if (this.cash_id) {
+                /* if (this.cash_id) {
                         if (this.configuration.ordens_cash) {
                             let data = await this.checkTables();
                             if (!data.success) {
@@ -5623,9 +5787,11 @@ export default {
             } else {
                 form_submit.items = this.localOrden;
             }
+
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
+
             if (this.clientTableData.customer_id) {
                 form_submit.customer_id = this.clientTableData.customer_id;
                 console.log(
@@ -5636,6 +5802,9 @@ export default {
             if (!this.configuration.maderera && !this.divided_items) {
                 form_submit.items = this.mergeItems(form_submit.items);
             }
+            // Adjuntar discounts por item (tipo 00) antes de emitir
+            this._attachItemDiscounts(form_submit.items);
+            console.log("ver form_submit ver los datos que pase", form_submit.items);
             this.loading = true;
 
             this.commands_fisico = "";
@@ -5662,6 +5831,7 @@ export default {
                 });
             }
         },
+
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);
             if (!hasFoodId) {
@@ -5720,61 +5890,65 @@ export default {
             }
         },
         calculateTotal(w = null) {
+            // Totales generales
             this.totalOrdenItems = 0.0;
-
             this.total = 0.0;
             this.totalOrden = 0.0;
-            let OrdenPen = 0;
-            let OrdenPenAtendidos = 0;
+            let totalGravado = 0,
+                totalExonerado = 0,
+                totalIgv = 0,
+                totalDescuentos = 0;
 
-            /* let selectedItems = []; */
             _.forEach(this.localOrden, value => {
-                let { item } = value.food;
-                OrdenPen += value.quantity * value.price;
-
-                /* selectedItems.push({
-                    itemName: item.name,
-                    quantity: value.quantity,
-                }); */
-                // OrdenPen =
-                //     parseFloat(OrdenPen) +
-                //     value.quantity *
-                //         this.getPriceCurrency(
-                //             value.price,
-                //             item.currency_type_id
-                //         );
+                const amounts = this._calcItemAmounts(value);
+                // Guardar montos calculados en el item para referencia (reactivo)
+                value._base = amounts.base;
+                value._igv = amounts.igv;
+                value._total_line = amounts.total;
+                value._discount_amount = amounts.discount_amount;
+                totalDescuentos += amounts.discount_amount;
+                if (value.food.item.sale_affectation_igv_type_id == "10") {
+                    totalGravado += amounts.base;
+                    totalIgv += amounts.igv;
+                } else {
+                    totalExonerado += amounts.base; // en exonerado base = total línea
+                }
             });
-            this.totalOrden = _.round(OrdenPen, 2);
+
+            this.totalOrden = _.round(
+                totalGravado + totalExonerado + totalIgv,
+                2
+            );
+
+            // Totales de ordenes ya atendidas (sin modificar su estructura original)
+            let atendidosGravExoIgv = 0;
             _.forEach(this.ordens, values => {
-                let { item } = values.food;
-                OrdenPenAtendidos =
-                    parseFloat(OrdenPenAtendidos) +
-                    values.quantity *
-                        this.getPriceCurrency(
-                            values.price,
-                            item.currency_type_id
-                        );
-                /* selectedItems.push({
-                    itemName: item.name, // Suponiendo que 'item' tiene un campo 'name'
-                    quantity: values.quantity,
-                }); */
+                atendidosGravExoIgv += values.quantity * values.price; // Mantener comportamiento anterior
             });
-            this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
-            // this.total = this.totalOrden + this.totalOrdenItems;
+            this.totalOrdenItems = _.round(atendidosGravExoIgv, 2);
             this.total = _.round(this.totalOrden, 2);
+            // Emitir totales detallados si se requieren para otro componente
+            this.$emit("totales_detallados", {
+                gravado: Number(totalGravado.toFixed(2)),
+                exonerado: Number(totalExonerado.toFixed(2)),
+                igv: Number(totalIgv.toFixed(2)),
+                descuentos: Number(totalDescuentos.toFixed(2)),
+                total: this.total
+            });
             this.$emit("total_salcancelOrdenaes", this.total);
-
-            /* console.log("Ítems seleccionados:", selectedItems); */
         },
+
         deleteFood(idx) {
             this.$emit("deletedFood", idx);
             this.calculateTotal();
         },
+
         async submit() {
             //this.loading = true;
             this.showDialogPing = true;
             this.open_orders();
         },
+
         async cancelOrdenaPin() {
             if (this.pin.length > 3 && this.reasonToDelete) {
                 if (this.deleteGeneralOrden) {

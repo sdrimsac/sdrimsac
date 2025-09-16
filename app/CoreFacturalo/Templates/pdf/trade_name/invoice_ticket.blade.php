@@ -918,7 +918,7 @@
                         @endif
                         @if ($row->discounts)
                             @foreach ($row->discounts as $dtos)
-                                <br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
+                                <br /> ** Descuento:<small>{{ number_format($dtos->factor * 100 / 1.18, 2) }}%</small>
                             @endforeach
                         @endif
 
@@ -1251,9 +1251,7 @@
                 @if ($code)
                     <b>Código A.</b>: {{ $code }} <br>
                 @endif
-
             </td>
-
         </tr>
         @if ($footer_text)
             <tr>

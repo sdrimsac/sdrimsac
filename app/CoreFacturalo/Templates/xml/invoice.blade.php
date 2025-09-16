@@ -413,7 +413,7 @@
             <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}</cbc:LineExtensionAmount>
             <cac:PricingReference>
                 <cac:AlternativeConditionPrice>
-                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}</cbc:PriceAmount>
+                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total }}</cbc:PriceAmount>
                     <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
                 </cac:AlternativeConditionPrice>
             </cac:PricingReference>
@@ -422,9 +422,9 @@
                     <cac:AllowanceCharge>
                         <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
                         <cbc:AllowanceChargeReasonCode>{{ $charge->charge_type_id }}</cbc:AllowanceChargeReasonCode>
-                        <cbc:MultiplierFactorNumeric>{{ $charge->factor }}</cbc:MultiplierFactorNumeric>
-                        <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ $charge->amount }}</cbc:Amount>
-                        <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ $charge->base }}</cbc:BaseAmount>
+                        <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($charge->factor) }}</cbc:MultiplierFactorNumeric>
+                        <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($charge->amount) }}</cbc:Amount>
+                        <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($charge->base) }}</cbc:BaseAmount>
                     </cac:AllowanceCharge>
                 @endforeach
             @endif
@@ -433,9 +433,9 @@
                     <cac:AllowanceCharge>
                         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                         <cbc:AllowanceChargeReasonCode>{{ $discount->discount_type_id }}</cbc:AllowanceChargeReasonCode>
-                        <cbc:MultiplierFactorNumeric>{{ $discount->factor }}</cbc:MultiplierFactorNumeric>
-                        <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ $discount->amount }}</cbc:Amount>
-                        <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ $discount->base }}</cbc:BaseAmount>
+                        <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($discount->factor) }}</cbc:MultiplierFactorNumeric>
+                        <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->amount) }}</cbc:Amount>
+                        <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->base) }}</cbc:BaseAmount>
                     </cac:AllowanceCharge>
                 @endforeach
             @endif
