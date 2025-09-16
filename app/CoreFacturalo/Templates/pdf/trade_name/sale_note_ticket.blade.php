@@ -723,7 +723,7 @@
                         @endif
                         @if ($row->discounts)
                             @foreach ($row->discounts as $dtos)
-                                <br /><small>{{ $dtos->factor * 100 }}% {{ $dtos->description }}</small>
+                                <br /><small>Descuentos {{ $dtos->factor * 100 }}%</small>
                             @endforeach
                         @endif
                         @if (isset($row->item->is_promotion) && $row->item->is_promotion)
@@ -785,14 +785,40 @@
                     <td class="text-right font-bold desc">{{ number_format($document->total_taxed, 2) }}</td>
                 </tr>
             @endif
-            @if ($document->total_discount > 0)
+            {{-- @if ($document->total_discount > 0)
                 <tr>
                     <td colspan="4" class="text-right font-bold">
                         {{ $document->total_prepayment > 0 ? 'ANTICIPO' : 'DESCUENTO TOTAL' }}:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold">{{ number_format($document->total_discount, 2) }}</td>
                 </tr>
+            @endif --}}
+
+            @php
+                // Calcular descuento total: suma de descuento global + descuentos por ítem
+                $total_item_discounts = 0;
+                foreach ($document->items as $item) {
+                    if ($item->discounts) {
+                        foreach ($item->discounts as $discount) {
+                            if ($discount->amount > 0) {
+                                $total_item_discounts += $discount->amount;
+                            }
+                        }
+                    }
+                }
+                $total_discount = $document->total_discount + $total_item_discounts;
+            @endphp
+
+            @if ($total_discount > 0)
+                <tr>
+                    <td colspan="4" class="text-right font-bold desc">{{ $document->total_prepayment > 0 ? 'ANTICIPO' : 'DESCUENTO TOTAL' }}:
+                        {{ $document->currency_type->symbol }}</td>
+                    <td class="text-right font-bold desc">
+                        {{ number_format($total_discount, 2) }}
+                    </td>
+                </tr>
             @endif
+
             <tr>
                 <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}
                 </td>

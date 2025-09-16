@@ -1004,11 +1004,29 @@
                     <td class="text-right font-bold desc">{{ number_format($document->total_taxed, 2) }}</td>
                 </tr>
             @endif
-            @if ($document->total_discount > 0)
+            @php
+                // Calcular descuento total: suma de descuento global + descuentos por ítem
+                $total_item_discounts = 0;
+                foreach ($document->items as $item) {
+                    if ($item->discounts) {
+                        foreach ($item->discounts as $discount) {
+                            if ($discount->amount > 0) {
+                                $total_item_discounts += $discount->amount;
+                            }
+                        }
+                    }
+                }
+                // El descuento global ya viene en $document->total_discount
+                $total_discount = $document->total_discount + $total_item_discounts;
+            @endphp
+
+            @if ($total_discount > 0)
                 <tr>
                     <td colspan="4" class="text-right font-bold desc">DESCUENTO TOTAL:
                         {{ $document->currency_type->symbol }}</td>
-                    <td class="text-right font-bold desc">{{ number_format($document->total_discount, 2) }}</td>
+                    <td class="text-right font-bold desc">
+                        {{ number_format($total_discount, 2) }}
+                    </td>
                 </tr>
             @endif
             @if ($document->total_plastic_bag_taxes > 0)
