@@ -4499,15 +4499,73 @@ export default {
 
             this.form.total_discount = _.round(global_discount, 2);
             this.form.total_value = _.round(nuevaBase, 2);
-            this.form.total_taxed = _.round(nuevaBase, 2); // asumimos gravado si había IGV
-            if (this.form.total_exonerated > 0 && this.form.total_taxed === 0) {
-                this.form.total_exonerated = _.round(nuevaBase, 2);
+
+            // Mantener la composición (gravada/exonerada/inafecta/exportación) proporcional al estado previo
+            const prevTaxed = this.toNumber(this.form.total_taxed);
+            const prevExo = this.toNumber(this.form.total_exonerated);
+            const prevUnaf = this.toNumber(this.form.total_unaffected);
+            const prevExpo = this.toNumber(this.form.total_exportation);
+            const prevBaseSum = _.round(prevTaxed + prevExo + prevUnaf + prevExpo, 2) || 0;
+
+            if (prevBaseSum > 0) {
+                // Distribuir la nueva base según proporciones anteriores
+                const taxedRatio = prevTaxed / prevBaseSum;
+                const exoRatio = prevExo / prevBaseSum;
+                const unafRatio = prevUnaf / prevBaseSum;
+                const expoRatio = prevExpo / prevBaseSum;
+
+                let newTaxed = _.round(nuevaBase * taxedRatio, 2);
+                let newExo = _.round(nuevaBase * exoRatio, 2);
+                let newUnaf = _.round(nuevaBase * unafRatio, 2);
+                let newExpo = _.round(nuevaBase * expoRatio, 2);
+
+                // Ajuste por redondeo: corregir la diferencia en la categoría dominante
+                let sumNew = _.round(newTaxed + newExo + newUnaf + newExpo, 2);
+                let diff = _.round(nuevaBase - sumNew, 2);
+                if (diff !== 0) {
+                    // Elegir la categoría con mayor base previa para absorber la diferencia
+                    const buckets = [
+                        { key: 'taxed', prev: prevTaxed },
+                        { key: 'exo', prev: prevExo },
+                        { key: 'unaf', prev: prevUnaf },
+                        { key: 'expo', prev: prevExpo }
+                    ].sort((a, b) => b.prev - a.prev);
+                    const biggest = buckets[0]?.key;
+                    if (biggest === 'taxed') newTaxed = _.round(newTaxed + diff, 2);
+                    else if (biggest === 'exo') newExo = _.round(newExo + diff, 2);
+                    else if (biggest === 'unaf') newUnaf = _.round(newUnaf + diff, 2);
+                    else newExpo = _.round(newExpo + diff, 2);
+                }
+
+                // Evitar negativos por redondeo
+                if (newTaxed < 0) newTaxed = 0;
+                if (newExo < 0) newExo = 0;
+                if (newUnaf < 0) newUnaf = 0;
+                if (newExpo < 0) newExpo = 0;
+
+                this.form.total_taxed = newTaxed;
+                this.form.total_exonerated = newExo;
+                this.form.total_unaffected = newUnaf;
+                this.form.total_exportation = newExpo;
+            } else {
+                // Si no hay composición previa, decidir según IGV anterior
+                if (igvAntes > 0) {
+                    this.form.total_taxed = _.round(nuevaBase, 2);
+                    this.form.total_exonerated = 0;
+                    this.form.total_unaffected = 0;
+                    this.form.total_exportation = 0;
+                } else {
+                    // Caso típico de exonerado total
+                    this.form.total_taxed = 0;
+                    this.form.total_exonerated = _.round(nuevaBase, 2);
+                    this.form.total_unaffected = 0;
+                    this.form.total_exportation = 0;
+                }
             }
+
             this.form.total_igv = _.round(nuevoIGV, 2);
             this.form.total_taxes = _.round(
-                nuevoIGV +
-                    (this.form.total_isc || 0) +
-                    (this.form.total_plastic_bag_taxes || 0),
+                nuevoIGV + (this.form.total_isc || 0) + (this.form.total_plastic_bag_taxes || 0),
                 2
             );
             this.form.total = nuevoTotalConIGV;
