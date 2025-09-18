@@ -793,7 +793,7 @@
                     <td class="text-right font-bold">{{ number_format($document->total_discount, 2) }}</td>
                 </tr>
             @endif --}}
-
+{{-- 
             @php
                 // Calcular descuento total: suma de descuento global + descuentos por ítem
                 $total_item_discounts = 0;
@@ -817,8 +817,36 @@
                         {{ number_format($total_discount, 2) }}
                     </td>
                 </tr>
-            @endif
+            @endif --}}
 
+            @php
+                // Calcular descuento total: suma de descuento global + descuentos por ítem
+                $total_item_discounts = 0;
+                foreach ($document->items as $item) {
+                    if ($item->discounts) {
+                        foreach ($item->discounts as $discount) {
+                            if ($discount->amount > 0) {
+                                $total_item_discounts += $discount->amount;
+                            }
+                        }
+                    }
+                }
+                // El descuento global ya viene en $document->total_discount
+                $total_discount_gross = $document->total_discount + $total_item_discounts;
+                // Si el documento tiene IGV, mostrar el descuento dividido entre 1.18 (descuento base sin IGV)
+                $has_igv = ($document->total_igv > 0) || ($document->total_taxed > 0);
+                $total_discount = $has_igv ? ($total_discount_gross / 1.18) : $total_discount_gross;
+            @endphp
+
+            @if ($total_discount > 0)
+                <tr>
+                    <td colspan="4" class="text-right font-bold desc">{{ $document->total_prepayment > 0 ? 'ANTICIPO' : 'DESCUENTO TOTAL' }}:
+                        {{ $document->currency_type->symbol }}</td>
+                    <td class="text-right font-bold desc">
+                        {{ number_format($total_discount, 2) }}
+                    </td>
+                </tr>
+            @endif
             <tr>
                 <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}
                 </td>

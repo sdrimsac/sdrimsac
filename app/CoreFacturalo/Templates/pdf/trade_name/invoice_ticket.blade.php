@@ -917,8 +917,17 @@
                             @endforeach
                         @endif
                         @if ($row->discounts)
+                            @php
+                                $has_igv_row = ($document->total_igv > 0) || ($document->total_taxed > 0);
+                            @endphp
                             @foreach ($row->discounts as $dtos)
-                                <br /> ** Descuento:<small>{{ number_format($dtos->factor * 100 / 1.18, 2) }}%</small>
+                                @php
+                                    $dto_percent = $dtos->factor * 100;
+                                    /* if ($has_igv_row) {
+                                        $dto_percent = $dto_percent / 1.18;
+                                    } */
+                                @endphp
+                                <br /> ** Descuento:<small>{{ number_format($dto_percent, 2) }}%</small>
                             @endforeach
                         @endif
 
@@ -1017,7 +1026,10 @@
                     }
                 }
                 // El descuento global ya viene en $document->total_discount
-                $total_discount = $document->total_discount + $total_item_discounts;
+                $total_discount_gross = $document->total_discount + $total_item_discounts;
+                // Si el documento tiene IGV, mostrar el descuento dividido entre 1.18 (descuento base sin IGV)
+                $has_igv = ($document->total_igv > 0) || ($document->total_taxed > 0);
+                $total_discount = $has_igv ? ($total_discount_gross / 1.18) : $total_discount_gross;
             @endphp
 
             @if ($total_discount > 0)

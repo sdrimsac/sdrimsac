@@ -3406,6 +3406,9 @@ const DigitalPayments = () => import("../partials/digital_payments.vue");
 const OpenItems = () => import("../partials/visualizate.vue");
 import { exchangeRate } from "@mixins/functions";
 import DeliveryForm from "../partials/delivery_from.vue";
+import { listcalculateTotal as calculateTotal } from "./listorden/calculateTotal.js";
+import { DiscountCalcItemAmounts } from "./listorden/discountCalcItemAmount.js";
+import { attachItemDiscounts } from "./listorden/enterattachItemDiscounts.js";
 export default {
     mixins: [exchangeRate],
 
@@ -3777,116 +3780,16 @@ export default {
     methods: {
         // Calcula importes de un item con descuento considerando si es gravado (IGV) o exonerado
         _calcItemAmounts(order) {
-            console.log("Calculando importes para el item:", order); 
-            try {
-                const igvType = order.food.item.sale_affectation_igv_type_id; // '10' gravado, otros exoner/inafecto según SUNAT
-                const qty = Number(order.quantity) || 0;
-                const unitPrice = Number(order.price) || 0;
-                const lineTotal = qty * unitPrice; // Total antes de descuento
-                let discountInput = Number(order.food.item.discount) || 0; // valor ingreso
-                const isPercent = !!order.discount; // true => porcentaje
-                // Determinar monto de descuento
-                let discountAmount = 0;
-                if (isPercent) {
-                    // porcentaje sobre el total de la línea
-                    discountAmount = lineTotal * (discountInput / 100);
-                } else {
-                    discountAmount = discountInput; // monto directo
-                }
-                if (discountAmount > lineTotal) discountAmount = lineTotal; // no permitir negativo
-                // Monto luego del descuento
-                const netAfterDiscount = lineTotal - discountAmount;
-                // IGV 18% si es tipo 10 (gravado)
-                let base = 0,
-                    igv = 0,
-                    total = 0;
-                if (igvType == "10") {
-                    // Gravado
-                    // netAfterDiscount incluye IGV -> separar base e igv
-                    const factor = 1 + 0.18; // 18%
-                    base = netAfterDiscount / factor;
-                    igv = netAfterDiscount - base;
-                    total = base + igv; // = netAfterDiscount
-                } else {
-                    // Exonerado / Inafecto: todo es base, sin IGV
-                    base = netAfterDiscount;
-                    igv = 0;
-                    total = netAfterDiscount;
-                }
-                return {
-                    base: Number(base.toFixed(2)),
-                    igv: Number(igv.toFixed(2)),
-                    total: Number(total.toFixed(2)),
-                    discount_amount: Number(discountAmount.toFixed(2))
-                };
-            } catch (e) {
-                return { base: 0, igv: 0, total: 0, discount_amount: 0 };
-            }
+            return DiscountCalcItemAmounts(order);
+        },
+
+        _attachItemDiscounts() {
+            this._attachItemDiscounts(this.localOrden);
         },
 
         _attachItemDiscounts(items) {
-            try {
-                items.forEach(item => {
-                    if (!item || !item.food || !item.food.item) return;
 
-                    const qty = Number(item.quantity) || 0;
-                    const unitPrice = Number(item.price) || 0;
-                    if (qty <= 0 || unitPrice < 0) return;
-
-                    const lineTotal = qty * unitPrice; // total original con IGV (si aplica)
-                    const igvType = item.food.item.sale_affectation_igv_type_id;
-                    const discountInput = Number(item.food.item.discount) || 0;
-                    const isPercent = !!item.discount; // true => porcentaje
-
-                    if (discountInput <= 0) return;
-
-                    // Calcular descuento ingresado
-                    let discountAmount = 0;
-                    if (isPercent) {
-                        discountAmount = lineTotal * (discountInput / 100);
-                    } else {
-                        discountAmount = discountInput;
-                    }
-
-                    if (discountAmount > lineTotal) discountAmount = lineTotal;
-
-                    let discountBase = discountAmount;
-                    let discountIgv = 0;
-                    let baseOriginal = lineTotal;
-
-                    if (igvType === "10") {
-                        // El descuento se ingresa con IGV, lo separamos en base e IGV
-                        discountBase = discountAmount / 1.18;
-                        discountIgv = discountAmount - discountBase;
-
-                        // La base imponible original (sin descuento)
-                        baseOriginal = lineTotal / 1.18;
-                    }
-
-                    const factor = _.round(discountBase / baseOriginal, 4);
-                    const amount = _.round(discountBase, 2);
-                    const base = _.round(baseOriginal, 2);
-
-                    item.discounts = [
-                        {
-                            discount_type_id: "00",
-                            description:
-                                "Descuento que afecta la base imponible del IGV/IVAP",
-                            factor,
-                            amount, // base imponible del descuento
-                            base
-                        }
-                    ];
-
-                    // Este es el descuento total con IGV (lo que el cliente ve)
-                    item.total_discount = _.round(discountAmount, 2);
-
-                    // Opcional: guardar también el IGV del descuento
-                    item.discount_igv = _.round(discountIgv, 2);
-                });
-            } catch (e) {
-                console.error("Error al adjuntar descuentos a los items:", e);
-            }
+            return  attachItemDiscounts(items);
         },
 
         /* openDeliveryForm() {
@@ -5890,53 +5793,9 @@ export default {
                 return price / this.exchange_rate_sale;
             }
         },
-        calculateTotal(w = null) {
-            // Totales generales
-            this.totalOrdenItems = 0.0;
-            this.total = 0.0;
-            this.totalOrden = 0.0;
-            let totalGravado = 0,
-                totalExonerado = 0,
-                totalIgv = 0,
-                totalDescuentos = 0;
 
-            _.forEach(this.localOrden, value => {
-                const amounts = this._calcItemAmounts(value);
-                // Guardar montos calculados en el item para referencia (reactivo)
-                value._base = amounts.base;
-                value._igv = amounts.igv;
-                value._total_line = amounts.total;
-                value._discount_amount = amounts.discount_amount;
-                totalDescuentos += amounts.discount_amount;
-                if (value.food.item.sale_affectation_igv_type_id == "10") {
-                    totalGravado += amounts.base;
-                    totalIgv += amounts.igv;
-                } else {
-                    totalExonerado += amounts.base; // en exonerado base = total línea
-                }
-            });
-
-            this.totalOrden = _.round(
-                totalGravado + totalExonerado + totalIgv,
-                2
-            );
-
-            // Totales de ordenes ya atendidas (sin modificar su estructura original)
-            let atendidosGravExoIgv = 0;
-            _.forEach(this.ordens, values => {
-                atendidosGravExoIgv += values.quantity * values.price; // Mantener comportamiento anterior
-            });
-            this.totalOrdenItems = _.round(atendidosGravExoIgv, 2);
-            this.total = _.round(this.totalOrden, 2);
-            // Emitir totales detallados si se requieren para otro componente
-            this.$emit("totales_detallados", {
-                gravado: Number(totalGravado.toFixed(2)),
-                exonerado: Number(totalExonerado.toFixed(2)),
-                igv: Number(totalIgv.toFixed(2)),
-                descuentos: Number(totalDescuentos.toFixed(2)),
-                total: this.total
-            });
-            this.$emit("total_salcancelOrdenaes", this.total);
+        calculateTotal (w = null) {
+            return calculateTotal.call(this);
         },
 
         deleteFood(idx) {

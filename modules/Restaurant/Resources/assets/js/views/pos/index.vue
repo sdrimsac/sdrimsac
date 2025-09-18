@@ -6528,11 +6528,13 @@ export default {
                     if (taxable) {
                         total_base_igv = total_value;
                         total_taxes = total_igv; // solo IGV
-                        unit_value = qty ? total_value / qty : 0;
+                        // unit_value debe ser base antes del descuento (sin IGV)
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     } else {
                         total_base_igv = total_value; // para exonerado / inafecto se usa igual
                         total_taxes = 0;
-                        unit_value = qty ? lineTotal / qty : 0;
+                        // unit_value debe ser base antes del descuento
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     }
                 } else if (comesPrecalc && i.total !== undefined && i.total_value !== undefined) {
                     // Caso: vienen totales simples (total y total_value) desde list_ordens. Respetarlos.
@@ -6542,12 +6544,14 @@ export default {
                         total_base_igv = total_value;
                         total_igv = _.round(total_base_igv * percentage, 2);
                         total_taxes = total_igv;
-                        unit_value = qty ? total_base_igv / qty : 0;
+                        // unit_value debe ser base antes del descuento (sin IGV)
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     } else {
                         total_base_igv = total_value;
                         total_igv = 0;
                         total_taxes = 0;
-                        unit_value = qty ? lineTotal / qty : 0;
+                        // unit_value debe ser base antes del descuento
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     }
                 } else if (hasTotalOnly) {
                     // Viene sólo el total (bruto). Calcular base/igv a partir de él, manteniendo el total intacto
@@ -6557,13 +6561,15 @@ export default {
                         total_igv = _.round(total_base_igv * percentage, 2);
                         total_value = total_base_igv;
                         total_taxes = total_igv;
-                        unit_value = qty ? total_base_igv / qty : 0;
+                        // unit_value debe ser base antes del descuento (sin IGV)
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     } else {
                         total_base_igv = lineTotal;
                         total_igv = 0;
                         total_value = lineTotal;
                         total_taxes = 0;
-                        unit_value = qty ? lineTotal / qty : 0;
+                        // unit_value debe ser base antes del descuento
+                        unit_value = qty ? preDiscountBaseNet / qty : 0;
                     }
                 } else {
                     // Calcular localmente si no tenemos precálculo
