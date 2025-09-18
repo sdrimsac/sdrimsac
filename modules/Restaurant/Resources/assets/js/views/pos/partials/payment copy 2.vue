@@ -3687,6 +3687,7 @@ export default {
                 this.form.subtotal = this.form.total;
             }
         },
+        
         discountGlobal3() {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);

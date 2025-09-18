@@ -526,7 +526,7 @@ class ReportCreditController extends Controller
     // Map paid=2 to null (show all), while keeping 0 and 1 as valid filter states
     $rawPaid = $request->has('paid') ? (int) $request->paid : null;
     $paid = ($rawPaid === 2) ? null : $rawPaid;
-    Log::info('Filtering records', ['paid' => $paid, 'raw_paid' => $rawPaid]);
+    //Log::info('Filtering records', ['paid' => $paid, 'raw_paid' => $rawPaid]);
 
         $isFromAdmin = $request->isFromAdmin;
         $status = $request->status;
