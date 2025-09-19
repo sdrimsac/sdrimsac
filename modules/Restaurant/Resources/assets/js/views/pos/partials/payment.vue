@@ -1512,6 +1512,7 @@
                                             v-model="affectation_optional_id"
                                             clearable
                                             filterable
+                                            :disabled="disableAffectationSelect"
                                         >
                                             <el-option
                                                 v-for="option in affectation_igv_types.filter(
@@ -1524,6 +1525,13 @@
                                             >
                                             </el-option>
                                         </el-select>
+                                        <small
+                                            v-if="disableAffectationSelect"
+                                            class="text-muted d-block mt-1"
+                                        >
+                                            Bloqueado porque hay un descuento
+                                            aplicado.
+                                        </small>
                                     </div>
                                 </template>
                                 <!-- </template> -->
@@ -2298,6 +2306,26 @@ export default {
             });
             format += `Total: ${sum.toFixed(2)}`;
             return format;
+        },
+        hasAnyDiscount() {
+            const globalDiscount =
+                Number(this.discount_amount) > 0 ||
+                Number(this.discount_percentage) > 0;
+            const items = (this.form && this.form.items) || [];
+            const itemDiscount = items.some(it => {
+                const td = Number(it.total_discount || it.discount || 0);
+                const nested = (Array.isArray(it.discounts)
+                    ? it.discounts
+                    : []
+                ).reduce((a, d) => a + (Number(d.amount) || 0), 0);
+                return td > 0 || nested > 0;
+            });
+            return globalDiscount || itemDiscount;
+        },
+        disableAffectationSelect() {
+            if (this.conf.show_discounts_payment) {
+                return this.hasAnyDiscount === true;
+            }
         }
     },
     async created() {
@@ -2431,8 +2459,10 @@ export default {
                     const it = items[i] || {};
                     if (
                         (it.total_discount && Number(it.total_discount) > 0) ||
-                        (Array.isArray(it.discounts) && it.discounts.length > 0) ||
-                        (it._discount_amount && Number(it._discount_amount) > 0) ||
+                        (Array.isArray(it.discounts) &&
+                            it.discounts.length > 0) ||
+                        (it._discount_amount &&
+                            Number(it._discount_amount) > 0) ||
                         (it.discount && Number(it.discount) > 0)
                     ) {
                         hasItemDiscount = true;
@@ -4081,7 +4111,7 @@ export default {
                 }
             }
         },
-        
+
         togglePercent() {
             // Cambia entre modo porcentaje y monto
             if (this.usePercent) {
@@ -4551,7 +4581,7 @@ export default {
             }
             return parts;
         },
-        discountGlobal2(){
+        discountGlobal2() {
             return discountInputdiscountGlobal2.call(this);
         },
         // aqui es donde se considera todo los metodos de pago
@@ -4797,137 +4827,10 @@ export default {
             }
         }, */
 
-     // para recalcular los totales
+        // para recalcular los totales
         reCalculateTotal() {
             return discountInputReCalculateTotal.call(this);
         },
-
-        /* reCalculateTotal() {
-            console.log("Recalculando totales");
-            let total_discount = 0;
-            let total_charge = 0;
-
-            let total_exportation = 0;
-            let total_taxed = 0;
-            let total_exonerated = 0;
-            let total_unaffected = 0;
-            let total_free = 0;
-            let total_igv = 0;
-            let total_value = 0;
-            let total = 0;
-            let total_plastic_bag_taxes = 0;
-            if (
-                this.affectation_optional_id != null &&
-                this.affectation_optional_id != undefined &&
-                this.affectation_optional_id != ""
-            ) {
-                this.form.items = this.formatItems(
-                    this.form.items,
-                    this.affectation_optional_id
-                );
-            }
-
-            this.form.items.forEach(row => {
-                total_discount += parseFloat(row.total_discount);
-                total_charge += parseFloat(row.total_charge);
-
-                if (row.affectation_igv_type_id === "10") {
-                    total_taxed += parseFloat(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "20") {
-                    total_exonerated += parseFloat(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "30") {
-                    total_unaffected += parseFloat(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "40") {
-                    total_exportation += parseFloat(row.total_value);
-                }
-                console.log("row:", row.affectation_igv_type_id);
-                if (
-                    ["11", "12", "13", "14", "15", "16"].includes(
-                        row.affectation_igv_type_id
-                    )
-                ) {
-                    let unit_value = row.total_value / row.quantity;
-                    let total_value_partial = unit_value * row.quantity;
-                    row.total_taxes =
-                        row.total_value -
-                        total_value_partial +
-                        isNaN(parseFloat(row.total_plastic_bag_taxes))
-                            ? 0.0
-                            : parseFloat(row.total_plastic_bag_taxes);
-                    row.total_igv =
-                        total_value_partial * (row.percentage_igv / 100);
-                    row.total_base_igv = total_value_partial;
-                    console.log("restando de", row.total_value, total_value);
-                    total_value -= row.total_value;
-                    console.log("sumando", row.total, total);
-                    total += parseFloat(row.total);
-                }
-                if (
-                    ["10", "20", "30", "40"].indexOf(
-                        row.affectation_igv_type_id
-                    ) < 0
-                ) {
-                    total_free += parseFloat(row.total_value);
-                    console.log("Total value actualizado:", total_value);
-                }
-                if (
-                    ["10", "20", "30", "40"].indexOf(
-                        row.affectation_igv_type_id
-                    ) > -1
-                ) {
-                    total_igv += parseFloat(row.total_igv);
-                    total += parseFloat(row.total);
-                }
-                total_value += parseFloat(row.total_value);
-                total_plastic_bag_taxes += isNaN(
-                    parseFloat(row.total_plastic_bag_taxes)
-                )
-                    ? 0.0
-                    : parseFloat(row.total_plastic_bag_taxes);
-            });
-            console.log("Totales antes del redondeo:");
-            console.log("Total Taxed:", total_taxed);
-            console.log("Total Exonerated:", total_exonerated);
-            console.log("Total IGV:", total_igv);
-            console.log("Total Value:", total_value);
-
-
-            this.form.total_exportation = _.round(total_exportation, 2);
-            this.form.total_taxed = _.round(total_taxed, 2);
-            this.form.total_exonerated = _.round(total_exonerated, 2);
-            this.form.total_unaffected = _.round(total_unaffected, 2);
-            this.form.total_free = _.round(total_free, 2);
-            this.form.total_igv = _.round(total_igv, 2);
-            this.form.total_value = _.round(total_value, 2);
-            this.form.total_value_without_rounding = total_value;
-            this.form.total_taxes = _.round(total_igv, 2);
-            this.form.total_plastic_bag_taxes = _.round(
-                total_plastic_bag_taxes,
-                2
-            );
-            console.log("Totales después del redondeo:", {
-                total_taxed: this.form.total_taxed,
-                total_igv: this.form.total_igv,
-                total_value: this.form.total_value,
-            });
-
-
-            // this.form.total = _.round(total, 2)
-            this.form.total = _.round(
-                total_charge + total + this.form.total_plastic_bag_taxes,
-                2
-            );
-            console.log("Total final calculado:", this.form.total);
-
-            if (this.discount_amount) {
-                this.discountGlobal();
-            }
-
-            // this.discountGlobal();
-        }, */
 
         chargeGlobal() {
             let base = parseFloat(this.form.total);
@@ -5197,6 +5100,14 @@ export default {
         },
         async sendPayment($event, form = null) {
             let pass = true;
+            // Validación: si hay descuentos aplicados, no permitir cambiar afectación opcional
+            /* if (this.hasAnyDiscount && this.affectation_optional_id) {
+                this.$toast.error(
+                    "No puede cambiar la afectación cuando existe un descuento aplicado"
+                );
+                this.isLocked = false;
+                return;
+            } */
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
                 (this.form.observation == "" &&
@@ -5407,6 +5318,18 @@ export default {
             let how_is;
             this.reCalculateTotal();
             // return;
+            // Alinear el monto ingresado con el total cuando corresponde
+            // Evita validación falsa por montos exonerados con cambio de afectación
+            if (["01", "03"].includes(form.document_type_id)) {
+                const hasSplit = (this.currentPayments || []).length > 0;
+                const enteredAmountTmp =
+                    (parseFloat(form.enter_amount) || 0) + this.totalPayments();
+                const totalAmountTmp = parseFloat(form.total) || 0;
+                if (!hasSplit && enteredAmountTmp < totalAmountTmp - 0.009) {
+                    this.form.enter_amount = this.form.total;
+                    this.enterAmount();
+                }
+            }
             if (
                 (!this.form.series_id && this.conf.pos_quick_sale) ||
                 this.ordens_all_table
