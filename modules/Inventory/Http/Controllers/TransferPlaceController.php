@@ -13,6 +13,7 @@ use Exception;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Inventory\Http\Resources\TransferCollection;
 use Modules\Inventory\Http\Resources\TransferResource;
 use Modules\Inventory\Models\Inventory;
@@ -303,12 +304,17 @@ class TransferPlaceController extends Controller
                         }
                     }
                 }
+
                 if (isset($series_lots['color_size'])) {
+                    Log::info("✅ Pasando talla color por aquí", $series_lots['color_size']);
                     foreach ($series_lots['color_size']  as $item_color) {
                         $size = $item_color['size'];
                         $color = $item_color['color'];
                         $price = $item_color['price'];
-                        $quantity = $item_color['selectedQuantity'];
+                        /* $quantity = $item_color['selectedQuantity']; */
+                        $quantity = $item_color['selectedQuantity']
+                            ?? $item_color['quantity']
+                            ?? 0;
                         $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
                             ->where('size', $size)
                             ->where('color', $color)
