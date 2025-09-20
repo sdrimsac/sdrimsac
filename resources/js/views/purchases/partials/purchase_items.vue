@@ -1,30 +1,39 @@
 <template>
-    <el-dialog :title="title" :visible.sync="showDialog" width="50%" :before-close="close">
-        <div>
-            <div>
-                <label for="">Descargar formato Excel</label>
+    <el-dialog :title="title" :visible.sync="showDialog" width="70%" :before-close="close">
+        <div class="row mb-2">
+            <div class="col-4">
+                <div class="col-12">
+                    <el-button class="btn_guardarsmall" type="primary" @click.prevent="
+                        $refs.file.click()
+                        ">Cargar Archivo
+                        <i class="fas fa-file-excel"></i>
+                    </el-button>
+                    <input type="file" @change="
+                        ImportItems
+                    " style="visibility:hidden;" ref="file" accept=".xlsx,.xls" />
+
+                    
+
+                </div>
             </div>
-            <div>
-                <el-tooltip class="item" effect="dark" content="Descargar Formato de Excel" placement="top">
-                    <a href="/formats/purchase_items.xlsx" download
-                        class="el-button el-button--primary text-success d-inline-flex align-items-center gap-1">
+            <div class="col-4">
+                <a href="/formats/purchase_items.xlsx" download>
                         <i class="el-icon-download"></i>
-                        Descargar
-                        <i class="fas fa-file-excel fa-2x"></i>
+                        Descargar AQUÍ el formato
+
                     </a>
-                </el-tooltip>
+            </div>
+            <div class="col-">
+                <div class="col-4 d-flex justify-content-end">
+                    <!-- <el-button class="btn_cancelarsmall" type="primary" @click="close">Cerrar</el-button> -->
+                    <!-- <el-button class="btn_guardarsmall" type="primary" @click="close">Agregar</el-button> -->
+                </div>
             </div>
 
-            <div class="d-flex justify-content-center align-items-center">
-                <el-button class="btn_canjearsmall" icon="fas fa-upload icon" @click.prevent="
-                    $refs.file.click()
-                    "></el-button>
-                <input type="file" @change="
-                    ImportItems
-                " style="visibility:hidden;" ref="file" accept=".xlsx,.xls" />
-            </div>
         </div>
-        <div v-if="items.length > 0" class="mt-4">
+
+        
+        <!-- <div v-if="items.length > 0" class="mt-4">
             <el-table :data="items" style="width: 100%">
                 <el-table-column prop="id" label="ID del producto" />
                 <el-table-column prop="internal_id" label="ID Interno" />
@@ -35,13 +44,10 @@
                 <el-table-column prop="warehouse_id" label="Almacén" />
                 <el-table-column prop="sale_unit_price" label="Precio Venta" />
                 <el-table-column prop="affectation_igv_type_id" label="Afectación IGV" />
-                <!-- Agrega más columnas si hay más datos en el producto -->
+                
             </el-table>
-        </div>
-        <div class="mt-4">
-            <el-button type="primary" @click="close">Cerrar</el-button>
-            <el-button type="primary" @click="close">Agregar</el-button>
-        </div>
+        </div> -->
+    
     </el-dialog>
 </template>
 <script>
@@ -56,11 +62,13 @@ export default {
     data() {
         return {
             title: "Importar Items de Compra",
-            items: []
+            items: [],
+            localForm: { ...this.form }
         };
     },
     methods: {
         close() {
+            
             this.$emit("update:showDialog", false);
         },
 
@@ -126,7 +134,7 @@ export default {
                                 percentage_igv = Number(this.percentage_igv) || 18;
                             }
 
-                            this.form = {
+                            this.localForm = {
                                 item_id: found.id,
                                 item: {
                                     ...found,
@@ -202,6 +210,19 @@ export default {
                     // 5. Mostrar en tabla local
                     this.items = validItems;
 
+                    // Limpiar formulario
+                    this.localForm = {};
+                    // Emitir cambios al padre
+                    this.$emit('update:form', this.localForm);
+                    // Cerrar el modal
+                    this.$emit("update:showDialog", false);
+                    // Mostrar mensaje de éxito
+                    return this.$showSAlert(
+                        "Éxito",
+                        "Archivo Excel cargado correctamente.",
+                        "success"
+                    );
+
                 } catch (error) {
                     console.error('Error en importación (catch):', error);
                     if (error.response) {
@@ -215,7 +236,7 @@ export default {
         },
 
         async clickAddItem() {
-            if (!this.form.item_id || !this.form.item) {
+            if (!this.localForm.item_id || !this.localForm.item) {
                 return this.$showSAlert(
                     "Alerta",
                     "Debe seleccionar un producto para poder agregar.",
@@ -224,14 +245,14 @@ export default {
             }
             // Validación de total en 0
             if (
-                this.form.total_price === 0 ||
-                this.form.total_price === null ||
-                this.form.total_price === undefined
+                this.localForm.total_price === 0 ||
+                this.localForm.total_price === null ||
+                this.localForm.total_price === undefined
             ) {
                 // Igualar precio de compra al purchase_unit_price del item importado
-                if (this.form.item && this.form.item.purchase_unit_price) {
-                    this.form.unit_price = this.form.item.purchase_unit_price;
-                    this.form.purchase_unit_price = this.form.item.purchase_unit_price;
+                if (this.localForm.item && this.localForm.item.purchase_unit_price) {
+                    this.localForm.unit_price = this.localForm.item.purchase_unit_price;
+                    this.localForm.purchase_unit_price = this.localForm.item.purchase_unit_price;
                 }
                 return Swal.fire(
                     "No se puede agregar un Producto o Servicios con Valor 0"
@@ -240,7 +261,7 @@ export default {
             this.insertTotalPrice = false;
 
             // Validation for color and size
-            if (this.form.item.has_color_size && this.color_size.length === 0) {
+            if (this.localForm.item.has_color_size && this.color_size.length === 0) {
                 return this.$showSAlert(
                     "Alerta",
                     "Debe agregar al menos un color y talla para poder realizar la Compra",
@@ -249,13 +270,13 @@ export default {
             }
 
             // Validation for lots
-            /* if (this.form.item.lots_enabled && this.lots.length === 0) {
+            /* if (this.localForm.item.lots_enabled && this.lots.length === 0) {
                     return this.$toast.error("Debe agregar al menos un lote para poder realizar la compra.");
                 } */
 
             // Validation for series
-            if (this.form.item.series_enabled) {
-                if (this.lots.length > this.form.quantity) {
+            if (this.localForm.item.series_enabled) {
+                if (this.lots.length > this.localForm.quantity) {
                     // return this.$toast.error("La cantidad de series registradas es superior al stock");
                     return this.$showSAlert(
                         "Alerta",
@@ -264,7 +285,7 @@ export default {
                     );
                 }
 
-                if (this.lots.length != this.form.quantity) {
+                if (this.lots.length != this.localForm.quantity) {
                     // return this.$toast.error(
                     //     "La cantidad de series registradas son diferentes al stock"
                     // );
@@ -276,23 +297,23 @@ export default {
                 }
             }
 
-            let date_of_due = this.form.date_of_due;
-            this.form.item.unit_price = this.form.unit_price;
-            this.form.item.presentation = this.item_unit_type;
+            let date_of_due = this.localForm.date_of_due;
+            this.localForm.item.unit_price = this.localForm.unit_price;
+            this.localForm.item.presentation = this.item_unit_type;
             // Buscar el tipo de afectación IGV correctamente (string vs número)
             let affectation_igv_type = Array.isArray(this.affectation_igv_types)
-                ? this.affectation_igv_types.find(t => String(t.id) === String(this.form.affectation_igv_type_id))
+                ? this.affectation_igv_types.find(t => String(t.id) === String(this.localForm.affectation_igv_type_id))
                 : {};
-            this.form.affectation_igv_type = affectation_igv_type || {};
+            this.localForm.affectation_igv_type = affectation_igv_type || {};
 
             // Determinar el IGV correcto
             let percentage_igv = Number(affectation_igv_type && affectation_igv_type.percentage_igv)
                 ? Number(affectation_igv_type.percentage_igv)
                 : Number(this.percentage_igv) || 18;
-            this.form.percentage_igv = percentage_igv;
+            this.localForm.percentage_igv = percentage_igv;
 
             this.row = await calculateRowItem(
-                this.form,
+                this.localForm,
                 this.currencyTypeIdActive,
                 this.exchangeRateSale,
                 this.includes,
@@ -339,11 +360,11 @@ export default {
                 }
             });
             if (this.noIsUnid) {
-                this.row.real_quantity = this.form.real_quantity;
+                this.row.real_quantity = this.localForm.real_quantity;
                 this.row.max_quantity = this.unids;
-                this.row.max_quantity_description = this.form.max_quantity_description;
+                this.row.max_quantity_description = this.localForm.max_quantity_description;
             }
-            this.row.sale_unit_price = this.form.sale_unit_price;
+            this.row.sale_unit_price = this.localForm.sale_unit_price;
             this.row.lot_code = await this.lot_code;
             this.row.lots_group = await this.lotsGroup;
             this.row.item.lots_group = await this.lotsGroup;
@@ -362,6 +383,8 @@ export default {
             if (this.barcode_lector) {
                 this.$refs.input_barcode.focus();
             }
+            // Emitir cambios al padre
+            this.$emit('update:form', this.localForm);
             this.$emit("add", this.row);
             console.log('Item agregado:', this.row);
             this.colorSizeImported = false;

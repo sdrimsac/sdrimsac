@@ -1,946 +1,480 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        width="50%"
-        @close="close"
-        @open="create"
-        append-to-body
-        @opened="opened"
-        :close-on-click-modal="false"
-        class="rounded-dialog"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" width="50%" @close="close" @open="create" append-to-body
+        @opened="opened" :close-on-click-modal="false" class="rounded-dialog">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div class="col-12 col-lg-6 col-xl-6">
-                        <div
-                            class="form-group"
-                            :class="{
-                                'has-danger': errors.identity_document_type_id
-                            }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fas fa-id-card"></i> Doc.
-                                Identidad
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Este campo es obligatorio...!!!"
-                                    placement="top"
-                                >
-                                    <i
-                                        class="fas fa-info-circle text-danger"
-                                    ></i>
-                                </el-tooltip>
-                            </label>
-                            <el-select
-                                v-model="form.identity_document_type_id"
-                                filterable
-                                popper-class="el-select-identity_document_type"
-                                dusk="identity_document_type_id"
-                                @change="changeIdentityDocType"
-                            >
-                                <el-option
-                                    v-for="option in identity_document_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.identity_document_type_id"
-                                v-text="errors.identity_document_type_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 col-xl-6">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.number }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-id-card"></i>
-                                <i class="fas fa-hashtag"></i>
-                                Número de Doc.
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Este campo es obligatorio...!!!"
-                                    placement="top"
-                                >
-                                    <i
-                                        class="fas fa-info-circle text-danger"
-                                    ></i>
-                                </el-tooltip>
-                            </label>
-                            <div
-                                v-if="
-                                    api_service_token != false &&
-                                        form.identity_document_type_id !== '4'
-                                "
-                            >
-                                <x-input-service
-                                    :identity_document_type_id="
-                                        form.identity_document_type_id
-                                    "
-                                    v-model="form.number"
-                                    @search="searchNumber"
-                                ></x-input-service>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group" :class="{
+                                    'has-danger': errors.identity_document_type_id
+                                }">
+                                    <label class="control-label">
+                                        <i class="fas fas fa-id-card"></i> Documento
+                                        <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!"
+                                            placement="top">
+                                            <i class="fas fa-info-circle text-danger"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-select v-model="form.identity_document_type_id" filterable
+                                        popper-class="el-select-identity_document_type" dusk="identity_document_type_id"
+                                        @change="changeIdentityDocType">
+                                        <el-option v-for="option in identity_document_types" :key="option.id"
+                                            :value="option.id" :label="option.description"></el-option>
+                                    </el-select>
+                                    <small class="text-danger" v-if="errors.identity_document_type_id"
+                                        v-text="errors.identity_document_type_id[0]"></small>
+                                </div>
                             </div>
-                            <div v-else>
-                                <el-input
-                                    ref="number"
-                                    v-model="form.number"
-                                    :maxlength="maxLength"
-                                    dusk="number"
-                                    @input="validateNumericInput('number')"
-                                >
-                                    <template
-                                        v-if="
-                                            form.identity_document_type_id ===
+                            <div class="col-6">
+                                <div class="form-group" :class="{ 'has-danger': errors.number }">
+                                    <label class="control-label">
+                                        <i class="fas fa-id-card"></i>
+                                        <i class="fas fa-hashtag"></i>
+                                        Número
+                                        <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!"
+                                            placement="top">
+                                            <i class="fas fa-info-circle text-danger"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <div v-if="
+                                        api_service_token != false &&
+                                        form.identity_document_type_id !== '4'
+                                    ">
+                                        <x-input-service :identity_document_type_id="form.identity_document_type_id"
+                                            v-model="form.number" @search="searchNumber"></x-input-service>
+                                    </div>
+                                    <div v-else>
+                                        <el-input ref="number" v-model="form.number" :maxlength="maxLength"
+                                            dusk="number" @input="validateNumericInput('number')">
+                                            <template v-if="
+                                                form.identity_document_type_id ===
                                                 '6' ||
                                                 form.identity_document_type_id ===
-                                                    '1' ||
+                                                '1' ||
                                                 form.identity_document_type_id ===
-                                                    '4'
-                                        "
-                                    >
-                                        <el-button
-                                            slot="append"
-                                            :loading="loading_search"
-                                            icon="el-icon-search"
-                                            @click.prevent="searchCustomer"
-                                        ></el-button>
-                                    </template>
-                                    <i
-                                        slot="prefix"
-                                        class="el-icon-edit-outline"
-                                    ></i>
-                                </el-input>
+                                                '4'
+                                            ">
+                                                <el-button slot="append" :loading="loading_search" icon="el-icon-search"
+                                                    @click.prevent="searchCustomer"></el-button>
+                                            </template>
+                                            <i slot="prefix" class="el-icon-edit-outline"></i>
+                                        </el-input>
+                                    </div>
+                                    <small class="text-danger" v-if="errors.number" v-text="errors.number[0]"></small>
+                                </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.name }">
 
-                            <small
-                                class="text-danger"
-                                v-if="errors.number"
-                                v-text="errors.number[0]"
-                            ></small>
+                                    <el-input v-model="form.name" dusk="name" @input="toUpperCase('name')"
+                                        placeholder="Nombre del Cliente">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.name" v-text="errors.name[0]"></small>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2" v-if="configuration.alias_client">
+                                <div class="form-group" :class="{ 'has-danger': errors.alias }">
+
+                                    <el-input v-model="form.alias" dusk="alias" @input="toUpperCase('alias')"
+                                        placeholder="Alias del Cliente">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.alias" v-text="errors.alias[0]"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mt-2" v-if="form.identity_document_type_id !== '6'">
+                                
+                                <el-select v-model="form.sex" placeholder="Sexo">
+                                    <el-option label="Másculino" value="M"></el-option>
+                                    <el-option label="Femenino" value="F"></el-option>
+                                </el-select>
+                            </div>
+                            <div v-else class="col-md-12 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.trade_name }">
+
+                                    <el-input v-model="form.trade_name" dusk="trade_name"
+                                        @input="toUpperCase('trade_name')" placeholder="Nombre Comercial">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.trade_name"
+                                        v-text="errors.trade_name[0]"></small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-12 col-xl-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.name }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-tag"></i> Nombre
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Este campo es obligatorio...!!!"
-                                    placement="top"
-                                >
-                                    <i
-                                        class="fas fa-info-circle text-danger"
-                                    ></i>
-                                </el-tooltip>
-                            </label>
-                            <el-input
-                                v-model="form.name"
-                                dusk="name"
-                                @input="toUpperCase('name')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.name"
-                                v-text="errors.name[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div
-                        class="col-12 col-lg-12 col-xl-12"
-                        v-if="configuration.alias_client"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.alias }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-tag"></i>
-                                Alias
-                            </label>
-                            <el-input
-                                v-model="form.alias"
-                                dusk="alias"
-                                @input="toUpperCase('alias')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.alias"
-                                v-text="errors.alias[0]"
-                            ></small>
+                    <div class="col-4">
+                        <div class="col-12" >
+                            <div class="form-group d-flex flex-column align-items-center">
+                                <label class="control-label mb-2">
+                                    <i class="fas fa-image"></i> Imagen
+                                </label>
+                                <el-upload class="avatar-uploader-custom" :data="{ type: 'persons' }" :headers="headers"
+                                    :action="`/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess"
+                                    :before-upload="resizeAndConvertToPng">
+                                    <div class="avatar-wrapper"
+                                        style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; border: 1px solid #e4e7ed; background: #fafafa;">
+                                        <img v-if="form.image_url" :src="form.image_url" class="avatar-img"
+                                            style="width: 100px; height: 100px; object-fit: cover;" />
+                                        <i v-else class="el-icon-plus avatar-uploader-icon"
+                                            style="font-size: 32px;"></i>
+                                    </div>
+                                </el-upload>
+                                <small class=" mt-2">Formatos permitidos: </small>
+                                <small class="mt-1">JPG, PNG. Tamaño máximo:</small>
+                                    
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div
-                        class="col-md-4"
-                        v-if="form.identity_document_type_id !== '6'"
-                    >
-                        <label class="control-label">
-                            <i class="fas fa-mars"></i>
-                            <i class="fas fa-venus"></i>
-                            Masculino
-                        </label>
-                        <el-select v-model="form.sex">
-                            <el-option label="Másculino" value="M"></el-option>
-                            <el-option label="Femenino" value="F"></el-option>
-                        </el-select>
-                    </div>
-                    <div v-else class="col-md-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.trade_name }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-building"></i> Nombre Comercial
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Este campo es obligatorio...!!!"
-                                    placement="top"
-                                >
-                                    <i
-                                        class="fas fa-info-circle text-danger"
-                                    ></i>
-                                </el-tooltip>
-                            </label>
-                            <el-input
-                                v-model="form.trade_name"
-                                dusk="trade_name"
-                                @input="toUpperCase('trade_name')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.trade_name"
-                                v-text="errors.trade_name[0]"
-                            ></small>
+                    <div class="col-8">
+                        <div class="col-md-12">
+                            <div class="form-group" :class="{ 'has-danger': errors.address }">
+
+                                <el-input v-model="form.address" dusk="address" @input="toUpperCase('address')"
+                                    placeholder=" Dirección del Cliente">
+                                    <i slot="prefix" class="el-icon-edit-outline"></i>
+                                </el-input>
+                                <small class="text-danger" v-if="errors.address" v-text="errors.address[0]"></small>
+                            </div>
                         </div>
+
+
+                        <div class="col-md-12 mt-2">
+                            <div class="form-group" :class="{ 'has-danger': errors.adderss_secondary }">
+
+                                <el-input v-model="form.adderss_secondary" dusk="adderss_secondary"
+                                    @input="toUpperCase('adderss_secondary')" placeholder=" Dirección Real del Cliente">
+                                    <i slot="prefix" class="el-icon-edit-outline"></i>
+                                </el-input>
+                                <small class="text-danger" v-if="errors.adderss_secondary"
+                                    v-text="errors.adderss_secondary[0]"></small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.client_zone_id }">
+                                    <div class="d-flex align-items-center">
+                                        <el-select v-model="form.client_zone_id" filterable dusk="client_zone_id" placeholder="Seleccione una zona" style="flex: 1;">
+                                            <el-option v-for="option in zones" :key="option.id" :value="option.id"
+                                                :label="option.description"></el-option>
+                                        </el-select>
+                                        <el-tooltip class="item" effect="dark" content="Crear Zona de Atención" placement="top">
+                                            <a href="#" @click.prevent="showCreateFormZone = true" class="ml-2 d-flex align-items-center" style="white-space: nowrap; font-size: 1.5em;">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </a>
+                                        </el-tooltip>
+                                    </div>
+                                    <small class="text-danger" v-if="errors.client_zone_id"
+                                        v-text="errors.client_zone_id[0]"></small>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.telephone }">
+                                    <el-input v-model="form.telephone" dusk="telephone" @input="toUpperCase('telephone')" placeholder=" Teléfono o WhatsApp"
+                                        maxlength="9" show-word-limit>
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.telephone" v-text="errors.telephone[0]"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <div class="form-group" :class="{ 'has-danger': errors.email }">
+                                
+                                <el-input v-model="form.email" dusk="email" @input="toUpperCase('email')" placeholder=" Correo electrónico">
+                                    <i slot="prefix" class="el-icon-edit-outline"></i>
+                                </el-input>
+                                <small class="text-danger" v-if="errors.email" v-text="errors.email[0]"></small>
+                            </div>
+                        </div>
+
+                        <div class="row" v-if="configuration.mod_renta">
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.occupation }">
+                                    
+                                    <el-input type="text" v-model="form.occupation" @input="toUpperCase('occupation')" placeholder=" Ocupacion Cliente">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.occupation"
+                                        v-text="errors.occupation[0]"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.ref_origin }">
+                                    <el-input type="text" v-model="form.ref_origin" @input="toUpperCase('ref_origin')" placeholder=" Referencia de Procedencia">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.ref_origin"
+                                        v-text="errors.ref_origin[0]"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row " v-if="configuration.mod_renta">
+                            <div class="col-md-12 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.name_family }">
+                                    
+                                    <el-input type="text" v-model="form.name_family"
+                                        @input="toUpperCase('name_family')" placeholder=" Nombre Familiar Emergencia">
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.name_family"
+                                        v-text="errors.name_family[0]"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                    
+                                    <el-select v-model="form.parient_id" filterable placeholder=" Parentesco">
+                                        <el-option v-for="option in parent" :key="option.id" :value="option.id"
+                                            :label="option.description"></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group" :class="{ 'has-danger': errors.telephone_family }">
+                                    
+                                    <el-input type="text" v-model="form.telephone_family" placeholder=" Telefono Familiar Emergencia"
+                                        @input="toUpperCase('telephone_family')" maxlength="9" show-word-limit>
+                                        <i slot="prefix" class="el-icon-edit-outline"></i>
+                                    </el-input>
+                                    <small class="text-danger" v-if="errors.telephone_family"
+                                        v-text="errors.telephone_family[0]"></small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- Ubigeo -->
+                    <div class="col-4">
+                        <div class="col-12">
+                            <div class="form-group" :class="{ 'has-danger': errors.country_id }">
+                                <el-select v-model="form.country_id" filterable dusk="country_id">
+                                    <el-option v-for="option in countries" :key="option.id" :value="option.id"
+                                        :label="option.description"></el-option>
+                                </el-select>
+                                <small class="text-danger" v-if="errors.country_id"
+                                    v-text="errors.country_id[0]"></small>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="form-group" :class="{ 'has-danger': errors.department_id }">
+
+                                <el-select v-model="form.department_id" filterable clearable @change="filterProvince"
+                                    popper-class="el-select-departments" dusk="department_id"
+                                    placeholder="Departamento">
+                                    <el-option v-for="option in all_departments" :key="option.id" :value="option.id"
+                                        :label="option.description"></el-option>
+                                </el-select>
+                                <small class="text-danger" v-if="errors.department_id"
+                                    v-text="errors.department_id[0]"></small>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="form-group" :class="{ 'has-danger': errors.province_id }">
+
+                                <el-select v-model="form.province_id" filterable clearable @change="filterDistrict"
+                                    popper-class="el-select-provinces" dusk="province_id" placeholder="Provincia">
+                                    <el-option v-for="option in provinces" :key="option.id" :value="option.id"
+                                        :label="option.description"></el-option>
+                                </el-select>
+                                <small class="text-danger" v-if="errors.province_id"
+                                    v-text="errors.province_id[0]"></small>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="form-group" :class="{ 'has-danger': errors.district_id }">
+
+                                <el-select v-model="form.district_id" filterable clearable
+                                    popper-class="el-select-districts" dusk="district_id" placeholder="Distrito">
+                                    <el-option v-for="option in districts" :key="option.id" :value="option.id"
+                                        :label="option.description"></el-option>
+                                </el-select>
+                                <small class="text-danger" v-if="errors.district_id"
+                                    v-text="errors.district_id[0]"></small>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
-                <!-- <div class="row" v-if="type === 'customers'">
-                    <div class="col-md-4">
-                        <div class="form-group" :class="{'has-danger': errors.person_type_id}">
-                            <label class="control-label">Tipo de cliente</label>
-                            <el-select v-model="form.person_type_id" filterable  >
-                                <el-option v-for="option in person_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                            </el-select>
-                            <small class="text-danger" v-if="errors.person_type_id" v-text="errors.person_type_id[0]"></small>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group"  >
-                            <label class="control-label">Comentario</label>
-                            <el-input v-model="form.comment"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                        </div>
-                    </div>
-        </div>-->
 
                 <div class="row">
-                    <div class="col-12 col-lg-3 col-xl-3">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.country_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-globe"></i> País
-                            </label>
-                            <el-select
-                                v-model="form.country_id"
-                                filterable
-                                dusk="country_id"
-                            >
-                                <el-option
-                                    v-for="option in countries"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.country_id"
-                                v-text="errors.country_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 col-xl-3">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.department_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-building"></i> Departamento
-                            </label>
-                            <el-select
-                                v-model="form.department_id"
-                                filterable
-                                clearable
-                                @change="filterProvince"
-                                popper-class="el-select-departments"
-                                dusk="department_id"
-                            >
-                                <el-option
-                                    v-for="option in all_departments"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.department_id"
-                                v-text="errors.department_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 col-xl-3">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.province_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-city"></i> Provincia
-                            </label>
-                            <el-select
-                                v-model="form.province_id"
-                                filterable
-                                clearable
-                                @change="filterDistrict"
-                                popper-class="el-select-provinces"
-                                dusk="province_id"
-                            >
-                                <el-option
-                                    v-for="option in provinces"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.province_id"
-                                v-text="errors.province_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 col-xl-3">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.district_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-map-marker-alt"></i> Distrito
-                            </label>
-                            <el-select
-                                v-model="form.district_id"
-                                filterable
-                                clearable
-                                popper-class="el-select-districts"
-                                dusk="district_id"
-                            >
-                                <el-option
-                                    v-for="option in districts"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.district_id"
-                                v-text="errors.district_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.address }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <i class="fas fa-globe"></i>
-                                Dirección
-                            </label>
-                            <el-input
-                                v-model="form.address"
-                                dusk="address"
-                                @input="toUpperCase('address')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.address"
-                                v-text="errors.address[0]"
-                            ></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.adderss_secondary }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <i class="fas fa-globe"></i>
-                                Dirección Real del cliente
-                            </label>
-                            <el-input
-                                v-model="form.adderss_secondary"
-                                dusk="adderss_secondary"
-                                @input="toUpperCase('adderss_secondary')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.adderss_secondary"
-                                v-text="errors.adderss_secondary[0]"
-                            ></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-6 col-xl-6">
-                        <!-- create a select with options of zones -->
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.client_zone_id }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-map-marked-alt"></i> Zona
-                                <a href="#" @click="showCreateFormZone = true">
-                                    <i class="fas fa-plus-circle"></i> Nuevo
-                                </a>
-                            </label>
-                            <el-select
-                                v-model="form.client_zone_id"
-                                filterable
-                                dusk="client_zone_id"
-                            >
-                                <el-option
-                                    v-for="option in zones"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.client_zone_id"
-                                v-text="errors.client_zone_id[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 col-xl-6">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.telephone }"
-                        >
-                            <label class="control-label">
-                                <i class="fab fa-whatsapp"></i> WhatsApp
-                            </label>
-                            <el-input
-                                v-model="form.telephone"
-                                dusk="telephone"
-                                @input="toUpperCase('telephone')"
-                                maxlength="9"
-                                show-word-limit
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.telephone"
-                                v-text="errors.telephone[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-12 col-xl-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.email }"
-                        >
-                            <label class="control-label">
-                                <i class="fas fa-envelope"></i> Correo
-                                electrónico
-                            </label>
-                            <el-input
-                                v-model="form.email"
-                                dusk="email"
-                                @input="toUpperCase('email')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.email"
-                                v-text="errors.email[0]"
-                            ></small>
-                        </div>
-                    </div>
                     <div class="col-md-6" v-if="configuration.mod_renta">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.occupation }"
-                        >
-                            <label class="control-label"
-                                >Ocupacion Cliente</label
-                            >
-                            <el-input
-                                type="text"
-                                v-model="form.occupation"
-                                @input="toUpperCase('occupation')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.occupation"
-                                v-text="errors.occupation[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-6" v-if="configuration.mod_renta">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.ref_origin }"
-                        >
-                            <label class="control-label"
-                                >Referencia de Procedencia</label
-                            >
-                            <el-input
-                                type="text"
-                                v-model="form.ref_origin"
-                                @input="toUpperCase('ref_origin')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.ref_origin"
-                                v-text="errors.ref_origin[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-6" v-if="configuration.mod_renta">
-                        <div class="form-group">
-                            <label class="control-label"
-                                >Tipo De Parentesco</label
-                            >
-                            <el-select v-model="form.parient_id" filterable>
-                                <el-option
-                                    v-for="option in parent"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="col-md-6" v-if="configuration.mod_renta">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.name_family }"
-                        >
-                            <label class="control-label"
-                                >Nombre Familiar Emergencia</label
-                            >
-                            <el-input
-                                type="text"
-                                v-model="form.name_family"
-                                @input="toUpperCase('telephone_family')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.name_family"
-                                v-text="errors.name_family[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-6" v-if="configuration.mod_renta">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.telephone_family }"
-                        >
-                            <label class="control-label"
-                                >Telefono Familiar Emergencia</label
-                            >
-                            <el-input
-                                type="text"
-                                v-model="form.telephone_family"
-                                @input="toUpperCase('telephone_family')"
-                                maxlength="9"
-                                show-word-limit
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
-                            </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.telephone_family"
-                                v-text="errors.telephone_family[0]"
-                            ></small>
-                        </div>
-                    </div>
-                    <div class="col-md-2" v-if="configuration.mod_renta">
-                        <div class="form-group">
-                            <label class="control-label">
-                                Imagen De Cliente
+                        <div class="form-group d-flex flex-column align-items-center">
+                            <label class="control-label mb-2">
+                                <i class="fas fa-id-card"></i> DNI 1
                                 <span class="text-danger"></span>
                             </label>
                             <el-upload
-                                class="avatar-uploader text-center bg-white"
-                                :data="{ type: 'persons' }"
-                                :headers="headers"
-                                :action="`/${resource}/uploads`"
-                                :show-file-list="false"
-                                :on-success="onSuccess"
-                            >
-                                <img
-                                    v-if="form.image_url"
-                                    :src="form.image_url"
-                                    class="avatar"
-                                />
-                                <i
-                                    v-else
-                                    class="el-icon-plus avatar-uploader-icon"
-                                ></i>
-                            </el-upload>
-                        </div>
-                    </div>
-                    <div class="col-md-2" v-if="configuration.mod_renta">
-                        <div class="form-group">
-                            <label class="control-label">
-                                DNI 1
-                                <span class="text-danger"></span>
-                            </label>
-                            <el-upload
-                                class="avatar-uploader text-center bg-white"
+                                class="avatar-uploader-custom"
                                 :data="{ type: 'persons_extra1' }"
                                 :headers="headers"
                                 :action="`/${resource}/uploads`"
                                 :show-file-list="false"
                                 :on-success="onSuccessExtra1"
+                                :before-upload="resizeAndConvertToPng"
                             >
-                                <img
-                                    v-if="form.image_extra1_url"
-                                    :src="form.image_extra1_url"
-                                    class="avatar"
-                                />
-                                <i
-                                    v-else
-                                    class="el-icon-plus avatar-uploader-icon"
-                                ></i>
+                                <div class="avatar-wrapper"
+                                    style="width: 300px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; border: 1px solid #e4e7ed; background: #fafafa;">
+                                    <img v-if="form.image_extra1_url" :src="form.image_extra1_url" class="avatar-img"
+                                        style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"
+                                        style="font-size: 32px;"></i>
+                                </div>
                             </el-upload>
+                            <small class="text-muted mt-2">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</small>
                         </div>
                     </div>
-                    <div class="col-md-2" v-if="configuration.mod_renta">
-                        <div class="form-group">
-                            <label class="control-label">
-                                DNI 2
+                    <div class="col-md-6" v-if="configuration.mod_renta">
+                        <div class="form-group d-flex flex-column align-items-center">
+                            <label class="control-label mb-2">
+                                <i class="fas fa-id-card"></i> DNI 2
                                 <span class="text-danger"></span>
                             </label>
                             <el-upload
-                                class="avatar-uploader text-center bg-white"
+                                class="avatar-uploader-custom"
                                 :data="{ type: 'persons_extra2' }"
                                 :headers="headers"
                                 :action="`/${resource}/uploads`"
                                 :show-file-list="false"
                                 :on-success="onSuccessExtra2"
+                                :before-upload="resizeAndConvertToPng"
                             >
-                                <img
-                                    v-if="form.image_extra2_url"
-                                    :src="form.image_extra2_url"
-                                    class="avatar"
-                                />
-                                <i
-                                    v-else
-                                    class="el-icon-plus avatar-uploader-icon"
-                                ></i>
+                                <div class="avatar-wrapper"
+                                    style="width: 300px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; border: 1px solid #e4e7ed; background: #fafafa;">
+                                    <img v-if="form.image_extra2_url" :src="form.image_extra2_url" class="avatar-img"
+                                        style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"
+                                        style="font-size: 32px;"></i>
+                                </div>
                             </el-upload>
+                            <small class="text-muted mt-2">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</small>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6" v-if="form.state">
                         <div class="form-group">
-                            <label class="control-label"
-                                >Estado del Contribuyente</label
-                            >
+                            <label class="control-label">Estado del Contribuyente</label>
                             <template v-if="form.state == 'ACTIVO'">
-                                <el-alert
-                                    :title="`${form.state}`"
-                                    type="success"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
+                                <el-alert :title="`${form.state}`" type="success" show-icon
+                                    :closable="false"></el-alert>
                             </template>
                             <template v-else>
-                                <el-alert
-                                    :title="`${form.state}`"
-                                    type="error"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
+                                <el-alert :title="`${form.state}`" type="error" show-icon :closable="false"></el-alert>
                             </template>
                         </div>
                     </div>
                     <div class="col-md-6" v-if="form.condition">
                         <div class="form-group">
-                            <label class="control-label"
-                                >Condición del Contribuyente</label
-                            >
+                            <label class="control-label">Condición del Contribuyente</label>
                             <template v-if="form.condition == 'HABIDO'">
-                                <el-alert
-                                    :title="`${form.condition}`"
-                                    type="success"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
+                                <el-alert :title="`${form.condition}`" type="success" show-icon
+                                    :closable="false"></el-alert>
                             </template>
                             <template v-else>
-                                <el-alert
-                                    :title="`${form.condition}`"
-                                    type="error"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
+                                <el-alert :title="`${form.condition}`" type="error" show-icon
+                                    :closable="false"></el-alert>
                             </template>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-2" v-if="type === 'suppliers'">
                     <div class="col-md-6 center-el-checkbox">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.perception_agent }"
-                        >
-                            <el-checkbox v-model="form.perception_agent"
-                                >¿Es agente de percepción?</el-checkbox
-                            >
+                        <div class="form-group" :class="{ 'has-danger': errors.perception_agent }">
+                            <el-checkbox v-model="form.perception_agent">¿Es agente de percepción?</el-checkbox>
                             <br />
-                            <small
-                                class="text-danger"
-                                v-if="errors.perception_agent"
-                                v-text="errors.perception_agent[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.perception_agent"
+                                v-text="errors.perception_agent[0]"></small>
                         </div>
                     </div>
-                    <div
-                        class="col-md-6"
-                        v-if="type === 'suppliers'"
-                        v-show="form.perception_agent"
-                    >
+                    <div class="col-md-6" v-if="type === 'suppliers'" v-show="form.perception_agent">
                         <div class="form-group">
-                            <label class="control-label"
-                                >Porcentaje de percepción</label
-                            >
+                            <label class="control-label">Porcentaje de percepción</label>
 
                             <el-input v-model="form.percentage_perception">
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
+                                <i slot="prefix" class="el-icon-edit-outline"></i>
                             </el-input>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    class="row m-t-10"
-                    v-for="(row, index) in form.addresses"
-                    :key="index"
-                >
+                <div class="row m-t-10" v-for="(row, index) in form.addresses" :key="index">
                     <div class="col-md-12">
-                        <label class="control-label" v-if="index === 0"
-                            >Dirección principal</label
-                        >
+                        <label class="control-label" v-if="index === 0">Dirección principal</label>
                         <label class="control-label" v-else>
                             Dirección secundaria # {{ index }}
-                            <el-button
-                                size="mini"
-                                icon="el-icon-minus"
-                                @click.prevent="clickRemoveAddress(index)"
-                                class="btn-default-danger"
-                                >Eliminar dirección</el-button
-                            >
+                            <el-button size="mini" icon="el-icon-minus" @click.prevent="clickRemoveAddress(index)"
+                                class="btn-default-danger">Eliminar dirección</el-button>
                         </label>
                     </div>
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.country_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.country_id }">
                             <label class="control-label">País</label>
                             <el-select v-model="row.country_id" filterable>
-                                <el-option
-                                    v-for="option in countries"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                                <el-option v-for="option in countries" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.country_id"
-                                v-text="errors.country_id[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.country_id" v-text="errors.country_id[0]"></small>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.location_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.location_id }">
                             <label class="control-label">Ubigeo</label>
-                            <el-cascader
-                                :options="locations"
-                                v-model="row.location_id"
-                                :clearable="true"
-                                filterable
-                            ></el-cascader>
-                            <small
-                                class="text-danger"
-                                v-if="errors.location_id"
-                                v-text="errors.location_id[0]"
-                            ></small>
+                            <el-cascader :options="locations" v-model="row.location_id" :clearable="true"
+                                filterable></el-cascader>
+                            <small class="text-danger" v-if="errors.location_id" v-text="errors.location_id[0]"></small>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.address }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.address }">
                             <label class="control-label">Dirección</label>
-                            <el-input
-                                v-model="row.address"
-                                @input="toUpperCase('row.address')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
+                            <el-input v-model="row.address" @input="toUpperCase('row.address')">
+                                <i slot="prefix" class="el-icon-edit-outline"></i>
                             </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.address"
-                                v-text="errors.address[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.address" v-text="errors.address[0]"></small>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.phone }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.phone }">
                             <label class="control-label">Teléfono</label>
-                            <el-input
-                                v-model="row.phone"
-                                @input="validateNumericInput('row.phone')"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i>
+                            <el-input v-model="row.phone" @input="validateNumericInput('row.phone')">
+                                <i slot="prefix" class="el-icon-edit-outline"></i>
                             </el-input>
-                            <small
-                                class="text-danger"
-                                v-if="errors.phone"
-                                v-text="errors.phone[0]"
-                            ></small>
+                            <small class="text-danger" v-if="errors.phone" v-text="errors.phone[0]"></small>
                         </div>
                     </div>
                 </div>
 
-                <template
-                    v-if="
-                        type == 'customers' &&
-                            configuration.credit_list &&
-                            (typeUser == 'admin' ||
-                                typeUser == 'superadmin' ||
-                                isArca)
-                    "
-                >
+                <template v-if="
+                    type == 'customers' &&
+                    configuration.credit_list &&
+                    (typeUser == 'admin' ||
+                        typeUser == 'superadmin' ||
+                        isArca)
+                ">
                     <div class="row">
                         <div class="col-3">
-                            <label for="has_credit_line" class="w-100"
-                                >Tiene linea de crédito</label
-                            >
-                            <el-checkbox
-                                v-model="form.has_credit_line"
-                                :checked="form.has_credit_line"
-                            ></el-checkbox>
+                            <label for="has_credit_line" class="w-100">Tiene linea de crédito</label>
+                            <el-checkbox v-model="form.has_credit_line" :checked="form.has_credit_line"></el-checkbox>
                         </div>
                         <div class="col-3">
-                            <label for="credit_line"
-                                >Monto - linea de crédito</label
-                            >
-                            <el-input
-                                v-model="form.credit_line"
-                                :disabled="!form.has_credit_line"
-                                type="number"
-                                min="0"
-                                step="0.01"
-                            ></el-input>
+                            <label for="credit_line">Monto - linea de crédito</label>
+                            <el-input v-model="form.credit_line" :disabled="!form.has_credit_line" type="number" min="0"
+                                step="0.01"></el-input>
                         </div>
                     </div>
                 </template>
@@ -951,127 +485,67 @@
                             documento
                         </label>
 
-                        <el-select
-                            v-model="form.document_type_id"
-                            filterable
-                            popper-class="el-select-document_type"
-                            dusk="document_type"
-                        >
-                            <el-option
-                                v-for="(option, idx) in document_types"
-                                :key="idx"
-                                :value="option.id"
-                                :label="option.description"
-                            ></el-option>
+                        <el-select v-model="form.document_type_id" filterable popper-class="el-select-document_type"
+                            dusk="document_type">
+                            <el-option v-for="(option, idx) in document_types" :key="idx" :value="option.id"
+                                :label="option.description"></el-option>
                         </el-select>
                     </div>
                     <div class="col-4 col-lg-4 col-xl-4">
-                        <label for="varios"
-                            >Clientes varios
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="La boleta o nota se emitirá a nombre de clientes varios."
-                                placement="top"
-                            >
+                        <label for="varios">Clientes varios
+                            <el-tooltip class="item" effect="dark"
+                                content="La boleta o nota se emitirá a nombre de clientes varios." placement="top">
                                 <i class="fas fa-info-circle text-danger"></i>
                             </el-tooltip>
                         </label>
-                        <el-checkbox
-                            @change="changeVarios"
-                            v-model="form.varios"
-                            :checked="form.varios"
-                        ></el-checkbox>
+                        <el-checkbox @change="changeVarios" v-model="form.varios" :checked="form.varios"></el-checkbox>
                     </div>
                 </div>
-                <div
-                    class="row"
-                    v-if="
-                        configuration.consolidated_quotations &&
-                            !configuration.consolidated_quotation_details
-                    "
-                >
+                <div class="row" v-if="
+                    configuration.consolidated_quotations &&
+                    !configuration.consolidated_quotation_details
+                ">
                     <div class="col-8 col-lg-8 col-xl-8">
                         <div class="form-group">
-                            <label class="control-label"
-                                >Politica de precio</label
-                            >
-                            <el-select
-                                v-model="item_unit_type"
-                                filterable
-                                clearable
-                                popper-class="el-select-identity_document_type"
-                                dusk="item_unit_type"
-                            >
-                                <el-option
-                                    v-for="(option, idx) in item_unit_types"
-                                    :key="idx"
-                                    :value="option"
-                                    :label="option"
-                                ></el-option>
+                            <label class="control-label">Politica de precio</label>
+                            <el-select v-model="item_unit_type" filterable clearable
+                                popper-class="el-select-identity_document_type" dusk="item_unit_type">
+                                <el-option v-for="(option, idx) in item_unit_types" :key="idx" :value="option"
+                                    :label="option"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-4 col-lg-4 col-xl-4">
                         <div class="form-group">
                             <br />
-                            <el-button
-                                type="primary"
-                                @click="clickAddItemUnitType"
-                                icon="el-icon-plus"
-                                >Agregar</el-button
-                            >
+                            <el-button type="primary" @click="clickAddItemUnitType"
+                                icon="el-icon-plus">Agregar</el-button>
                         </div>
                     </div>
                 </div>
-                <div
-                    class="row"
-                    v-if="
-                        form.item_unit_types && form.item_unit_types.length > 0
-                    "
-                >
+                <div class="row" v-if="
+                    form.item_unit_types && form.item_unit_types.length > 0
+                ">
                     <el-button-group>
-                        <el-button
-                            type="primary"
-                            icon="el-icon-delete"
-                            v-for="(item, index) in form.item_unit_types"
-                            :key="index"
-                            @click="removeItemUnitType(index)"
-                            >{{ item }}</el-button
-                        >
+                        <el-button type="primary" icon="el-icon-delete" v-for="(item, index) in form.item_unit_types"
+                            :key="index" @click="removeItemUnitType(index)">{{ item }}</el-button>
                     </el-button-group>
                 </div>
             </div>
-            <div
-                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-            >
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
                 <!-- Botón Cancelar -->
-                <el-button
-                    class="btn_cancelarsmall"
-                    icon="fas fa-times fa-lg"
-                    @click.prevent="close()"
-                >
+                <el-button class="btn_cancelarsmall" icon="fas fa-times fa-lg" @click.prevent="close()">
                     <span>Cancelar</span>
                 </el-button>
                 <!-- Botón Guardar -->
-                <el-button
-                    class="btn_guardarsmall"
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                >
+                <el-button class="btn_guardarsmall" icon="fas fa-save fa-lg" type="primary" native-type="submit"
+                    :loading="loading_submit">
                     <span>Guardar</span>
                 </el-button>
             </div>
         </form>
-        <el-dialog
-            width="600px"
-            :visible.sync="showCreateFormZone"
-            append-to-body
-            @close="showCreateFormZone = false"
-            :title="'Crear Zona'"
-        >
+        <el-dialog width="600px" :visible.sync="showCreateFormZone" append-to-body @close="showCreateFormZone = false"
+            :title="'Crear Zona'">
             <div class="row m-2">
                 <div class="col-12">
                     <label class="control-label">
@@ -1079,22 +553,11 @@
                     </label>
                     <el-input v-model="form_zone.description"></el-input>
                 </div>
-                <div
-                    style="margin-top:5px"
-                    class="d-flex justify-content-center"
-                >
-                    <div
-                        class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-                    >
+                <div style="margin-top:5px" class="d-flex justify-content-center">
+                    <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
                         <!-- Botón Guardar -->
-                        <el-button
-                            class="btn-save btn-save:hover"
-                            icon="fas fa-save fa-lg"
-                            type="primary"
-                            @click.prevent="submitZone"
-                            native-type="submit"
-                            :loading="loading_submit"
-                        >
+                        <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary"
+                            @click.prevent="submitZone" native-type="submit" :loading="loading_submit">
                             <i class="fas fa-plus-circle"></i>
                             <span> Crear</span>
                         </el-button>
@@ -1211,7 +674,7 @@ export default {
         }
     },
     computed: {
-        maxLength: function() {
+        maxLength: function () {
             if (this.form.identity_document_type_id === "6") {
                 return 11;
             }
@@ -1224,6 +687,33 @@ export default {
         }
     },
     methods: {
+        /**
+         * Convierte cualquier imagen a PNG antes de subirla
+         */
+        async convertToPng(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        canvas.toBlob((blob) => {
+                            if (!blob) return reject('No se pudo convertir a PNG');
+                            const pngFile = new File([blob], file.name.replace(/\.[^.]+$/, '.png'), { type: 'image/png' });
+                            resolve(pngFile);
+                        }, 'image/png');
+                    };
+                    img.onerror = () => reject('Error al cargar la imagen');
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject('Error al leer el archivo');
+                reader.readAsDataURL(file);
+            });
+        },
         async submitZone() {
             const response = await this.$http.post(
                 `/client_zones`,

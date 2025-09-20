@@ -132,7 +132,7 @@
                                                 </el-button>
                                                 <el-button type="info" size="mini"
                                                     class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                    @click.prevent="clickDisguise(row.id)">
+                                                    @click.prevent="clickDisguise(row.id)"  v-if="typeUser === 'superadmin'">
                                                     <i class="fas fa-eye-slash fa-lg me-2"></i> Desactivar
                                                 </el-button>
                                                 <el-tooltip content="Agregar este producto a todos los Almacenes" placement="top">
@@ -248,35 +248,21 @@
                             </td>
 
                             <td class="text-center">
-                                <button class="btn_guardarsmall" :style="{
-                                    color: 'white',
-                                    backgroundColor:
-                                        Array.isArray(row.warehouses) &&
-                                            row.warehouses.some(
-                                                warehouse => warehouse.active
-                                            )
-                                            ? 'green'
-                                            : 'red',
-                                    fontWeight: 'bold',
-                                    width: '110px'
-                                }">
-                                    {{
-                                        Array.isArray(row.warehouses) &&
-                                            row.warehouses.some(
-                                                warehouse => warehouse.active
-                                            )
-                                            ? "Habilitado"
-                                            : "Inhabilitado"
-                                    }}
-                                </button>
-
-                                <!-- <el-button v-if="
-                                    typeUser == 'superadmin' &&
-                                    !row.is_in_all_warehouses
-                                 " type="primary" @click.prevent="
-                                    clickAddProductToWarehouses(row.id)
-                                    ">Agregar a todos los almacenes
-                                </el-button> -->
+                                <template v-if="Array.isArray(row.warehouses) && row.warehouses.some(warehouse => warehouse.active)">
+                                    <button class="btn_excelsmall" :style="{
+                                        color: 'white',
+                                        backgroundColor: 'green',
+                                        fontWeight: 'bold',
+                                        width: '110px'
+                                    }">
+                                        Habilitado
+                                    </button>
+                                </template>
+                                <template v-else>
+                                    <el-button class="btn_cancelarsmall" type="danger">
+                                        Inhabilitado
+                                    </el-button>
+                                </template>
                             </td>
                         </tr>
                     </data-table>

@@ -6,88 +6,49 @@
           <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
             <div class="d-flex">
               <div style="width:100px">Filtrar por:</div>
-              <el-select
-                v-model="search.column"
-                placeholder="Select"
-                @change="changeClearInput"
-                clearable
-              >
+              <el-select v-model="search.column" placeholder="Select" @change="changeClearInput" clearable>
                 <el-option v-for="(label, key) in columns" :key="key" :value="key" :label="label"></el-option>
               </el-select>
             </div>
           </div>
           <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
-            <template
-              v-if="
-                                search.column == 'date_of_issue' ||
-                                    search.column == 'date_of_due' ||
-                                    search.column == 'date_of_payment' ||
-                                    search.column == 'delivery_date'
-                            "
-            >
-              <el-date-picker
-                v-model="search.value"
-                type="date"
-                style="width: 100%;"
-                placeholder="Buscar"
-                value-format="yyyy-MM-dd"
-                @change="getRecords"
-              ></el-date-picker>
+            <template v-if="
+              search.column == 'date_of_issue' ||
+              search.column == 'date_of_due' ||
+              search.column == 'date_of_payment' ||
+              search.column == 'delivery_date'
+            ">
+              <el-date-picker v-model="search.value" type="date" style="width: 100%;" placeholder="Buscar"
+                value-format="yyyy-MM-dd" @change="getRecords"></el-date-picker>
             </template>
             <template v-else-if="search.column == 'district_id'">
-              <el-select
-                v-model="search.value"
-                @change="getRecords"
-                placeholder="Seleccione el Distrito"
-              >
-                <el-option
-                  v-for="item in array_district"
-                  :key="item.id"
-                  :label="item.description"
-                  :value="item.id"
-                ></el-option>
+              <el-select v-model="search.value" @change="getRecords" placeholder="Seleccione el Distrito">
+                <el-option v-for="item in array_district" :key="item.id" :label="item.description"
+                  :value="item.id"></el-option>
               </el-select>
             </template>
             <template v-else>
-              <el-input
-                placeholder="Buscar"
-                v-model="search.value"
-                style="width: 100%;"
-                prefix-icon="el-icon-search"
-                @input="getRecords"
-              ></el-input>
+              <el-input placeholder="Buscar" v-model="search.value" style="width: 100%;" prefix-icon="el-icon-search"
+                @input="getRecords"></el-input>
             </template>
           </div>
-          <div
-            class="col-lg-3 col-md-4 col-sm-12 pb-2"
-            v-if="resource == 'persons/customers'||resource == 'persons/suppliers'"
-          >
+          <div class="col-lg-3 col-md-4 col-sm-12 pb-2"
+            v-if="resource == 'persons/customers' || resource == 'persons/suppliers'">
             <el-checkbox v-model="search.credit" @change="getRecords">A cuenta</el-checkbox>
           </div>
           <div class="col-md-2" v-if="typeUser === 'superadmin'">
-            <el-button
-              class="submit"
-              type="success"
-              icon="el-icon-tickets"
-              @click.prevent="clickDownload('excel')"
-            >Exportar Excel</el-button>
+            <el-button class="submit" type="success" icon="el-icon-tickets"
+              @click.prevent="clickDownload('excel')">Exportar
+              Excel</el-button>
           </div>
         </div>
       </div>
       <br />
 
       <div class="col-md-12">
-        <br />
+        
         <div class="table-responsive">
-          <div>
-            <el-pagination
-              @current-change="getRecords"
-              layout="total, prev, pager, next"
-              :total="pagination.total"
-              :current-page.sync="pagination.current_page"
-              :page-size="pagination.per_page"
-            ></el-pagination>
-          </div>
+          
           <table class="table table-striped">
             <thead>
               <slot name="heading"></slot>
@@ -97,13 +58,8 @@
             </tbody>
           </table>
           <div>
-            <el-pagination
-              @current-change="getRecords"
-              layout="total, prev, pager, next"
-              :total="pagination.total"
-              :current-page.sync="pagination.current_page"
-              :page-size="pagination.per_page"
-            ></el-pagination>
+            <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+              :current-page.sync="pagination.current_page" :page-size="pagination.per_page"></el-pagination>
           </div>
         </div>
       </div>

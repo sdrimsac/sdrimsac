@@ -1,192 +1,148 @@
 <!-- Módulo de Clientes Admin hoila
     Módulo de Proveedores -->
 <template>
-<div>
-    <div class="container-fluid p-l-0 p-r-0">
-        <div class="card mb-0">
-            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                    <i class="fas fa-coins" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                    Módulo de {{ title }}
-                </h4>
-            </div>
+    <div>
+        <div class="container-fluid p-l-0 p-r-0">
+            <div class="card mb-0">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 8px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="fas fa-coins" style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                        Módulo de {{ title }}
+                    </h4>
+                </div>
 
-            <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3" style="margin-left: 1rem;">
-                <el-button class="btn_buscar me-2" 
-                           href="javascript:void(0)" @click.prevent="clickCreate()">
-                    <i class="fas fa-plus"></i>
-                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
-                </el-button>
+                <div class="data-table-visible-columns d-flex justify-content-start align-items-center mb-3"
+                    style="margin-left: 1rem;">
+                    <el-button class="btn_guardarsmall" href="javascript:void(0)" @click.prevent="clickCreate()">
+                        <i class="fas fa-plus"></i>
+                        <span style="color: #fff;  font-weight: bold;">Nuevo</span>
+                    </el-button>
 
-                <el-button class="btn_buscar me-2" href="javascript:void(0)" @click.prevent="clickZones()">
-                    <i class="icofont-location-pin"></i>
-                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Zona</span>
-                </el-button>
+                    <el-button class="btn_guardarsmall" href="javascript:void(0)" @click.prevent="clickZones()">
+                        <i class="icofont-location-pin"></i>
+                        <span style="color: #fff; font-weight: bold;">Zona</span>
+                    </el-button>
 
-                <el-button class="btn_buscar" href="javascript:void(0)" @click.prevent="clickImport()">
-                    <i class="fa fa-upload"></i>
-                    <span style="color: #fff; font-size: 1.25rem; font-weight: bold;">Importar</span>
-                </el-button>
-            </div>
-            <div class="card-body">
+                    <el-button class="btn_guardarsmall" href="javascript:void(0)" @click.prevent="clickImport()">
+                        <i class="fa fa-upload"></i>
+                        <span style="color: #fff; font-weight: bold;">Importar</span>
+                    </el-button>
+                </div>
+                <div class="card-body">
 
-                <data-table :resource="resource + `/${this.type}`" :type-user="typeUser">
-                    <tr slot="heading" class="bg-primary" style="border-radius: 12px;">
-                        <th class="text-white">#</th>
-                        <th class="text-white">Nombre</th>
-                        <th class="text-white text-center">Creado por Usuario</th>
-                        <th class="text-center text-white">Alias</th>
-                        <th class="text-center text-white">DNI/RUC</th>
-                        <th class="text-center text-white">Zona</th>
-                        <th class="text-center text-white">Telefonos</th>
+                    <data-table :resource="resource + `/${this.type}`" :type-user="typeUser">
+                        <tr slot="heading" class="bg-primary" style="border-radius: 12px;">
+                            <th class="text-white text-center">Imagen</th>
+                            <th class="text-white">#</th>
+                            <th class="text-white text-left">Creado por Usuario</th>
+                            <th class="text-white">{{ title }}</th>
+                            <th class="text-center text-white" v-if="!configuration.mod_renta">Zona</th>
+                            <th class="text-center text-white">Datos</th>
+                            <th class="text-center text-white" v-if="configuration.mod_renta">Procedencia </th>
+                            <th class="text-center text-white" v-if="configuration.mod_renta">Familiar</th>
 
-                        <th class="text-center text-white" v-if="configuration.mod_renta">Procedencia </th>
-                        <th class="text-center text-white" v-if="configuration.mod_renta">Nombre de Familiar</th>
-                        <th class="text-center text-white" v-if="configuration.mod_renta">Telefono  de Familiar</th>
-                        <th class="text-center text-white" v-if="configuration.mod_renta">Ocupacion</th>
-                        <th class="text-end text-white">Acciones</th>
-                    </tr>
 
-                    <tr></tr>
-                    <tr slot-scope="{ index, row }" :class="{ 'bg-primary': !row.enabled }">
-                        <td>{{ index }}</td>
-                        <td>{{ row.name }}</td>
-                        <td class="text-center">{{ row.user_name }} <br> {{ row.updated_at }}
-                        </td>
-                        <td class="text-center">{{ row.alias }}</td>
-                        <td class="text-center">{{ row.number }}</td>
-                        <td class="text-center">{{ row.zone_description }}</td>
-                        <td class="text-center">{{ row.telephone }}</td>
+                            <th class="text-center text-white">Acciones</th>
+                        </tr>
 
-                        <td class="text-center" v-if="configuration.mod_renta">{{ row.ref_origin }}</td>
-                        <td class="text-center" v-if="configuration.mod_renta">{{ row.parient_description }} - {{ row.name_family }}</td>
-                        <td class="text-center" v-if="configuration.mod_renta">{{ row.telephone_family }}</td>
-                        <td class="text-center" v-if="configuration.mod_renta">{{ row.occupation }}</td>
-                        <td class="text-end">
-
-                            <!-- **** -->
-                            <button 
-                                class="btn p-0" 
-                                type="button" 
-                                data-bs-toggle="dropdown" 
-                                aria-haspopup="true" 
-                                aria-expanded="false" 
-                                style="font-size: 1.25rem; padding: 0.75rem 1.5rem;"
-                            >
-                                <span 
-                                    class="btn btn-primary dropdown-toggle" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    data-bs-delay="0" 
-                                    title="" 
-                                    data-bs-original-title="Item Count" 
-                                    aria-label="Item Count" 
-                                    style="font-size: 1.25rem;"
-                                >
-                                    Acciones
+                        <tr></tr>
+                        <tr slot-scope="{ index, row }" :class="{ 'bg-secondary-darker': !row.enabled }">
+                            <td class="text-center" :class="!row.enabled ? 'td-amber' : ''">
+                                <img v-if="row.image_url" :src="row.image_url" alt="avatar" style="width:40px; height:40px; object-fit:cover; border-radius:50%; border:1px solid #ccc;" />
+                                <i v-else class="fas fa-user-circle" style="font-size: 2rem; color: #ccc;"></i>
+                            </td>
+                            <td :class="!row.enabled ? 'td-amber' : ''">{{ index }}</td>
+                            <td class="text-left" :class="!row.enabled ? 'td-amber' : ''">
+                                <span v-if="row.user_name" style="font-weight: bold; font-size: 0.8rem;">
+                                    USUARIO: {{ row.user_name }}
                                 </span>
-                            </button>
+                                <br v-if="row.user_name && row.updated_at">
+                                <span v-if="row.updated_at" style="font-weight: bold; font-size: 0.8rem;">
+                                    FECHA: {{ row.updated_at.split(' ')[0] }} <br>
+                                    HORA : {{ row.updated_at.split(' ')[1] }}
+                                </span>
+                            </td>
+                            <td style="font-size: 1.1rem;">
+                                <span style="font-weight: bold;">{{ row.number }}</span> <br>
+                                <span style="font-size: 1.2rem; color: #000;">{{ row.name }}</span><br>
+                                <span style="font-size: 1rem; color: #888;">{{ row.alias }}</span>
+                            </td>
 
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <template v-if="row.enabled">
-                                    <a 
-                                        type="button" 
-                                        class="dropdown-item text-secondary" 
-                                        @click.prevent="clickCreate(row.id)" 
-                                        style="color: #6c757d; font-size: 1.1rem;"
-                                    >
-                                        <i class="fa fa-edit" style="font-size: 1.3rem;"></i> Editar
-                                    </a>
-                                </template>
 
-                                <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">
-                                    <a 
-                                        type="button" 
-                                        class="dropdown-item text-danger" 
-                                        @click.prevent="clickDelete(row.id)" 
-                                        style="color: #dc3545; font-size: 1.1rem;"
-                                    >
-                                        <i class="fa fa-trash" style="font-size: 1.3rem;"></i> Eliminar
-                                    </a>
-                                </template>
+                            <td class="text-center" v-if="!configuration.mod_renta" :class="!row.enabled ? 'td-amber' : ''">{{ row.zone_description }}</td>
+                            <td class="text-center" :class="!row.enabled ? 'td-amber' : ''">
+                                <span v-if="row.occupation">
+                                    Ocupación: {{ row.occupation }}<br>
+                                </span>
+                                <span v-if="row.telephone">
+                                    Teléfono: {{ row.telephone }}
+                                </span>
+                            </td>
 
-                                
-                                <!-- <a 
-                                    type="button" 
-                                    class="dropdown-item text-warning" 
-                                    @click.prevent="clickDisable(row.id)" 
-                                    v-if="row.active" 
-                                    style="color: #ffc107; font-size: 1.1rem;"
-                                >
-                                    <i class="fa fa-ban" style="font-size: 1.3rem;"></i> Inhabilitar
-                                </a>
-                                
-                                <a 
-                                    type="button" 
-                                    class="dropdown-item text-success" 
-                                    @click.prevent="clickEnable(row.id)" 
-                                    v-else 
-                                    style="color: #28a745; font-size: 1.1rem;"
-                                >
-                                    <i class="fa fa-check" style="font-size: 1.3rem;"></i> Habilitar
-                                </a> -->
-                            </div>
+                            <td class="text-center" v-if="configuration.mod_renta" :class="!row.enabled ? 'td-amber' : ''">{{ row.ref_origin }}</td>
+                            <td class="text-center" v-if="configuration.mod_renta" :class="!row.enabled ? 'td-amber' : ''">
+                                {{ row.parient_description }} - {{ row.name_family }} <br>
+                                {{ row.telephone_family }}
+                            </td>
 
-                            <!-- **** -->
-                            <!-- <template v-if="row.enabled">
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-info"
-                                        @click.prevent="clickCreate(row.id)"
-                                    >
-                                        Editar
-                                    </button>
-                                </template>
+                            <td class="text-center align-middle" :class="!row.enabled ? 'td-amber' : ''">
+                                <div class="d-flex justify-content-center align-items-center" style="gap: 0.5rem;">
+                                    <el-tooltip content="Editar" placement="top">
+                                        <button
+                                            v-if="row.enabled"
+                                            class="btn btn-sm rounded-circle"
+                                            style="color: #fff; background: #007bff; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%;"
+                                            @click.prevent="clickCreate(row.id)"
+                                            :disabled="!row.enabled"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Eliminar" placement="top"
+                                        v-if="typeUser === 'admin' || typeUser === 'superadmin'">
+                                        <button class="btn btn-sm rounded-circle"
+                                            style="color: #fff; background: #dc3545; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%;"
+                                            @click.prevent="clickDelete(row.id)"
+                                            :disabled="!row.enabled"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Inhabilitar" placement="top"
+                                        v-if="(typeUser === 'admin' || typeUser === 'superadmin') && row.enabled">
+                                        <button class="btn btn-sm rounded-circle"
+                                            style="color: #fff; background: #ffc107; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%;"
+                                            @click.prevent="clickDisable(row.id)"
+                                            :disabled="!row.enabled"
+                                        >
+                                            <i class="fa fa-ban"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Habilitar" placement="top"
+                                        v-if="(typeUser === 'admin' || typeUser === 'superadmin') && !row.enabled">
+                                        <button class="btn btn-sm rounded-circle"
+                                            style="color: #fff; background: #28a745; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%;"
+                                            @click.prevent="clickEnable(row.id)"
+                                        >
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
+                            </td>
+                           
+                        </tr>
+                    </data-table>
+                </div>
+                <Printer :showDialogPrinter.sync="showDialogPrinter"></Printer>
+                <persons-form :typeUser="typeUser" :showDialog.sync="showDialog" :type="type" :recordId="recordId"
+                    :api_service_token="api_service_token" :isArca="isArca"></persons-form>
 
-                                <template
-                                    v-if="
-                                        typeUser === 'admin' ||
-                                            typeUser === 'superadmin'
-                                    "
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickDelete(row.id)"
-                                    >
-                                        Eliminar
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickDisable(row.id)"
-                                        v-if="row.enabled"
-                                    >
-                                        Inhabilitar
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-primary"
-                                        @click.prevent="clickEnable(row.id)"
-                                        v-else
-                                    >
-                                        Habilitar
-                                    </button>
-                                </template> -->
-                        </td>
-                    </tr>
-                </data-table>
+                <persons-import :showDialog.sync="showImportDialog" :type="type"></persons-import>
+                <client-zones :showDialog.sync="showDialogZones">
+                </client-zones>
             </div>
-            <Printer :showDialogPrinter.sync="showDialogPrinter"></Printer>
-            <persons-form :typeUser="typeUser" :showDialog.sync="showDialog" :type="type" :recordId="recordId" :api_service_token="api_service_token" :isArca="isArca"></persons-form>
-
-            <persons-import :showDialog.sync="showImportDialog" :type="type"></persons-import>
-            <client-zones :showDialog.sync="showDialogZones">
-            </client-zones>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -225,15 +181,15 @@ export default {
         //    console.log(resource+`/${this.type}`)
 
         await this.$http.get(`/${this.resource}/tables`).then(response => {
-            
+
             this.configuration = response.data.configuration;
-            
+
             console.log(
                 "🚀 ~ file: form.vue ~ line 153 ~ created ~ parent",
                 this.parent
             );
         });
-        
+
     },
     methods: {
         clickZones() {

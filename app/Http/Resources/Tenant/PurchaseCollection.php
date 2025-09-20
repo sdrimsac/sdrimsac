@@ -27,7 +27,7 @@ class PurchaseCollection extends ResourceCollection
                 $includes = false;
             }
             $paid = $row->purchase_payments->sum('payment') == $row->total;
-            if($paid == false){
+            if ($paid == false) {
                 $paid = $row->total_canceled;
             }
             return [
@@ -73,11 +73,34 @@ class PurchaseCollection extends ResourceCollection
                     return [
                         'key' => $key + 1,
                         'id' => $row->id,
+                        'internal_id' => $row->item->internal_id,
                         'description' => $row->item->description,
                         'quantity' => round($row->quantity, 2),
                         'unit_type_id' => $row->item->unit_type_id,
                         'max_quantity' => $item->max_quantity,
                         'max_quantity_description' => $item->max_quantity_description,
+                        'lots' => collect($row->lots)->transform(function ($row, $key) {
+                            return [
+                                'id' => $row->id,
+                                'series' => $row->series,
+                                'date' => $row->date,
+                                'item_lot_id' => $row->item_lot_id,
+                            ];
+                        }),
+                        'color_size' => $row->item->color_size,
+                        'lots_group' => (isset($row->item->lots_group) && $row->item->lots_group)
+                            ? collect($row->item->lots_group)->transform(function ($row, $key) {
+                                return [
+                                    'id' => isset($row->id) ? $row->id : null,
+                                    'code' => isset($row->code) ? $row->code : null,
+                                    'date_of_due' => isset($row->date_of_due) ? $row->date_of_due : null,
+                                    'item_id' => isset($row->item_id) ? $row->item_id : null,
+                                    'warehouse_id' => isset($row->warehouse_id) ? $row->warehouse_id : null,
+                                    'status' => isset($row->status) ? $row->status : null,
+                                ];
+                            })
+                            : null,
+                        'warehouse' => $row->warehouse ? $row->warehouse->description : '',
                     ];
                 }),
             ];

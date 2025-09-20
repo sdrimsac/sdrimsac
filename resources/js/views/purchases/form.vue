@@ -6,12 +6,12 @@
                 <i class="fas fa-coins" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                 Nueva Compra
             </h4>
-            <div>
+            <!-- <div>
                 <el-button class="btn_titulos_modal" @click.prevent="formItems()">
                     <i class="fas fa-plus"></i>
                     <span>Nuevo</span>
                 </el-button>
-            </div>
+            </div> -->
         </div>
         <div class="data-table-visible-columns d-flex align-items-center">
             <!--  -->
@@ -62,17 +62,6 @@
                 <i class="fas fa-wallet"></i>
                 disponible: S/ {{ Number(total).toFixed(2) }}
             </el-button>
-            <!-- <el-button
-                        class="btn_titulos_modal"
-                        href="javascript:void(0)"
-                        @click.prevent="clickImport()"
-                    >
-                        <i class="fa fa-upload"></i>
-                        <span
-                            style="color: #000; font-size: 1.25rem; font-weight: bold;"
-                            >Importar</span
-                        >
-                    </el-button> -->
         </div>
         <!-- <div class="data-table-visible-columns">
             <el-button
@@ -2082,7 +2071,19 @@ export default {
                 });
                 this.selectSupplier();
             } else {
-                this.suppliers = this.all_suppliers; //_.filter(this.all_suppliers, (c) => { return c.identity_document_type_id !== '6' })
+                this.suppliers = this.all_suppliers;
+                // Si es NOTA DE ENTRADA, seleccionar automáticamente 'Varios'
+                if (this.form.document_type_id === "NE76") {
+                    const variosSupplier = _.find(this.suppliers, s => {
+                        return (
+                            (s.name && s.name.toLowerCase().includes('varios')) ||
+                            (s.description && s.description.toLowerCase().includes('varios'))
+                        );
+                    });
+                    if (variosSupplier) {
+                        this.aux_supplier_id = variosSupplier.id;
+                    }
+                }
                 this.selectSupplier();
             }
         },
@@ -2169,7 +2170,7 @@ export default {
                 }
             );
         },
-        async changeDocumentType() {
+        /* async changeDocumentType() {
             if (
                 this.form.document_type_id == "GU75" ||
                 this.form.document_type_id == "NE76"
@@ -2184,7 +2185,37 @@ export default {
                 this.form.number = null;
             }
             this.filterSuppliers();
+        }, */
+
+        async changeDocumentType() {
+            if (
+                this.form.document_type_id == "GU75" ||
+                this.form.document_type_id == "NE76"
+            ) {
+                this.form.series = "";
+                this.form.number = "0";
+                if (this.form.document_type_id == "NE76") {
+                    await this.getCorrelative();
+                    // Seleccionar automáticamente proveedor 'Varios' si existe
+                    const variosSupplier = this.all_suppliers.find(s => {
+                        return (
+                            (s.name && s.name.toLowerCase().includes('varios')) ||
+                            (s.description && s.description.toLowerCase().includes('varios'))
+                        );
+                    });
+                    if (variosSupplier) {
+                        this.form.supplier_id = variosSupplier.id;
+                    }
+                }
+            } else {
+                this.form.series = null;
+                this.form.number = null;
+            }
+            this.filterSuppliers();
         },
+
+
+
         async getCorrelative() {
             try {
                 const response = await this.$http.get(`ne76/correlative`);
