@@ -413,7 +413,7 @@
             <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}</cbc:LineExtensionAmount>
             <cac:PricingReference>
                 <cac:AlternativeConditionPrice>
-                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total }}</cbc:PriceAmount>
+                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}</cbc:PriceAmount>
                     <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
                 </cac:AlternativeConditionPrice>
             </cac:PricingReference>
