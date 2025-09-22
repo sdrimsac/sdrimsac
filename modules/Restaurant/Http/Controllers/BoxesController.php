@@ -1378,6 +1378,67 @@ class BoxesController extends Controller
         return $all;
     }
 
+    /**
+     * Obtiene las notas de venta a crédito de una caja, con sus productos, pagos y saldo pendiente.
+     *
+     * @param int $cash_id
+     * @return array
+     */
+    function get_sale_note_credit($cash_id)
+    {
+        $result = [];
+
+        // Solo obtener SaleNotes a crédito (payment_condition_id = '02') de la caja
+        $sale_notes = SaleNote::with(['items.item', 'payments'])
+            ->where('cash_id', $cash_id)
+            ->where('credit_cash', 1)
+            ->get();
+
+        foreach ($sale_notes as $sale_note) {
+            // Productos vendidos en la nota de venta
+            $products = [];
+            foreach ($sale_note->items as $item) {
+                $products[] = [
+                    'internal_id' => $item->item->internal_id,
+                    'description' => $item->item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
+                    'total' => $item->total,
+                ];
+            }
+
+            // Pagos realizados a la nota de venta
+            $payments = [];
+            $total_paid = 0;
+            foreach ($sale_note->payments as $payment) {
+                $payments[] = [
+                    'date_of_payment' => $payment->date_of_payment,
+                    'payment' => $payment->payment,
+                    'payment_method_type_id' => $payment->payment_method_type_id,
+                ];
+                $total_paid += $payment->payment;
+            }
+
+            // Saldo pendiente
+            $remaining = $sale_note->total - $total_paid;
+
+            $result[] = [
+                'id' => $sale_note->id,
+                'number' => $sale_note->number_full,
+                'date_of_issue' => $sale_note->date_of_issue,
+                'customer_name' => $sale_note->customer->name,
+                'total' => $sale_note->total,
+                'products' => $products,
+                'payments' => $payments,
+                'total_paid' => $total_paid,
+                'remaining' => $remaining,
+            ];
+        }
+        Log::info('Sale Note Credit Report', ['cash_id' => $cash_id, 'result' => $result]);
+
+        return $result;
+    }
+
     function get_stock_report($cash_id)
     {
         $cash = Cash::find($cash_id);
@@ -3096,7 +3157,8 @@ class BoxesController extends Controller
         $deliveries = [];
         $promotions = [];
         $promotions_give = [];
-        $anulate_documents = $this->get_anulate_documents($cash_id);;
+        $anulate_documents = $this->get_anulate_documents($cash_id);
+        $sale_credit = $this->get_sale_note_credit($cash_id);
         $stock_init_report = $this->get_stock_report($cash_id);
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
         $order_anulate_items = $this->get_orden_item_anulate($cash_id);
@@ -3605,6 +3667,7 @@ class BoxesController extends Controller
                 "stock_init_report",
                 /* "order_anulate_comand", */
                 "order_anulate_items",
+                "sale_credit",
                 "credit_notes",
                 "coinsReceive",
                 "promotions_give",
@@ -3653,6 +3716,7 @@ class BoxesController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
+
     function get_detraction_payments($cash_id)
     {
 
