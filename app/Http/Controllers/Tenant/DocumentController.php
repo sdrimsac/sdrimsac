@@ -83,6 +83,7 @@ use App\CoreFacturalo\Requests\Api\Validation\DocumentValidation;
 use App\CoreFacturalo\Requests\Inputs\DocumentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\CreditByClientExport;
+use App\Exports\DocumentDetraccionExport;
 use App\Exports\DocumentExport;
 use App\Exports\DocumentVenta;
 use App\Http\Controllers\Api\DocumentController as ApiDocumentController;
@@ -2644,6 +2645,21 @@ class DocumentController extends Controller
             ->company($company)
             ->establishment($establishment)
             ->download('Reporte_Ventas_' . Carbon::now() . '.xlsx');
+    }
+
+    public function excelDetraccion(Request $request)
+    {
+        ini_set('memory_limit', '2048M');
+
+
+        $records = $this->getRecordsDetraction($request, false, true)->get();
+        $establishment = Establishment::first();
+        $company = Company::active();
+        return (new DocumentDetraccionExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Detracciones_' . Carbon::now() . '.xlsx');
     }
 
     public function excelVentas(Request $request)

@@ -621,6 +621,8 @@ if ($hostname) {
                         Route::get('columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns_detraction']);
                         Route::get('records', [App\Http\Controllers\Tenant\DocumentController::class, 'records_detraction']);
                         Route::get('data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
+                        Route::get('excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excelDetraccion']);
+
                     });
                 Route::prefix('documents_ventas')
                     ->group(function () {

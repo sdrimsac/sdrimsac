@@ -1411,7 +1411,6 @@
                         </tbody>
                     </table>
                 @endforeach
-
             </div>
         @endif
         @if (count($promotions_give) > 0)

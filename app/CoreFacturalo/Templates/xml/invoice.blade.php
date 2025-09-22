@@ -28,6 +28,10 @@
             $amount_discount = $discount->discount_type_id == 2 ? $document->total_value : $discount->base;
         }
     }
+    $price_unit = 0;
+    foreach ($document->items as $row) {
+        $price_unit = isset($row) && $row->quantity > 0 ? $row->total / $row->quantity : (isset($row) ? $row->total : 0);
+    }
 @endphp
 {!! '<?xml version="1.0" encoding="utf-8" standalone="no"?>' !!}
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
@@ -411,12 +415,21 @@
             <cbc:ID>{{ $loop->iteration }}</cbc:ID>
             <cbc:InvoicedQuantity unitCode="{{ $row->item->unit_type_id }}">{{ $row->quantity }}</cbc:InvoicedQuantity>
             <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}</cbc:LineExtensionAmount>
-            <cac:PricingReference>
-                <cac:AlternativeConditionPrice>
-                    <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}</cbc:PriceAmount>
-                    <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
-                </cac:AlternativeConditionPrice>
-            </cac:PricingReference>
+            @if($row->total_discount > 0)
+                <cac:PricingReference>
+                    <cac:AlternativeConditionPrice>
+                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $price_unit }}</cbc:PriceAmount>
+                        <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
+                    </cac:AlternativeConditionPrice>
+                </cac:PricingReference>
+            @else
+                <cac:PricingReference>
+                    <cac:AlternativeConditionPrice>
+                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_price }}</cbc:PriceAmount>
+                        <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
+                    </cac:AlternativeConditionPrice>
+                </cac:PricingReference>
+            @endif
             @if ($row->charges)
                 @foreach ($row->charges as $charge)
                     <cac:AllowanceCharge>
