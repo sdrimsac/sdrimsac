@@ -249,18 +249,19 @@
 
                             <td class="text-center">
                                 <template v-if="Array.isArray(row.warehouses) && row.warehouses.some(warehouse => warehouse.active)">
-                                    <button class="btn_excelsmall" :style="{
+                                    <button class="btn_excelsmall d-flex justify-content-center align-items-center" :style="{
                                         color: 'white',
                                         backgroundColor: 'green',
                                         fontWeight: 'bold',
-                                        width: '110px'
+                                        width: '110px',
+                                        textAlign: 'center'
                                     }">
-                                        Habilitado
+                                        <span style="width: 100%; text-align: center;">Habilitado</span>
                                     </button>
                                 </template>
                                 <template v-else>
-                                    <el-button class="btn_cancelarsmall" type="danger">
-                                        Inhabilitado
+                                    <el-button class="btn_cancelarsmall d-flex justify-content-center align-items-center" type="danger" style="width: 110px; text-align: center;">
+                                        <span style="width: 100%; text-align: center;">Inhabilitado</span>
                                     </el-button>
                                 </template>
                             </td>

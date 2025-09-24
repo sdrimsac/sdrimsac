@@ -657,24 +657,31 @@ class SaleNoteController extends Controller
         $configuration = Configuration::first();
         return view('tenant.sale_notes.form', compact('id', 'configuration'));
     }
-    public function getCreditPending()
+    public function getCreditPending(Request $request)
     {
-        $payments = Payment::select('sale_note_id', DB::raw('SUM(amount) as total_amount'))
-            ->whereHas('sale_note', function ($q) {
-                $q->where('paid', 0)->whereHas('credit_payments');
-            })
-            ->groupBy('sale_note_id')
-            ->get();
+        // Obtener los SaleNotes filtrados según los parámetros de búsqueda
+        $records = $this->get_records($request)->get();
 
-        $sale_notes_total = collect($payments)->sum('total_amount');
-        $sale_notes_paid = 0;
-        foreach ($payments as $key => $sale_note) {
-            $id = $sale_note["sale_note_id"];
-            $sale_note_payment = SaleNotePayment::where('sale_note_id', $id)->sum('payment');
-            $sale_notes_paid += $sale_note_payment;
+        $sale_notes_pending = 0;
+        foreach ($records as $sale_note) {
+            // Solo considerar los que están pendientes de pago
+            if (isset($sale_note->total) && isset($sale_note->payments)) {
+                $total_paid = 0;
+                foreach ($sale_note->payments as $payment) {
+                    $total_paid += $payment->payment;
+                }
+                $pending = $sale_note->total - $total_paid;
+                if ($pending > 0) {
+                    $sale_notes_pending += $pending;
+                }
+            } else if (isset($sale_note->total) && isset($sale_note->total_paid)) {
+                // Fallback si existe un campo total_paid
+                $pending = $sale_note->total - $sale_note->total_paid;
+                if ($pending > 0) {
+                    $sale_notes_pending += $pending;
+                }
+            }
         }
-
-        $sale_notes_pending = $sale_notes_total - $sale_notes_paid;
 
         return compact('sale_notes_pending');
     }
@@ -831,7 +838,12 @@ class SaleNoteController extends Controller
             $records = $records->where("seller_id", $seller_id);
         }
         if ($state_type_id) {
-            $records = $records->where("state_type_id", $state_type_id);
+            if ($state_type_id === 'pending') {
+                // Filtrar solo los pendientes de pago
+                $records = $records->where('paid', 0);
+            } else {
+                $records = $records->where("state_type_id", $state_type_id);
+            }
         }
         if ($number) {
             $records = $records->where("number", $number);

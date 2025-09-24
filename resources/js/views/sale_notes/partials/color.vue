@@ -1,16 +1,16 @@
 <template>
-<el-dialog :title="titleDialog" width="30%" :visible="showDialog" @open="create" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
+<el-dialog :title="titleDialog" width="40%" :visible="showDialog" @open="create" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body :show-close="false">
     <div class="form-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 table-responsive">
                 <table width="100%" class="table">
                     <thead>
-                        <tr width="100%">
-                            <th>Talla</th>
-                            <th>Color</th>
-                            <th>Stock</th>
-                            <th>Precio</th>
-                            <th>Ingrese Cantidad</th>
+                        <tr width="100%" style="background-color: #073f68; color: #fff;">
+                            <th style="color: #fff; width: 18%;">Talla</th>
+                            <th style="color: #fff; width: 18%;">Color</th>
+                            <th style="color: #fff; width: 18%;">Stock</th>
+                            <th style="color: #fff; width: 18%;">Precio</th>
+                            <th style="color: #fff; width: 28%;">Cantidad a Vender</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,9 +38,9 @@
             </div>
         </div>
     </div>
-    <div class="form-actions text-end pt-2 pb-2">
-        <el-button @click.prevent="close()">Cerrar</el-button>
-        <el-button type="primary" @click="submit">Guardar</el-button>
+    <div class="form-actions pt-2 pb-2" style="display: flex; justify-content: flex-end;">
+        <el-button class="btn_cancelarsmall" type="primary" @click.prevent="close()">Cerrar</el-button>
+        <el-button class="btn_guardarsmall" type="primary" @click="submit">Guardar</el-button>
     </div>
 </el-dialog>
 </template>

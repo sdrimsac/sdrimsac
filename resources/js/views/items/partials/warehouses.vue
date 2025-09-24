@@ -1,3 +1,5 @@
+<!-- Ver stock de producto en almacenes y últimas transacciones (ventas y compras). -->
+
 <template>
     <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="open" append-to-body top="7vh"
         v-loading="loading" :close-on-click-modal="false">
@@ -18,7 +20,7 @@
                                     <tbody>
                                         <tr v-for="(row, idx) in warehouses" :key="idx">
                                             <td>
-                                                {{ row.warehouse_description }}
+                                                {{ row.warehouse_description.replace(/^Almacén\s*-\s*/i, '') }}
                                             </td>
                                             <td>
                                                 <template v-if="item.max_quantity">

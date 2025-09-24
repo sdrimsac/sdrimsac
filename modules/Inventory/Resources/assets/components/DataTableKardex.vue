@@ -3,98 +3,90 @@
     <div class="row">
       <div class="col-md-12 col-lg-12 col-xl-12">
         <div class="row mt-2">
-          <div class="col-md-6">
+          <div class="col-3">
             <label class="control-label">Producto</label>
-            <el-select
-              v-model="form.item_id"
-              filterable
-              remote
-              clearable
-              @change="hasMaxQuantity"
-              :remote-method="searchRemoteItems"
-            >
-              <el-option
-                v-for="option in items"
-                :key="option.id"
-                :value="option.id"
-                :label="option.description"
-              ></el-option>
+            <el-select v-model="form.item_id" filterable remote clearable @change="hasMaxQuantity"
+              :remote-method="searchRemoteItems">
+              <el-option v-for="option in items" :key="option.id" :value="option.id"
+                :label="option.description"></el-option>
             </el-select>
           </div>
-          <div class="col-md-3">
+          <div class="col-3">
             <label class="control-label">Fecha inicio</label>
-            <el-date-picker
-              class="w-100"
-              v-model="form.date_start"
-              type="date"
-              @change="changeDisabledDates"
-              value-format="yyyy-MM-dd"
-              format="dd/MM/yyyy"
-              :clearable="true"
-            ></el-date-picker>
+            <el-date-picker class="w-100" v-model="form.date_start" type="date" @change="changeDisabledDates"
+              value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="true"></el-date-picker>
           </div>
-          <div class="col-md-3">
+          <div class="col-3">
             <label class="control-label">Fecha término</label>
-            <el-date-picker
-              class="w-100"
-              v-model="form.date_end"
-              type="date"
-              :picker-options="pickerOptionsDates"
-              value-format="yyyy-MM-dd"
-              format="dd/MM/yyyy"
-              :clearable="true"
-            ></el-date-picker>
+            <el-date-picker class="w-100" v-model="form.date_end" type="date" :picker-options="pickerOptionsDates"
+              value-format="yyyy-MM-dd" format="dd/MM/yyyy" :clearable="true"></el-date-picker>
           </div>
-        </div>
-        <div class="row col-12">
           <div class="col-3">
             <label class="control-label">Establecimiento</label>
             <el-select v-model="form.establish" filterable clearable>
-              <el-option
-                v-for="option in establecimiento"
-                :key="option.id"
-                :value="option.id"
-                :label="option.description"
-              ></el-option>
+              <el-option v-for="option in establecimiento" :key="option.id" :value="option.id"
+                :label="option.description"></el-option>
             </el-select>
           </div>
+        </div>
+        <div class="row col-12">
+
           <div class="col-3" v-if="unitTypeDescription && records.length > 0">
-            <br />
-            <el-switch
-              @change="parsedMaxQuantity"
-              v-model="max_quantity"
-              :active-text="unitTypeDescription.max"
-              :inactive-text="unitTypeDescription.min"
-            ></el-switch>
+
+            <el-switch @change="parsedMaxQuantity" v-model="max_quantity" :active-text="unitTypeDescription.max"
+              :inactive-text="unitTypeDescription.min"></el-switch>
           </div>
         </div>
-        <div class="row mt-2">
-          <div class="col-md-12">
-            <el-button
-              class="submit"
-              type="primary"
-              @click.prevent="getRecordsByFilter"
-              :loading="loading_submit"
-              icon="el-icon-search"
-            >Buscar</el-button>
+        <div class="row mb-1">
+
+          <div class="col-12">
+            <div class="row">
+              <div class="col-9 mt-2">
+                <div class="d-flex justify-content-end">
+                  <button class="btn_politicasmall  ml-2" type="primary"
+                    @click="$emit('update:invertirOrden', !invertirOrden)">
+                    <i class="fas fa-sort-amount-down-alt"></i>
+                    {{ invertirOrden ? 'Mostrar más antiguos primero' : 'Mostrar últimos primero' }}
+                  </button>
+
+                </div>
+
+              </div>
+              <div class="col-3">
+                <div class="d-flex justify-content-end">
+                  <template v-if="records.length > 0">
+                    <el-button class="btn_pdfsmall ml-2" type="danger" icon="el-icon-tickets"
+                      @click.prevent="clickDownload('pdf')">Exportar PDF</el-button>
+                    <el-button class="btn_excelsmall ml-2" type="success" @click.prevent="clickDownload('excel')">
+                      <i class="fa fa-file-excel"></i> Exportar
+                      Excel
+                    </el-button>
+                  </template>
+
+
+
+                  <el-button class="btn_guardarsmall ml-2" type="primary" @click.prevent="getRecordsByFilter"
+                    :loading="loading_submit" icon="el-icon-search">
+                    Buscar
+                  </el-button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-md-6 col-12 mt-2">
+
+          <!-- <div class="col-md-6 col-12 mt-2">
             <template v-if="records.length > 0">
               <div class="form-group">
                 <label class="control-label w-100">Exportar para usuario</label>
-                <el-button
-                  class="submit"
-                  type="danger"
-                  icon="el-icon-tickets"
-                  @click.prevent="clickDownload('pdf')"
-                >Exportar PDF</el-button>
+                <el-button class="submit" type="danger" icon="el-icon-tickets"
+                  @click.prevent="clickDownload('pdf')">Exportar PDF</el-button>
                 <el-button class="submit" type="success" @click.prevent="clickDownload('excel')">
                   <i class="fa fa-file-excel"></i> Exportar
                   Excel
                 </el-button>
               </div>
             </template>
-          </div>
+          </div> -->
           <!-- <div class="col-md-6 m-t-10">
                               <template v-if="records.length>0">
                                 <label class="control-label">Exportar para sunat </label>
@@ -114,17 +106,12 @@
               <slot name="heading"></slot>
             </thead>
             <tbody>
-              <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
+              <slot v-for="(row, index) in recordsToShow" :row="row" :index="customIndex(index)"></slot>
             </tbody>
           </table>
           <div>
-            <el-pagination
-              @current-change="getRecords"
-              layout="total, prev, pager, next"
-              :total="pagination.total"
-              :current-page.sync="pagination.current_page"
-              :page-size="pagination.per_page"
-            ></el-pagination>
+            <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+              :current-page.sync="pagination.current_page" :page-size="pagination.per_page"></el-pagination>
           </div>
         </div>
       </div>
@@ -141,7 +128,7 @@ import moment from "moment";
 import queryString from "query-string";
 
 export default {
-  props: ["establecimiento", "resource"],
+  props: ["establecimiento", "resource", "invertirOrden"],
   data() {
     return {
       max_quantity: false,
@@ -167,7 +154,14 @@ export default {
       }
     };
   },
-  computed: {},
+  computed: {
+    recordsToShow() {
+      if (this.invertirOrden) {
+        return this.records.slice().reverse();
+      }
+      return this.records;
+    }
+  },
   created() {
     this.initForm();
     this.$eventHub.$on("reloadData", () => {
@@ -293,7 +287,8 @@ export default {
       this.form = {
         item_id: null,
         date_start: null,
-        date_end: null
+        date_end: null,
+        establish: (this.establecimiento && this.establecimiento.length > 0) ? this.establecimiento[0].id : null
       };
     },
     customIndex(index) {
@@ -364,26 +359,26 @@ export default {
         .then(() => {
         });
     } */
-   /* loadConfiguration() {
-      this.$http
-        .get(`/configurations/records`)
-        .then(response => {
-          console.log('Respuesta del servidor:', response.data);
-          if (response.data.success) {
-            this.configuration = response.data.data;
-            this.$toast.success(response.data.message);
-          } else {
-            this.$toast.error(response.data.message);
-          }
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 422) {
-            this.errors = error.response.data.errors;
-          } else {
-            console.log('Error en la solicitud:', error);
-          }
-        });
-    }, */
+    /* loadConfiguration() {
+       this.$http
+         .get(`/configurations/records`)
+         .then(response => {
+           console.log('Respuesta del servidor:', response.data);
+           if (response.data.success) {
+             this.configuration = response.data.data;
+             this.$toast.success(response.data.message);
+           } else {
+             this.$toast.error(response.data.message);
+           }
+         })
+         .catch(error => {
+           if (error.response && error.response.status === 422) {
+             this.errors = error.response.data.errors;
+           } else {
+             console.log('Error en la solicitud:', error);
+           }
+         });
+     }, */
   }
 };
 </script>

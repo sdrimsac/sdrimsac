@@ -55,6 +55,7 @@ class ReportKardexCollection extends ResourceCollection
             case $models[0]: //venta
                 return [
                     'user_name' => isset($row->user_id) ? $row->user->name : '',
+                    'user_avatar' => (isset($row->user) && isset($row->user->image_url)) ? $row->user->image_url : null,
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'unit_type_id' => $row->item->unit_type_id,
@@ -85,6 +86,7 @@ class ReportKardexCollection extends ResourceCollection
                 if ($purchase_find !== null) {
                     return [
                         'user_name' => isset($row->user_id) ? $row->user->name : '',
+                        'user_avatar' => (isset($row->user) && isset($row->user->image_url)) ? $row->user->image_url : null,
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'internal_id' => $row->item->internal_id,
@@ -143,6 +145,7 @@ class ReportKardexCollection extends ResourceCollection
 
                 return [
                     'user_name' => isset($row->user_id) ? $row->user->name : '',
+                    'user_avatar' => (isset($row->user) && isset($row->user->image_url)) ? $row->user->image_url : null,
                     'id' => $row->id,
                     'item_name' => $row->item->description,
                     'internal_id' => $row->item->internal_id,

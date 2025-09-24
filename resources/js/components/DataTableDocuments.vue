@@ -361,9 +361,44 @@
     </div>
 </template>
 
-<style>
+
+<style scoped>
 .font-custom {
     font-size: 15px !important;
+}
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background: #fff;
+    font-size: 15px;
+}
+.table thead {
+    background: #0d2d4b;
+}
+.table thead th {
+    color: #fff;
+    background: #0d2d4b;
+    font-weight: bold;
+    border: none;
+    padding: 10px 8px;
+    text-align: left;
+}
+.table tbody tr:nth-child(even) {
+    background: #f5f1e7;
+}
+.table tbody tr:nth-child(odd) {
+    background: #fff;
+}
+.table tbody td {
+    border: none;
+    padding: 10px 8px;
+    color: #222;
+    vertical-align: middle;
+    text-align: left;
+}
+.table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
 }
 </style>
 

@@ -5,20 +5,23 @@
             <div class="row" >
                 <div class="col-lg-12 col-md-12 table-responsive">
                     <div class="col-lg-5 col-md-5 col-sm-12 pb-2">
-                        <el-input placeholder="Buscar serie ..."
+                        <el-input
                             v-model="search"
-                            style="width: 100%;"
+                            placeholder="Buscar por serie..."
+                            clearable
                             prefix-icon="el-icon-search"
-                            @input="filter">
-                         <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                            @input="filter"
+                            style="width: 100%; border-radius: 20px; background: #f5f7fa;"
+                        >
+                        </el-input>
                     </div>
                     <table width="100%" class="table">
                         <thead>
-                            <tr width="100%">
-                                <th class="text-center">Seleccionar</th>
-                                <th >Cod. Lote</th>
-                                <th>Serie</th>
-                                <th>Fecha</th>
+                            <tr width="100%" style="background-color: #073f68; color: #fff;">
+                                <th class="text-center" style="color: #fff;">Seleccionar</th>
+                                <th style="color: #fff;">Cod. Lote</th>
+                                <th style="color: #fff;">Serie</th>
+                                <th style="color: #fff;">Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,10 +50,10 @@
             </div>
         </div>
 
-       <div class="form-actions text-end pt-2 pb-2">
-            <el-button @click.prevent="close()">Cerrar</el-button>
-            <!-- <el-button type="primary" @click="submit" >Guardar</el-button> -->
-        </div>
+    <div class="form-actions pt-2 pb-2" style="display: flex; justify-content: flex-end;">
+        <el-button class="btn_cancelarsmall" type="primary" @click.prevent="close()">Cerrar</el-button>
+        <!-- <el-button type="primary" @click="submit" >Guardar</el-button> -->
+    </div>
     </el-dialog>
 </template>
 

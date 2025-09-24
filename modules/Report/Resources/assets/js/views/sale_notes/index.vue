@@ -5,7 +5,7 @@
         <div class="card-header bg-primary">
             <h4 class="my-0 text-white">
                 <i class="fas fa-file-alt"></i>
-                Consulta de Nota de venta</h4>
+                Consulta de Nota de venta ffdfdf</h4>
         </div>
         <div class="card mb-0">
                 <div class="card-body">
@@ -84,3 +84,44 @@
         }
     }
 </script>
+<style scoped>
+/* Encabezado de la tabla */
+.data-table thead th,
+table thead th {
+    background-color: #15344a !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Filas alternas (zebra striping) */
+.data-table tbody tr:nth-child(even),
+table tbody tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+.data-table tbody tr:nth-child(odd),
+table tbody tr:nth-child(odd) {
+    background-color: #e3ded3;
+}
+
+/* Bordes sutiles */
+.data-table th, .data-table td,
+table th, table td {
+    border: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+/* Ajuste de padding y alineación */
+.data-table th, .data-table td,
+table th, table td {
+    padding: 8px 10px;
+}
+
+/* Alineación de columnas específicas */
+.text-center {
+    text-align: center !important;
+}
+.text-end {
+    text-align: right !important;
+}
+</style>

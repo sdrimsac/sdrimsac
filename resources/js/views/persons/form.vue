@@ -688,6 +688,47 @@ export default {
     },
     methods: {
         /**
+         * Redimensiona y convierte una imagen a PNG antes de subirla
+         */
+        async resizeAndConvertToPng(file) {
+            const maxWidth = 800;
+            const maxHeight = 800;
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth || height > maxHeight) {
+                            const aspectRatio = width / height;
+                            if (width > height) {
+                                width = maxWidth;
+                                height = Math.round(maxWidth / aspectRatio);
+                            } else {
+                                height = maxHeight;
+                                width = Math.round(maxHeight * aspectRatio);
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => {
+                            if (!blob) return reject('No se pudo convertir a PNG');
+                            const pngFile = new File([blob], file.name.replace(/\.[^.]+$/, '.png'), { type: 'image/png' });
+                            resolve(pngFile);
+                        }, 'image/png');
+                    };
+                    img.onerror = () => reject('Error al cargar la imagen');
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject('Error al leer el archivo');
+                reader.readAsDataURL(file);
+            });
+        },
+        /**
          * Convierte cualquier imagen a PNG antes de subirla
          */
         async convertToPng(file) {

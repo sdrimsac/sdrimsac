@@ -3,16 +3,16 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
                     <h4
                         class="my-0 text-white d-flex align-items-center"
-                        style="font-size: 1.5rem; font-weight: bold;"
+                        style="font-size: 1rem; font-weight: bold;"
                     >
                         <i
                             class="fas fa-file-alt"
-                            style="font-size: 2rem; margin-right: 0.5rem;"
+                            style="font-size: 1rem; margin-right: 0.5rem;"
                         ></i>
-                        Cotizaciones
+                        Listado de Cotizaciones
                     </h4>
                 </div>
                 

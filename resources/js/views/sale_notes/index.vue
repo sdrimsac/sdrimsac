@@ -2,48 +2,22 @@
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>Comprobante Nota de Venta</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashbodard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Nota de Venta</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Container-fluid starts-->
-        <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="card-header bg-primary">
+                <div class="card-header bg-primary" style="padding: 10px;">
                     <h4 class="my-0 text-white">
                         <i class="fas fa-file-alt"></i>
                         Consulta de Nota de venta
                     </h4>
                 </div>
-                <div class="data-table-visible-columns">
-                    <el-button
-                        class
-                        href="javascript:void(0)"
-                        @click.prevent="clickCreate()"
-                    >
-                        <i class="fas fa-file-alt fa-lg"></i>
+                <div class="data-table-visible-columns d-flex align-items-center mb-2">
+                    <el-button class="btn_guardarsmall me-2" type="primary" href="javascript:void(0)"
+                        @click.prevent="clickCreate()">
+
                         <i class="fas fa-plus"></i>
-                        Nuevo NV
+                        Nuevo
                     </el-button>
-                    <el-button
-                        @click.prevent="onOpenModalGenerateCPE"
-                        v-if="just_sale_notes"
-                        type="button"
-                    >
+                    <el-button @click.prevent="onOpenModalGenerateCPE" v-if="just_sale_notes" class="btn_guardarsmall"
+                        type="primary">
                         <i class="fas fa-file-check"></i>
                         Generar CPE de Multiples NV
                     </el-button>
@@ -71,353 +45,143 @@
                 <div class="card-body">
                     <data-table :resource="resource">
                         <tr slot="heading" class="bg-primary">
-                            <th>#</th>
-                            <th class="text-white text-end">Acciones</th>
-                            <th class="text-white text-end">Actividad</th>
-                            <th class="text-white text-center">
-                                Fecha Emisión
+                            <th style="width: 40px;">#</th>
+                            <!-- <th class="text-white text-end">Acciones</th>
+                            <th class="text-white text-end">Actividad</th> -->
+                            <th class="text-white text-center" style="width: 200px;">
+                                Actividad
                             </th>
-                            <th class="text-end text-white">Vendedor</th>
-                            <th class="text-end text-white">Cliente</th>
-                            <th class="text-end text-white">Nota de Venta</th>
-                            <th class="text-end text-white">Guia</th>
-                            <th class="text-end text-white">
-                                Motivo Anulacion
-                            </th>
-                            <th class="text-white text-center">Moneda</th>
-                            <th
-                                class="text-white text-end"
-                                v-if="columns.total_exportation.visible"
-                            >
+                            <!-- <th class="text-center text-white" style="width: 100px;">Usuario</th> -->
+                            <th class="text-left text-white" style="min-width: 230px; text-align: left;">Cliente</th>
+                            <th class="text-center text-white" style="width: 150px;">N.V.</th>
+                            <!-- <th class="text-center text-white" style="width: 80px;">G.R.</th> -->
+                           
+                            <!-- <th class="text-center text-white" style="width: 50px;">Moneda</th> -->
+                            <th class="text-white text-end" v-if="columns.total_exportation.visible"
+                                style="width: 110px;">
                                 T.Exportación
                             </th>
-                            <th
-                                class="text-white text-end"
-                                v-if="columns.total_free.visible"
-                            >
+                            <th class="text-white text-end" v-if="columns.total_free.visible" style="width: 110px;">
                                 T.Gratuito
                             </th>
-                            <th
-                                class="text-white text-end"
-                                v-if="columns.total_unaffected.visible"
-                            >
+                            <th class="text-white text-end" v-if="columns.total_unaffected.visible"
+                                style="width: 110px;">
                                 T.Inafecta
                             </th>
-                            <th
-                                class="text-white ext-end"
-                                v-if="columns.total_exonerated.visible"
-                            >
+                            <th class="text-white ext-end" v-if="columns.total_exonerated.visible"
+                                style="width: 110px;">
                                 T.Exonerado
                             </th>
-                            <th
-                                class="text-white text-end"
-                                v-if="columns.total_taxed.visible"
-                            >
+                            <th class="text-white text-end" v-if="columns.total_taxed.visible" style="width: 110px;">
                                 T.Gravado
                             </th>
-                            <th
-                                class="text-white text-end"
-                                v-if="columns.total_igv.visible"
-                            >
+                            <th class="text-white text-end" v-if="columns.total_igv.visible" style="width: 90px;">
                                 T.Igv
                             </th>
-                            <th class="text-white text-center">Adelanto</th>
-                            <th class="text-white text-center">
+                            <th class="text-white text-center" style="width: 50px;" v-if="configuration.credits">
+                                Adelanto</th>
+                            <th class="text-white text-center" style="width: 130px;">
                                 Metodo de pago
                             </th>
-                            <th class="text-white text-center">Pagado</th>
-                            <th class="text-white text-center">Resta</th>
-                            <th class="text-white text-end">Total</th>
-                            <th class="text-white text-end">Tasa</th>
-                            <th class="text-white text-center">Comprobantes</th>
-                            <th class="text-white text-center">Estado pago</th>
-                            <th class="text-white text-center">
-                                Acciones crédito
+                            <th class="text-white text-center" style="width: 150px;">Pagado</th>
+                            <!-- <th class="text-white text-center" style="width: 90px;">Resta</th>
+                            <th class="text-white text-end" style="width: 100px;">Total</th> -->
+                            <th class="text-white text-end" style="width: 70px;" v-if="configuration.credits">Tasa</th>
+                            <th class="text-white text-center" style="width: 100px;">CPE</th>
+                             <th class="text-center text-white" style="width: 200px;">Motivo</th>
+                            <th class="text-white text-center" style="width: 100px;">Estado pago</th>
+                            <th class="text-white text-center" style="width: 140px;">
+                                Acciones
                             </th>
                         </tr>
 
                         <tr></tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td class="text-end">
-                                <template v-if="row.state_type_id != 11">
-                                    <div
-                                        class="btn-toolbar mb-2"
-                                        role="toolbar"
-                                    >
-                                        <div class="btn-group mb-1">
-                                            <button
-                                                class="btn btn-secondary btn-sm dropdown-toggle"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                                <i
-                                                    class="fas fa-ellipsis-v"
-                                                ></i>
-                                            </button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-sm"
-                                            >
-                                                <button
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11' &&
-                                                            (user_type ==
-                                                                'admin' ||
-                                                                user_type ==
-                                                                    'superadmin')
-                                                    "
-                                                    class="dropdown-item"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickDetail(row)
-                                                    "
-                                                >
-                                                    <i class="fas fa-trash"></i>
-                                                    Ver detalle
-                                                </button>
-                                                <button
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11' &&
-                                                            !row.is_credit &&
-                                                            !row.paid
-                                                    "
-                                                    class="dropdown-item"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickPayment(row.id)
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fas fa-money-bill-alt"
-                                                    ></i>
-                                                    Registrar Pago
-                                                </button>
-                                                <a
-                                                    :href="
-                                                        `/dispatches/create_new/sale_note/${row.id}`
-                                                    "
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11' &&
-                                                            (user_type ==
-                                                                'admin' ||
-                                                                user_type ==
-                                                                    'superadmin')
-                                                    "
-                                                    class="dropdown-item"
-                                                >
-                                                    <i
-                                                        class="far fa-file-alt"
-                                                    ></i>
-                                                    Generar guía
-                                                </a>
-
-                                                <button
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11' &&
-                                                            (user_type ==
-                                                                'admin' ||
-                                                                user_type ==
-                                                                    'superadmin')
-                                                    "
-                                                    class="dropdown-item btn-danger"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickVoided(row.id)
-                                                    "
-                                                >
-                                                    <i class="fas fa-trash"></i>
-                                                    Anular Nota de Venta
-                                                </button>
-
-                                                <button
-                                                    class="dropdown-item"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickCreate(row.id)
-                                                    "
-                                                    v-if="
-                                                        row.btn_generate &&
-                                                            row.state_type_id !=
-                                                                '11' &&
-                                                            (user_type ==
-                                                                'admin' ||
-                                                                user_type ==
-                                                                    'superadmin')
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fas fa-file-signature"
-                                                    ></i>
-                                                    Editar nota de Venta
-                                                </button>
-
-                                                <button
-                                                    class="dropdown-item"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickGenerate(row.id)
-                                                    "
-                                                    v-if="
-                                                        !row.changed &&
-                                                            row.state_type_id !=
-                                                                '11' &&
-                                                            soapCompany !=
-                                                                '03' &&
-                                                            (user_type ==
-                                                                'admin' ||
-                                                                user_type ==
-                                                                    'superadmin')
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fas fa-file-excel"
-                                                    ></i>
-                                                    Generar Comprobante
-                                                </button>
-                                                <button
-                                                    v-if="
-                                                        row.state_type_id !=
-                                                            '11'
-                                                    "
-                                                    class="dropdown-item"
-                                                    type="button"
-                                                    @click.prevent="
-                                                        clickOptions(row.id)
-                                                    "
-                                                >
-                                                    <i class="fas fa-print"></i>
-                                                    Imprimir Nota de Venta
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <el-button
-                                        @click.prevent="clickOptions(row.id)"
-                                    >
-                                        <i class="fas fa-print"></i>
-                                    </el-button>
-                                </template>
-                            </td>
-                            <!-- <td v-if="row.state_type_id == '11'">
+                            <!-- <td class="text-end">
                                 
                             </td> -->
+                            <!-- <td v-if="row.state_type_id == '11'">
+                                
+                            </td>
                             <td>
-                                <template
-                                    v-if="
-                                        row.last_register &&
-                                            row.last_register.user
-                                    "
-                                    class="text-center"
-                                >
-                                    <span
-                                        class="text-center fw-bold"
-                                        style="font-family: Arial, sans-serif;"
-                                        >{{ row.last_register.user }}</span
-                                    >
+                                <template v-if="
+                                    row.last_register &&
+                                    row.last_register.user
+                                " class="text-center">
+                                    <span class="text-center fw-bold" style="font-family: Arial, sans-serif;">{{
+                                        row.last_register.user }}</span>
                                     :
                                     <br />
-                                    <span
-                                        class="text-primary"
-                                        style="font-family: Arial, sans-serif;"
-                                        >{{
-                                            row.last_register.description
-                                        }}</span
-                                    >
+                                    <span class="text-primary" style="font-family: Arial, sans-serif;">{{
+                                        row.last_register.description
+                                        }}</span>
                                     <br />
-                                    <span
-                                        style="font-family: Arial, sans-serif;"
-                                    >
-                                        <!-- {{
+                                    <span style="font-family: Arial, sans-serif;">
+                                        {{
                                             formatDateTime(
                                                 row.last_register.date_time
                                             )
-                                        }} -->
+                                        }}
                                         {{ row.last_register.created_at }}
                                     </span>
                                 </template>
-                            </td>
+</td> -->
 
-                            <td class="text-center">
-                                {{ row.date_of_issue }}
+                            <td class="text-left">
+                                {{ row.user_name }} <br>
+                                <span style="font-weight: bold; color: #15344a;">
+                                    Fecha: {{ row.date_of_issue }}
+                                </span>
                                 <template>
                                     <br />
-                                    <small>{{ row.time_of_issue }}</small>
+                                    <small style="font-weight: bold; color: #e67e22;">
+                                        Hora: {{ row.time_of_issue }}
+                                    </small>
                                 </template>
                             </td>
-                            <td>{{ row.user_name }}</td>
+                            <!-- <td></td> -->
                             <td>
                                 {{ row.customer_name }}
                                 <br />
                                 <small v-text="row.customer_number"></small>
                             </td>
 
-                            <td>{{ row.full_number }}</td>
-                            <td>
-                                <span
-                                    v-for="(dispatch, idx) in row.dispatches"
-                                    :key="idx"
-                                >
+                            <td class="text-center">{{ row.full_number }}</td>
+                            <!-- <td>
+                                <span v-for="(dispatch, idx) in row.dispatches" :key="idx">
                                     {{ dispatch.number_full }}
-                                    <br />
+                                    
                                 </span>
-                            </td>
+                            </td> -->
                             <!-- <td>{{ row.state_type_description }}</td> -->
-                            <td>{{ row.observation }}</td>
-                            <td class="text-center">
+                            
+                            <!-- <td class="text-center">
                                 {{ row.currency_type_id }}
-                            </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_exportation.visible"
-                            >
+                            </td> -->
+                            <td class="text-end" v-if="columns.total_exportation.visible">
                                 {{ row.total_exportation }}
                             </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_free.visible"
-                            >
+                            <td class="text-end" v-if="columns.total_free.visible">
                                 {{ row.total_free }}
                             </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_unaffected.visible"
-                            >
+                            <td class="text-end" v-if="columns.total_unaffected.visible">
                                 {{ row.total_unaffected }}
                             </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_exonerated.visible"
-                            >
+                            <td class="text-end" v-if="columns.total_exonerated.visible">
                                 {{ row.total_exonerated }}
                             </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_taxed.visible"
-                            >
+                            <td class="text-end" v-if="columns.total_taxed.visible">
                                 {{ row.total_taxed }}
                             </td>
-                            <td
-                                class="text-end"
-                                v-if="columns.total_igv.visible"
-                            >
+                            <td class="text-end" v-if="columns.total_igv.visible">
                                 {{ row.total_igv }}
                             </td>
 
-                            <td
-                                class="text-center"
-                                v-if="columns.total_paid.visible"
-                            >
+                            <td class="text-center" v-if="columns.total_paid.visible">
                                 {{ row.total_paid }}
                             </td>
-                            <td>{{ row.advances }}</td>
+                            <td v-if="configuration.credits">{{ Number(row.advances).toFixed(2) }}</td>
                             <!-- <td>
                                 {{ row.advances }}
               </td>-->
@@ -432,17 +196,10 @@
                                 <td class="text-end"></td>
               </template>-->
                             <td>
-                                <div
-                                    class="justify-content-center d-flex flex-column"
-                                >
-                                    <el-tag
-                                        style="margin-top:5px;"
-                                        v-for="(data, idx) in row.boxes
-                                            .slice(-3)
-                                            .reverse()"
-                                        :key="idx"
-                                        type="primary"
-                                    >
+                                <div class="justify-content-center d-flex flex-column">
+                                    <el-tag style="margin-top:5px;" v-for="(data, idx) in row.boxes
+                                        .slice(-3)
+                                        .reverse()" :key="idx" type="primary">
                                         <b>
                                             {{ data.method }} S/{{
                                                 data.amount
@@ -455,134 +212,238 @@
                                 <td class="text-end">
                                     {{ row.total }}
                                 </td>
-              </template>-->
+                              </template>-->
                             <td class="text-end">
-                                {{ row.paid_amount.toFixed(2) }}
+                                Pagado: S/ {{ row.paid_amount.toFixed(2) }}
+                                Pendiente: S/ {{ row.pending.toFixed(2) }}
+                                <br>
+                                <span style="display:block; border-bottom:1px solid #222; margin:6px 0;"></span>
+                                Total: S/ {{ Number(row.total).toFixed(2) }}
                             </td>
-                            <td class="text-end">
-                                {{ row.pending.toFixed(2) }}
+                            <!-- <td class="text-end">
+                               
                             </td>
                             <template>
                                 <td class="text-end">
-                                    {{ Number(row.total).toFixed(2) }}
+                                   
                                 </td>
-                            </template>
-                            <td class="text-end">
+                            </template> -->
+                            <td class="text-end" v-if="configuration.credits">
                                 {{
                                     row.tax_rate > 0 ? `${row.tax_rate}%` : "-"
                                 }}
                             </td>
                             <td>
-                                <template
-                                    v-for="(document, i) in row.documents"
-                                >
-                                    <label
-                                        :key="i"
-                                        v-text="document.number_full"
-                                        class="d-block"
-                                    ></label>
+                                <template v-for="(document, i) in row.documents">
+                                    <label :key="i" v-text="document.number_full" class="d-block"></label>
                                 </template>
                             </td>
+                            <td>  {{ row.observation }} </td>
                             <td class="text-center">
-                                <span
-                                    class="badge text-white"
-                                    :class="{
-                                        'bg-success': row.paid,
-                                        'bg-warning': !row.paid
-                                    }"
-                                    v-if="
-                                        row.state_type_description !=
-                                            'Anulado' && row.total > 0
-                                    "
-                                >
+                                <span class="badge text-white" :class="{
+                                    'bg-success': row.paid,
+                                    'bg-warning': !row.paid
+                                }" v-if="
+                                    row.state_type_description !=
+                                    'Anulado' && row.total > 0
+                                ">
                                     {{ row.paid ? "Pagado" : "Pendiente" }}
                                 </span>
-                                <span
-                                    class="badge text-white bg-danger"
-                                    v-if="
-                                        row.state_type_description !=
-                                            'Registrado'
-                                    "
-                                    >Anulado</span
-                                >
-                                <span
-                                    class="badge text-white bg-success"
-                                    v-if="row.total == 0"
-                                    >Pagado</span
-                                >
+                                <span class="badge text-white bg-danger" v-if="
+                                    row.state_type_description == 'Anulado'
+                                ">
+                                    Anulado
+
+                                </span>
+                                <span class="badge text-white bg-success" v-if="row.total == 0">Pagado</span>
+                                <br>
+                                
                             </td>
-
+                            <!-- Acciones -->
                             <td class="text-center">
-                                <!-- <button
-                                    type="button"
-                                    style="min-width: 41px"
-                                    class="btn waves-effect waves-light btn-sm btn-info m-1__2"
-                                    @click.prevent="clickPayment(row.id)"
-                                    v-if="row.btn_payments"
-                                >
-                                    Pagos
-                </button>-->
+                                <template v-if="row.state_type_id != 11">
+                                    <div class="btn-toolbar mb-2" role="toolbar">
+                                        <div class="btn-group mb-1">
+                                            <button class="btn_guardarsmall dropdown-toggle" type="primary"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                                Acciones
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-sm">
+                                                <button v-if="
+                                                    row.state_type_id !=
+                                                    '11' &&
+                                                    (user_type ==
+                                                        'admin' ||
+                                                        user_type ==
+                                                        'superadmin')
+                                                " class="dropdown-item" type="button" @click.prevent="
+                                                    clickDetail(row)
+                                                    ">
+                                                    <i class="fas fa-trash"></i>
+                                                    Ver detalle
+                                                </button>
+                                                <button v-if="
+                                                    row.state_type_id !=
+                                                    '11' &&
+                                                    !row.is_credit &&
+                                                    !row.paid
+                                                " class="dropdown-item" type="button" @click.prevent="
+                                                    clickPayment(row.id)
+                                                    ">
+                                                    <i class="fas fa-money-bill-alt"></i>
+                                                    Registrar Pago
+                                                </button>
+                                                <a :href="`/dispatches/create_new/sale_note/${row.id}`
+                                                    " v-if="
+                                                        row.state_type_id !=
+                                                        '11' &&
+                                                        (user_type ==
+                                                            'admin' ||
+                                                            user_type ==
+                                                            'superadmin')
+                                                    " class="dropdown-item">
+                                                    <i class="far fa-file-alt"></i>
+                                                    Generar GR
+                                                </a>
 
-                                <template v-if="row.is_credit">
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Registrar Pagos"
-                                        placement="bottom-end"
+                                                <button v-if="
+                                                    row.state_type_id !=
+                                                    '11' &&
+                                                    (user_type ==
+                                                        'admin' ||
+                                                        user_type ==
+                                                        'superadmin')
+                                                " class="dropdown-item btn-danger" type="button" @click.prevent="
+                                                    clickVoided(row.id)
+                                                    ">
+                                                    <i class="fas fa-trash"></i>
+                                                    Anular
+                                                </button>
+
+                                                <button class="dropdown-item" type="button" @click.prevent="
+                                                    clickCreate(row.id)
+                                                    " v-if="
+                                                        row.btn_generate &&
+                                                        row.state_type_id !=
+                                                        '11' &&
+                                                        (user_type ==
+                                                            'admin' ||
+                                                            user_type ==
+                                                            'superadmin')
+                                                    ">
+                                                    <i class="fas fa-file-signature"></i>
+                                                    Editar
+                                                </button>
+
+                                                <button class="dropdown-item" type="button" @click.prevent="
+                                                    clickGenerate(row.id)
+                                                    " v-if="
+                                                        !row.changed &&
+                                                        row.state_type_id !=
+                                                        '11' &&
+                                                        soapCompany !=
+                                                        '03' &&
+                                                        (user_type ==
+                                                            'admin' ||
+                                                            user_type ==
+                                                            'superadmin')
+                                                    ">
+                                                    <i class="fas fa-file-excel"></i>
+                                                    Generar CPE
+                                                </button>
+                                                <button v-if="
+                                                    row.state_type_id !=
+                                                    '11'
+                                                " class="dropdown-item" type="button" @click.prevent="
+                                                    clickOptions(row.id)
+                                                    ">
+                                                    <i class="fas fa-print"></i>
+                                                    Imprimir
+                                                </button>
+
+                                                <div class="d-flex flex-row justify-content-center"
+                                                    v-if="row.is_credit">
+                                                    <el-tooltip class="item" effect="dark" content="Registrar Pagos"
+                                                        placement="bottom-end">
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-circle btn-xs me-1"
+                                                            v-if="row.state_type_id != '11'"
+                                                            @click.prevent="clickPayment(row.id)"
+                                                            style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;">
+                                                            <i class="fas fa-money-bill-alt"></i>
+                                                        </button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Imprimir Contrato"
+                                                        placement="bottom-end">
+                                                        <button type="button"
+                                                            class="btn btn-success btn-circle btn-xs me-1"
+                                                            @click.prevent="clickContract(row.id)"
+                                                            style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;">
+                                                            <i class="fas fa-file-alt"></i>
+                                                        </button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark"
+                                                        content="Imprimir Cronograma de Pagos" placement="bottom-end">
+                                                        <button type="button" class="btn btn-success btn-circle btn-xs"
+                                                            @click.prevent="clickSchedule(row.id)"
+                                                            style="width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;">
+                                                            <i class="fas fa-file-alt"></i>
+                                                        </button>
+                                                    </el-tooltip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <el-button @click.prevent="clickOptions(row.id)">
+                                        <i class="fas fa-print"></i>
+                                    </el-button>
+                                </template>
+                                <!-- <button
+                                        type="button"
+                                        style="min-width: 41px"
+                                        class="btn waves-effect waves-light btn-sm btn-info m-1__2"
+                                        @click.prevent="clickPayment(row.id)"
+                                        v-if="row.btn_payments"
                                     >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-primary"
-                                            v-if="row.state_type_id != '11'"
-                                            @click.prevent="
+                                    Pagos
+                                 </button>-->
+
+                                <!-- <template v-if="row.is_credit">
+                                    <el-tooltip class="item" effect="dark" content="Registrar Pagos"
+                                        placement="bottom-end">
+                                        <button type="button" class="btn waves-effect waves-light btn-sm btn-primary"
+                                            v-if="row.state_type_id != '11'" @click.prevent="
                                                 clickPayment(row.id)
-                                            "
-                                        >
-                                            <i
-                                                class="fas fa-money-bill-alt"
-                                            ></i>
+                                                ">
+                                            <i class="fas fa-money-bill-alt"></i>
                                         </button>
                                     </el-tooltip>
 
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Imprimir Contrato"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-success"
+                                    <el-tooltip class="item" effect="dark" content="Imprimir Contrato"
+                                        placement="bottom-end">
+                                        <button type="button" class="btn waves-effect waves-light btn-sm btn-success"
                                             @click.prevent="
                                                 clickContract(row.id)
-                                            "
-                                        >
+                                                ">
                                             <i class="fas fa-file-alt"></i>
                                         </button>
                                     </el-tooltip>
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Imprimir Cronograma de Pagos"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-success"
+                                    <el-tooltip class="item" effect="dark" content="Imprimir Cronograma de Pagos"
+                                        placement="bottom-end">
+                                        <button type="button" class="btn waves-effect waves-light btn-sm btn-success"
                                             @click.prevent="
                                                 clickSchedule(row.id)
-                                            "
-                                        >
+                                                ">
                                             <i class="fas fa-file-alt"></i>
                                         </button>
                                     </el-tooltip>
-                                </template>
+                                </template> -->
                             </td>
 
-                            <td
-                                class="text-end"
-                                v-if="columns.paid.visible && row.total > 0"
-                            >
+                            <td class="text-end" v-if="columns.paid.visible && row.total > 0">
                                 {{ row.paid ? "Pagado" : "Pendiente" }}
                             </td>
                         </tr>
@@ -590,43 +451,39 @@
                 </div>
             </div>
         </div>
-        <sale-note-payments
-            :showDialog.sync="showDialogPayments"
-            :configuration.sync="configuration"
-            :documentId="recordId"
-        ></sale-note-payments>
+        <sale-note-payments :showDialog.sync="showDialogPayments" :configuration.sync="configuration"
+            :documentId="recordId"></sale-note-payments>
 
-        <sale-notes-options
-            :showDialog.sync="showDialogOptions"
-            :recordId.sync="saleNotesNewId"
-            :configuration.sync="configuration"
-            :editSale.sync="editSale"
-            :showClose="true"
-            :company="company"
-        ></sale-notes-options>
+        <sale-notes-options :showDialog.sync="showDialogOptions" :recordId.sync="saleNotesNewId"
+            :configuration.sync="configuration" :editSale.sync="editSale" :showClose="true"
+            :company="company"></sale-notes-options>
 
-        <sale-note-generate
-            :showDialog.sync="showDialogGenerate"
-            :recordId="recordId"
-            :showGenerate="true"
-            :configuration.sync="configuration"
-            :showClose="false"
-        ></sale-note-generate>
-        <sale-note-detail
-            :number="currentNumber"
-            :saleNoteId="recordId"
-            :showDialog.sync="showDialogDetail"
-            :configuration.sync="configuration"
-            :boxes="boxes"
-        ></sale-note-detail>
-        <modal-generate-cpe
-            :show.sync="showModalGenerateCPE"
-        ></modal-generate-cpe>
+        <sale-note-generate :showDialog.sync="showDialogGenerate" :recordId="recordId" :showGenerate="true"
+            :configuration.sync="configuration" :showClose="false"></sale-note-generate>
+        <sale-note-detail :number="currentNumber" :saleNoteId="recordId" :showDialog.sync="showDialogDetail"
+            :configuration.sync="configuration" :boxes="boxes"></sale-note-detail>
+        <modal-generate-cpe :show.sync="showModalGenerateCPE"></modal-generate-cpe>
     </div>
 </template>
-<style>
-td {
-    color: #000;
+<style scoped>
+/* Encabezado de la tabla */
+.data-table thead th,
+table thead th {
+    background-color: #15344a !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Filas alternas (zebra striping) */
+.data-table tbody tr:nth-child(even),
+table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.data-table tbody tr:nth-child(odd),
+table tbody tr:nth-child(odd) {
+    background-color: #e3ded3;
 }
 </style>
 <script>
@@ -724,7 +581,7 @@ export default {
             }
         };
     },
-    created() {},
+    created() { },
     filters: {
         period(name) {
             let res = "";
@@ -829,7 +686,7 @@ export default {
                         console.log(error);
                     }
                 })
-                .then(() => {});
+                .then(() => { });
         },
         clickVoided(id) {
             swal.fire({

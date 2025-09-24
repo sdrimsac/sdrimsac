@@ -9,125 +9,134 @@
                 <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
             </div>
         </header> -->
-         <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                <div class="col-sm-6">
-                    <h6><span>Resumen</span></h6>
-                    <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                        <li class="breadcrumb-item active"><span class="text-muted">Resumen de Boletas</span></li>
-                    </ol>
-                </div>
-                <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
-                    <!-- Contact Button Start -->
-                    <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickCreate()">
+        <div class="container-fluid p-l-0 p-r-0">
+           
+        </div>
+        <div class="card">
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                <i class="fas fa-file-alt text-white mr-4"></i>
+                <h6 class="my-0 text-white"> Listado de resúmenes</h6>
+            </div>
+            <div class="data-table-visible-columns d-flex align-items-center">
+                <button  class="btn_guardarsmall" type="primary"
+                    @click.prevent="clickCreate()">
                     <i class="icofont-plus-circle"></i>
                     <span>Nuevo</span>
-                    </button>
-                    <!-- Contact Button End -->
-                </div>
-              
-                </div>
-            </div>
-    </div>
-        <div class="card">
-            <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Listado de resúmenes</h6>
+                </button>
             </div>
 
-             <div class="card-body">
-                <data-table :resource="resource">
-                    <tr slot="heading">
-                        <th>#</th>
-                        <th class="text-center">Fecha Emisión</th>
-                        <th class="text-center">Fecha Referencia</th>
-                        <th>Identificador</th>
-                        <th>Estado</th>
-                        <th>Ticket</th>
-                        <th class="text-center">Descargas</th>
-                        <th class="text-end">Acciones</th>
+            <div class="card-body">
+                <data-table :resource="resource" class="table-striped" ref="dataTable">
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white" style="width: 10px;">#</th>
+                        <th class="text-white text-center" style="width: 120px;">Fecha Emisión</th>
+                        <th class="text-white text-center" style="width: 120px;">Fecha Referencia</th>
+                        <th class="text-white text-center" style="width: 180px;">Identificador</th>
+                        <th class="text-white text-center" style="width: 100px;">Estado</th>
+                        <th class="text-white text-center" style="width: 100px;">Ticket</th>
+                        <th class="text-white text-center" style="width: 120px;">Descargas</th>
+                        <th class="text-white text-center" style="width: 120px;">Acciones</th>
                     </tr>
-                    <tr slot-scope="{ index, row }" >
-                        <td>{{ index  }}</td>
+                    <tr slot-scope="{ index, row }">
+                        <td class="text-center">{{ index }}</td>
                         <td class="text-center">{{ row.date_of_issue }}</td>
                         <td class="text-center">{{ row.date_of_reference }}</td>
-                        <td>{{ row.identifier }}</td>
-                        <td>{{ row.state_type_description }}</td>
-                        <td>{{ row.ticket }}</td>
+                        <td class="text-center" style="font-weight: bold; font-size: 1.1em;">{{ row.identifier }}</td>
+                        <td class="text-center">{{ row.state_type_description }}</td>
+                        <td class="text-center">{{ row.ticket }}</td>
                         <td class="text-center">
-                            <button type="button" class="btn waves-effect waves-light btn-sm btn-info"
-                                    @click.prevent="clickDownload(row.download_xml)"
-                                    v-if="row.has_xml">XML</button> 
-                            <button type="button" class="btn waves-effect waves-light btn-sm btn-info"
-                                    @click.prevent="clickDownload(row.download_cdr)"
-                                    v-if="row.has_cdr">CDR</button>
+                            <button type="button" class="btn waves-effect waves-light btn-sm btn-primary"
+                                @click.prevent="clickDownload(row.download_xml)" v-if="row.has_xml">XML</button>
+                            <button type="button" class="btn waves-effect waves-light btn-sm btn-success"
+                                @click.prevent="clickDownload(row.download_cdr)" v-if="row.has_cdr">CDR</button>
                         </td>
                         <td class="text-end">
                             <button type="button" class="btn waves-effect waves-light btn-sm btn-warning"
-                                    @click.prevent="clickTicket(row.id)"
-                                    dusk="consult-ticket"
-                                    v-if="row.btn_ticket">Consultar</button>
+                                @click.prevent="clickTicket(row.id)" dusk="consult-ticket"
+                                v-if="row.btn_ticket">Consultar</button>
                             <button type="button" class="btn waves-effect waves-light btn-sm btn-danger"
-                                    @click.prevent="clickDelete(row.id)"
-                                    v-if="row.btn_ticket">Eliminar</button>
+                                @click.prevent="clickDelete(row.id)" v-if="row.btn_ticket">Eliminar</button>
                         </td>
                     </tr>
                 </data-table>
             </div>
-            
-            <summary-form :showDialog.sync="showDialog"
-                        :external="false"></summary-form>
+
+            <summary-form :showDialog.sync="showDialog" :external="false"></summary-form>
         </div>
     </div>
 
 </template>
 
+
+<style>
+.table-striped tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+.table-striped tr:nth-child(odd) {
+    background-color: #e7e1d6;
+}
+.table-striped th {
+    background: #0d3557;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: left;
+    font-family: Arial, sans-serif;
+}
+.table-striped td {
+    padding: 10px 16px;
+    color: #18304b;
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+}
+</style>
+
 <script>
 
-    import SummaryForm from './form.vue'
-    import DataTable from '../../components/DataTable.vue'
-    import {deletable} from '../../mixins/deletable'
+import SummaryForm from './form.vue'
+import DataTable from '../../components/DataTable.vue'
+import { deletable } from '../../mixins/deletable'
 
-    export default {
-        mixins: [deletable],
-        components: {DataTable, SummaryForm},
-        data () {
-            return {
-                resource: 'summaries',
-                showDialog: false,
-                records: [],
-            }
-        },
-        created() {
-
-        },
-        methods: { 
-            clickCreate() {
-                this.showDialog = true
-            },
-            clickTicket(id) {
-                this.$http.get(`/${this.resource}/status/${id}`)
-                    .then(response => {
-                        if (response.data.success) {
-                            this.$eventHub.$emit('reloadData') 
-                            this.$toast.success(response.data.message)
-                        } else {
-                            this.$toast.error(response.data.message)
-                        }
-                    })
-                    .catch(error => {
-                        this.$toast.error(error.response.data.message)
-                    })
-            },
-            clickDelete(id) {
-                this.destroy(`/${this.resource}/${id}`).then(() =>
-                    this.$eventHub.$emit('reloadData')
-                )
-            },
-            clickDownload(download) {
-                window.open(download, '_blank');
-            },
+export default {
+    mixins: [deletable],
+    components: { DataTable, SummaryForm },
+    data() {
+        return {
+            resource: 'summaries',
+            showDialog: false,
+            records: [],
         }
+    },
+    created() {
+
+    },
+    methods: {
+        clickCreate() {
+            this.showDialog = true
+        },
+        clickTicket(id) {
+            this.$http.get(`/${this.resource}/status/${id}`)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$eventHub.$emit('reloadData')
+                        this.$toast.success(response.data.message)
+                    } else {
+                        this.$toast.error(response.data.message)
+                    }
+                })
+                .catch(error => {
+                    this.$toast.error(error.response.data.message)
+                })
+        },
+        clickDelete(id) {
+            this.destroy(`/${this.resource}/${id}`).then(() =>
+                this.$eventHub.$emit('reloadData')
+            )
+        },
+        clickDownload(download) {
+            window.open(download, '_blank');
+        },
     }
+}
 </script>
