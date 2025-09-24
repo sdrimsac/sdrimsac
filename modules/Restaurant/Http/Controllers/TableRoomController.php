@@ -1001,11 +1001,12 @@ class TableRoomController extends Controller
         }
 
         $hotel_rent->total = $hotel_rent->items->sum('total');
-        Log::info(''. $hotel_rent->total .''); 
+        Log::info('' . $hotel_rent->total . '');
         $hotel_rent->save();
-    } 
+    }
 
-    public function changeRoom($to, $from)
+    /* para el  */
+    /* public function changeRoom($to, $from)
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
@@ -1019,8 +1020,53 @@ class TableRoomController extends Controller
         $table_to->status_table_id = 1;
         $table_to->save();
         $table_from->status_table_id = 2;
+        Log::info('Cambio de habitación: De ' . $table_to->number . ' a ' . $table_from->number);
         $table_from->save();
         $this->recalculate($hotel_rent_item);
+
+        return [
+            'success' => true,
+            'message' => 'Habitación cambiada'
+        ];
+    } */
+    public function changeRoom($to, $from)
+    {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+
+        $table_to = Table::find($to);   // Habitación actual (de donde se mueve)
+        $hotel_rent_item = HotelRentItem::where('table_id', $to)
+            ->orderBy('checkin_date', 'desc')
+            ->orderBy('checkin_time', 'desc')
+            ->first();
+
+        $table_from = Table::find($from); // Habitación nueva (a donde se va)
+
+        // Mover item de habitación
+        $hotel_rent_item->table_id = $from;
+        $hotel_rent_item->save();
+
+        // Cambiar estados
+        $table_to->status_table_id = 1; // libre
+        $table_to->save();
+
+        $table_from->status_table_id = 2; // ocupada
+        $table_from->save();
+
+        Log::info('Cambio de habitación: De ' . $table_to->number . ' a ' . $table_from->number);
+
+        // Validar si recalcula
+        $hotel_rent = $hotel_rent_item->hotel_rent;
+
+        if (
+            strtolower($hotel_rent_item->payment_status) !== 'pagado' ||
+            strtolower($hotel_rent->payment_status) !== 'pagado' ||
+            $table_from->price > $table_to->price
+        ) {
+            // Solo recalcula si NO está pagado o si la nueva habitación es más cara
+            $this->recalculate($hotel_rent_item);
+        }
+
         return [
             'success' => true,
             'message' => 'Habitación cambiada'

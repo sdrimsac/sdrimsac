@@ -2658,9 +2658,15 @@ export default {
             this.timer = setInterval(() => {
                 this.updateTime();
             }, 1000);
+            // Seleccionar automáticamente la primera torre y su primer piso
+            if (this.towers && this.towers.length > 0) {
+                const torreDefault = this.towers[0];
+                if (torreDefault && torreDefault.id) {
+                    this.filterFloorsByTower(torreDefault.id);
+                }
+            }
             if (this.roomSeeId) {
                 let table = this.all_tables.find(t => t.id == this.roomSeeId);
-
                 this.selectTable(table);
             }
         },
