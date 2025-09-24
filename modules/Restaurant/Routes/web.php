@@ -236,7 +236,7 @@ Route::prefix('caja')->group(function () {
         Route::get('observations/record/{id}', 'ObservationController@record');
         Route::get('observations/{id}', 'ObservationController@active');
         //**** TIPO DE TRABAJADORES */
-        Route::get('workers-type', 'WorkersTypeController@index')->name('restaurant.workers_type')->middleware("just.super");;
+        Route::get('workers-type', 'WorkersTypeController@index')->name('restaurant.workers_type')->middleware("just.super");
         Route::get('workers-type/columns', 'WorkersTypeController@columns');
         Route::get('workers-type/records', 'WorkersTypeController@records');
         Route::get('workers-type/actives', 'WorkersTypeController@actives');

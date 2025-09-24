@@ -16,7 +16,7 @@ return [
   'desarrollador' => (isset($_SERVER['HTTP_HOST']) &&
     (str_contains($_SERVER['HTTP_HOST'], 'sdrimsac') || str_contains($_SERVER['HTTP_HOST'], 'sdrclientes')))
     ? 'SDRIMSAC SOLUTIONS'
-    : 'VILLA CORP',
+    : 'GRUPO VILLACORP',
   'web_whatsapp' => env('WEB_WHATSAPP', 'sdrimsac.xyz'),
   'whatsapp_url' => env('API_SERVICE_URL', 'sdrimsac.xyz'),
   'whatsapp_token' => env('API_SERVICE_TOKEN'),

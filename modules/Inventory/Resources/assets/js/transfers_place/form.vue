@@ -248,6 +248,7 @@
                                                         clickColorcodeOutput
                                                     "
                                                 >
+                                                Seleccione talla color
                                                 </el-button>
                                             </div>
                                         </div>

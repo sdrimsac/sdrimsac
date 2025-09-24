@@ -1,13 +1,24 @@
 export function attachItemDiscounts(items) {
+    console.log("attachItemDiscounts reawfsdvsdfdfsdfasdsdf", items);
     try {
         items.forEach(item => {
             if (!item || !item.food || !item.food.item) return;
 
+            // Validar si existe el precio original
+            const originalPrice = Number(item.food.item.price_original ?? item.food.item.price);
+            const currentPrice = Number(item.price) || 0;
             const qty = Number(item.quantity) || 0;
-            const unitPrice = Number(item.price) || 0;
-            if (qty <= 0 || unitPrice < 0) return;
+            if (qty <= 0 || currentPrice < 0) return;
 
-            const lineTotal = qty * unitPrice; // total original con IGV (si aplica)
+            // Si el precio fue modificado manualmente, no aplicar descuento
+            if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
+                item.discounts = [];
+                item.discount_igv = 0;
+                item.total_discount = 0;
+                return;
+            }
+
+            const lineTotal = qty * currentPrice; // total original con IGV (si aplica)
             const igvType = item.food.item.sale_affectation_igv_type_id;
             const discountInput = Number(item.food.item.discount) || 0;
             const isPercent = !!item.discount; // true => porcentaje
@@ -53,7 +64,8 @@ export function attachItemDiscounts(items) {
             ];
 
             // Este es el descuento total con IGV (lo que el cliente ve)
-            item.total_discount = _.round(discountAmount, 2);
+            /* item.total_discount = _.round(discountAmount, 2); */
+            /* console.log("ver el total del descuento", item.total_discount); */
 
             // Opcional: guardar también el IGV del descuento
             item.discount_igv = _.round(discountIgv, 2);

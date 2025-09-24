@@ -29,13 +29,13 @@
                         <i class="fas fa-boxes"></i>
                         <span>Configuracion</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/rooms' && !isRenta" class="btn_buscar"
-                        @click.prevent="clickSeeInsumos">
+                    <el-button v-if="resource == 'caja/rooms' && typeUser == 'superadmin' && !isRenta"
+                        class="btn_buscar" @click.prevent="clickSeeInsumos">
                         <i class="fas fa-boxes"></i>
                         <span>Insumos</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/rooms' && !isRenta" class="btn_buscar"
-                        @click.prevent="clickSeePromotions">
+                    <el-button v-if="resource == 'caja/rooms' && typeUser == 'superadmin' && !isRenta"
+                        class="btn_buscar" @click.prevent="clickSeePromotions">
                         <i class="fas fa-tags"></i>
                         <span>Promociones</span>
                     </el-button>
@@ -49,20 +49,23 @@
                         <i class="fas fa-exclamation-triangle"></i>
                         <span>Penalidades</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/rooms'" class="btn_buscar" @click.prevent="clickSeeTypes()">
+                    <el-button v-if="resource == 'caja/rooms' && typeUser == 'superadmin'" class="btn_buscar"
+                        @click.prevent="clickSeeTypes()">
                         <i class="fas fa-bed"></i>
                         <span>Tipo de habitaciones</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/rooms'" class="btn_buscar" @click.prevent="clickSeeTowers()">
+                    <el-button v-if="resource == 'caja/rooms' && typeUser == 'superadmin'" class="btn_buscar"
+                        @click.prevent="clickSeeTowers()">
                         <i class="fas fa-building"></i>
                         <span>Torres</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/rooms'" class="btn_buscar" @click.prevent="clickSeeFloors()">
+                    <el-button v-if="resource == 'caja/rooms' && typeUser == 'superadmin'" class="btn_buscar"
+                        @click.prevent="clickSeeFloors()">
                         <i class="fas fa-layer-group"></i>
                         <span>Pisos</span>
                     </el-button>
-                    <el-button v-if="resource == 'caja/tables'" type="primary" class="btn_buscar"
-                        href="javascript:void(0)" @click.prevent="clickZones()">
+                    <el-button v-if="resource == 'caja/tables' && typeUser == 'superadmin'" type="primary"
+                        class="btn_buscar" href="javascript:void(0)" @click.prevent="clickZones()">
                         <i class="fas fa-plus-circle"></i>
                         <span>Zona</span>
                     </el-button>
@@ -111,7 +114,7 @@
                             </th>
                             <th class="text-white" v-if="
                                 type == 'caja/tables'
-                                
+
                             ">
                                 zona
                             </th>
@@ -172,7 +175,7 @@
                             </td>
                             <td v-if="
                                 type == 'caja/tables'
-                               
+
                             ">{{ row.zone }}</td>
                             <td v-if="
                                 type == 'caja/tables' ||
@@ -213,8 +216,8 @@
                                         <i class="fa fa-edit"></i> Editar
                                     </a>
                                     <a type="button" class="dropdown-item" :class="row.active
-                                            ? 'btn btn-danger btn-sm'
-                                            : 'btn btn-success btn-sm'
+                                        ? 'btn btn-danger btn-sm'
+                                        : 'btn btn-success btn-sm'
                                         " @click.prevent="
                                             clickDelete(row.id, row.active)
                                             ">
@@ -246,8 +249,8 @@
                     :establishments="establishments"></create-form>
 
                 <create-form-massive :types="types" :showDialog.sync="showDialogMassive" :areas="areas" :type="type"
-                    :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :zones="zones"
-                    :establishments="establishments"></create-form-massive>
+                    :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable"
+                    :zones="zones" :establishments="establishments"></create-form-massive>
                 <items-rooms :showDialog.sync="showItems" :type="typeItem"></items-rooms>
                 <items-tables :showDialog.sync="showItemsTables" :type="typeItem"></items-tables>
                 <promotions :showDialog.sync="showPromotions"></promotions>
@@ -309,7 +312,7 @@ import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 import ConfigHotels from "./config.vue";
 export default {
-    props: ["type", "title", "configurations"],
+    props: ["type", "title", "configurations", "typeUser", "user"],
     mixins: [deletable],
     components: {
         DataTable,
@@ -374,6 +377,15 @@ export default {
             return this.configurations.mod_renta;
         }
     },
+
+    mounted() {
+        console.log("type:", this.type);
+        console.log("title:", this.title);
+        console.log("configurations:", this.configurations);
+        console.log("typeUser:", this.typeUser);
+        console.log("user:", this.user);
+    },
+
     methods: {
         clickConfigurations() {
             this.showConfigurations = true;
@@ -450,13 +462,13 @@ export default {
             if (this.type == "caja/tables") {
 
                 this.$http.get(`/caja/tables/tables-zone`).then(response => {
-                let { zones } = response.data;
-                this.zones = zones;
-            });
+                    let { zones } = response.data;
+                    this.zones = zones;
+                });
             }
 
             /* if (this.type == "caja/areas"){ */
-                this.$http
+            this.$http
                 .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
                     this.areas = response.data.data;
@@ -464,7 +476,7 @@ export default {
                 });
             /* } */
             /* if (this.type == "caja/status-tables") { */
-                this.$http
+            this.$http
                 .get(
                     `/caja/status-tables/records?column=description&page=1&value`
                 )
@@ -473,7 +485,7 @@ export default {
                 });
 
             /* } */
-            
+
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;
             });

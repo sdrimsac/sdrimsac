@@ -276,11 +276,7 @@
                 <div
                     class="row h5 text-white col-12"
                     style="padding-left: 25px"
-                    v-if="
-                        clientTableData.table &&
-                            configuration.restaurant &&
-                            configuration.hotels
-                    "
+                    v-if="clientTableData.table && configuration.restaurant"
                 >
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
@@ -705,8 +701,7 @@
                                     localOrden.length != 0 &&
                                     !isSeller &&
                                     (configuration.restaurant ||
-                                        configuration.modo_billar ||
-                                        configuration.hotels)
+                                        configuration.modo_billar)
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -1809,48 +1804,6 @@
                                                                     ></el-button>
                                                                 </el-button-group>
                                                             </div>
-                                                            <div
-                                                                v-if="establishments.conf && establishments.conf.show_discounts_payment && !isCreatingOrden && configuration.discount_items"
-                                                                class="col-6 col-md-6"
-                                                            >
-                                                                <label
-                                                                    for=""
-                                                                    class="fw-bold w-100"
-                                                                    >Descuentos</label
-                                                                >
-                                                                <el-input-number
-                                                                    v-model="
-                                                                        order_pend
-                                                                            .food
-                                                                            .item
-                                                                            .discount
-                                                                    "
-                                                                    controls-position="right"
-                                                                    :min="0"
-                                                                    :max="
-                                                                        9999999
-                                                                    "
-                                                                    @change="
-                                                                        calculateTotal
-                                                                    "
-                                                                ></el-input-number>
-                                                                <el-checkbox
-                                                                    v-model="
-                                                                        order_pend.discount
-                                                                    "
-                                                                    @change="
-                                                                        calculateTotal
-                                                                    "
-                                                                >
-                                                                    <span>
-                                                                        {{
-                                                                            order_pend.discount
-                                                                                ? "Porcentaje"
-                                                                                : "Monto"
-                                                                        }}
-                                                                    </span>
-                                                                </el-checkbox>
-                                                            </div>
                                                         </div>
                                                         <!-- Cantidad de productos en lista de venta directa -->
                                                         <div
@@ -2012,7 +1965,7 @@
                                                                 </span>
                                                             </div>
 
-                                                            <!-- Precio unitario del produto en lista de venta directa -->
+                                                            <!-- Precio/Total del producto en lista de venta directa -->
                                                             <template>
                                                                 <div
                                                                     class="col-6 col-4 col-md-5 col-lg-5 col-xl-4"
@@ -2024,105 +1977,61 @@
                                                                             class="fw-bold"
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                         >
-                                                                            Precio:
+                                                                            {{ configuration.is_grifo ? 'Total:' : 'Precio:' }}
                                                                             {{
                                                                                 currency_id
                                                                             }}
-
-                                                                            <template
-                                                                                v-if="
-                                                                                    order_pend.prices
-                                                                                "
-                                                                            >
-                                                                                <el-input
-                                                                                    v-if="
-                                                                                        isEditing &&
-                                                                                            configuration.edit_price_sales
-                                                                                    "
-                                                                                    class="custom_input fw-bold"
-                                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
-                                                                                    type="number"
-                                                                                    v-model.number="
-                                                                                        order_pend.price
-                                                                                    "
-                                                                                    @input="
-                                                                                        update_price(
-                                                                                            indexx
-                                                                                        )
-                                                                                    "
-                                                                                    placeholder="Editar precio"
-                                                                                ></el-input>
-                                                                                <el-select
-                                                                                    v-else
-                                                                                    v-model="
-                                                                                        order_pend.price
-                                                                                    "
-                                                                                    placeholder="Seleccione un precio"
-                                                                                    @change="
-                                                                                        update_price(
-                                                                                            indexx,
-                                                                                            order_pend.price
-                                                                                        )
-                                                                                    "
-                                                                                >
-                                                                                    <el-option
-                                                                                        v-for="(price,
-                                                                                        index) in order_pend.prices"
-                                                                                        :key="
-                                                                                            index
-                                                                                        "
-                                                                                        :value="
-                                                                                            price
-                                                                                        "
-                                                                                        :label="
-                                                                                            price
-                                                                                        "
-                                                                                    ></el-option>
-                                                                                </el-select>
-                                                                                <el-button
-                                                                                    v-if="
-                                                                                        configuration.edit_price
-                                                                                    "
-                                                                                    @click="
-                                                                                        toggleEdit
-                                                                                    "
-                                                                                    >{{
-                                                                                        isEditing
-                                                                                            ? "C"
-                                                                                            : "E"
-                                                                                    }}</el-button
-                                                                                >
-                                                                            </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
+                                                                            
+                                                                            <!-- En modo grifo el input representa el TOTAL ingresado -->
+                                                                            <template v-if="configuration.is_grifo">
                                                                                 <el-input
                                                                                     class="custom_input text-dark"
                                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
-                                                                                    :disabled="
-                                                                                        isSellerConsolidated ||
-                                                                                            configuration.editar_precio_politica ===
-                                                                                                false
-                                                                                    "
                                                                                     type="number"
-                                                                                    v-model="
-                                                                                        order_pend.price
-                                                                                    "
-                                                                                    @input="
-                                                                                        update_price(
-                                                                                            indexx,
-                                                                                            order_pend.price
-                                                                                        )
-                                                                                    "
-                                                                                >
-                                                                                    <!-- <template
-                                                                                        slot="prepend"
+                                                                                    v-model.number="order_pend.total_grifo"
+                                                                                    @input="update_price(indexx, order_pend.total_grifo)"
+                                                                                ></el-input>
+                                                                            </template>
+                                                                            
+                                                                            <!-- Modo normal: precio unitario -->
+                                                                            <template v-else>
+                                                                                <template v-if="order_pend.prices">
+                                                                                    <el-input
+                                                                                        v-if="isEditing && configuration.edit_price_sales"
+                                                                                        class="custom_input fw-bold"
+                                                                                        style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
+                                                                                        type="number"
+                                                                                        v-model.number="order_pend.price"
+                                                                                        @input="update_price(indexx)"
+                                                                                        placeholder="Editar precio"
+                                                                                    ></el-input>
+                                                                                    <el-select
+                                                                                        v-else
+                                                                                        v-model="order_pend.price"
+                                                                                        placeholder="Seleccione un precio"
+                                                                                        @change="update_price(indexx, order_pend.price)"
                                                                                     >
-                                                                                        {{
-                                                                                            currency_id
-                                                                                        }}
-                                                                                    </template> -->
-                                                                                </el-input>
+                                                                                        <el-option
+                                                                                            v-for="(price, index) in order_pend.prices"
+                                                                                            :key="index"
+                                                                                            :value="price"
+                                                                                            :label="price"
+                                                                                        ></el-option>
+                                                                                    </el-select>
+                                                                                    <el-button v-if="configuration.edit_price" @click="toggleEdit">
+                                                                                        {{ isEditing ? 'C' : 'E' }}
+                                                                                    </el-button>
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <el-input
+                                                                                        class="custom_input text-dark"
+                                                                                        style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
+                                                                                        :disabled="isSellerConsolidated || configuration.editar_precio_politica === false"
+                                                                                        type="number"
+                                                                                        v-model="order_pend.price"
+                                                                                        @input="update_price(indexx, order_pend.price)"
+                                                                                    ></el-input>
+                                                                                </template>
                                                                             </template>
                                                                         </span>
                                                                     </span>
@@ -2225,11 +2134,9 @@
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                         >
                                                                             {{
-                                                                                (order_pend._total_line !==
-                                                                                undefined
-                                                                                    ? order_pend._total_line
-                                                                                    : order_pend.price *
-                                                                                      order_pend.quantity
+                                                                                parseFloat(
+                                                                                    order_pend.price *
+                                                                                        order_pend.quantity
                                                                                 ).toFixed(
                                                                                     2
                                                                                 )
@@ -3406,9 +3313,6 @@ const DigitalPayments = () => import("../partials/digital_payments.vue");
 const OpenItems = () => import("../partials/visualizate.vue");
 import { exchangeRate } from "@mixins/functions";
 import DeliveryForm from "../partials/delivery_from.vue";
-import { listcalculateTotal as calculateTotal } from "./listorden/calculateTotal.js";
-import { DiscountCalcItemAmounts } from "./listorden/discountCalcItemAmount.js";
-import { attachItemDiscounts } from "./listorden/enterattachItemDiscounts.js";
 export default {
     mixins: [exchangeRate],
 
@@ -3573,13 +3477,6 @@ export default {
     },
 
     watch: {
-        showColorSize(val) {
-            if (!val) {
-                this.currentColorSize = null;
-                this.currentItem = null;
-                this.currentIdx = null;
-            }
-        },
         showPinRequest(newValue) {
             if (newValue) {
                 // Cuando se abre el diálogo, focus en el input oculto
@@ -3778,20 +3675,6 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
-        // Calcula importes de un item con descuento considerando si es gravado (IGV) o exonerado
-        _calcItemAmounts(order) {
-            return DiscountCalcItemAmounts(order);
-        },
-
-        _attachItemDiscounts() {
-            this._attachItemDiscounts(this.localOrden);
-        },
-
-        _attachItemDiscounts(items) {
-
-            return  attachItemDiscounts(items);
-        },
-
         /* openDeliveryForm() {
             this.allToCarry();
             this.showDeliveryForm = true;
@@ -5149,60 +5032,7 @@ export default {
 
                     break;
                 case 3:
-                    // Cerrar caja: solo abrir el modal cuando TODAS las validaciones pasen.
-                    // Si se muestra alguna alerta o confirmación, NO abrir el modal de cierre.
-                    if (!this.cash_id) {
-                        this.showDialogCash = true;
-                        break;
-                    }
-
-                    // Validación de órdenes pendientes
-                    if (this.configuration.ordens_cash) {
-                        const data = await this.checkTables();
-                        if (data && data.success) {
-                            // Hay órdenes pendientes: mostrar confirmación y salir sin abrir el modal
-                            const { ordenes, total, items } = data;
-                            try {
-                                await this.$confirm(
-                                    `Existen ${ordenes} ordenes pendientes por cobrar, con un total de ${total} soles. Desea emitir una nota de venta por el total?`,
-                                    "Cerrar Caja",
-                                    {
-                                        confirmButtonText: "Emitir",
-                                        cancelButtonText: "Cerrar",
-                                        type: "warning"
-                                    }
-                                );
-                                this.$emit("sendOrdensAllTables", items);
-                            } catch (e) {
-                                // Usuario canceló: no hacer nada más
-                            }
-                            break; // No abrir modal
-                        }
-                        // Si no hay pendientes, continuar con las siguientes validaciones
-                    }
-
-                    // Validación de hoteles
-                    if (this.configuration.hotels) {
-                        const expiredCount = await this.checkExpiredRooms();
-                        if (expiredCount > 0) {
-                            const msg = `Tiene ${expiredCount} habitación(es) vencida(s). Debe liberar las habitaciones vencidas para poder cerrar la caja.`;
-                            if (this.$showSAlert)
-                                this.$showSAlert("ALERTA", msg, "warning");
-                            else
-                                await Swal.fire({
-                                    title: "Alerta",
-                                    text: msg,
-                                    icon: "warning"
-                                });
-                            break; // No abrir modal
-                        }
-                    }
-
-                    // Todas las validaciones pasaron: abrir modal para cerrar caja
-                    this.showDialogClose = true;
-                    break;
-
-                /* if (this.cash_id) {
+                    if (this.cash_id) {
                         if (this.configuration.ordens_cash) {
                             let data = await this.checkTables();
                             if (!data.success) {
@@ -5226,23 +5056,10 @@ export default {
                         } else {
                             this.showDialogClose = true;
                         }
-
-                        if (this.configuration.hotels) {
-                            const expiredCount = await this.checkExpiredRooms();
-                            if (expiredCount > 0) {
-                                const msg = `Tiene ${expiredCount} habitación(es) vencida(s). Debe liberar las habitaciones vencidas para poder cerrar la caja.`;
-                                if (this.$showSAlert) this.$showSAlert("ALERTA", msg, "warning");
-                                else await Swal.fire({ title: "Alerta", text: msg, icon: "warning" });
-                                return;
-                            }
-                            
-                        } else {
-                            this.showDialogClose = true;
-                        }
-
                     } else {
                         this.showDialogCash = true;
-                    } */
+                    }
+                    break;
                 case 5:
                     if (!this.cash_id) {
                         this.$toast.error("Abra una caja");
@@ -5373,63 +5190,56 @@ export default {
             this.$emit("update:localOrden", []);
         },
 
-        async checkExpiredRooms() {
-            try {
-                const { data, status } = await this.$http.get(
-                    `/caja/rooms/tables_expired`
-                );
-                if (status === 200 && data && data.success) {
-                    return (
-                        data.count ??
-                        (Array.isArray(data.data) ? data.data.length : 0)
-                    );
-                }
-            } catch (e) {}
-            return 0;
-        },
-
         //aqui modificamos el precio
-        update_price(index, sale_unit_price) {
+        /* update_price(index, sale_unit_price) {
             let localOrden_update = this.localOrden;
-            /* if (this.configuration.is_grifo) {
-                localOrden_update[index].food.quantity =
-                    sale_unit_price / localOrden_update[index].food.price;
+        
+            if (this.configuration.is_grifo){
+                localOrden_update[index].food.quantity = sale_unit_price / localOrden_update[index].food.price;
                 console.log(
-                    "ver el precio modificado",
-                    localOrden_update[index].food.quantity
-                );
-            } else { */
-            localOrden_update[index].food.sale_unit_price = sale_unit_price;
-            /* } */
+                "ver el precio modificado",
+                localOrden_update[index].food.quantity
+            );
+
+            } else {
+                localOrden_update[index].food.sale_unit_price = sale_unit_price;
+
+            }
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();
-        },
+        }, */
 
-        /* update_price(index, sale_unit_price) {
+        update_price(index, sale_unit_price) {
             // Clonar para mantener reactividad
             const items = [...this.localOrden];
             const item = { ...items[index] };
 
             if (this.configuration.is_grifo) {
-                const unit = Number(item.food.price) || 0;
-                const total =
-                    sale_unit_price != null
-                        ? Number(sale_unit_price)
-                        : Number(item.price) || 0;
+                // En modo grifo el valor ingresado es el TOTAL. Recalculamos la cantidad
+                // usando el precio unitario base, y mantenemos el precio de línea como el unitario
+                const unit = Number(item?.food?.price) || 0; // precio unitario base
+                const total = sale_unit_price != null ? Number(sale_unit_price) : Number(item.price) || 0; // importe total ingresado
+
                 const newQty = unit > 0 ? Number((total / unit).toFixed(3)) : 0;
-                item.quantity = newQty;
+                item.quantity = newQty; // actualizar la cantidad visible
+
+                // MUY IMPORTANTE: restaurar el precio de la línea al precio unitario base
+                // para que el total sea unit * qty (y no total * qty)
+                item.price = unit;
+                if (item.food) item.food.sale_unit_price = unit; // opcional, mantener consistencia
             } else {
+                // Modo normal: el valor ingresado es el precio unitario
                 const newPrice = Number(sale_unit_price);
                 if (!isNaN(newPrice)) {
-                    item.price = newPrice; 
-                    if (item.food) item.food.sale_unit_price = newPrice;
+                    item.price = newPrice; // precio de la línea usado en el total
+                    if (item.food) item.food.sale_unit_price = newPrice; // opcional, si sincronizas con backend
                 }
             }
 
             items[index] = item;
             this.$emit("update:localOrden", items);
             this.calculateTotal();
-        }, */
+        },
 
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {
@@ -5691,11 +5501,9 @@ export default {
             } else {
                 form_submit.items = this.localOrden;
             }
-
             if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
-
             if (this.clientTableData.customer_id) {
                 form_submit.customer_id = this.clientTableData.customer_id;
                 console.log(
@@ -5706,9 +5514,6 @@ export default {
             if (!this.configuration.maderera && !this.divided_items) {
                 form_submit.items = this.mergeItems(form_submit.items);
             }
-            // Adjuntar discounts por item (tipo 00) antes de emitir
-            this._attachItemDiscounts(form_submit.items);
-            console.log("ver form_submit ver los datos que pase", form_submit.items);
             this.loading = true;
 
             this.commands_fisico = "";
@@ -5735,7 +5540,6 @@ export default {
                 });
             }
         },
-
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);
             if (!hasFoodId) {
@@ -5793,22 +5597,62 @@ export default {
                 return price / this.exchange_rate_sale;
             }
         },
+        calculateTotal(w = null) {
+            this.totalOrdenItems = 0.0;
 
-        calculateTotal (w = null) {
-            return calculateTotal.call(this);
+            this.total = 0.0;
+            this.totalOrden = 0.0;
+            let OrdenPen = 0;
+            let OrdenPenAtendidos = 0;
+
+            /* let selectedItems = []; */
+            _.forEach(this.localOrden, value => {
+                let { item } = value.food;
+                OrdenPen += value.quantity * value.price;
+
+                /* selectedItems.push({
+                    itemName: item.name,
+                    quantity: value.quantity,
+                }); */
+                // OrdenPen =
+                //     parseFloat(OrdenPen) +
+                //     value.quantity *
+                //         this.getPriceCurrency(
+                //             value.price,
+                //             item.currency_type_id
+                //         );
+            });
+            this.totalOrden = _.round(OrdenPen, 2);
+            _.forEach(this.ordens, values => {
+                let { item } = values.food;
+                OrdenPenAtendidos =
+                    parseFloat(OrdenPenAtendidos) +
+                    values.quantity *
+                        this.getPriceCurrency(
+                            values.price,
+                            item.currency_type_id
+                        );
+                /* selectedItems.push({
+                    itemName: item.name, // Suponiendo que 'item' tiene un campo 'name'
+                    quantity: values.quantity,
+                }); */
+            });
+            this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
+            // this.total = this.totalOrden + this.totalOrdenItems;
+            this.total = _.round(this.totalOrden, 2);
+            this.$emit("total_salcancelOrdenaes", this.total);
+
+            /* console.log("Ítems seleccionados:", selectedItems); */
         },
-
         deleteFood(idx) {
             this.$emit("deletedFood", idx);
             this.calculateTotal();
         },
-
         async submit() {
             //this.loading = true;
             this.showDialogPing = true;
             this.open_orders();
         },
-
         async cancelOrdenaPin() {
             if (this.pin.length > 3 && this.reasonToDelete) {
                 if (this.deleteGeneralOrden) {

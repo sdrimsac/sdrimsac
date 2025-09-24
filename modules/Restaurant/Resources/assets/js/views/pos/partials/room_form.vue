@@ -1252,17 +1252,43 @@ export default {
             // }
         },
         addEmptyRoom() {
-            this.addRoom({ tower_id: null, floor_id: null, table_id: null });
+            // Validar que todas las habitaciones sean del mismo establecimiento/almacén
+            // Suponiendo que cada torre tiene un campo establishment_id o almacen_id
+            // Si no existe, reemplazar por el campo correcto
+            if (this.rooms.length > 0) {
+                // Buscar la torre de la primera habitación existente
+                const firstRoom = this.rooms[0];
+                const firstTower = this.all_towers.find(t => t.id == firstRoom.tower_id);
+                const firstEstId = firstTower ? firstTower.establishment_id : null;
+                if (firstEstId) {
+                    // Mostrar solo torres del mismo establecimiento
+                    const allowedTowers = this.all_towers.filter(t => t.establishment_id == firstEstId);
+                    if (allowedTowers.length === 0) {
+                        this.$message({
+                            message: "No hay torres disponibles para el mismo establecimiento.",
+                            type: "warning"
+                        });
+                        return;
+                    }
+                    // Seleccionar la primera torre válida
+                    const defaultTowerId = allowedTowers[0].id;
+                    this.towers = allowedTowers;
+                    this.addRoom({ tower_id: defaultTowerId, floor_id: null, table_id: null });
+                } else {
+                    // Si la primera habitación no tiene torre, permitir agregar vacía
+                    this.addRoom({ tower_id: null, floor_id: null, table_id: null });
+                }
+            } else {
+                // Si no hay habitaciones, permitir agregar vacía
+                this.addRoom({ tower_id: null, floor_id: null, table_id: null });
+            }
 
             // Autoseleccionar torre (y por consecuencia el piso por defecto de esa torre)
             const idx = this.rooms.length - 1;
-            if (this.all_towers && this.all_towers.length > 0) {
-                const defaultTowerId = this.all_towers[0].id;
-                // Asegura que el combo de torres esté poblado
-                this.towers = this.all_towers;
+            if (this.towers && this.towers.length > 0) {
+                const defaultTowerId = this.towers[0].id;
                 // Asignar torre y refrescar pisos/mesas con lógica centralizada
                 this.rooms[idx].tower_id = defaultTowerId;
-                // Forzar actualización inmediata por si el componente no emite change al setear programáticamente
                 this.filterFloors(defaultTowerId, idx);
 
                 // Asegura que el primer piso quede seleccionado y las mesas se carguen
@@ -1274,7 +1300,6 @@ export default {
                     // Selecciona automáticamente la primera mesa disponible
                     if (this.tables.length > 0) {
                         this.rooms[idx].table_id = this.tables[0].id;
-                        // Inicializa servicios/totales sin mostrar alerta de disponibilidad
                         this.changeTable(this.rooms[idx], true);
                     }
                 } else {

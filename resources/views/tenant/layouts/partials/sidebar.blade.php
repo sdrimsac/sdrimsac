@@ -679,15 +679,6 @@
                 </a>
                 <ul id="boxes" class="collapse ">
                     @if ($roleService->isArca() || $user->is_arca)
-                        @if ($config->hotels)
-                            <li>
-                                <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
-                                    href="{{ route('hotels.reports.rooms') }}">
-                                    <i class="icofont-hotel" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                                    <span class="label" style="font-size: 1em; ">Reporte de Habitaciones</span>
-                                </a>
-                            </li>
-                        @endif
                         <li>
                             <a href="/cash/main_cash"
                                 class="{{ $path[0] === 'cash' && $path[1] == 'main_cash' ? 'active' : '' }}">

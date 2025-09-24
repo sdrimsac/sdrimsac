@@ -1163,7 +1163,7 @@ export default {
                 }
                 this.timer = setTimeout(async () => {
                     await this.$http
-                        .get(`/documents/search-items/?${parameters}`)
+                        .get(`/documents/search-items-purchase/?${parameters}`)
                         .then(response => {
                             this.items_select = response.data[0];
                             this.items = response.data;

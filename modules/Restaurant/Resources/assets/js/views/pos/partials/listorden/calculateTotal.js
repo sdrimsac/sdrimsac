@@ -1,4 +1,7 @@
 export function listcalculateTotal(w = null) {
+
+    console.log("listcalculateTotal", w);
+    
     
     // Totales generales
     this.totalOrdenItems = 0.0;
@@ -42,5 +45,7 @@ export function listcalculateTotal(w = null) {
         descuentos: Number(totalDescuentos.toFixed(2)),
         total: this.total
     });
+
+    console.log("total de la orden", this.total);
     this.$emit("total_salcancelOrdenaes", this.total);
 }

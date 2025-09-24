@@ -1001,10 +1001,14 @@ class TableRoomController extends Controller
         }
 
         $hotel_rent->total = $hotel_rent->items->sum('total');
+        Log::info(''. $hotel_rent->total .''); 
         $hotel_rent->save();
-    }
+    } 
+
     public function changeRoom($to, $from)
     {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
         $table_to = Table::find($to);
         $hotel_rent_item = HotelRentItem::where('table_id', $to)->orderBy('checkin_date', 'desc')
             ->orderBy('checkin_time', 'desc')
@@ -1587,10 +1591,13 @@ class TableRoomController extends Controller
 
     public function tablesToLeave()
     {
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
         $configuration = Configuration::first();
         $time_to_leave = $configuration->alarm_to_end;
         $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
         $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
+
         $tablesLeave = Table::with(['hotel_rent_items' => function ($query) use ($date, $time) {
             $query->where(function ($query) use ($date, $time) {
                 $query->where('checkout_date_estimated', '<', $date)
@@ -1599,7 +1606,6 @@ class TableRoomController extends Controller
                             ->where('checkout_time_estimated', '<', $time);
                     });
             })
-                // ->where('payment_status', 'Pendiente')
                 ->where('active', true)
                 ->where('was_cancel', 0);
         }])
@@ -1611,12 +1617,12 @@ class TableRoomController extends Controller
                                 ->where('checkout_time_estimated', '<', $time);
                         });
                 })
-                    // ->where('payment_status', 'Pendiente')
                     ->where('active', true)
                     ->where('was_cancel', 0);
             })
             ->where('is_room', true)
             ->where('status_table_id', '<>', 1)
+            ->where('establishment_id', $establishment_id) // Solo del almacén del usuario autenticado
             ->get();
 
         return [
@@ -1683,16 +1689,16 @@ class TableRoomController extends Controller
         }
 
         $count = Table::whereHas('hotel_rent_items', function ($query) use ($nowDate, $nowTime) {
-                $query->where(function ($query) use ($nowDate, $nowTime) {
-                    $query->where('checkout_date_estimated', '<', $nowDate)
-                        ->orWhere(function ($query) use ($nowDate, $nowTime) {
-                            $query->where('checkout_date_estimated', '=', $nowDate)
-                                ->where('checkout_time_estimated', '<', $nowTime);
-                        });
-                })
-                    ->where('active', true)
-                    ->where('was_cancel', 0);
+            $query->where(function ($query) use ($nowDate, $nowTime) {
+                $query->where('checkout_date_estimated', '<', $nowDate)
+                    ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                        $query->where('checkout_date_estimated', '=', $nowDate)
+                            ->where('checkout_time_estimated', '<', $nowTime);
+                    });
             })
+                ->where('active', true)
+                ->where('was_cancel', 0);
+        })
             ->where('is_room', true)
             ->where('status_table_id', '<>', 1)
             ->where('establishment_id', $establishment_id)
@@ -1706,7 +1712,14 @@ class TableRoomController extends Controller
 
     public function tablesToClean()
     {
-        $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+
+        $tablesClean = DB::connection('tenant')
+            ->table('tables')
+            ->where('is_cleaning', true)
+            ->where('establishment_id', $establishment_id)
+            ->get();
 
         return [
             'success' => true,
@@ -2759,6 +2772,8 @@ class TableRoomController extends Controller
     }
     public function check_reserve(Request $request)
     {
+        $user = auth()->user();
+        $establishment = Establishment::find($user->establishment_id);
         $id = $request->input('id');
         $table_id = $request->input('table_id');
         $duration = $request->input('duration');
@@ -2788,10 +2803,13 @@ class TableRoomController extends Controller
             ];
         }
 
-
+        // Solo buscar reservas en el almacén del usuario autenticado
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
             ->whereNull('checkout_date')
-            ->where('was_cancel', false);
+            ->where('was_cancel', false)
+            ->whereHas('table', function ($q) use ($user) {
+                $q->where('establishment_id', $user->establishment_id);
+            });
         if ($id) {
             $tables_in_reserve->where('id', '<>', $id);
         }
@@ -2803,7 +2821,6 @@ class TableRoomController extends Controller
                 'message' => 'Habitación disponible'
             ];
         }
-
 
         foreach ($tables_in_reserve as $key => $value) {
             $start_date_reserve = Carbon::parse($value->checkin_date . ' ' . $value->checkin_time);

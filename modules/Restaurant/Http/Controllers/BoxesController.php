@@ -66,6 +66,7 @@ class BoxesController extends Controller
         $this->configuration = Configuration::first();
         //ini_set('memory_limit', '4096M');
     }
+
     function get_receipts($cash_id)
     {
         $receipts = [];
@@ -258,7 +259,8 @@ class BoxesController extends Controller
             "advances" => $advances
         ];
     }
-    function get_category($item)
+
+    /* function get_category($item)
     {
         $configuration = Configuration::first();
         $hotels = $this->configuration->hotels;
@@ -294,7 +296,53 @@ class BoxesController extends Controller
             }
             return isset($item->item->category) ?  $item->item->category->name : "OTROS";
         }
+    } */
+
+    function get_category($item)
+    {
+        $configuration = Configuration::first();
+        $hotels = $configuration->hotels;  // 👈 corregido
+
+        if ($hotels) {
+            $item_hotel = $item->item;
+            $description = $item_hotel->description ?? '';
+
+            $is_media_tarifa = mb_stripos($description, 'Media tarifa') !== false;
+
+            if (mb_stripos($description, 'HABITACIÓN') !== false || $is_media_tarifa) {
+                return "HABITACIONES";
+            }
+        }
+
+        $category = $item->item->category ?? null;
+
+        if ($category == null) {
+            $item_id = $item->item_id;
+            $itemModel = Item::select('category_id')->find($item_id);
+            if ($itemModel) {
+                $categoryModel = CategoryItem::find($itemModel->category_id);
+                if ($categoryModel) {
+                    return $categoryModel->name;
+                }
+            }
+            if ($configuration->mod_renta) {
+                return "ALQUILER";
+            }
+            return "OTROS";
+        }
+
+        if (gettype($category) == "string") {
+            return $category;
+        } else {
+            if ($configuration->mod_renta) {
+                return "ALQUILER";
+            }
+            return $item->item->category->name ?? "OTROS";
+        }
     }
+
+
+
     /* function get_items_from_box($cash_id)
     {
 
@@ -519,6 +567,7 @@ class BoxesController extends Controller
             'customer_number' => $customer->number
         ];
     }
+
     function get_items_from_box($cash_id, $currency_type_id = "PEN")
     {
         $configuration = Configuration::first();
@@ -648,22 +697,30 @@ class BoxesController extends Controller
                             "name" => $name_sale_note,
                             "total" => $sale_note->total,
                         ];
-                        $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get();
+                        /* $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get(); */
+
+                        $items = $sale_note->items;
+                        Log::info("ver datos aqui en el item" . $items);
 
                         foreach ($items as $item) {
                             if ($item) {
                                 $item_db = Item::find($item->item_id);
-                                if ($configuration->mod_renta) {
+
+                                if ($configuration->hotels) {
                                     if ($item_db) {
                                         $category_id = $item_db->category_id;
 
-                                        $category_name = "ALQUILER";
+                                        $category_name = "HABITACIONES";
                                         if (array_key_exists($category_name, $categories)) {
                                             $categories[$category_name] += $item->total;
                                         } else {
                                             $categories[$category_name] = $item->total;
                                         }
                                         if ($configuration->mod_renta) {
+                                            $description_item = $item->item->description;
+                                        }
+
+                                        if ($configuration->hotels) {
                                             $description_item = $item->item->description;
                                         } else {
                                             $description_item = $item_db->description;
@@ -672,7 +729,7 @@ class BoxesController extends Controller
                                                 $cat = $item->item->categoriaMadera;
 
                                                 if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
-                                                    $medidas = "{$cat->selectedAncho}x{$cat->selectedLargo}x{$cat->selectedGrosor}";
+                                                    $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
                                                     $description_item .= " - {$medidas}";
                                                 }
                                             }
@@ -681,6 +738,7 @@ class BoxesController extends Controller
                                                 $description_item .= " - Media tarifa";
                                             }
                                         }
+
                                         $key = $description_item . "-" . $item->unit_price;
                                         $id_exist = array_search($key, array_column($all_items, 'key'));
                                         if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
@@ -707,7 +765,64 @@ class BoxesController extends Controller
                                     } else {
                                         Log::info("Item no tiene categoria: " . $item->item_id);
                                     }
-                                } else {
+                                }
+
+                                if ($configuration->mod_renta) {
+                                    if ($item_db) {
+                                        $category_id = $item_db->category_id;
+
+                                        $category_name = "HABITACIONES";
+                                        if (array_key_exists($category_name, $categories)) {
+                                            $categories[$category_name] += $item->total;
+                                        } else {
+                                            $categories[$category_name] = $item->total;
+                                        }
+                                        if ($configuration->mod_renta) {
+                                            $description_item = $item->item->description;
+                                        } else {
+                                            $description_item = $item_db->description;
+
+                                            if (isset($item->item->categoriaMadera)) {
+                                                $cat = $item->item->categoriaMadera;
+
+                                                if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                    $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
+                                                    $description_item .= " - {$medidas}";
+                                                }
+                                            }
+
+                                            if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                                $description_item .= " - Media tarifa";
+                                            }
+                                        }
+
+                                        $key = $description_item . "-" . $item->unit_price;
+                                        $id_exist = array_search($key, array_column($all_items, 'key'));
+                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                            if ($id_exist !== false) {
+                                                $all_items[$id_exist] = [
+                                                    "price" => $item->unit_price,
+                                                    "key" => $key,
+                                                    "category" => $this->get_category($item),
+                                                    "description" => $description_item,
+                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                ];
+                                            } else {
+                                                $all_items[] = [
+                                                    "key" => $key,
+                                                    "price" => $item->unit_price,
+                                                    "description" => $description_item,
+                                                    "quantity" => $item->quantity,
+                                                    "category" => $this->get_category($item),
+                                                    "total" => $item->total,
+                                                ];
+                                            }
+                                        }
+                                    } else {
+                                        Log::info("Item no tiene categoria: " . $item->item_id);
+                                    }
+                                }else {
                                     if ($item_db && $item_db->category_id) {
                                         $category_id = $item_db->category_id;
                                         $category = CategoryItem::find($category_id);
@@ -723,10 +838,11 @@ class BoxesController extends Controller
                                             $cat = $item->item->categoriaMadera;
 
                                             if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
-                                                $medidas = "{$cat->selectedAncho}x{$cat->selectedLargo}x{$cat->selectedGrosor}";
+                                                $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
                                                 $description_item .= " - {$medidas}";
                                             }
                                         }
+                                        
 
                                         if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                             $description_item .= " - Media tarifa";
@@ -857,6 +973,7 @@ class BoxesController extends Controller
         }
         return view('restaurant::boxes', compact('users'));
     }
+
     public function tables()
     {
         $gruop = Group::all();
@@ -866,6 +983,7 @@ class BoxesController extends Controller
         $methods = PaymentMethodType::all();
         return compact('gruop', 'category', 'subcategory', 'company', 'methods');
     }
+
     public function data_reports(Request $request)
     {
         ///
@@ -980,6 +1098,7 @@ class BoxesController extends Controller
             "scotiabank",
         );
     }
+
     public function reports_categoria_type(Request $request)
     {
 
@@ -1099,6 +1218,7 @@ class BoxesController extends Controller
         $pdf = PDF::loadView('report::boxes.report_category_pos', compact("user", "records", "company", "establishment", "date_start", "date_end"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
     }
+
     public function balance_final($date_closed)
     {
 
@@ -1171,6 +1291,7 @@ class BoxesController extends Controller
         $balance_total = ($data_ingresos + $yape + $plin + $transferencias + $tarjetas + $data_ingresos_all + $depositos) - $data_egresos;
         return compact('balance_total');
     }
+
     public function paymentorden($type, $id, $orderId)
     {
 
@@ -1194,6 +1315,7 @@ class BoxesController extends Controller
             "message" => "Se genero con  exito"
         ];
     }
+
     public function listfoods($date)
     {
         // $items=$this->list_food_sales($request);
@@ -1218,6 +1340,7 @@ class BoxesController extends Controller
             "data"    => $items,
         ];
     }
+
     function formatPromotions($promotions)
     {
         $formated = [];
@@ -1248,6 +1371,7 @@ class BoxesController extends Controller
         }
         return $formated;
     }
+
     function get_to_carry($model)
     {
         $info = null;
@@ -1262,6 +1386,7 @@ class BoxesController extends Controller
         }
         return $info;
     }
+
     function credit_list_ordens($cash_id)
     {
 
@@ -1310,6 +1435,7 @@ class BoxesController extends Controller
             "customers" => $customers
         ];
     }
+
     function get_credit_notes($cash_id)
     {
         $all = [];
@@ -1342,6 +1468,7 @@ class BoxesController extends Controller
         });
         return $all;
     }
+
     function get_anulate_documents($cash_id)
     {
         $all = [];

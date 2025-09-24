@@ -1767,6 +1767,7 @@ class PurchaseController extends Controller
                 $items = Item::where('active', 1)
                     ->whereNotIsSet()
                     ->whereIsActive()
+                    ->where('unit_type_id', '!=', 'ZZ')
                     ->orderBy('description')
                     ->take(20)
                     ->get();
