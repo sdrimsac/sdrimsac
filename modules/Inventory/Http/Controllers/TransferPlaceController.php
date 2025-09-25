@@ -306,45 +306,25 @@ class TransferPlaceController extends Controller
                 }
 
                 if (isset($series_lots['color_size'])) {
-                    /* Log::info("✅ Pasando talla color por aquí", [
-                        'color_size' => $series_lots['color_size'],
-                        'item_id' => $it->item_id,
-                        'origen' => $transfer->warehouse_id,
-                        'warehouse_id' => $transfer->warehouse_id_destination
-                    ]); */
 
                     foreach ($series_lots['color_size'] as $item_color) {
                         $size = $item_color['size'];
                         $color = $item_color['color'] ?? '-';
                         $quantity = $item_color['selectedQuantity'] ?? $item_color['quantity'] ?? 0;
-
-                        Log::info("🔎 Procesando talla/color", [
-                            'item_id' => $it->item_id,
-                            'size' => $size,
-                            'color' => $color,
-                            'quantity' => $quantity,
-                            'origen' => $transfer->warehouse_id,
-                            'warehouse_id' => $transfer->warehouse_id_destination
-                        ]);
+                        $code = $item_color['code'] ?? '-';
 
                         // 1️⃣ Descontar del almacén origen
                         $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
                             ->where('item_id', $it->item_id)
                             ->where('size', $size)
                             ->where('color', $color)
+                            ->where('code', $code)
                             ->first();
-                        /* Log::info("🔸 Origen encontrado dasdasdasd", ['item_color_origin' => $item_color_origin]); */
                         if ($item_color_origin) {
                             $item_color_origin->stock -= $quantity;
                             $item_color_origin->save();
-                            /* Log::info("🟠 Stock descontado en origen", ['stock' => $item_color_origin->stock]); */
                         } else {
-                            /* Log::warning("❌ No se encontró talla/color en almacén origen", [
-                                'item_id' => $it->item_id,
-                                'size' => $size,
-                                'color' => $color,
-                                'warehouse_id' => $transfer->warehouse_id
-                            ]); */
+                            
                         }
 
                         // 2️⃣ Insertar o actualizar en almacén destino
@@ -354,7 +334,6 @@ class TransferPlaceController extends Controller
                             ->where('color', $color)
                             ->where('warehouse_id', $transfer->warehouse_id_destination)
                             ->first();
-                        /* Log::info("🔸 Destino encontrado  fffffffff", ['item_color_dest' => $item_color_dest]); */
 
                         if (!$item_color_dest) {
                             $item_color_dest = ItemColorSize::create([
@@ -364,13 +343,12 @@ class TransferPlaceController extends Controller
                                 'price' => $item_color['price'],
                                 'warehouse_id' => $transfer->warehouse_id_destination,
                                 'stock' => 0,
+                                'code' => $code,
                             ]);
-                            /* Log::info("🟢 Creado nuevo registro en destino", ['item_color_dest' => $item_color_dest]); */
                         }
 
                         $item_color_dest->stock += $quantity;
                         $item_color_dest->save();
-                        /* Log::info("🟢 Stock sumado en destino", ['stock' => $item_color_dest->stock]); */
                     }
                 }
             }
