@@ -136,11 +136,11 @@
                           <button type="button"
                             class="whatsapp-title-btn"
                             :class="{ 'active-title': !form.sent_to_group }"
-                            @click="selectEnvioCliente"
+                            
                           >
                             <i class="fa fa-phone" style="margin-right:8px;"></i> Nro Whatsapp
                           </button>
-                          <el-input v-model="form.phone" :disabled="form.sent_to_group" ref="inputPhone"></el-input>
+                          <el-input v-model="form.phone" ref="inputPhone"></el-input>
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -148,11 +148,11 @@
                           <button type="button"
                             class="whatsapp-title-btn"
                             :class="{ 'active-title': form.sent_to_group }"
-                            @click="selectEnvioGrupo"
+                            
                           >
                             <i class="fa fa-users" style="margin-right:8px;"></i> Grupo de Whatsapp
                           </button>
-                          <el-input v-model="form.group_whatsapp" :disabled="!form.sent_to_group" ref="inputGroup"></el-input>
+                          <el-input v-model="form.group_whatsapp" ref="inputGroup"></el-input>
                         </div>
                       </div>
 
@@ -752,11 +752,11 @@ export default {
             this.form.sent_to_group = false;
             this.form.group_whatsapp = '';
             // Focus al input de cliente
-            this.$nextTick(() => {
+            /* this.$nextTick(() => {
                 if (this.$refs.inputPhone && this.$refs.inputPhone.focus) {
                     this.$refs.inputPhone.focus();
                 }
-            });
+            }); */
         },
         onSwitchChange(val) {
             // Si el usuario cambia el switch manualmente, limpiar el campo opuesto

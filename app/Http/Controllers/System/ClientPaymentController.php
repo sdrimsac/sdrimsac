@@ -382,6 +382,7 @@ class ClientPaymentController extends Controller
             $to_group = $client->sent_to_group;
             $number = $client->phone;
             $group_whatsapp = $client->group_whatsapp;
+            /* Log::info('Número de teléfono y grupo de WhatsApp:', [$number, $group_whatsapp]); */
             if ($to_group && $group_whatsapp) {
                 $number = $group_whatsapp;
             } else {
@@ -389,6 +390,7 @@ class ClientPaymentController extends Controller
             }
             // Enviar el mensaje por WhatsApp
             $response_success_message = $this->sendMessage($request->message, $number, $to_group);
+            /* Log::info('Respuesta de sendMessage:', [$response_success_message, 'numero' => $number, 'to_group' => $to_group]); */
             if ($url_video) {
                 $response_success_video = $this->sendVideo($url_video, $number, $to_group);
             }
