@@ -108,56 +108,65 @@
                                         </button>
                                         <div class="dropdown-menu p-2 custom-dropdown-bg">
                                             <div class="d-flex flex-column" style="width: 120px;">
-                                                <el-button type="primary" size="mini"
-                                                    class="btn_buscarsmall d-flex align-items-center"
-                                                    style="margin: 0px 0px 8px 10px;"
-                                                    @click.prevent="clickCreate(row.id)">
-                                                    <i class="fa fa-edit fa-lg me-2"></i> Editar
-                                                </el-button>
-                                                <el-button type="danger" size="mini"
-                                                    class="btn_buscarsmall mb-2 d-flex align-items-center"
-                                                    @click.prevent="clickDelete(row.id)">
-                                                    <i class="fa fa-trash fa-lg me-2"></i> Eliminar
-                                                </el-button>
-                                                <el-button v-if="row.warehouses.some(warehouse => warehouse.active)"
-                                                    type="warning" size="mini"
-                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                    @click.prevent="clickDisableItem(row.id)">
-                                                    <i class="fas fa-toggle-off fa-lg me-2"></i> Inhabilitar
-                                                </el-button>
-                                                <el-button v-else type="success" size="mini"
-                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                    @click.prevent="clickEnableItem(row.id)">
-                                                    <i class="fas fa-toggle-on fa-lg me-2"></i> Habilitar
-                                                </el-button>
-                                                <el-button type="info" size="mini"
-                                                    class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                    @click.prevent="clickDisguise(row.id)"  v-if="typeUser === 'superadmin'">
-                                                    <i class="fas fa-eye-slash fa-lg me-2"></i> Desactivar
-                                                </el-button>
-                                                <el-tooltip content="Agregar este producto a todos los Almacenes" placement="top">
-                                                    <!-- typeUser == 'superadmin' &&  -->
-                                                    <el-button 
-                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                        v-if="!row.is_in_all_warehouses" type="primary" 
-                                                        @click.prevent="clickAddProductToWarehouses(row.id)">
-                                                        <i class="fas fa-warehouse fa-lg me-2"></i>Agregar
-                                                    </el-button>
-                                                </el-tooltip>
-                                                <el-tooltip
-                                                    content="Agregar Política de Precios de Producto en todos los establecimintos"
-                                                    placement="top">
+                                                <template v-if="row.active === true">
                                                     <el-button type="primary" size="mini"
-                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
-                                                        @click.prevent="clickPolitica(row.id)">
-                                                        <i class="fas fa-balance-scale fa-lg me-2"></i> PPP
+                                                        class="btn_buscarsmall d-flex align-items-center"
+                                                        style="margin: 0px 0px 8px 10px;"
+                                                        @click.prevent="clickCreate(row.id)">
+                                                        <i class="fa fa-edit fa-lg me-2"></i> Editar
                                                     </el-button>
-                                                </el-tooltip>
-
+                                                    <el-button type="danger" size="mini"
+                                                        class="btn_buscarsmall mb-2 d-flex align-items-center"
+                                                        @click.prevent="clickDelete(row.id)">
+                                                        <i class="fa fa-trash fa-lg me-2"></i> Eliminar
+                                                    </el-button>
+                                                    <el-button
+                                                        v-if="row.warehouses.some(warehouse => warehouse.active)"
+                                                        type="warning" size="mini"
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        @click.prevent="clickDisableItem(row.id)">
+                                                        <i class="fas fa-toggle-off fa-lg me-2"></i> Inhabilitar
+                                                    </el-button>
+                                                    <el-button v-else type="success" size="mini"
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        @click.prevent="clickEnableItem(row.id)">
+                                                        <i class="fas fa-toggle-on fa-lg me-2"></i> Habilitar
+                                                    </el-button>
+                                                    <el-button type="info" size="mini"
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        @click.prevent="clickDisguise(row.id)">
+                                                        <i class="fas fa-eye-slash fa-lg me-2"></i> Desactivar
+                                                    </el-button>
+                                                    <el-tooltip content="Agregar este producto a todos los Almacenes"
+                                                        placement="top">
+                                                        <!-- typeUser == 'superadmin' &&  -->
+                                                        <el-button
+                                                            class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                            v-if="!row.is_in_all_warehouses" type="primary"
+                                                            @click.prevent="clickAddProductToWarehouses(row.id)">
+                                                            <i class="fas fa-warehouse fa-lg me-2"></i>Agregar
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip
+                                                        content="Agregar Política de Precios de Producto en todos los establecimintos"
+                                                        placement="top">
+                                                        <el-button type="primary" size="mini"
+                                                            class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                            @click.prevent="clickPolitica(row.id)">
+                                                            <i class="fas fa-balance-scale fa-lg me-2"></i> PPP
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </template>
+                                                <template v-else>
+                                                    <el-button type="success" size="mini"
+                                                        class="btn_buscarsmall mb-2 w-100 d-flex align-items-center"
+                                                        @click.prevent="clickDisguiseEnable(row.id)">
+                                                        <i class="fas fa-toggle-on fa-lg me-2"></i> Activar
+                                                    </el-button>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
-
                                 </template>
                             </td>
                             <td>
@@ -171,7 +180,7 @@
                                     <br />
                                     <span class="text-primary" style="font-family: Arial, sans-serif;">{{
                                         row.last_register.description
-                                    }}</span>
+                                        }}</span>
                                     <br />
                                     <span style="font-family: Arial, sans-serif;">
                                         <span style="color: #007bff;">
@@ -207,11 +216,8 @@
                                         row.unit_type_id != 'ZZ'
                                     ">
                                         <el-tooltip content="Ver STOCK del producto y Almacenes" placement="top">
-                                            <button
-                                                type="primary"
-                                                class="btn_guardarsmall"
-                                                style="width: 30px; padding: 1px;"
-                                                @click.prevent="
+                                            <button type="primary" class="btn_guardarsmall"
+                                                style="width: 30px; padding: 1px;" @click.prevent="
                                                     clickWarehouseDetail(
                                                         row.id,
                                                         row.has_series,
@@ -219,8 +225,7 @@
                                                         row.unit_type,
                                                         row
                                                     )
-                                                "
-                                            >
+                                                    ">
                                                 <i class="fa fa-eye"></i>
                                             </button>
                                         </el-tooltip>
@@ -248,19 +253,23 @@
                             </td>
 
                             <td class="text-center">
-                                <template v-if="Array.isArray(row.warehouses) && row.warehouses.some(warehouse => warehouse.active)">
-                                    <button class="btn_excelsmall d-flex justify-content-center align-items-center" :style="{
-                                        color: 'white',
-                                        backgroundColor: 'green',
-                                        fontWeight: 'bold',
-                                        width: '110px',
-                                        textAlign: 'center'
-                                    }">
+                                <template
+                                    v-if="Array.isArray(row.warehouses) && row.warehouses.some(warehouse => warehouse.active)">
+                                    <button class="btn_excelsmall d-flex justify-content-center align-items-center"
+                                        :style="{
+                                            color: 'white',
+                                            backgroundColor: 'green',
+                                            fontWeight: 'bold',
+                                            width: '110px',
+                                            textAlign: 'center'
+                                        }">
                                         <span style="width: 100%; text-align: center;">Habilitado</span>
                                     </button>
                                 </template>
                                 <template v-else>
-                                    <el-button class="btn_cancelarsmall d-flex justify-content-center align-items-center" type="danger" style="width: 110px; text-align: center;">
+                                    <el-button
+                                        class="btn_cancelarsmall d-flex justify-content-center align-items-center"
+                                        type="danger" style="width: 110px; text-align: center;">
                                         <span style="width: 100%; text-align: center;">Inhabilitado</span>
                                     </el-button>
                                 </template>
@@ -655,6 +664,50 @@ export default {
                 if (result.isConfirmed) {
                     axios
                         .get(`/items/disguise/${id}`)
+                        .then(response => {
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: "Desactivado",
+                                    text: response.data.message,
+                                    icon: "success",
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                                this.$eventHub.$emit("reloadData");
+                            } else {
+                                swal.fire({
+                                    title: "Error",
+                                    text: response.data.message,
+                                    icon: "error"
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            swal.fire({
+                                title: "Error",
+                                text:
+                                    "Hubo un problema al intentar realizar la acción",
+                                icon: "error"
+                            });
+                        });
+                }
+            });
+        },
+
+        clickDisguiseEnable(id) {
+            swal.fire({
+                title: "HABILITAR PRODUCTO?",
+                text:
+                    "Recuerda si se habilita el producto ya se podrá recuperar y visualizar en todos los almacenes",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Habilitar"
+            }).then(result => {
+                if (result.isConfirmed) {
+                    axios
+                        .get(`/items/enable/${id}`)
                         .then(response => {
                             if (response.data.success) {
                                 swal.fire({

@@ -1607,7 +1607,8 @@ class TableRoomController extends Controller
     public function index()
     {
         $configurations = Configuration::first();
-        return view('restaurant::configuration.rooms', compact('configurations'));
+        $type_user = $configurations->type_user;
+        return view('restaurant::configuration.rooms', compact('configurations', 'type_user'));
     }
     public function columns()
     {

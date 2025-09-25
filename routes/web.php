@@ -540,6 +540,7 @@ if ($hostname) {
                 Route::get('items/disableItem/{item}/{warehouse}', [App\Http\Controllers\Tenant\ItemController::class, 'disableItem']);
                 Route::get('items/enableItem/{item}/{warehouse}', [App\Http\Controllers\Tenant\ItemController::class, 'enableItem']);
                 Route::get('items/disguise/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'disguise']);
+                Route::get('items/enable/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'enable_item']);
                 Route::get('items/images/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'images']);
                 Route::get('items/images/delete/{id}', [App\Http\Controllers\Tenant\ItemController::class, 'delete_images']);
                 Route::get('items/import/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tablesImport']);

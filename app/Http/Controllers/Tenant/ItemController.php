@@ -1062,12 +1062,14 @@ class ItemController extends Controller
 
     public function getRecords($request, $services = true)
     {
-        $datos = $request->value;
-        $textoIntoArray =  explode(' ', $datos);
-        $warehouse_id = $request->warehouse_id;
-        $categoria_madera_id = $request->categoria_madera_id;
-        $area_id = $request->area_id;
-        $active = $request->active;
+    $datos = $request->value;
+    $textoIntoArray =  explode(' ', $datos);
+    $warehouse_id = $request->warehouse_id;
+    $categoria_madera_id = $request->categoria_madera_id;
+    $area_id = $request->area_id;
+    $active = $request->active;
+    $show_inactive = filter_var($request->show_inactive ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
         /** @var User $user */
@@ -1140,8 +1142,15 @@ class ItemController extends Controller
                     ->where($request->column, 'like', "%{$request->value}%");
                 break;
         }
+        /* $records = $records->where('active', 1); */
 
-        $records = $records->where('active', 1);
+        if ($show_inactive === true) {
+            // Mostrar solo inactivos
+            $records = $records->where('active', 0);
+        } elseif ($show_inactive === false) {
+            // Mostrar solo activos (por defecto)
+            $records = $records->where('active', 1);
+        }
 
         if ($active !== null) {
             $active = ($active === 'Habilitado') ? 1 : 0;
@@ -1181,6 +1190,7 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
+
     public function getRecordMobile($request, $services = true)
     {
         $datos = $request->value;
@@ -2630,7 +2640,7 @@ class ItemController extends Controller
         }
     }
 
-    public function enable($id)
+    public function enable_item($id)
     {
         try {
 

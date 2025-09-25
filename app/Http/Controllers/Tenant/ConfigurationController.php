@@ -31,28 +31,26 @@ class ConfigurationController extends Controller
 {
     public function create()
     {
-    
+
         return view('tenant.configurations.form');
     }
-    public function app()
+    public function app() {}
+    public function saveNumbersEstablishments(Request $request)
     {
-    }
-    public function saveNumbersEstablishments(Request $request){
         try {
             $data = $request->payload;
-            EstablishmentNotificationNumber::where('id','!=',null)->delete();
-            foreach($data as $row){
+            EstablishmentNotificationNumber::where('id', '!=', null)->delete();
+            foreach ($data as $row) {
                 EstablishmentNotificationNumber::create([
                     'establishment_id' => $row['establishment_id'],
                     'number' => $row['number_id']
                 ]);
-            }   
+            }
 
             return [
                 'success' => true,
                 'message' => 'Números guardados correctamente'
             ];
-
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -65,10 +63,10 @@ class ConfigurationController extends Controller
         // Obtener configuración y usuario
         $configuration = Configuration::first();
         $user = auth()->user() ?? auth('api')->user();
-        
+
         // Obtener el ID de caja activa para el usuario
         $cash_id = $this->getActiveCashId($user);
-        
+
         return [
             'affectation_igv_type_id' => $configuration->affectation_igv_type_id,
             'establishment_id' => $user->establishment_id,
@@ -81,19 +79,20 @@ class ConfigurationController extends Controller
     private function getActiveCashId($user)
     {
         $cash = Cash::where('user_id', $user->id)
-                    ->where('state', 1)
-                    ->first();
-                    
+            ->where('state', 1)
+            ->first();
+
         if ($cash) {
             return $cash->id;
         }
-        
+
         $cash = Cash::where('state', 1)->first();
-        
+
         return $cash ? $cash->id : null;
     }
-    public function tablesNumbersEstablishments(Request $request){
-        $establishments = Establishment::all()->transform(function($row){
+    public function tablesNumbersEstablishments(Request $request)
+    {
+        $establishments = Establishment::all()->transform(function ($row) {
             return [
                 'id' => $row->id,
                 'description' => $row->description,
@@ -101,7 +100,7 @@ class ConfigurationController extends Controller
         });
         $numbers = NumberActivity::all();
         $records = EstablishmentNotificationNumber::all();
-        return compact('records','establishments','numbers');
+        return compact('records', 'establishments', 'numbers');
     }
     public function etiquetas(Request $request)
     {
@@ -199,6 +198,11 @@ class ConfigurationController extends Controller
     }
     function check_and_set_restaurant()
     {
+        $CategoryItem = [
+            ['name' => 'IMSUMOS', 'identifier' => null, 'icono' => null, 'pos_drag' => false, 'user_id' => null, 'active' => 1, 'show_count_pos' => false, 'images' => null],
+
+        ];
+
         $areas = [
             ['description' => 'BARRA', 'copies' => 0, 'printer' => null, 'active' => 1],
             ['description' => 'COCINA', 'copies' => 0, 'printer' => null, 'active' => 1],
@@ -212,6 +216,88 @@ class ConfigurationController extends Controller
             ['description' => 'BARMAN', 'active' => 1],
         ];
 
+        $Item = [
+            [
+                'name' => null,
+                'second_name' => null,
+                'description' => 'VARIACION',
+                'item_type_id' => '01',
+                'internal_id' => '000ZZ',
+                'barcode' => null,
+                'barcode_type' => null,
+                'item_code' => null,
+                'date_of_due' => null,
+                'account_id' => null,
+                'item_code_gs1' => null,
+                'unit_type_id' => 'ZZ',
+                'currency_type_id' => 'PEN',
+                'sale_unit_price' => 1,
+                'has_igv' => false,
+                'purchase_unit_price' => 0,
+                'has_isc' => false,
+                'commission_amount' => null,
+                'commission_type' => null,
+                'amount_plastic_bag_taxes' => 0.20,
+                'system_isc_type_id' => null,
+                'percentage_isc' => 0.00,
+                'suggested_price' => 0.00,
+                'sale_affectation_igv_type_id' => 20,
+                'purchase_affectation_igv_type_id' => '20',
+                'calculate_quantity' => false,
+                'sale_unit_price_set' => null,
+                'is_set' => false,
+                'is_manufactured' => false,
+                'category_id' => null,
+                'brand_id' => null,
+                'image' => 'imagen-no-disponible.jpg',
+                'image_medium' => 'imagen-no-disponible.jpg',
+                'image_small' => 'imagen-no-disponible.jpg',
+                'is_stock' => 'Si',
+                'stock' => 0,
+                'stock_min' => 0.00,
+                'lot_code' => null,
+                'lots_enabled' => false,
+                'series_enabled' => false,
+                'percentage_of_profit' => 0.00,
+                'has_perception' => false,
+                'percentage_perception' => 0.00,
+                'attributes' => json_encode([]),
+                'active' => true,
+                'location' => null,
+                'warehouse_id' => null,
+                'status' => 1,
+                'apply_store' => 0,
+                'max_quantity' => null,
+                'max_quantity_description' => null,
+                'has_orden_compra' => false,
+                'is_promotion' => false,
+                'promotion_count' => 0,
+                'delivery_cost' => 0.00,
+                'has_commercial_treatment' => true,
+                'has_color_size' => false,
+                'subject_to_detraction' => false,
+                'weight' => 0.00,
+                'model' => null,
+                'quality' => null,
+                'origin' => null,
+                'points_value' => null,
+                'has_warranty' => false,
+                'month_day' => null,
+                'init_report' => false,
+                'commission' => 0.00,
+                'codes_family' => false,
+                'calculate_price' => false,
+
+            ]
+        ];
+
+        foreach ($CategoryItem as $category) {
+            $existingCategory = DB::connection('tenant')->table('categories')->where('name', $category['name'])->first();
+            if (!$existingCategory) {
+                DB::connection('tenant')->table('categories')->insert($category);
+            }
+        }
+
         foreach ($areas as $area) {
             $existingArea = DB::connection('tenant')->table('areas')->where('description', $area['description'])->first();
             if (!$existingArea) {
@@ -224,11 +310,38 @@ class ConfigurationController extends Controller
                 DB::connection('tenant')->table('workers_type')->insert($workerType);
             }
         }
+
+        /* foreach ($Item as $item) {
+            $existingItem = DB::connection('tenant')->table('items')->where('description', $item['description'])->first();
+            if (!$existingItem) {
+                DB::connection('tenant')->table('items')->insert($item);
+            }
+        } */
+
+        foreach ($Item as &$item) {
+            // Asegurar que attributes no sea null ni array PHP
+            if (is_array($item['attributes'])) {
+                $item['attributes'] = json_encode($item['attributes']);
+            } elseif (is_null($item['attributes'])) {
+                $item['attributes'] = json_encode([]);
+            }
+
+            $existingItem = DB::connection('tenant')->table('items')
+                ->where('description', $item['description'])
+                ->first();
+
+            if (!$existingItem) {
+                DB::connection('tenant')->table('items')->insert($item);
+            }
+        }
+
         $users = [
             ['name' => 'BARRA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 2, 'pin' => 5822, 'type' => 'seller', 'worker_type_id' => 4, 'area_id' => 1, 'active' => 1],
             ['name' => 'COCINA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 3, 'pin' => 5725, 'type' => 'seller', 'worker_type_id' => 3, 'area_id' => 3, 'active' => 1],
             ['name' => 'MOZO', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 4, 'pin' => 7808, 'type' => 'seller', 'worker_type_id' => 2, 'area_id' => 4, 'active' => 1]
         ];
+
+
         foreach ($users as $user) {
             $existingUser = DB::connection('tenant')->table('users')->where('name', $user['name'])->first();
             if (!$existingUser) {
@@ -245,7 +358,7 @@ class ConfigurationController extends Controller
     function get_area_id($name)
     {
         if ($name == 'MOZO') {
-            $worker_type_id = DB::connection('tenant')->table('areas')->where('description', 'COCINA')->first();
+            $worker_type_id = DB::connection('tenant')->table('areas')->where('description', 'MESA')->first();
             if ($worker_type_id) {
                 return $worker_type_id->id;
             }

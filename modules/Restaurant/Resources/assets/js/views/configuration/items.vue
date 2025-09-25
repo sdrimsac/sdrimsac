@@ -230,6 +230,11 @@
                                             <template v-else>Activar</template>
                                         </template>
                                         <template v-else>
+                                            <!-- <template v-if="typeUser == 'superadmin'">
+                                                <i class="fa fa-delete"></i> Eliminar
+                                            </template>
+                                            <template v-else>
+                                            </template> -->
                                             <i class="fa fa-delete"></i>
                                             Eliminar
                                         </template>
