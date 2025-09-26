@@ -1805,9 +1805,12 @@
                                                                 </el-button-group>
                                                             </div>
                                                             <div
+                                                                v-if="establishments.conf && establishments.conf.show_discounts_payment && !isCreatingOrden && configuration.discount_items"
                                                                 class="col-6 col-md-6"
                                                             >
-                                                                <label for="" class="fw-bold w-100"
+                                                                <label
+                                                                    for=""
+                                                                    class="fw-bold w-100"
                                                                     >Descuentos</label
                                                                 >
                                                                 <el-input-number
@@ -1818,16 +1821,29 @@
                                                                             .discount
                                                                     "
                                                                     controls-position="right"
-                                                                    :min="1"
-                                                                    :max="9999999"
+                                                                    :min="0"
+                                                                    :max="
+                                                                        9999999
+                                                                    "
+                                                                    @change="
+                                                                        calculateTotal
+                                                                    "
                                                                 ></el-input-number>
                                                                 <el-checkbox
-                                                                        v-model="order_pend.discount"
-                                                                        @change="calculateTotal"
-                                                                    >
-                                                                        <span>
-                                                                            {{ order_pend.discount ? 'Porcentaje' : 'Monto' }}
-                                                                        </span>
+                                                                    v-model="
+                                                                        order_pend.discount
+                                                                    "
+                                                                    @change="
+                                                                        calculateTotal
+                                                                    "
+                                                                >
+                                                                    <span>
+                                                                        {{
+                                                                            order_pend.discount
+                                                                                ? "Porcentaje"
+                                                                                : "Monto"
+                                                                        }}
+                                                                    </span>
                                                                 </el-checkbox>
                                                             </div>
                                                         </div>
