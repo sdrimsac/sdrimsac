@@ -119,19 +119,24 @@ class ClientPaymentController extends Controller
             $content_number = $number;
         }
         try {
-            $response = Http::withoutVerifying()->post($url, [
+            $payload = [
                 $name_number => $content_number,
                 'sender' => 'sdrimsac',
                 'message' => $message,
-            ]);
-
+            ];
+            $response = Http::withoutVerifying()->post($url, $payload);
             $status = $response->status();
             $body = $response->body();
             return [
                 "success" => $status == 200,
-                "message" => $body
-
-
+                "message" => $body,
+                "debug" => [
+                    "url" => $url,
+                    "payload" => $payload,
+                    "status" => $status,
+                    "number" => $number,
+                    "to_group" => $to_group,
+                ]
             ];
         } catch (\Exception $e) {
             Log::error("Error al enviar el mensaje por WhatsApp: ", [
@@ -142,6 +147,12 @@ class ClientPaymentController extends Controller
             return [
                 "message" => $e->getMessage(),
                 "line" => $e->getLine(),
+                "debug" => [
+                    "url" => $url,
+                    "payload" => isset($payload) ? $payload : null,
+                    "number" => $number,
+                    "to_group" => $to_group,
+                ]
             ];
         }
     }
@@ -382,7 +393,6 @@ class ClientPaymentController extends Controller
             $to_group = $client->sent_to_group;
             $number = $client->phone;
             $group_whatsapp = $client->group_whatsapp;
-            /* Log::info('Número de teléfono y grupo de WhatsApp:', [$number, $group_whatsapp]); */
             if ($to_group && $group_whatsapp) {
                 $number = $group_whatsapp;
             } else {
@@ -390,12 +400,20 @@ class ClientPaymentController extends Controller
             }
             // Enviar el mensaje por WhatsApp
             $response_success_message = $this->sendMessage($request->message, $number, $to_group);
-            /* Log::info('Respuesta de sendMessage:', [$response_success_message, 'numero' => $number, 'to_group' => $to_group]); */
             if ($url_video) {
                 $response_success_video = $this->sendVideo($url_video, $number, $to_group);
             }
             $message_response = "El mensaje se envió ";
-            $message_response .= $response_success_message['success'] ? "correctamente" : "con error";
+            if ($response_success_message['success']) {
+                $message_response .= "correctamente";
+            } else {
+                $message_response .= "con error: ";
+                if (isset($response_success_message['message'])) {
+                    $message_response .= $response_success_message['message'];
+                } else {
+                    $message_response .= "Error desconocido";
+                }
+            }
 
             if ($url_video) {
                 sleep(rand(1, 3));

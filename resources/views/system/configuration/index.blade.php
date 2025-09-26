@@ -21,7 +21,7 @@
         <div class="col-lg-6 col-md-12">
             {{-- <system-configuration-culqi></system-configuration-culqi> --}}
             
-            {{-- <system-configuration-emit-document-url></system-configuration-emit-document-url> --}}
+            <system-configuration-emit-document-url></system-configuration-emit-document-url>
             
             <system-configuration-upload-videos></system-configuration-upload-videos>
             {{-- <system-configuration-messages-client></system-configuration-messages-client> --}}
