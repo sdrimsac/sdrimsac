@@ -1804,6 +1804,32 @@
                                                                     ></el-button>
                                                                 </el-button-group>
                                                             </div>
+                                                            <div
+                                                                class="col-6 col-md-6"
+                                                            >
+                                                                <label for="" class="fw-bold w-100"
+                                                                    >Descuentos</label
+                                                                >
+                                                                <el-input-number
+                                                                    v-model="
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .discount
+                                                                    "
+                                                                    controls-position="right"
+                                                                    :min="1"
+                                                                    :max="9999999"
+                                                                ></el-input-number>
+                                                                <el-checkbox
+                                                                        v-model="order_pend.discount"
+                                                                        @change="calculateTotal"
+                                                                    >
+                                                                        <span>
+                                                                            {{ order_pend.discount ? 'Porcentaje' : 'Monto' }}
+                                                                        </span>
+                                                                </el-checkbox>
+                                                            </div>
                                                         </div>
                                                         <!-- Cantidad de productos en lista de venta directa -->
                                                         <div

@@ -46,74 +46,9 @@
                                 </td>
                                 <td>
                                     <!-- Popover principal que muestra el detalle de productos (y dentro cada lote / serie / talla-color) -->
-                                    <el-popover placement="right" width="650" trigger="click">
-                                        <el-table :data="row.detail" size="mini" border>
-                                            <el-table-column width="240" property="description" label="Producto"></el-table-column>
-                                            <el-table-column width="90" property="quantity" label="Cant."></el-table-column>
-                                            <el-table-column label="Detalle" min-width="300">
-                                                <template slot-scope="scope">
-                                                    <!-- LOTES -->
-                                                    <div v-if="scope.row.lots_enabled" class="mb-1">
-                                                        <strong style="font-size:11px;">Lotes:</strong>
-                                                        <el-table
-                                                            v-if="scope.row.series_lots && scope.row.series_lots.lotes && scope.row.series_lots.lotes.length"
-                                                            :data="scope.row.series_lots.lotes"
-                                                            size="mini"
-                                                            :show-header="false"
-                                                            style="width:100%; margin-top:2px;"
-                                                        >
-                                                            <el-table-column prop="code" label="Código" width="120"></el-table-column>
-                                                            <el-table-column prop="quantity" label="Cant." width="60"></el-table-column>
-                                                            <el-table-column prop="date_of_due" label="Vence" width="100"></el-table-column>
-                                                        </el-table>
-                                                        <span v-else style="font-size:11px; color:#888;">Sin lotes</span>
-                                                    </div>
-                                                    <!-- SERIES -->
-                                                    <div v-if="scope.row.series_enabled" class="mb-1">
-                                                        <strong style="font-size:11px;">Series:</strong>
-                                                        <div v-if="scope.row.series_lots && scope.row.series_lots.series && scope.row.series_lots.series.length" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:2px;">
-                                                            <el-tag
-                                                                v-for="(ser, i) in scope.row.series_lots.series"
-                                                                :key="ser.id || i"
-                                                                type="info"
-                                                                size="mini"
-                                                                :disable-transitions="true"
-                                                            >{{ ser.series }}</el-tag>
-                                                        </div>
-                                                        <span v-else style="font-size:11px; color:#888;">Sin series</span>
-                                                    </div>
-                                                    <!-- TALLA / COLOR -->
-                                                    <div v-if="scope.row.has_color_size" class="mb-1">
-                                                        <strong style="font-size:11px;">Talla / Color:</strong>
-                                                        <el-table
-                                                            v-if="scope.row.series_lots && scope.row.series_lots.color_size && scope.row.series_lots.color_size.length"
-                                                            :data="scope.row.series_lots.color_size"
-                                                            size="mini"
-                                                            :show-header="false"
-                                                            style="width:100%; margin-top:2px;"
-                                                        >
-                                                            <el-table-column label="Código" width="120">
-                                                                <template slot-scope="cs">{{ cs.row.code }}</template>
-                                                            </el-table-column>
-                                                            <el-table-column label="Talla" width="60">
-                                                                <template slot-scope="cs">{{ cs.row.size }}</template>
-                                                            </el-table-column>
-                                                            <el-table-column label="Color" width="90">
-                                                                <template slot-scope="cs">{{ cs.row.color }}</template>
-                                                            </el-table-column>
-                                                            <el-table-column label="Cant." width="60">
-                                                                <template slot-scope="cs">{{ cs.row.quantity }}</template>
-                                                            </el-table-column>
-                                                        </el-table>
-                                                        <span v-else style="font-size:11px; color:#888;">Sin talla/color</span>
-                                                    </div>
-                                                    <!-- Si no hay ningún detalle adicional -->
-                                                    <div v-if="!scope.row.lots_enabled && !scope.row.series_enabled && !scope.row.has_color_size" style="font-size:11px; color:#888;">Sin detalle</div>
-                                                </template>
-                                            </el-table-column>
-                                        </el-table>
-                                        <el-button slot="reference" icon="el-icon-zoom-in"></el-button>
-                                    </el-popover>
+                                    <el-button type="primary" @click="items = Array.isArray(row.detail) ? row.detail : (row.detail ? [row.detail] : []); showDialogTransferModel = true">
+                                        Ver Productos
+                                    </el-button>
                                 </td>
                                 <td class="text-center">{{ row.quantity }}</td>
                                 <td>
@@ -185,6 +120,7 @@
             :printers="printers" @reloadData="reloadDataTable"></transfer-form>
         <pdf-model :showDialog.sync="showDialogPdf" :currentCode="currentCode" :printer_id="printer_id"
             :printers="printers" :configuration="configuration" @reloadData="reloadData" @Printer="Printer"></pdf-model>
+        <transfer-model :dialogVisible.sync="showDialogTransferModel" :items="items"></transfer-model>
     </div>
 </template>
 
@@ -193,12 +129,14 @@ import DataTable from "../../../../../../resources/js/components/DataTableTransf
 import { deletable } from "../../../../../../resources/js/mixins/deletable";
 import TransferForm from "./form.vue";
 import pdfModel from "./partials/model_pdf.vue";
+import TransferModel from "./partials/transfer_model.vue";
 
 export default {
     components: {
         DataTable,
         TransferForm,
-        pdfModel
+        pdfModel,
+        TransferModel
     },
     props: ["direct", "areaPrinter", "warehouse_id", "establishment_id"],
     mixins: [deletable],
@@ -217,7 +155,9 @@ export default {
             currentCode: null,
             transferCode: "",
             configuration: [],
-            establishments: []
+            establishments: [],
+            showDialogTransferModel: false,
+            items: []
         };
     },
     /* created() {

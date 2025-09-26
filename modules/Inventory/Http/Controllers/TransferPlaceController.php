@@ -256,30 +256,6 @@ class TransferPlaceController extends Controller
                         $item_lot->update();
                     }
                 }
-                /* foreach ($series_lots['color_size']  as $item_color) {
-                    $size = $item_color['size'];
-                    $color = $item_color['color'];
-                    $price = $item_color['price'];
-                    $quantity = $item_color['selectedQuantity'];
-                    $item_color_size = ItemColorSize::where('warehouse_id', $transfer->warehouse_id_destination)
-                        ->where('size', $size)
-                        ->where('color', $color)
-                        ->where('item_id',$it->item_id)
-                        ->first();
-                    if (!$item_color_size) {
-                        $item_color_size = ItemColorSize::create([
-                            'size' => $size,
-                            'item_id' => $it->item_id,
-                            'color' => $color,
-                            'price' => $price,
-                            'warehouse_id' => $transfer->warehouse_id_destination,
-                            'stock' => 0,
-                        ]);
-                        $item_color_size->save();
-                    }
-                    $item_color_size->stock += $quantity;
-                    $item_color_size->save();
-                } */
                 foreach ($series_lots['lotes']  as $lote) {
                     $item_group = ItemLotsGroup::find($lote["id"]);
                     $quantity = $lote["quantity"];
@@ -314,17 +290,37 @@ class TransferPlaceController extends Controller
                         $code = $item_color['code'] ?? '-';
 
                         // 1️⃣ Descontar del almacén origen
-                        $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                        /* $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
                             ->where('item_id', $it->item_id)
                             ->where('size', $size)
                             ->where('color', $color)
                             ->where('code', $code)
+                            ->first(); */
+
+                        $color = isset($item_color['color']) && $item_color['color'] !== '' ? $item_color['color'] : '-';
+                        // ...luego en la consulta:
+                        $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                            ->where('item_id', $it->item_id)
+                            ->where('size', $size)
+                            ->where(function ($query) use ($color) {
+                                if ($color === '-' || $color === '' || $color === null) {
+                                    $query->whereNull('color')->orWhere('color', '')->orWhere('color', '-');
+                                } else {
+                                    $query->where('color', $color);
+                                }
+                            })
+                            ->where('code', $code)
                             ->first();
+                        /* $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                            ->where('item_id', $it->item_id)
+                            ->where('size', $size)
+                            ->where('color', $color)
+                            ->where('code', $code)
+                            ->first(); */
                         if ($item_color_origin) {
                             $item_color_origin->stock -= $quantity;
                             $item_color_origin->save();
                         } else {
-                            
                         }
 
                         // 2️⃣ Insertar o actualizar en almacén destino
