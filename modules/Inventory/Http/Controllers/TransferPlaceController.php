@@ -290,27 +290,23 @@ class TransferPlaceController extends Controller
                         $code = $item_color['code'] ?? '-';
 
                         // 1️⃣ Descontar del almacén origen
-                        /* $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
-                            ->where('item_id', $it->item_id)
-                            ->where('size', $size)
-                            ->where('color', $color)
-                            ->where('code', $code)
-                            ->first(); */
-
-                        $color = isset($item_color['color']) && $item_color['color'] !== '' ? $item_color['color'] : '-';
-                        // ...luego en la consulta:
-                        $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
-                            ->where('item_id', $it->item_id)
-                            ->where('size', $size)
-                            ->where(function ($query) use ($color) {
-                                if ($color === '-' || $color === '' || $color === null) {
-                                    $query->whereNull('color')->orWhere('color', '')->orWhere('color', '-');
-                                } else {
-                                    $query->where('color', $color);
-                                }
-                            })
-                            ->where('code', $code)
-                            ->first();
+                        if (isset($item_color['id']) && !empty($item_color['id'])) {
+                            $item_color_origin = ItemColorSize::find($item_color['id']);
+                        } else {
+                            $color = isset($item_color['color']) && $item_color['color'] !== '' ? $item_color['color'] : '-';
+                            $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
+                                ->where('item_id', $it->item_id)
+                                ->where('size', $size)
+                                ->where(function ($query) use ($color) {
+                                    if ($color === '-' || $color === '' || $color === null) {
+                                        $query->whereNull('color')->orWhere('color', '')->orWhere('color', '-');
+                                    } else {
+                                        $query->where('color', $color);
+                                    }
+                                })
+                                ->where('code', $code)
+                                ->first();
+                        }
                         /* $item_color_origin = ItemColorSize::where('warehouse_id', $transfer->warehouse_id)
                             ->where('item_id', $it->item_id)
                             ->where('size', $size)
