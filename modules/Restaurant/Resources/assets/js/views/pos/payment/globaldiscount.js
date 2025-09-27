@@ -1,5 +1,5 @@
 export function inputDiscountAmount() {
-    console.log("inputDiscountAmount - globaldiscount.js aplicado");
+    /* console.log("inputDiscountAmount - globaldiscount.js aplicado"); */
 
     const toNum = v => (v == null || v === "" ? 0 : parseFloat(v));
     let global_discount = toNum(this.discount_amount);
@@ -121,7 +121,7 @@ export function inputDiscountAmount() {
     // Registrar descuento total (sobre total con IGV)
     this.form.total_discount = _.round(global_discount, 2);
 
-    console.log("Totales después de aplicar descuento global:", {
+    /* console.log("Totales después de aplicar descuento global:", {
         total: this.form.total,
         total_value: this.form.total_value,
         total_taxed: this.form.total_taxed,
@@ -135,6 +135,6 @@ export function inputDiscountAmount() {
         discount_base_amount: discountBaseRoundedForRecord,
         discount_igv_amount: discountIgvRoundedForRecord,
         split: { amount02, amount03 }
-    });
+    }); */
 }
 

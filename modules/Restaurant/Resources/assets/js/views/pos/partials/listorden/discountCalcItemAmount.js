@@ -1,5 +1,5 @@
 export function DiscountCalcItemAmounts(order) {
-    console.log("DiscountCalcItemAmounts ver si ingres descueto aqui", order);
+    // Solo calcula montos, no maneja advertencias visuales ni estado Vue
     try {
         const igvType = order.food.item.sale_affectation_igv_type_id; // '10' gravado, otros exoner/inafecto según SUNAT
         const qty = Number(order.quantity) || 0;
@@ -7,11 +7,12 @@ export function DiscountCalcItemAmounts(order) {
         const originalPrice = Number(order.food.item.price_original ?? order.food.item.price);
         const lineTotal = qty * unitPrice; // Total antes de descuento
         let discountInput = Number(order.food.item.discount) || 0; // valor ingreso
-        const isPercent = !!order.discount; // true => porcentaje
+    const isPercent = Boolean(order.discount); // true => porcentaje
+    console.log('Descuento:', discountInput, 'Tipo:', isPercent, 'Precio:', unitPrice, 'Original:', originalPrice);
 
         // Si el precio fue modificado manualmente, no aplicar descuento
         let discountAmount = 0;
-        if (Number(unitPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
+        if (Math.abs(Number(unitPrice) - Number(originalPrice)) > 0.01) {
             discountAmount = 0;
         } else {
             // Determinar monto de descuento
@@ -43,7 +44,6 @@ export function DiscountCalcItemAmounts(order) {
             igv = 0;
             total = netAfterDiscount;
         }
-        console.log('DiscountCalcItemAmounts dasdfafasdfsdfasdf', { base, igv, total, discountAmount })
         return {
             base: Number(base.toFixed(2)),
             igv: Number(igv.toFixed(2)),

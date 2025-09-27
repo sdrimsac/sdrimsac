@@ -4010,53 +4010,7 @@ export default {
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
                 this.ordens[i].food.item.consignment_item_id =
                     item.consignment_item_id;
-                // --- Propagación de descuentos hacia el pago ---
-                // Intentar obtener el valor de descuento total ya calculado
-                let discountValue = 0;
-                if (item.total_discount !== undefined && item.total_discount !== null) {
-                    discountValue = Number(item.total_discount) || 0;
-                } else {
-                    // Campos posibles que podrían contener monto de descuento a nivel item
-                    const discountFieldNames = [
-                        'discount_total',
-                        'discount',
-                        'discount_amount',
-                        '_discount_amount',
-                        'item_discount',
-                        'dscto',
-                        'descuento'
-                    ];
-                    for (let df of discountFieldNames) {
-                        if (item[df] !== undefined && item[df] !== null) {
-                            discountValue = Number(item[df]) || 0;
-                            if (discountValue) break;
-                        }
-                    }
-                }
-                // Guardar precio original si llega y aún no está asignado
-                const possibleOriginalPrice =
-                    item.original_price ||
-                    item.sale_unit_price_original ||
-                    item.price_original ||
-                    item.sale_unit_price_before ||
-                    item.unit_price_before ||
-                    null;
-                if (!discountValue && possibleOriginalPrice) {
-                    const originalP = Number(possibleOriginalPrice);
-                    const currentPrice = Number(item.price || item.sale_unit_price || 0);
-                    if (originalP > currentPrice && item.quantity) {
-                        discountValue = (originalP - currentPrice) * Number(item.quantity);
-                    }
-                }
-                this.ordens[i].food.item.total_discount = discountValue;
-                // Clonar el arreglo de descuentos si existe, sino arreglo vacío
-                this.ordens[i].food.item.discounts = item.discounts ? JSON.parse(JSON.stringify(item.discounts)) : [];
-                if (possibleOriginalPrice && !this.ordens[i].food.item.original_price) {
-                    this.ordens[i].food.item.original_price = possibleOriginalPrice;
-                }
-                // ------------------------------------------------
             }
-            
             this.form.items = this.ordens.map(o => o.food.item);
             this.formatItems();
 
@@ -4423,7 +4377,7 @@ export default {
                           (1 + this.percentage_igv / 100)
                         : i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
-                total_discount: Number(i.total_discount || 0),
+                total_discount: 0.0,
                 total: i.sale_unit_price * i.quantity,
                 price_type_id: "01",
                 unit_price: i.sale_unit_price,
@@ -4433,16 +4387,14 @@ export default {
                 unit_price: i.sale_unit_price,
                 presentation: null,
                 charges: [],
-                discounts: i.discounts ? JSON.parse(JSON.stringify(i.discounts)) : [],
+                discounts: [],
                 attributes: [],
                 affectation_igv_type: i.sale_affectation_igv_type_id
             };
         },
-
         async paymentsOrden(form, variationItem = []) {
             console.log("paymentsOrden recibida:", form);
             this.orden_items = form;
-            console.log("orden_items seteada:", this.orden_items);
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             this.form.advance = form.advance;
@@ -4452,7 +4404,6 @@ export default {
             this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;
             this.form.customer_id = form.customer_id ? form.customer_id : 1;
-    
             // Propagar banderas de impresión opcionales
             this.form.printerDefault = form.printerDefault;
             if (this.form.is_room) {
@@ -4477,7 +4428,6 @@ export default {
                 //this.form.caja = true;
             }
             let { items } = form;
-            console.log("items recibidos en paymentsOrden:", items);
 
             this.ordens = [...items];
 
@@ -4485,39 +4435,6 @@ export default {
 
             for (let i = 0; i < items.length; i++) {
                 let item = JSON.parse(JSON.stringify(items[i]));
-                // Determinar descuento del item antes de mutar
-                let discountValue = 0;
-                const discountFieldNames = [
-                    'total_discount',
-                    'discount_total',
-                    'discount',
-                    'discount_amount',
-                    '_discount_amount',
-                    'item_discount',
-                    'dscto',
-                    'descuento'
-                ];
-                for (let df of discountFieldNames) {
-                    if (item[df] !== undefined && item[df] !== null) {
-                        discountValue = Number(item[df]) || 0;
-                        if (discountValue) break;
-                    }
-                }
-                // Si no viene un campo de descuento explícito, intentar inferirlo por diferencia de precios
-                const possibleOriginalPrice =
-                    item.original_price ||
-                    item.sale_unit_price_original ||
-                    item.price_original ||
-                    item.sale_unit_price_before ||
-                    item.unit_price_before ||
-                    null;
-                const currentPrice = Number(item.price || item.sale_unit_price || 0);
-                if (!discountValue && possibleOriginalPrice) {
-                    const originalP = Number(possibleOriginalPrice);
-                    if (originalP > currentPrice && item.quantity) {
-                        discountValue = (originalP - currentPrice) * Number(item.quantity);
-                    }
-                }
                 this.ordens[i].food.item.categoriaMadera = item.categoriaMadera;
                 this.ordens[i].food.item.from_unit_type_id = item.type_id;
                 this.ordens[i].food.item.from_unit_type_id_desc =
@@ -4536,37 +4453,6 @@ export default {
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
                 this.ordens[i].food.item.consignment_item_id =
                     item.consignment_item_id;
-                // Copiar montos precalculados si llegan desde list_ordens
-                if (item._total_line !== undefined) {
-                    this.ordens[i].food.item._total_line = item._total_line;
-                }
-                if (item._base !== undefined) {
-                    this.ordens[i].food.item._base = item._base;
-                }
-                if (item._igv !== undefined) {
-                    this.ordens[i].food.item._igv = item._igv;
-                }
-                if (item.total !== undefined) {
-                    this.ordens[i].food.item.total = item.total;
-                }
-                if (item.total_value !== undefined) {
-                    this.ordens[i].food.item.total_value = item.total_value;
-                }
-                if (item.affectation_igv_type_id !== undefined && !this.ordens[i].food.item.sale_affectation_igv_type_id) {
-                    this.ordens[i].food.item.sale_affectation_igv_type_id = item.affectation_igv_type_id;
-                }
-                if (item.sale_affectation_igv_type_id !== undefined) {
-                    this.ordens[i].food.item.sale_affectation_igv_type_id = item.sale_affectation_igv_type_id;
-                }
-                // Asignar descuento detectado
-                this.ordens[i].food.item.total_discount = Number(discountValue || 0);
-                // Preservar arreglo de descuentos si existe
-                this.ordens[i].food.item.discounts = item.discounts ? JSON.parse(JSON.stringify(item.discounts)) : [];
-                console.log("Descuento asignado al item:", this.ordens[i].food.item.total_discount, this.ordens[i].food.item.discounts);
-                // Guardar precio original si estaba y no lo teníamos
-                if (possibleOriginalPrice && !this.ordens[i].food.item.original_price) {
-                    this.ordens[i].food.item.original_price = possibleOriginalPrice;
-                }
             }
             if (variationItem.length > 0) {
                 this.variation = true;
@@ -4625,13 +4511,13 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             } else {
+                
             }
 
             // A partir de aquí se finaliza el flujo para ambos casos (con cliente válido o asignado por defecto)
             if (variationItem.length > 0) {
                 let tmpchange = this.formVariation;
                 let tmpchange2 = this.form;
-
                 this.form = tmpchange;
                 this.formVariation = tmpchange2;
                 this.form.variation = true;
@@ -4659,7 +4545,7 @@ export default {
                 }, 500);
             }
         },
-        
+
         formatVariation(i) {
             return {
                 ...i,
@@ -5477,6 +5363,7 @@ export default {
 
         total_sales(val) {
             this.total_sales_pos = val;
+            this.form.total = val;
         },
         async ordenCancel(id) {
             try {
@@ -6394,208 +6281,13 @@ export default {
         },
         formatItems() {
             this.form.items = this.form.items.map(i => {
-                // Si vienen montos precalculados desde la lista de órdenes, respétalos
-                const comesPrecalc = (
-                    i._base !== undefined && i._igv !== undefined && i._total_line !== undefined
-                ) || (i.total !== undefined && i.total_value !== undefined);
-                const hasTotalOnly = (
-                    i.total !== undefined && i._total_line === undefined && i.total_value === undefined
-                );
-                // Permitir que 'discount' (campo simple) alimente total_discount si total_discount viene vacío
-                const discountRaw = (i.total_discount !== undefined && i.total_discount !== null)
-                    ? i.total_discount
-                    : (i.discount !== undefined ? i.discount : 0);
-                const discount = Number(discountRaw || 0);
-                const qty = Number(i.quantity || 0);
-                const price = Number(
-                    i.sale_unit_price ?? i.unit_price ?? i.price ?? i.item?.sale_unit_price ?? 0
-                );
-                const gross = price * qty;
-                const affectationId = String(
-                    i.sale_affectation_igv_type_id ??
-                    i.affectation_igv_type_id ??
-                    i.item?.sale_affectation_igv_type_id ??
-                    i.item?.affectation_igv_type_id ??
-                    ''
-                );
-                const taxable = affectationId === '10';
-                const percentage = this.percentage_igv / 100;
-                const hasPrecalc = (
-                    i._base !== undefined &&
-                    i._igv !== undefined &&
-                    i._total_line !== undefined
-                );
-
-                let appliedDiscount = discount;
-                if (hasPrecalc && i._discount_amount !== undefined) {
-                    appliedDiscount = Number(i._discount_amount) || 0;
-                } else if (!appliedDiscount && Array.isArray(i.discounts) && i.discounts.length) {
-                    // Fallback: sumar montos de descuentos del arreglo si existe
-                    appliedDiscount = i.discounts.reduce((acc, d) => {
-                        const v = Number(
-                            d.amount ?? d.amount_value ?? d.discount ?? 0
-                        );
-                        return acc + (isNaN(v) ? 0 : v);
-                    }, 0);
-                }
-
-                                // Reconstruir/normalizar discounts y asegurar montos netos (sin IGV) para tipo '00'
-                                let discountsArray = Array.isArray(i.discounts) ? JSON.parse(JSON.stringify(i.discounts)) : [];
-                const possibleOriginalPrice = i.original_price || i.sale_unit_price_original || i.price_original || i.sale_unit_price_before || i.unit_price_before || null;
-                const currentUnitPrice = price;
-                // Precalcular bases para normalización: base después de descuento y base antes de descuento (ambas netas)
-                                                const discountedGrossPreview = (comesPrecalc || hasTotalOnly)
-                                        ? // Si ya viene total (neto + impuestos), usarlo para mantener coherencia
-                                                            Number(i._total_line ?? i.total) || 0
-                                        : Math.max(gross - appliedDiscount, 0);
-                const baseAfterDiscountNet = taxable ? (discountedGrossPreview / (1 + percentage)) : discountedGrossPreview;
-                const amountNetForNormalize = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
-                const preDiscountBaseNet = baseAfterDiscountNet + amountNetForNormalize;
-                                                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length === 0 && appliedDiscount > 0 && possibleOriginalPrice) {
-                    // Evitar duplicados si ya hay un descuento equivalente
-                    const existingLike = discountsArray.find(d => {
-                        const amt = Number(d.amount) || 0;
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // si ya hay uno neto equivalente al bruto ingresado, no duplicar
-                            return Math.abs(amt - (appliedDiscount / (1 + percentage))) < 0.01;
-                        }
-                        return Math.abs(amt - appliedDiscount) < 0.01;
-                    });
-                    if (!existingLike) {
-                        // Calcular factor (porcentaje) basado en precio original
-                        const originalP = Number(possibleOriginalPrice);
-                        if (originalP > 0) {
-                            // Monto total del descuento aplicado viene en bruto (con IGV) -> convertir a neto (sin IGV)
-                            const amountNet = amountNetForNormalize;
-                            const lineNet = preDiscountBaseNet || (taxable ? (originalP * qty) / (1 + percentage) : (originalP * qty));
-                            const factor = lineNet > 0 ? _.round(amountNet / lineNet, 5) : 0;
-                            discountsArray.push({
-                                discount_type_id: '00', // descuento que afecta base imponible
-                                description: 'Descuento por item',
-                                factor,
-                                amount: _.round(amountNet, 2), // enviar SIN IGV
-                                base: _.round(lineNet, 2) // base imponible SIN IGV
-                            });
-                        }
-                    }
-                }
-
-                // Normalizar descuentos existentes tipo '00' (monto y base sin IGV, factor coherente)
-                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
-                    discountsArray = discountsArray.map(d => {
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // Si viene marcado como neto, evitar dividir nuevamente
-                            const comesNet = d.net === true;
-                            const amtNet = comesNet
-                                ? _.round(Number(d.amount) || 0, 2)
-                                : _.round((Number(d.amount) || 0) / (1 + percentage), 2);
-                            const baseNet = _.round(preDiscountBaseNet, 2);
-                            const f = baseNet > 0 ? _.round(amtNet / baseNet, 5) : 0;
-                            return {
-                                ...d,
-                                amount: amtNet,
-                                base: baseNet,
-                                factor: f
-                            };
-                        }
-                        return d;
-                    });
-                }
-
-                // Asegurar coherencia: calcular suma equivalente BRUTA a partir de descuentos netos (p.e. '00')
-                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
-                    const sumGrossEquivalent = discountsArray.reduce((acc, d) => {
-                        const amt = Number(d.amount) || 0;
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // Si el descuento está en neto, convertir a bruto para equiparar contra appliedDiscount
-                            const comesNet = d.net === true;
-                            return acc + (comesNet ? (amt * (1 + percentage)) : amt);
-                        }
-                        return acc + amt;
-                    }, 0);
-                    if (Math.abs(sumGrossEquivalent - appliedDiscount) > 0.01) {
-                        appliedDiscount = _.round(sumGrossEquivalent, 2);
-                    }
-                }
-
-                let unit_value, total_base_igv, total_igv, total_taxes, total_value, lineTotal;
-
-                if (hasPrecalc) {
-                    // Confiar en los valores precalculados provenientes del backend / cálculo previo
-                    total_value = Number(i._base) || 0; // base imponible o valor sin IGV
-                    total_igv = Number(i._igv) || 0;
-                    lineTotal = Number(i._total_line) || 0;
-                    if (taxable) {
-                        total_base_igv = total_value;
-                        total_taxes = total_igv; // solo IGV
-                        // unit_value debe ser base antes del descuento (sin IGV)
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    } else {
-                        total_base_igv = total_value; // para exonerado / inafecto se usa igual
-                        total_taxes = 0;
-                        // unit_value debe ser base antes del descuento
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    }
-                } else if (comesPrecalc && i.total !== undefined && i.total_value !== undefined) {
-                    // Caso: vienen totales simples (total y total_value) desde list_ordens. Respetarlos.
-                    lineTotal = Number(i.total) || 0;
-                    total_value = Number(i.total_value) || 0;
-                    if (taxable) {
-                        total_base_igv = total_value;
-                        total_igv = _.round(total_base_igv * percentage, 2);
-                        total_taxes = total_igv;
-                        // unit_value debe ser base antes del descuento (sin IGV)
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    } else {
-                        total_base_igv = total_value;
-                        total_igv = 0;
-                        total_taxes = 0;
-                        // unit_value debe ser base antes del descuento
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    }
-                } else if (hasTotalOnly) {
-                    // Viene sólo el total (bruto). Calcular base/igv a partir de él, manteniendo el total intacto
-                    lineTotal = Number(i.total) || 0;
-                    if (taxable) {
-                        total_base_igv = lineTotal / (1 + percentage);
-                        total_igv = _.round(total_base_igv * percentage, 2);
-                        total_value = total_base_igv;
-                        total_taxes = total_igv;
-                        // unit_value debe ser base antes del descuento (sin IGV)
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    } else {
-                        total_base_igv = lineTotal;
-                        total_igv = 0;
-                        total_value = lineTotal;
-                        total_taxes = 0;
-                        // unit_value debe ser base antes del descuento
-                        unit_value = qty ? preDiscountBaseNet / qty : 0;
-                    }
-                } else {
-                    // Calcular localmente si no tenemos precálculo
-                    const discountedGross = Math.max(gross - appliedDiscount, 0);
-                    if (taxable) {
-                        total_base_igv = discountedGross / (1 + percentage);
-                        total_igv = total_base_igv * percentage;
-                        unit_value = price / (1 + percentage);
-                        total_value = total_base_igv;
-                        total_taxes = total_igv;
-                        lineTotal = discountedGross;
-                    } else {
-                        unit_value = price;
-                        total_base_igv = discountedGross;
-                        total_igv = 0;
-                        total_value = discountedGross;
-                        total_taxes = 0;
-                        lineTotal = discountedGross;
-                    }
-                }
                 return {
                     ...i,
-                    currency_type_id: this.currency_id == 'S/' ? 'PEN' : 'USD',
+                    currency_type_id: this.currency_id == "S/" ? "PEN" : "USD",
                     currency_type: {
-                        id: this.currency_id == 'S/' ? 'PEN' : 'USD',
-                        description: this.currency_id == 'S/' ? 'Soles' : 'Dolares',
+                        id: this.currency_id == "S/" ? "PEN" : "USD",
+                        description:
+                            this.currency_id == "S/" ? "Soles" : "Dolares",
                         symbol: this.currency_id
                     },
                     attributes: i.attributes || [],
@@ -6604,36 +6296,54 @@ export default {
                     warehouse_id: null,
                     item: i,
                     item_id: i.id,
-                    unit_value: _.round(unit_value, 6),
-                    quantity: qty,
-                    aux_quantity: qty,
-                    total_base_igv: _.round(total_base_igv, 2),
+                    unit_value:
+                        i.sale_affectation_igv_type_id == 10
+                            ? i.sale_unit_price /
+                              (1 + this.percentage_igv / 100)
+                            : i.sale_unit_price,
+                    quantity: i.quantity,
+                    aux_quantity: i.quantity,
+                    total_base_igv:
+                        i.sale_affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * i.quantity) /
+                              (1 + this.percentage_igv / 100)
+                            : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
-                    total_igv: _.round(total_igv, 2),
+                    total_igv:
+                        i.sale_affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * i.quantity) /
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
+                            : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
                     total_isc: 0.0,
                     total_base_other_taxes: 0.0,
                     percentage_other_taxes: 0.0,
                     total_other_taxes: 0.0,
-                    total_taxes: _.round(total_taxes, 2),
-                    total_value: _.round(total_value, 2),
+                    total_taxes:
+                        i.sale_affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * i.quantity) /
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
+                            : 0,
+                    total_value:
+                        i.sale_affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * i.quantity) /
+                              (1 + this.percentage_igv / 100)
+                            : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
-                    total_discount: (comesPrecalc || hasTotalOnly) ? Number(i.total_discount || appliedDiscount || 0) : appliedDiscount,
-                    total: _.round(lineTotal, 2),
-                    price_type_id: '01',
-                    unit_price: price,
-                    unit_price_value: price,
+                    total_discount: 0.0,
+                    total: i.sale_unit_price * i.quantity,
+                    price_type_id: "01",
+                    unit_price: i.sale_unit_price,
+                    unit_price_value: i.sale_unit_price,
                     has_igv: i.has_igv,
                     affectation_igv_type_id: i.sale_affectation_igv_type_id,
+                    unit_price: i.sale_unit_price,
                     presentation: null,
                     charges: [],
-                    discounts: discountsArray.map(d => ({
-                        ...d,
-                        amount: _.round(Number(d.amount) || 0, 2),
-                        base: _.round(Number(d.base) || 0, 2),
-                        factor: Number((Number(d.factor) || 0).toFixed(5))
-                    })),
+                    discounts: [],
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
             });
@@ -7117,22 +6827,14 @@ export default {
             let total_value = 0;
             let total = 0;
             this.ordens.forEach(orden => {
-                const itemObj = orden.food.item;
-                let lineTotal;
-                if (itemObj._total_line !== undefined) {
-                    lineTotal = Number(itemObj._total_line) || 0;
-                } else if (itemObj.total !== undefined) {
-                    lineTotal = Number(itemObj.total) || 0;
-                } else {
-                    lineTotal = parseFloat(
-                        _.round(
-                            parseFloat(itemObj.quantity) *
-                                parseFloat(orden.food.price),
-                            2
-                        )
-                    );
-                }
-                total += lineTotal;
+                let t = parseFloat(
+                    _.round(
+                        parseFloat(orden.food.item.quantity) *
+                            parseFloat(orden.food.price),
+                        2
+                    )
+                );
+                total += t;
             });
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
@@ -7197,7 +6899,6 @@ export default {
             this.form.total_free = _.round(total_free, 2);
             this.form.total_igv = _.round(total_igv, 2);
             this.form.total_value = _.round(total_value, 2);
-            // No restar aquí total_discount porque los items ya vienen netos si había descuento
             this.form.total = _.round(total, 2);
             if (this.ordens.length > 0) {
                 if (this.selectOption == 2) {
@@ -7819,7 +7520,7 @@ export default {
         sidebarmodal() {
             this.showcustomModal = true;
         },
-        formatVariation(i) {
+        formatUrlImage(url) {
             if (!url) return;
             let formated = "storage/uploads/items/" + url;
             return `/${formated}`;
@@ -7836,19 +7537,29 @@ export default {
             }
 
             let foodItem = this.listFoods[index]?.item;
-            // Si es producto de familia y hay código escaneado, restringir al código exacto
+            // Si es producto de familia y hay código escaneado
             if (foodItem && foodItem.codes_family && this.barcode) {
-                const foundCode = Array.isArray(foodItem.item_codes)
-                    ? foodItem.item_codes.find(c => c.code_barcode === this.barcode)
-                    : null;
-                if (!foundCode) {
+                // Buscar el item_code exacto que coincida con el barcode escaneado
+                if (Array.isArray(foodItem.item_codes)) {
+                    const foundCode = foodItem.item_codes.find(
+                        c => c.code_barcode === this.barcode
+                    );
+                    if (!foundCode) {
+                        this.$message.error(
+                            "El código de familia escaneado no es válido para este producto."
+                        );
+                        return;
+                    }
+                    // Solo dejar el code_barcode escaneado en item_codes
+                    foodItem.item_codes = [foundCode];
+                    // También puedes asignar el code_barcode al campo principal si lo usas
+                    foodItem.code_barcode = this.barcode;
+                } else {
                     this.$message.error(
-                        "El código de familia escaneado no es válido para este producto."
+                        "No hay códigos de familia válidos para este producto."
                     );
                     return;
                 }
-                foodItem.item_codes = [foundCode];
-                foodItem.code_barcode = this.barcode;
             }
 
             let quotation_stock = localStorage.getItem("quotation_stock") || 0;

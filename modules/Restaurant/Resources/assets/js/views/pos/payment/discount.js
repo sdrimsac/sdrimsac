@@ -1,5 +1,5 @@
 export function inputDiscountAmount() {
-    console.log("inputDiscountAmount - globaldiscount.js hola");
+   /*  console.log("inputDiscountAmount - globaldiscount.js hola"); */
     if (!this.enabled_discount) return;
 
     if (!this.discount_mode) {
@@ -110,19 +110,6 @@ export function inputDiscountAmount() {
         this.discount_applied = true;
         this.reCalculateTotal();
         // Logs después de recalcular, reflejan montos finales
-        console.log("Snapshot original capturado:", this.original_totals_snapshot);
-        console.log("Aplicando descuento global de:", this.discount_amount);
-        console.log("Base del descuento:", this.discount_base_amount);
-        console.log("IGV del descuento:", this.discount_igv_amount);
-        console.log("Totales finales tras descuento:", {
-            total: this.form.total,
-            total_value: this.form.total_value,
-            total_igv: this.form.total_igv,
-            total_taxed: this.form.total_taxed,
-            total_exonerated: this.form.total_exonerated,
-            total_discount: this.discount_amount
-
-        });
         this.discount_dirty = false;
         this.enterAmount();
     } else {

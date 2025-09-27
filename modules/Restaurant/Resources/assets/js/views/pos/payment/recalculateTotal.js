@@ -1,5 +1,5 @@
 export function inputReCalculateTotal() {
-    console.log("Recalculando totales");
+    /* console.log("Recalculando totales"); */
     let total_discount = 0;
     let total_charge = 0;
 
@@ -40,7 +40,7 @@ export function inputReCalculateTotal() {
         if (row.affectation_igv_type_id === "40") {
             total_exportation += parseFloat(row.total_value);
         }
-        console.log("row:", row.affectation_igv_type_id);
+        /* console.log("row:", row.affectation_igv_type_id); */
         if (
             ["11", "12", "13", "14", "15", "16"].includes(
                 row.affectation_igv_type_id
@@ -78,14 +78,6 @@ export function inputReCalculateTotal() {
             ? 0.0
             : parseFloat(row.total_plastic_bag_taxes);
     });
-    console.log("Totales antes del redondeo:");
-    console.log("Total Taxed:", total_taxed);
-    console.log("Total Exonerated:", total_exonerated);
-    console.log("Total IGV:", total_igv);
-    console.log("Total Value:", total_value);
-    console.log("Total Plastic Bag Taxes:", total_plastic_bag_taxes);
-    console.log("Total Charge:", total_charge);
-    console.log("Total Discount:", total_discount);
 
     this.form.total_exportation = _.round(total_exportation, 2);
     this.form.total_taxed = _.round(total_taxed, 2);
@@ -97,21 +89,21 @@ export function inputReCalculateTotal() {
     this.form.total_value_without_rounding = total_value;
     this.form.total_taxes = _.round(total_igv, 2);
     this.form.total_plastic_bag_taxes = _.round(total_plastic_bag_taxes, 2);
-    console.log("Totales después del redondeo:", {
+    /* console.log("Totales después del redondeo:", {
         total_taxed: this.form.total_taxed,
         total_igv: this.form.total_igv,
         total_value: this.form.total_value,
         total_plastic_bag_taxes: this.form.total_plastic_bag_taxes,
         total_charge: total_charge,
         total_discount: total_discount
-    });
+    }); */
 
     // this.form.total = _.round(total, 2)
     this.form.total = _.round(
         total_charge + total + this.form.total_plastic_bag_taxes,
         2
     );
-    console.log("Total final calculado:", this.form.total);
+    /* console.log("Total final calculado:", this.form.total); */
 
     if (this.discount_amount) {
         if (!this.original_totals_snapshot) {

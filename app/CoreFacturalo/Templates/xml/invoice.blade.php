@@ -28,10 +28,7 @@
             $amount_discount = $discount->discount_type_id == 2 ? $document->total_value : $discount->base;
         }
     }
-    $price_unit = 0;
-    foreach ($document->items as $row) {
-        $price_unit = isset($row) && $row->quantity > 0 ? $row->total / $row->quantity : (isset($row) ? $row->total : 0);
-    }
+    // El cálculo de price_unit se hará por item en el foreach principal
 @endphp
 {!! '<?xml version="1.0" encoding="utf-8" standalone="no"?>' !!}
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
@@ -418,7 +415,7 @@
             @if($row->total_discount > 0)
                 <cac:PricingReference>
                     <cac:AlternativeConditionPrice>
-                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $price_unit }}</cbc:PriceAmount>
+                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->quantity > 0 ? $row->total / $row->quantity : $row->total }}</cbc:PriceAmount>
                         <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
                     </cac:AlternativeConditionPrice>
                 </cac:PricingReference>
