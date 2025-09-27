@@ -1,29 +1,24 @@
-<!-- Módulo de Usuarios Principal -->
+<!-- Módulo de Listado de  Usuarios Principal -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
-                <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1.5rem; font-weight: bold;">
-                        <i class="far fa-address-book" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                        Módulo de Usuarios
+                <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                    <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                        <i class="far fa-address-book" style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                        Listado de Usuarios
                     </h4>
                 </div>
 
                 <div class="data-table-visible-columns">
-                    <el-button class="btn_titulos_modal" href="javascript:void(0)" @click.prevent="clickCreate()">
+                    <el-button class="btn_guardarsmall" type="primary" href="javascript:void(0)"
+                        @click.prevent="clickCreate()">
                         <i class="fa fa-user-plus"></i>
-                        <span style="color: #000; font-size: 1.25rem; font-weight: bold;">Nuevo</span>
+                        Nuevo
                     </el-button>
                 </div>
 
-                <!-- <div class="data-table-visible-columns">
-                    <el-button type="primary" class="btn-large" href="javascript:void(0)" @click.prevent="clickCreate()">
-                        <i class="fa fa-user-plus" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
-                        <span style="font-size: 1.25rem; font-weight: bold;">Nuevo Usuario</span>
-                    </el-button>
-                </div> -->
-                <div class="card-body">
+                <div class="card-body" style="padding: 10px;">
                     <template>
                         <div class="row m-3 align-items-center">
                             <!-- Filtro por Estado -->
@@ -51,7 +46,7 @@
                             </div>
 
                             <!-- Botón Buscar -->
-                            <!-- <div
+                            <div
                                 class="col-md-3 d-flex align-items-center justify-content-center"
                             >
                                 <el-button
@@ -63,7 +58,7 @@
                                     <i class="fas fa-search icon-style"></i>
                                     <span class="label-style">Buscar</span>
                                 </el-button>
-                            </div> -->
+                            </div>
                         </div>
                     </template>
 
@@ -73,41 +68,35 @@
                         </div>
                         <div v-for="(row, index) in records" :key="index" class="user-card-horizontal shadow-sm">
                             <div class="user-card-h-main d-flex align-items-stretch position-relative">
-                                <!-- Avatar/Icono -->
-                                <div class="user-card-h-avatar d-flex flex-column align-items-center justify-content-center">
-                                    <img
-                                        v-if="getUserImage(row)"
-                                        :src="getUserImage(row)"
-                                        alt="Avatar"
-                                        class="user-avatar-img"
-                                    />
-                                    <div v-else class="user-avatar-placeholder">
-                                        <i class="fa fa-user-circle"></i>
-                                        <span>Sin imagen</span>
-                                    </div>
-                                </div>
+
                                 <!-- Datos -->
                                 <div class="user-card-h-data flex-grow-1 px-3 py-2">
                                     <div class="d-flex align-items-center mb-1">
-                                        <span class="fw-bold fs-5 me-2">{{ row.name }}</span>
-                                        <span class="text-muted small">#{{ index + 1 }}</span>
+                                        <span
+                                            class="user-index-circle d-flex align-items-center justify-content-center"
+                                            style="width: 32px; height: 32px; border-radius: 50%; background: #073f68; color: #fff; font-weight: bold; font-size: 1rem; margin-right: 0.5rem;"
+                                         >
+                                            {{ index + 1 }}
+                                        </span>
+                                        <span class="fw-bold fs-5 me-2">{{ row.name.split('-').slice(1).join('-').trim() }}</span>
+                                        
                                     </div>
                                     <div class="row g-1 mb-1">
                                         <div class="col-6">
-                                            <span class="label">Tipo:</span>
+                                            <!-- <span class="label">Tipo:</span> -->
                                             <span class="value">{{ row.type }}</span>
                                         </div>
                                         <div class="col-6">
-                                            <span class="label">Área:</span>
+                                            <!-- <span class="label">Área:</span> -->
                                             <span class="value">{{ row.area }}</span>
                                         </div>
                                         <div class="col-6">
-                                            <span class="label">Establecimiento:</span>
+                                            <!-- <span class="label">Establecimiento:</span> -->
                                             <span class="value">{{ row.establishment_description }}</span>
                                         </div>
-                                        <div class="col-6">
-                                            <span class="label">Series:</span>
-                                            <span class="value">{{ row.series }}</span>
+                                        <div class="col-6" v-if="row.series">
+                                            <span  class="label">Series:</span>
+                                            <span  class="value">{{ row.series }}</span>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center mb-1">
@@ -131,83 +120,137 @@
                                         <span class="label">Token:</span>
                                         <span class="value">{{ row.api_token }}</span>
                                     </div>
-                                    <div class="mb-1">
+                                   
+                                    <div class="mt-4 mb-5">
+                                        <ul class="list-unstyled d-flex flex-wrap gap-2">
+                                            <li v-if="row.active">
+                                                <el-button
+                                                    type="primary"
+                                                    @click.prevent="clickCreate(row.id)"
+                                                    class="btn_guardarsmall w-100 mb-1"
+                                                >
+                                                <i class="fas fa-user-edit" style="margin-right: 6px;"></i>
+                                                    Editar
+                                                </el-button>
+                                            </li>
+                                            <li v-if="row.active">
+                                                <el-button
+                                                    type="danger"
+                                                    @click.prevent="clickDelete(row.id)"
+                                                    class="btn_cancelarsmall w-100 mb-1"
+                                                    >
+                                                    <i class="fas fa-ban" style="margin-right: 6px;"></i>
+                                                    Suspender
+                                                </el-button>
+                                            </li>
+                                            <li v-if="!row.active">
+                                                <el-button
+                                                    type="success"
+                                                    
+                                                    icon="el-icon-check"
+                                                    @click.prevent="clickActivate(row.id)"
+                                                    class="btn_excelsmall w-100 mb-1"
+                                                >
+                                                    Activar
+                                                </el-button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                     <!-- Footer de actividad -->
+                                    <div class="user-card-h-footer mt-3 pt-2 border-top">
                                         <span class="label">Actividad:</span>
                                         <span v-if="row.last_register && row.last_register.user">
-                                            <strong>{{ row.last_register.user }}</strong>:
                                             <span class="text-primary">{{ row.last_register.description }}</span>
                                             <span :class="{ 'text-danger': row.last_register.date_time.is24Hours }">
                                                 ({{ formatDateTime(row.last_register.date_time) }})
                                             </span>
                                         </span>
-                                        <span v-else class="text-muted small">Sin actividad reciente</span>
+                                        <span v-else class="small">Sin actividad reciente</span>
                                     </div>
-                                    <div class="d-flex align-items-center mt-2">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown">
-                                                Acciones
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item text-info"
-                                                        @click.prevent="clickCreate(row.id)">
-                                                        <i class="fas fa-edit"></i>
-                                                        Editar
-                                                    </a>
-                                                </li>
-                                                <li v-if="row.active">
-                                                    <a class="dropdown-item text-danger"
-                                                        @click.prevent="clickDelete(row.id)">
-                                                        <i class="fas fa-toggle-off"></i>
-                                                        Desactivar
-                                                    </a>
-                                                </li>
-                                                <li v-if="!row.active">
-                                                    <a class="dropdown-item text-success"
-                                                        @click.prevent="clickActivate(row.id)">
-                                                        <i class="fas fa-toggle-on"></i>
-                                                        Activar
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <span class="text-muted small ms-3">ID: {{ row.id }}</span>
-                                    </div>
+                                    
                                 </div>
+                                <!-- Avatar/Icono -->
+
                                 <!-- Sello de estado -->
                                 <div class="user-card-h-stamp"
                                     :class="row.active ? 'stamp-activo' : 'stamp-suspendido'">
                                     {{ row.active ? 'ACTIVO' : 'SUSPENDIDO' }}
                                 </div>
+                                <div
+                                    class="user-card-h-avatar d-flex flex-column align-items-center justify-content-center">
+
+                                    <img v-if="getUserImage(row)" :src="getUserImage(row)" alt="Avatar"
+                                        class="user-avatar-img" />
+                                    <div v-else class="user-avatar-placeholder">
+                                        <i class="fa fa-user-circle"></i>
+                                        <span>Sin imagen</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
             <create-form :configuration="configuration" :showDialog.sync="showDialog" :areas="areas"
                 :recordId="recordId" :workersType="workersType" :series="series" :establishments="establishments"
-                :allEstablishments="allEstablishments" :allWarehouses="allWarehouses"
+                :allEstablishments="allEstablishments" :allWarehouses="allWarehouses" :typeUser="typeUser" :user="user"
                 :commercial_treatment="commercial_treatment"></create-form>
         </div>
-        <el-dialog :visible.sync="showEditPin" title="Editar PIN" v-if="currentUser" width="450px" v-loading="loading">
+        <el-dialog :visible.sync="showEditPin" title="Editar PIN" v-if="currentUser" width="20%" v-loading="loading">
+            <template #title>
+                <span>
+                    <i class="fa fa-user-circle me-2"></i>
+                    {{ currentUser.name }}
+                </span>
+            </template>
             <div class="row m-2">
+                <div class="col-12 d-flex flex-column align-items-center mb-2">
+                    <img v-if="getUserImage(currentUser)" :src="getUserImage(currentUser)" alt="Avatar" class="user-avatar-img mb-2" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" />
+                    <div v-else class="user-avatar-placeholder mb-2">
+                        <i class="fa fa-user-circle" style="font-size: 3rem;"></i>
+                        <span>Sin imagen</span>
+                    </div>
+                    <div class="mb-1">
+                        <span class="fw-bold">PIN actual: </span>
+                        <span style="color: #28a745; font-weight: bold; font-size: 1.2rem;">{{ currentUser.pin }}</span>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Tipo de usuario: </span>
+                        <span>{{ currentUser.type }}</span>
+                    </div>
+                </div>
                 <!-- Campo para ingresar el nuevo PIN de usuario -->
                 <div class="col-12">
-                    <label for="newPin">Ingrese Nuevo PIN de Usuario</label>
-                    <input type="password" id="newPin" maxlength="6" @input="validatePin" class="form-control"
-                        v-model="newPin" placeholder="Nuevo PIN" />
+                    <label for="newPin">INGRESE</label>
+                    <div style="position: relative;">
+                        <input
+                            ref="pinInput"
+                            type="password"
+                            id="newPin"
+                            :maxlength="currentUser && currentUser.type === 'vendedor' ? 4 : 6"
+                            @input="validatePin"
+                            class="form-control fs-4 pr-5 pin-blink"
+                            v-model="newPin"
+                            placeholder="Nuevo PIN"
+                            style="padding-right: 60px;"
+                        />
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; font-weight: bold; color: #222; background: #fff; padding: 0 4px; border-radius: 4px; border: 1px solid #e0e0e0;">
+                            {{ (newPin ? newPin.length : 0) }}/{{ currentUser && currentUser.type === 'vendedor' ? 4 : 6 }}
+                        </span>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Botones de acción -->
-            <div class="d-flex justify-content-end m-2" style="gap: 10px;">
-                <button class="btn btn-primary" @click="updatePin">
-                    Guardar
-                </button>
-                <button class="btn btn-danger" @click="showEditPin = false">
-                    Cerrar
-                </button>
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-end m-2" style="gap: 10px;">
+                    <button class="btn_guardarsmall" type="primary" @click="updatePin">
+                        <i class="fas fa-save"></i>
+                        Actualizar
+                    </button>
+                    <button class="btn_cancelarsmall" type="danger" @click="showEditPin = false">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -219,26 +262,21 @@ import CreateForm from "./form.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
-    props: ["establishments", "configuration"],
+    props: ["establishments", "configuration", "typeUser", "user"],
     mixins: [deletable],
     components: {
-        CreateForm
+        CreateForm,
+        /* DataTableUser */
+
+        // No debe haber ningún componente llamado 'image'
     },
     data() {
         return {
             authenticatedUser: null,
-            typeUser: null,
+            /* typeUser: null, */
             qty_types: [
-                {
-                    id: 1,
-                    name: "Activo",
-                    value: "1"
-                },
-                {
-                    id: 2,
-                    name: "Suspendido",
-                    value: "0"
-                }
+                { id: 1, name: "Activo", value: "1" },
+                { id: 2, name: "Suspendido", value: "0" }
             ],
             active: false,
             showEditPin: false,
@@ -254,12 +292,17 @@ export default {
             loading: false,
             allWarehouses: [],
             allEstablishments: [],
-            form: {},
+            form: {
+                qty_type: "1", // Mostrar usuarios activos por defecto
+                name: null
+            },
             loading_submit: false,
             commercial_treatment: []
         };
     },
-    // ...existing code...
+    /* created() {
+        this.getData(); // Ejecuta la búsqueda inicial al cargar el componente
+    }, */
     created() {
         this.fetchAuthenticatedUser();
         this.initForm();
@@ -272,6 +315,7 @@ export default {
 
         this.getData();
     },
+
     methods: {
         getUserImage(row) {
             // Prioridad: image_url > avatar > photo > image
@@ -367,6 +411,11 @@ export default {
         editPin(user) {
             this.showEditPin = true;
             this.currentUser = user;
+            this.$nextTick(() => {
+                if (this.$refs.pinInput) {
+                    this.$refs.pinInput.focus();
+                }
+            });
         },
         visiblePin(idx) {
             this.records[idx].visible = !this.records[idx].visible;
@@ -470,8 +519,8 @@ export default {
 
 
 .user-avatar-img {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid #e0e0e0;
@@ -503,32 +552,41 @@ export default {
     display: flex;
     align-items: stretch;
     position: relative;
+    min-height: 170px;
+    padding-bottom: 40px; /* espacio para el avatar */
 }
 
 .user-card-h-avatar {
-    min-width: 110px;
-    max-width: 110px;
+    position: absolute;
+    right: 16px;
+    bottom: 12px;
+    min-width: 150px;
+    max-width: 150px;
+    height: 150px;
+    background: #f7f3ee;
+    border-radius: 50%;
+    border: 2px solid #e0d6c3;
+    padding: 0.2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f7f3ee;
-    border-radius: 0.7rem;
-    margin-right: 1.2rem;
-    border: 1px solid #e0d6c3;
-    padding: 0.5rem 0.2rem;
-    height: 120px;
+    box-shadow: 0 2px 8px 0 rgba(180, 150, 100, 0.07);
+    margin: 0;
+    z-index: 3;
+    overflow: hidden;
 }
 
 .user-avatar-img {
-    width: 70px;
-    height: 70px;
+    width: 140px;
+    height: 140px;
     object-fit: cover;
-    border-radius: 0.5rem;
-    border: 1.5px solid #e0d6c3;
+    border-radius: 50%;
+    border: 2px solid #e0d6c3;
     background: #fff;
     box-shadow: 0 2px 8px 0 rgba(180, 150, 100, 0.07);
     margin-bottom: 0.3rem;
+    display: block;
 }
 
 .user-avatar-placeholder {
@@ -549,26 +607,26 @@ export default {
 
 .user-card-h-stamp {
     position: absolute;
-    top: 18px;
-    right: -45px;
-    font-size: 2.1rem;
+    top: 12px;
+    right: 16px;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #fff;
     background: #e74c3c;
-    padding: 0.4em 2.7em;
+    padding: 0.2em 1.2em;
     border-radius: 0.5em;
-    transform: rotate(-18deg);
-    opacity: 0.22;
+    transform: rotate(-12deg);
+    opacity: 0.32;
     pointer-events: none;
     z-index: 2;
     text-shadow: 1px 1px 2px #b03a2e;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.10);
     user-select: none;
 }
 
 .stamp-activo {
-    background: #27ae60;
+    background: #05642d;
     text-shadow: 1px 1px 2px #196f3d;
 }
 
@@ -579,7 +637,7 @@ export default {
 
 .user-card-h-data .label {
     font-weight: 600;
-    color: #007bff;
+    color: #073f68;
     font-size: 0.95rem;
 }
 
@@ -638,7 +696,7 @@ export default {
 
 .user-card-body .label {
     font-weight: 600;
-    color: #007bff;
+    color: #03172c;
     font-size: 0.95rem;
 }
 
@@ -678,5 +736,15 @@ export default {
 
 .user-card .text-muted.small {
     font-size: 0.92rem;
+}
+/* Parpadeo para el input PIN */
+.pin-blink {
+    animation: blinkInput 1s steps(2, start) infinite;
+    box-shadow: 0 0 0 2px #007bff;
+}
+@keyframes blinkInput {
+    to {
+        box-shadow: 0 0 0 2px #fff;
+    }
 }
 </style>

@@ -1,44 +1,21 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @close="close"
-        @open="create"
-        class="rounded-dialog"
-        :close-on-click-modal="false"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="rounded-dialog"
+        :close-on-click-modal="false">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row g-3">
                     <!-- Campo DNI -->
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.number }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.number }">
                             <label for="dni">
                                 <i class="far fa-id-card"></i> DNI
                             </label>
-                            <el-input
-                                v-model="form.number"
-                                :maxlength="8"
-                                id="dni"
-                                placeholder="Ingrese el DNI"
-                                :class="{ 'is-invalid': errors.number }"
-                                @input="validateNumbers('number')"
-                            >
-                                <el-button
-                                    slot="append"
-                                    :loading="loading_search"
-                                    icon="el-icon-search"
-                                    @click.prevent="searchWorker"
-                                    type="primary"
-                                ></el-button>
+                            <el-input v-model="form.number" :maxlength="8" id="dni" placeholder="Ingrese el DNI"
+                                :class="{ 'is-invalid': errors.number }" @input="validateNumbers('number')">
+                                <el-button slot="append" :loading="loading_search" icon="el-icon-search"
+                                    @click.prevent="searchWorker" type="primary"></el-button>
                             </el-input>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.number"
-                            >
+                            <small class="form-control-feedback text-danger" v-if="errors.number">
                                 Ingreso Obligatorio
                             </small>
                         </div>
@@ -46,24 +23,13 @@
 
                     <!-- Campo Nombres / Apellidos -->
                     <div class="col-md-8">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.name }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.name }">
                             <label for="name">
                                 <i class="fas fa-user"></i> Nombres / Apellidos
                             </label>
-                            <el-input
-                                v-model="form.name"
-                                id="name"
-                                placeholder="Ingrese los nombres y apellidos"
-                                :class="{ 'is-invalid': errors.name }"
-                                @input="convertToUppercase('name')"
-                            ></el-input>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.name"
-                            >
+                            <el-input v-model="form.name" id="name" placeholder="Ingrese los nombres y apellidos"
+                                :class="{ 'is-invalid': errors.name }" @input="convertToUppercase('name')"></el-input>
+                            <small class="form-control-feedback text-danger" v-if="errors.name">
                                 Ingreso Obligatorio
                             </small>
                         </div>
@@ -71,61 +37,35 @@
 
                     <!-- Tipo de Trabajador -->
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.worker_type_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.worker_type_id }">
                             <label for="worker_type">
                                 <i class="fas fa-toolbox"></i> Tipo de
                                 Trabajador
                             </label>
-                            <el-select
-                                v-model="form.worker_type_id"
-                                id="worker_type"
+                            <el-select v-model="form.worker_type_id" id="worker_type"
                                 placeholder="Seleccione el tipo de trabajador"
-                                :class="{ 'is-invalid': errors.worker_type_id }"
-                            >
-                                <el-option
-                                    v-for="(data, index) in workersType"
-                                    :key="index"
-                                    :value="data.id"
-                                    :label="data.description"
-                                ></el-option>
+                                :class="{ 'is-invalid': errors.worker_type_id }">
+                                <el-option v-for="(data, index) in workersType" :key="index" :value="data.id"
+                                    :label="data.description"></el-option>
                             </el-select>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.worker_type_id"
-                            >
+                            <small class="form-control-feedback text-danger" v-if="errors.worker_type_id">
                                 Ingreso Obligatorio
                             </small>
                         </div>
                     </div>
 
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.worker_type_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.worker_type_id }">
                             <label for="type">
                                 <i class="fas fa-toolbox"></i> Tipo usuario
                             </label>
-                            <el-select
-                                v-model="form.worker_type_id"
-                                id="worker_type"
+                            <el-select v-model="form.worker_type_id" id="worker_type"
                                 placeholder="Seleccione el tipo de trabajador"
-                                :class="{ 'is-invalid': errors.worker_type_id }"
-                            >
-                                <el-option
-                                    v-for="(data, index) in workersType"
-                                    :key="index"
-                                    :value="data.id"
-                                    :label="data.description"
-                                ></el-option>
+                                :class="{ 'is-invalid': errors.worker_type_id }">
+                                <el-option v-for="(data, index) in workersType" :key="index" :value="data.id"
+                                    :label="data.description"></el-option>
                             </el-select>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.worker_type_id"
-                            >
+                            <small class="form-control-feedback text-danger" v-if="errors.worker_type_id">
                                 Ingreso Obligatorio
                             </small>
                         </div>
@@ -133,31 +73,17 @@
 
                     <!-- Área de Trabajo -->
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.area_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.area_id }">
                             <label for="area">
                                 <i class="fa-solid fa-layer-group"></i> Área de
                                 Trabajo
                             </label>
-                            <el-select
-                                v-model="form.area_id"
-                                id="area"
-                                placeholder="Seleccione el área de trabajo"
-                                :class="{ 'is-invalid': errors.area_id }"
-                            >
-                                <el-option
-                                    v-for="(data, index) in areas"
-                                    :key="index"
-                                    :value="data.id"
-                                    :label="data.description"
-                                ></el-option>
+                            <el-select v-model="form.area_id" id="area" placeholder="Seleccione el área de trabajo"
+                                :class="{ 'is-invalid': errors.area_id }">
+                                <el-option v-for="(data, index) in areas" :key="index" :value="data.id"
+                                    :label="data.description"></el-option>
                             </el-select>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.area_id"
-                            >
+                            <small class="form-control-feedback text-danger" v-if="errors.area_id">
                                 Ingreso Obligatorio
                             </small>
                         </div>
@@ -165,32 +91,18 @@
 
                     <!-- Establecimiento -->
                     <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.establishment_id }"
-                        >
+                        <div class="form-group" :class="{ 'has-danger': errors.establishment_id }">
                             <label for="establishment">
                                 <i class="fas fa-store"></i> Establecimiento
                             </label>
-                            <el-select
-                                v-model="form.establishment_id"
-                                id="establishment"
-                                placeholder="Seleccione un establecimiento"
-                                :class="{
+                            <el-select v-model="form.establishment_id" id="establishment"
+                                placeholder="Seleccione un establecimiento" :class="{
                                     'is-invalid': errors.establishment_id
-                                }"
-                            >
-                                <el-option
-                                    v-for="(data, index) in establishments"
-                                    :key="index"
-                                    :value="data.id"
-                                    :label="data.description"
-                                ></el-option>
+                                }">
+                                <el-option v-for="(data, index) in establishments" :key="index" :value="data.id"
+                                    :label="data.description"></el-option>
                             </el-select>
-                            <small
-                                class="form-control-feedback text-danger"
-                                v-if="errors.establishment_id"
-                            >
+                            <small class="form-control-feedback text-danger" v-if="errors.establishment_id">
                                 Ingreso Obligatorio
                             </small>
                         </div>
@@ -202,12 +114,8 @@
                             <label for="telephone">
                                 <i class="fab fa-whatsapp"></i> Teléfono
                             </label>
-                            <el-input
-                                v-model="form.telephone"
-                                id="telephone"
-                                placeholder="Ingrese el teléfono"
-                                @input="validateNumbers('telephone')"
-                            ></el-input>
+                            <el-input v-model="form.telephone" id="telephone" placeholder="Ingrese el teléfono"
+                                @input="validateNumbers('telephone')"></el-input>
                         </div>
                     </div>
 
@@ -216,24 +124,15 @@
                         <!-- Icono de producto -->
                         <i class="fas fa-store-alt"></i>
                         <!-- Icono de sucursal -->
-                        <label for="product"
-                            >Establecimiento productos
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="Establecimiento desde el cual obtendrá los productos"
-                                placement="top"
-                            >
+                        <label for="product">Establecimiento productos
+                            <el-tooltip class="item" effect="dark"
+                                content="Establecimiento desde el cual obtendrá los productos" placement="top">
                                 <i class="fas fa-info-circle"></i>
                             </el-tooltip>
                         </label>
                         <el-select v-model="form.warehouse_product_id">
-                            <el-option
-                                v-for="(data, index) in allWarehouses"
-                                :key="index"
-                                :label="data.description"
-                                :value="data.id"
-                            ></el-option>
+                            <el-option v-for="(data, index) in allWarehouses" :key="index" :label="data.description"
+                                :value="data.id"></el-option>
                         </el-select>
                     </div>
                     <div class="col-md-4" v-if="configuration.restaurant">
@@ -241,111 +140,64 @@
                         <!-- Icono de mesa -->
                         <i class="fas fa-store-alt"></i>
                         <!-- Icono de establecimiento -->
-                        <label for="product"
-                            >Establecimiento mesa
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="Establecimiento desde el cual obtendrá las mesas"
-                                placement="top"
-                            >
+                        <label for="product">Establecimiento mesa
+                            <el-tooltip class="item" effect="dark"
+                                content="Establecimiento desde el cual obtendrá las mesas" placement="top">
                                 <i class="fas fa-info-circle"></i>
                             </el-tooltip>
                         </label>
                         <el-select v-model="form.establishment_table_id">
-                            <el-option
-                                v-for="(data, index) in allEstablishments"
-                                :key="index"
-                                :label="data.description"
-                                :value="data.id"
-                            ></el-option>
+                            <el-option v-for="(data, index) in allEstablishments" :key="index" :label="data.description"
+                                :value="data.id"></el-option>
                         </el-select>
                     </div>
 
                     <!-- Créditos en Notas de Venta -->
-                    <div
-                        class="col-md-4"
-                        v-if="configuration.sale_note_credit_confirm"
-                    >
+                    <div class="col-md-4" v-if="configuration.sale_note_credit_confirm">
                         <label for="credit_sales">
                             <i class="far fa-credit-card"></i> Créditos en Notas
                             de Venta
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
+                            <el-tooltip class="item" effect="dark"
                                 content="Permite que el usuario acepte créditos en el modo 'CREDITOS' en Nota de Venta"
-                                placement="top"
-                            >
+                                placement="top">
                                 <i class="fas fa-info-circle"></i>
                             </el-tooltip>
                         </label>
-                        <el-checkbox
-                            v-model="form.can_accept_credit_sale_note"
-                            id="credit_sales"
-                            label="Acepta Créditos"
-                        ></el-checkbox>
+                        <el-checkbox v-model="form.can_accept_credit_sale_note" id="credit_sales"
+                            label="Acepta Créditos"></el-checkbox>
                     </div>
 
                     <!-- Usuario Arca -->
                     <div class="col-md-4" v-if="configuration.principal_cash">
                         <label for="arca_user">
                             <i class="fas fa-cash-register"></i> Usuario Arca
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="Permite al usuario tener opciones de ARCA"
-                                placement="top"
-                            >
+                            <el-tooltip class="item" effect="dark" content="Permite al usuario tener opciones de ARCA"
+                                placement="top">
                                 <i class="fas fa-info-circle"></i>
                             </el-tooltip>
                         </label>
-                        <el-checkbox
-                            v-model="form.is_arca"
-                            id="arca_user"
-                            label="Es Arca?"
-                        ></el-checkbox>
+                        <el-checkbox v-model="form.is_arca" id="arca_user" label="Es Arca?"></el-checkbox>
                     </div>
-                    <div
-                        class="col-md-4"
-                        v-if="form.is_arca && configuration.health_network"
-                    >
+                    <div class="col-md-4" v-if="form.is_arca && configuration.health_network">
                         <label for="arca_user">
                             Tipo de Usuario Arca >
                         </label>
                         <el-select v-model="form.arca_type" clearable>
-                            <el-option
-                                value="product"
-                                label="Productos"
-                            ></el-option>
-                            <el-option
-                                value="service"
-                                label="Servicios"
-                            ></el-option>
+                            <el-option value="product" label="Productos"></el-option>
+                            <el-option value="service" label="Servicios"></el-option>
                         </el-select>
                     </div>
 
-                    <div
-                        class="col-md-4"
-                        v-if="configuration.user_series_independientes_caja"
-                    >
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.series }"
-                        >
+                    <div class="col-md-4" v-if="configuration.user_series_independientes_caja">
+                        <div class="form-group" :class="{ 'has-danger': errors.series }">
                             <div>
                                 <i class="fas fa-toolbox"></i>
                                 <!-- Icono de Tipo de trabajador -->
-                                <label class="control-label"
-                                    >Seleccione Serie</label
-                                >
+                                <label class="control-label">Seleccione Serie</label>
                             </div>
                             <el-select clearable v-model="form.series">
-                                <el-option
-                                    v-for="(data, index) in series"
-                                    :key="index"
-                                    :label="data.number"
-                                    :value="data.id"
-                                ></el-option>
+                                <el-option v-for="(data, index) in series" :key="index" :label="data.number"
+                                    :value="data.id"></el-option>
                             </el-select>
                             <!-- <small class="form-control-feedback" v-if="errors.series" v-text="errors.series[0]"></small> -->
                         </div>
@@ -353,44 +205,26 @@
                     <div class="col-md-4" v-if="configuration.health_network">
                         <label for="arca_user">
                             <i class="fas fa-cash-register"></i> ES usuario Famacia
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="Permite al usuario especificar si pertenece a famacia"
-                                placement="top"
-                            >
+                            <el-tooltip class="item" effect="dark"
+                                content="Permite al usuario especificar si pertenece a famacia" placement="top">
                                 <i class="fas fa-info-circle"></i>
                             </el-tooltip>
                         </label>
-                        <el-checkbox
-                            v-model="form.is_pharmacy"
-                            id="is_pharmacy"
-                            label="ES famacia?"
-                        ></el-checkbox>
+                        <el-checkbox v-model="form.is_pharmacy" id="is_pharmacy" label="ES famacia?"></el-checkbox>
                     </div>
                     <div class="col-md-4" v-if="isEstilista">
                         <label for="product">Ver/Editar servicios </label>
-                        <el-button type="primary" @click="openUserItems"
-                            >Ver/Editar servicios</el-button
-                        >
+                        <el-button type="primary" @click="openUserItems">Ver/Editar servicios</el-button>
                     </div>
-                    <div
-                        class="row"
-                        v-if="configuration.commercial_treatment_items"
-                    >
+                    <div class="row" v-if="configuration.commercial_treatment_items">
                         <div class="col-12">
                             Tratamientos Comerciales
                         </div>
                         <div class="col-12">
-                            <el-tag
-                                v-for="(data,
-                                index) in commercial_treatment_users"
-                                :key="index"
-                                :type="`${data.active ? 'success' : 'info'}`"
-                                style="margin-right: 5px;"
-                                role="button"
-                                @click="clickTag(data)"
-                            >
+                            <el-tag v-for="(data,
+                                index) in commercial_treatment_users" :key="index"
+                                :type="`${data.active ? 'success' : 'info'}`" style="margin-right: 5px;" role="button"
+                                @click="clickTag(data)">
                                 {{ data.description }}
                             </el-tag>
                         </div>
@@ -401,52 +235,24 @@
                                 Imagen
                                 <span class="text-danger"></span>
                             </label>
-                            <el-upload
-                                class="avatar-uploader bg-white"
-                                :data="{ type: 'workers' }"
-                                :headers="headers"
-                                :action="`/caja/${resource}/uploads`"
-                                :show-file-list="false"
-                                :on-success="onSuccess"
-                            >
-                                <img
-                                    v-if="form.image_url"
-                                    :src="form.image_url"
-                                    class="avatar"
-                                />
-                                <i
-                                    v-else
-                                    class="el-icon-plus avatar-uploader-icon"
-                                ></i>
+                            <el-upload class="avatar-uploader bg-white" :data="{ type: 'workers' }" :headers="headers"
+                                :action="`/caja/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess">
+                                <img v-if="form.image_url" :src="form.image_url" class="avatar" />
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                         </div>
                     </div>
                 </div>
             </div>
-            <user-items
-                :showDialog.sync="showUserItems"
-                :userId="recordId"
-                @saveItems="saveItems"
-            ></user-items>
+            <user-items :showDialog.sync="showUserItems" :userId="recordId" @saveItems="saveItems"></user-items>
 
             <!-- Botones -->
-            <div
-                class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
-            >
-                <el-button
-                    class="btn-cancel btn-cancel:hover"
-                    icon="fas fa-times fa-lg"
-                    @click.prevent="close"
-                >
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <el-button class="btn-cancel btn-cancel:hover" icon="fas fa-times fa-lg" @click.prevent="close">
                     <span>Cancelar</span>
                 </el-button>
-                <el-button
-                    class="btn-save btn-save:hover"
-                    icon="fas fa-save fa-lg"
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                >
+                <el-button class="btn-save btn-save:hover" icon="fas fa-save fa-lg" type="primary" native-type="submit"
+                    :loading="loading_submit">
                     <span>Guardar</span>
                 </el-button>
             </div>
@@ -473,13 +279,16 @@ export default {
         "allEstablishments",
         "allWarehouses",
         "series",
-        "commercial_treatment"
+        "commercial_treatment",
+        "typeUser",
+        "user"
     ],
     data() {
         return {
             form: {
                 workers: true,
                 identity_document_type_id: "1", // Tipo de documento
+                identity_document_type_name: "dni", // Por defecto DNI
                 number: "", // DNI
                 name: "", // Nombres y apellidos
                 worker_type_id: null, // Tipo de trabajador
@@ -606,6 +415,7 @@ export default {
             this.form = {
                 workers: true,
                 identity_document_type_id: "1",
+                identity_document_type_name: "dni", // Por defecto DNI
                 number: "",
                 name: "",
                 worker_type_id: null,
@@ -622,6 +432,11 @@ export default {
         // Validar el formulario
         validateForm() {
             this.errors = {};
+
+            // Si el usuario es superadmin, permitir registrar sin validación
+            if (this.typeUser === 'superadmin') {
+                return true;
+            }
 
             // Obtener el tipo de usuario seleccionado
             let selectedWorkerType = this.workersType.find(type => type.id === this.form.worker_type_id);
@@ -742,6 +557,9 @@ export default {
                         this.form.is_arca = this.form.is_arca === 1;
                         this.form.can_accept_credit_sale_note =
                             this.form.can_accept_credit_sale_note === 1;
+                        if (!this.form.identity_document_type_name) {
+                            this.form.identity_document_type_name = "dni";
+                        }
                     });
             } else {
                 this.initForm();
@@ -749,7 +567,31 @@ export default {
         },
         searchWorker() {
             this.searchServiceNumberByType();
-        }
+        },
+
+        async searchServiceNumberByType() {
+            if (this.form.number === "") {
+                this.$showSAlert("", "Ingresar el número a buscar", "error");
+                return;
+            }
+            let identity_document_type_name = "";
+            if (this.form.identity_document_type_id === "1") {
+                identity_document_type_name = "dni";
+            }
+            this.loading_search = true;
+            let response = await this.$http.get(
+                `/service/dni/${this.form.number}`
+            );
+            if (response.data.success) {
+                let data = response.data.data;
+                const firstName = data.nombres ? data.nombres.split(' ')[0] : '';
+                this.form.name = `${firstName} ${data.apellido_paterno}`;
+                this.form.sex = data.sexo == "Masculino" ? "M" : "F";
+            } else {
+                this.$toast.error(response.data.message);
+            }
+            this.loading_search = false;
+        },
     }
 };
 </script>
