@@ -99,7 +99,7 @@
                         configuration.principal_cash &&
                         cash_id
                     " class="btn btn-primary pos-btn mb-2" :class="cashAvailable < 0 ? 'btn-danger' : 'btn-primary'
-                            " type="button" @click="checkCashAvailable" style="padding: 5px 5px;">
+                        " type="button" @click="checkCashAvailable" style="padding: 5px 5px;">
                         Disponible S/ {{ cashAvailable.toFixed(2) }}
                     </button>
                     <button v-if="
@@ -410,8 +410,7 @@
                             !configuration.sale_note_credit_confirm &&
                             localOrden.length != 0 &&
                             !isSeller
-                        " @click="openCredit" class="btn btn-light mt-2"
-                            style="max-height: 45px ; max-width: 60px;">
+                        " @click="openCredit" class="btn btn-light mt-2" style="max-height: 45px ; max-width: 60px;">
                             <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">Crédito</span>
@@ -471,10 +470,9 @@
                             isCreatingOrden == false &&
                             clientTableData.table != undefined &&
                             ordens.length != 0
-                        " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;"
-                            @click="
-                                cancelGeneralOrden(clientTableData.orden_id)
-                                ">
+                        " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;" @click="
+                            cancelGeneralOrden(clientTableData.orden_id)
+                            ">
                             <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">Cancelar</span>
@@ -971,7 +969,7 @@
                                         <div v-show="localOrden.length > 0"
                                             class="col-sm-12 col-md-12 col-lg-12 col-xl-12" v-for="(order_pend,
                                                 indexx) in localOrden" :key="indexx" v-loading="loadingCommercialTreatment
-                                                ">
+                                                    ">
                                             <!--  -->
                                             <div class="mx-2 coupon rounded d-flex justify-content-between">
                                                 <div class="tengah py-2 d-flex w-100 justify-content-start p-2">
@@ -1028,9 +1026,9 @@
                                                                                             .food
                                                                                             .types" :key="indext
                                                                                                 " :command="{
-                                                                                            indexx,
-                                                                                            unit_type
-                                                                                        }">
+                                                                                                    indexx,
+                                                                                                    unit_type
+                                                                                                }">
                                                                                         <strong>
                                                                                             {{
                                                                                                 unit_type.description
@@ -1131,16 +1129,16 @@
                                                                 <el-tag v-if="
                                                                     configuration.restaurant
                                                                 " @click="
-                                                                        toCarry(
-                                                                            indexx
-                                                                        )
-                                                                        " size="medium" role="button" :type="order_pend.to_carry
-                                                                            ? 'success'
-                                                                            : 'info'
+                                                                    toCarry(
+                                                                        indexx
+                                                                    )
+                                                                    " size="medium" role="button" :type="order_pend.to_carry
+                                                                        ? 'success'
+                                                                        : 'info'
                                                                         " :effect="order_pend.to_carry
                                                                             ? 'dark'
                                                                             : 'plain'
-                                                                        ">
+                                                                            ">
                                                                     <i class="fas fa-biking" style="color: black"></i>
                                                                 </el-tag>
                                                             </div>
@@ -1172,10 +1170,15 @@
                                                             <div v-if="establishments.conf && establishments.conf.show_discounts_payment && !isCreatingOrden && configuration.discount_items && order_pend.price == order_pend.original_price"
                                                                 class="col-6 col-md-6">
                                                                 <label for="" class="fw-bold w-100">Descuentos</label>
-                                                                <el-input-number v-model="order_pend.food.item.discount"
-                                                                    controls-position="right" :min="0" :max="9999999"
-                                                                    @change="calculateTotal"
-                                                                    :disabled="!!order_pend.food.item.price"></el-input-number>
+                                                                <el-input v-model="order_pend.food.item.discount"
+                                                                    style="width: 90px; font-size: 14px;"
+                                                                    type="number"
+                                                                    controls-position="right" :min="0"
+                                                                    :max="order_pend.discount ? 99.5 : order_pend.price * order_pend.quantity"
+                                                                    @input="validateDiscount(indexx)"
+                                                                    @change="validateDiscount(indexx)"
+                                                                    @blur="validateDiscount(indexx)"
+                                                                    :disabled="!!order_pend.food.item.price"></el-input>
                                                                 <el-checkbox v-model="order_pend.discount"
                                                                     @change="calculateTotal"
                                                                     :disabled="!!order_pend.food.item.price">
@@ -1196,10 +1199,10 @@
                                                                     <div class="input-group spinner"
                                                                         data-trigger="spinner">
                                                                         <input type="text" :readonly="(order_pend
-                                                                                .food
-                                                                                .item
-                                                                                .is_set &&
-                                                                                configuration.item_set_quantity_pos) ||
+                                                                            .food
+                                                                            .item
+                                                                            .is_set &&
+                                                                            configuration.item_set_quantity_pos) ||
                                                                             isConsignment ||
                                                                             !configuration.quantity_cash ||
                                                                             order_pend
@@ -1227,23 +1230,23 @@
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
                                                                             v-model="order_pend.quantity
                                                                                 " data-rule="currency" :class="{
-                                                                                'custom-bg-light': !configuration.item_set_quantity_pos,
-                                                                                'custom-bg-danger;':
-                                                                                    configuration.item_set_quantity_pos
-                                                                            }" @input="
-                                                                                verifyStock(
-                                                                                    order_pend,
-                                                                                    indexx
-                                                                                )
-                                                                                " />
+                                                                                    'custom-bg-light': !configuration.item_set_quantity_pos,
+                                                                                    'custom-bg-danger;':
+                                                                                        configuration.item_set_quantity_pos
+                                                                                }" @input="
+                                                                                    verifyStock(
+                                                                                        order_pend,
+                                                                                        indexx
+                                                                                    )
+                                                                                    " />
 
                                                                         <div class="input-group-text">
                                                                             <button type="button" class="spin-up"
                                                                                 data-spin="up" :disabled="(order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .is_set &&
-                                                                                        configuration.item_set_quantity_pos) ==
+                                                                                    .food
+                                                                                    .item
+                                                                                    .is_set &&
+                                                                                    configuration.item_set_quantity_pos) ==
                                                                                     1 ||
                                                                                     isConsignment ||
                                                                                     (order_pend
@@ -1269,10 +1272,10 @@
                                                                                             .length >
                                                                                         1)
                                                                                     " @click="
-                                                                                    sumar_orden(
-                                                                                        indexx
-                                                                                    )
-                                                                                    ">
+                                                                                        sumar_orden(
+                                                                                            indexx
+                                                                                        )
+                                                                                        ">
                                                                                 <span class="arrow"></span>
                                                                             </button>
                                                                             <button type="button" class="spin-down"
@@ -1300,10 +1303,10 @@
                                                                                             .length >
                                                                                         1)
                                                                                     " @click="
-                                                                                    restar_orden(
-                                                                                        indexx
-                                                                                    )
-                                                                                    ">
+                                                                                        restar_orden(
+                                                                                            indexx
+                                                                                        )
+                                                                                        ">
                                                                                 <span class="arrow"></span>
                                                                             </button>
                                                                         </div>
@@ -1332,10 +1335,10 @@
                                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                                     type="number" v-model.number="order_pend.price
                                                                                         " @input="
-                                                                                        update_price(
-                                                                                            indexx
-                                                                                        )
-                                                                                        "
+                                                                                            update_price(
+                                                                                                indexx
+                                                                                            )
+                                                                                            "
                                                                                     placeholder="Editar precio"></el-input>
                                                                                 <el-select v-else v-model="order_pend.price
                                                                                     "
@@ -1350,18 +1353,18 @@
                                                                                         index) in order_pend.prices"
                                                                                         :key="index
                                                                                             " :value="price
-                                                                                            " :label="price
-                                                                                            "></el-option>
+                                                                                                " :label="price
+                                                                                                    "></el-option>
                                                                                 </el-select>
                                                                                 <el-button v-if="
                                                                                     configuration.edit_price
                                                                                 " @click="
-                                                                                        toggleEdit
-                                                                                    ">{{
-                                                                                        isEditing
-                                                                                            ? "C"
-                                                                                            : "E"
-                                                                                    }}</el-button>
+                                                                                    toggleEdit
+                                                                                ">{{
+                                                                                    isEditing
+                                                                                        ? "C"
+                                                                                        : "E"
+                                                                                }}</el-button>
                                                                             </template>
                                                                             <template v-else>
                                                                                 <el-input class="custom_input text-dark"
@@ -1370,12 +1373,12 @@
                                                                                         configuration.editar_precio_politica ===
                                                                                         false
                                                                                         " type="number" v-model="order_pend.price
-                                                                                        " @input="
-                                                                                        update_price(
-                                                                                            indexx,
-                                                                                            order_pend.price
-                                                                                        )
-                                                                                        ">
+                                                                                            " @input="
+                                                                                                update_price(
+                                                                                                    indexx,
+                                                                                                    order_pend.price
+                                                                                                )
+                                                                                                ">
                                                                                     <!-- <template
                                                                                         slot="prepend"
                                                                                     >
@@ -1436,10 +1439,10 @@
                                                                             <el-tag v-if="
                                                                                 !order_pend.change_subtotal
                                                                             " role="button" size="medium" @click="
-                                                                                    changeSubtotal(
-                                                                                        indexx
-                                                                                    )
-                                                                                    ">
+                                                                                changeSubtotal(
+                                                                                    indexx
+                                                                                )
+                                                                                ">
                                                                                 <i class="fas fa-edit text-primary"></i>
                                                                             </el-tag>
                                                                             <el-tag v-else role="button" size="medium"
@@ -1475,10 +1478,11 @@
                                                                         style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; text-align: center;"
                                                                         v-model="order_pend.newSubtotal
                                                                             " @input="
-                                                                            justNumber(
-                                                                                indexx
-                                                                            )
-                                                                            " placeholder="0.00" size="medium"></el-input>
+                                                                                justNumber(
+                                                                                    indexx
+                                                                                )
+                                                                                " placeholder="0.00"
+                                                                        size="medium"></el-input>
 
                                                                     <el-tooltip v-if="
                                                                         configuration.change_price_product
@@ -1524,11 +1528,11 @@
                                                                     <el-tag type="primary" closable
                                                                         :disable-transitions="false
                                                                             " @close="
-                                                                            deleteSerie(
-                                                                                indexx,
-                                                                                serie.id
-                                                                            )
-                                                                            ">
+                                                                                deleteSerie(
+                                                                                    indexx,
+                                                                                    serie.id
+                                                                                )
+                                                                                ">
                                                                         {{
                                                                             serie.series
                                                                         }}
@@ -1575,11 +1579,11 @@
                                                                     <el-tag type="primary" closable
                                                                         :disable-transitions="false
                                                                             " @close="
-                                                                            deleteColorSize(
-                                                                                indexx,
-                                                                                color_size.id
-                                                                            )
-                                                                            ">
+                                                                                deleteColorSize(
+                                                                                    indexx,
+                                                                                    color_size.id
+                                                                                )
+                                                                                ">
                                                                         {{
                                                                             color_size.color
                                                                         }}
@@ -1665,11 +1669,11 @@
                                                                         .length >
                                                                     1
                                                                 " style="margin-top: 5px" role="button" @click="
-                                                                        showLotesDialog(
-                                                                            order_pend,
-                                                                            indexx
-                                                                        )
-                                                                        " type="success">
+                                                                    showLotesDialog(
+                                                                        order_pend,
+                                                                        indexx
+                                                                    )
+                                                                    " type="success">
                                                                     Ver Lotes
                                                                 </el-tag>
                                                             </template>
@@ -1795,8 +1799,8 @@
                                                                             ord.categoriaMadera
                                                                         " type="text" readonly
                                                                             class="form-control text-center" v-model="ord
-                                                                                    .categoriaMadera
-                                                                                    .quantity
+                                                                                .categoriaMadera
+                                                                                .quantity
                                                                                 " data-rule="currency" />
                                                                         <div class="input-group-text">
                                                                             <button type="button" class="spin-up"
@@ -1822,8 +1826,8 @@
                                                                             style="width: 100%; font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                             type="number" v-model="ord.price
                                                                                 " @input="
-                                                                                calculateTotal
-                                                                            ">
+                                                                                    calculateTotal
+                                                                                ">
                                                                             <template slot="prepend">
                                                                                 {{
                                                                                     currency_id ==
@@ -1854,10 +1858,10 @@
                                                                         ord.status_orden_id !=
                                                                         3
                                                                     " @click="
-                                                                            ordenReady(
-                                                                                ord.id
-                                                                            )
-                                                                            " type="success" icon="el-icon-check"
+                                                                        ordenReady(
+                                                                            ord.id
+                                                                        )
+                                                                        " type="success" icon="el-icon-check"
                                                                         size="mini" circle></el-button>
                                                                     <el-button class="text-white" type="danger"
                                                                         icon="el-icon-delete" size="mini" circle @click="
@@ -2430,10 +2434,10 @@ export default {
             }
         },
         localOrden: {
-                handler(newVal) {
-                    // Aplicar descuentos en tiempo real al modificar localOrden
-                    this._attachItemDiscounts(newVal);
-                    this.calculateTotal(newVal);
+            handler(newVal) {
+                // Aplicar descuentos en tiempo real al modificar localOrden
+                this._attachItemDiscounts(newVal);
+                this.calculateTotal(newVal);
             },
             deep: true // Para observar cambios dentro de los objetos en localOrden
         },
@@ -2618,6 +2622,36 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+
+        validateDiscount(indexx) {
+            const order_pend = this.localOrden[indexx];
+            let value = Number(order_pend.food.item.discount) || 0;
+
+            if (order_pend.discount) { // porcentaje
+                if (value > 99.5) {
+                    order_pend.food.item.discount = 99.5;
+                    this.$message.error('El descuento en % no puede ser mayor a 99.5');
+                    this.$forceUpdate();
+                }
+                if (value < 0) {
+                    order_pend.food.item.discount = 0;
+                    this.$forceUpdate();
+                }
+            } else { // monto
+                const maxAmount = order_pend.price * order_pend.quantity;
+                if (value > maxAmount) {
+                    order_pend.food.item.discount = maxAmount;
+                    this.$message.error('El descuento no puede ser mayor al total disponible');
+                    this.$forceUpdate();
+                }
+                if (value < 0) {
+                    order_pend.food.item.discount = 0;
+                    this.$forceUpdate();
+                }
+            }
+            this.calculateTotal();
+        },
+
         // Calcula importes de un item con descuento considerando si es gravado (IGV) o exonerado
         _calcItemAmounts(order) {
             return DiscountCalcItemAmounts(order);
