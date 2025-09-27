@@ -415,7 +415,7 @@
             @if($row->total_discount > 0)
                 <cac:PricingReference>
                     <cac:AlternativeConditionPrice>
-                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->quantity > 0 ? $row->total / $row->quantity : $row->total }}</cbc:PriceAmount>
+                        <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ number_format($row->quantity > 0 ? $row->total / $row->quantity : $row->total, 2, '.', '') }}</cbc:PriceAmount>
                         <cbc:PriceTypeCode>{{ $row->price_type_id }}</cbc:PriceTypeCode>
                     </cac:AlternativeConditionPrice>
                 </cac:PricingReference>
