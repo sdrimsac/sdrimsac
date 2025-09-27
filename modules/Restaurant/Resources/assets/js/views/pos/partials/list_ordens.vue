@@ -2639,9 +2639,9 @@ export default {
                 }
             } else { // monto
                 const maxAmount = order_pend.price * order_pend.quantity;
-                if (value > maxAmount) {
-                    order_pend.food.item.discount = maxAmount;
-                    this.$message.error('El descuento no puede ser mayor al total disponible');
+                if (value >= maxAmount) {
+                    order_pend.food.item.discount = maxAmount - 1.00;
+                    this.$message.error('El descuento debe ser menor al total disponible');
                     this.$forceUpdate();
                 }
                 if (value < 0) {
