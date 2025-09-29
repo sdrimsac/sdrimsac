@@ -46,21 +46,29 @@ trait CheckEditTrait
         $price_changes = [];
 
         foreach ($items as $doc_item) {
-            $item = Item::select('sale_unit_price', 'description')->find($doc_item->item_id);
-
+            $item = Item::select('sale_unit_price', 'description', 'sale_affectation_igv_type_id')->find($doc_item->item_id);
             if (!$item) continue;
 
-            $current_price = number_format($item->sale_unit_price, 2);
-            $sold_price = number_format($doc_item->unit_value, 2);
+            // Validar afectación IGV
+            if ($item->sale_affectation_igv_type_id === '10') {
+                // Precio incluye IGV, obtener precio sin IGV
+                $real_price = $item->sale_unit_price / 1.18;
+            } else {
+                // Exonerado u otros, el precio se mantiene igual
+                $real_price = $item->sale_unit_price;
+            }
 
-            if ($current_price != $sold_price) {
+            $sold_price = $doc_item->unit_value;
+
+            // Comparar sin redondear
+            if (abs($real_price - $sold_price) > 0.00001) {
                 $price_changes[] = [
                     'item' => $item->description,
-                    'old_price' => $current_price,
-                    'new_price' => $sold_price,
+                    'old_price' => number_format($real_price, 6),
+                    'new_price' => number_format($sold_price, 6),
                 ];
             }
-        }
+    }
 
         // Enviar mensaje si hay diferencias
         if (!empty($price_changes)) {

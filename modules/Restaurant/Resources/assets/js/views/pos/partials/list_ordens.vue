@@ -1171,8 +1171,7 @@
                                                                 class="col-6 col-md-6">
                                                                 <label for="" class="fw-bold w-100">Descuentos</label>
                                                                 <el-input v-model="order_pend.food.item.discount"
-                                                                    style="width: 90px; font-size: 14px;"
-                                                                    type="number"
+                                                                    style="width: 90px; font-size: 14px;" type="number"
                                                                     controls-position="right" :min="0"
                                                                     :max="order_pend.discount ? 99.5 : order_pend.price * order_pend.quantity"
                                                                     @input="validateDiscount(indexx)"
@@ -2680,6 +2679,7 @@ export default {
                         return;
                     }
 
+
                     // Si el precio fue modificado manualmente, no aplicar descuento
                     if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
                         console.log("[DESC] Motivo: Precio modificado manualmente", currentPrice, originalPrice, item);
@@ -2774,7 +2774,11 @@ export default {
             this.showDeliveryForm = true;
         },
         addItemToSelection(item) {
-            // Inicializar price_original si no existe
+            // Inicializar original_price SOLO si no existe
+            if (item.original_price === undefined || item.original_price === null) {
+                item.original_price = item.price;
+            }
+            // Inicializar price_original en el objeto food.item si no existe (para compatibilidad)
             if (item.food && item.food.item && (item.food.item.price_original === undefined || item.food.item.price_original === null)) {
                 item.food.item.price_original = item.food.item.price;
             }
@@ -3293,7 +3297,7 @@ export default {
                                         if (orden.type_id) continue;
                                         let newPrice = data[i];
                                         if (!orden.original_price) {
-                                            orden.original_price = orden.price;
+                                            // NO modificar original_price si ya existe
                                         }
                                         if (newPrice.amount) {
                                             orden.price = Number(
@@ -3336,7 +3340,7 @@ export default {
                                 } = orden;
                                 let category_id = category.id;
                                 if (!orden.original_price) {
-                                    orden.original_price = orden.price;
+                                    // NO modificar original_price si ya existe
                                 }
 
                                 let price = orden.original_price;

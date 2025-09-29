@@ -1,14 +1,8 @@
 <!-- Padre de Caja  -->
 <template>
-    <div
-        style="position: relative"
-        v-loading.fullscreen="loading"
-        element-loading-text="Espere..."
-    >
+    <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
         <!-- Hora y Fecha del sistema -->
-        <div
-            class="container-fluid pos-header-bar mb-0"
-            style="
+        <div class="container-fluid pos-header-bar mb-0" style="
             position: fixed;
             top: 60px;
             left: 50%;
@@ -19,45 +13,31 @@
             
             padding: 0.5rem 1.2rem;
             margin-top: 10px;
-            "
-        >
-            <div
-                class="card-body bg-tertiary rounded w-100"
-                style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;"
-                v-if="screenWidth > 678"
-            >
+            ">
+            <div class="card-body bg-tertiary rounded w-100"
+                style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;" v-if="screenWidth > 678">
                 <div class="row align-items-center">
                     <!-- límite de monto para venta de CPE -->
                     <div class="col-5">
                         <div class="col-12" v-if="limitAmount">
-                            <div
-                                :class="[
-                                    `alert alert-${limitAmount.color}`,
-                                    'pos-alert-warning'
-                                ]"
-                                style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;"
-                            >
-                                <i
-                                    class="fas fa-exclamation-triangle me-2"
-                                    style="font-size: 1.3em; color: #ff9800;"
-                                ></i>
-                                <p
-                                    style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;"
-                                    :class="{
-                                        'blink-alert-text':
-                                            limitAmount.tipo === 'critico'
-                                    }"
-                                >
+                            <div :class="[
+                                `alert alert-${limitAmount.color}`,
+                                'pos-alert-warning'
+                            ]"
+                                style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;">
+                                <i class="fas fa-exclamation-triangle me-2"
+                                    style="font-size: 1.3em; color: #ff9800;"></i>
+                                <p style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;" :class="{
+                                    'blink-alert-text':
+                                        limitAmount.tipo === 'critico'
+                                }">
                                     {{ limitAmount.mensaje }}
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="col-2 text-white text-end">
-                        <el-tooltip
-                            content="Tiempo restante para refrescar la pantalla"
-                            placement="top"
-                        >
+                        <el-tooltip content="Tiempo restante para refrescar la pantalla" placement="top">
                             <button class="btn btn-success" type="button">
                                 <i class="fas fa-clock"></i>
 
@@ -66,24 +46,15 @@
                         </el-tooltip>
                     </div>
                     <div class="col-2 text-white text-center">
-                        <el-tooltip
-                            content="Estado de Estabilidad de Internet"
-                            placement="top"
-                        >
-                            <button
-                                class="btn"
-                                type="button"
-                                :style="{
-                                    backgroundColor: getPingBackground(),
-                                    color: 'white'
-                                }"
-                            >
+                        <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
+                            <button class="btn" type="button" :style="{
+                                backgroundColor: getPingBackground(),
+                                color: 'white'
+                            }">
                                 Internet
 
                                 <i class="fas fa-wifi"></i>
-                                <span style="color: white;"
-                                    >{{ latencia }} ms</span
-                                >
+                                <span style="color: white;">{{ latencia }} ms</span>
                             </button>
                         </el-tooltip>
                     </div>
@@ -114,95 +85,51 @@
             </div>
         </div> -->
         <div class="row" style="margin-top: 50px;">
-            <div
-                v-if="screenWidth > 678"
-                class="d-flex flex-row justify-content-start card mb-2"
-            >
-                <div
-                    class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7"
-                >
+            <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
+                <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
                     <div class="card-body p-2">
                         <div class="row">
                             <div class="d-flex flex-wrap">
-                                <div
-                                    class="dropdown-as-select d-inline-block mb-1"
-                                    data-childselector="span"
-                                >
-                                    <button
-                                        class="btn p-0"
-                                        type="button"
-                                        id="menu-actions"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <span
-                                            class="btn btn-primary dropdown-toggle"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            data-bs-delay="0"
-                                            title
-                                            data-bs-original-title="Item Count"
-                                            aria-label="Item Count"
-                                            >Menú de acciones
+                                <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span">
+                                    <button class="btn p-0" type="button" id="menu-actions" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" data-bs-delay="0" title
+                                            data-bs-original-title="Item Count" aria-label="Item Count">Menú de acciones
                                         </span>
                                     </button>
 
-                                    <template
-                                        v-if="
-                                            configuration.restaurant &&
-                                                !this.isSeller
-                                        "
-                                    >
+                                    <template v-if="
+                                        configuration.restaurant &&
+                                        !this.isSeller
+                                    ">
                                         <!-- Boton de Mesa en Restaurante  o cuartos en Hotel -->
-                                        <template
-                                            v-if="
-                                                !configuration.hotels ||
-                                                    (configuration.hotels &&
-                                                        !isPiscinaArea)
-                                            "
-                                        >
-                                            <button
-                                                class="btn btn-sm btn-primary"
-                                                type="button"
-                                                @click="buttonSmTables"
-                                                :title="
-                                                    isHotelArea
+                                        <template v-if="
+                                            !configuration.hotels ||
+                                            (configuration.hotels &&
+                                                !isPiscinaArea)
+                                        ">
+                                            <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables"
+                                                :title="isHotelArea
                                                         ? '[F2] Cuartos para Alquilar'
                                                         : '[F2] Mesas de Atención'
-                                                "
-                                            >
-                                                <i
-                                                    v-if="isHotelArea"
-                                                    class="fas fa-hotel"
-                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"
-                                                ></i>
-                                                <i
-                                                    v-else
-                                                    class="icofont-dining-table"
-                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"
-                                                ></i>
+                                                    ">
+                                                <i v-if="isHotelArea" class="fas fa-hotel"
+                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
+                                                <i v-else class="icofont-dining-table"
+                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
                                             </button>
                                         </template>
 
-                                        <template
-                                            v-if="configuration.created_items"
-                                        >
-                                            <button
-                                                class="btn btn-sm btn-success"
-                                                type="button"
-                                                @click="createdNew"
-                                            >
+                                        <template v-if="configuration.created_items">
+                                            <button class="btn btn-sm btn-success" type="button" @click="createdNew">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </template>
 
                                         <template v-if="isAndroid">
-                                            <button
-                                                class="btn btn-sm btn-primary"
-                                                type="button"
-                                                @click="printLastDocument"
-                                            >
+                                            <button class="btn btn-sm btn-primary" type="button"
+                                                @click="printLastDocument">
                                                 <i class="fas fa-print"></i>
                                                 <template v-if="lastDocument">
                                                     {{
@@ -211,65 +138,39 @@
                                                 </template>
                                             </button>
 
-                                            <button
-                                                class="btn btn-sm btn-success"
-                                                size="small"
-                                                v-for="orden in ordenToPrint"
-                                                :key="orden.id"
-                                                @click="
+                                            <button class="btn btn-sm btn-success" size="small"
+                                                v-for="orden in ordenToPrint" :key="orden.id" @click="
                                                     printOrden(
                                                         orden.url,
                                                         orden.id
                                                     )
-                                                "
-                                            >
+                                                    ">
                                                 N° {{ orden.id }}
                                             </button>
                                         </template>
                                     </template>
-                                    <template
-                                        v-if="
-                                            configuration.sale_note_credit_cash &&
-                                                this.isCreditCash &&
-                                                !this.isSeller
-                                        "
-                                    >
-                                        <button
-                                            class="btn btn-sm btn-primary"
-                                            type="button"
-                                            @click="trigerFunction(195)"
-                                        >
+                                    <template v-if="
+                                        configuration.sale_note_credit_cash &&
+                                        this.isCreditCash &&
+                                        !this.isSeller
+                                    ">
+                                        <button class="btn btn-sm btn-primary" type="button"
+                                            @click="trigerFunction(195)">
                                             <i class="fas fa-cash-register"></i>
                                         </button>
                                     </template>
-                                    <div
-                                        class="dropdown-menu dropdown-menu-end col-md-2 col-1"
-                                        style="width: 153px;"
-                                    >
-                                        <div
-                                            class="col-12"
-                                            v-for="(option, idx) in optionsMenu"
-                                            :key="idx"
-                                            v-show="option.visible"
-                                        >
-                                            <el-button
-                                                v-if="option.visible"
-                                                @click="
-                                                    trigerFunction(option.id)
+                                    <div class="dropdown-menu dropdown-menu-end col-md-2 col-1" style="width: 153px;">
+                                        <div class="col-12" v-for="(option, idx) in optionsMenu" :key="idx"
+                                            v-show="option.visible">
+                                            <el-button v-if="option.visible" @click="
+                                                trigerFunction(option.id)
                                                 "
                                                 class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                                                style="max-width: 150px;"
-                                            >
-                                                <div
-                                                    class="text-center"
-                                                    style="margin-bottom: 2px"
-                                                >
-                                                    <p
-                                                        style="margin: 0 !important; padding: 0 !important ; font-size: 15px;"
+                                                style="max-width: 150px;">
+                                                <div class="text-center" style="margin-bottom: 2px">
+                                                    <p style="margin: 0 !important; padding: 0 !important ; font-size: 15px;"
                                                         v-for="(title,
-                                                        idx2) in option.title"
-                                                        :key="idx2"
-                                                    >
+                                                            idx2) in option.title" :key="idx2">
                                                         {{ title }}
                                                     </p>
                                                     <i :class="option.icon"></i>
@@ -281,32 +182,18 @@
                                 </div>
                                 <template v-if="isHotelArea">
                                     <el-badge :value="tablesClean.length" :hidden="tablesClean.length === 0">
-                                        <button
-                                            style="margin-right: 2px;margin-left: 2px;"
-                                            type="button"
-                                            class="btn btn-dirty"
-                                            @click="showCleanDialog = true"
-                                        >
-                                            <svg
-                                                fill="#ffffff"
-                                                width="20px"
-                                                height="20px"
-                                                viewBox="-8.08 0 122.88 122.88"
-                                                version="1.1"
-                                                id="Layer_1"
+                                        <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                            class="btn btn-dirty" @click="showCleanDialog = true">
+                                            <svg fill="#ffffff" width="20px" height="20px"
+                                                viewBox="-8.08 0 122.88 122.88" version="1.1" id="Layer_1"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                style="enable-background:new 0 0 106.72 122.88"
-                                                xml:space="preserve"
-                                                stroke="#ffffff"
-                                                stroke-width="0.0012288"
-                                                transform="rotate(0)"
-                                            >
+                                                style="enable-background:new 0 0 106.72 122.88" xml:space="preserve"
+                                                stroke="#ffffff" stroke-width="0.0012288" transform="rotate(0)">
                                                 <g id="SVGRepo_iconCarrier">
                                                     <g>
                                                         <path
-                                                            d="M4.42,33.57c-0.66-5.38,0.44-9.98,2.7-13.69c1.65-2.7,3.9-4.9,6.54-6.56c2.6-1.63,5.57-2.74,8.69-3.27 c4.94-0.84,10.29-0.24,15.13,1.96c1.72-3.29,4.16-6.1,7.33-8.19C48.46,1.41,53.04,0,58.53,0c5.96,0,11.59,2.53,15.71,6.6 c3.05,3.03,5.27,6.92,6.17,11.26c3.55-1.84,6.87-2.69,9.86-2.68c2.46,0,4.7,0.58,6.67,1.65c1.96,1.07,3.63,2.61,4.96,4.56 c2.24,3.27,3.54,7.71,3.69,12.93c0.64,0.92,1.01,2.03,1.11,3.33c0.04,0.51,0.03,1.04-0.01,1.58c-0.02,0.19-0.05,0.37-0.1,0.54 l-16,70.03c-0.01,0.03-0.02,0.07-0.03,0.1l0,0c-3.72,13.67-13.03,13.27-23.32,12.82c-1.58-0.07-3.19-0.14-5.05-0.14h-17 c-2.48,0-3.96,0.03-5.31,0.05c-14.36,0.27-17.53,0.33-22.17-19.11l0-0.01l-0.01,0l-0.23-0.97c-2.1-1.21-4.08-2.72-5.91-4.54 C1.39,87.86-3.71,67.96,3.11,35.55c0.14-0.68,0.53-1.24,1.04-1.62C4.23,33.8,4.32,33.68,4.42,33.57L4.42,33.57z M78.35,44.25 c4.2,0,7.6,3.4,7.6,7.6c0,3.49-2.36,6.43-5.56,7.32c-2.3,19.92-14.95,35.36-29.48,42.62c-6.76,3.38-13.94,5.01-20.71,4.54 c-2.24-0.16-4.43-0.54-6.55-1.16c3.28,12.33,6.04,12.28,16.15,12.09c1.88-0.03,3.95-0.07,5.39-0.07h17c1.61,0,3.46,0.08,5.28,0.16 c8.03,0.35,15.3,0.66,17.89-8.86h0l15.96-69.87c0.02-0.23,0.02-0.43,0-0.6c-0.02-0.24-0.05-0.42-0.11-0.54 c-0.1-0.08-0.19-0.17-0.28-0.27c-0.2-0.09-0.5-0.15-0.89-0.19c-0.33-0.03-0.69-0.03-1.07-0.01c-0.11,0.01-0.21,0.02-0.33,0.02H8.7 c-0.13,0.02-0.2,0.06-0.22,0.1c-0.22,0.5-0.25,1.36-0.15,2.43l13.81,59.34c2.64,1.19,5.48,1.87,8.41,2.07 c5.83,0.4,12.05-1.03,17.95-3.98c13.05-6.53,24.42-20.39,26.53-38.31c-2.54-1.23-4.29-3.83-4.29-6.84 C70.76,47.66,74.16,44.25,78.35,44.25L78.35,44.25z M15.58,94.42L5.85,52.64c-2.04,20.94,2.21,34.29,9.5,41.56 C15.43,94.28,15.5,94.35,15.58,94.42L15.58,94.42z M100,31.62c-0.4-2.9-1.26-5.35-2.54-7.21c-0.86-1.25-1.9-2.22-3.09-2.87 c-1.19-0.65-2.57-0.99-4.11-0.99c-2.97,0-6.54,1.25-10.6,4.03l0,0c-0.44,0.3-0.97,0.47-1.54,0.47c-1.47-0.02-2.65-1.22-2.65-2.69 c-0.01-0.07-0.01-0.14-0.01-0.21c0-4.56-1.95-8.71-5-11.73c-3.13-3.1-7.41-5.03-11.92-5.03c-4.4,0-7.99,1.08-10.78,2.92 c-3.01,1.98-5.16,4.9-6.46,8.33c-0.06,0.17-0.14,0.33-0.24,0.49c-0.77,1.27-2.43,1.67-3.69,0.89c-4.34-2.65-9.45-3.46-14.12-2.66 c-2.43,0.41-4.73,1.26-6.72,2.51c-1.95,1.23-3.62,2.84-4.82,4.81c-1.48,2.43-2.27,5.44-2.06,8.97h88.98 C99.1,31.62,99.56,31.61,100,31.62L100,31.62z"
-                                                        />
+                                                            d="M4.42,33.57c-0.66-5.38,0.44-9.98,2.7-13.69c1.65-2.7,3.9-4.9,6.54-6.56c2.6-1.63,5.57-2.74,8.69-3.27 c4.94-0.84,10.29-0.24,15.13,1.96c1.72-3.29,4.16-6.1,7.33-8.19C48.46,1.41,53.04,0,58.53,0c5.96,0,11.59,2.53,15.71,6.6 c3.05,3.03,5.27,6.92,6.17,11.26c3.55-1.84,6.87-2.69,9.86-2.68c2.46,0,4.7,0.58,6.67,1.65c1.96,1.07,3.63,2.61,4.96,4.56 c2.24,3.27,3.54,7.71,3.69,12.93c0.64,0.92,1.01,2.03,1.11,3.33c0.04,0.51,0.03,1.04-0.01,1.58c-0.02,0.19-0.05,0.37-0.1,0.54 l-16,70.03c-0.01,0.03-0.02,0.07-0.03,0.1l0,0c-3.72,13.67-13.03,13.27-23.32,12.82c-1.58-0.07-3.19-0.14-5.05-0.14h-17 c-2.48,0-3.96,0.03-5.31,0.05c-14.36,0.27-17.53,0.33-22.17-19.11l0-0.01l-0.01,0l-0.23-0.97c-2.1-1.21-4.08-2.72-5.91-4.54 C1.39,87.86-3.71,67.96,3.11,35.55c0.14-0.68,0.53-1.24,1.04-1.62C4.23,33.8,4.32,33.68,4.42,33.57L4.42,33.57z M78.35,44.25 c4.2,0,7.6,3.4,7.6,7.6c0,3.49-2.36,6.43-5.56,7.32c-2.3,19.92-14.95,35.36-29.48,42.62c-6.76,3.38-13.94,5.01-20.71,4.54 c-2.24-0.16-4.43-0.54-6.55-1.16c3.28,12.33,6.04,12.28,16.15,12.09c1.88-0.03,3.95-0.07,5.39-0.07h17c1.61,0,3.46,0.08,5.28,0.16 c8.03,0.35,15.3,0.66,17.89-8.86h0l15.96-69.87c0.02-0.23,0.02-0.43,0-0.6c-0.02-0.24-0.05-0.42-0.11-0.54 c-0.1-0.08-0.19-0.17-0.28-0.27c-0.2-0.09-0.5-0.15-0.89-0.19c-0.33-0.03-0.69-0.03-1.07-0.01c-0.11,0.01-0.21,0.02-0.33,0.02H8.7 c-0.13,0.02-0.2,0.06-0.22,0.1c-0.22,0.5-0.25,1.36-0.15,2.43l13.81,59.34c2.64,1.19,5.48,1.87,8.41,2.07 c5.83,0.4,12.05-1.03,17.95-3.98c13.05-6.53,24.42-20.39,26.53-38.31c-2.54-1.23-4.29-3.83-4.29-6.84 C70.76,47.66,74.16,44.25,78.35,44.25L78.35,44.25z M15.58,94.42L5.85,52.64c-2.04,20.94,2.21,34.29,9.5,41.56 C15.43,94.28,15.5,94.35,15.58,94.42L15.58,94.42z M100,31.62c-0.4-2.9-1.26-5.35-2.54-7.21c-0.86-1.25-1.9-2.22-3.09-2.87 c-1.19-0.65-2.57-0.99-4.11-0.99c-2.97,0-6.54,1.25-10.6,4.03l0,0c-0.44,0.3-0.97,0.47-1.54,0.47c-1.47-0.02-2.65-1.22-2.65-2.69 c-0.01-0.07-0.01-0.14-0.01-0.21c0-4.56-1.95-8.71-5-11.73c-3.13-3.1-7.41-5.03-11.92-5.03c-4.4,0-7.99,1.08-10.78,2.92 c-3.01,1.98-5.16,4.9-6.46,8.33c-0.06,0.17-0.14,0.33-0.24,0.49c-0.77,1.27-2.43,1.67-3.69,0.89c-4.34-2.65-9.45-3.46-14.12-2.66 c-2.43,0.41-4.73,1.26-6.72,2.51c-1.95,1.23-3.62,2.84-4.82,4.81c-1.48,2.43-2.27,5.44-2.06,8.97h88.98 C99.1,31.62,99.56,31.61,100,31.62L100,31.62z" />
                                                     </g>
                                                 </g>
                                             </svg>
@@ -314,30 +201,23 @@
                                         </button>
                                     </el-badge>
                                     <el-badge :value="tablesLeave.length" :hidden="tablesLeave.length === 0">
-                                        <button
-                                            style="margin-right: 2px;margin-left: 2px;"
-                                            type="button"
-                                            class="btn btn-danger"
-                                            :title="'Habitaciones vencidas'"
-                                            @click="showExpiredDialog = true"
-                                        >
+                                        <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                            class="btn btn-danger" :title="'Habitaciones vencidas'"
+                                            @click="showExpiredDialog = true">
                                             <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
                                             Vencidas
                                         </button>
                                     </el-badge>
-                                    
+
                                 </template>
                             </div>
                         </div>
-                        <div
-                            class="row card mx-1 mt-2"
-                            v-if="
-                                configuration.sale_note_credit_confirm
-                                    ? isAnalist ||
-                                      user.can_accept_credit_sale_note
-                                    : true
-                            "
-                        >
+                        <div class="row card mx-1 mt-2" v-if="
+                            configuration.sale_note_credit_confirm
+                                ? isAnalist ||
+                                user.can_accept_credit_sale_note
+                                : true
+                        ">
                             <div>
                                 <!-- Busqueda de Categorias  Chifa China -->
                                 <template v-if="configuration.category_deslay">
@@ -347,122 +227,67 @@
                                             <div class="categories-scroll">
                                                 <div class="categories-wrapper">
                                                     <!-- Add All Categories circle -->
-                                                    <div
-                                                        class="category-card"
-                                                        :class="{
-                                                            active:
-                                                                category ===
-                                                                null
-                                                        }"
-                                                        @click="
+                                                    <div class="category-card" :class="{
+                                                        active:
+                                                            category ===
+                                                            null
+                                                    }" @click="
                                                             category = null;
-                                                            search_items(null);
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="category-circle"
-                                                        >
-                                                            <i
-                                                                class="fas fa-th text-primary"
-                                                                style="font-size: 24px;"
-                                                            ></i>
+                                                        search_items(null);
+                                                        ">
+                                                        <div class="category-circle">
+                                                            <i class="fas fa-th text-primary"
+                                                                style="font-size: 24px;"></i>
                                                         </div>
-                                                        <span
-                                                            class="category-name"
-                                                            >Todo
-                                                            Categoria</span
-                                                        >
+                                                        <span class="category-name">Todo
+                                                            Categoria</span>
                                                     </div>
 
                                                     <!-- Existing categories -->
-                                                    <div
-                                                        v-for="item in categories"
-                                                        :key="item.id"
-                                                        class="category-card"
+                                                    <div v-for="item in categories" :key="item.id" class="category-card"
                                                         :class="{
                                                             active:
                                                                 category ===
                                                                 item.id
-                                                        }"
-                                                        @click="
+                                                        }" @click="
                                                             category = item.id;
-                                                            search_items(null);
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="category-circle"
-                                                        >
-                                                            <img
-                                                                v-if="
-                                                                    item.icono
-                                                                "
-                                                                :src="
-                                                                    `/storage/uploads/category/${item.icono}`
-                                                                "
-                                                                alt=""
-                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
-                                                            />
-                                                            <img
-                                                                v-else
-                                                                src="/logo/imagen-no-disponible.jpg"
+                                                        search_items(null);
+                                                        ">
+                                                        <div class="category-circle">
+                                                            <img v-if="
+                                                                item.icono
+                                                            " :src="`/storage/uploads/category/${item.icono}`
+                                                                    " alt=""
+                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;" />
+                                                            <img v-else src="/logo/imagen-no-disponible.jpg"
                                                                 alt="Imagen no disponible"
-                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
-                                                            />
+                                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;" />
                                                         </div>
-                                                        <span
-                                                            class="category-name"
-                                                            >{{
-                                                                item.name
-                                                            }}</span
-                                                        >
+                                                        <span class="category-name">{{
+                                                            item.name
+                                                        }}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- Buscar -->
-                                        <div
-                                            class="col-12 col-lg-4 p-2"
-                                            v-if="configuration.search_new"
-                                        >
-                                            <h2
-                                                class="font-weight-bold custom-text-size"
-                                            >
+                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">
+                                            <h2 class="font-weight-bold custom-text-size">
                                                 Buscar
                                             </h2>
                                             <template v-if="selectOption == 4">
-                                                <el-input
-                                                    ref="input_items"
-                                                    size="small"
-                                                    v-model="input_item"
-                                                    @input="search()"
-                                                    @focus="clear_input()"
-                                                    autofocus
-                                                    clearable
-                                                >
-                                                    <el-button
-                                                        class="bg-light"
-                                                        slot="append"
-                                                        icon="el-icon-search"
-                                                        @click="search"
-                                                    ></el-button>
+                                                <el-input ref="input_items" size="small" v-model="input_item"
+                                                    @input="search()" @focus="clear_input()" autofocus clearable>
+                                                    <el-button class="bg-light" slot="append" icon="el-icon-search"
+                                                        @click="search"></el-button>
                                                 </el-input>
                                             </template>
                                             <template v-else>
-                                                <el-input
-                                                    ref="input_item"
-                                                    size="small"
-                                                    v-model="input_item"
-                                                    @input="search()"
-                                                    @focus="clear_input()"
-                                                    autofocus
-                                                >
-                                                    <el-button
-                                                        class="bg-light"
-                                                        slot="append"
-                                                        icon="el-icon-search"
-                                                        @click="search"
-                                                    ></el-button>
+                                                <el-input ref="input_item" size="small" v-model="input_item"
+                                                    @input="search()" @focus="clear_input()" autofocus>
+                                                    <el-button class="bg-light" slot="append" icon="el-icon-search"
+                                                        @click="search"></el-button>
                                                 </el-input>
                                             </template>
                                         </div>
@@ -474,79 +299,44 @@
 
                                     <div class="row">
                                         <!-- Series -->
-                                        <div
-                                            v-if="
-                                                configuration.search_series_pos
-                                            "
-                                            class="col-3 d-flex align-items-center justify-content-center"
-                                        >
-                                            <el-tooltip
-                                                content="Envía a la lista de venta directamente (Imeis, Series)"
-                                                placement="top"
-                                            >
-                                                <el-checkbox
-                                                    v-if="
-                                                        configuration.search_series_pos
-                                                    "
-                                                    v-model="searchSeries"
-                                                    @change="
+                                        <div v-if="
+                                            configuration.search_series_pos
+                                        " class="col-3 d-flex align-items-center justify-content-center">
+                                            <el-tooltip content="Envía a la lista de venta directamente (Imeis, Series)"
+                                                placement="top">
+                                                <el-checkbox v-if="
+                                                    configuration.search_series_pos
+                                                " v-model="searchSeries" @change="
                                                         saveInLocalStorageSearchSeries
-                                                    "
-                                                    class="d-flex align-items-center"
-                                                >
-                                                    <i
-                                                        class="fas fa-list-alt me-2"
-                                                    ></i>
+                                                    " class="d-flex align-items-center">
+                                                    <i class="fas fa-list-alt me-2"></i>
                                                     <span>Series</span>
                                                 </el-checkbox>
                                             </el-tooltip>
                                         </div>
 
                                         <!-- Barcode -->
-                                        <div
-                                            v-if="configuration.barcode"
-                                            class="col-3 d-flex align-items-center justify-content-center"
-                                        >
-                                            <el-tooltip
-                                                content="Habilitar búsqueda por código de barras"
-                                                placement="top"
-                                            >
-                                                <el-checkbox
-                                                    v-if="configuration.barcode"
-                                                    v-model="barcode"
-                                                    @change="
-                                                        saveInLocalStorageBarcode
-                                                    "
-                                                    class="d-flex align-items-center"
-                                                >
-                                                    <i
-                                                        class="fas fa-barcode me-2"
-                                                    ></i>
+                                        <div v-if="configuration.barcode"
+                                            class="col-3 d-flex align-items-center justify-content-center">
+                                            <el-tooltip content="Habilitar búsqueda por código de barras"
+                                                placement="top">
+                                                <el-checkbox v-if="configuration.barcode" v-model="barcode" @change="
+                                                    saveInLocalStorageBarcode
+                                                " class="d-flex align-items-center">
+                                                    <i class="fas fa-barcode me-2"></i>
                                                     <span>Barcode</span>
                                                 </el-checkbox>
                                             </el-tooltip>
                                         </div>
 
                                         <!-- Calidad -->
-                                        <div
-                                            v-if="configuration.quality"
-                                            class="col-3 d-flex align-items-center justify-content-center"
-                                        >
-                                            <el-tooltip
-                                                content="Filtrar por calidad del producto"
-                                                placement="top"
-                                            >
-                                                <el-checkbox
-                                                    v-if="configuration.quality"
-                                                    v-model="quality"
-                                                    @change="
-                                                        saveInLocalStorageQuality
-                                                    "
-                                                    class="d-flex align-items-center"
-                                                >
-                                                    <i
-                                                        class="fas fa-star me-2"
-                                                    ></i>
+                                        <div v-if="configuration.quality"
+                                            class="col-3 d-flex align-items-center justify-content-center">
+                                            <el-tooltip content="Filtrar por calidad del producto" placement="top">
+                                                <el-checkbox v-if="configuration.quality" v-model="quality" @change="
+                                                    saveInLocalStorageQuality
+                                                " class="d-flex align-items-center">
+                                                    <i class="fas fa-star me-2"></i>
                                                     <span>Calidad</span>
                                                 </el-checkbox>
                                             </el-tooltip>
@@ -554,25 +344,13 @@
 
                                         <!-- Modelo -->
 
-                                        <div
-                                            v-if="configuration.model"
-                                            class="col-3 d-flex align-items-center justify-content-center"
-                                        >
-                                            <el-tooltip
-                                                content="Filtrar por modelo del producto"
-                                                placement="top"
-                                            >
-                                                <el-checkbox
-                                                    v-if="configuration.model"
-                                                    v-model="model"
-                                                    @change="
-                                                        saveInLocalStorageModel
-                                                    "
-                                                    class="d-flex align-items-center"
-                                                >
-                                                    <i
-                                                        class="fas fa-cube me-2"
-                                                    ></i>
+                                        <div v-if="configuration.model"
+                                            class="col-3 d-flex align-items-center justify-content-center">
+                                            <el-tooltip content="Filtrar por modelo del producto" placement="top">
+                                                <el-checkbox v-if="configuration.model" v-model="model" @change="
+                                                    saveInLocalStorageModel
+                                                " class="d-flex align-items-center">
+                                                    <i class="fas fa-cube me-2"></i>
                                                     <span>Modelo</span>
                                                 </el-checkbox>
                                             </el-tooltip>
@@ -609,68 +387,37 @@
                                                     <!-- Categorías -->
                                                     <div style="padding: 0;">
                                                         <template>
-                                                            <el-select
-                                                                v-model="
-                                                                    category
-                                                                "
-                                                                filterable
-                                                                clearable
-                                                                placeholder="Categoría..."
+                                                            <el-select v-model="category
+                                                                " filterable clearable placeholder="Categoría..."
                                                                 @change="
                                                                     search_items(
                                                                         null
                                                                     )
-                                                                "
-                                                                size="small"
-                                                            >
-                                                                <el-option
-                                                                    v-for="item in categories"
-                                                                    :key="
-                                                                        item.id
-                                                                    "
-                                                                    :label="
-                                                                        item.name
-                                                                    "
-                                                                    :value="
-                                                                        item.id
-                                                                    "
-                                                                ></el-option>
+                                                                    " size="small">
+                                                                <el-option v-for="item in categories" :key="item.id
+                                                                    " :label="item.name
+                                                                        " :value="item.id
+                                                                        "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
                                                 </div>
                                                 <div class="col-5">
                                                     <!-- Marca -->
-                                                    <div
-                                                        v-if="
-                                                            configuration.brand
-                                                        "
-                                                    >
+                                                    <div v-if="
+                                                        configuration.brand
+                                                    ">
                                                         <template>
-                                                            <el-select
-                                                                v-model="brand"
-                                                                filterable
-                                                                clearable
-                                                                placeholder="Marca..."
-                                                                @change="
+                                                            <el-select v-model="brand" filterable clearable
+                                                                placeholder="Marca..." @change="
                                                                     search_items(
                                                                         null
                                                                     )
-                                                                "
-                                                                size="small"
-                                                            >
-                                                                <el-option
-                                                                    v-for="item in brands"
-                                                                    :key="
-                                                                        item.id
-                                                                    "
-                                                                    :label="
-                                                                        item.name
-                                                                    "
-                                                                    :value="
-                                                                        item.id
-                                                                    "
-                                                                ></el-option>
+                                                                    " size="small">
+                                                                <el-option v-for="item in brands" :key="item.id
+                                                                    " :label="item.name
+                                                                        " :value="item.id
+                                                                        "></el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
@@ -681,33 +428,17 @@
                                         <!-- Buscar -->
                                         <div class="col-8" style="width: 50%;">
                                             <div
-                                                style="display: flex; justify-content: center; align-items: center; height: 100%;"
-                                            >
-                                                <template
-                                                    v-if="selectOption == 4"
-                                                >
-                                                    <el-input
-                                                        ref="input_items"
-                                                        size="small"
-                                                        v-model="input_item"
-                                                        placeholder="producto a buscar..."
-                                                        @input="search()"
-                                                        @focus="clear_input()"
-                                                        autofocus
-                                                        clearable
-                                                        style="border: 2px solid #FFC107; border-radius: 4px;"
-                                                    >
+                                                style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                                <template v-if="selectOption == 4">
+                                                    <el-input ref="input_items" size="small" v-model="input_item"
+                                                        placeholder="producto a buscar..." @input="search()"
+                                                        @focus="clear_input()" autofocus clearable
+                                                        style="border: 2px solid #FFC107; border-radius: 4px;">
                                                     </el-input>
                                                 </template>
                                                 <template v-else>
-                                                    <el-input
-                                                        ref="input_item"
-                                                        size="small"
-                                                        v-model="input_item"
-                                                        @input="search()"
-                                                        @focus="clear_input()"
-                                                        autofocus
-                                                    >
+                                                    <el-input ref="input_item" size="small" v-model="input_item"
+                                                        @input="search()" @focus="clear_input()" autofocus>
                                                     </el-input>
                                                 </template>
                                             </div>
@@ -716,78 +447,45 @@
                                 </template>
                             </div>
                         </div>
-                        <div
-                            class="row"
-                            v-if="selectOption == 4 || selectOption == 3"
-                        >
+                        <div class="row" v-if="selectOption == 4 || selectOption == 3">
                             <div class="col-md-12 p-1">
-                                <ListFood
-                                    :lastQuery="lastQuery"
-                                    :canAddItem.sync="canAddItem"
-                                    :loadingItems.sync="loadingItems"
-                                    :localOrden="localOrden"
-                                    :blockAdd.sync="blockCart"
-                                    ref="list_foods"
-                                    :barcode.sync="barcode"
-                                    :policy.sync="policy"
-                                    :searchSeries.sync="searchSeries"
-                                    :searchSecondName.sync="searchSecondName"
-                                    :model.sync="model"
-                                    :quality.sync="quality"
-                                    :type_code.sync="type_code"
-                                    :worker="worker"
-                                    @insertOrden="insertOrden"
-                                    :configuration="configuration"
-                                    :foods.sync="allFoods"
-                                    :value="input_item"
-                                    @buscarnuevo="buscarnuevo"
-                                    :medida_alto="medida_alto"
-                                    :medida_ancho="medida_ancho"
-                                    :medida_grosor="medida_grosor"
-                                    :categoria_madera="categoria_madera"
-                                    @cotizarConfirmado="handleCotizarConfirmado"
-                                    :cotizarConfirmado.sync="cotizarConfirmado"
-                                    :establishments="establishments"
+                                <ListFood :lastQuery="lastQuery" :canAddItem.sync="canAddItem"
+                                    :loadingItems.sync="loadingItems" :localOrden="localOrden"
+                                    :blockAdd.sync="blockCart" ref="list_foods" :barcode.sync="barcode"
+                                    :policy.sync="policy" :searchSeries.sync="searchSeries"
+                                    :searchSecondName.sync="searchSecondName" :model.sync="model"
+                                    :quality.sync="quality" :type_code.sync="type_code" :worker="worker"
+                                    @insertOrden="insertOrden" :configuration="configuration" :foods.sync="allFoods"
+                                    :value="input_item" @buscarnuevo="buscarnuevo" :medida_alto="medida_alto"
+                                    :medida_ancho="medida_ancho" :medida_grosor="medida_grosor"
+                                    :categoria_madera="categoria_madera" @cotizarConfirmado="handleCotizarConfirmado"
+                                    :cotizarConfirmado.sync="cotizarConfirmado" :establishments="establishments"
                                     @cotizarConfirmadoChanged="
                                         handleCotizarConfirmado
-                                    "
-                                ></ListFood>
+                                    "></ListFood>
                             </div>
                         </div>
-                        <div
-                            class="row"
-                            v-if="selectOption == 1 || selectOption == 2"
-                        >
+                        <div class="row" v-if="selectOption == 1 || selectOption == 2">
                             <div class="col-12 mb-1">
-                                <div
-                                    class="card mb-2 bg-transparent no-shadow d-none d-lg-block"
-                                >
+                                <div class="card mb-2 bg-transparent no-shadow d-none d-lg-block">
                                     <div class="row g-0 sh-3">
                                         <div class="col">
-                                            <div
-                                                class="card-body pt-0 pb-0 h-100"
-                                            >
-                                                <div
-                                                    class="row g-0 h-100 align-content-center"
-                                                >
+                                            <div class="card-body pt-0 pb-0 h-100">
+                                                <div class="row g-0 h-100 align-content-center">
                                                     <div
-                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-start text-alternate text-medium text-muted text-small"
-                                                    >
+                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-start text-alternate text-medium text-muted text-small">
                                                         CANTIDAD
                                                     </div>
                                                     <div
-                                                        class="col-6 col-lg-5 d-flex align-items-center justify-content-start text-alternate text-medium text-muted text-small"
-                                                    >
+                                                        class="col-6 col-lg-5 d-flex align-items-center justify-content-start text-alternate text-medium text-muted text-small">
                                                         DESCRIPCION
                                                     </div>
                                                     <div
-                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-center text-alternate text-medium text-muted text-small"
-                                                    >
+                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-center text-alternate text-medium text-muted text-small">
                                                         PRECIO
                                                     </div>
                                                     <div
-                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-center text-alternate text-medium text-muted text-small"
-                                                    >
+                                                        class="col-6 col-lg-2 d-flex align-items-center justify-content-center text-alternate text-medium text-muted text-small">
                                                         IMPORTE
                                                     </div>
                                                 </div>
@@ -796,38 +494,22 @@
                                     </div>
                                 </div>
                                 <div id="checkboxTable">
-                                    <div
-                                        class="card mb-2 hover-border-secondary border"
-                                        v-for="(row, index) in ordens"
-                                        :key="index"
-                                    >
+                                    <div class="card mb-2 hover-border-secondary border" v-for="(row, index) in ordens"
+                                        :key="index">
                                         <div class="card-body p-2">
-                                            <div
-                                                class="row g-0 h-100 align-content-center"
-                                            >
+                                            <div class="row g-0 h-100 align-content-center">
                                                 <div
-                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-start mb-2 mb-lg-0 order-lg-2"
-                                                >
-                                                    <div
-                                                        class="text-muted text-small d-lg-none"
-                                                    >
+                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-start mb-2 mb-lg-0 order-lg-2">
+                                                    <div class="text-muted text-small d-lg-none">
                                                         <h1>CANTIDAD</h1>
                                                     </div>
                                                     <div class="text-alternate">
                                                         <template>
-                                                            <el-input-number
-                                                                :disabled="
-                                                                    disableCantidad
-                                                                "
-                                                                :min="1"
-                                                                size="mini"
-                                                                v-model="
-                                                                    row.food
+                                                            <el-input-number :disabled="disableCantidad
+                                                                " :min="1" size="mini" v-model="row.food
                                                                         .item
                                                                         .quantity
-                                                                "
-                                                                controls-position="right"
-                                                                @change="
+                                                                    " controls-position="right" @change="
                                                                     calculateItem(
                                                                         index,
                                                                         row.food
@@ -836,27 +518,21 @@
                                                                         row.food
                                                                             .price_sale
                                                                     )
-                                                                "
-                                                            ></el-input-number>
+                                                                    "></el-input-number>
                                                         </template>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-12 col-lg-5 d-flex flex-column justify-content-start mb-2 mb-lg-0 order-lg-3"
-                                                >
-                                                    <div
-                                                        class="text-muted text-small d-lg-none"
-                                                    >
+                                                    class="col-12 col-lg-5 d-flex flex-column justify-content-start mb-2 mb-lg-0 order-lg-3">
+                                                    <div class="text-muted text-small d-lg-none">
                                                         DESCRIPCION
                                                     </div>
 
-                                                    <template
-                                                        v-if="
-                                                            row.food.item
-                                                                .name_product_pdf !=
-                                                                null
-                                                        "
-                                                    >
+                                                    <template v-if="
+                                                        row.food.item
+                                                            .name_product_pdf !=
+                                                        null
+                                                    ">
                                                         {{
                                                             row.food.item
                                                                 .name_product_pdf
@@ -870,25 +546,16 @@
                                                     </template>
                                                 </div>
                                                 <div
-                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-lg-4"
-                                                >
-                                                    <div
-                                                        class="text-muted text-small d-lg-none"
-                                                    >
+                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-lg-4">
+                                                    <div class="text-muted text-small d-lg-none">
                                                         PRECIO
                                                     </div>
                                                     <div class="text-alternate">
                                                         <span>
-                                                            <el-input
-                                                                v-model="
-                                                                    row.food
-                                                                        .price
-                                                                "
-                                                                :disabled="
-                                                                    disableCantidad
-                                                                "
-                                                                size="mini"
-                                                                @input="
+                                                            <el-input v-model="row.food
+                                                                    .price
+                                                                " :disabled="disableCantidad
+                                                                    " size="mini" @input="
                                                                     calculateItem(
                                                                         index,
                                                                         row.food
@@ -897,23 +564,16 @@
                                                                         row.food
                                                                             .price
                                                                     )
-                                                                "
-                                                            >
-                                                                <template
-                                                                    slot="prepend"
-                                                                    >S/.</template
-                                                                >
+                                                                    ">
+                                                                <template slot="prepend">S/.</template>
                                                             </el-input>
                                                         </span>
                                                     </div>
                                                 </div>
 
                                                 <div
-                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-lg-5 text-center"
-                                                >
-                                                    <div
-                                                        class="text-muted text-small d-lg-none mb-1"
-                                                    >
+                                                    class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-lg-5 text-center">
+                                                    <div class="text-muted text-small d-lg-none mb-1">
                                                         IMPORTE
                                                     </div>
                                                     S/.
@@ -930,21 +590,15 @@
                                                     }}
                                                 </div>
                                                 <div
-                                                    class="col-12 col-lg-1 d-flex flex-column justify-content-center align-items-lg-end mb-2 mb-lg-0 text-end order-lg-last pr-2"
-                                                >
-                                                    <button
-                                                        type="button"
-                                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                                        @click="
+                                                    class="col-12 col-lg-1 d-flex flex-column justify-content-center align-items-lg-end mb-2 mb-lg-0 text-end order-lg-last pr-2">
+                                                    <button type="button"
+                                                        class="btn waves-effect waves-light btn-sm btn-danger" @click="
                                                             removeFood(
                                                                 index,
                                                                 row.id
                                                             )
-                                                        "
-                                                    >
-                                                        <i
-                                                            class="fas fa-times"
-                                                        ></i>
+                                                            ">
+                                                        <i class="fas fa-times"></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -956,59 +610,32 @@
                         <!-- Customers List End -->
                         <!--  -->
 
-                        <div
-                            class="row"
-                            v-loading="loading"
-                            v-if="selectOption == 0"
-                        >
-                            <div
-                                class="col-12 col-lg-6 col-xxl-2 mb-2"
-                                v-for="(row, index) in listar_tables"
-                                :key="index"
-                            >
-                                <div
-                                    class="card hover-border-secondary"
-                                    :class="
-                                        selecttables == row.id
-                                            ? 'border-secondary'
-                                            : ''
-                                    "
-                                    @click="selectTable(row, index)"
-                                    data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasRight"
-                                    aria-controls="offcanvasRight"
-                                >
-                                    <div
-                                        class="h-100 row g-0 card-body align-items-center"
-                                    >
+                        <div class="row" v-loading="loading" v-if="selectOption == 0">
+                            <div class="col-12 col-lg-6 col-xxl-2 mb-2" v-for="(row, index) in listar_tables"
+                                :key="index">
+                                <div class="card hover-border-secondary" :class="selecttables == row.id
+                                        ? 'border-secondary'
+                                        : ''
+                                    " @click="selectTable(row, index)" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                    <div class="h-100 row g-0 card-body align-items-center">
                                         <div class="col-auto">
                                             <div
-                                                class="bg-gradient-2 sw-6 sh-6 rounded-md d-flex justify-content-center align-items-center"
-                                            >
-                                                <i
-                                                    class="icofont icofont-dining-table icofont-2x text-white"
-                                                ></i>
+                                                class="bg-gradient-2 sw-6 sh-6 rounded-md d-flex justify-content-center align-items-center">
+                                                <i class="icofont icofont-dining-table icofont-2x text-white"></i>
                                             </div>
                                         </div>
-                                        <div
-                                            class="col sh-6 ps-3 d-flex flex-column justify-content-center"
-                                        >
-                                            <div
-                                                class="heading mb-0 d-flex align-items-center lh-1-25"
-                                            >
+                                        <div class="col sh-6 ps-3 d-flex flex-column justify-content-center">
+                                            <div class="heading mb-0 d-flex align-items-center lh-1-25">
                                                 Mesa {{ row.number }}
                                             </div>
                                             <div class="row g-0">
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="cta-2 text-primary"
-                                                    >
-                                                        <template
-                                                            v-if="
-                                                                row.ordens
-                                                                    .length == 1
-                                                            "
-                                                        >
+                                                    <div class="cta-2 text-primary">
+                                                        <template v-if="
+                                                            row.ordens
+                                                                .length == 1
+                                                        ">
                                                             {{
                                                                 (
                                                                     "00" +
@@ -1018,18 +645,16 @@
                                                             }}
                                                         </template>
                                                         <template v-else>
-                                                            <template
-                                                                v-if="
-                                                                    row.ordens
-                                                                        .length +
-                                                                        1 <=
-                                                                        9
-                                                                "
-                                                            >
+                                                            <template v-if="
+                                                                row.ordens
+                                                                    .length +
+                                                                1 <=
+                                                                9
+                                                            ">
                                                                 0{{
                                                                     row.ordens
                                                                         .length +
-                                                                        1
+                                                                    1
                                                                 }}
                                                                 Ordenes
                                                             </template>
@@ -1037,7 +662,7 @@
                                                                 {{
                                                                     row.ordens
                                                                         .length +
-                                                                        1
+                                                                    1
                                                                 }}
                                                                 Ordenes
                                                             </template>
@@ -1050,24 +675,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="offcanvas offcanvas-end"
-                            tabindex="-1"
-                            id="offcanvasRight"
-                            aria-labelledby="offcanvasRightLabel"
-                        >
+                        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                            aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
                                 <h5 id="offcanvasRightLabel">
                                     Mesa Nº {{ tableSelect.number }} /
                                     {{ ("00" + OrdenLength).slice(-2) }}
                                     Ordenes
                                 </h5>
-                                <button
-                                    type="button"
-                                    class="btn-close text-reset"
-                                    data-bs-dismiss="offcanvas"
-                                    aria-label="Close"
-                                ></button>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
                                 <section class="scroll-section" id="checkboxes">
@@ -1075,119 +692,61 @@
                                         <h2 class="small-title">
                                             Ordenes de Pedido
                                         </h2>
-                                        <div
-                                            class="btn-group check-all-container mt-n1"
-                                        >
-                                            <div
-                                                class="btn btn-sm btn-outline-primary btn-custom-control"
-                                                id="checkAllforCheckboxTable"
-                                                data-target="#checkboxTable"
-                                                @click="selectAllCats"
-                                            >
-                                                <span
-                                                    class="form-check mb-0 pe-1"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        class="form-check-input"
-                                                        id="checkAll"
-                                                        v-model="isAllSelected"
-                                                    />
+                                        <div class="btn-group check-all-container mt-n1">
+                                            <div class="btn btn-sm btn-outline-primary btn-custom-control"
+                                                id="checkAllforCheckboxTable" data-target="#checkboxTable"
+                                                @click="selectAllCats">
+                                                <span class="form-check mb-0 pe-1">
+                                                    <input type="checkbox" class="form-check-input" id="checkAll"
+                                                        v-model="isAllSelected" />
                                                 </span>
                                             </div>
-                                            <button
-                                                type="button"
+                                            <button type="button"
                                                 class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split"
-                                                data-bs-offset="0,3"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            ></button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
-                                            >
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="javascript:void(0)"
-                                                    @click="status_orden_id(0)"
-                                                    >Cancelar Ordenes</a
-                                                >
-                                                <div
-                                                    class="dropdown-divider"
-                                                ></div>
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="javascript:void(0)"
-                                                    @click="status_orden_id(3)"
-                                                    >Orden de Pedidos Listo</a
-                                                >
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="javascript:void(0)"
-                                                    @click="facturar_orden()"
-                                                    >Facturar</a
-                                                >
+                                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false"></button>
+                                            <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    @click="status_orden_id(0)">Cancelar
+                                                    Ordenes</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    @click="status_orden_id(3)">Orden de Pedidos
+                                                    Listo</a>
+                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                    @click="facturar_orden()">Facturar</a>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="scroll-out">
-                                        <div
-                                            class="scroll-by-count os-host os-theme-dark os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition"
-                                            data-count="4"
-                                            id="checkboxTable"
-                                            style="height: calc(100vh - 7rem)"
-                                        >
-                                            <div
-                                                class="os-resize-observer-host observed"
-                                            >
-                                                <div
-                                                    class="os-resize-observer"
-                                                    style="left: 0px; right: auto"
-                                                ></div>
+                                        <div class="scroll-by-count os-host os-theme-dark os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition"
+                                            data-count="4" id="checkboxTable" style="height: calc(100vh - 7rem)">
+                                            <div class="os-resize-observer-host observed">
+                                                <div class="os-resize-observer" style="left: 0px; right: auto"></div>
                                             </div>
-                                            <div
-                                                class="os-size-auto-observer observed"
-                                                style="height: calc(100% + 1px); float: left"
-                                            >
-                                                <div
-                                                    class="os-resize-observer"
-                                                ></div>
+                                            <div class="os-size-auto-observer observed"
+                                                style="height: calc(100% + 1px); float: left">
+                                                <div class="os-resize-observer"></div>
                                             </div>
-                                            <div
-                                                class="os-content-glue"
-                                                style="margin: 0px -15px"
-                                            ></div>
+                                            <div class="os-content-glue" style="margin: 0px -15px"></div>
                                             <div class="os-padding">
-                                                <div
-                                                    class="os-viewport os-viewport-native-scrollbars-invisible"
-                                                    style="overflow-y: scroll"
-                                                >
-                                                    <div
-                                                        class="os-content"
-                                                        style="padding: 0px 15px; height: 100%; width: 100%"
-                                                    >
-                                                        <div
-                                                            v-for="(data,
-                                                            index) in tableSelect.ordens"
-                                                            :key="index"
-                                                        >
-                                                            <div
-                                                                class="row g-0 h-100 align-content-center"
-                                                                v-if="
-                                                                    data.status_id ==
-                                                                        1
-                                                                "
-                                                                :class="
-                                                                    data.status_id ==
-                                                                    0
+                                                <div class="os-viewport os-viewport-native-scrollbars-invisible"
+                                                    style="overflow-y: scroll">
+                                                    <div class="os-content"
+                                                        style="padding: 0px 15px; height: 100%; width: 100%">
+                                                        <div v-for="(data,
+                                                            index) in tableSelect.ordens" :key="index">
+                                                            <div class="row g-0 h-100 align-content-center" v-if="
+                                                                data.status_id ==
+                                                                1
+                                                            " :class="data.status_id ==
+                                                                        0
                                                                         ? 'animate__animated animate__backOutUp animate__delay-2s'
                                                                         : ''
-                                                                "
-                                                            >
+                                                                    ">
                                                                 <div
-                                                                    class="col-12 d-flex align-items-center mb-2 mb-md-0 p-2 font-weight-bold"
-                                                                >
+                                                                    class="col-12 d-flex align-items-center mb-2 mb-md-0 p-2 font-weight-bold">
                                                                     ORDEN Nº
                                                                     {{
                                                                         data.id
@@ -1197,24 +756,16 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div
-                                                                v-for="(ordersItem,
-                                                                indexx) in data.orden_items"
-                                                                :key="indexx"
-                                                            >
-                                                                <div
-                                                                    class="card mb-1 pt-2 pb-2 border"
-                                                                    :class="
-                                                                        data.status_orden_id ==
+                                                            <div v-for="(ordersItem,
+                                                                indexx) in data.orden_items" :key="indexx">
+                                                                <div class="card mb-1 pt-2 pb-2 border" :class="data.status_orden_id ==
                                                                         3
-                                                                            ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                            : ''
-                                                                    "
-                                                                    v-if="
+                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                        : ''
+                                                                    " v-if="
                                                                         ordersItem.status_orden_id ==
-                                                                            1
-                                                                    "
-                                                                >
+                                                                        1
+                                                                    ">
                                                                     <div>
                                                                         <div>
                                                                             <div>
@@ -1251,19 +802,12 @@
 
                                                                             <div>
                                                                                 <div>
-                                                                                    <input
-                                                                                        type="checkbox"
-                                                                                        class="form-check-input"
-                                                                                        :value="
-                                                                                            ordersItem.id
-                                                                                        "
-                                                                                        v-model="
-                                                                                            selectedCatIds
-                                                                                        "
-                                                                                        @click="
+                                                                                    <input type="checkbox"
+                                                                                        class="form-check-input" :value="ordersItem.id
+                                                                                            " v-model="selectedCatIds
+                                                                                            " @click="
                                                                                             select
-                                                                                        "
-                                                                                    />
+                                                                                        " />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1283,243 +827,131 @@
                 </div>
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
-                        <list-orden
-                            :divided_items.sync="divided_items"
-                            @searchFoodByCustomerUnitTypeId="
-                                searchFoodByCustomerUnitTypeId
-                            "
-                            :formQtn.sync="formQtn"
-                            @updateCurrencyChoice="updateCurrencyChoice"
-                            :exchange_rate_sale="form.exchange_rate_sale"
-                            :users.sync="users"
-                            :user.sync="user"
-                            :quotationId.sync="quotationId"
-                            :cotIdentifier.sync="cotIdentifier"
-                            :isSeller.sync="isSeller"
-                            :isAnalist.sync="isAnalist"
-                            @sendOrdens="sendOrdens"
-                            :isHotelArea.sync="isHotelArea"
-                            :clientSaleNoteNumber.sync="clientSaleNoteNumber"
-                            :clientSaleNoteDiscount.sync="
-                                clientSaleNoteDiscount
-                            "
-                            :sellers="sellers"
-                            @sendOrdensAllTables="sendOrdensAllTables"
-                            ref="list_orden"
-                            :affectation_igv_types="affectation_igv_types"
-                            :all_series.sync="all_series"
-                            @resetOrden="resetOrden"
-                            :areas.sync="areas"
-                            :company.sync="company"
-                            :customers.sync="all_customers"
-                            :customer_variation="customer_variation"
-                            :variationShow.sync="variation"
-                            :establishments="establishments"
-                            :itemDefault.sync="itemDefault"
-                            :cash_id.sync="cashId"
-                            :ordenId.sync="ordenId"
-                            :ordensPending.sync="ordensPending"
-                            :area_id="area_id"
-                            :isCreatingOrden.sync="isCreatingOrden"
-                            :blockCart.sync="blockCart"
-                            :total2.sync="form.total"
-                            :configuration.sync="configuration"
-                            :localOrden.sync="localOrden"
-                            :ordens.sync="ordensItems"
-                            @total_sales="total_sales"
-                            @updateOrdens="updateOrdens"
-                            @paymentsOrden="paymentsOrden"
-                            @deletedFood="deletedFood"
-                            @cancelOrden="cancelOrden"
-                            @ordenDeleted="createOrden"
-                            @limpiarForm="limpiarForm"
-                            :clientTableData.sync="clientTableData"
-                            @reloadProduct="search_items"
-                            @cotizarConfirmado="handleCotizarConfirmado"
-                            :cotizarConfirmado.sync="cotizarConfirmado"
+                        <list-orden :divided_items.sync="divided_items" @searchFoodByCustomerUnitTypeId="
+                            searchFoodByCustomerUnitTypeId
+                        " :formQtn.sync="formQtn" @updateCurrencyChoice="updateCurrencyChoice"
+                            :exchange_rate_sale="form.exchange_rate_sale" :users.sync="users" :user.sync="user"
+                            :quotationId.sync="quotationId" :cotIdentifier.sync="cotIdentifier"
+                            :isSeller.sync="isSeller" :isAnalist.sync="isAnalist" @sendOrdens="sendOrdens"
+                            :isHotelArea.sync="isHotelArea" :clientSaleNoteNumber.sync="clientSaleNoteNumber"
+                            :clientSaleNoteDiscount.sync="clientSaleNoteDiscount
+                                " :sellers="sellers" @sendOrdensAllTables="sendOrdensAllTables" ref="list_orden"
+                            :affectation_igv_types="affectation_igv_types" :all_series.sync="all_series"
+                            @resetOrden="resetOrden" :areas.sync="areas" :company.sync="company"
+                            :customers.sync="all_customers" :customer_variation="customer_variation"
+                            :variationShow.sync="variation" :establishments="establishments"
+                            :itemDefault.sync="itemDefault" :cash_id.sync="cashId" :ordenId.sync="ordenId"
+                            :ordensPending.sync="ordensPending" :area_id="area_id"
+                            :isCreatingOrden.sync="isCreatingOrden" :blockCart.sync="blockCart"
+                            :total2.sync="form.total" :configuration.sync="configuration" :localOrden.sync="localOrden"
+                            :ordens.sync="ordensItems" @total_sales="total_sales" @updateOrdens="updateOrdens"
+                            @paymentsOrden="paymentsOrden" @deletedFood="deletedFood" @cancelOrden="cancelOrden"
+                            @ordenDeleted="createOrden" @limpiarForm="limpiarForm"
+                            :clientTableData.sync="clientTableData" @reloadProduct="search_items"
+                            @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
                             @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
-                            "
-                            :currencyIdChoice.sync="currencyIdChoice"
-                        ></list-orden>
+                            " :currencyIdChoice.sync="currencyIdChoice"></list-orden>
                     </div>
                 </div>
             </div>
             <div v-else>
                 <!-- Modo Celular/ Movil -->
                 <div class="d-flex flex-wrap">
-                    <button
-                        v-if="
-                            isSellerConsolidated
-                                ? customer_unit_type_id != null &&
-                                  customer_unit_type_id != ''
-                                : true
-                        "
-                        type="button"
-                        class="btn settings-button bg-primary text-white border border-white"
-                        data-bs-toggle="modal"
-                        data-bs-target="#settings"
-                        id="settingsButton"
-                    >
+                    <button v-if="
+                        isSellerConsolidated
+                            ? customer_unit_type_id != null &&
+                            customer_unit_type_id != ''
+                            : true
+                    " type="button" class="btn settings-button bg-primary text-white border border-white"
+                        data-bs-toggle="modal" data-bs-target="#settings" id="settingsButton">
                         <i class="fas fa-cart-plus"></i>
                     </button>
-                    <div
-                        class="modal fade modal-right scroll-out-negative"
-                        id="settings"
-                        data-bs-backdrop="true"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="settings"
-                        aria-hidden="true"
-                    >
-                        <div
-                            class="modal-dialog modal-dialog-scrollable full"
-                            role="document"
-                        >
+                    <div class="modal fade modal-right scroll-out-negative" id="settings" data-bs-backdrop="true"
+                        tabindex="-1" role="dialog" aria-labelledby="settings" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable full" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h5
-                                        class="modal-title"
-                                        style="color: var(--light-text) !important;"
-                                    >
+                                    <h5 class="modal-title" style="color: var(--light-text) !important;">
                                         Visualizacion de Productos
                                     </h5>
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
 
                                 <div class="modal-body">
-                                    <div
-                                        class="scroll-track-visible"
-                                        style="overflow-y: auto;"
-                                    >
+                                    <div class="scroll-track-visible" style="overflow-y: auto;">
                                         <div class="row">
                                             <div class="col-12"></div>
 
                                             <div class="col-12">
                                                 <template>
-                                                    <h2
-                                                        class="text-muted text-small"
-                                                    >
+                                                    <h2 class="text-muted text-small">
                                                         Categorias
                                                     </h2>
-                                                    <el-select
-                                                        v-model="category"
-                                                        filterable
-                                                        clearable
-                                                        placeholder="Selecionar aqui...."
-                                                    >
-                                                        <el-option
-                                                            v-for="item in categories"
-                                                            :key="item.id"
-                                                            :label="item.name"
-                                                            :value="item.id"
-                                                        ></el-option>
+                                                    <el-select v-model="category" filterable clearable
+                                                        placeholder="Selecionar aqui....">
+                                                        <el-option v-for="item in categories" :key="item.id"
+                                                            :label="item.name" :value="item.id"></el-option>
                                                     </el-select>
                                                 </template>
                                             </div>
                                             <div class="col-12">
-                                                <h2
-                                                    class="text-muted text-small"
-                                                >
+                                                <h2 class="text-muted text-small">
                                                     Buscar
                                                 </h2>
-                                                <template
-                                                    v-if="selectOption == 4"
-                                                >
-                                                    <el-input
-                                                        ref="input_items"
-                                                        size="small"
-                                                        v-model="input_item"
-                                                        @input="search()"
-                                                        @focus="clear_input()"
-                                                        autofocus
-                                                        placeholder="Ingrese aca Un Producto"
-                                                    >
-                                                        <el-button
-                                                            slot="append"
-                                                            icon="el-icon-search"
-                                                            @click="receiveData"
-                                                        ></el-button>
+                                                <template v-if="selectOption == 4">
+                                                    <el-input ref="input_items" size="small" v-model="input_item"
+                                                        @input="search()" @focus="clear_input()" autofocus
+                                                        placeholder="Ingrese aca Un Producto">
+                                                        <el-button slot="append" icon="el-icon-search"
+                                                            @click="receiveData"></el-button>
                                                     </el-input>
                                                 </template>
 
                                                 <template v-else>
-                                                    <el-input
-                                                        ref="input_itemMobil"
-                                                        size="small"
-                                                        v-model="input_item"
-                                                        @input="search()"
-                                                        @focus="clear_input()"
-                                                        autofocus
-                                                        placeholder="Ingrese Un Producto"
-                                                    >
-                                                        <el-button
-                                                            slot="append"
-                                                            icon="el-icon-search"
-                                                            @click="receiveData"
-                                                        ></el-button>
+                                                    <el-input ref="input_itemMobil" size="small" v-model="input_item"
+                                                        @input="search()" @focus="clear_input()" autofocus
+                                                        placeholder="Ingrese Un Producto">
+                                                        <el-button slot="append" icon="el-icon-search"
+                                                            @click="receiveData"></el-button>
                                                     </el-input>
                                                 </template>
                                             </div>
                                             <div class="col-12">
-                                                <el-checkbox
-                                                    v-model="barcode"
-                                                    @change="
-                                                        saveInLocalStorageBarcode
-                                                    "
-                                                >
-                                                    <h2
-                                                        class="text-muted text-small"
-                                                    >
+                                                <el-checkbox v-model="barcode" @change="
+                                                    saveInLocalStorageBarcode
+                                                ">
+                                                    <h2 class="text-muted text-small">
                                                         Barcode
                                                     </h2>
                                                 </el-checkbox>
                                             </div>
                                         </div>
                                         <div class="row d-flex flex-wrap">
-                                            <div
-                                                class="col-12 p-1"
-                                                v-for="(data,
-                                                index) in allFoods"
-                                                :key="index"
-                                            >
-                                                <el-tooltip
-                                                    effect="dark"
-                                                    :disabled="
-                                                        data.item.warehouses
-                                                            .length == 1 ||
-                                                            !configuration.show_stock_establishment_box
-                                                    "
-                                                >
+                                            <div class="col-12 p-1" v-for="(data,
+                                                index) in allFoods" :key="index">
+                                                <el-tooltip effect="dark" :disabled="data.item.warehouses
+                                                        .length == 1 ||
+                                                    !configuration.show_stock_establishment_box
+                                                    ">
                                                     <div slot="content">
                                                         Stock Almacenes
                                                         <br />
-                                                        <span
-                                                            v-for="(info,
+                                                        <span v-for="(info,
                                                             idx) in data.item
-                                                                .warehouses"
-                                                            :key="idx"
-                                                        >
-                                                            <label
-                                                                v-if="
-                                                                    info
-                                                                        .warehouse
-                                                                        .id !=
-                                                                        establishmentId
-                                                                "
-                                                            >
-                                                                <template
-                                                                    v-if="
-                                                                        data
-                                                                            .item
-                                                                            .max_quantity
-                                                                    "
-                                                                >
+                                                                .warehouses" :key="idx">
+                                                            <label v-if="
+                                                                info
+                                                                    .warehouse
+                                                                    .id !=
+                                                                establishmentId
+                                                            ">
+                                                                <template v-if="
+                                                                    data
+                                                                        .item
+                                                                        .max_quantity
+                                                                ">
                                                                     <!-- {{
                                                                             `${
                                                                                 info.warehouse.description
@@ -1533,14 +965,11 @@
                                                                         )
                                                                     }}
                                                                 </template>
-                                                                <template
-                                                                    v-else
-                                                                >
+                                                                <template v-else>
                                                                     {{
-                                                                        `${
-                                                                            info
-                                                                                .warehouse
-                                                                                .description
+                                                                        `${info
+                                                                            .warehouse
+                                                                            .description
                                                                         }: ${Number(
                                                                             info.stock
                                                                         ).toFixed(
@@ -1552,72 +981,47 @@
                                                             <br />
                                                         </span>
                                                     </div>
-                                                    <div
-                                                        id="card"
+                                                    <div id="card"
                                                         class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1"
-                                                        style="height: 125px; width: 297px ; margin-left: 9px; "
-                                                    >
-                                                        <div
-                                                            @click="
-                                                                (configuration.consolidated_quotations ||
-                                                                    configuration.direct_unit_type) &&
+                                                        style="height: 125px; width: 297px ; margin-left: 9px; ">
+                                                        <div @click="
+                                                            (configuration.consolidated_quotations ||
+                                                                configuration.direct_unit_type) &&
                                                                 data.types
                                                                     .length > 0
-                                                                    ? clickCommand(
-                                                                          data
-                                                                              .types[0]
-                                                                      )
-                                                                    : addFood(
-                                                                          index
-                                                                      )
-                                                            "
-                                                        >
+                                                                ? clickCommand(
+                                                                    data
+                                                                        .types[0]
+                                                                )
+                                                                : addFood(
+                                                                    index
+                                                                )
+                                                            ">
                                                             <div>
-                                                                <span
-                                                                    class="lead-font-weight-700 h5"
-                                                                >
+                                                                <span class="lead-font-weight-700 h5">
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
                                                                 </span>
                                                             </div>
-                                                            <div
-                                                                class="d-flex align-items-end justify-content-between"
-                                                            >
-                                                                <div
-                                                                    class="p-1"
-                                                                >
-                                                                    <div
-                                                                        class="icon-container"
-                                                                    >
-                                                                        <div
-                                                                            class="icon-container_box"
-                                                                        >
-                                                                            <template
-                                                                                v-if="
-                                                                                    data.image ==
-                                                                                        'imagen-no-disponible.jpg'
-                                                                                "
-                                                                            >
-                                                                                <img
-                                                                                    hidden
+                                                            <div class="d-flex align-items-end justify-content-between">
+                                                                <div class="p-1">
+                                                                    <div class="icon-container">
+                                                                        <div class="icon-container_box">
+                                                                            <template v-if="
+                                                                                data.image ==
+                                                                                'imagen-no-disponible.jpg'
+                                                                            ">
+                                                                                <img hidden
                                                                                     src="/images/imagen-no-disponible.jpg"
-                                                                                    alt="User Img"
-                                                                                    class="thumbail"
-                                                                                />
+                                                                                    alt="User Img" class="thumbail" />
                                                                             </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
-                                                                                <img
-                                                                                    :src="
-                                                                                        formatUrlImage(
-                                                                                            data.image
-                                                                                        )
-                                                                                    "
-                                                                                    class="thumbail"
-                                                                                    style="  max-height: 69px;  max-width: 69px;"
-                                                                                />
+                                                                            <template v-else>
+                                                                                <img :src="formatUrlImage(
+                                                                                    data.image
+                                                                                )
+                                                                                    " class="thumbail"
+                                                                                    style="  max-height: 69px;  max-width: 69px;" />
                                                                             </template>
                                                                         </div>
                                                                     </div>
@@ -1627,21 +1031,14 @@
                                                                         data.code
                                                                     }}
                                                                 </div>
-                                                                <div
-                                                                    class="d-flex flex-column align-items-end"
-                                                                >
+                                                                <div class="d-flex flex-column align-items-end">
                                                                     <!-- <div class="text-uppercase font-weight-light h5">
                                                     {{ data.category.name }}
                                   </div>-->
-                                                                    <div
-                                                                        class="block mb-2"
-                                                                    >
-                                                                        <span
-                                                                            class="time font-weight-light"
-                                                                        >
+                                                                    <div class="block mb-2">
+                                                                        <span class="time font-weight-light">
                                                                             <span
-                                                                                class="text-muted lead-font-weight-700"
-                                                                            >
+                                                                                class="text-muted lead-font-weight-700">
                                                                                 S/
                                                                                 {{
                                                                                     data.price
@@ -1649,39 +1046,32 @@
                                                                             </span>
                                                                         </span>
                                                                     </div>
-                                                                    <div
-                                                                        v-if="
-                                                                            (data
+                                                                    <div v-if="
+                                                                        (data
+                                                                            .item
+                                                                            .is_set ==
+                                                                            0 &&
+                                                                            data
                                                                                 .item
-                                                                                .is_set ==
-                                                                                0 &&
-                                                                                data
-                                                                                    .item
-                                                                                    .unit_type_id !=
-                                                                                    'ZZ') ||
-                                                                                configuration.show_stock_cash ==
-                                                                                    true
-                                                                        "
-                                                                    >
-                                                                        <template
-                                                                            v-if="
-                                                                                data
-                                                                                    .item
-                                                                                    .stock >
-                                                                                    0
-                                                                            "
-                                                                        >
+                                                                                .unit_type_id !=
+                                                                            'ZZ') ||
+                                                                        configuration.show_stock_cash ==
+                                                                        true
+                                                                    ">
+                                                                        <template v-if="
+                                                                            data
+                                                                                .item
+                                                                                .stock >
+                                                                            0
+                                                                        ">
                                                                             <span
-                                                                                class="badge rounded-pill bg-primary m-l-0"
-                                                                            >
+                                                                                class="badge rounded-pill bg-primary m-l-0">
                                                                                 Stock
-                                                                                <template
-                                                                                    v-if="
-                                                                                        data
-                                                                                            .item
-                                                                                            .max_quantity
-                                                                                    "
-                                                                                >
+                                                                                <template v-if="
+                                                                                    data
+                                                                                        .item
+                                                                                        .max_quantity
+                                                                                ">
                                                                                     {{
                                                                                         formatedStockPresentation(
                                                                                             data.item,
@@ -1700,9 +1090,7 @@
                                                                                             )
                                           }}-->
                                                                                 </template>
-                                                                                <template
-                                                                                    v-else
-                                                                                >
+                                                                                <template v-else>
                                                                                     {{
                                                                                         parseFloat(
                                                                                             data
@@ -1713,57 +1101,36 @@
                                                                                 </template>
                                                                             </span>
                                                                         </template>
-                                                                        <template
-                                                                            v-else
-                                                                        >
+                                                                        <template v-else>
                                                                             <span
-                                                                                class="badge rounded-pill bg-danger m-l-0"
-                                                                                >Agotado</span
-                                                                            >
+                                                                                class="badge rounded-pill bg-danger m-l-0">Agotado</span>
                                                                         </template>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div
-                                                            v-if="
-                                                                isSellerConsolidated
-                                                                    ? data.types
-                                                                          .length >
-                                                                      1
-                                                                    : data.types
-                                                                          .length >
-                                                                      0
-                                                            "
-                                                            class="d-flex justify-content-end"
-                                                            style="padding-right: 10px; margin-top: 5px"
-                                                        >
-                                                            <el-dropdown
-                                                                @command="
-                                                                    clickCommand
-                                                                "
-                                                            >
-                                                                <span
-                                                                    class="el-dropdown-link"
-                                                                >
+                                                        <div v-if="
+                                                            isSellerConsolidated
+                                                                ? data.types
+                                                                    .length >
+                                                                1
+                                                                : data.types
+                                                                    .length >
+                                                                0
+                                                        " class="d-flex justify-content-end"
+                                                            style="padding-right: 10px; margin-top: 5px">
+                                                            <el-dropdown @command="
+                                                                clickCommand
+                                                            ">
+                                                                <span class="el-dropdown-link">
                                                                     Precios
-                                                                    <i
-                                                                        class="el-icon-arrow-down el-icon--right"
-                                                                    ></i>
+                                                                    <i class="el-icon-arrow-down el-icon--right"></i>
                                                                 </span>
-                                                                <el-dropdown-menu
-                                                                    slot="dropdown"
-                                                                >
-                                                                    <el-dropdown-item
-                                                                        v-for="(type,
-                                                                        idx) in data.types"
-                                                                        :key="
-                                                                            idx
-                                                                        "
-                                                                        :command="
-                                                                            type
-                                                                        "
-                                                                    >
+                                                                <el-dropdown-menu slot="dropdown">
+                                                                    <el-dropdown-item v-for="(type,
+                                                                        idx) in data.types" :key="idx
+                                                                            " :command="type
+                                                                            ">
                                                                         {{
                                                                             formatDescriptionType(
                                                                                 type
@@ -1784,54 +1151,23 @@
                         </div>
                     </div>
                     <!-- sidebarmodal fin  -->
-                    <div
-                        class="dropdown-as-select d-inline-block"
-                        data-childselector="span"
-                    >
-                        <button
-                            class="btn p-0"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                        >
-                            <span
-                                class="btn btn-primary dropdown-toggle"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                data-bs-delay="0"
-                                title
-                                data-bs-original-title="Item Count"
-                                aria-label="Item Count"
-                            >
+                    <div class="dropdown-as-select d-inline-block" data-childselector="span">
+                        <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip"
+                                data-bs-placement="top" data-bs-delay="0" title data-bs-original-title="Item Count"
+                                aria-label="Item Count">
                                 <i class="fas fa-list"></i>
                             </span>
                         </button>
-                        <div
-                            class="dropdown-menu dropdown-menu-end col-md-2 col-1"
-                        >
-                            <div
-                                class="col-12"
-                                v-for="(option, idx) in optionsMenu"
-                                :key="idx"
-                                v-show="option.visible"
-                            >
-                                <el-button
-                                    v-if="option.visible"
-                                    @click="trigerFunction(option.id)"
+                        <div class="dropdown-menu dropdown-menu-end col-md-2 col-1">
+                            <div class="col-12" v-for="(option, idx) in optionsMenu" :key="idx" v-show="option.visible">
+                                <el-button v-if="option.visible" @click="trigerFunction(option.id)"
                                     class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                                    style="max-width: 150px;"
-                                >
-                                    <div
-                                        class="text-center"
-                                        style="margin-bottom: 2px"
-                                    >
-                                        <p
-                                            style="margin: 0 !important; padding: 0 !important"
-                                            v-for="(title,
-                                            idx2) in option.title"
-                                            :key="idx2"
-                                        >
+                                    style="max-width: 150px;">
+                                    <div class="text-center" style="margin-bottom: 2px">
+                                        <p style="margin: 0 !important; padding: 0 !important" v-for="(title,
+                                            idx2) in option.title" :key="idx2">
                                             {{ title }}
                                         </p>
                                         <i :class="[option.icon, 'fa-1x']"></i>
@@ -1843,254 +1179,100 @@
                     </div>
                 </div>
                 <div class="row">
-                    <list-orden
-                        :divided_items.sync="divided_items"
-                        @searchFoodByCustomerUnitTypeId="
-                            searchFoodByCustomerUnitTypeId
-                        "
-                        :formQtn.sync="formQtn"
-                        :exchange_rate_sale="form.exchange_rate_sale"
-                        :users.sync="users"
-                        :user.sync="user"
-                        :isSeller.sync="isSeller"
-                        @sendOrdens="sendOrdens"
-                        :company.sync="company"
-                        :customer_variation="customer_variation"
-                        :variationShow.sync="variation"
-                        :customers.sync="all_customers"
-                        :establishments="establishments"
-                        :itemDefault.sync="itemDefault"
-                        :cash_id.sync="cashId"
-                        :ordenId.sync="ordenId"
-                        :ordensPending.sync="ordensPending"
-                        :area_id="area_id"
-                        :isCreatingOrden.sync="isCreatingOrden"
-                        :blockCart.sync="blockCart"
-                        :total2.sync="form.total"
-                        :configuration.sync="configuration"
-                        :localOrden.sync="localOrden"
-                        :ordens.sync="ordensItems"
-                        @limpiarForm="limpiarForm"
-                        @total_sales="total_sales"
-                        @updateOrdens="updateOrdens"
-                        @paymentsOrden="paymentsOrden"
-                        @deletedFood="deletedFood"
-                        @cancelOrden="cancelOrden"
-                        @ordenDeleted="createOrden"
-                        :clientTableData.sync="clientTableData"
-                        :categories.sync="categories"
-                        @reloadProduct="search_items"
-                        :currencyIdChoice.sync="currencyIdChoice"
-                        ref="listOrdens"
-                    ></list-orden>
+                    <list-orden :divided_items.sync="divided_items" @searchFoodByCustomerUnitTypeId="
+                        searchFoodByCustomerUnitTypeId
+                    " :formQtn.sync="formQtn" :exchange_rate_sale="form.exchange_rate_sale" :users.sync="users"
+                        :user.sync="user" :isSeller.sync="isSeller" @sendOrdens="sendOrdens" :company.sync="company"
+                        :customer_variation="customer_variation" :variationShow.sync="variation"
+                        :customers.sync="all_customers" :establishments="establishments" :itemDefault.sync="itemDefault"
+                        :cash_id.sync="cashId" :ordenId.sync="ordenId" :ordensPending.sync="ordensPending"
+                        :area_id="area_id" :isCreatingOrden.sync="isCreatingOrden" :blockCart.sync="blockCart"
+                        :total2.sync="form.total" :configuration.sync="configuration" :localOrden.sync="localOrden"
+                        :ordens.sync="ordensItems" @limpiarForm="limpiarForm" @total_sales="total_sales"
+                        @updateOrdens="updateOrdens" @paymentsOrden="paymentsOrden" @deletedFood="deletedFood"
+                        @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
+                        :categories.sync="categories" @reloadProduct="search_items"
+                        :currencyIdChoice.sync="currencyIdChoice" ref="listOrdens"></list-orden>
                 </div>
                 <template>
-                    <list-food-mobiles
-                        :canAddItem.sync="canAddItem"
-                        :loadingItems.sync="loadingItems"
-                        :localOrden="localOrden"
-                        :blockAdd.sync="blockCart"
-                        ref="list_foods"
-                        :worker="worker"
-                        @insertOrden="insertOrden"
-                        :configuration="configuration"
-                        :foods.sync="allFoods"
-                        @buscarnuevo="buscarnuevo"
-                        :category.sync="category"
-                        :showDialogViewItems.sync="showDialogViewItems"
-                        :categories.sync="categories"
-                        :selectOption.sync="selectOption"
-                        @data-received="receiveData"
-                        @changeCategory="changeCategory"
-                    ></list-food-mobiles>
+                    <list-food-mobiles :canAddItem.sync="canAddItem" :loadingItems.sync="loadingItems"
+                        :localOrden="localOrden" :blockAdd.sync="blockCart" ref="list_foods" :worker="worker"
+                        @insertOrden="insertOrden" :configuration="configuration" :foods.sync="allFoods"
+                        @buscarnuevo="buscarnuevo" :category.sync="category"
+                        :showDialogViewItems.sync="showDialogViewItems" :categories.sync="categories"
+                        :selectOption.sync="selectOption" @data-received="receiveData"
+                        @changeCategory="changeCategory"></list-food-mobiles>
                 </template>
             </div>
         </div>
 
-        <DrawerOrdens
-            ref="ordenRef"
-            :configuration.sync="configuration"
-            :localOrden.sync="localOrden"
-            :ordens.sync="ordensItems"
-            @total_sales="total_sales"
-            @updateOrdens="updateOrdens"
-            @paymentsOrden="paymentsOrden"
-            @deletedFood="deletedFood"
-            @ordenDeleted="createOrden"
-        ></DrawerOrdens>
+        <DrawerOrdens ref="ordenRef" :configuration.sync="configuration" :localOrden.sync="localOrden"
+            :ordens.sync="ordensItems" @total_sales="total_sales" @updateOrdens="updateOrdens"
+            @paymentsOrden="paymentsOrden" @deletedFood="deletedFood" @ordenDeleted="createOrden"></DrawerOrdens>
 
         <template>
-            <payment-form
-                :user="user"
-                :currencyIdChoice.sync="currencyIdChoice"
-                @clearVariation="clearVariation"
-                :promotions_document="promotions_document"
-                :itemDefault.sync="itemDefault"
-                :quotationId.sync="quotationId"
-                :clientSaleNoteNumber.sync="clientSaleNoteNumber"
-                :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
-                :sellers.sync="sellers"
-                :ordens_all_table.sync="ordens_all_table"
-                :consignment_id="consignment_id"
-                @removeConsignment="removeConsignment"
-                :isConsignment.sync="isConsignment"
-                :printer.sync="printer"
-                :personalWhatsapp="personalWhatsapp"
-                @getFile="getFile"
-                :customer_default="customer_default"
-                :variation.sync="variation"
-                :documentsType="documentsType"
-                :cash_id.sync="cashId"
-                :percentage_igv="percentage_igv"
-                :is_payment.sync="is_payment"
-                :form="form"
-                :orden_items="orden_items"
-                :establishments="establishments"
-                :company.sync="company"
-                :idOrden="idOrden"
-                :all_series.sync="all_series"
-                :payments.sync="payments"
-                :direct_printing="direct_printing"
-                :currency-type-id-active="form.currency_type_id"
-                :currency-type-active="currency_type"
-                :exchange-rate-sale="form.exchange_rate_sale"
-                :customer="customer"
-                :auth_login="auth_login"
-                :configuration="configuration"
-                :desarrollador.sync="desarrollador"
-                @limpiarForm="limpiarForm"
-                :orden="ordenId"
-                @openDrawer="openDrawer"
-                @printer="Printer"
-                :all_customers.sync="all_customers"
-                :formVariation.sync="formVariation"
-                :customer_variation="customer_variation"
-                :affectation_igv_types="affectation_igv_types"
-                @reloadItems="getFoods"
-                ref="paymentComponent"
-            ></payment-form>
+            <payment-form :user="user" :currencyIdChoice.sync="currencyIdChoice" @clearVariation="clearVariation"
+                :promotions_document="promotions_document" :itemDefault.sync="itemDefault"
+                :quotationId.sync="quotationId" :clientSaleNoteNumber.sync="clientSaleNoteNumber"
+                :clientSaleNoteDiscount.sync="clientSaleNoteDiscount" :sellers.sync="sellers"
+                :ordens_all_table.sync="ordens_all_table" :consignment_id="consignment_id"
+                @removeConsignment="removeConsignment" :isConsignment.sync="isConsignment" :printer.sync="printer"
+                :personalWhatsapp="personalWhatsapp" @getFile="getFile" :customer_default="customer_default"
+                :variation.sync="variation" :documentsType="documentsType" :cash_id.sync="cashId"
+                :percentage_igv="percentage_igv" :is_payment.sync="is_payment" :form="form" :orden_items="orden_items"
+                :establishments="establishments" :company.sync="company" :idOrden="idOrden"
+                :all_series.sync="all_series" :payments.sync="payments" :direct_printing="direct_printing"
+                :currency-type-id-active="form.currency_type_id" :currency-type-active="currency_type"
+                :exchange-rate-sale="form.exchange_rate_sale" :customer="customer" :auth_login="auth_login"
+                :configuration="configuration" :desarrollador.sync="desarrollador" @limpiarForm="limpiarForm"
+                :orden="ordenId" @openDrawer="openDrawer" @printer="Printer" :all_customers.sync="all_customers"
+                :formVariation.sync="formVariation" :customer_variation="customer_variation"
+                :affectation_igv_types="affectation_igv_types" @reloadItems="getFoods"
+                ref="paymentComponent"></payment-form>
         </template>
         <template v-if="configuration.college">
-            <college-parents
-                v-if="showDialogNewPerson"
-                :showDialog.sync="showDialogNewPerson"
-                :fromPos="true"
-            ></college-parents>
+            <college-parents v-if="showDialogNewPerson" :showDialog.sync="showDialogNewPerson"
+                :fromPos="true"></college-parents>
         </template>
         <template v-else>
-            <person-form
-                v-if="showDialogNewPerson"
-                :external="false"
-                :showDialog.sync="showDialogNewPerson"
-                :fromPos="true"
-            ></person-form>
+            <person-form v-if="showDialogNewPerson" :external="false" :showDialog.sync="showDialogNewPerson"
+                :fromPos="true"></person-form>
         </template>
-        <cash-history
-            :configuration="configuration"
-            :cash_id.sync="cashId"
-            :showHistoryCash.sync="showHistoryCash"
-            :area_id="area_id"
-            :sender="personalWhatsapp ? sender : 'sdrimsac'"
-        ></cash-history>
-        <item-form
-            v-if="showDialogNewItem"
-            :showDialog.sync="showDialogNewItem"
-            :external="true"
-            :worker="worker"
-            :fromPos="true"
-        ></item-form>
-        <college
-            v-if="configuration.college"
-            :showDialog.sync="showDialogCollege"
-            :configuration="configuration"
-            :fromPos="true"
-        ></college>
-        <warehouses-detail
-            v-if="showWarehousesDetail"
-            :showDialog.sync="showWarehousesDetail"
-            :warehouses="warehousesDetail"
-            :unit_type="unittypeDetail"
-            :fromPos="true"
-        ></warehouses-detail>
-        <tables
-            :configuration="configuration"
-            @creatingOrden="creatingOrden"
-            @sendOrdens="sendOrdens"
-            :showTables.sync="showTables"
-        ></tables>
-        <tables-rooms
-            v-if="configuration.hotels"
-            :cash_id.sync="cashId"
-            :configuration="configuration"
-            :printer.sync="printer"
-            @getTablesToClean="getTablesToClean"
-            @paymentsOrden="paymentsOrden"
-            @creatingOrden="creatingOrden"
-            @roomWasCleaned="roomWasCleaned"
-            @sendOrdens="sendOrdens"
-            :roomSeeId="roomSeeId"
-            @modal-closed="modalClosed"
-            :showTables.sync="showTablesRooms"
-            :itemDefault.sync="itemDefault"
-            :fromPos="true"
-        ></tables-rooms>
-        <documents-print
-            :sender="personalWhatsapp ? sender : 'sdrimsac'"
-            :company="company"
-            :showDialog.sync="showDocumentsPrint"
-            :config.sync="config"
-            @sendOrdens="sendOrdens"
-            @insertOrdenQuotation="insertOrdenQuotation"
-            @sendItems="sendItems"
-            :establishment.sync="establishments"
-            :area_id="area_id"
-            :printer.sync="printer"
-            :cash_id.sync="cashId"
-        ></documents-print>
-        <PromotionCanje
-            :showDialog.sync="showdialogPromocion"
-            :config.sync="config"
-            :establishment.sync="establishment"
-        >
+        <cash-history :configuration="configuration" :cash_id.sync="cashId" :showHistoryCash.sync="showHistoryCash"
+            :area_id="area_id" :sender="personalWhatsapp ? sender : 'sdrimsac'"></cash-history>
+        <item-form v-if="showDialogNewItem" :showDialog.sync="showDialogNewItem" :external="true" :worker="worker"
+            :fromPos="true"></item-form>
+        <college v-if="configuration.college" :showDialog.sync="showDialogCollege" :configuration="configuration"
+            :fromPos="true"></college>
+        <warehouses-detail v-if="showWarehousesDetail" :showDialog.sync="showWarehousesDetail"
+            :warehouses="warehousesDetail" :unit_type="unittypeDetail" :fromPos="true"></warehouses-detail>
+        <tables :configuration="configuration" @creatingOrden="creatingOrden" @sendOrdens="sendOrdens"
+            :showTables.sync="showTables"></tables>
+        <tables-rooms v-if="configuration.hotels" :cash_id.sync="cashId" :configuration="configuration"
+            :printer.sync="printer" @getTablesToClean="getTablesToClean" @paymentsOrden="paymentsOrden"
+            @creatingOrden="creatingOrden" @roomWasCleaned="roomWasCleaned" @sendOrdens="sendOrdens"
+            :roomSeeId="roomSeeId" @modal-closed="modalClosed" :showTables.sync="showTablesRooms"
+            :itemDefault.sync="itemDefault" :fromPos="true"></tables-rooms>
+        <documents-print :sender="personalWhatsapp ? sender : 'sdrimsac'" :company="company"
+            :showDialog.sync="showDocumentsPrint" :config.sync="config" @sendOrdens="sendOrdens"
+            @insertOrdenQuotation="insertOrdenQuotation" @sendItems="sendItems" :establishment.sync="establishments"
+            :area_id="area_id" :printer.sync="printer" :cash_id.sync="cashId"></documents-print>
+        <PromotionCanje :showDialog.sync="showdialogPromocion" :config.sync="config"
+            :establishment.sync="establishment">
         </PromotionCanje>
-        <credits-list
-            v-if="configuration.sale_note_credit_penalty"
-            :showDialog.sync="showCredits"
-            :configuration="configuration"
-            :isAnalist="isAnalist"
-            :user="user"
-            :fromPos="true"
-        ></credits-list>
-        <unit-type-modal
-            @addUnitType="addUnitType"
-            @addCategoriaMadera="addCategoriaMadera"
-            :showDialog.sync="showUnitTypeModal"
-            :medida_alto="medida_alto"
-            :medida_ancho="medida_ancho"
-            :medida_grosor="medida_grosor"
-            :categoria_madera="categoria_madera"
-            :item="selectedFood"
-            :currentIndex="currentIndex"
-        ></unit-type-modal>
+        <credits-list v-if="configuration.sale_note_credit_penalty" :showDialog.sync="showCredits"
+            :configuration="configuration" :isAnalist="isAnalist" :user="user" :fromPos="true"></credits-list>
+        <unit-type-modal @addUnitType="addUnitType" @addCategoriaMadera="addCategoriaMadera"
+            :showDialog.sync="showUnitTypeModal" :medida_alto="medida_alto" :medida_ancho="medida_ancho"
+            :medida_grosor="medida_grosor" :categoria_madera="categoria_madera" :item="selectedFood"
+            :currentIndex="currentIndex"></unit-type-modal>
 
-        <dispatch-modal
-            :configuration="configuration"
-            :showDialog.sync="showDispatch"
-        ></dispatch-modal>
+        <dispatch-modal :configuration="configuration" :showDialog.sync="showDispatch"></dispatch-modal>
         <category-drag :showDialog.sync="showCategoryDrag"></category-drag>
-        <edit-product
-            @getFoods="getFoods"
-            :showDialog.sync="showEditProduct"
-            :allItems="allFoods"
-        ></edit-product>
+        <edit-product @getFoods="getFoods" :showDialog.sync="showEditProduct" :allItems="allFoods"></edit-product>
 
-        <el-dialog
-            v-loading="showDailyCashLoading"
-            width="450px"
-            :visible.sync="showPinRequest"
-            title="Ingrese su PIN"
-            append-to-body
-        >
+        <el-dialog v-loading="showDailyCashLoading" width="450px" :visible.sync="showPinRequest" title="Ingrese su PIN"
+            append-to-body>
             <div class="row mt-1">
                 <h5>
                     Para poder visualizar la venta del día de hoy, ingrese su
@@ -2100,28 +1282,14 @@
 
             <div class="row mt-2 d-flex justify-content-center">
                 <div class="col-8">
-                    <el-input
-                        v-model="pin"
-                        placeholder="Ingrese su PIN"
-                        type="password"
-                        maxlength="4"
-                        readonly
-                    ></el-input>
+                    <el-input v-model="pin" placeholder="Ingrese su PIN" type="password" maxlength="4"
+                        readonly></el-input>
                 </div>
                 <div class="col-12 d-flex flex-wrap justify-content-center">
-                    <el-button
-                        v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-                        :key="num"
-                        class="m-2"
-                        @click="generatePin(num)"
-                        >{{ num }}</el-button
-                    >
-                    <el-button
-                        @click="pin = ''"
-                        class="m-2"
-                        type="danger"
-                        icon="el-icon-delete"
-                    ></el-button>
+                    <el-button v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="num" class="m-2"
+                        @click="generatePin(num)">{{
+                        num }}</el-button>
+                    <el-button @click="pin = ''" class="m-2" type="danger" icon="el-icon-delete"></el-button>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -2129,84 +1297,38 @@
                 <el-button type="primary" @click="checkPin">Enviar</el-button>
             </div>
         </el-dialog>
-        <consignment-list
-            @setItemsToLiquidate="setItemsToLiquidate"
-            :showDialog.sync="showDialogConsignment"
-        ></consignment-list>
+        <consignment-list @setItemsToLiquidate="setItemsToLiquidate"
+            :showDialog.sync="showDialogConsignment"></consignment-list>
         <products-due :showDialog.sync="showDialogDueProducts"></products-due>
-        <item-set
-            :showDialog.sync="showDialogItemSet"
-            :external="true"
-            :establishment_id.sync="establishmentId"
-        ></item-set>
-        <sale-note-credit-cash
-            :configuration="configuration"
-            :showDialog.sync="showSaleNoteCreditCash"
-        ></sale-note-credit-cash>
-        <consolidated-list-modal
-            @cancelOrden="cancelOrden"
-            :showDialog.sync="showConsolidatedList"
-            @insertOrdenQuotation="insertOrdenQuotation"
-            :configuration="configuration"
-        ></consolidated-list-modal>
-        <quotation-list-modal
-            :showDialog.sync="showQuotationListDialog"
-        ></quotation-list-modal>
+        <item-set :showDialog.sync="showDialogItemSet" :external="true"
+            :establishment_id.sync="establishmentId"></item-set>
+        <sale-note-credit-cash :configuration="configuration"
+            :showDialog.sync="showSaleNoteCreditCash"></sale-note-credit-cash>
+        <consolidated-list-modal @cancelOrden="cancelOrden" :showDialog.sync="showConsolidatedList"
+            @insertOrdenQuotation="insertOrdenQuotation" :configuration="configuration"></consolidated-list-modal>
+        <quotation-list-modal :showDialog.sync="showQuotationListDialog"></quotation-list-modal>
         <month-sales :showDialog.sync="showMonthSales"></month-sales>
         <iframe ref="pdfFrame" style="display: none;"></iframe>
-        <el-dialog
-            class="no-header"
-            width="90%"
-            top="5vh"
-            title
-            :header="null"
-            :visible.sync="showDialogCreditReportDaily"
-            style="color:blue"
-        >
+        <el-dialog class="no-header" width="90%" top="5vh" title :header="null"
+            :visible.sync="showDialogCreditReportDaily" style="color:blue">
             <div style="text-align: right;">
-                <el-button
-                    type="primary"
-                    icon="el-icon-close"
-                    @click="closeModal"
-                ></el-button>
+                <el-button type="primary" icon="el-icon-close" @click="closeModal"></el-button>
             </div>
             <x-report-credit-daily-cash></x-report-credit-daily-cash>
             <br />
         </el-dialog>
-        <detraction-payment
-            v-if="configuration.detraction"
-            :showDialog.sync="showDialogDetraction"
-            :fromPos="true"
-        ></detraction-payment>
-        <Warranty
-            :showDialog.sync="showDialogWarranty"
-            :fromPos="true"
-        ></Warranty>
+        <detraction-payment v-if="configuration.detraction" :showDialog.sync="showDialogDetraction"
+            :fromPos="true"></detraction-payment>
+        <Warranty :showDialog.sync="showDialogWarranty" :fromPos="true"></Warranty>
         <!-- Modal para limpiar mesas/habitaciones -->
-        <CleanModal
-            v-if="isHotelArea"
-            :showDialog.sync="showCleanDialog"
-            :tablesClean="tablesClean"
-            @cleanTable="onCleanTableFromModal"
-        />
+        <CleanModal v-if="isHotelArea" :showDialog.sync="showCleanDialog" :tablesClean="tablesClean"
+            @cleanTable="onCleanTableFromModal" />
         <!-- Modal de habitaciones vencidas -->
-        <ExpiredRoomModal
-            v-if="isHotelArea"
-            :showDialog.sync="showExpiredDialog"
-            :tablesClean="tablesLeave"
-            @openRoom="tableOpen"
-            :cash_id.sync="cashId"
-        />
-        <Pos-form
-            :showDialog.sync="showDialog"
-            :recordId.sync="recordId"
-            :external="true"
-            @addDataMozo="recibirItem"
-        ></Pos-form>
-        <Stock-min
-            :showDialog.sync="showDialogStockMin"
-            :fromPos="true"
-        ></Stock-min>
+        <ExpiredRoomModal v-if="isHotelArea" :showDialog.sync="showExpiredDialog" :tablesClean="tablesLeave"
+            @openRoom="tableOpen" :cash_id.sync="cashId" />
+        <Pos-form :showDialog.sync="showDialog" :recordId.sync="recordId" :external="true"
+            @addDataMozo="recibirItem"></Pos-form>
+        <Stock-min :showDialog.sync="showDialogStockMin" :fromPos="true"></Stock-min>
     </div>
 </template>
 
@@ -2452,7 +1574,7 @@ export default {
         PromotionCanje,
         TablesRooms,
         SaleNoteCreditCash,
-    Swal,
+        Swal,
         CleanModal,
         ExpiredRoomModal
     },
@@ -2772,11 +1894,11 @@ export default {
         }, 500);
 
         if (this.configuration.user_unit) {
-            (function() {
+            (function () {
                 function generateUUID() {
                     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
                         /[xy]/g,
-                        function(c) {
+                        function (c) {
                             const r = (Math.random() * 16) | 0,
                                 v = c === "x" ? r : (r & 0x3) | 0x8;
                             return v.toString(16);
@@ -2870,7 +1992,7 @@ export default {
                 setTimeout(updatePresence, 100);
                 setInterval(updatePresence, 500);
 
-                window.addEventListener("storage", function(event) {
+                window.addEventListener("storage", function (event) {
                     if (
                         (event.key === presenceKeyByRoute ||
                             event.key === presenceKeyByTab) &&
@@ -3088,7 +2210,7 @@ export default {
                 console.error("Error al intentar imprimir con RawBT:", error);
                 this.$message.error(
                     `Error: ${error.message ||
-                        "No se pudo imprimir el archivo. Verifica la instalación de RawBT."}`
+                    "No se pudo imprimir el archivo. Verifica la instalación de RawBT."}`
                 );
             }
         },
@@ -3149,9 +2271,9 @@ export default {
 
         async limpiarcache(reload = true) {
             if ("caches" in window) {
-                caches.keys().then(function(cacheNames) {
+                caches.keys().then(function (cacheNames) {
                     console.log(cacheNames);
-                    cacheNames.forEach(function(cacheName) {
+                    cacheNames.forEach(function (cacheName) {
                         caches.delete(cacheName);
                     });
                 });
@@ -3159,7 +2281,7 @@ export default {
 
             navigator.serviceWorker
                 ?.getRegistrations()
-                .then(function(registrations) {
+                .then(function (registrations) {
                     for (let registration of registrations) {
                         registration.unregister();
                     }
@@ -3308,7 +2430,7 @@ export default {
                     }
                 );
                 await this.roomCleaned(id);
-            } catch (e) {}
+            } catch (e) { }
         },
         playSound(sound = "services_sound.mp3") {
             let audio = new Audio(`/sounds/${sound}`);
@@ -3344,13 +2466,11 @@ export default {
                         let minutes = diff % 60;
                         let hours = Math.floor(diff / 60);
                         if (hours >= 1) {
-                            t.timer = `${hours < 10 ? "0" : ""}${hours}:${
-                                minutes < 10 ? "0" : ""
-                            }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                            t.timer = `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""
+                                }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
                         } else {
-                            t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
-                                seconds < 10 ? "0" : ""
-                            }${seconds}`;
+                            t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""
+                                }${seconds}`;
                         }
                     } else {
                         t.timer = null;
@@ -3377,9 +2497,8 @@ export default {
                         let seconds = diff % 60;
                         diff = Math.floor(diff / 60);
                         let minutes = diff % 60;
-                        t.time_to_finish = `${
-                            minutes < 10 ? "0" : ""
-                        }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                        t.time_to_finish = `${minutes < 10 ? "0" : ""
+                            }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
                     }
                 }
             });
@@ -3461,9 +2580,9 @@ export default {
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
-                            "HOTEL" &&
+                        "HOTEL" &&
                         this.worker.area.description.toUpperCase() !==
-                            "CAJA PISCINA"
+                        "CAJA PISCINA"
                 },
 
                 {
@@ -3847,7 +2966,7 @@ export default {
                 .join("");
             try {
                 this.socket = io.connect(this.$socketUrl);
-            } catch (e) {}
+            } catch (e) { }
             this.socket.on("ready", message => {
                 this.showMessage(message);
             });
@@ -4056,7 +3175,7 @@ export default {
                 }
                 // ------------------------------------------------
             }
-            
+
             this.form.items = this.ordens.map(o => o.food.item);
             this.formatItems();
 
@@ -4396,14 +3515,14 @@ export default {
                 total_base_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
@@ -4414,13 +3533,13 @@ export default {
                 total_taxes:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_value:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: Number(i.total_discount || 0),
@@ -4452,7 +3571,7 @@ export default {
             this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;
             this.form.customer_id = form.customer_id ? form.customer_id : 1;
-    
+
             // Propagar banderas de impresión opcionales
             this.form.printerDefault = form.printerDefault;
             if (this.form.is_room) {
@@ -4641,8 +3760,8 @@ export default {
             }
             this.form.currency_type_id =
                 this.currencyIdChoice == "S/" ||
-                this.currencyIdChoice == undefined ||
-                this.currencyIdChoice == "PEN"
+                    this.currencyIdChoice == undefined ||
+                    this.currencyIdChoice == "PEN"
                     ? "PEN"
                     : "USD";
             this.is_payment = true;
@@ -4659,7 +3778,7 @@ export default {
                 }, 500);
             }
         },
-        
+
         formatVariation(i) {
             return {
                 ...i,
@@ -4674,14 +3793,14 @@ export default {
                 total_base_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.sale_unit_price * i.quantity,
                 percentage_igv: this.percentage_igv,
                 total_igv:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_base_isc: 0.0,
                 percentage_isc: 0.0,
@@ -4692,13 +3811,13 @@ export default {
                 total_taxes:
                     i.sale_affectation_igv_type_id == 10
                         ? ((i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)) *
-                          (this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)) *
+                        (this.percentage_igv / 100)
                         : 0,
                 total_value:
                     i.sale_affectation_igv_type_id == 10
                         ? (i.sale_unit_price * i.quantity) /
-                          (1 + this.percentage_igv / 100)
+                        (1 + this.percentage_igv / 100)
                         : i.quantity * i.sale_unit_price,
                 total_charge: 0.0,
                 total_discount: 0.0,
@@ -4739,7 +3858,7 @@ export default {
             }
             return price;
         },
-        async insertItemFromNoteSales() {},
+        async insertItemFromNoteSales() { },
         checkDetractionItems(item) {
             if (!this.configuration.detraction) return false;
             let {
@@ -5257,7 +4376,7 @@ export default {
                             orden.categoriaMadera &&
                             orden.categoriaMadera.key == categoriaMadera.key &&
                             orden.categoriaMadera.medida ==
-                                categoriaMadera.medida &&
+                            categoriaMadera.medida &&
                             orden.categoriaMadera.price == categoriaMadera.price
                     );
                     if (indexFind != -1) {
@@ -5599,7 +4718,7 @@ export default {
                         ) {
                             const response = await this.$http.get(
                                 `/caja/worker/ordens-ready/` +
-                                    this.selectedCatIds[index]
+                                this.selectedCatIds[index]
                             );
                             if (response.data.success == true) {
                                 this.$toast.success(response.data.message);
@@ -5656,7 +4775,7 @@ export default {
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (e) { }
         },
         // reloadDataCustomers(customer_id) {
         //     this.$http
@@ -5812,7 +4931,7 @@ export default {
             if (total_sales) {
                 this.$toast(
                     ` Venta Acumulada S/ ` +
-                        response.data.total_sales.toFixed(2)
+                    response.data.total_sales.toFixed(2)
                 );
             } else {
                 this.$toast(`Sin ventas acumuladas en el día`);
@@ -5952,7 +5071,7 @@ export default {
                 }
             }
         },
-        clickClose: function() {
+        clickClose: function () {
             this.$confirm("¿Desea Salir del Punto de Venta?", "Advertencia", {
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cerrar",
@@ -6080,7 +5199,7 @@ export default {
             if (this.form.items[index].item.calculate_quantity) {
                 let quantity = _.round(
                     parseFloat(this.form.items[index].total) /
-                        parseFloat(this.form.items[index].unit_price),
+                    parseFloat(this.form.items[index].unit_price),
                     4
                 );
 
@@ -6439,49 +5558,49 @@ export default {
                     }, 0);
                 }
 
-                                // Reconstruir/normalizar discounts y asegurar montos netos (sin IGV) para tipo '00'
-                                let discountsArray = Array.isArray(i.discounts) ? JSON.parse(JSON.stringify(i.discounts)) : [];
-                                const possibleOriginalPrice = i.original_price || i.sale_unit_price_original || i.price_original || i.sale_unit_price_before || i.unit_price_before || null;
-                                const currentUnitPrice = price;
-                                // Precalcular bases para normalización: base después de descuento y base antes de descuento (ambas netas)
-                                const discountedGrossPreview = (comesPrecalc || hasTotalOnly)
-                                    ? Number(i._total_line ?? i.total) || 0
-                                    : Math.max(gross - appliedDiscount, 0);
-                                const baseAfterDiscountNet = taxable ? (discountedGrossPreview / (1 + percentage)) : discountedGrossPreview;
-                                const amountNetForNormalize = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
-                                const preDiscountBaseNet = baseAfterDiscountNet + amountNetForNormalize;
-                                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length === 0 && appliedDiscount > 0 && possibleOriginalPrice) {
-                                    // Evitar duplicados si ya hay un descuento equivalente
-                                    const existingLike = discountsArray.find(d => {
-                                        const amt = Number(d.amount) || 0;
-                                        if (taxable && String(d.discount_type_id) === '00') {
-                                            // si ya hay uno neto equivalente al bruto ingresado, no duplicar
-                                            return Math.abs(amt - (appliedDiscount / (1 + percentage))) < 0.01;
-                                        }
-                                        return Math.abs(amt - appliedDiscount) < 0.01;
-                                    });
-                                    if (!existingLike) {
-                                        // Calcular factor (porcentaje) basado en precio original
-                                        const originalP = Number(possibleOriginalPrice);
-                                        if (originalP > 0) {
-                                            // Monto total del descuento aplicado viene en bruto (con IGV) -> convertir a neto (sin IGV)
-                                            const amountNet = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
-                                            // La base debe ser el valor original sin IGV
-                                            const lineNet = taxable ? ((originalP * qty) / (1 + percentage)) : (originalP * qty);
-                                            const factor = lineNet > 0 ? _.round(amountNet / lineNet, 5) : 0;
-                                            discountsArray.push({
-                                                discount_type_id: '00', // descuento que afecta base imponible
-                                                description: 'Descuento por item',
-                                                factor,
-                                                amount: _.round(amountNet, 2), // enviar SIN IGV
-                                                base: _.round(lineNet, 2) // base imponible SIN IGV
-                                            });
-                                        }
-                                    }
-                                }
+                // Reconstruir/normalizar discounts y asegurar montos netos (sin IGV) para tipo '00'
+                let discountsArray = Array.isArray(i.discounts) ? JSON.parse(JSON.stringify(i.discounts)) : [];
+                /* const possibleOriginalPrice = i.original_price || i.sale_unit_price_original || i.price_original || i.sale_unit_price_before || i.unit_price_before || null;
+                const currentUnitPrice = price; */
+                // Precalcular bases para normalización: base después de descuento y base antes de descuento (ambas netas)
+                const discountedGrossPreview = (comesPrecalc || hasTotalOnly)
+                    ? Number(i._total_line ?? i.total) || 0
+                    : Math.max(gross - appliedDiscount, 0);
+                const baseAfterDiscountNet = taxable ? (discountedGrossPreview / (1 + percentage)) : discountedGrossPreview;
+                const amountNetForNormalize = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
+                const preDiscountBaseNet = baseAfterDiscountNet + amountNetForNormalize;
+                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length === 0 && appliedDiscount > 0 && possibleOriginalPrice) {
+                    // Evitar duplicados si ya hay un descuento equivalente
+                    const existingLike = discountsArray.find(d => {
+                        const amt = Number(d.amount) || 0;
+                        if (taxable && String(d.discount_type_id) === '00') {
+                            // si ya hay uno neto equivalente al bruto ingresado, no duplicar
+                            return Math.abs(amt - (appliedDiscount / (1 + percentage))) < 0.01;
+                        }
+                        return Math.abs(amt - appliedDiscount) < 0.01;
+                    });
+                    if (!existingLike) {
+                        // Calcular factor (porcentaje) basado en precio original
+                        const originalP = Number(possibleOriginalPrice);
+                        if (originalP > 0) {
+                            // Monto total del descuento aplicado viene en bruto (con IGV) -> convertir a neto (sin IGV)
+                            const amountNet = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
+                            // La base debe ser el valor original sin IGV
+                            const lineNet = taxable ? ((originalP * qty) / (1 + percentage)) : (originalP * qty);
+                            const factor = lineNet > 0 ? _.round(amountNet / lineNet, 5) : 0;
+                            discountsArray.push({
+                                discount_type_id: '00', // descuento que afecta base imponible
+                                description: 'Descuento por item',
+                                factor,
+                                amount: _.round(amountNet, 2), // enviar SIN IGV
+                                base: _.round(lineNet, 2) // base imponible SIN IGV
+                            });
+                        }
+                    }
+                } */
 
                 // Normalizar descuentos existentes tipo '00' (monto y base sin IGV, factor coherente)
-                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
+                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
                     discountsArray = discountsArray.map(d => {
                         if (taxable && String(d.discount_type_id) === '00') {
                             // Si viene marcado como neto, evitar dividir nuevamente
@@ -6500,10 +5619,10 @@ export default {
                         }
                         return d;
                     });
-                }
+                } */
 
                 // Asegurar coherencia: calcular suma equivalente BRUTA a partir de descuentos netos (p.e. '00')
-                if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
+                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
                     const sumGrossEquivalent = discountsArray.reduce((acc, d) => {
                         const amt = Number(d.amount) || 0;
                         if (taxable && String(d.discount_type_id) === '00') {
@@ -6516,7 +5635,7 @@ export default {
                     if (Math.abs(sumGrossEquivalent - appliedDiscount) > 0.01) {
                         appliedDiscount = _.round(sumGrossEquivalent, 2);
                     }
-                }
+                } */
 
                 let unit_value, total_base_igv, total_igv, total_taxes, total_value, lineTotal;
 
@@ -6699,7 +5818,7 @@ export default {
                 let unit_price = exist_item.item.has_igv
                     ? exist_item.item.sale_unit_price
                     : exist_item.item.sale_unit_price *
-                      (1 + this.percentage_igv / 100);
+                    (1 + this.percentage_igv / 100);
                 // exist_item.unit_price = unit_price
                 exist_item.item.unit_price = unit_price;
                 this.row = calculateRowItem(
@@ -6725,7 +5844,7 @@ export default {
                 let unit_price = this.form_item.has_igv
                     ? this.form_item.unit_price_value
                     : this.form_item.unit_price_value *
-                      (1 + this.percentage_igv / 100);
+                    (1 + this.percentage_igv / 100);
 
                 this.form_item.unit_price = unit_price;
                 this.form_item.item.unit_price = unit_price;
@@ -7006,7 +6125,7 @@ export default {
                 ).toFixed(2);
                 this.form.items[index].total_base_igv = _.round(
                     this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
+                    (1 + this.percentage_igv / 100),
                     2
                 );
                 this.form.items[index].unit_value = (
@@ -7016,12 +6135,12 @@ export default {
                 this.form.items[index].total_igv = _.round(
                     (this.form.items[index].total /
                         (1 + this.percentage_igv / 100)) *
-                        (this.percentage_igv / 100),
+                    (this.percentage_igv / 100),
                     2
                 );
                 this.form.items[index].total_base_igv = _.round(
                     this.form.items[index].total /
-                        (1 + this.percentage_igv / 100),
+                    (1 + this.percentage_igv / 100),
                     2
                 );
             } else {
@@ -7031,14 +6150,14 @@ export default {
                 this.form.items[index].total_taxes = 0.0;
                 this.form.items[index].total_base_igv = _.round(
                     Math.round(parseFloat(quantity) * parseFloat(price) * 10) /
-                        10,
+                    10,
                     2
                 );
                 this.form.items[index].unit_value = price;
                 this.form.items[index].total_igv = 0;
                 this.form.items[index].total_base_igv = _.round(
                     Math.round(parseFloat(quantity) * parseFloat(price) * 10) /
-                        10,
+                    10,
                     2
                 );
             }
@@ -7067,7 +6186,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -7127,7 +6246,7 @@ export default {
                     lineTotal = parseFloat(
                         _.round(
                             parseFloat(itemObj.quantity) *
-                                parseFloat(orden.food.price),
+                            parseFloat(orden.food.price),
                             2
                         )
                     );
@@ -7142,7 +6261,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -7169,8 +6288,8 @@ export default {
                     let total_value_partial = unit_value * row.quantity;
                     row.total_taxes =
                         row.total_value -
-                        total_value_partial +
-                        isNaN(parseFloat(row.total_plastic_bag_taxes))
+                            total_value_partial +
+                            isNaN(parseFloat(row.total_plastic_bag_taxes))
                             ? 0.0
                             : parseFloat(row.total_plastic_bag_taxes);
                     row.total_igv =
@@ -7271,7 +6390,7 @@ export default {
                             d.item.lots_group = d.item.lots_group.filter(
                                 lt =>
                                     lt.warehouse_id ==
-                                        this.worker.establishment_id &&
+                                    this.worker.establishment_id &&
                                     lt.quantity > 0
                             );
                         }
@@ -7309,7 +6428,7 @@ export default {
                         timer: null
                     }));
                 }
-            } catch (e) {}
+            } catch (e) { }
         },
         async getTablesToClean() {
             try {
@@ -7324,7 +6443,7 @@ export default {
                         time_to_finish: null
                     }));
                 }
-            } catch (e) {}
+            } catch (e) { }
         },
         async getTables() {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});

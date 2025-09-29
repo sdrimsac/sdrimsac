@@ -573,7 +573,7 @@
                                             @input="validateAndProcess"
                                             maxlength="8"
                                             placeholder="0.00"
-                                            :disabled="!enabled_discount"
+                                            :disabled="!enabled_discount || affectation_optional_id === '10'"
                                             style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
                                         />
                                         <!-- Input para porcentaje -->
@@ -586,7 +586,7 @@
                                             placeholder="0"
                                             min="0"
                                             max="100"
-                                            :disabled="!enabled_discount"
+                                            :disabled="!enabled_discount || affectation_optional_id === '10'"
                                             style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
                                         />
                                     </div>
@@ -2951,7 +2951,7 @@ export default {
                         2
                     );
                 }
-                const possibleOriginalPrice =
+                /* const possibleOriginalPrice =
                     i.original_price ||
                     (i.item && i.item.original_price) ||
                     i.sale_unit_price_original ||
@@ -2965,8 +2965,8 @@ export default {
                 const qty = Number(i.quantity || 0);
                 const currentUnitPrice = Number(
                     i.sale_unit_price || (i.item && i.item.sale_unit_price) || 0
-                );
-                if (
+                ); */
+                /* if (
                     discountsArray.length === 0 &&
                     existingDiscountTotal > 0 &&
                     possibleOriginalPrice &&
@@ -2987,9 +2987,9 @@ export default {
                             base: _.round(lineBase, 2)
                         });
                     }
-                }
+                } */
                 // Si el arreglo tiene descuentos y total_discount está en cero, sincronizar
-                if (
+                /* if (
                     discountsArray.length &&
                     (!existingDiscountTotal || existingDiscountTotal === 0)
                 ) {
@@ -3000,7 +3000,7 @@ export default {
                         ),
                         2
                     );
-                }
+                } */
                 return {
                     ...i,
                     warehouse_id: null,
@@ -5457,7 +5457,7 @@ export default {
                     }
                 });
                 // Si discounts está vacío pero hay total_discount y original_price -> construir
-                if (
+                /* if (
                     (!it.discounts || it.discounts.length === 0) &&
                     Number(it.total_discount) > 0
                 ) {
@@ -5480,7 +5480,7 @@ export default {
                             }
                         ];
                     }
-                }
+                } */
                 // Alinear total_discount con suma de discounts si hay divergencia
                 if (Array.isArray(it.discounts) && it.discounts.length) {
                     const sum = _.round(

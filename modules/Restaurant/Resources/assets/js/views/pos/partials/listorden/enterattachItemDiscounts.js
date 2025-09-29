@@ -17,8 +17,16 @@ export function attachItemDiscounts(items) {
             }
 
             // Si el precio fue modificado manualmente, no aplicar descuento
-            if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
+            /* if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
                 console.log("Precio modificado manualmente", currentPrice, originalPrice, item);
+                item.discounts = [];
+                item.discount_igv = 0;
+                item.total_discount = 0;
+                return;
+            } */
+
+            if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
+                console.log("[DESC] Motivo: Precio modificado manualmente", currentPrice, originalPrice, item);
                 item.discounts = [];
                 item.discount_igv = 0;
                 item.total_discount = 0;

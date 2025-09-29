@@ -2090,30 +2090,6 @@ class DocumentController extends Controller
             // Call saveItemWarranty to check and save item warranties
             $this->saveItemWarranty($document, $request->items);
             // --- Acumulador de ventas por ítem ---
-            // Reemplaza el intento anterior que usaba variables no definidas ($item_id, $quantity)
-            // Recorremos los items de la venta y sumamos la cantidad vendida en item_sales_summary.
-            // Requiere que la tabla item_sales_summary tenga un índice UNIQUE o PRIMARY KEY en item_id.
-            // Estructura sugerida de la tabla:
-            //   item_id BIGINT PRIMARY KEY
-            //   total_sold DECIMAL(15,2) DEFAULT 0
-            //   timestamps
-            /* if (isset($request->items) && is_array($request->items)) {
-                foreach ($request->items as $it) {
-                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
-                    $itemId = $it['item_id'];
-                    $qty = (float) $it['quantity'];
-                    if ($qty <= 0) continue;
-
-                    DB::connection('tenant')->statement(
-                        'INSERT INTO item_sales_summary (item_id, total_sales, total_quantity, created_at, updated_at)
-                        VALUES (?, 0, ?, NOW(), NOW())
-                        ON DUPLICATE KEY UPDATE 
-                        total_quantity = total_quantity + VALUES(total_quantity),
-                        updated_at = NOW()',
-                        [$itemId, $qty]
-                    );
-                }
-            } */
 
             if (isset($request->items) && is_array($request->items)) {
                 foreach ($request->items as $it) {
