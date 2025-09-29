@@ -4133,7 +4133,11 @@ export default {
 
         inputDiscountAmount() {
             // Delegar a la función modular conservando el contexto de Vue
-            return discountInputDiscountAmount.call(this);
+            const result = discountInputDiscountAmount.call(this);
+            // Actualizar el monto entregado al nuevo total con descuento
+            this.form.enter_amount = this.form.total;
+            this.enterAmount();
+            return result;
         },
 
         getTotalAffected() {
