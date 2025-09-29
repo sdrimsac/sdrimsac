@@ -5,24 +5,21 @@ export function DiscountCalcItemAmounts(order) {
         const qty = Number(order.quantity) || 0;
         const unitPrice = Number(order.price) || 0;
         const originalPrice = Number(order.food.item.price_original ?? order.food.item.price);
-        const lineTotal = qty * unitPrice; // Total antes de descuento
-        let discountInput = Number(order.food.item.discount) || 0; // valor ingreso
-    const isPercent = Boolean(order.discount); // true => porcentaje
+        const lineTotal = qty * unitPrice;
+        let discountInput = Number(order.food.item.discount) || 0;
+    const isPercent = Boolean(order.discount);
     console.log('Descuento:', discountInput, 'Tipo:', isPercent, 'Precio:', unitPrice, 'Original:', originalPrice);
 
-        // Si el precio fue modificado manualmente, no aplicar descuento
         let discountAmount = 0;
         if (Math.abs(Number(unitPrice) - Number(originalPrice)) > 0.01) {
             discountAmount = 0;
         } else {
-            // Determinar monto de descuento
             if (isPercent) {
-                // porcentaje sobre el total de la línea
                 discountAmount = lineTotal * (discountInput / 100);
             } else {
-                discountAmount = discountInput; // monto directo
+                discountAmount = discountInput;
             }
-            if (discountAmount > lineTotal) discountAmount = lineTotal; // no permitir negativo
+            if (discountAmount > lineTotal) discountAmount = lineTotal;
         }
 
         // Monto luego del descuento

@@ -3131,42 +3131,25 @@ export default {
                     item.consignment_item_id;
                 // --- Propagación de descuentos hacia el pago ---
                 // Intentar obtener el valor de descuento total ya calculado
+                // Reiniciar total_discount por defecto
                 let discountValue = 0;
-                if (item.total_discount !== undefined && item.total_discount !== null) {
-                    discountValue = Number(item.total_discount) || 0;
-                } else {
-                    // Campos posibles que podrían contener monto de descuento a nivel item
-                    const discountFieldNames = [
-                        'discount_total',
-                        'discount',
-                        'discount_amount',
-                        '_discount_amount',
-                        'item_discount',
-                        'dscto',
-                        'descuento'
-                    ];
-                    for (let df of discountFieldNames) {
-                        if (item[df] !== undefined && item[df] !== null) {
-                            discountValue = Number(item[df]) || 0;
-                            if (discountValue) break;
-                        }
+                // Solo asignar si hay descuento explícito
+                const discountFieldNames = [
+                    'discount_total',
+                    'discount',
+                    'discount_amount',
+                    '_discount_amount',
+                    'item_discount',
+                    'dscto',
+                    'descuento'
+                ];
+                for (let df of discountFieldNames) {
+                    if (item[df] !== undefined && item[df] !== null && Number(item[df]) > 0) {
+                        discountValue = Number(item[df]);
+                        break;
                     }
                 }
-                // Guardar precio original si llega y aún no está asignado
-                const possibleOriginalPrice =
-                    item.original_price ||
-                    item.sale_unit_price_original ||
-                    item.price_original ||
-                    item.sale_unit_price_before ||
-                    item.unit_price_before ||
-                    null;
-                if (!discountValue && possibleOriginalPrice) {
-                    const originalP = Number(possibleOriginalPrice);
-                    const currentPrice = Number(item.price || item.sale_unit_price || 0);
-                    if (originalP > currentPrice && item.quantity) {
-                        discountValue = (originalP - currentPrice) * Number(item.quantity);
-                    }
-                }
+                // Si no hay descuento explícito, limpiar total_discount
                 this.ordens[i].food.item.total_discount = discountValue;
                 // Clonar el arreglo de descuentos si existe, sino arreglo vacío
                 this.ordens[i].food.item.discounts = item.discounts ? JSON.parse(JSON.stringify(item.discounts)) : [];
@@ -3604,7 +3587,7 @@ export default {
 
             for (let i = 0; i < items.length; i++) {
                 let item = JSON.parse(JSON.stringify(items[i]));
-                // Determinar descuento del item antes de mutar
+                // Solo asignar descuento si hay campo explícito
                 let discountValue = 0;
                 const discountFieldNames = [
                     'total_discount',
@@ -3617,44 +3600,24 @@ export default {
                     'descuento'
                 ];
                 for (let df of discountFieldNames) {
-                    if (item[df] !== undefined && item[df] !== null) {
-                        discountValue = Number(item[df]) || 0;
-                        if (discountValue) break;
-                    }
-                }
-                // Si no viene un campo de descuento explícito, intentar inferirlo por diferencia de precios
-                const possibleOriginalPrice =
-                    item.original_price ||
-                    item.sale_unit_price_original ||
-                    item.price_original ||
-                    item.sale_unit_price_before ||
-                    item.unit_price_before ||
-                    null;
-                const currentPrice = Number(item.price || item.sale_unit_price || 0);
-                if (!discountValue && possibleOriginalPrice) {
-                    const originalP = Number(possibleOriginalPrice);
-                    if (originalP > currentPrice && item.quantity) {
-                        discountValue = (originalP - currentPrice) * Number(item.quantity);
+                    if (item[df] !== undefined && item[df] !== null && Number(item[df]) > 0) {
+                        discountValue = Number(item[df]);
+                        break;
                     }
                 }
                 this.ordens[i].food.item.categoriaMadera = item.categoriaMadera;
                 this.ordens[i].food.item.from_unit_type_id = item.type_id;
-                this.ordens[i].food.item.from_unit_type_id_desc =
-                    item.type_description;
-
+                this.ordens[i].food.item.from_unit_type_id_desc = item.type_description;
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = item.color_size
-                    ? [...item.color_size]
-                    : [];
+                this.ordens[i].food.item.color_size = item.color_size ? [...item.color_size] : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 ixd.push(item.price);
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
-                this.ordens[i].food.item.consignment_item_id =
-                    item.consignment_item_id;
+                this.ordens[i].food.item.consignment_item_id = item.consignment_item_id;
                 // Copiar montos precalculados si llegan desde list_ordens
                 if (item._total_line !== undefined) {
                     this.ordens[i].food.item._total_line = item._total_line;
@@ -3677,12 +3640,13 @@ export default {
                 if (item.sale_affectation_igv_type_id !== undefined) {
                     this.ordens[i].food.item.sale_affectation_igv_type_id = item.sale_affectation_igv_type_id;
                 }
-                // Asignar descuento detectado
-                this.ordens[i].food.item.total_discount = Number(discountValue || 0);
+                // Asignar descuento solo si es explícito, si no limpiar
+                this.ordens[i].food.item.total_discount = discountValue;
                 // Preservar arreglo de descuentos si existe
                 this.ordens[i].food.item.discounts = item.discounts ? JSON.parse(JSON.stringify(item.discounts)) : [];
                 console.log("Descuento asignado al item:", this.ordens[i].food.item.total_discount, this.ordens[i].food.item.discounts);
                 // Guardar precio original si estaba y no lo teníamos
+                const possibleOriginalPrice = item.original_price || item.sale_unit_price_original || item.price_original || item.sale_unit_price_before || item.unit_price_before || null;
                 if (possibleOriginalPrice && !this.ordens[i].food.item.original_price) {
                     this.ordens[i].food.item.original_price = possibleOriginalPrice;
                 }

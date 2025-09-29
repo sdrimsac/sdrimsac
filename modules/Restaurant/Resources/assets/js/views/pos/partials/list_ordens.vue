@@ -1179,7 +1179,7 @@
                                                                     @blur="validateDiscount(indexx)"
                                                                     :disabled="!!order_pend.food.item.price"></el-input>
                                                                 <el-checkbox v-model="order_pend.discount"
-                                                                    @change="calculateTotal"
+                                                                    @change="onDiscountTypeChange(indexx)"
                                                                     :disabled="!!order_pend.food.item.price">
                                                                     <span>
                                                                         {{ order_pend.discount ? 'Porcentaje' : 'Monto'
@@ -2226,6 +2226,7 @@
     pointer-events: none;
 }
 </style>
+
 <script>
 const ConsignmentForm = () => import("./consignment_modal.vue");
 const QuotationForm = () => import("./quotation_modal.vue");
@@ -2246,7 +2247,7 @@ const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
 const ConsolidatedModal = () => import("../partials/consolidated_modal.vue");
 const DigitalPayments = () => import("../partials/digital_payments.vue");
 const OpenItems = () => import("../partials/visualizate.vue");
-import { exchangeRate } from "@mixins/functions";
+import { exchangeRate } from "@mixins/functions";     
 import DeliveryForm from "../partials/delivery_from.vue";
 import { listcalculateTotal as calculateTotal } from "./listorden/calculateTotal.js";
 import { DiscountCalcItemAmounts } from "./listorden/discountCalcItemAmount.js";
@@ -2621,6 +2622,12 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        onDiscountTypeChange(indexx) {
+            const order_pend = this.localOrden[indexx];
+            // Limpiar el input al cambiar tipo de descuento
+            order_pend.food.item.discount = '';
+            this.calculateTotal();
+        },
 
         validateDiscount(indexx) {
             const order_pend = this.localOrden[indexx];
@@ -2660,6 +2667,8 @@ export default {
 
             try {
                 items.forEach(item => {
+                    // Log para depuración
+                    console.log('[DEBUG _attachItemDiscounts] Antes de calcular descuento:', item);
 
                     // Validar si existe el precio original correctamente
                     const originalPrice = Number(
@@ -2667,69 +2676,52 @@ export default {
                     );
                     const currentPrice = Number(item.price) || 0;
                     const qty = Number(item.quantity) || 0;
-                    console.log('[DESC] Comparación de precios:', {
-                        originalPriceRaw: item.original_price,
-                        backupPriceOriginal: item.food?.item?.price_original,
-                        backupPrice: item.food?.item?.price,
-                        originalPrice,
-                        currentPrice
-                    });
                     if (qty <= 0 || currentPrice < 0) {
-                        console.log("[DESC] Motivo: Cantidad o precio inválido", qty, currentPrice, item);
                         return;
                     }
 
+                    // Solo calcular descuento si hay descuento explícito
+                    let discountInput = Number(item.food?.item?.discount) || 0;
+                    let isPercent = !!item.discount;
 
-                    // Si el precio fue modificado manualmente, no aplicar descuento
-                    if (Number(currentPrice).toFixed(2) !== Number(originalPrice).toFixed(2)) {
-                        console.log("[DESC] Motivo: Precio modificado manualmente", currentPrice, originalPrice, item);
-                        item.discounts = [];
-                        item.discount_igv = 0;
-                        item.total_discount = 0;
-                        return;
-                    }
-
-                    const lineTotal = qty * currentPrice; // total original con IGV (si aplica)
-                    const igvType = item.food.item.sale_affectation_igv_type_id;
-                    let discountInput = Number(item.food.item.discount) || 0;
-                    let isPercent = !!item.discount; // true => porcentaje
-
-                    // Si no viene descuento pero sí _discount_amount, usarlo
-                    if (discountInput <= 0 && item._discount_amount) {
+                    // Solo usar _discount_amount si discount es explícito (>0)
+                    if (discountInput > 0 && item._discount_amount) {
                         discountInput = item._discount_amount;
-                        isPercent = false; // Se asume monto directo
-                        console.log("[DESC] Usando _discount_amount", discountInput, item);
+                        isPercent = false;
                     }
 
+                    // Si NO hay descuento explícito, limpiar total_discount y salir
                     if (discountInput <= 0) {
-                        console.log("[DESC] Motivo: No hay descuento para este item", item);
+                        item.total_discount = 0;
+                        item.discount_igv = 0;
+                        if (item.food && item.food.item) {
+                            item.food.item.total_discount = 0;
+                        }
+                        console.log('[DEBUG _attachItemDiscounts] No hay descuento explícito, total_discount=0', item);
                         return;
                     }
 
-                    // Calcular descuento ingresado
+                    // Calcular descuento ingresado SOLO si hay descuento explícito
                     let discountAmount = 0;
                     if (isPercent) {
-                        discountAmount = lineTotal * (discountInput / 100);
+                        discountAmount = qty * currentPrice * (discountInput / 100);
                     } else {
                         discountAmount = discountInput;
                     }
 
-                    if (discountAmount > lineTotal) {
-                        console.log("[DESC] Motivo: El descuento es mayor al total de la línea, se ajusta", discountAmount, lineTotal, item);
-                        discountAmount = lineTotal;
+                    if (discountAmount > qty * currentPrice) {
+                        discountAmount = qty * currentPrice;
                     }
 
                     let discountBase = discountAmount;
                     let discountIgv = 0;
-                    let baseOriginal = lineTotal;
+                    let baseOriginal = qty * currentPrice;
 
+                    const igvType = item.food.item.sale_affectation_igv_type_id;
                     if (igvType === "10") {
-                        // El descuento se ingresa con IGV, lo separamos en base e IGV
                         discountBase = discountAmount / 1.18;
                         discountIgv = discountAmount - discountBase;
-
-                        // La base imponible original (sin descuento)
-                        baseOriginal = lineTotal / 1.18;
+                        baseOriginal = (qty * currentPrice) / 1.18;
                     }
 
                     const factor = baseOriginal > 0 ? _.round(discountBase / baseOriginal, 4) : 0;
@@ -2746,17 +2738,16 @@ export default {
                             base
                         }
                     ];
-                    console.log("[DESC] Descuento estructurado", item.discounts, item);
 
-                    // Este es el descuento total con IGV (lo que el cliente ve)
                     item.total_discount = _.round(discountAmount, 2);
-                    console.log("[DESC] ver el total del descuento", item.total_discount);
-
-                    // Opcional: guardar también el IGV del descuento
+                    if (item.food && item.food.item) {
+                        item.food.item.total_discount = _.round(discountAmount, 2);
+                    }
                     item.discount_igv = _.round(discountIgv, 2);
+                    console.log('[DEBUG _attachItemDiscounts] Descuento calculado:', item.total_discount);
                 });
             } catch (e) {
-                console.error("[DESC] Error al adjuntar descuentos a los items:", e);
+                console.error('[DEBUG _attachItemDiscounts] Error al adjuntar descuentos a los items:', e);
             }
 
 
@@ -3729,6 +3720,10 @@ export default {
                 ordensModified[idx].color_size = [];
                 ordensModified[idx].lotes = [];
                 ordensModified[idx].newSubtotal = null;
+                // Limpiar total_discount si existe food.item
+                if (ordensModified[idx].food && ordensModified[idx].food.item) {
+                    ordensModified[idx].food.item.total_discount = 0;
+                }
                 this.$emit("update:localOrden", ordensModified);
                 this.$toast.error("Subtotal no válido");
                 return;
@@ -3741,6 +3736,10 @@ export default {
             ordensModified[idx].color_size = [];
             ordensModified[idx].lotes = [];
             ordensModified[idx].newSubtotal = null;
+            // Limpiar total_discount si existe food.item
+            if (ordensModified[idx].food && ordensModified[idx].food.item) {
+                ordensModified[idx].food.item.total_discount = 0;
+            }
             this.$emit("update:localOrden", ordensModified);
             this.calculateTotal();
             this.$toast.success("Subtotal actualizado");
@@ -4386,6 +4385,10 @@ export default {
                 );
             } else { */
             localOrden_update[index].food.sale_unit_price = sale_unit_price;
+            // Limpiar total_discount si existe food.item
+            /* if (localOrden_update[index].food && localOrden_update[index].food.item) {
+                localOrden_update[index].food.item.total_discount = 0;
+            } */
             /* } */
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();
@@ -4619,7 +4622,7 @@ export default {
         },
         async payOrden(offert = null) {
             // Antes de procesar el pago, asegurar que todos los productos tengan price_original
-            if (this.localOrden && Array.isArray(this.localOrden)) {
+            /* if (this.localOrden && Array.isArray(this.localOrden)) {
                 this.localOrden.forEach(item => {
                     if (
                         item &&
@@ -4630,7 +4633,8 @@ export default {
                         item.food.item.price_original = item.food.item.price;
                     }
                 });
-            }
+            } */
+            
             if (!this.checkIfHasZeroTotal()) {
                 this.$toast.error(
                     "No puede realizar una venta de productos con total 0"
@@ -4689,6 +4693,10 @@ export default {
                 form_submit.items = this.ordens;
             } else {
                 form_submit.items = this.localOrden;
+                console.log(
+                    "verificando los items antes de pagar fffffffff",
+                    form_submit.items
+                );
             }
 
             if (this.clientTableData.ref) {

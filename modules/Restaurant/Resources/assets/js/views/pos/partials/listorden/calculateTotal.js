@@ -19,6 +19,7 @@ export function listcalculateTotal(w = null) {
         value._igv = amounts.igv;
         value._total_line = amounts.total;
         value._discount_amount = amounts.discount_amount;
+        console.log("amounts ver el descuento", value.discount_amount);
         totalDescuentos += amounts.discount_amount;
         if (value.food.item.sale_affectation_igv_type_id == "10") {
             totalGravado += amounts.base;

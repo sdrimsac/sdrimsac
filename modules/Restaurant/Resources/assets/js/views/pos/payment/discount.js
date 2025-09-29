@@ -18,13 +18,14 @@ export function inputDiscountAmount() {
 
     if (this.discount_mode === "percent") {
         const pct = parseFloat(this.discount_percentage);
-        if (!isNaN(pct) && pct > 0) {
-            const boundedPct = Math.min(Math.max(pct, 0), 100);
+        // Solo permitir valores entre 1 y 99
+        if (!isNaN(pct) && pct >= 1 && pct <= 99) {
+            const boundedPct = Math.min(Math.max(pct, 1), 99);
             this.discount_percentage = boundedPct;
             this.discount_input_percentage = boundedPct;
             this.discount_dirty = true;
             this.discount_applied = false;
-          
+
             const montoDescuentoTotal = totalConIGV * (boundedPct / 100);
             // Prorratear contra la base original (desde snapshot si existe)
             const baseAntes = this.original_totals_snapshot
@@ -39,9 +40,23 @@ export function inputDiscountAmount() {
             this.discount_igv_amount = _.round(igvDescuento, 2);
             hasDiscount = this.discount_amount > 0;
         } else {
+            // Si el valor no está en el rango, limpiar el campo y mostrar alerta
+            this.discount_percentage = "";
+            this.discount_input_percentage = 0;
             this.discount_amount = 0;
             this.discount_base_amount = 0;
             this.discount_igv_amount = 0;
+            if (!isNaN(pct)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Descuento inválido",
+                    text: "El porcentaje debe ser entre 1% y 99%.",
+                    timer: 2000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: "top-end"
+                });
+            }
         }
     } else {
         // amount
