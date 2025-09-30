@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\grifo\Http\Controllers;
+namespace Modules\Grifo\Http\Controllers;
 
 use App\Exports\CashPrincipalExport;
 use Exception;

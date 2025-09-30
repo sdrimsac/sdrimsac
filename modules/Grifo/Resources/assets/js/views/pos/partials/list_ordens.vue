@@ -3447,6 +3447,7 @@ export default {
             this.currentIdx = index;
             this.showSeries = true;
         },
+        
         justNumber(indexx) {
             let val = this.localOrden[indexx].newSubtotal;
             val = String(val).replace(/[^0-9.]/g, "");
@@ -3458,6 +3459,7 @@ export default {
                 this.localOrden[indexx].quantity = parseFloat((subtotal / price).toFixed(2));
             }
         },
+
         updateDefaultFoodQty(bool, idx) {
             let foodDefault = this.foodDefaults[idx];
             if (bool) {
@@ -3470,16 +3472,19 @@ export default {
 
             this.$forceUpdate();
         },
+
         showChangeDescription(idx) {
             this.descriptionTemp = null;
             this.currentFoodDefault = idx;
             this.showChangeDescriptionVariation = true;
         },
+
         changeDescription() {
             let foodDefault = this.foodDefaults[this.currentFoodDefault];
             foodDefault.description = this.descriptionTemp;
             this.showChangeDescriptionVariation = false;
         },
+
         changeVariation() {
             if (this.customer_variation == null) {
                 this.variation = false;
@@ -3498,6 +3503,7 @@ export default {
 
             this.foodDefaults = [this.foodDefault];
         },
+
         saveSubtotal(idx) {
             let ordensModified = [...this.localOrden];
             let currentOrden = ordensModified[idx];
@@ -3545,7 +3551,7 @@ export default {
             this.calculateTotal();
             this.$toast.success("Subtotal actualizado");
         },
-        
+
         changeSubtotal(idx) {
             let ordensModified = [...this.localOrden];
             ordensModified[idx].change_subtotal = !ordensModified[idx]
