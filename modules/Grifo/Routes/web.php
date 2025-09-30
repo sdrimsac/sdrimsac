@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\grifo\Http\Controllers\CashController;
+use Modules\Grifo\Http\Controllers\CashController;
 use Modules\Grifo\Http\Controllers\GrifoController;
 use Modules\Grifo\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/dashboard-pos', [GrifoController::class, 'pos']);
             Route::get('print_last_document', [OrdenController::class, 'print_last_document']);
             Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
-            Route::get('expenses', [GrifoController::class, 'expenses'])->name('grifo.expenses.index')->middleware('just.worker');;
+            Route::get('expenses', [GrifoController::class, 'expenses'])->name('grifo.expenses.index')->middleware('just.worker');
             Route::get('expenses/records', [GrifoController::class, 'records']);
             Route::get('expenses/record/{id}', [GrifoController::class, 'record']);
             Route::post('expenses', [GrifoController::class, 'store']);
@@ -37,13 +37,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pos/listtables', [GrifoController::class, 'listtables']);
             Route::get('pos/selecttabled/{idOrden}', [GrifoController::class, 'electtabled']);
             Route::get('pos/foods', [GrifoController::class, 'foods']);
-            Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
+            Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');
             Route::get('cash/get-final-balance/{cash_id}', [CashController::class, 'getFinalBalance']);
             Route::get('cash/columns', [CashController::class, 'columns']);
             Route::get('cash/generate_reports/{cash_id}', [CashController::class, 'generate_reports']);
             Route::get('cash/records', [CashController::class, 'records']);
             Route::get('cash/records_closed', [CashController::class, 'recordsClosed']);
-            Route::get('cash/create', [CashController::class, 'create'])->name('tenant.cash_pos.create')->middleware('just.worker');;
+            Route::get('cash/create', [CashController::class, 'create'])->name('tenant.cash_pos.create')->middleware('just.worker');
             Route::get('cash/tables', [CashController::class, 'tables']);
             Route::get('cash/final_balance_last_principal', [CashController::class, 'final_balance_last_principal']);
             Route::get('cash/opening_cash', [CashController::class, 'opening_cash']);

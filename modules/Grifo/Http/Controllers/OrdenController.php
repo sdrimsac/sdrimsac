@@ -13,8 +13,6 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
-use App\Models\Tenant\DocumentItem;
-use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
@@ -37,13 +35,10 @@ use Modules\Restaurant\Events\OrdenCancelEvent;
 use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Http\Resources\ObservationCollection;
 use Modules\Restaurant\Http\Resources\OrdenCollection;
-use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 use App\Events\MessageEvent;
 use App\Models\Tenant\Cash;
-use App\Models\Tenant\ItemWarehouse;
-use App\Models\Tenant\Warehouse;
 
 class OrdenController extends Controller
 {
