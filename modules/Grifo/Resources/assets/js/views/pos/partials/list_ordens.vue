@@ -175,7 +175,7 @@
                         <div class="row">
                             <h3 class="text-white" style="text-align: right">
                                 Total {{ currency_id == "USD" ? "$" : "S/" }}
-                                {{ (total + totalOrdenItems).toFixed(2) }}
+                                {{ getTotalToShow() }}
                             </h3>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                         <div class="row">
                             <h3 v-if="!clientTableData.table" class="text-white" style="text-align: right">
                                 Total {{ currency_id }}
-                                {{ (total + totalOrdenItems).toFixed(2) }}
+                                {{ getTotalToShow() }}
                             </h3>
                         </div>
                     </div>
@@ -1366,65 +1366,13 @@
                                                                         </span>
                                                                     </span>
                                                                 </div>
-                                                                <div class="col-4 col-md-2 col-lg-3 mt-2">
-                                                                    <!-- <template
-                                                                        v-if="
+                                                                <div class="col-4 col-md-2 col-lg-3 mt-2" v-if="
                                                                             configuration.edit_subtotal_box &&
                                                                                 !isSellerConsolidated
-                                                                        "
-                                                                    >
-                                                                        <el-tag
-                                                                            v-if="
-                                                                                !order_pend.change_subtotal
-                                                                            "
-                                                                            role="button"
-                                                                            size="medium"
-                                                                            @click="
-                                                                                changeSubtotal(
-                                                                                    indexx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <i
-                                                                                class="fas fa-edit text-primary"
-                                                                            ></i>
-                                                                        </el-tag>
-
-                                                                        <el-tag
-                                                                            v-else
-                                                                            role="button"
-                                                                            size="medium"
-                                                                            @click="
-                                                                                saveSubtotal(
-                                                                                    indexx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <i
-                                                                                class="fas fa-save text-primary"
-                                                                            ></i>
-                                                                        </el-tag>
-                                                                    </template> -->
-                                                                    <!-- <el-input class="input-new-tag1 text-center w-100"
-                                                                        style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; text-align: center;"
-                                                                        v-model.number="order_pend.newSubtotal"
-                                                                        @input="justNumber(indexx)" placeholder="0.00"
-                                                                        size="medium"></el-input>
-                                                                    <el-tag v-if="!order_pend.change_subtotal"
-                                                                        role="button" size="medium"
-                                                                        @click="changeSubtotal(indexx)">
-                                                                        <i class="fas fa-edit text-primary"></i>
-                                                                    </el-tag>
-                                                                    <el-tag v-else role="button" size="medium"
-                                                                        @click="saveSubtotal(indexx)">
-                                                                        <i class="fas fa-save text-primary"></i>
-                                                                    </el-tag>-->
+                                                                        ">
 
                                                                     <strong>
-                                                                        {{
-                                                                            
-                                                                                 parseFloat(order_pend.price * order_pend.quantity).toFixed(2)
-                                                                        }}
+                                                                        {{ typeof order_pend.newSubtotal === 'number' ? Number(order_pend.newSubtotal).toFixed(2) : parseFloat(order_pend.price * order_pend.quantity).toFixed(2) }}
                                                                     </strong>
 
                                                                     <el-input class="input-new-tag1 text-center w-100"
@@ -2556,14 +2504,36 @@ export default {
         this.readDividedItemsLocalStorage();
     },
     methods: {
+        getTotalToShow() {
+            // Si hay solo un producto y tiene subtotal editado, mostrar ese subtotal
+            if (this.localOrden && this.localOrden.length === 1 && typeof this.localOrden[0].newSubtotal === 'number') {
+                return Number(this.localOrden[0].newSubtotal).toFixed(2);
+            }
+            // Si hay subtotal editado en todos los productos, sumar esos subtotales
+            if (this.localOrden && this.localOrden.length > 0 && this.localOrden.every(o => typeof o.newSubtotal === 'number')) {
+                let sum = this.localOrden.reduce((acc, o) => acc + Number(o.newSubtotal), 0);
+                return sum.toFixed(2);
+            }
+            // Si hay al menos un producto con subtotal editado, sumar solo esos subtotales
+            if (this.localOrden && this.localOrden.length > 0 && this.localOrden.some(o => typeof o.newSubtotal === 'number')) {
+                let sum = this.localOrden.filter(o => typeof o.newSubtotal === 'number').reduce((acc, o) => acc + Number(o.newSubtotal), 0);
+                return sum.toFixed(2);
+            }
+            // Si no, mostrar el total calculado normal
+            return (this.total + this.totalOrdenItems).toFixed(2);
+        },
 
         handleSubtotalInput(val, idx) {
             // Limpiar timeout anterior si existe
             if (this.subtotalInputTimeouts[idx]) {
                 clearTimeout(this.subtotalInputTimeouts[idx]);
             }
-            // Guardar el valor temporalmente
-            this.localOrden[idx].newSubtotal = val === '' || val === null ? null : parseFloat(val);
+            // Guardar el valor temporalmente, forzando dos decimales
+            this.localOrden[idx].newSubtotal = val === '' || val === null ? null : parseFloat(Number(val).toFixed(2));
+            // Si el subtotal fue editado, recalcular la cantidad con 6 decimales
+            if (this.localOrden[idx].price > 0 && this.localOrden[idx].newSubtotal !== null) {
+                this.localOrden[idx].quantity = parseFloat((this.localOrden[idx].newSubtotal / this.localOrden[idx].price).toFixed(6));
+            }
             // Crear nuevo timeout para ejecutar el proceso después de 600ms
             this.subtotalInputTimeouts[idx] = setTimeout(() => {
                 if (val === '' || val === null) {
@@ -3557,7 +3527,7 @@ export default {
 
             let newQty = sub / unitBase;
             // Siempre usar 3 decimales al recalcular por subtotal para no alterar el total ingresado
-            newQty = Number(newQty.toFixed(3));
+            newQty = Number(newQty.toFixed(6));
 
             if (!isFinite(newQty) || newQty <= 0) {
                 this.$toast.error("Cantidad resultante no válida");
@@ -3575,6 +3545,7 @@ export default {
             this.calculateTotal();
             this.$toast.success("Subtotal actualizado");
         },
+        
         changeSubtotal(idx) {
             let ordensModified = [...this.localOrden];
             ordensModified[idx].change_subtotal = !ordensModified[idx]
@@ -4542,11 +4513,11 @@ export default {
             // Sumar el subtotal manual si existe, si no, cantidad * precio
             _.forEach(this.localOrden, value => {
                 let subtotal = (typeof value.newSubtotal === 'number' && !isNaN(value.newSubtotal))
-                    ? value.newSubtotal
-                    : value.quantity * value.price;
+                    ? parseFloat(Number(value.newSubtotal).toFixed(2))
+                    : parseFloat((value.quantity * value.price).toFixed(2));
                 OrdenPen += subtotal;
             });
-            this.totalOrden = _.round(OrdenPen, 2);
+            this.totalOrden = parseFloat(OrdenPen.toFixed(2));
             _.forEach(this.ordens, values => {
                 let { item } = values.food;
                 OrdenPenAtendidos =

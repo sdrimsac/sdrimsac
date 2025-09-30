@@ -3728,27 +3728,6 @@ class BoxesController extends Controller
 
         $datosSeries = array_values($datosSeries);
 
-
-        /* if (!empty($seriesDocs)) {
-            foreach ($seriesDocs as $key => $value) {
-                $detalleSell =  json_decode($value->item, true);
-                foreach ($detalleSell['lots'] as $key => $valueDetalle) {
-                    $datosSeries[] =  [$value->doc_series . '-' . $value->doc_number, $detalleSell['description'], $valueDetalle['series']];
-                }
-            }
-        }
-
-        if (!empty($seriesSalesNotes)) {
-            foreach ($seriesSalesNotes as $key => $value) {
-                $detalleSalesNotes =  json_decode($value->item, true);
-                if (isset($detalleSalesNotes['lots'])) {
-                    foreach ($detalleSalesNotes['lots'] as $key => $valueDetalle) {
-                        $datosSeries[] =  [$value->salenotes_series . '-' . $value->salenotes_number, $detalleSalesNotes['description'], $valueDetalle['series']];
-                    }
-                }
-            }
-        } */
-
         $receipts = $this->get_receipts($cash_id); // receipts
         $quantity_receipts = count($receipts);
         $total_receipts = $receipts->sum('amount');
