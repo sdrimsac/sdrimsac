@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send:message-client')->dailyAt('08:00');
         $schedule->command('send:message-client')->dailyAt('08:40');
         $schedule->command('send:message-client')->dailyAt('09:00');
+        $schedule->command('tenancy:run item-totem:register-prices')->dailyAt('05:10');
         $schedule->command('block:client-has-no-payment')->dailyAt('06:00');
         //para las guias
         //$schedule->command('send:dispatches')->everyFiveMinutes(2);

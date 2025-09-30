@@ -959,7 +959,7 @@ return [
                 </td>
             </tr>
         </table>
-        <!-- @if (!empty($datosSeries))
+        @if (!empty($totem_detail))
         <table style="margin-top: 10px;">
             <tr>
                 <td width="50%" style="vertical-align: top">
@@ -970,7 +970,7 @@ return [
                         <thead>
                             <tr>
                                 <th class="thead" colspan="4">
-                                    <span class="f12">DETALLE PRECIOS DE HOY</span>
+                                    <span class="f12">DETALLE PRECIOS TOTEM</span>
                                 </th>
                             </tr>
                             <tr>
@@ -990,12 +990,12 @@ return [
                         </thead>
                         <tbody>
 
-                            @foreach ($datosSeries as $index => $detailseries)
+                            @foreach ($totem_detail as $index => $detailseries)
                             <tr>
                                 <td width="10%" class="f12 center">{{ $index + 1 }}</td>
-                                <td width="10%" class="f12 center">{{ $detailseries[0] }}</td>
-                                <td width="70%" class="f12">{{ strtoupper($detailseries[1]) }}</td>
-                                <td width="35%" class="f12 right">{{ $detailseries[2] }}</td>
+                                <td width="30%" class="f12 center">{{ $detailseries->item->description }}</td>
+                                <td width="10%" class="f12 right">{{ $detailseries->price }}</td>
+                                <td width="10%" class="f12 right">{{ $detailseries->date_of_price }}</td>
                             </tr>
                             @endforeach
 
@@ -1006,7 +1006,7 @@ return [
 
             </tr>
         </table>
-        @endif -->
+        @endif
 
         @if (!empty($datosSeries))
         <table style="margin-top: 10px;">
@@ -1814,9 +1814,17 @@ return [
                 </thead>
                 <tbody>
                     @foreach ($group as $a_item)
+                    <!-- log para saber que datos llegan el elemento -->
+                    @php
+                    Log::info('Datos del elemento:', $a_item);
+                    @endphp
                     <tr>
                         <td class="f12 center">
-                            {{ intval($a_item['quantity']) }}
+                            @if($configuration->tap && $a_item['category'] == "COMBUSTIBLE")
+                                {{ number_format($a_item['quantity'], 3) }} - {{ $a_item['unit_type_id'] }}
+                            @else
+                                {{ intval($a_item['quantity']) }} 
+                            @endif
                         </td>
                         <td class="f12">
                             {{ $a_item['description'] }}

@@ -56,6 +56,7 @@ use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\Table;
 use Hyn\Tenancy\Environment;
+use Modules\Grifo\Models\ItemTotemPrices;
 
 class BoxesController extends Controller
 {
@@ -653,6 +654,9 @@ class BoxesController extends Controller
 
                                     $id_exist = array_search($key, array_column($all_items, 'key'));
 
+                                    // Obtener la unidad de medida
+                                    $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
+
                                     if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
                                         if ($id_exist !== false) {
                                             $all_items[$id_exist] = [
@@ -662,6 +666,7 @@ class BoxesController extends Controller
                                                 "description" => $description_item,
                                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                 "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                "unit_type_id" => $unit_type_id,
                                             ];
                                         } else {
                                             $all_items[] = [
@@ -671,6 +676,7 @@ class BoxesController extends Controller
                                                 "quantity" => $item->quantity,
                                                 "category" => $this->get_category($item),
                                                 "total" => $item->total,
+                                                "unit_type_id" => $unit_type_id,
                                             ];
                                         }
                                     }
@@ -741,6 +747,9 @@ class BoxesController extends Controller
 
                                         $key = $description_item . "-" . $item->unit_price;
                                         $id_exist = array_search($key, array_column($all_items, 'key'));
+
+                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
+
                                         if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
                                             if ($id_exist !== false) {
                                                 $all_items[$id_exist] = [
@@ -750,6 +759,7 @@ class BoxesController extends Controller
                                                     "description" => $description_item,
                                                     "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                     "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             } else {
                                                 $all_items[] = [
@@ -759,6 +769,7 @@ class BoxesController extends Controller
                                                     "quantity" => $item->quantity,
                                                     "category" => $this->get_category($item),
                                                     "total" => $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             }
                                         }
@@ -798,6 +809,7 @@ class BoxesController extends Controller
 
                                         $key = $description_item . "-" . $item->unit_price;
                                         $id_exist = array_search($key, array_column($all_items, 'key'));
+                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
                                         if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
                                             if ($id_exist !== false) {
                                                 $all_items[$id_exist] = [
@@ -807,6 +819,7 @@ class BoxesController extends Controller
                                                     "description" => $description_item,
                                                     "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                     "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             } else {
                                                 $all_items[] = [
@@ -816,6 +829,7 @@ class BoxesController extends Controller
                                                     "quantity" => $item->quantity,
                                                     "category" => $this->get_category($item),
                                                     "total" => $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             }
                                         }
@@ -849,6 +863,7 @@ class BoxesController extends Controller
                                         }
                                         $key = $description_item . "-" . $item->unit_price;
                                         $id_exist = array_search($key, array_column($all_items, 'key'));
+                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
                                         if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
                                             if ($id_exist !== false) {
                                                 $all_items[$id_exist] = [
@@ -858,6 +873,7 @@ class BoxesController extends Controller
                                                     "description" => $description_item,
                                                     "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                                     "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             } else {
                                                 $all_items[] = [
@@ -867,6 +883,7 @@ class BoxesController extends Controller
                                                     "quantity" => $item->quantity,
                                                     "category" => $this->get_category($item),
                                                     "total" => $item->total,
+                                                    "unit_type_id" => $unit_type_id,
                                                 ];
                                             }
                                         }
@@ -3285,7 +3302,9 @@ class BoxesController extends Controller
         $anulate_documents = $this->get_anulate_documents($cash_id);
         $sale_credit = $this->get_sale_note_credit($cash_id);
         $stock_init_report = $this->get_stock_report($cash_id);
-        /* $totem_detail = $this->get_totem_detail($cash_id); */
+        if ($configuration->tap) {
+            $totem_detail = $this->get_totem_detail();
+        }
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
         $order_anulate_items = $this->get_orden_item_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
@@ -3772,6 +3791,7 @@ class BoxesController extends Controller
                 "stock_init_report",
                 /* "order_anulate_comand", */
                 "order_anulate_items",
+                "totem_detail",
                 "sale_credit",
                 "credit_notes",
                 "coinsReceive",
@@ -3822,11 +3842,11 @@ class BoxesController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
 
-    /* function get_totem_detail() {
-        // segun la fecha de hoy verificar 
-        
-
-    } */
+    function get_totem_detail() { 
+        $date = date('Y-m-d');
+        $totem_details = ItemTotemPrices::whereDate('date_of_price', $date)->get();
+        return $totem_details;
+    }
 
     function get_detraction_payments($cash_id)
     {

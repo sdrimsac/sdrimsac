@@ -17,6 +17,7 @@ use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Food;
 use App\Traits\RegisterMovementTrait;
 use Illuminate\Http\Request;
+use Modules\Grifo\Models\ItemTotemPrices;
 use Modules\Restaurant\Models\Observation;
 use Modules\Restaurant\Models\OrdenItem;
 
@@ -25,6 +26,26 @@ use Modules\Restaurant\Models\OrdenItem;
 class Item extends ModelTenant
 {
     use RegisterMovementTrait;
+
+    /**
+     * Guarda el precio actual del item en el historial para el totem (desde consola)
+     */
+    public function storePriceFromConsole()
+    {
+        // Si el usuario no está autenticado (ejecución por consola), user_id puede ser null o 1 (admin)
+        $userId = auth()->id() ?? 1;
+        $price = $this->sale_unit_price;
+        if ($price === null) {
+            // Si no hay precio, no registrar
+            return;
+        }
+        ItemTotemPrices::create([
+            'item_id' => $this->id,
+            'price'   => $price,
+            'user_id' => $userId,
+            'date_of_price' => now()->toDateString(),
+        ]);
+    }
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
         'calculate_price',
