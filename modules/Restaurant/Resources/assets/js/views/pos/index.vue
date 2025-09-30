@@ -3543,6 +3543,7 @@ export default {
 
         async paymentsOrden(form, variationItem = []) {
             console.log("paymentsOrden recibida:", form);
+            console.log("variationItem recibida:", variationItem);
             this.orden_items = form;
             console.log("orden_items seteada:", this.orden_items);
             this.form.printDocument = form.printDocument;
@@ -3652,10 +3653,16 @@ export default {
                 }
             }
             if (variationItem.length > 0) {
+                console.log("[LOG] variationItem recibido antes de asignar:", variationItem);
                 this.variation = true;
+                // Log antes de mapear
+                const itemsFormateados = variationItem.map(o => this.formatVariation(o));
+                console.log("[LOG] items formateados por formatVariation:", itemsFormateados);
                 this.formVariation.items = [
-                    ...variationItem.map(o => this.formatVariation(o))
+                    ...itemsFormateados
                 ];
+                // Log después de asignar
+                console.log("[LOG] this.formVariation.items después de asignar:", this.formVariation.items);
                 this.formVariation.enter_amount = variationItem.reduce(
                     (a, b) => a + b.sale_unit_price * b.quantity,
                     0
@@ -3744,7 +3751,8 @@ export default {
         },
 
         formatVariation(i) {
-            return {
+            console.log("[LOG] formatVariation recibe:", i);
+            const result = {
                 ...i,
                 item: i,
                 item_id: i.id,
@@ -3798,6 +3806,8 @@ export default {
                 attributes: [],
                 affectation_igv_type: i.sale_affectation_igv_type_id
             };
+            console.log("[LOG] formatVariation retorna:", result);
+            return result;
         },
 
         select(id) {
@@ -6143,13 +6153,14 @@ export default {
             //  total_igv = _.round((total / (1+(this.percentage_igv/100))) * (this.percentage_igv/100), 2);
 
             formVariation.items.forEach(row => {
-                total_discount += parseFloat(row.total_discount);
-                total_charge += parseFloat(row.total_charge);
-                total += parseFloat(row.total);
-                total_taxes += parseFloat(row.total_taxes);
+                if (!row) return;
+                total_discount += parseFloat(row.total_discount || 0);
+                total_charge += parseFloat(row.total_charge || 0);
+                total += parseFloat(row.total || 0);
+                total_taxes += parseFloat(row.total_taxes || 0);
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
-                        parseFloat(row.total_value) *
+                        parseFloat(row.total_value || 0) *
                         (this.percentage_igv / 100),
                         2
                     );
@@ -6187,6 +6198,7 @@ export default {
             formVariation.total_value = _.round(total_value, 2);
             formVariation.total = _.round(total, 2);
         },
+
         calculateTotal(sale_unit_price = 0) {
             let total_discount = 0;
             let total_charge = 0;
@@ -6902,9 +6914,9 @@ export default {
         sidebarmodal() {
             this.showcustomModal = true;
         },
-        formatVariation(i) {
-            if (!url) return;
-            let formated = "storage/uploads/items/" + url;
+        formatVariationImageUrl(i) {
+            if (!i || !i.url) return;
+            let formated = "storage/uploads/items/" + i.url;
             return `/${formated}`;
         },
         addFood(index = 0, type = null, categoria = null) {

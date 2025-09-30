@@ -148,6 +148,8 @@
                                         </span>
                                     </button>
 
+                                    
+
                                     <template
                                         v-if="
                                             configuration.restaurant &&
@@ -278,6 +280,13 @@
                                             </el-button>
                                         </div>
                                     </div>
+                                    <el-button 
+                                        class="btn"
+                                        style="background-color: #dc3545; color: #fff; max-width: 150px;"
+                                        @click="openTotemDialog()"
+                                    >
+                                        TOTEM
+                                    </el-button>
                                 </div>
                                 <template v-if="isHotelArea">
                                     <el-badge :value="tablesClean.length" :hidden="tablesClean.length === 0">
@@ -2208,6 +2217,7 @@
             :showDialog.sync="showDialogStockMin"
             :fromPos="true"
         ></Stock-min>
+        <Totem :dialogTotem.sync="showTotemModal"></Totem>
     </div>
 </template>
 
@@ -2375,6 +2385,8 @@ const ConsolidatedListModal = () =>
 
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
+import Totem from "./partials/totem.vue";
+
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
 import StockMin from "./partials/stock_min.vue";
 import Swal from "sweetalert2";
@@ -2453,6 +2465,7 @@ export default {
         PromotionCanje,
        /*  TablesRooms, */
         SaleNoteCreditCash,
+        Totem,
     Swal,
         /* CleanModal, */
         ExpiredRoomModal
@@ -2653,7 +2666,8 @@ export default {
             lastDocument: null,
             printQueue: [],
             isPrinting: false,
-            printDelay: 1500
+            printDelay: 1500,
+            showTotemModal: false
         };
     },
     beforeDestroy() {
@@ -2963,12 +2977,17 @@ export default {
     },
 
     methods: {
+        openTotemDialog() {
+            this.showTotemModal = true;  
+        },
+
         modalClosed() {
             // Cerrar el modal de habitaciones si sigue abierto
             this.showTablesRooms = false;
             this.getTablesToClean();
             this.getTablesToLeave();
         },
+
         iniciarMedicionLatencia() {
             setInterval(async () => {
                 const valor = await this.medirLatencia();
@@ -2976,6 +2995,7 @@ export default {
                 //console.log("⏱️ Latencia medida:", valor, "ms");
             }, 2000); // Cada 2 segundos
         },
+
         async medirLatencia() {
             // Usa la función existente para medir la latencia con una imagen
             return await this.medirLatenciaConImagen();
@@ -2986,6 +3006,7 @@ export default {
             if (this.latencia < 150) return "#facc15"; // Amarillo
             return "#ef4444"; // Rojo
         },
+
         medirLatenciaConImagen(url = "https://i.imgur.com/ZKnb2Tt.png") {
             return new Promise(resolve => {
                 const start = performance.now();
@@ -3012,6 +3033,7 @@ export default {
                 //console.log("⏱️ Latencia medida:", valor, "ms");
             }, 2000); // Cada 2 segundos
         },
+
         async ItemNew(productId) {
             try {
                 const response = await this.$http.get(
@@ -3041,6 +3063,7 @@ export default {
                 );
             }
         },
+
         recibirItem(data) {
             console.log("Producto recibido:", data);
             this.ItemNew(data.id);
@@ -3049,6 +3072,7 @@ export default {
         createdNew() {
             this.showDialog = true;
         },
+
         async updateCashId(id) {
             // Cuando se abre la caja
             this.$eventHub.$emit("cashStatusChanged", {

@@ -959,6 +959,55 @@ return [
                 </td>
             </tr>
         </table>
+        <!-- @if (!empty($datosSeries))
+        <table style="margin-top: 10px;">
+            <tr>
+                <td width="50%" style="vertical-align: top">
+                    <div>
+                        <br>
+                    </div>
+                    <table class="border" style="margin-top:4px;">
+                        <thead>
+                            <tr>
+                                <th class="thead" colspan="4">
+                                    <span class="f12">DETALLE PRECIOS DE HOY</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="thead">
+                                    <span class="f12">#</span>
+                                </th>
+                                <th class="thead">
+                                    <span class="f12">COMBUSTIBLE</span>
+                                </th>
+                                <th class="thead">
+                                    <span class="f12">PRECIO</span>
+                                </th>
+                                    <th class="thead">
+                                        <span class="f12">FECHA</span>
+                                    </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($datosSeries as $index => $detailseries)
+                            <tr>
+                                <td width="10%" class="f12 center">{{ $index + 1 }}</td>
+                                <td width="10%" class="f12 center">{{ $detailseries[0] }}</td>
+                                <td width="70%" class="f12">{{ strtoupper($detailseries[1]) }}</td>
+                                <td width="35%" class="f12 right">{{ $detailseries[2] }}</td>
+                            </tr>
+                            @endforeach
+
+
+                        </tbody>
+                    </table>
+                </td>
+
+            </tr>
+        </table>
+        @endif -->
+
         @if (!empty($datosSeries))
         <table style="margin-top: 10px;">
             <tr>

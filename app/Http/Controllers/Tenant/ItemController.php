@@ -14,9 +14,7 @@ use App\Models\Tenant\Inventory;
 use App\Models\Tenant\ItemImage;
 use App\Models\Tenant\Warehouse;
 use App\Models\Tenant\ItemCodes;
-
 use Illuminate\Support\Str;
-
 use App\Imports\ItemsImport;
 use App\Models\Tenant\Catalogs\Tag;
 use App\Models\Tenant\DocumentItem;
@@ -82,6 +80,8 @@ use App\Models\Tenant\RegisterMovement;
 use App\Models\Tenant\SaleOffertDetail;
 use App\Services\ItemCodeService;
 use Barryvdh\DomPDF\Facade as PDF;
+use ItemFuelPrices;
+use Modules\Grifo\Models\ItemTotemPrices;
 
 class ItemController extends Controller
 {
@@ -902,6 +902,12 @@ class ItemController extends Controller
         return new ItemCollection($records->paginate(config('tenant.items_per_page')));
     }
 
+    public function recordsTotem(Request $request)
+    {
+        $records = $this->getRecordsTotem($request);
+        return new ItemCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
     public function recordsCatalog(Request $request)
     {
         $records = $this->getRecordsCatalog($request);
@@ -1062,13 +1068,13 @@ class ItemController extends Controller
 
     public function getRecords($request, $services = true)
     {
-    $datos = $request->value;
-    $textoIntoArray =  explode(' ', $datos);
-    $warehouse_id = $request->warehouse_id;
-    $categoria_madera_id = $request->categoria_madera_id;
-    $area_id = $request->area_id;
-    $active = $request->active;
-    $show_inactive = filter_var($request->show_inactive ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $datos = $request->value;
+        $textoIntoArray =  explode(' ', $datos);
+        $warehouse_id = $request->warehouse_id;
+        $categoria_madera_id = $request->categoria_madera_id;
+        $area_id = $request->area_id;
+        $active = $request->active;
+        $show_inactive = filter_var($request->show_inactive ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
@@ -1190,6 +1196,24 @@ class ItemController extends Controller
 
         return $records->orderBy('description', 'ASC');
     }
+
+
+    public function getRecordsTotem($request)
+    {
+        // Obtener solo los items que pertenecen a la categoría "COMBUSTIBLE"
+        // Primero buscamos el ID de la categoría cuyo nombre es "COMBUSTIBLE"
+        $category = CategoryItem::where('name', 'COMBUSTIBLE')->first();
+
+        if (!$category) {
+            // Si no existe la categoría, retornar una colección vacía
+            return Item::whereRaw('0=1');
+        }
+
+        $records = Item::where('category_id', $category->id);
+
+        return $records->orderBy('description', 'ASC');
+    }
+
 
     public function getRecordMobile($request, $services = true)
     {
@@ -1492,6 +1516,8 @@ class ItemController extends Controller
             $item->item_type_id = '01';
             $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
             $item->fill($request->all());
+
+            $configuration = Configuration::first();
 
             $temp_path = $request->input('temp_path');
             $id = $request->input('id');
@@ -1811,6 +1837,15 @@ class ItemController extends Controller
 
             $item->update();
 
+            if ($configuration->tap && $id) {
+
+                Log::info('Configuración de grifo activada, verificando categoría del ítem...');
+                $combustibleCategoryId = 1;
+                if ($item->category_id == $combustibleCategoryId) {
+                    $this->storePrice($request, $item->id);
+                }
+            }
+
             // FINAL: Generar códigos si aplica
             if ($item->codes_family) {
                 $warehouses = ItemWarehouse::where('item_id', $item->id)->pluck('warehouse_id');
@@ -1835,6 +1870,22 @@ class ItemController extends Controller
                 'message' => 'Error inesperado, no se pudo registrar el producto'
             ];
         }
+    }
+
+
+    public function storePrice(Request $request, $item_id)
+    {
+        ItemTotemPrices::create([
+            'item_id' => $item_id,
+            'price'   => $request->sale_unit_price,
+            'user_id' => auth()->id(),
+            'date_of_price' => now()->toDateString(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Precio registrado correctamente en el historial',
+        ]);
     }
 
     public function generateCodes(Request $request)

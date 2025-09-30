@@ -3250,8 +3250,6 @@ class BoxesController extends Controller
         return $pdf->stream('Reporte_Yape_' . date('YmdHis') . '.pdf');
     }
 
-
-
     public function reports_resumen_type(Request $request)
     {
         ini_set('memory_limit', '10096M');
@@ -3287,6 +3285,7 @@ class BoxesController extends Controller
         $anulate_documents = $this->get_anulate_documents($cash_id);
         $sale_credit = $this->get_sale_note_credit($cash_id);
         $stock_init_report = $this->get_stock_report($cash_id);
+        /* $totem_detail = $this->get_totem_detail($cash_id); */
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
         $order_anulate_items = $this->get_orden_item_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
@@ -3822,6 +3821,12 @@ class BoxesController extends Controller
 
         return $pdf->stream('pdf_file.pdf');
     }
+
+    /* function get_totem_detail() {
+        // segun la fecha de hoy verificar 
+        
+
+    } */
 
     function get_detraction_payments($cash_id)
     {

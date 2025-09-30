@@ -3692,6 +3692,7 @@ export default {
             foodDefault.description = this.descriptionTemp;
             this.showChangeDescriptionVariation = false;
         },
+
         changeVariation() {
             if (this.customer_variation == null) {
                 this.variation = false;
@@ -3709,7 +3710,9 @@ export default {
             }
 
             this.foodDefaults = [this.foodDefault];
+            console.log("Food Defaults:", this.foodDefaults);
         },
+
         saveSubtotal(idx) {
             let ordensModified = [...this.localOrden];
             let currentOrden = ordensModified[idx];
@@ -4622,18 +4625,6 @@ export default {
         },
         async payOrden(offert = null) {
             // Antes de procesar el pago, asegurar que todos los productos tengan price_original
-            /* if (this.localOrden && Array.isArray(this.localOrden)) {
-                this.localOrden.forEach(item => {
-                    if (
-                        item &&
-                        item.food &&
-                        item.food.item &&
-                        (item.food.item.price_original === undefined || item.food.item.price_original === null)
-                    ) {
-                        item.food.item.price_original = item.food.item.price;
-                    }
-                });
-            } */
             
             if (!this.checkIfHasZeroTotal()) {
                 this.$toast.error(
@@ -4693,10 +4684,6 @@ export default {
                 form_submit.items = this.ordens;
             } else {
                 form_submit.items = this.localOrden;
-                console.log(
-                    "verificando los items antes de pagar fffffffff",
-                    form_submit.items
-                );
             }
 
             if (this.clientTableData.ref) {
@@ -4705,10 +4692,10 @@ export default {
 
             if (this.clientTableData.customer_id) {
                 form_submit.customer_id = this.clientTableData.customer_id;
-                console.log(
+                /* console.log(
                     "ver pasando el customer_id",
                     this.clientTableData.customer_id
-                );
+                ); */
             }
             if (!this.configuration.maderera && !this.divided_items) {
                 form_submit.items = this.mergeItems(form_submit.items);
@@ -4721,9 +4708,10 @@ export default {
             this.commands_fisico = "";
 
             form_submit.is_for_carry = this.to_carry;
+
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
-
+                console.log("Food Defaults ver datos:", this.foodDefaults);
                 this.$emit("paymentsOrden", form_submit, this.foodDefaults);
             } else {
                 this.$emit("paymentsOrden", form_submit);
@@ -4732,6 +4720,7 @@ export default {
             this.loading = false;
             this.disableSend = false;
             this.to_carry = false;
+            // NOTA: La limpieza de foodDefaults y variation debe hacerse SOLO cuando el pago realmente termine (por ejemplo, al cerrar el modal de pago)
             this.foodDefaults = [];
             this.variation = false;
             // Limpiar referencia después de cobrar la orden

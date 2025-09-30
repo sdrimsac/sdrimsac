@@ -2505,7 +2505,7 @@ export default {
         someItemAffected20() {
             if (!this.form.items) return false;
             return this.form.items.some(
-                item => item.affectation_igv_type_id == "20"
+                item => item && item.affectation_igv_type_id == "20"
             );
         },
         //agragado para poder agregar la cantidad de promociones que se puede canjear

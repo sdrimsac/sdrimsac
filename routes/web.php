@@ -510,6 +510,7 @@ if ($hostname) {
                 Route::get('items/import_stock_format', [App\Http\Controllers\Tenant\ItemController::class, 'importStockFormat']);
                 Route::get('items/check_series', [App\Http\Controllers\Tenant\ItemController::class, 'check_series']);
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);
+                Route::get('items/records-totem', [App\Http\Controllers\Tenant\ItemController::class, 'recordsTotem']);
                 Route::get('items/excel', [App\Http\Controllers\Tenant\ItemController::class, 'excel']);
                 Route::get('items/excel-for-import', [App\Http\Controllers\Tenant\ItemController::class, 'excelForImport']);
                 Route::post('items/updateprice', [App\Http\Controllers\Tenant\ItemController::class, 'updateprice']);
