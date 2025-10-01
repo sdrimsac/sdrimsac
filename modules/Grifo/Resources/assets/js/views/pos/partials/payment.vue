@@ -573,7 +573,7 @@
                                             @input="validateAndProcess"
                                             maxlength="8"
                                             placeholder="0.00"
-                                            :disabled="!enabled_discount || affectation_optional_id === '10'"
+                                            :disabled="!enabled_discount"
                                             style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;"
                                         />
                                         <!-- Input para porcentaje -->

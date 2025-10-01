@@ -555,6 +555,7 @@ class BoxesController extends Controller
             "documents_info" => $documents,
         ];
     } */
+   
     function add_method(&$all_methods, $method, $amount, $document, $date_of_issue, $customer)
     {
         if (!isset($all_methods[$method])) {
