@@ -428,6 +428,11 @@ export default {
             this.addingType = true;
             this.addFood(this.currentIndex, null, false, categoria);
         },
+        formatUrlImage(url) {
+            if (!url) return;
+            let formated = "storage/uploads/items/" + url;
+            return `/${formated}`;
+        },
         UpdateparentCategory() {
             this.$emit("update:category", this.categoryChild);
             this.$emit("data-received", this.input_itemMobil);
@@ -727,6 +732,13 @@ export default {
             let formated = "storage/uploads/items/" + url;
             return `/${formated}`;
         },
+
+        /* formatUrlImage(url) {
+            if (!url) return;
+            let formated = "storage/uploads/items/" + url;
+            return `/${formated}`;
+        }, */
+
         open() {
             this.ordenItems = [];
             this.orden = [];
