@@ -342,8 +342,6 @@ class BoxesController extends Controller
         }
     }
 
-
-
     /* function get_items_from_box($cash_id)
     {
 
@@ -555,7 +553,7 @@ class BoxesController extends Controller
             "documents_info" => $documents,
         ];
     } */
-   
+
     function add_method(&$all_methods, $method, $amount, $document, $date_of_issue, $customer)
     {
         if (!isset($all_methods[$method])) {
@@ -3303,6 +3301,7 @@ class BoxesController extends Controller
         $anulate_documents = $this->get_anulate_documents($cash_id);
         $sale_credit = $this->get_sale_note_credit($cash_id);
         $stock_init_report = $this->get_stock_report($cash_id);
+        $totem_detail = null;
         if ($configuration->tap) {
             $totem_detail = $this->get_totem_detail();
         }
