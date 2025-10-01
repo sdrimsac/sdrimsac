@@ -2083,6 +2083,11 @@ export default {
     },
 
     methods: {
+        formatUrlImage(url) {
+            if (!url) return;
+            let formated = "storage/uploads/items/" + url;
+            return `/${formated}`;
+        },
         modalClosed() {
             // Cerrar el modal de habitaciones si sigue abierto
             this.showTablesRooms = false;
