@@ -3983,114 +3983,6 @@ export default {
 
                 // LOGS para depuración de códigos
                 console.log("[SCAN] input_item:", this.input_item);
-                /* console.log(
-                    "[SCAN] item_codes:",
-                    orden?.food?.item?.item_codes
-                );
-                console.log(
-                    "[SCAN] _all_item_codes antes:",
-                    orden?.food?.item?._all_item_codes
-                );
-                console.log(
-                    "[SCAN] item_codes_scanned antes:",
-                    orden?.food?.item?.item_codes_scanned
-                ); */
-
-                /* if (
-                    Array.isArray(orden?.food?.item?.item_codes) &&
-                    this.barcode === true &&
-                    this.input_item
-                ) {
-                    const scanned = String(this.input_item)
-                        .trim()
-                        .toLowerCase();
-
-                    // Solo inicializar _all_item_codes si no existe o está vacía
-                    if (
-                        !Array.isArray(orden.food.item._all_item_codes) ||
-                        orden.food.item._all_item_codes.length === 0
-                    ) {
-                        orden.food.item._all_item_codes = [
-                            ...orden.food.item.item_codes
-                        ];
-                    } else {
-                        // Si el código escaneado no está en _all_item_codes pero sí en item_codes, agregarlo
-                        const existsInAll = orden.food.item._all_item_codes.some(
-                            c =>
-                                String(c.code_barcode)
-                                    .trim()
-                                    .toLowerCase() === scanned
-                        );
-                        const existsInItemCodes = orden.food.item.item_codes.some(
-                            c =>
-                                String(c.code_barcode)
-                                    .trim()
-                                    .toLowerCase() === scanned
-                        );
-                        if (!existsInAll && existsInItemCodes) {
-                            const codeToAdd = orden.food.item.item_codes.find(
-                                c =>
-                                    String(c.code_barcode)
-                                        .trim()
-                                        .toLowerCase() === scanned
-                            );
-                            orden.food.item._all_item_codes.push(codeToAdd);
-                            console.log(
-                                "[SCAN] Se agregó el código escaneado a _all_item_codes:",
-                                codeToAdd
-                            );
-                        }
-                    }
-
-                    if (!Array.isArray(orden.food.item.item_codes_scanned)) {
-                        this.$set(orden.food.item, "item_codes_scanned", []);
-                    }
-
-                    console.log(
-                        "[SCAN] _all_item_codes después:",
-                        orden.food.item._all_item_codes
-                    );
-                    console.log(
-                        "[SCAN] item_codes_scanned antes de buscar:",
-                        orden.food.item.item_codes_scanned
-                    );
-
-                    const foundCode = orden.food.item._all_item_codes.find(
-                        c =>
-                            String(c.code_barcode)
-                                .trim()
-                                .toLowerCase() === scanned
-                    );
-
-                    if (!foundCode) {
-                        this.$toast.error(
-                            "Código no válido para este producto."
-                        );
-                        this.input_item = "";
-                        return;
-                    }
-
-                    const alreadyScanned = orden.food.item.item_codes_scanned.some(
-                        c =>
-                            String(c.code_barcode)
-                                .trim()
-                                .toLowerCase() === scanned
-                    );
-
-                    if (alreadyScanned) {
-                        this.$toast.warning("Este código ya fue escaneado.");
-                        this.input_item = "";
-                        return;
-                    }
-
-                    orden.food.item.item_codes_scanned.push(foundCode);
-                    //this.input_item = "";
-
-                    console.log(
-                        "[SCAN] Escaneados después:",
-                        orden.food.item.item_codes_scanned
-                    );
-                } */
 
                 if (this.configuration.divided_items) {
                     if (this.divided_items) {
@@ -4562,10 +4454,11 @@ export default {
                     }
                 }
 
-                // this.localOrden = [...this.localOrden];
-                //this.localOrden = this.changeCurrencyItems();
+                this.localOrden = [...this.localOrden];
+                this.localOrden = this.changeCurrencyItems();
             }
             this.$refs.ordenRef.calculateTotal();
+            // Aseguramos recalcular el total en el propio componente
         },
 
         total_sales(val) {

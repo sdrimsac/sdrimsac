@@ -1812,6 +1812,7 @@ export default {
             categoria = null,
             color_size = []
         ) {
+            console.log("addFood llamado con a items");
             if (!this.canAddItem) {
                 this.$showSAlert(
                     "Error",

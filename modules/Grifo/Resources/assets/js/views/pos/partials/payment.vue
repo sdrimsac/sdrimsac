@@ -1367,13 +1367,11 @@ export default {
             deep: true
         },
         affectation_optional_id(newVal, oldVal) {
-            // Si cambia la afectación, limpia descuentos y recalcula
             this.discount_amount = 0;
             this.discount_percentage = 0;
             this.usePercent = false;
             this.discount_mode = "amount";
-            this.inputDiscountAmount(); // o this.reCalculateTotal() según tu lógica
-            // Si tienes lógica especial para bloquear, puedes agregarla aquí
+            this.inputDiscountAmount();
         }
     },
 
