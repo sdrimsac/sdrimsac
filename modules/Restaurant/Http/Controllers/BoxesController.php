@@ -3435,6 +3435,7 @@ class BoxesController extends Controller
             'BCP',
             'BCO NACION',
             'Scotiabank',
+            'Efectivo',
         ];
 
         $methods = [];
@@ -3509,13 +3510,20 @@ class BoxesController extends Controller
             "unds" => $unds,
         ];
         $sales_detail = [
-            "cash" => [
+            /* "cash" => [
                 "desc" => "Efectivo",
                 "quantity" => $sales_cash_quantity,
                 "sum" => $sales_cash_sum,
                 "digital" => false,
                 "transfer" => false,
-            ],
+            ], */
+            "cash" => [
+                "desc" => "Efectivo", 
+                "quantity" => $methods['Efectivo']['quantity'], 
+                "sum" => $methods['Efectivo']['sum'], 
+                "digital" => false, 
+                "transfer" => false],
+
             "card" => [
                 "desc" => "Tarjeta",
                 "quantity" => $methods['Tarjeta']['quantity'],

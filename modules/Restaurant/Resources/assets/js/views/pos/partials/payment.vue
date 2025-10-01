@@ -3220,6 +3220,17 @@ export default {
             return false;
         },
         addPayment() {
+            // Validar máximo 4 métodos de pago
+            if (this.currentPayments.length >= 4) {
+                this.$toast.error("Ha llegado al límite de métodos de pago. No puede agregar más de 4 metodos de pago.");
+                return;
+            }
+            // Validar que no se repita el método de pago
+            const exists = this.currentPayments.some(p => p.method_payment_id === this.method_payments);
+            if (exists) {
+                this.$toast.error("No puede usar dos veces el mismo método de pago.");
+                return;
+            }
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
