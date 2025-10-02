@@ -133,9 +133,6 @@ class GananciaDiscountReportExport implements FromCollection, WithHeadings, Shou
     {
         $export = collect();
 
-        // LOG PARA VER DATOS DE sales_data
-        Log::info('sales_data para exportación:', $this->sales_data);
-
         // Inicializar acumuladores de totales
         $totales = [
             'quantity' => 0.0,

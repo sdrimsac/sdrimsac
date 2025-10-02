@@ -195,6 +195,7 @@ class BoxesController extends Controller
             "documents" => $documents_credit
         ];
     }
+
     function get_items_from_credit($cash_id)
     {
         $items = [];
@@ -705,7 +706,6 @@ class BoxesController extends Controller
                         /* $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get(); */
 
                         $items = $sale_note->items;
-                        Log::info("ver datos aqui en el item" . $items);
 
                         foreach ($items as $item) {
                             if ($item) {
@@ -1577,7 +1577,6 @@ class BoxesController extends Controller
                 'remaining' => $remaining,
             ];
         }
-        Log::info('Sale Note Credit Report', ['cash_id' => $cash_id, 'result' => $result]);
 
         return $result;
     }
@@ -2827,9 +2826,6 @@ class BoxesController extends Controller
             ];
         });
 
-
-
-
         $cash = Cash::find($cash_id);
         $counter = $cash->counter ?? [];
         $user = User::find($cash->user_id);
@@ -3099,6 +3095,13 @@ class BoxesController extends Controller
         }));
         $documents["notas"]["total"] += $advances_sale_note_credit;
         $documents["notas"]["quantity"] += $credit_grouped_count;
+        // Calcular notas pendientes
+        $notas_pendientes_total = array_sum(array_column($credit_grouped, 'remaining'));
+        $notas_pendientes_quantity = count(array_filter($credit_grouped, function($item) { return $item['remaining'] > 0; }));
+        $documents["notas_pendientes"] = [
+            "total" => $notas_pendientes_total,
+            "quantity" => $notas_pendientes_quantity
+        ];
 
         $array_receipts = $receipts->toArray();
         $all_credit_documents = array_merge($credit_grouped, $array_receipts);
@@ -3435,7 +3438,7 @@ class BoxesController extends Controller
             'BCP',
             'BCO NACION',
             'Scotiabank',
-            'Efectivo',
+            /* 'Efectivo', */
         ];
 
         $methods = [];
@@ -3510,19 +3513,19 @@ class BoxesController extends Controller
             "unds" => $unds,
         ];
         $sales_detail = [
-            /* "cash" => [
+            "cash" => [
                 "desc" => "Efectivo",
                 "quantity" => $sales_cash_quantity,
                 "sum" => $sales_cash_sum,
                 "digital" => false,
                 "transfer" => false,
-            ], */
-            "cash" => [
+            ],
+            /* "cash" => [
                 "desc" => "Efectivo", 
                 "quantity" => $methods['Efectivo']['quantity'], 
                 "sum" => $methods['Efectivo']['sum'], 
                 "digital" => false, 
-                "transfer" => false],
+                "transfer" => false], */
 
             "card" => [
                 "desc" => "Tarjeta",
@@ -3768,8 +3771,20 @@ class BoxesController extends Controller
         $credit_grouped_count = count(array_filter($credit_grouped, function ($item) {
             return $item["advances"] > 0;
         }));
+        /* $documents["notas"]["total"] += $advances_sale_note_credit;
+        $documents["notas"]["quantity"] += $credit_grouped_count; */
+
         $documents["notas"]["total"] += $advances_sale_note_credit;
         $documents["notas"]["quantity"] += $credit_grouped_count;
+        // Calcular notas pendientes
+        /* $notas_pendientes_total = array_sum(array_column($credit_grouped, 'remaining'));
+        $notas_pendientes_quantity = count(array_filter($credit_grouped, function($item) { return $item['remaining'] > 0; }));
+        $documents["notas_pendientes"] = [
+            "total" => $notas_pendientes_total,
+            "quantity" => $notas_pendientes_quantity
+        ]; */
+
+        Log::info('Cantidad de documentos de crédito:', $documents);
 
         $array_receipts = $receipts->toArray();
         $all_credit_documents = array_merge($credit_grouped, $array_receipts);
@@ -3784,6 +3799,7 @@ class BoxesController extends Controller
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
         ini_restore('memory_limit');
+
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
                 "is_usd",
@@ -3872,6 +3888,7 @@ class BoxesController extends Controller
 
         return $payments;
     }
+
     function format_bill_series($bill_series)
     {
         if ($bill_series == null || count($bill_series) == 0) {
