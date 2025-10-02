@@ -1,21 +1,9 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        append-to-body
-        width="30%"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-        @open="create"
-    >
+    <el-dialog :title="titleDialog" :visible="showDialog" append-to-body width="30%" :close-on-click-modal="false"
+        :close-on-press-escape="false" :show-close="false" @open="create">
         <div v-if="form.response_message" class="row mb-4">
             <div class="col-md-12">
-                <el-alert
-                    :title="form.response_message"
-                    :type="form.response_type"
-                    show-icon
-                >
+                <el-alert :title="form.response_message" :type="form.response_type" show-icon>
                 </el-alert>
             </div>
         </div>
@@ -27,8 +15,7 @@
                 <template v-if="response_sunat_status_ticket">
                     <div>{{ response_sunat_status_ticket.message }}</div>
                     <div v-if="!response_sunat_status_ticket.success">
-                        <el-button class="list" @click="clickStatusTicket"
-                            >Consultar ticket
+                        <el-button class="list" @click="clickStatusTicket">Consultar ticket
                         </el-button>
                     </div>
                 </template>
@@ -36,140 +23,88 @@
         </div>
 
         <div v-if="form.send_to_pse" class="row">
-            <div
-                v-if="form.response_signature_pse"
-                class="col-lg-12 col-md-12 col-sm-12"
-            >
-                <el-alert
-                    :title="`Firma Xml PSE: ${form.response_signature_pse}`"
-                    show-icon
-                    type="success"
-                ></el-alert>
+            <div v-if="form.response_signature_pse" class="col-lg-12 col-md-12 col-sm-12">
+                <el-alert :title="`Firma Xml PSE: ${form.response_signature_pse}`" show-icon type="success"></el-alert>
             </div>
-            <div
-                v-if="form.response_send_cdr_pse"
-                class="col-lg-12 col-md-12 col-sm-12 mt-3"
-            >
-                <el-alert
-                    :title="`Envio CDR PSE: ${form.response_send_cdr_pse}`"
-                    show-icon
-                    type="success"
-                ></el-alert>
+            <div v-if="form.response_send_cdr_pse" class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                <el-alert :title="`Envio CDR PSE: ${form.response_send_cdr_pse}`" show-icon type="success"></el-alert>
             </div>
         </div>
 
-        <template
-            v-if="
-                (response_sunat_status_ticket &&
-                    response_sunat_status_ticket.success) ||
-                    !sendSunat
-            "
-        >
-            <div class="row">
-                <div
-                    class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3"
-                >
-                    <button
-                        class="btn btn-lg btn-info waves-effect waves-light"
-                        type="button"
-                        @click="clickPrint('a4')"
-                    >
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>Descargar A4</p>
+        <template v-if="
+            (response_sunat_status_ticket &&
+                response_sunat_status_ticket.success) ||
+            !sendSunat
+        ">
+            <div class="row mb-3 justify-content-center">
+                <div class="col-12 d-flex justify-content-center mb-2">
+                    <strong>Descargar / Imprimir</strong>
                 </div>
-                <div
-                    class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3"
-                >
-                    <button
-                        class="btn btn-lg btn-info waves-effect waves-light"
-                        type="button"
-                        @click="clickPrint('ticket')"
-                    >
-                        <i class="fa fa-file-alt"></i>
+                
+                <!-- Boton Imprimir A4 -->
+                <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                    <button type="button" class="btn_paperA4" @click="clickPrint('a4')">
+                        <i class="fa fa-file-alt" style="font-size: 24px;"></i> A4
                     </button>
-                    <p>80MM</p>
                 </div>
-                <div
-                    class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3"
-                >
-                    <button
-                        class="btn btn-lg btn-info waves-effect waves-light"
-                        type="button"
-                        @click="clickPrint('ticket_58')"
-                    >
-                        <i class="fa fa-file-alt"></i>
+                <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                    <button type="button" class="btn_paper80" @click="clickPrint('ticket')">
+                        <i class="fa fa-receipt" style="font-size: 24px;"></i> 80mm
                     </button>
-                    <p>58MM</p>
                 </div>
-                <div
-                    v-if="sendSunat"
-                    class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3"
-                >
-                    <button
-                        class="btn btn-lg btn-info waves-effect waves-light"
-                        type="button"
-                        @click="clickDownloadCdr()"
-                    >
+                <div v-if="sendSunat" class="col-lg-6 col-md-6 col-sm-6 d-flex flex-column align-items-center mt-3">
+                    <button class="btn btn-lg btn-info waves-effect waves-light" type="button"
+                        @click="clickDownloadCdr()">
                         <i class="fa fa-file-download"></i>
                     </button>
                     <p>Descargar CDR</p>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-md-12">
-                    <el-input v-model="form.customer_email">
-                        <el-button
-                            slot="append"
-                            :loading="loading"
-                            icon="el-icon-message"
-                            @click="clickSendEmail"
-                            >Enviar
-                        </el-button>
-                    </el-input>
-                    <small
-                        v-if="errors.customer_email"
-                        class="form-control-feedback"
-                        v-text="errors.customer_email[0]"
-                    ></small>
+            <!-- Enviar a correo o whatsapp -->
+            <div class="row mt-2">
+                <div class="col-12 d-flex justify-content-center mb-2">
+                    <strong>Enviar a:</strong>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-md-12">
-                    <el-input v-model="form.customer_telephone">
-                        <template slot="prepend">+51</template>
-                        <el-button slot="append" @click="clickSendWhatsapp"
-                            >Enviar
-                            <el-tooltip
-                                class="item"
-                                content="Es necesario tener aperturado Whatsapp web"
-                                effect="dark"
-                                placement="top-start"
-                            >
-                                <i class="fab fa-whatsapp"></i>
-                            </el-tooltip>
+                <div class="col-md-12 mb-2">
+                    Correo:
+                    <el-input v-model="form.customer_email">
+                        <!-- <el-button class="btn_guardarsmall" type="primary" slot="append" :loading="loading" icon="el-icon-message"
+                            @click="clickSendEmail">
+                        </el-button> -->
+                        <el-button slot="append" @click="clickSendEmail" :loading="loading">
+                            <i class="el-icon-message" style="font-size: 24px; color: navy;"></i>
                         </el-button>
                     </el-input>
-                    <small
-                        v-if="errors.customer_telephone"
-                        class="form-control-feedback"
-                        v-text="errors.customer_telephone[0]"
-                    ></small>
+                    <small v-if="errors.customer_email" class="form-control-feedback"
+                        v-text="errors.customer_email[0]"></small>
+                </div>
+            
+                <div class="col-md-12 mb-2">
+                    Whatsapp:
+                    <el-input v-model="form.customer_telephone">
+                        <!-- <template slot="prepend">+51</template> -->
+                        <!-- <el-button class="btn_guardarsmall" type="primary" slot="append" @click="clickSendWhatsapp">
+                                <i class="fab fa-whatsapp"></i>
+                        </el-button> -->
+                        <el-button slot="append" @click="clickSendWhatsapp">
+                            <i class="fab fa-whatsapp" style="font-size: 24px; color: green;"></i>
+                        </el-button>
+                    </el-input>
+                    <small v-if="errors.customer_telephone" class="form-control-feedback"
+                        v-text="errors.customer_telephone[0]"></small>
                 </div>
             </div>
         </template>
 
-        <span slot="footer" v-if="!loading_sunat_send" class="dialog-footer">
+        <span slot="footer" v-if="!loading_sunat_send" class="dialog-footer d-flex justify-content-end">
             <template v-if="showClose">
-                <el-button @click="clickClose">Cerrar</el-button>
+            <el-button class="btn_cancelarsmall" type="primary" @click="clickClose">Cerrar</el-button>
             </template>
             <template v-else>
-                <el-button class="list" @click="clickFinalize"
-                    >Ir al listado</el-button
-                >
-                <el-button type="primary" @click="clickNewDocument">{{
-                    text_button
-                }}</el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="clickFinalize">Ir al listado</el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="clickNewDocument">{{
+                text_button
+            }}</el-button>
             </template>
         </span>
     </el-dialog>
@@ -290,7 +225,7 @@ export default {
                         this.form.number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " + "*" + this.$desarrollador + "*"
                 };
                 try {
                     this.loading = true;
@@ -443,9 +378,9 @@ export default {
                     }
                 })
                 .catch(() => {
-                let url = window.location.origin;
-                 let formatoPdf = `${url}/print/dispatch/${this.form.external_id}/${format}`;
-                 console.log(formatoPdf);
+                    let url = window.location.origin;
+                    let formatoPdf = `${url}/print/dispatch/${this.form.external_id}/${format}`;
+                    console.log(formatoPdf);
                     window.open(formatoPdf, "_blank");
                     this.clickClose();
                 });

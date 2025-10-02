@@ -1,205 +1,116 @@
 <!-- Imprimir Acciones  CPE  -->
 <template>
-    <el-dialog
-        v-loading="loading_print"
-        :element-loading-text="message"
-        :title="titleDialog"
-        :visible="showDialog"
-        @open="create"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-        append-to-body
-    >
+    <el-dialog v-loading="loading_print" :element-loading-text="message" :title="titleDialog" :visible="showDialog"
+        @open="create" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" append-to-body>
         <div class="row mb-4" v-if="form.response_message">
             <div class="col-md-12">
-                <el-alert
-                    :title="form.response_message"
-                    :type="form.response_type"
-                    show-icon
-                >
+                <el-alert :title="form.response_message" :type="form.response_type" show-icon>
                 </el-alert>
             </div>
         </div>
         <div class="row">
-            <div
-                class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold"
-                v-if="!locked_emission.success"
-            >
-                <el-alert
-                    :title="locked_emission.message"
-                    type="warning"
-                    show-icon
-                >
+            <div class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold" v-if="!locked_emission.success">
+                <el-alert :title="locked_emission.message" type="warning" show-icon>
                 </el-alert>
             </div>
 
             <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
                 <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>Seleccione Formato a Reimprimir</span>
+                    <div slot="header" class="clearfix text-center" style="padding: 10px;">
+                        <span style="font-size: 1.5rem; font-weight: bold; color: #073f68;">Formato a
+                            Imprimir o Descargar</span>
                     </div>
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center text-center">
                         <!-- Boton Imprimir A4 -->
-                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
-                            <button
-                                type="button"
-                                class="btn_imprimir"
-                                @click="clickPrint('a4')"
-                            >
-                                <i class="fa fa-file-alt fa-2x"></i> A4
+                        <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                            <button type="button" class="btn_paperA4" @click="clickPrint('a4')">
+                                <i class="fa fa-file-alt" style="font-size: 24px;"></i> A4
                             </button>
                         </div>
 
                         <!-- Boton Imprimir A5 -->
-                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
-                            <button
-                                type="button"
-                                class="btn_imprimir"
-                                @click="clickPrint('a5')"
-                            >
-                                <i class="fa fa-file fa-2x"></i> A5
+                        <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                            <button type="button" class="btn_papera5" @click="clickPrint('a5')">
+                                <i class="fa fa-file" style="font-size: 24px;"></i> A5
                             </button>
                         </div>
 
                         <!-- Boton Imprimir Ticket 80mm -->
-                        <div class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3">
-                            <button
-                                type="button"
-                                class="btn_imprimir"
-                                @click="clickPrint('ticket')"
-                            >
-                                <i class="fa fa-receipt fa-2x"></i> 80mm
+                        <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                            <button type="button" class="btn_paper80" @click="clickPrint('ticket')">
+                                <i class="fa fa-receipt" style="font-size: 24px;"></i> 80mm
                             </button>
                         </div>
 
-                        <div
-                            class="col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-                        >
-                            <button
-                                type="button"
-                                class="btn_imprimir"
-                                @click="clickPrint('ticket_50')"
-                            >
-                                <i class="fa fa-receipt fa-2x"></i>50mm
+                        <!-- Boton Imprimir Ticket 50mm -->
+                        <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                            <button type="button" class="btn_paper50" @click="clickPrint('ticket_50')">
+                                <i class="fa fa-receipt" style="font-size: 24px;"></i> 50mm
                             </button>
-                            
                         </div>
-
                     </div>
                 </el-card>
             </div>
+        </div>
 
+        <div class="row mt-3">
+            <div class="col-6 d-flex justify-content-center align-items-center">
+                <div class="col-10 text-center" v-if="form.image_detraction">
+                    <img :src="form.image_detraction" alt="Constancia de Pago - Detracción"
+                        style="max-width: 40%; margin-top: 10px;" />
+                    <br>
+                    <a :href="form.image_detraction" download class="text-center font-weight-bold">
+                        Destracción - Descargar
+                    </a>
+                </div>
+            </div>
+            <div class="col-6">
+                Reenviar Comprobante
+                <div class="col-12">
+                    <el-input v-model="form.customer_email" placeholder="tu-correo">
+                        <el-button slot="append" @click="clickSendEmail" :loading="loading">
+                            <i class="el-icon-message" style="font-size: 24px; color: navy;"></i>
+                        </el-button>
+                    </el-input>
+                    <small class="form-control-feedback" v-if="errors.customer_email" v-text="errors.customer_email[0]"
+                        style="color: red;">
+                    </small>
+                </div>
+                <div class="col-12 mt-3">
+                    <el-input v-model="form.customer_telephone" placeholder="WhatsApp" style="color: navy;">
+                        <!-- <template slot="prepend">
+                            <span style="color: navy; font-weight: bold;">+51</span>
+                        </template> -->
+                        <el-button slot="append" @click="clickSendWhatsapp">
+                            <i class="fab fa-whatsapp" style="font-size: 24px; color: green;"></i>
+                        </el-button>
+                    </el-input>
+                    <small class="form-control-feedback" v-if="errors.customer_telephone"
+                        v-text="errors.customer_telephone[0]">
+                    </small>
+                </div>
+            </div>
+        </div>
 
-            <div
-                class="col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3"
-                v-if="form.image_detraction"
-            >
-                <a
-                    :href="`${this.form.image_detraction}`"
-                    download
-                    class="text-center font-weight-bold "
-                    >Descargar Constancia de Pago - Detracción</a
-                >
-            </div>
-        </div>
-        <!-- <div class="row mt-4">
-            <div class="col-lg-6 col-md-6 col-sm-12 text-center">
-                <button type="button" class="btn btn-lg waves-effect waves-light btn-outline-secondary" @click="clickDownload('a4')">
-                    <i class="fa fa-download"></i>&nbsp;&nbsp;Descargar A4
-                </button>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 text-center">
-                <button type="button" class="btn btn-lg waves-effect waves-light btn-outline-secondary" @click="clickDownload('ticket')">
-                    <i class="fa fa-download"></i>&nbsp;&nbsp;Descargar Ticket
-                </button>
-            </div>
-        </div> -->
-        <div class="row mt-3">
-            <div class="col-md-12">
-            <el-input 
-                v-model="form.customer_email" 
-                placeholder="Ingrese Correo Electrónico - tucorreo@gmail.com"
-            >
-                <el-button
-                slot="append"
-                @click="clickSendEmail"
-                :loading="loading"
-                style="color: navy; font-size: 18px;"
-                >
-                <i class="el-icon-message" style="font-size: 24px; color: navy;"></i> Enviar
-                </el-button>
-                <i slot="prefix" class="el-icon-edit-outline"></i>
-            </el-input>
-            <small
-                class="form-control-feedback"
-                v-if="errors.customer_email"
-                v-text="errors.customer_email[0]"
-            ></small>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-12">
-            <el-input v-model="form.customer_telephone" placeholder="Ingrese Número de WhatsApp" style="color: navy;">
-                <template slot="prepend">
-                <span style="color: navy; font-weight: bold;">+51</span>
-                </template>
-                <el-button slot="append" @click="clickSendWhatsapp" style="color: green; font-size: 18px; font-weight: bold;">
-                Enviar
-                <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="Es necesario tener aperturado Whatsapp web"
-                    placement="top-start"
-                >
-                    <i class="fab fa-whatsapp" style="font-size: 24px; color: green;"></i>
-                </el-tooltip>
-                </el-button>
-                <i slot="prefix" class="el-icon-edit-outline"></i>
-            </el-input>
-            <small
-                class="form-control-feedback"
-                v-if="errors.customer_telephone"
-                v-text="errors.customer_telephone[0]"
-            ></small>
-            </div>
-        </div>
-        <br>
-        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-            <template v-if="showClose">
-                 <!-- Consultar CDR -->
-                <button type="button" 
-                        class="btn-save btn-save:hover"
-                        icon="fas fa-file-alt fa-lg"
-                        @click.prevent="clickConsultCdr(form.id)"
-                        style="float: right;">
-                        Consultar CDR
-                </button>
-                <el-button
-                    class="btn-cancel btn-cancel:hover"
-                    icon="fas fa-times fa-lg"
-                    @click="clickClose"
-                    style="float: right;"
-                >
-                    <span>Salir</span>
-                </el-button>
-                
-            </template>
-            
-            <template v-else>
-                <el-button class="list" @click="clickFinalize"
-                    >Listado CPE</el-button
-                >
-                <el-button type="primary" @click="clickNewDocument"
-                    >Nuevo CPE</el-button
-                >
-            </template>
-        </div>
-       
         <span slot="footer" class="dialog-footer">
-            
+            <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
+                <template v-if="showClose">
+                    <!-- Consultar CDR -->
+                    <button type="primary" class="btn_guardarsmall" icon="fas fa-file-alt fa-lg"
+                        @click.prevent="clickConsultCdr(form.id)" style="float: right;">
+                        Consultar CDR
+                    </button>
+                    <el-button class="btn_cancelarsmall" type="primary" icon="fas fa-times fa-lg" @click="clickClose"
+                        style="float: right;">
+                        <span>Salir</span>
+                    </el-button>
+                </template>
+                <template v-else>
+                    <el-button class="list" @click="clickFinalize">Listado CPE</el-button>
+                    <el-button type="primary" @click="clickNewDocument">Nuevo CPE</el-button>
+                </template>
+            </div>
         </span>
-        
     </el-dialog>
 </template>
 
@@ -265,7 +176,7 @@ export default {
         //     }
         // });
     },
-    mounted() {},
+    mounted() { },
     methods: {
         socketWhatsappConfig() {
             let hostName = window.location.hostname;
@@ -541,7 +452,7 @@ export default {
                 this.clickPrintPos(this.form.printer, this.form.print_a5);
             }
             if (format == "ticket") {
-                
+
                 this.clickPrintPos(this.form.printer, this.form.ticket);
             }
             if (format == "ticket_50") {

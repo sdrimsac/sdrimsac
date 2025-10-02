@@ -429,13 +429,23 @@
                         </div>
                     </div>
                     <div class="col-lg-12"></div>
-                    <div class="form-actions text-right mt-4">
-                        <el-button @click.prevent="clickClose">Cancelar</el-button>
-                        <el-button v-if="(form.items.length > 0)"
-                                   :loading="loading_submit"
-                                   native-type="submit"
-                                   type="primary">Generar
-                        </el-button>
+                    <div class="form-actions mt-2">
+                        <div class="d-flex justify-content-end">
+                            <el-button 
+                                class="btn_cancelarsmall" 
+                                type="primary"
+                                @click.prevent="clickClose">
+                                Cancelar
+                            </el-button>
+                            <el-button 
+                                type="primary"
+                                class="btn_guardarsmall"
+                                v-if="(form.items.length > 0)"
+                                :loading="loading_submit"
+                                native-type="submit">
+                                Generar
+                            </el-button>
+                        </div>
                     </div>
                 </div>
             </form>

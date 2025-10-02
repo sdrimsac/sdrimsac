@@ -3169,6 +3169,7 @@ html[data-color='light-pink'] {
     --separator-rgb: 221, 221, 221;
     --separator-light-rgb: 241, 241, 241;
     --background:  #afb1a0;
+    --backgrounds:  #020200;
     /* color de la vista del index */
     /* --foreground: #ffffff; */
     --foreground: #e4dccf;
@@ -13293,6 +13294,115 @@ width: 181px;
   background-color: #0056b3 !important; /* Azul más oscuro en hover */
   color: #e6f0ff !important; /* Azul claro en hover */
 }
+
+/* Botón cuadrado para tamaño A4 */
+.btn_paperA4 {
+  background-color: #007bff !important; /* Azul */
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  text-align: center;
+}
+.btn_paperA4:hover {
+  background-color: #0056b3 !important;
+  color: #e6f0ff !important;
+}
+
+/* Botón cuadrado para tamaño Carta */
+.btn_papera5 {
+  background-color: #28a745 !important; /* Verde */
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  text-align: center;
+}
+.btn_paperA5:hover {
+  background-color: #218838 !important;
+  color: #e6ffe6 !important;
+}
+
+/* Botón cuadrado para tamaño Oficio */
+.btn_paper80 {
+  background-color: #fd7e14 !important; /* Naranja */
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  text-align: center;
+}
+.btn_paper80:hover {
+  background-color: #e66a11 !important;
+  color: #fff3e6 !important;
+}
+
+/* Botón cuadrado para tamaño Ticket */
+.btn_paper50 {
+  background-color: #6f42c1 !important; /* Morado */
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  text-align: center;
+}
+.btn_paper50:hover {
+  background-color: #5a32a3 !important;
+  color: #f3e6ff !important;
+}
+
+/* Icono arriba, texto abajo */
+.btn_paperA4 i,
+.btn_paperCarta i,
+.btn_paperOficio i,
+.btn_paperTicket i {
+  font-size: 2rem !important;
+  margin-bottom: 4px !important;
+  color: inherit !important;
+}
+
+
+
+
+
+
+
 
 /* Estilos para el botón btn_excelsmall */
 .btn_excelsmall {

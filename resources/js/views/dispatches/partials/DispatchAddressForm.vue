@@ -1,3 +1,4 @@
+<!-- Punto de LLegada guia de remisión admin -->
 <template>
     <el-dialog :close-on-click-modal="false"
                :title="titleDialog"
@@ -13,13 +14,17 @@
                         <div :class="{'has-danger': errors.address}"
                              class="form-group">
                             <label class="control-label">Dirección</label>
-                            <el-input v-model="form.address">
-                                <el-button type="primary"
+                            <el-input
+                                v-model="form.address"
+                                @input="toUppercase"
+                                style="text-transform: uppercase;"
+                            >
+                                <!-- <el-button type="primary"
                                            slot="append"
                                            :loading="loadingSearch"
                                            icon="el-icon-search"
                                            @click.prevent="clickSearch">Buscar
-                                </el-button>
+                                </el-button> -->
                             </el-input>
                             <small v-if="errors.address"
                                    class="form-control-feedback"
@@ -40,11 +45,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-right mt-4">
-                <el-button @click.prevent="clickClose">Cancelar</el-button>
-                <el-button :loading="loading_submit"
-                           native-type="submit"
-                           type="primary">Guardar
+            <div class="form-actions d-flex justify-content-end mt-4">
+                <el-button  type="primary"
+                            class="btn_cancelarsmall"
+                            @click.prevent="clickClose">
+                    Cancelar
+                </el-button>
+                <el-button  type="primary"
+                            class="btn_guardarsmall"
+                            :loading="loading_submit"
+                            native-type="submit">
+                    Guardar
                 </el-button>
             </div>
         </form>
@@ -72,6 +83,9 @@ export default {
         this.initForm()
     },
     methods: {
+        toUppercase(value) {
+            this.form.address = value ? value.toUpperCase() : '';
+        },
         async getTables() {
             await this.$http.get(`/${this.resource}/tables`)
                 .then(response => {
@@ -94,6 +108,10 @@ export default {
             this.initForm();
         },
         async submit() {
+            // Asegura que se guarde en mayúsculas
+            if (this.form.address) {
+                this.form.address = this.form.address.toUpperCase();
+            }
             this.loading_submit = true
             await this.$http.post(`/${this.resource}`, this.form)
                 .then(response => {

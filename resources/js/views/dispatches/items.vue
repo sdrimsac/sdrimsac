@@ -93,7 +93,8 @@
                 <template v-if="item">
                     <div class="col-12 mt-2">
                         <el-button
-                            class="bg-primary text-white"
+                           class="btn_guardarsmall"
+                            type="primary"
                             v-if="
                                 item.lots_enabled && item.lots_group.length > 0
                             "
@@ -104,7 +105,8 @@
                             v-if="
                                 item.series_enabled && item.lots.length > 0
                             "
-                            class="bg-primary text-white"
+                            class="btn_guardarsmall"
+                            type="primary"
                             @click.prevent="addRowLots"
                             >Seleccionar Series</el-button
                         >
@@ -112,7 +114,8 @@
                             v-if="
                                 item.has_color_size && item.color_size.length > 0
                             "
-                            class="bg-primary text-white"
+                            class="btn_guardarsmall"
+                            type="primary"
                             @click.prevent="addRowColorSize"
                             >Seleccionar Talla Color</el-button
                         >
@@ -126,7 +129,8 @@
             >
                 <!-- Cancelar -->
                 <el-button
-                    class="btn-cancel btn-cancel:hover"
+                    class="btn_cancelarsmall"
+                    type="danger"
                     icon="fas fa-times fa-lg"
                     @click.prevent="close"
                 >
@@ -134,7 +138,7 @@
                 </el-button>
 
                 <el-button
-                    class="btn-save btn-save:hover"
+                    class="btn_guardarsmall"
                     icon="fas fa-plus-circle fa-lg"
                     type="primary"
                     native-type="submit"

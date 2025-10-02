@@ -1,149 +1,103 @@
 <template>
-    <el-dialog :close-on-click-modal="false"
-               :close-on-press-escape="false"
-               :show-close="false"
-               :title="titleDialog"
-               :visible="showDialog"
-               append-to-body
-               width="30%"
-               @open="create">
+    <el-dialog :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" :title="titleDialog"
+        :visible="showDialog" append-to-body width="30%" @open="create">
 
-        <div v-if="form.response_message"
-             class="row mb-4">
+        <div v-if="form.response_message" class="row mb-4">
             <div class="col-md-12">
-                <el-alert
-                    :title="form.response_message"
-                    :type="form.response_type"
-                    show-icon>
+                <el-alert :title="form.response_message" :type="form.response_type" show-icon>
                 </el-alert>
             </div>
         </div>
 
-        <div v-if="form.send_to_pse"
-             class="row">
+        <div v-if="form.send_to_pse" class="row">
 
-            <div v-if="form.response_signature_pse"
-                 class="col-lg-12 col-md-12 col-sm-12">
-                <el-alert :title="`Firma Xml PSE: ${form.response_signature_pse}`"
-                          show-icon
-                          type="success"></el-alert>
+            <div v-if="form.response_signature_pse" class="col-lg-12 col-md-12 col-sm-12">
+                <el-alert :title="`Firma Xml PSE: ${form.response_signature_pse}`" show-icon type="success"></el-alert>
             </div>
 
-            <div v-if="form.response_send_cdr_pse"
-                 class="col-lg-12 col-md-12 col-sm-12 mt-3">
-                <el-alert :title="`Envio CDR PSE: ${form.response_send_cdr_pse}`"
-                          show-icon
-                          type="success"></el-alert>
+            <div v-if="form.response_send_cdr_pse" class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                <el-alert :title="`Envio CDR PSE: ${form.response_send_cdr_pse}`" show-icon type="success"></el-alert>
             </div>
 
+        </div>
+
+        <div class="row justify-content-center">
+            <template>
+            <!-- Boton Imprimir A4 -->
+            <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                <button type="button" class="btn_paperA4" @click="clickDownload()">
+                <i class="fa fa-file-alt" style="font-size: 24px;"></i> A4
+                </button>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 d-flex justify-content-center mt-3">
+                <button type="button" class="btn_paper80" @click="clickDownload('ticket')">
+                <i class="fa fa-receipt" style="font-size: 24px;"></i> 80mm
+                </button>
+            </div>
+            </template>
         </div>
 
         <div class="row">
-
-            <template v-if="form.has_cdr">
-                <div v-if="form && form.external_id && form.external_id != null"
-                     class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownload('a4')">
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>Descargar A4</p>
+            <div class="col-12">
+                Reenviar Comprobante
+                <div class="col-12">
+                    <el-input v-model="form.customer_email" placeholder="tu-correo">
+                        <el-button slot="append":loading="loading"  @click="clickSendEmail">
+                            <i class="el-icon-message" style="font-size: 24px; color: navy;"></i>
+                        </el-button>
+                    </el-input>
+                     <small v-if="errors.customer_email" class="form-control-feedback"
+                    v-text="errors.customer_email[0]"></small>
                 </div>
-                <!-- se agregaron templates con el issue #1435 -->
-                <div v-if="form && form.external_id && form.external_id != null"
-                     class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownload('ticket')">
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>80MM</p>
+                <div class="col-12 mt-3">
+                    <el-input v-model="form.customer_telephone" placeholder="WhatsApp" style="color: navy;">
+                        <!-- <template slot="prepend">
+                            <span style="color: navy; font-weight: bold;">+51</span>
+                        </template> -->
+                        <el-button slot="append" @click="clickSendWhatsapp">
+                            <i class="fab fa-whatsapp" style="font-size: 24px; color: green;"></i>
+                        </el-button>
+                    </el-input>
+                    <small class="form-control-feedback" v-if="errors.customer_telephone"
+                        v-text="errors.customer_telephone[0]">
+                    </small>
                 </div>
-                <div v-if="form && form.external_id && form.external_id != null"
-                     class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownload('ticket_58')">
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>58MM</p>
-                </div>
-                <div v-if="form && form.external_id && form.external_id != null"
-                     class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownloadCdr()">
-                        <i class="fa fa-file-download"></i>
-                    </button>
-                    <p>Descargar CDR</p>
-                </div>
-            </template>
-            <template >
-                <div class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownload()">
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>Descargar A4</p>
-                </div>
-                <div 
-                     class="col-lg-6 col-md-6 col-sm-6 text-center font-weight-bold mt-3">
-                    <button class="btn btn-lg btn-info waves-effect waves-light"
-                            type="button"
-                            @click="clickDownload('ticket')">
-                        <i class="fa fa-file-alt"></i>
-                    </button>
-                    <p>80MM</p>
-                </div>
-            </template>
-
+            </div>
         </div>
-        <div class="row mt-3">
+        <!-- <div class="row mt-3">
             <div class="col-md-12">
                 <el-input v-model="form.customer_email">
-                    <el-button slot="append"
-                               :loading="loading"
-                               icon="el-icon-message"
-                               @click="clickSendEmail">Enviar
+                    <el-button slot="append" :loading="loading" icon="el-icon-message" @click="clickSendEmail">Enviar
                     </el-button>
                 </el-input>
-                <small v-if="errors.customer_email"
-                       class="form-control-feedback"
-                       v-text="errors.customer_email[0]"></small>
+                <small v-if="errors.customer_email" class="form-control-feedback"
+                    v-text="errors.customer_email[0]"></small>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-12">
                 <el-input v-model="form.customer_telephone">
                     <template slot="prepend">+51</template>
-                    <el-button slot="append"
-                               @click="clickSendWhatsapp">Enviar
-                        <el-tooltip class="item"
-                                    content="Es necesario tener aperturado Whatsapp web"
-                                    effect="dark"
-                                    placement="top-start">
+                    <el-button slot="append" @click="clickSendWhatsapp">Enviar
+                        <el-tooltip class="item" content="Es necesario tener aperturado Whatsapp web" effect="dark"
+                            placement="top-start">
                             <i class="fab fa-whatsapp"></i>
                         </el-tooltip>
                     </el-button>
                 </el-input>
-                <small v-if="errors.customer_telephone"
-                       class="form-control-feedback"
-                       v-text="errors.customer_telephone[0]"></small>
+                <small v-if="errors.customer_telephone" class="form-control-feedback"
+                    v-text="errors.customer_telephone[0]"></small>
             </div>
-        </div>
-        <span slot="footer"
-              class="dialog-footer">
+        </div> -->
+        <span slot="footer" class="dialog-footer d-flex justify-content-end">
             <template v-if="showClose">
-                <el-button @click="clickClose">Cerrar</el-button>
+            <el-button class="btn_cancelarsmall" type="danger" @click="clickClose">
+                <i class="el-icon-close"></i> Cerrar
+            </el-button>
             </template>
             <template v-else>
-                <el-button class="list"
-                           @click="clickFinalize">Ir al listado</el-button>
-                <el-button v-if="!isUpdate"
-                           type="primary"
-                           @click="clickNewDocument">{{ text_button }}</el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="clickFinalize">Ir al listado</el-button>
+            <el-button class="btn_guardarsmall" v-if="!isUpdate" type="primary" @click="clickNewDocument">{{ text_button }}</el-button>
             </template>
         </span>
     </el-dialog>
@@ -185,7 +139,7 @@ export default {
                         this.form.number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " + "*" + this.$desarrollador + "*"
                 };
                 try {
                     this.loading = true;
@@ -206,11 +160,11 @@ export default {
             // );
         },
         clickDownload(format = 'a4') {
-            if( (this.form && this.form.external_id)) {
+            if ((this.form && this.form.external_id)) {
                 window.open(`/print/dispatch/${this.form.external_id}/${format}`, '_blank');
             }
         },
-  
+
         initForm() {
             this.errors = {};
             this.form = {

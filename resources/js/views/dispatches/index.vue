@@ -2,34 +2,23 @@
 <template>
     <div>
         <div class="card mb-0">
-            <div class="card-header bg-primary d-flex align-items-center" style="padding: 15px;">
-                <h4
-                    class="my-0 text-white d-flex align-items-center"
-                    style="font-size: 1.5rem; font-weight: bold;"
-                >
-                    <i
-                        class="fas fa-file-alt"
-                        style="font-size: 2rem; margin-right: 0.5rem;"
-                    ></i>
+            <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
+                <h4 class="my-0 text-white d-flex align-items-center" style="font-size: 1rem; font-weight: bold;">
+                    <i class="fas fa-file-alt" style="font-size: 1rem; margin-right: 0.5rem;"></i>
                     Listado de Guias de Remisión
                 </h4>
             </div>
 
             <div class="data-table-visible-columns">
-                <el-button
-                    type="primary"
-                    class="btn_titulos_modal"
-                    style="margin-right: 5px;"
-                    v-if=" typeUser == 'admin' || typeUser == 'superadmin'"
-                    @click.prevent="clickNuevo()">
-                
+                <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;"
+                    v-if="typeUser == 'admin' || typeUser == 'superadmin'" @click.prevent="clickNuevo()">
                     <i class="fas fa-plus-circle"></i>
                     Nuevo
                 </el-button>
-            </div> 
+            </div>
 
             <div class="card-body">
-                
+
                 <data-table :resource="resource">
                     <tr slot="heading" class="bg-primary">
                         <th class="text-white">#</th>
@@ -44,10 +33,7 @@
                     </tr>
 
                     <tr></tr>
-                    <tr
-                        slot-scope="{ index, row }"
-                        :class="{ 'text-danger': row.state_type_id === '11' }"
-                    >
+                    <tr slot-scope="{ index, row }" :class="{ 'text-danger': row.state_type_id === '11' }">
                         <td>{{ index }}</td>
                         <td class="text-center">{{ row.date_of_issue }}</td>
                         <td>
@@ -56,17 +42,13 @@
                         </td>
                         <td>{{ row.number }}</td>
                         <td>
-                            <span
-                                class="badge bg-secondary text-white"
-                                :class="{
-                                    'bg-secondary': row.state_type_id === '01',
-                                    'bg-info': row.state_type_id === '03',
-                                    'bg-success': row.state_type_id === '05',
-                                    'bg-secondary': row.state_type_id === '07',
-                                    'bg-dark': row.state_type_id === '09'
-                                }"
-                                >{{ row.state_type_description }}</span
-                            >
+                            <span class="badge bg-secondary text-white" :class="{
+                                'bg-secondary': row.state_type_id === '01',
+                                'bg-info': row.state_type_id === '03',
+                                'bg-success': row.state_type_id === '05',
+                                'bg-secondary': row.state_type_id === '07',
+                                'bg-dark': row.state_type_id === '09'
+                            }">{{ row.state_type_description }}</span>
                         </td>
                         <td class="text-center">{{ row.date_of_shipping }}</td>
 
@@ -74,74 +56,39 @@
                             <template v-for="(row, index) in row.documents">
                                 <label class="d-block" :key="index">{{
                                     row.description
-                                }}</label>
+                                    }}</label>
                             </template>
                         </td>
 
                         <td class="text-center">
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="
-                                    clickDownload(row.download_external_xml)
-                                "
-                            >
-                                XML
-                            </button>
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="
-                                    clickDownload(row.download_external_pdf)
-                                "
-                                v-if="row.btn_pdf"
-                            >
-                                PDF
-                            </button>
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="
-                                    clickDownload(row.download_external_cdr)
-                                "
-                                v-if="row.has_cdr"
-                            >
-                                CDR
-                            </button>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button type="primary" class="btn_guardarsmall me-1" @click.prevent="clickDownload(row.download_external_xml)">
+                                    XML
+                                </button>
+                                <button type="danger" class="btn_pdfsmall me-1" @click.prevent="clickDownload(row.download_external_pdf)" v-if="row.btn_pdf">
+                                    PDF
+                                </button>
+                                <button type="primary" class="btn_politicasmall" @click.prevent="clickDownload(row.download_external_cdr)" v-if="row.has_cdr">
+                                    CDR
+                                </button>
+                            </div>
                         </td>
                         <td class="text-center">
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="onGenerateDocument(row.id)"
-                                v-if="row.btn_generate_document"
-                            >
+                            <button type="button" class="btn waves-effect waves-light btn-xs btn-info"
+                                @click.prevent="onGenerateDocument(row.id)" v-if="row.btn_generate_document">
                                 Generar comprobante
                             </button>
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="
-                                    btnStatusTicket(row.external_id)
-                                "
-                                v-if="row.btn_status_ticket"
-                            >
+                            <button type="button" class="btn waves-effect waves-light btn-xs btn-info" @click.prevent="
+                                btnStatusTicket(row.external_id)
+                                " v-if="row.btn_status_ticket">
                                 Consultar ticket
                             </button>
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="clickOptions(row.id)"
-                                v-if="row.btn_options"
-                            >
+                            <button type="button" class="btn_guardarsmall"
+                                @click.prevent="clickOptions(row.id)" v-if="row.btn_options">
                                 Opciones
                             </button>
-                            <button
-                                type="button"
-                                class="btn waves-effect waves-light btn-xs btn-info"
-                                @click.prevent="sendSunat(row.external_id)"
-                                v-if="row.btn_send"
-                            >
+                            <button type="button" class="btn waves-effect waves-light btn-xs btn-info"
+                                @click.prevent="sendSunat(row.external_id)" v-if="row.btn_send">
                                 Enviar a Sunat
                             </button>
                             <!-- <el-button>
@@ -160,19 +107,11 @@
                 </data-table>
             </div>
         </div>
-        <dispatch-options
-            :showDialog.sync="showDialogOptions"
-            :recordId="recordId"
-            :showClose="true"
-        ></dispatch-options>
+        <dispatch-options :showDialog.sync="showDialogOptions" :recordId="recordId"
+            :showClose="true"></dispatch-options>
 
-        <FormGenerateDocument
-            :showDialog.sync="showDialogGenerateDocument"
-            :recordId="recordId"
-            :showClose="true"
-            :showGenerate="true"
-            :configuration="configuration"
-        ></FormGenerateDocument>
+        <FormGenerateDocument :showDialog.sync="showDialogGenerateDocument" :recordId="recordId" :showClose="true"
+            :showGenerate="true" :configuration="configuration"></FormGenerateDocument>
         <ModalGenerateCPE :show.sync="showModalGenerateCPE"></ModalGenerateCPE>
     </div>
 </template>

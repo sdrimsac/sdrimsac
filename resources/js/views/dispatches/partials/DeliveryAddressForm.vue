@@ -1,3 +1,4 @@
+<!-- Punto de llegada  guia  -->
 <template>
     <el-dialog :close-on-click-modal="false"
                :title="titleDialog"
@@ -33,10 +34,13 @@
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-right mt-4">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+            <div class="form-actions d-flex justify-content-end text-right mt-2">
+                <el-button type="primary"
+                           class="btn_cancelarsmall"
+                           @click.prevent="close()">Cancelar</el-button>
                 <el-button :loading="loading_submit"
                            native-type="submit"
+                           class="btn_guardarsmall" 
                            type="primary">Guardar
                 </el-button>
             </div>

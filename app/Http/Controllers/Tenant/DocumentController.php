@@ -3435,4 +3435,16 @@ class DocumentController extends Controller
         $records = $records->orderBy('id', 'desc');
         return new RegisterMovementCollection($records->paginate(config('tenant.items_per_page')));
     }
+    public function EstatesDocument(Request $request)
+    {
+        // cambiar de estado el document 
+
+        $id = $request->id;
+        $records = Document::where('id', $id)->update(['state_type_id' => $request->state_type_id]);            
+        return [
+            'success' => true,
+            'message' => 'Estado actualizado con éxito',
+            'data' => $records
+        ];
+    }
 }

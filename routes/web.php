@@ -615,6 +615,8 @@ if ($hostname) {
 
                 Route::get('documents/search/customers', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomers']);
                 Route::get('documents/search/customer/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomerById']);
+                //ruta para cambiar de estado el documento
+                Route::post('documents/change_type', [App\Http\Controllers\Tenant\DocumentController::class, 'EstatesDocument']);
 
                 Route::get('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'index'])->name('tenant.documents.index')->middleware(['just.admin']);
                 Route::prefix('documents_detraction')

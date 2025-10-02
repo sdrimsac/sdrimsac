@@ -1,59 +1,43 @@
 <template>
-  <el-dialog :close-on-click-modal="false"
-             :title="titleDialog"
-             :visible="showDialog"
-             append-to-body
-             @close="close"
-             @open="create">
-    <form autocomplete="off"
-          @submit.prevent="submit">
+  <el-dialog :close-on-click-modal="false" :title="titleDialog" :visible="showDialog" append-to-body @close="close"
+    @open="create">
+    <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
         <div class="row">
           <div class="col-md-6">
-            <div :class="{'has-danger': errors.plate_number}"
-                 class="form-group">
-              <label class="control-label">Nro. de Placa aaa<span class="text-danger">*</span></label>
-              <el-input v-model="form.plate_number"
-                        dusk="name"></el-input>
-              <small v-if="errors.plate_number"
-                     class="form-control-feedback"
-                     v-text="errors.plate_number[0]"></small>
+            <div :class="{ 'has-danger': errors.plate_number }" class="form-group">
+              <label class="control-label">Nro. de Placa<span class="text-danger">*</span></label>
+              <el-input v-model="form.plate_number" dusk="name"></el-input>
+              <small v-if="errors.plate_number" class="form-control-feedback" v-text="errors.plate_number[0]"></small>
             </div>
           </div>
           <div class="col-md-6">
-            <div :class="{'has-danger': errors.model}"
-                 class="form-group">
+            <div :class="{ 'has-danger': errors.model }" class="form-group">
               <label class="control-label">Modelo</label>
               <el-input v-model="form.model"></el-input>
-              <small v-if="errors.model"
-                     class="form-control-feedback"
-                     v-text="errors.model[0]"></small>
+              <small v-if="errors.model" class="form-control-feedback" v-text="errors.model[0]"></small>
             </div>
           </div>
           <div class="col-md-6">
-            <div :class="{'has-danger': errors.brand}"
-                 class="form-group">
+            <div :class="{ 'has-danger': errors.brand }" class="form-group">
               <label class="control-label">Marca</label>
               <el-input v-model="form.brand"></el-input>
-              <small v-if="errors.brand"
-                     class="form-control-feedback"
-                     v-text="errors.brand[0]"></small>
+              <small v-if="errors.brand" class="form-control-feedback" v-text="errors.brand[0]"></small>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group" style="margin-top: 32px;">
-              <el-switch v-model="form.is_default"
-                         active-text="Predeterminado"
-                         inactive-text=""></el-switch>
+              <el-switch v-model="form.is_default" active-text="Predeterminado" inactive-text=""></el-switch>
             </div>
           </div>
         </div>
       </div>
-      <div class="form-actions text-right mt-4">
-        <el-button @click.prevent="close()">Cancelar</el-button>
-        <el-button :loading="loading_submit"
-                   native-type="submit"
-                   type="primary">Guardar
+      <div class="form-actions mt-4" style="display: flex; justify-content: flex-end;">
+        <el-button class="btn_cancelarsmall" type="primary" @click.prevent="close()">
+          <i class="el-icon-close"></i> Cancelar
+        </el-button>
+        <el-button class="btn_guardarsmall" type="primary" :loading="loading_submit" native-type="submit">
+          <i class="el-icon-check"></i> Guardar
         </el-button>
       </div>
     </form>
@@ -94,33 +78,33 @@ export default {
       this.titleDialog = (this.recordId) ? 'Editar Vehículo' : 'Nuevo Vehículo'
       if (this.recordId) {
         await this.$http.get(`/${this.resource}/record/${this.recordId}`)
-            .then(response => {
-              this.form = response.data.data
-            })
+          .then(response => {
+            this.form = response.data.data
+          })
       }
     },
     async submit() {
       this.loading_submit = true
       await this.$http.post(`/${this.resource}`, this.form)
-          .then(response => {
-            if (response.data.success) {
-              this.$message.success(response.data.message)
-              this.$emit('success', response.data.id)
-              this.close()
-            } else {
-              this.$message.error(response.data.message)
-            }
-          })
-          .catch(error => {
-            if (error.response.status === 422) {
-              this.errors = error.response.data
-            } else {
-              console.log(error)
-            }
-          })
-          .then(() => {
-            this.loading_submit = false
-          })
+        .then(response => {
+          if (response.data.success) {
+            this.$message.success(response.data.message)
+            this.$emit('success', response.data.id)
+            this.close()
+          } else {
+            this.$message.error(response.data.message)
+          }
+        })
+        .catch(error => {
+          if (error.response.status === 422) {
+            this.errors = error.response.data
+          } else {
+            console.log(error)
+          }
+        })
+        .then(() => {
+          this.loading_submit = false
+        })
     },
     close() {
       this.$emit('update:showDialog', false)
