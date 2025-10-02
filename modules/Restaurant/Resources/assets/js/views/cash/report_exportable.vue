@@ -74,13 +74,28 @@
                                     class="submit"
                                     type="success"
                                     @click.prevent="clickDownload('excel')"
-                                    :loading="loading_submit"
+                                    :loading="loading_excel"
                                     icon="el-icon-download"
                                 >
                                     {{
-                                        loading_submit
+                                        loading_excel
                                             ? "Generando reporte..."
-                                            : "Exportar a Excel"
+                                            : "Exportar a Excel ganancia"
+                                    }}
+                                </el-button>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <el-button
+                                    class="submit"
+                                    type="success"
+                                    @click.prevent="clickDownloadDiscount('excel')"
+                                    :loading="loading_excel_discount"
+                                    icon="el-icon-download"
+                                >
+                                    {{
+                                        loading_excel_discount
+                                            ? "Generando reporte con descuento..."
+                                            : "Exportar a Excel ganancia con descuento"
                                     }}
                                 </el-button>
                             </div>
@@ -99,7 +114,8 @@ import queryString from "query-string";
 export default {
     data() {
         return {
-            loading_submit: false,
+            loading_excel: false,
+            loading_excel_discount: false,
             warehouses: [],
             form: {
                 establishment_id: 1,
@@ -131,45 +147,13 @@ export default {
             return queryString.stringify(this.form);
         },
 
-        /* clickDownload(type) {
-            if (!this.form.date_start || !this.form.date_end) {
-                this.$toast.error("Debe seleccionar un rango de fechas");
-                return;
-            }
-
-            this.loading_submit = true;
-            this.$toast.info("Generando reporte, por favor espere...");
-
-            // Primera llamada para generar el Excel
-            this.$http
-                .get(`/${this.resource}/report_document/${type}`, {
-                    params: this.form
-                })
-                .then(response => {
-                    if (response.data.success) {
-
-                        window.location.href = `/${this.resource}/download-report/${response.data.filename}`;
-                        this.$toast.success("Reporte generado correctamente");
-                    } else {
-                        this.$toast.error("Error al generar el reporte");
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.$toast.error("Error al generar el reporte");
-                })
-                .finally(() => {
-                    this.loading_submit = false;
-                });
-        } */
-
         clickDownload(type) {
             if (!this.form.date_start || !this.form.date_end) {
                 this.$toast.error("Debe seleccionar un rango de fechas");
                 return;
             }
 
-            this.loading_submit = true;
+            this.loading_excel = true;
             this.$toast.info("Generando reporte, por favor espere...");
 
             this.$http
@@ -182,14 +166,13 @@ export default {
                         const checkInterval = 3000; // 3 segundos
 
                         const checkFileExists = () => {
-                            console.log('Verificando existencia:', `/${this.resource}/check-report-exists/${filename}`);
                             this.$http
                                 .get(
                                     `/${this.resource}/check-report-exists/${filename}`
                                 )
                                 .then(res => {
                                     if (res.data.exists) {
-                                        this.loading_submit = false;
+                                        this.loading_excel = false;
                                         window.location.href = `/${this.resource}/download-report/${filename}`;
                                         this.$toast.success(
                                             "Reporte generado correctamente"
@@ -202,7 +185,7 @@ export default {
                                     }
                                 })
                                 .catch(() => {
-                                    this.loading_submit = false;
+                                    this.loading_excel = false;
                                     this.$toast.error(
                                         "Error al verificar el reporte"
                                     );
@@ -212,13 +195,71 @@ export default {
                         setTimeout(checkFileExists, checkInterval);
                     } else {
                         this.$toast.error("Error al generar el reporte");
-                        this.loading_submit = false;
+                        this.loading_excel = false;
                     }
                 })
                 .catch(error => {
                     console.error(error);
                     this.$toast.error("Error al generar el reporte");
-                    this.loading_submit = false;
+                    this.loading_excel = false;
+                });
+        },
+
+        clickDownloadDiscount(type) {
+            if (!this.form.date_start || !this.form.date_end) {
+                this.$toast.error("Debe seleccionar un rango de fechas");
+                return;
+            }
+
+            this.loading_excel_discount = true;
+            this.$toast.info("Generando reporte de ganancia con descuento, por favor espere...");
+
+            this.$http
+                .get(`/${this.resource}/report_document_discount/${type}`, {
+                    params: this.form
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        const filename = response.data.filename;
+                        const checkInterval = 3000; // 3 segundos
+
+                        const checkFileExists = () => {
+                            this.$http
+                                .get(
+                                    `/${this.resource}/check-report-exists-discount/${filename}`
+                                )
+                                .then(res => {
+                                    if (res.data.exists) {
+                                        this.loading_excel_discount = false;
+                                        window.location.href = `/${this.resource}/download-report-discount/${filename}`;
+                                        this.$toast.success(
+                                            "Reporte generado correctamente"
+                                        );
+                                    } else {
+                                        setTimeout(
+                                            checkFileExists,
+                                            checkInterval
+                                        );
+                                    }
+                                })
+                                .catch(() => {
+                                    this.loading_excel_discount = false;
+                                    this.$toast.error(
+                                        "Error al verificar el reporte"
+                                    );
+                                });
+                        };
+
+                        setTimeout(checkFileExists, checkInterval);
+                    } else {
+                        this.$toast.error("Error al generar el reporte");
+                        this.loading_excel_discount = false;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.$toast.error("Error al generar el reporte");
+                    this.loading_excel_discount = false;
                 });
         }
     }

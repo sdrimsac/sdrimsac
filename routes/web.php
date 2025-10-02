@@ -56,9 +56,13 @@ if ($hostname) {
 
             //para el excel con datos
             Route::get('report_cash/report_document/{type}', [CashController::class, 'report_cash_export_document']);
+
+            Route::get('report_cash/report_document_discount/{type}', [CashController::class, 'report_cash_export_document_discount']);
             //Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
             /* Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']); */
             Route::get('report_cash/download-report/{filename}', [CashController::class, 'downloadReport']);
+
+            Route::get('report_cash/download-report-discount/{filename}', [CashController::class, 'downloadReportDiscount']);
             /* para reporte de madera  */
             Route::get('/madera', [MaderaController::class, 'index_madera'])->name('tenant.madera.index');
             Route::get('/report-madera', [MaderaController::class, 'report_madera'])->name('report_madera');
@@ -93,6 +97,8 @@ if ($hostname) {
                 Route::post('store_zip', [DocumentController::class, 'storeZip']);  
                 
                 Route::get('report_cash/check-report-exists/{filename}',  [CashController::class, 'check_report_exists']);
+
+                Route::get('report_cash/check-report-exists-discount/{filename}',  [CashController::class, 'check_report_exists_discount']);
 
                 Route::prefix('/digital-payments')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\PosController::class, 'digital_payments']);

@@ -63,6 +63,7 @@ use GuzzleHttp\Psr7\Response;
 use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\Cache;
+use Modules\Restaurant\Events\GenerateDiscountExcelReportJob;
 use Modules\Restaurant\Models\Turns;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -223,7 +224,6 @@ class CashController extends Controller
         if ($configuration->health_network) {
 
             $caja_principal = $cash_principal;
-
         } else {
             $caja_principal = Cash::where('user_id', $cash_principal->user_id)
                 ->where('principal', 1)
@@ -1058,6 +1058,32 @@ class CashController extends Controller
             'message' => 'El reporte ya fue generado y se encuentra en proceso de descarga',
         ];
     }
+
+    public function report_cash_export_document_discount($type, Request $request)
+    {
+
+        $filename = 'Reporte_Ganancia_descuentos' . date('YmdHis') . '.xlsx';
+        $params = [
+            'type' => $type,
+            'company' => Company::active(),
+            'establishment' => Establishment::find($request->establishment_id),
+            'date_start' => $request->date_start ? Carbon::parse($request->date_start)->format("Y-m-d") : null,
+            'date_end' => $request->date_end ? Carbon::parse($request->date_end)->format("Y-m-d") : null,
+            'establishment_id' => $request->establishment_id,
+            'item_id' => $request->item_id,
+            'categoria_id' => $request->categoria_id,
+            'filename' => $filename
+        ];
+
+        dispatch(new GenerateDiscountExcelReportJob($params, auth()->id()));
+
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'message' => 'El reporte ya fue generado y se encuentra en proceso de descarga',
+        ];
+    }
+
     public function check_report_exists($filename)
     {
         $website = app(Environment::class)->tenant();
@@ -1068,26 +1094,19 @@ class CashController extends Controller
 
         return response()->json(['exists' => $exists]);
     }
-    /* public function downloadReport($filename)
-    {
 
-        $website = app(Environment::class)->tenant();
-        $tenant_uuid = $website->uuid;
 
-        $full_path = "tenancy/tenants/{$tenant_uuid}/reports/gains/{$filename}";
-
-        return Storage::download($full_path, $filename);
-    } */
-
-    /* public function downloadReport($filename)
+    public function check_report_exists_discount($filename)
     {
         $website = app(Environment::class)->tenant();
         $tenant_uuid = $website->uuid;
+        $path = "tenancy/tenants/{$tenant_uuid}/reports/discounts/{$filename}";
 
-        $file_path = "reports/gains/{$filename}";
+        $exists = Storage::exists($path);
 
-        return Storage::disk('tenant')->download($file_path, $filename);
-    } */
+        return response()->json(['exists' => $exists]);
+    }
+
 
     public function downloadReport($filename)
     {
@@ -1095,6 +1114,26 @@ class CashController extends Controller
 
         // Ruta relativa en el disco tenant
         $file_path = "reports/gains/{$filename}";
+
+        // Verificar si el archivo existe
+        if (!Storage::disk('tenant')->exists($file_path)) {
+            Log::error('Archivo no encontrado en disco tenant', [
+                'path' => $file_path,
+            ]);
+            abort(404, 'Archivo no encontrado.');
+        }
+
+        // Descargar el archivo desde el disco tenant
+        return Storage::disk('tenant')->download($file_path, $filename);
+    }
+
+    public function downloadReportDiscount($filename)
+    {
+        $website = app(Environment::class)->tenant();
+
+        // Ruta relativa en el disco tenant
+        $file_path = "reports/discounts/{$filename}";
+
 
         // Verificar si el archivo existe
         if (!Storage::disk('tenant')->exists($file_path)) {
