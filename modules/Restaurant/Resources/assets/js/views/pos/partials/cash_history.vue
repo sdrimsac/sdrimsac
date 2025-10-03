@@ -170,11 +170,11 @@
                                 placement="top"
                             >
                                 <el-button
-                                    type="warning"
+                                    type="danger"
                                     
                                     @click="deleteReport(box)"
                                 >
-                                <i class="fas fa-file-download"></i>
+                                <i class="el-icon-delete"></i>
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip
