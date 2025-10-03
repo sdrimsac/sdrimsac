@@ -1833,7 +1833,7 @@ return [
                             @if($configuration->tap && $a_item['category'] == "COMBUSTIBLE")
                                 {{ number_format($a_item['quantity'], 3) }} - {{ $a_item['unit_type_id'] }}
                             @else
-                                {{ intval($a_item['quantity']) }} 
+                                {{ fmod($a_item['quantity'], 1) == 0 ? intval($a_item['quantity']) : number_format($a_item['quantity'], 2) }}
                             @endif
                         </td>
                         <td class="f12">
