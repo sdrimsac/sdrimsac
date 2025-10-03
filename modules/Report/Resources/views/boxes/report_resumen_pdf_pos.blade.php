@@ -394,6 +394,16 @@ return [
                                         <tr>
                                             <td>
                                                 <span
+                                                    class="f12">{{ $documents['notas_credito']['quantity'] }}</span>
+                                            </td>
+                                            <td><span class="f12">NOTAS V. CREDITO</span></td>
+                                            <td class="right"><span class="f12">
+                                                    {{ number_format($documents['notas_credito']['total'], 2) }}
+                                                </span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span
                                                     class="f12">{{ $documents['recibos']['quantity'] }}</span>
                                             </td>
                                             <td><span class="f12">RECIBOS</span></td>

@@ -134,6 +134,7 @@ class BoxesController extends Controller
 
         return $receipts;
     }
+
     function get_invoice_credit($cash_id)
     {
         $items = [];
@@ -255,6 +256,9 @@ class BoxesController extends Controller
         usort($grouped, function ($a, $b) {
             return count($a) < count($b);
         });
+        Log::info('Grouped items by category', ['grouped' => $grouped]);
+        Log::info('Grouped items by category', ['documents' => $documents_credit]);
+        Log::info('Grouped items by category', ['advances' => $advances]);
         return [
             "items" => $grouped,
             "documents" => $documents_credit,
@@ -721,10 +725,6 @@ class BoxesController extends Controller
                                         } else {
                                             $categories[$category_name] = $item->total;
                                         }
-                                        if ($configuration->mod_renta) {
-                                            $description_item = $item->item->description;
-                                        }
-
                                         if ($configuration->hotels) {
                                             $description_item = $item->item->description;
                                         } else {
@@ -775,9 +775,7 @@ class BoxesController extends Controller
                                     } else {
                                         Log::info("Item no tiene categoria: " . $item->item_id);
                                     }
-                                }
-
-                                if ($configuration->mod_renta) {
+                                } elseif ($configuration->mod_renta) {
                                     if ($item_db) {
                                         $category_id = $item_db->category_id;
 
@@ -835,7 +833,7 @@ class BoxesController extends Controller
                                     } else {
                                         Log::info("Item no tiene categoria: " . $item->item_id);
                                     }
-                                }else {
+                                } else {
                                     if ($item_db && $item_db->category_id) {
                                         $category_id = $item_db->category_id;
                                         $category = CategoryItem::find($category_id);
@@ -855,7 +853,7 @@ class BoxesController extends Controller
                                                 $description_item .= " - {$medidas}";
                                             }
                                         }
-                                        
+
 
                                         if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                             $description_item .= " - Media tarifa";
@@ -1484,6 +1482,36 @@ class BoxesController extends Controller
         });
         return $all;
     }
+
+    function get_credit_sale_notes($cash_id)
+    {
+        $all = [];
+
+        $sale_notes = SaleNote::where('cash_id', $cash_id)->get();
+
+        foreach ($sale_notes as $sale_note) {
+            $total_payment = $sale_note->total_payment ?? 0;
+            $debe = $sale_note->total - $total_payment;
+
+            if ($debe > 0) {
+                $all[] = [
+                    'series'        => $sale_note->series,
+                    'full_number'   => $sale_note->series . "-" . $sale_note->number,
+                    'date_of_issue' => $sale_note->date_of_issue,
+                    'total'         => $sale_note->total,
+                    'amount'        => $total_payment,
+                    'advances'          => $debe,
+                ];
+            }
+        }
+        
+        usort($all, function ($a, $b) {
+            return $a['date_of_issue'] <=> $b['date_of_issue'];
+        });
+
+        return $all;
+    }
+
 
     function get_anulate_documents($cash_id)
     {
@@ -3097,7 +3125,9 @@ class BoxesController extends Controller
         $documents["notas"]["quantity"] += $credit_grouped_count;
         // Calcular notas pendientes
         $notas_pendientes_total = array_sum(array_column($credit_grouped, 'remaining'));
-        $notas_pendientes_quantity = count(array_filter($credit_grouped, function($item) { return $item['remaining'] > 0; }));
+        $notas_pendientes_quantity = count(array_filter($credit_grouped, function ($item) {
+            return $item['remaining'] > 0;
+        }));
         $documents["notas_pendientes"] = [
             "total" => $notas_pendientes_total,
             "quantity" => $notas_pendientes_quantity
@@ -3277,9 +3307,6 @@ class BoxesController extends Controller
         $cash_id = $request->cash_id;
         $configuration = Configuration::first();
         $socket_channel = $configuration->socket_channel;
-        //$hostname = Website::query();
-        /* $hostname =  app(Environment::class)->hostname();
-        $fqdn = $hostname->fqdn; */
         $cash = Cash::find($cash_id);
         $company = Company::first();
         $company_number = $company->number;
@@ -3761,11 +3788,22 @@ class BoxesController extends Controller
         $quantity_receipts = count($receipts);
         $total_receipts = $receipts->sum('amount');
         $documents["recibos"] = ["total" => $total_receipts, "quantity" => $quantity_receipts];
-
+        // validacion incorrecta no verifica si hay notas de credito emitidas en el dia para que se muestren en el reporte
         $documents_credit = $this->get_items_from_credit($cash_id);
+        $sales_credit_notes = $this->get_credit_sale_notes($cash_id);
+        $total_advances = 0;
+        foreach ($sales_credit_notes as $note) {
+            if (isset($note['advances'])) {
+                $total_advances += $note['advances'];
+            }
+        }
+        $documents["notas_credito"]["total"] = $total_advances;
+        $documents["notas_credito"]["quantity"] = count($sales_credit_notes);
+        //Log::info('Documentos de crédito en notas de ventas:', $sales_credit_notes);
         $all_credit_items = $documents_credit['items'];
         $credit_grouped = $documents_credit['documents'];
         $advances_sale_note_credit = $documents_credit['advances'];
+        /* Log::info('Documentos de crédito:', $advances_sale_note_credit); */
         // $credit_grouped_count = count($credit_grouped);
         //filtra credit_grouped y obten el numero de elementos con la propiedad "advances" mayor a 0
         $credit_grouped_count = count(array_filter($credit_grouped, function ($item) {
@@ -3774,15 +3812,9 @@ class BoxesController extends Controller
         /* $documents["notas"]["total"] += $advances_sale_note_credit;
         $documents["notas"]["quantity"] += $credit_grouped_count; */
 
-        $documents["notas"]["total"] += $advances_sale_note_credit;
+        /* $documents["notas"]["total"] += $advances_sale_note_credit; */
+        $documents["notas"]["total"] += $advances_sale_note_credit - $total_advances;
         $documents["notas"]["quantity"] += $credit_grouped_count;
-        // Calcular notas pendientes
-        /* $notas_pendientes_total = array_sum(array_column($credit_grouped, 'remaining'));
-        $notas_pendientes_quantity = count(array_filter($credit_grouped, function($item) { return $item['remaining'] > 0; }));
-        $documents["notas_pendientes"] = [
-            "total" => $notas_pendientes_total,
-            "quantity" => $notas_pendientes_quantity
-        ]; */
 
         Log::info('Cantidad de documentos de crédito:', $documents);
 
@@ -3866,7 +3898,8 @@ class BoxesController extends Controller
         return $pdf->stream('pdf_file.pdf');
     }
 
-    function get_totem_detail() { 
+    function get_totem_detail()
+    {
         $date = date('Y-m-d');
         $totem_details = ItemTotemPrices::whereDate('date_of_price', $date)->get();
         return $totem_details;
