@@ -1504,7 +1504,7 @@ class BoxesController extends Controller
                 ];
             }
         }
-        
+
         usort($all, function ($a, $b) {
             return $a['date_of_issue'] <=> $b['date_of_issue'];
         });
@@ -4820,5 +4820,35 @@ class BoxesController extends Controller
             $users = User::where('id', $user->id)->orWhere('area_id', $caja_area_id)->get();
         }
         return view('restaurant::report.index', compact('users'));
+    }
+
+    public function deleteReport($id)
+    {
+        $company = Company::first();
+
+        // Carpeta donde se guardan
+        $path = storage_path('app/public/');
+
+        // Buscar archivos con patrón (small y normal)
+        $patterns = [
+            $path . "report_resumen_pdf_pos_small_{$id}_{$company->number}_*.pdf",
+            $path . "report_resumen_pdf_pos_{$id}_{$company->number}_*.pdf",
+        ];
+
+        $deleted = 0;
+
+        foreach ($patterns as $pattern) {
+            foreach (glob($pattern) as $file) {
+                if (file_exists($file)) {
+                    unlink($file);
+                    $deleted++;
+                }
+            }
+        }
+
+        return response()->json([
+            "message" => $deleted > 0 ? "Reportes eliminados" : "No se encontraron reportes",
+            "success" => $deleted > 0,
+        ], 200);
     }
 }

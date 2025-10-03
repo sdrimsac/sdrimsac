@@ -72,6 +72,8 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes/reports_resumen_type_usd', 'BoxesController@reports_resumen_type_usd');
     Route::get('report-boxes/reports_resumen_type_page', 'BoxesController@reports_resumen_type_page');
 
+    Route::delete('report-boxes/delete-report/{id}', 'BoxesController@deleteReport');
+
     Route::get('report-boxes/reports_resumen_yape', 'BoxesController@reports_resumen_yape');
     Route::get('cash/balance-final/{date_closed}', 'BoxesController@balance_final');
 

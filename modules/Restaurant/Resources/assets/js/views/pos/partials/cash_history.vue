@@ -164,6 +164,20 @@
                                 </el-button>
                             </el-tooltip>
                             <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Borrar reporte"
+                                placement="top"
+                            >
+                                <el-button
+                                    type="warning"
+                                    
+                                    @click="deleteReport(box)"
+                                >
+                                <i class="fas fa-file-download"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
                                 v-if="box.tab_single"
                                 class="item"
                                 effect="dark"
@@ -413,6 +427,27 @@ export default {
                 this.generateReports(cash.id, idx);
             }
         },
+
+        deleteReport(cash) {
+            this.loading = true;
+            this.$http
+                .delete(`/caja/report-boxes/delete-report/${cash.id}`)
+                .then(response => {
+                    if (response.status == 200) {
+                        this.$toast.success("Reportes eliminados");
+                        cash.has_a4 = false;
+                        cash.has_a4_usd = false;
+                        cash.has_ticket = false;
+                        cash.has_ticket_usd = false;
+                    }
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+            
+        },
+
+
         seeDetail(cash) {
             this.currentBox = cash;
             this.showDetail = true;

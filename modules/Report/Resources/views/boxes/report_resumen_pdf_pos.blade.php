@@ -1825,9 +1825,6 @@ return [
                 <tbody>
                     @foreach ($group as $a_item)
                     <!-- log para saber que datos llegan el elemento -->
-                    @php
-                    Log::info('Datos del elemento:', $a_item);
-                    @endphp
                     <tr>
                         <td class="f12 center">
                             @if($configuration->tap && $a_item['category'] == "COMBUSTIBLE")
