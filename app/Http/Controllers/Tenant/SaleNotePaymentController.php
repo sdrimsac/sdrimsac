@@ -27,6 +27,7 @@ use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Resources\Tenant\SaleNotePaymentCollection;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Establishment;
 use Exception;
 use Illuminate\Http\Request;
 use Modules\Restaurant\Events\PrintEvent;
@@ -47,8 +48,9 @@ class SaleNotePaymentController extends Controller
     public function tables()
     {
         return [
-            'payment_method_types' => PaymentMethodType::all(),
-            'payment_destinations' => $this->getPaymentDestinations()
+            'payment_method_types' => PaymentMethodType::where('active', 1)->get(),
+            'payment_destinations' => $this->getPaymentDestinations(),
+            'establishments' => Establishment::select('id', 'description')->get(),
         ];
     }
 
@@ -306,6 +308,57 @@ class SaleNotePaymentController extends Controller
             ];
         }
     }
+
+    public function returnPaymentNotes($id)
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $sale_note_payment = SaleNotePayment::find($id);
+            $sale_note_payment->extorned = true;
+            $sale_note_payment->user_id = auth()->user()->id;
+            $sale_note_payment->save();
+            $sale_note = SaleNote::find($sale_note_payment->sale_note_id);
+            $amount = $sale_note_payment->payment;
+            /* $payment = Payment::find($sale_note_payment->payment_id); */
+            $payment_method_description = "Efectivo";
+            $payment_method_type_id = $sale_note_payment->payment_method_type_id;
+            $payment_method = PaymentMethodType::where('id', $payment_method_type_id)->first();
+            if ($payment_method) {
+                $payment_method_description = $payment_method->description;
+            }
+            $receipt = Receipt::where('sale_note_payment_id', $id)->first();
+            $cash_id = $receipt->cash_id;
+            $description_register = "EXTORNO DE PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
+
+            /** @var  User $user */
+            $user = auth()->user();
+
+            $cash_id = $user->get_cash_id();
+            Box::createExpense(
+                $amount,
+                $payment_method_description,
+                $description_register,
+                $cash_id,
+                $sale_note->id,
+                null,
+                $sale_note_payment->id
+            );
+
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => 'Pago eliminado con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar el pago: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+
     public function payLastPayment(Request $request, $id)
     {
         $amount = floatval($request->amount);
@@ -401,6 +454,10 @@ class SaleNotePaymentController extends Controller
         $amount = $request->input('payment');
         $remain_pay = $amount - $documentRealAmount;
         $record->fill($request->all());
+        // Asignar manualmente el usuario y el método de pago
+        $record->user_id = auth()->user()->id;
+        $payment_method = PaymentMethodType::where('id', $request->payment_method_type_id)->first();
+        $record->method = $payment_method ? $payment_method->description : null;
         if ($documentRealAmount) {
             $record->payment = $documentRealAmount;
         } else {

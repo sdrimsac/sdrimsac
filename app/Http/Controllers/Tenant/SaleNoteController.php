@@ -477,6 +477,7 @@ class SaleNoteController extends Controller
         $value = $request->value;
         $date_start = $request->date_start;
         $date_end = $request->date_end;
+        $establishment_id = $request->establishment_id;
         $records = SaleNote::query()
 
             ->with([
@@ -506,11 +507,17 @@ class SaleNoteController extends Controller
                     ->orWhere('sale_notes.number', 'like', $searchTerm);
             });
         }
+
         if ($date_start) {
             $records->where('date_of_issue', '>=', $date_start);
         }
+
         if ($date_end) {
             $records->where('date_of_issue', '<=', $date_end);
+        }
+        
+        if ($establishment_id) {
+            $records->where('establishment_id', $establishment_id);
         }
 
 
@@ -1814,7 +1821,6 @@ class SaleNoteController extends Controller
                                 break;
                         }
 
-
                         $payment_ = Payment::create([
                             "user_id"     => auth()->user()->id,
                             "amount"       => $request->amount,
@@ -1827,14 +1833,17 @@ class SaleNoteController extends Controller
                             if ($payments_[$i]['isPrepayment']) {
                                 $payment_->paid = true;
                                 $payment_->amount_paid = $payment_->amount;
+                                $method = $payments_[$i]['method'];
                                 $payment_->save();
                                 $sale_note_payment_ = SaleNotePayment::create([
                                     'sale_note_id' => $this->sale_note->id,
-                                    // 'payment_id' => $payment_->id,
                                     'payment_method_type_id' => '01',
                                     'date_of_payment' => $date_payment,
                                     'payment' => $payment_->amount,
+                                    'user_id' => auth()->id(),
+                                    'method' => $method,
                                 ]);
+                            
                                 $number_receipt = str_pad(($i + 1), 7, "0", STR_PAD_LEFT);
                                 Receipt::create([
                                     'user_id' => $user->id,
@@ -2028,15 +2037,37 @@ class SaleNoteController extends Controller
                     $total_payment = 0;
 
                     foreach ($request->payments as $payment) {
+                            // Mapeo automático de payment_method_type_id a method
+                            $payment_methods = [
+                                '01' => 'Efectivo',
+                                '02' => 'Culqui',
+                                '05' => 'TARJETA: IZYPAY',
+                                '07' => 'TARJETA: OPENPAY',
+                                '06' => 'TARJETA: NIUBIZ',
+                                '03' => 'YAPE',
+                                '04' => 'PLIN',
+                                '08' => 'DIDI FOOD',
+                                '09' => 'PEDIDOS YA',
+                                '18' => 'RAPPI',
+                            ];
+                            if (empty($payment['method']) && isset($payment['payment_method_type_id'])) {
+                                $payment['method'] = $payment_methods[$payment['payment_method_type_id']] ?? 'efectivo';
+                            }
+                        Log::info('Método de pago recibido en SaleNotePayment:', ['method' => $payment['method'] ?? null, 'payment' => $payment]);
 
                         $total_payment += $payment['payment'];
 
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
+                            //Log::info("Registro de pago en nota de venta", $record);
                             if (!isset($payment['payment_method_type_id'])) {
                                 $payment['payment_method_type_id'] = "01";
                             }
                             $record->fill($payment);
+                            // Asignar user_id y method manualmente si no existen en el array
+                            $record->user_id = $payment['user_id'] ?? auth()->id();
+                            // Asignar el método de pago real si existe y no está vacío, si no, poner 'efectivo'
+                            $record->method = (isset($payment['method']) && !empty($payment['method'])) ? $payment['method'] : 'Efectivo';
                             $payment["payment_destination_id"] = "cash";
                             $record->sale_note_id = $this->sale_note->id;
                             $record->save();

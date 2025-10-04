@@ -1,58 +1,32 @@
 <template>
-    <el-dialog
-        :visible="showDialog"
-        title="Notas de venta - Crédito"
-        @open="open"
-        @close="close"
-        width="80%"
-        append-to-body
-    >
+    <el-dialog :visible="showDialog" title="Notas de venta - Crédito" @open="open" @close="close" width="80%"
+        append-to-body>
         <div class="row m-2">
-            <el-pagination
-                @current-change="getRecords"
-                layout="total, prev, pager, next"
-                :total="pagination.total"
-                :current-page.sync="pagination.current_page"
-                :page-size="pagination.per_page"
-            >
+            <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+                :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
             </el-pagination>
         </div>
         <div class="row mt-1">
             <div class="col-4">
-                <el-input
-                    placeholder="Buscar"
-                    v-model="search"
-                    prefix-icon="el-icon-search"
-                    clearable
-                    @clear="getRecords"
-                    @input="getRecordsTimer"
-                ></el-input>
+                <el-input placeholder="Buscar" v-model="search" prefix-icon="el-icon-search" clearable
+                    @clear="getRecords" @input="getRecordsTimer"></el-input>
             </div>
             <div class="col-4">
-                <el-date-picker
-
-                    v-model="date_start"
-                    type="date"
-                    placeholder="Fecha inicio"
-                    @change="getRecords"
-                    value-format="yyyy-MM-dd"
-                    class="w-100"
-                ></el-date-picker>
+                <el-date-picker v-model="date_start" type="date" placeholder="Fecha inicio" @change="getRecords"
+                    value-format="yyyy-MM-dd" class="w-100"></el-date-picker>
             </div>
             <div class="col-4">
-                <el-date-picker
-                    class="w-100"
-                    v-model="date_end"
-                    type="date"
-                    placeholder="Fecha fin"
-                    @change="getRecords"
-                    value-format="yyyy-MM-dd"
-                ></el-date-picker>
+                <el-date-picker class="w-100" v-model="date_end" type="date" placeholder="Fecha fin"
+                    @change="getRecords" value-format="yyyy-MM-dd"></el-date-picker>
+            </div>
+            <div class="col-4">
+                <el-select v-model="establishment_id" @change="getRecords" placeholder="Seleccione establecimiento" clearable filterable>
+                    <el-option v-for="establishment in establishments" :key="establishment.id"
+                        :label="establishment.description" :value="establishment.id"></el-option>
+                </el-select>
             </div>
             <div class="col-6" v-if="records.length">
-                <el-button type="primary" @click="exportExcel"
-                    >Exportar Excel</el-button
-                >
+                <el-button type="primary" @click="exportExcel">Exportar Excel</el-button>
             </div>
         </div>
         <div class="row m-2 table-responsive">
@@ -83,11 +57,7 @@
                             {{ Number(record.remain).toFixed(2) }}
                         </td>
                         <td>
-                            <button
-                                type="button"
-                                class="btn btn-primary btn-sm"
-                                @click="pay(record.id)"
-                            >
+                            <button type="button" class="btn btn-primary btn-sm" @click="pay(record.id)">
                                 Pagar
                             </button>
                         </td>
@@ -95,17 +65,13 @@
                 </tbody>
             </table>
         </div>
-        <sale-note-payments
-            :showDialog.sync="showDialogPayments"
-            :documentId="recordId"
-            @reloadData="getRecords"
-            :configuration="configuration"
-        ></sale-note-payments>
+        <sale-note-payments :showDialog.sync="showDialogPayments" :documentId="recordId" @reloadData="getRecords"
+            :configuration="configuration"></sale-note-payments>
     </el-dialog>
 </template>
 
 <script>
-import SaleNotePayments from "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue";
+import SaleNotePayments from "../../../../../../../../resources/js/views/sale_notes/partials/payments_cash.vue";
 export default {
     props: ["showDialog", "configuration"],
     components: {
@@ -122,9 +88,22 @@ export default {
             timer: null,
             search: "",
             date_start: null,
-            date_end: null
+            date_end: null,
+            establishment_id: null,
+            establishments: []
         };
     },
+
+    async created() {
+        /* await this.initForm(); */
+        await this.$http.get(`/sale_note_payments/tables`).then(response => {
+            this.payment_destinations = response.data.payment_destinations;
+            this.payment_method_types = response.data.payment_method_types;
+            this.establishments = response.data.establishments;
+            //this.initDocumentTypes()
+        });
+    },
+
     methods: {
         exportExcel() {
             window.open(`/${this.resource}/export?date_start=${this.date_start || ""}&date_end=${this.date_end || ""}&value=${this.search || ""}`, "_blank");
@@ -154,7 +133,7 @@ export default {
             const response = await this.$http(
                 `/${this.resource}/records?value=${search}&page=${this
                     .pagination.current_page || 1}&date_start=${this
-                    .date_start || ""}&date_end=${this.date_end || ""}`
+                        .date_start || ""}&date_end=${this.date_end || ""}&establishment_id=${this.establishment_id || ""}`
             );
             let data = response.data;
             this.records = data.data;

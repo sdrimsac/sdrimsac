@@ -849,9 +849,9 @@
                             @ordenDeleted="createOrden" @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData" @reloadProduct="search_items"
                             @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
-                            @cotizarConfirmadoChanged="
+                            @cotizarConfirmadoChanged=" 
                                 handleCotizarConfirmadoRegreso
-                            " :currencyIdChoice.sync="currencyIdChoice"></list-orden>
+                            " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"></list-orden>
                     </div>
                 </div>
             </div>
@@ -1191,7 +1191,7 @@
                         :ordens.sync="ordensItems" @limpiarForm="limpiarForm" @total_sales="total_sales"
                         @updateOrdens="updateOrdens" @paymentsOrden="paymentsOrden" @deletedFood="deletedFood"
                         @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
-                        :categories.sync="categories" @reloadProduct="search_items"
+                        :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv"
                         :currencyIdChoice.sync="currencyIdChoice" ref="listOrdens"></list-orden>
                 </div>
                 <template>
@@ -1485,7 +1485,7 @@ const CollegeParents = () =>
         "../../../../../../College/Resources/assets/js/views/persons/form.vue"
     );
 const MonthSales = () => import("./partials/month_sales.vue");
-const SaleNoteCreditCash = () => import("./partials/sale_note_credit_cash.vue");
+const SaleNoteCreditCash = () => import("./partials/sale_note_credit_cash.vue")
 const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
@@ -1783,6 +1783,10 @@ export default {
     },
 
     async created() {
+        // LOG para ver el valor inicial de percentage_igv
+        this.$watch('percentage_igv', function(val) {
+            console.log('[LOG] WATCH percentage_igv cambió a:', val, typeof val);
+        });
         this.iniciarMedicionLatencia();
 
         /* await this.$http.get(`/companies/record`).then(response => {
@@ -5342,6 +5346,7 @@ export default {
                 this.idOrden = this.input_item;
             }
             this.form.items = this.ordens.map(o => o.food.item);
+            console.log('[LOG] index.vue clickPayment - percentage_igv:', this.percentage_igv);
             this.formatItems();
             this.form.enter_amount = this.form.total;
             this.form.difference = 0;
@@ -5384,6 +5389,7 @@ export default {
             this.setFormPosLocalStorage();
         },
         formatItems() {
+            console.log('[LOG] index.vue formatItems - percentage_igv:', this.percentage_igv, typeof this.percentage_igv);
             this.form.items = this.form.items.map(i => {
                 // Si vienen montos precalculados desde la lista de órdenes, respétalos
                 const comesPrecalc = (
@@ -5432,8 +5438,6 @@ export default {
 
                 // Reconstruir/normalizar discounts y asegurar montos netos (sin IGV) para tipo '00'
                 let discountsArray = Array.isArray(i.discounts) ? JSON.parse(JSON.stringify(i.discounts)) : [];
-                /* const possibleOriginalPrice = i.original_price || i.sale_unit_price_original || i.price_original || i.sale_unit_price_before || i.unit_price_before || null;
-                const currentUnitPrice = price; */
                 // Precalcular bases para normalización: base después de descuento y base antes de descuento (ambas netas)
                 const discountedGrossPreview = (comesPrecalc || hasTotalOnly)
                     ? Number(i._total_line ?? i.total) || 0
@@ -5441,73 +5445,6 @@ export default {
                 const baseAfterDiscountNet = taxable ? (discountedGrossPreview / (1 + percentage)) : discountedGrossPreview;
                 const amountNetForNormalize = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
                 const preDiscountBaseNet = baseAfterDiscountNet + amountNetForNormalize;
-                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length === 0 && appliedDiscount > 0 && possibleOriginalPrice) {
-                    // Evitar duplicados si ya hay un descuento equivalente
-                    const existingLike = discountsArray.find(d => {
-                        const amt = Number(d.amount) || 0;
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // si ya hay uno neto equivalente al bruto ingresado, no duplicar
-                            return Math.abs(amt - (appliedDiscount / (1 + percentage))) < 0.01;
-                        }
-                        return Math.abs(amt - appliedDiscount) < 0.01;
-                    });
-                    if (!existingLike) {
-                        // Calcular factor (porcentaje) basado en precio original
-                        const originalP = Number(possibleOriginalPrice);
-                        if (originalP > 0) {
-                            // Monto total del descuento aplicado viene en bruto (con IGV) -> convertir a neto (sin IGV)
-                            const amountNet = taxable ? (appliedDiscount / (1 + percentage)) : appliedDiscount;
-                            // La base debe ser el valor original sin IGV
-                            const lineNet = taxable ? ((originalP * qty) / (1 + percentage)) : (originalP * qty);
-                            const factor = lineNet > 0 ? _.round(amountNet / lineNet, 5) : 0;
-                            discountsArray.push({
-                                discount_type_id: '00', // descuento que afecta base imponible
-                                description: 'Descuento por item',
-                                factor,
-                                amount: _.round(amountNet, 2), // enviar SIN IGV
-                                base: _.round(lineNet, 2) // base imponible SIN IGV
-                            });
-                        }
-                    }
-                } */
-
-                // Normalizar descuentos existentes tipo '00' (monto y base sin IGV, factor coherente)
-                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
-                    discountsArray = discountsArray.map(d => {
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // Si viene marcado como neto, evitar dividir nuevamente
-                            const comesNet = d.net === true;
-                            const amtNet = comesNet
-                                ? _.round(Number(d.amount) || 0, 2)
-                                : _.round((Number(d.amount) || 0) / (1 + percentage), 2);
-                            const baseNet = _.round(preDiscountBaseNet, 2);
-                            const f = baseNet > 0 ? _.round(amtNet / baseNet, 5) : 0;
-                            return {
-                                ...d,
-                                amount: amtNet,
-                                base: baseNet,
-                                factor: f
-                            };
-                        }
-                        return d;
-                    });
-                } */
-
-                // Asegurar coherencia: calcular suma equivalente BRUTA a partir de descuentos netos (p.e. '00')
-                /* if (!(comesPrecalc || hasTotalOnly) && discountsArray.length) {
-                    const sumGrossEquivalent = discountsArray.reduce((acc, d) => {
-                        const amt = Number(d.amount) || 0;
-                        if (taxable && String(d.discount_type_id) === '00') {
-                            // Si el descuento está en neto, convertir a bruto para equiparar contra appliedDiscount
-                            const comesNet = d.net === true;
-                            return acc + (comesNet ? (amt * (1 + percentage)) : amt);
-                        }
-                        return acc + amt;
-                    }, 0);
-                    if (Math.abs(sumGrossEquivalent - appliedDiscount) > 0.01) {
-                        appliedDiscount = _.round(sumGrossEquivalent, 2);
-                    }
-                } */
 
                 let unit_value, total_base_igv, total_igv, total_taxes, total_value, lineTotal;
 
@@ -5565,6 +5502,7 @@ export default {
                 } else {
                     // Calcular localmente si no tenemos precálculo
                     const discountedGross = Math.max(gross - appliedDiscount, 0);
+                    console.log('[LOG] CÁLCULO LOCAL: percentage_igv actual:', this.percentage_igv, typeof this.percentage_igv, '| percentage usado:', percentage, typeof percentage, '| taxable:', taxable, '| price:', price, '| gross:', gross, '| appliedDiscount:', appliedDiscount);
                     if (taxable) {
                         total_base_igv = discountedGross / (1 + percentage);
                         total_igv = total_base_igv * percentage;
@@ -5572,6 +5510,7 @@ export default {
                         total_value = total_base_igv;
                         total_taxes = total_igv;
                         lineTotal = discountedGross;
+                        console.log('[LOG] IGV calculado para item', i.name || i.description || i.id, ':', total_igv, '| base:', total_base_igv, '| porcentaje:', percentage, '| discountedGross:', discountedGross);
                     } else {
                         unit_value = price;
                         total_base_igv = discountedGross;
@@ -5627,7 +5566,9 @@ export default {
                     })),
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
+                
             });
+            /* console.log('[DEBUG] Mapped item:', item); */
             // this.calculateTotal();
         },
         isNoteIsDefault() {

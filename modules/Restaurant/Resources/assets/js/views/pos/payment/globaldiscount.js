@@ -120,21 +120,5 @@ export function inputDiscountAmount() {
 
     // Registrar descuento total (sobre total con IGV)
     this.form.total_discount = _.round(global_discount, 2);
-
-    /* console.log("Totales después de aplicar descuento global:", {
-        total: this.form.total,
-        total_value: this.form.total_value,
-        total_taxed: this.form.total_taxed,
-        total_exonerated: this.form.total_exonerated,
-        total_unaffected: this.form.total_unaffected,
-        total_exportation: this.form.total_exportation,
-        total_igv: this.form.total_igv,
-        total_taxes: this.form.total_taxes,
-        total_discount: this.form.total_discount,
-        discount_input: global_discount,
-        discount_base_amount: discountBaseRoundedForRecord,
-        discount_igv_amount: discountIgvRoundedForRecord,
-        split: { amount02, amount03 }
-    }); */
 }
 

@@ -2308,7 +2308,8 @@ export default {
         "cash_id",
         "isHotelArea",
         "user",
-        "divided_items"
+        "divided_items",
+        "percentage_igv",
         // "exchange_rate_sale"
     ],
 
@@ -2660,7 +2661,9 @@ export default {
 
         // Calcula importes de un item con descuento considerando si es gravado (IGV) o exonerado
         _calcItemAmounts(order) {
-            return DiscountCalcItemAmounts(order);
+            // Siempre pasar el IGV dinámico
+            const percentage_igv = Number(this.percentage_igv) || 18;
+            return DiscountCalcItemAmounts(order, percentage_igv);
         },
 
         _attachItemDiscounts(items) {
@@ -2718,10 +2721,13 @@ export default {
                     let baseOriginal = qty * currentPrice;
 
                     const igvType = item.food.item.sale_affectation_igv_type_id;
+                    // Usar el IGV dinámico
+                    const igvFactor = 1 + (Number(this.percentage_igv) / 100);
+                    const igvRate = Number(this.percentage_igv) / 100;
                     if (igvType === "10") {
-                        discountBase = discountAmount / 1.18;
+                        discountBase = discountAmount / igvFactor;
                         discountIgv = discountAmount - discountBase;
-                        baseOriginal = (qty * currentPrice) / 1.18;
+                        baseOriginal = (qty * currentPrice) / igvFactor;
                     }
 
                     const factor = baseOriginal > 0 ? _.round(discountBase / baseOriginal, 4) : 0;

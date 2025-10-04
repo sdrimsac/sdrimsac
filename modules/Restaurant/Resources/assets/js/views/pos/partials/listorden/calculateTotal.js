@@ -1,8 +1,11 @@
 export function listcalculateTotal(w = null) {
 
     console.log("listcalculateTotal", w);
-    
-    
+    // Obtener el IGV dinámico desde this.percentage_igv (propagado desde list_ordens.vue)
+    const percentage_igv = Number(this.percentage_igv) || 18;
+    const igvFactor = 1 + (percentage_igv / 100);
+    const igvRate = percentage_igv / 100;
+
     // Totales generales
     this.totalOrdenItems = 0.0;
     this.total = 0.0;
@@ -13,7 +16,13 @@ export function listcalculateTotal(w = null) {
         totalDescuentos = 0;
 
     _.forEach(this.localOrden, value => {
-        const amounts = this._calcItemAmounts(value);
+        // Pasar el IGV dinámico a la función de cálculo de montos si lo soporta
+        let amounts;
+        if (typeof this._calcItemAmounts === 'function' && this._calcItemAmounts.length >= 2) {
+            amounts = this._calcItemAmounts(value, percentage_igv);
+        } else {
+            amounts = this._calcItemAmounts(value);
+        }
         // Guardar montos calculados en el item para referencia (reactivo)
         value._base = amounts.base;
         value._igv = amounts.igv;

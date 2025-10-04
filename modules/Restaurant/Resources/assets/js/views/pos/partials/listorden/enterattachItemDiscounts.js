@@ -1,5 +1,8 @@
 export function attachItemDiscounts(items) {
     console.log("attachItemDiscounts reawfsdvsdfdfsdfasdsdf", items);
+    // Asegurar que percentage_igv sea un número válido, si no, usar 18
+    percentage_igv = Number(percentage_igv);
+    if (!percentage_igv) percentage_igv = 18;
     try {
         items.forEach(item => {
             if (!item || !item.food || !item.food.item) {
@@ -66,11 +69,12 @@ export function attachItemDiscounts(items) {
 
             if (igvType === "10") {
                 // El descuento se ingresa con IGV, lo separamos en base e IGV
-                discountBase = discountAmount / 1.18;
+                const igvFactor = 1 + (percentage_igv / 100);
+                discountBase = discountAmount / igvFactor;
                 discountIgv = discountAmount - discountBase;
 
                 // La base imponible original (sin descuento)
-                baseOriginal = lineTotal / 1.18;
+                baseOriginal = lineTotal / igvFactor;
             }
 
             const factor = baseOriginal > 0 ? _.round(discountBase / baseOriginal, 4) : 0;
@@ -99,4 +103,6 @@ export function attachItemDiscounts(items) {
     } catch (e) {
         console.error("Error al adjuntar descuentos a los items:", e);
     }
+}
+export function attachItemDiscounts(items, percentage_igv = 18) {
 }

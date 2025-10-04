@@ -23,6 +23,8 @@ class SaleNotePayment extends ModelTenant
         'change',
         'payment',
         'user_id',
+        'method',
+        'number_method'
     ];
     
     //,'receipt'

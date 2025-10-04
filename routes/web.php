@@ -290,6 +290,7 @@ if ($hostname) {
                 Route::get('sale-notes/get-last-payment/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getLastPayment']);
                 Route::post('sale-notes/pay-last-payment/{salenote}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'payLastPayment']);
                 Route::get('sale-notes/return-payment/{salenotePaymentId}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'returnPayment']);
+                Route::get('sale-notes/return-payment-notes/{salenotePaymentId}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'returnPaymentNotes']);
                 Route::post('sale-notes/update-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'updateCredit']);
                 Route::get('sale-notes/payments-init/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'paymentsInit']);
                 Route::get('sale-notes/record-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'recordCredit']);

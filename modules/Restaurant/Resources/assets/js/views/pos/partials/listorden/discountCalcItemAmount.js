@@ -1,4 +1,4 @@
-export function DiscountCalcItemAmounts(order) {
+export function DiscountCalcItemAmounts(order, percentage_igv = 18) {
     // Solo calcula montos, no maneja advertencias visuales ni estado Vue
     try {
         const igvType = order.food.item.sale_affectation_igv_type_id; // '10' gravado, otros exoner/inafecto según SUNAT
@@ -31,7 +31,7 @@ export function DiscountCalcItemAmounts(order) {
         if (igvType == "10") {
             // Gravado
             // netAfterDiscount incluye IGV -> separar base e igv
-            const factor = 1 + 0.18; // 18%
+            const factor = 1 + (Number(percentage_igv) / 100);
             base = netAfterDiscount / factor;
             igv = netAfterDiscount - base;
             total = base + igv; // = netAfterDiscount

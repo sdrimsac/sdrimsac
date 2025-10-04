@@ -8,6 +8,7 @@ class ConfEstablishment extends ModelTenant
 {
     protected $table = "conf_establishment";
     protected $casts = [
+        'sale_credit_notes' => 'boolean',
         'show_discounts_payment' => 'boolean',
         'show_payment_method' => 'boolean',
         'print_command'  => 'boolean',

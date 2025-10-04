@@ -2066,7 +2066,7 @@ export default {
         "percentage_igv",
         "all_customers",
         "personalWhatsapp",
-        "sellers"
+        "sellers",
     ],
     watch: {
         all_customers(newCustomer, _) {
@@ -2080,7 +2080,12 @@ export default {
                 this.syncEnabledDiscountFromItems();
             },
             deep: true
-        }
+        },
+        /* percentage_igv(newVal, oldVal) {
+            if (newVal !== oldVal && typeof this.updateIgvAndRecalculate === 'function') {
+                this.updateIgvAndRecalculate(newVal);
+            }
+        } */
     },
 
     data() {
@@ -2902,6 +2907,7 @@ export default {
             this.reCalculateTotal();
         },
         formatItems(items = [], affectation = null) {
+            console.log('[LOG] formatItems - percentage_igv:', this.percentage_igv);
             items = items.map(i => {
                 let affectation_igv_type_id =
                     affectation != null && affectation != undefined
@@ -4173,286 +4179,7 @@ export default {
             return total_exonerated;
         },
 
-        // para calcular el descuento global que se puede aplicar a toda la venta
-        /* discountGlobal() {
-            // this.form.total = this.form.total_value;
-            let global_discount = parseFloat(this.discount_amount);
-            let total = parseFloat(this.form.total);
-            if (global_discount > total) {
-                this.discount_amount = 0;
-                this.$forceUpdate();
-                return this.$toast.error(
-                    "El descuento no puede ser mayor al total"
-                );
-            }
-            // let total_value = parseFloat(this.form.total_value);
-            let new_total = total - global_discount;
-            let factor = _.round(global_discount / total, 4);
-            this.form.discounts = [
-                {
-                    discount_type_id: "00",
-                    description: "OTROS DESCUENTOS",
-                    factor,
-                    amount: global_discount,
-                    base: total
-                }
-            ];
-            this.form.total_discount = global_discount;
-            if (this.discountTotal) {
-                this.form.total = new_total;
-            } else {
-                let global_discount_amount = global_discount;
-                let global_discount_amount_without_rounding = global_discount;
-                let { discount_with_base_variant } = this.configuration;
-                console.log("ver si paso pro aqui", discount_with_base_variant);
-                if (discount_with_base_variant) {
-                    console.log("paso por aqui");
-                    global_discount_amount = Number(
-                        (global_discount / 1.18).toFixed(2)
-                    );
-                    global_discount_amount_without_rounding =
-                        global_discount / 1.18;
-                }
-                let factor = _.round(global_discount_amount / base, 4);
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor,
-                        amount: global_discount_amount,
-                        base
-                    }
-                ];
-
-                let new_base = this.form.total_value_without_rounding;
-
-                this.form.total_taxed = _.round(
-                    new_base - global_discount_amount_without_rounding,
-                    2
-                );
-                let total_taxed_without_rounding =
-                    new_base - global_discount_amount_without_rounding;
-                this.form.total_value = this.form.total_taxed;
-                if (this.configuration.affectation_igv_type_id == "10") {
-                    this.form.total_igv = _.round(
-                        total_taxed_without_rounding *
-                            (this.percentage_igv / 100),
-                        2
-                    );
-                } else {
-                    this.form.total_igv = 0;
-                }
-
-                //impuestos (isc + igv + icbper)
-                this.form.total_taxes = _.round(
-                    this.form.total_igv +
-                        this.form.total_isc +
-                        this.form.total_plastic_bag_taxes,
-                    2
-                );
-                this.form.total = _.round(
-                    this.form.total_taxed + this.form.total_taxes,
-                    2
-                );
-                this.form.subtotal = this.form.total;
-            }
-            // para calcular descuentos
-            if (
-                this.configuration.sale_note_credit_cash &&
-                this.form.document_type_id == "80"
-            ) {
-            } else {
-                this.form.enter_amount = this.form.total;
-                this.enterAmount();
-            }
-        }, */
-
-        /* discountGlobal() {
-            const totalConIGVAntes = parseFloat(this.form.total) || 0;
-            const baseAntes = parseFloat(this.form.total_value) || 0;
-            const igvAntes = parseFloat(this.form.total_igv) || 0;
-
-            // Determinar si el descuento es porcentaje o monto fijo
-            let global_discount = 0;
-            if (
-                this.discount_input_percentage &&
-                this.discount_input_percentage > 0
-            ) {
-                // Caso porcentaje
-                global_discount = _.round(
-                    (totalConIGVAntes * this.discount_input_percentage) / 100,
-                    2
-                );
-            } else {
-                // Caso monto fijo
-                global_discount = parseFloat(this.discount_amount) || 0;
-            }
-
-            if (global_discount <= 0) return;
-            if (global_discount > totalConIGVAntes) {
-                this.discount_amount = 0;
-                this.$forceUpdate();
-                return this.$toast.error(
-                    "El descuento no puede ser mayor al total"
-                );
-            }
-
-            let baseDescPrecisa = 0;
-            let igvDescPreciso = 0;
-            if (
-                this.configuration.affectation_igv_type_id == "10" &&
-                this.percentage_igv
-            ) {
-                baseDescPrecisa =
-                    global_discount / (1 + this.percentage_igv / 100);
-                igvDescPreciso = global_discount - baseDescPrecisa;
-            } else {
-                baseDescPrecisa = global_discount;
-                igvDescPreciso = 0;
-            }
-
-            // Redondeos comerciales (2 decimales) ajustando IGV para que la suma coincida
-            let baseDesc = _.round(baseDescPrecisa, 2);
-            let igvDesc = _.round(global_discount - baseDesc, 2);
-            const sumaDesc = _.round(baseDesc + igvDesc, 2);
-            if (sumaDesc !== _.round(global_discount, 2)) {
-                igvDesc = _.round(global_discount - baseDesc, 2);
-            }
-
-            this.discount_base_amount = baseDesc;
-            this.discount_igv_amount = igvDesc;
-
-            // Si todo es exonerado → todo el descuento va a la base
-            if (this.form.total_taxed <= 0 && this.form.total_exonerated > 0) {
-                baseDesc = _.round(global_discount, 2);
-                igvDesc = 0;
-                this.discount_base_amount = baseDesc;
-                this.discount_igv_amount = 0;
-            }
-
-            // Nuevo total después del descuento
-            const nuevoTotalConIGV = _.round(
-                totalConIGVAntes - global_discount,
-                2
-            );
-
-            // Recalcular base e IGV finales
-            let nuevaBase = baseAntes - baseDesc;
-            let nuevoIGV = igvAntes - igvDesc;
-            if (nuevaBase < 0) nuevaBase = 0;
-            if (nuevoIGV < 0) nuevoIGV = 0;
-
-            // Calcular factor exacto
-            let factor = 0;
-            if (baseAntes > 0) {
-                factor = baseDescPrecisa / baseAntes;
-            }
-            if (
-                this.discount_input_percentage &&
-                this.discount_input_percentage > 0
-            ) {
-                factor = this.discount_input_percentage / 100;
-            }
-            factor = Number(factor.toFixed(5));
-
-            // Estructura de descuentos SUNAT
-            this.form.discounts = [
-                {
-                    discount_type_id: "02",
-                    description:
-                        "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                    factor: factor,
-                    amount: _.round(baseDesc, 2),
-                    base: _.round(baseAntes, 2)
-                }
-            ];
-
-            this.form.total_discount = _.round(global_discount, 2);
-            this.form.total_value = _.round(nuevaBase, 2);
-
-            // Mantener la composición (gravada/exonerada/inafecta/exportación) proporcional al estado previo
-            const prevTaxed = this.toNumber(this.form.total_taxed);
-            const prevExo = this.toNumber(this.form.total_exonerated);
-            const prevUnaf = this.toNumber(this.form.total_unaffected);
-            const prevExpo = this.toNumber(this.form.total_exportation);
-            const prevBaseSum = _.round(prevTaxed + prevExo + prevUnaf + prevExpo, 2) || 0;
-
-            if (prevBaseSum > 0) {
-                // Distribuir la nueva base según proporciones anteriores
-                const taxedRatio = prevTaxed / prevBaseSum;
-                const exoRatio = prevExo / prevBaseSum;
-                const unafRatio = prevUnaf / prevBaseSum;
-                const expoRatio = prevExpo / prevBaseSum;
-
-                let newTaxed = _.round(nuevaBase * taxedRatio, 2);
-                let newExo = _.round(nuevaBase * exoRatio, 2);
-                let newUnaf = _.round(nuevaBase * unafRatio, 2);
-                let newExpo = _.round(nuevaBase * expoRatio, 2);
-
-                // Ajuste por redondeo: corregir la diferencia en la categoría dominante
-                let sumNew = _.round(newTaxed + newExo + newUnaf + newExpo, 2);
-                let diff = _.round(nuevaBase - sumNew, 2);
-                if (diff !== 0) {
-                    // Elegir la categoría con mayor base previa para absorber la diferencia
-                    const buckets = [
-                        { key: 'taxed', prev: prevTaxed },
-                        { key: 'exo', prev: prevExo },
-                        { key: 'unaf', prev: prevUnaf },
-                        { key: 'expo', prev: prevExpo }
-                    ].sort((a, b) => b.prev - a.prev);
-                    const biggest = buckets[0]?.key;
-                    if (biggest === 'taxed') newTaxed = _.round(newTaxed + diff, 2);
-                    else if (biggest === 'exo') newExo = _.round(newExo + diff, 2);
-                    else if (biggest === 'unaf') newUnaf = _.round(newUnaf + diff, 2);
-                    else newExpo = _.round(newExpo + diff, 2);
-                }
-
-                // Evitar negativos por redondeo
-                if (newTaxed < 0) newTaxed = 0;
-                if (newExo < 0) newExo = 0;
-                if (newUnaf < 0) newUnaf = 0;
-                if (newExpo < 0) newExpo = 0;
-
-                this.form.total_taxed = newTaxed;
-                this.form.total_exonerated = newExo;
-                this.form.total_unaffected = newUnaf;
-                this.form.total_exportation = newExpo;
-            } else {
-                // Si no hay composición previa, decidir según IGV anterior
-                if (igvAntes > 0) {
-                    this.form.total_taxed = _.round(nuevaBase, 2);
-                    this.form.total_exonerated = 0;
-                    this.form.total_unaffected = 0;
-                    this.form.total_exportation = 0;
-                } else {
-                    // Caso típico de exonerado total
-                    this.form.total_taxed = 0;
-                    this.form.total_exonerated = _.round(nuevaBase, 2);
-                    this.form.total_unaffected = 0;
-                    this.form.total_exportation = 0;
-                }
-            }
-
-            this.form.total_igv = _.round(nuevoIGV, 2);
-            this.form.total_taxes = _.round(
-                nuevoIGV + (this.form.total_isc || 0) + (this.form.total_plastic_bag_taxes || 0),
-                2
-            );
-            this.form.total = nuevoTotalConIGV;
-            this.form.subtotal = nuevoTotalConIGV;
-
-            if (
-                !(
-                    this.configuration.sale_note_credit_cash &&
-                    this.form.document_type_id == "80"
-                )
-            ) {
-                this.form.enter_amount = this.form.total;
-                this.enterAmount();
-            }
-        }, */
-
+       
         discountGlobal() {
             return discountInputDiscountAmountGlobal.call(this);
         },
@@ -4623,227 +4350,24 @@ export default {
                 this.operation_number = null;
             }
         },
-        // aqui hace el proceso de recalculo de los montos
-        /* reCalculateTotal() {
-            if (!this.form.items || this.form.items.length == 0) {
-                return;
-            }
-            // Si ya existe un snapshot (descuento aplicado) y se están recalculando los items sin cambiar el descuento, restaurar valores base antes de recomputar
-            if (
-                this.original_totals_snapshot &&
-                this.discount_applied &&
-                !this.discount_dirty
-            ) {
-                // Evitar que se consoliden nuevamente los valores con descuento como base
-                this.form.total = this.original_totals_snapshot.total;
-                this.form.total_value = this.original_totals_snapshot.total_value;
-                this.form.total_igv = this.original_totals_snapshot.total_igv;
-                this.form.total_taxed = this.original_totals_snapshot.total_taxed;
-                this.form.total_exonerated = this.original_totals_snapshot.total_exonerated;
-            }
-            let total_discount = 0;
-            let total_charge = 0;
-
-            let total_exportation = 0;
-            let total_taxed = 0;
-            let total_exonerated = 0;
-            let total_unaffected = 0;
-            let total_free = 0;
-            let total_igv = 0;
-            let total_value = 0;
-            let total = 0;
-            let total_plastic_bag_taxes = 0;
-            if (
-                this.affectation_optional_id != null &&
-                this.affectation_optional_id != undefined &&
-                this.affectation_optional_id != ""
-            ) {
-                this.form.items = this.formatItems(
-                    this.form.items,
-                    this.affectation_optional_id
-                );
-            }
-
-            this.form.items.forEach(row => {
-                
-                total_discount += this.toNumber(row.total_discount);
-                total_charge += this.toNumber(row.total_charge);
-
-                if (row.affectation_igv_type_id === "10") {
-                    total_taxed += this.toNumber(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "20") {
-                    total_exonerated += this.toNumber(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "30") {
-                    total_unaffected += this.toNumber(row.total_value);
-                }
-                if (row.affectation_igv_type_id === "40") {
-                    total_exportation += this.toNumber(row.total_value);
-                }
-                if (
-                    ["11", "12", "13", "14", "15", "16"].includes(
-                        row.affectation_igv_type_id
-                    )
-                ) {
-                    // guard against undefined values and division by zero
-                    let unit_value =
-                        this.toNumber(row.total_value) /
-                        (this.toNumber(row.quantity) || 1);
-                    let total_value_partial =
-                        unit_value * this.toNumber(row.quantity);
-                    // ensure ternary applies only to the plastic bag taxes
-                    row.total_taxes =
-                        this.toNumber(row.total_value) -
-                        total_value_partial +
-                        (isNaN(parseFloat(row.total_plastic_bag_taxes))
-                            ? 0.0
-                            : this.toNumber(row.total_plastic_bag_taxes));
-                    row.total_igv =
-                        total_value_partial *
-                        (this.toNumber(row.percentage_igv) / 100);
-                    row.total_base_igv = total_value_partial;
-                    total_value -= this.toNumber(row.total_value);
-                    total += this.toNumber(row.total);
-                }
-                if (
-                    ["10", "20", "30", "40"].indexOf(
-                        row.affectation_igv_type_id
-                    ) < 0
-                ) {
-                    total_free += this.toNumber(row.total_value);
-                }
-                if (
-                    ["10", "20", "30", "40"].indexOf(
-                        row.affectation_igv_type_id
-                    ) > -1
-                ) {
-                    total_igv += this.toNumber(row.total_igv);
-                    total += this.toNumber(row.total);
-                }
-                if (!["21", "37"].includes(row.affectation_igv_type_id)) {
-                    total_value += this.toNumber(row.total_value);
-                }
-                total_plastic_bag_taxes += this.toNumber(
-                    row.total_plastic_bag_taxes
-                );
-            });
-
-            this.form.total_exportation = _.round(total_exportation, 2);
-            this.form.total_taxed = _.round(total_taxed, 2);
-            this.form.total_exonerated = _.round(total_exonerated, 2);
-            this.form.total_unaffected = _.round(total_unaffected, 2);
-            this.form.total_free = _.round(total_free, 2);
-            this.form.total_igv = _.round(total_igv, 2);
-            this.form.total_value = _.round(total_value, 2);
-            this.form.total_value_without_rounding = total_value;
-            this.form.total_taxes = _.round(total_igv, 2);
-            this.form.total_plastic_bag_taxes = _.round(
-                total_plastic_bag_taxes,
-                2
-            );
-
-            // this.form.total = _.round(total, 2)
-            this.form.total = _.round(
-                total_charge + total + this.form.total_plastic_bag_taxes,
-                2
-            );
-            //para el calculo de venta en descuento global
-            //if (!(
-            //    boxes + amount1 < amount2 &&
-            //    this.form.document_type_id == "80")){
-            //    this.form.enter_amount = this.form.total;
-            //    this.enterAmount();
-            //}
-
-            if (
-                this.discount_amount &&
-                (!this.discount_applied || this.discount_dirty)
-            ) {
-                // Antes de aplicar nuevamente, asegurar snapshot de base intacta
-                if (this.discount_dirty && this.original_totals_snapshot) {
-                    this.form.total = this.original_totals_snapshot.total;
-                    this.form.total_value = this.original_totals_snapshot.total_value;
-                    this.form.total_igv = this.original_totals_snapshot.total_igv;
-                    this.form.total_taxed = this.original_totals_snapshot.total_taxed;
-                    this.form.total_exonerated = this.original_totals_snapshot.total_exonerated;
-                }
-                this.discountGlobal();
-            }
-
-            console.log(this.form);
-
-            // Recalcular total_discount consolidado (descuentos por item + descuento global aplicado)
-            // 1. Sumar descuentos de cada item (item.total_discount)
-            let itemLevelDiscount = 0;
-            this.form.items.forEach(row => {
-                itemLevelDiscount += this.toNumber(row.total_discount);
-            });
-
-            // 2. Verificar si existe un descuento global en form.discounts (tipo 03 u otros) y sumar su monto
-            let globalLevelDiscount = 0;
-            if (
-                Array.isArray(this.form.discounts) &&
-                this.form.discounts.length
-            ) {
-                this.form.discounts.forEach(d => {
-                    // campos posibles: amount, amount_base, factor. Usamos amount si existe.
-                    if (d && d.amount)
-                        globalLevelDiscount += this.toNumber(d.amount);
-                });
-            }
-
-            // 3. Si se ingresó discount_amount manual (this.discount_amount) y no está reflejado en form.discounts, lo integramos.
-            // Evitar doble conteo: solo sumar si no hay descuento global ya registrado.
-            if (this.discount_amount && globalLevelDiscount === 0) {
-                // discount_amount representa un descuento total directo sobre la venta
-                globalLevelDiscount += this.toNumber(this.discount_amount);
-            }
-
-            // 4. Total consolidado
-            const consolidatedDiscount = _.round(
-                itemLevelDiscount + globalLevelDiscount,
-                2
-            );
-            this.form.total_discount = consolidatedDiscount;
-
-            // 5. (Opcional) Garantizar que total no sea negativo
-            if (this.form.total < 0) {
-                this.form.total = 0;
-            }
-
-            console.log("Totales después del redondeo:", {
-                total_taxed: this.form.total_taxed,
-                total_igv: this.form.total_igv,
-                total_value: this.form.total_value,
-                total_discount: this.form.total_discount,
-            });
-            // this.discountGlobal();
-
-            let saleTotal = this.form.total; // Monto total de la venta
-            let promotionTotal = this.total || 0; // Monto que tiene la promoción
-            let points_value = this.points_value || 0.1; // Valor de puntos por unidad monetaria
-
-            // Calcula puntos solo si hay un monto de venta
-            if (saleTotal > 0) {
-                // Si hay monto de promoción, usa ese para calcular puntos
-                if (promotionTotal > 0) {
-                    this.ventalista = parseFloat(
-                        (saleTotal / promotionTotal).toFixed(2)
-                    );
-                } else {
-                    // Si no hay monto de promoción, usa el cálculo estándar
-                    this.ventalista = parseFloat(
-                        (saleTotal * points_value).toFixed(2)
-                    );
-                }
-            } else {
-                this.ventalista = 0;
-            }
-        }, */
+        // Método para actualizar el IGV de los items y recalcular totales
+        updateIgvAndRecalculate(newIgv) {
+            console.log('[LOG] updateIgvAndRecalculate - newIgv:', newIgv, 'this.percentage_igv:', this.percentage_igv);
+            if (!this.form.items || this.form.items.length === 0) return;
+            // Actualiza el IGV de cada item
+            this.form.items = this.form.items.map(item => ({
+                ...item,
+                percentage_igv: newIgv
+            }));
+            // Recalcula los totales
+            this.reCalculateTotal();
+        },
+        // USO: Llama a este método cuando cambie el IGV desde el componente padre:
+        // this.$refs.payment.updateIgvAndRecalculate(nuevo_igv);
 
         // para recalcular los totales
         reCalculateTotal() {
+            console.log('[LOG] reCalculateTotal - percentage_igv:', this.percentage_igv);
             return discountInputReCalculateTotal.call(this);
         },
 
@@ -4972,7 +4496,7 @@ export default {
             if (
                 differen < 0 &&
                 this.form.payment_condition_id == "01" &&
-                !this.configuration.sale_note_credit_cash
+                !this.configuration.sale_note_credit_cash && !this.isCreditCash
             ) {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"
@@ -5010,7 +4534,7 @@ export default {
                 this.button_payment = true;
             }
 
-            if (this.configuration.sale_note_credit_cash) {
+            if (this.configuration.sale_note_credit_cash && this.isCreditCash) {
                 this.button_payment = false;
             }
 
@@ -5290,7 +4814,7 @@ export default {
             let amount1 = Number(this.form.enter_amount);
             let amount2 = Number(this.form.total);
             if (
-                this.configuration.sale_note_credit_cash &&
+                this.configuration.sale_note_credit_cash && this.isCreditCash &&
                 boxes + amount1 < amount2 &&
                 this.form.document_type_id == "80"
             ) {
