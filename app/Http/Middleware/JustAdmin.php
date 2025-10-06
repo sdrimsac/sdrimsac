@@ -131,7 +131,9 @@ class JustAdmin
                     $redirect_to = "/internet/worker/";
                 } elseif ($modo_billar) {
                     $redirect_to = "/billar/worker/";
-                } 
+                } elseif($tap) {
+                    $redirect_to = "/grifo/worker/";
+                }
                 else if ($workshop) {
                     if ($description_type == 'CAJERO MECANICO') {
 
@@ -159,7 +161,7 @@ class JustAdmin
                         $redirect_to .= 'salon-pos';
                     }
                     else if($tap){
-                        $redirect_to .= 'grifo-pos';
+                        $redirect_to .= 'dashboard-pos';
                     }
                     else{
                         $redirect_to .= 'dashboard-pos';

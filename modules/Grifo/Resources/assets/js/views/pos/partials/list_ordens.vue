@@ -1203,17 +1203,14 @@
                                                                                 1)
                                                                             " class="form-control text-center fw-bold"
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
-                                                                            v-model="order_pend.quantity
-                                                                                " data-rule="currency" :class="{
-                                                                                    'custom-bg-light': !configuration.item_set_quantity_pos,
-                                                                                    'custom-bg-danger;':
-                                                                                        configuration.item_set_quantity_pos
-                                                                                }" @input="
-                                                                                verifyStock(
-                                                                                    order_pend,
-                                                                                    indexx
-                                                                                )
-                                                                                " />
+                                                                            v-model="order_pend.quantity"
+                                                                            :type="'text'"
+                                                                            data-rule="currency" :class="{
+                                                                                'custom-bg-light': !configuration.item_set_quantity_pos,
+                                                                                'custom-bg-danger;': configuration.item_set_quantity_pos
+                                                                            }" @input="
+                                                                                verifyStock(order_pend, indexx)
+                                                                            " />
 
                                                                         <div class="input-group-text">
                                                                             <button type="button" class="spin-up"
@@ -1377,7 +1374,8 @@
 
                                                                     <el-input class="input-new-tag1 text-center w-100"
                                                                         style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; text-align: center;"
-                                                                        v-model.number="order_pend.newSubtotal"
+                                                                        v-model="order_pend.newSubtotal"
+                                                                        type="number" step="0.01"
                                                                         @input="val => handleSubtotalInput(val, indexx)"
                                                                         placeholder="0.00" size="medium" />
 
@@ -2541,7 +2539,7 @@ export default {
                 } else {
                     this.saveSubtotal(idx);
                 }
-            }, 600);
+            }, 1000);
         },
 
         openDeliveryForm() {
@@ -3743,12 +3741,16 @@ export default {
                     }
                 }
             }
-            // Mostrar siempre 3 decimales en cantidad
-            const q = Number(this.localOrden[idx].quantity);
-            if (!isNaN(q)) {
-                this.localOrden[idx].quantity = q.toFixed(3);
-            }
+            // Solo actualizar el total, no formatear decimales aquí
             this.calculateTotal();
+        },
+
+        formatQuantity(idx) {
+            // Formatear a 3 decimales solo al perder el foco
+            const val = this.localOrden[idx].quantity;
+            if (val !== '' && val !== null && !isNaN(Number(val))) {
+                this.localOrden[idx].quantity = Number(val).toFixed(3);
+            }
         },
         showOrdensPending() {
             this.showPendingOrdens = true;
