@@ -527,6 +527,7 @@
         <div class="row d-flex m-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
                 <el-button
+                    class="btn_guardarsmall"
                     type="primary"
                     :disabled="sendingPayments"
                     @click="handleSendPayments"

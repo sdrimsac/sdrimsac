@@ -51,9 +51,14 @@
                                     <div class="text-center">
                                         <label for="num">Ingrese Cantidad:</label>
                                         <br />
-                                        <el-input v-model="promotion.quantity" :min="0" :max="100"
-                                            @input="updatePoints(promotion)" :disabled="promotion.stock <= 0
-                                                " type="number" class="qquantity-promotion"></el-input>
+                                        <el-input v-model="promotion.quantity"
+                                            :min="0"
+                                            :max="promotion.stock > 0 ? Math.floor(remainingPoints / promotion.points_value) : 0"
+                                            @input="updatePoints(promotion)"
+                                            :disabled="promotion.stock <= 0"
+                                            type="number"
+                                            class="qquantity-promotion"
+                                        ></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -124,14 +129,21 @@ export default {
             return `/${formated}`;
         },
         open() {
-            // Initialize promotion quantities to zero when the dialog opens
+            // Inicializar cantidades y evitar autoasignar cantidad a productos agotados
             this.listPromotionItems.forEach(promotion => {
-                if (promotion.quantity === undefined) {
+                if (promotion.quantity === undefined || promotion.stock <= 0) {
                     this.$set(promotion, "quantity", 0);
                 }
             });
 
             this.distributePoints(parseInt(this.hasPromotionText));
+
+            // Forzar cantidad 0 en productos agotados después de distribuir
+            this.listPromotionItems.forEach(promotion => {
+                if (promotion.stock <= 0) {
+                    promotion.quantity = 0;
+                }
+            });
 
             console.log(
                 "ver pasar los item relacionados con la promocion seleccionada",
@@ -155,10 +167,13 @@ export default {
             console.log("puntos restantes finales", remainingPoints);
         },
         distributeEqualPoints(points) {
-            const numPromotions = this.listPromotionItems.length;
+            // Solo distribuir puntos a promociones con stock > 0
+            const availablePromotions = this.listPromotionItems.filter(p => p.stock > 0);
+            const numPromotions = availablePromotions.length;
+            if (numPromotions === 0) return points;
             const pointsPerPromotion = Math.floor(points / numPromotions);
 
-            this.listPromotionItems.forEach(promotion => {
+            availablePromotions.forEach(promotion => {
                 let pointsValue = parseInt(promotion.points_value);
                 promotion.quantity = Math.floor(pointsPerPromotion / pointsValue);
                 points -= promotion.quantity * pointsValue;
@@ -167,9 +182,10 @@ export default {
             return points;
         },
         distributeRemainingPoints(points) {
-            const sortedPromotions = [...this.listPromotionItems].sort((a, b) =>
-                parseInt(a.points_value) - parseInt(b.points_value)
-            );
+            // Solo distribuir puntos a promociones con stock > 0
+            const sortedPromotions = [...this.listPromotionItems]
+                .filter(p => p.stock > 0)
+                .sort((a, b) => parseInt(a.points_value) - parseInt(b.points_value));
 
             for (let promotion of sortedPromotions) {
                 let pointsValue = parseInt(promotion.points_value);
@@ -193,6 +209,11 @@ export default {
             });
         },
         updatePoints(promotion) {
+            // Si no hay stock, la cantidad debe ser 0 y no se puede modificar
+            if (promotion.stock <= 0) {
+                promotion.quantity = 0;
+                return;
+            }
             const otherPointsUsed = this.listPromotionItems.reduce(
                 (total, item) => {
                     if (item.id !== promotion.id) {

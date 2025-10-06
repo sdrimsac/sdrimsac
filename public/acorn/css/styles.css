@@ -13295,6 +13295,30 @@ width: 181px;
   color: #e6f0ff !important; /* Azul claro en hover */
 }
 
+/* Botón pequeño para billetes */
+.btn_billetessmall {
+  background-color: #007bff !important; /* Azul */
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: bold !important;
+  min-width: 30px !important;
+  min-height: 20px !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  text-align: center;
+}
+.btn_billetessmall:hover {
+  background-color: #0056b3 !important;
+  color: #e6f0ff !important;
+}
+
+
 /* Botón cuadrado para tamaño A4 */
 .btn_paperA4 {
   background-color: #007bff !important; /* Azul */

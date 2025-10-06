@@ -3660,16 +3660,12 @@ export default {
                 }
             }
             if (variationItem.length > 0) {
-                console.log("[LOG] variationItem recibido antes de asignar:", variationItem);
                 this.variation = true;
                 // Log antes de mapear
                 const itemsFormateados = variationItem.map(o => this.formatVariation(o));
-                console.log("[LOG] items formateados por formatVariation:", itemsFormateados);
                 this.formVariation.items = [
                     ...itemsFormateados
                 ];
-                // Log después de asignar
-                console.log("[LOG] this.formVariation.items después de asignar:", this.formVariation.items);
                 this.formVariation.enter_amount = variationItem.reduce(
                     (a, b) => a + b.sale_unit_price * b.quantity,
                     0
