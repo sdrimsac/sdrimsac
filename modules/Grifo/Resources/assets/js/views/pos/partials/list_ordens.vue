@@ -1368,7 +1368,7 @@
                                                                                 !isSellerConsolidated
                                                                         ">
 
-                                                                    <strong>
+                                                                    <strong style="font-size: 1.3rem; margin-left: 60px;">
                                                                         {{ typeof order_pend.newSubtotal === 'number' ? Number(order_pend.newSubtotal).toFixed(2) : parseFloat(order_pend.price * order_pend.quantity).toFixed(2) }}
                                                                     </strong>
 
@@ -1379,7 +1379,6 @@
                                                                         @input="val => handleSubtotalInput(val, indexx)"
                                                                         placeholder="0.00" size="medium" />
 
-                                                                    <!-- ...existing code... -->
                                                                 </div>
                                                             </template>
                                                         </div>
