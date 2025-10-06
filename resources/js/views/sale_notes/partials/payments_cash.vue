@@ -22,11 +22,7 @@
                                 )
                             }}
 
-                            <span class="text-danger" v-if="document.current_payment.penalty > 0">
-                                Penalidad:
-                                {{ Number(document.current_payment.diff_days) }}
-                                días
-                            </span>
+                            <!-- Penalidad eliminada -->
                         </div>
                         <div>
                             Total a pagar:
@@ -34,12 +30,6 @@
                                 Number(
                                     document.current_payment
                                         .amount_withouth_penalty
-                                ).toFixed(2)
-                            }}
-                            +
-                            {{
-                                Number(
-                                    document.current_payment.penalty
                                 ).toFixed(2)
                             }}
                             =
@@ -108,18 +98,10 @@
                                         <el-input-number @input="calculateDiscountCredit" v-model="creditDiscount">
                                         </el-input-number>
                                     </td>
-                                    <td v-if="cancelCredit" class="text-end">
-                                        DESCUENTO PENALIDAD
-                                    </td>
-                                    <td v-if="cancelCredit" class="text-end">
-                                        <el-input-number @input="
-                                            calculateDiscountAmountCredit
-                                        " v-model="creditDiscountPenalty">
-                                        </el-input-number>
-                                    </td>
+                                    <!-- Descuento penalidad eliminado -->
                                 </tr>
 
-                                <tr v-if="!cancelCredit && !hasPenalty">
+                                <tr v-if="!cancelCredit">
                                     <td :colspan="colspanValue" class="text-end">
                                         PENDIENTE DE PAGO
                                     </td>
@@ -330,10 +312,13 @@
                                             {{ row.payment }}
                                         </td>
                                         <td class="series-table-actions text-end">
-                                            <button v-if="
+                                            <button 
+                                            v-if="
                                                 row.can_extorned &&
-                                                !row.extorned
-                                            " type="button" class="btn waves-effect waves-light btn-sm btn-danger"
+                                                    row.canCancel &&
+                                                        !row.extorned
+                                                "
+                                            type="button" class="btn waves-effect waves-light btn-sm btn-danger"
                                                 @click.prevent="
                                                     returnPaymentNotes(row)
                                                     ">
@@ -379,7 +364,7 @@ export default {
     data() {
         return {
             showDetails: false,
-            creditDiscountPenalty: 0,
+            // creditDiscountPenalty eliminado
             customerName: null,
             currentPayment: {},
             is_paying: false,
@@ -411,17 +396,11 @@ export default {
         });
     },
     computed: {
-        hasPenalty() {
-            return (
-                this.configuration &&
-                this.configuration.sale_note_credit_penalty &&
-                this.document.current_payment.penalty > 0
-            );
-        },
+        // hasPenalty eliminado
         colspanValue() {
             let colspan = 4; // Base colspan for TOTAL PAGADO and TOTAL A PAGAR
             if (this.cancelCredit) {
-                colspan += 4; // Adding 4 for DESCUENTO and DESCUENTO PENALIDAD
+                colspan += 2; // Solo para DESCUENTO
             }
             return colspan;
         }
@@ -488,11 +467,7 @@ export default {
         seeDetail() {
             this.showDetails = true;
         },
-        calculateDiscountAmountCredit() {
-            this.document.total_difference_credit =
-                this.document.total_difference - this.creditDiscountPenalty ||
-                0;
-        },
+        // calculateDiscountAmountCredit eliminado
         isImage(url) {
             return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
         },
@@ -584,7 +559,7 @@ export default {
             this.loading = true;
             this.initForm();
             await this.$http
-                .get(`/${this.resource}/document/${this.documentId}`)
+                .get(`/${this.resource}/document-notes/${this.documentId}`)
                 .then(response => {
                     this.document = response.data;
                     this.document.total_difference_credit = this.document.total_difference;
@@ -604,7 +579,7 @@ export default {
                     this.records = this.records.reverse();
                     if (this.records.length > 0) {
                         let [record] = this.records;
-                        if (record.date_of_payment) {
+                        if (record.date_time_issue) {
                             this.records[0].canCancel = true;
                         }
                     }
@@ -661,7 +636,7 @@ export default {
             this.fileList = [];
         },
         async clickSubmit(index) {
-            if (this.configuration.sale_note_credit_cash) {
+            /* if (this.configuration.sale_note_credit_cash) { */
                 if (
                     this.records[index].payment > this.document.total_difference
                 ) {
@@ -672,23 +647,16 @@ export default {
                     );
                     return;
                 }
-            }
-            if (
-                this.creditDiscountPenalty >
-                this.document.current_payment.penalty
-            ) {
-                this.creditDiscountPenalty = this.document.current_payment.penalty;
-                this.$toast.error(
-                    "El descuento no puede ser mayor a la penalidad"
-                );
-                return;
-            }
+            /* } */
+            // Validación de penalidad eliminada
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
             if (payment <= 0) {
                 this.$toast.error("El monto ingresado debe ser mayor a 0.");
                 return;
             }
+            // Validar que current_payment exista antes de acceder a amount
+            const documentRealAmount = this.document.current_payment?.amount ?? 0;
             //si el monto ingresado tiene dos decimales
             if (payment % 1 != 0) {
                 //si el segundo decimal es mayor a 0
@@ -732,7 +700,7 @@ export default {
             //         return;
             //     }
             // }
-            if (
+            /* if (
                 this.records[index].payment >
                 parseFloat(
                     this.document.total_difference +
@@ -744,7 +712,7 @@ export default {
                     "El monto ingresado supera al monto pendiente de pago, verifique."
                 );
                 return;
-            }
+            } */
 
             let paid = false;
             if (
@@ -769,7 +737,7 @@ export default {
                 paid: paid,
                 creditDiscount: this.creditDiscount,
                 creditDiscountPenalty: this.creditDiscountPenalty,
-                documentRealAmount: this.document.current_payment.amount
+                documentRealAmount: documentRealAmount
             };
             try {
                 this.is_paying = true;

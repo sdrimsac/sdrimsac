@@ -1032,6 +1032,8 @@ if ($hostname) {
 
                 Route::get('sale_note_payments/records/{sale_note}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'records']);
                 Route::get('sale_note_payments/document/{sale_note}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'document']);
+
+                Route::get('sale_note_payments/document-notes/{sale_note}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'documentNotes']);
                 Route::get('sale_note_payments/tables', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'tables']);
 
                 Route::delete('sale_note_payments/{sale_note_payment}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'destroy']);

@@ -527,6 +527,27 @@ return [
                                 </span>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <span class="f12">INGRESO DIGITAL</span>
+                            </td>
+                            <td class="right">
+                                <span class="f12">
+                                    {{ number_format($incomes_expenses_cash_digital['incomes']['amount'], 2) }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="f12">SALIDA DIGITAL</span>
+                            </td>
+                            <td class="right">
+                                <span class="f12" style="color: red">
+                                    {{ number_format($incomes_expenses_cash_digital['expenses']['amount'], 2) }}
+
+                                </span>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td>
@@ -1189,7 +1210,7 @@ return [
                             </td>
                             <td>
                                 <span class="f12">
-                                    {{ $expense['description'] }}
+                                    {{ $expense['description'] }} - {{ $expense['method'] }}
                                 </span>
                             </td>
                             <td class=" right">

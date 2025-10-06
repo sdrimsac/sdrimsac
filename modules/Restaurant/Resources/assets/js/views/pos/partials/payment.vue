@@ -4496,7 +4496,7 @@ export default {
             if (
                 differen < 0 &&
                 this.form.payment_condition_id == "01" &&
-                !this.configuration.sale_note_credit_cash && !this.isCreditCash
+                !this.isCreditCash
             ) {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"
@@ -4534,7 +4534,7 @@ export default {
                 this.button_payment = true;
             }
 
-            if (this.configuration.sale_note_credit_cash && this.isCreditCash) {
+            if (this.isCreditCash) {
                 this.button_payment = false;
             }
 
@@ -4814,7 +4814,7 @@ export default {
             let amount1 = Number(this.form.enter_amount);
             let amount2 = Number(this.form.total);
             if (
-                this.configuration.sale_note_credit_cash && this.isCreditCash &&
+                this.isCreditCash &&
                 boxes + amount1 < amount2 &&
                 this.form.document_type_id == "80"
             ) {

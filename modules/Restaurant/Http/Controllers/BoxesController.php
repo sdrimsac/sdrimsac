@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Log;
 
 namespace Modules\Restaurant\Http\Controllers;
 
@@ -256,9 +257,6 @@ class BoxesController extends Controller
         usort($grouped, function ($a, $b) {
             return count($a) < count($b);
         });
-        Log::info('Grouped items by category', ['grouped' => $grouped]);
-        Log::info('Grouped items by category', ['documents' => $documents_credit]);
-        Log::info('Grouped items by category', ['advances' => $advances]);
         return [
             "items" => $grouped,
             "documents" => $documents_credit,
@@ -3019,16 +3017,30 @@ class BoxesController extends Controller
                     "amount" => $row->total,
                 ];
             });
+
+        // Efectivo
         $incomes_expenses_cash = [
             "incomes" => [
-                "quantity" => $incomes_cash_quantity,
-                "amount" => $incomes_cash_sum,
+                "quantity" => $sales_detail['cash']['quantity'],
+                "amount" => $sales_detail['cash']['sum'],
             ],
             "expenses" => [
                 "quantity" => $expenses_cash_quantity + $credit_cash_expense->count(),
                 "amount" => $expenses_cash_sum + $credit_cash_expense->sum('amount'),
             ],
         ];
+        
+        /* $incomes_expenses_digital = [
+            "incomes" => [
+                "quantity" => $digital_incomes_quantity,
+                "amount" => $digital_incomes_sum,
+            ],
+            "expenses" => [
+                "quantity" => 0,
+                "amount" => 0,
+            ],
+        ]; */
+    
 
         $date = Carbon::now()->format("d/m/Y");
         $time = Carbon::now()->format("H:i");
@@ -3485,8 +3497,9 @@ class BoxesController extends Controller
                 'quantity' => $sales->count(),
             ];
         }
-        $expenses = Box::where('currency_type_id', 'PEN')->where('type', '2')->where('expenses', 1)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
-        $expenses_cash = $expenses->where('method', 'Efectivo');
+        $expenses = Box::where('currency_type_id', 'PEN')->where('type', '2')->where('expenses', 1)->where('state', 0)->where('cash_id', $cash_id)->where('method', 'Efectivo')->OrderBy('date', 'asc');
+        // Considerar todos los métodos de pago, no solo 'Efectivo'
+        $expenses_cash = $expenses; // incluye todos los métodos
         $expenses_records = $expenses_cash->get()->transform(function ($row) {
             $id = $row->id;
             $items = BoxesDetail::where('boxes_id', $id)->count();
@@ -3497,19 +3510,70 @@ class BoxesController extends Controller
             return [
                 "items" => $items,
                 "description" => $row->description,
-                "amount" => $row->amount
+                "amount" => $row->amount,
+                "method" => $row->method
             ];
         });
         $expenses_cash_sum = $expenses_cash->sum('amount');
         $expenses_cash_quantity = $expenses_cash->count();
 
-        $incomes = Box::where('currency_type_id', 'PEN')->where('type', '1')->where('incomes', 1)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $incomes = Box::where('currency_type_id', 'PEN')->where('type', '1')->where('incomes', 1)->where('state', 0)->where('cash_id', $cash_id)->where('method', 'Efectivo')->OrderBy('date', 'asc');
         // Para considerar todos los métodos de pago, no filtres solo por 'Efectivo'
         $incomes_cash = $incomes; // incluye todos los métodos
         $incomes_cash_sum = $incomes_cash->sum('amount');
 
         $incomes_cash_quantity = $incomes_cash->count();
         $incomes_records = $incomes_cash->get()->transform(function ($row) {
+
+            return [
+                "description" => $row->description,
+                "amount" => $row->amount,
+                "method" => $row->method
+            ];
+        });
+         
+        // ingreso y salida en digital
+
+        // Obtener los egresos digitales (todos los métodos menos 'Efectivo')
+        $expensesdigital = Box::where('currency_type_id', 'PEN')
+            ->where('type', '2')
+            ->where('expenses', 1)
+            ->where('state', 0)
+            ->where('cash_id', $cash_id)
+            ->where('method', '!=', 'Efectivo')
+            ->orderBy('date', 'asc');
+        // Considerar todos los métodos de pago, no solo 'Efectivo'
+        $expenses_digital = $expensesdigital; // incluye todos los métodos
+        $expenses_records = $expenses_digital->get()->transform(function ($row) {
+            $id = $row->id;
+            $items = BoxesDetail::where('boxes_id', $id)->count();
+            if ($items == 0 && $row->purchase_id) {
+                $purchase = Purchase::find($row->purchase_id);
+                $items = $purchase->items->count();
+            }
+            return [
+                "items" => $items,
+                "description" => $row->description,
+                "amount" => $row->amount,
+                "method" => $row->method
+            ];
+        });
+        $expenses_digital_sum = $expenses_digital->sum('amount');
+        $expenses_digital_quantity = $expenses_digital->count();
+
+        $incomesdigital = Box::where('currency_type_id', 'PEN')
+            ->where('type', '1')
+            ->where('incomes', 1)
+            ->where('state', 0)
+            ->where('cash_id', $cash_id)
+            ->where('method', '!=', 'Efectivo')
+            ->orderBy('date', 'asc');
+        // Para considerar todos los métodos de pago, no filtres solo por 'Efectivo'
+        $incomes_digital = $incomesdigital; // incluye todos los métodos
+        $incomes_digital_sum = $incomes_digital->sum('amount');
+
+        $incomes_digital_quantity = $incomes_digital->count();
+        $incomes_records = $incomes_digital->get()->transform(function ($row) {
 
             return [
                 "description" => $row->description,
@@ -3688,6 +3752,7 @@ class BoxesController extends Controller
                 return [
                     "description" => $row->number_full,
                     "amount" => $row->total,
+
                 ];
             });
         $incomes_expenses_cash = [
@@ -3698,6 +3763,17 @@ class BoxesController extends Controller
             "expenses" => [
                 "quantity" => $expenses_cash_quantity + $credit_cash_expense->count(),
                 "amount" => $expenses_cash_sum + $credit_cash_expense->sum('amount'),
+            ],
+        ];
+
+        $incomes_expenses_cash_digital = [
+            "incomes" => [
+                "quantity" => $incomes_digital_quantity,
+                "amount" => $incomes_digital_sum,
+            ],
+            "expenses" => [
+                "quantity" => $expenses_digital_quantity + $credit_cash_expense->count(),
+                "amount" => $expenses_digital_sum + $credit_cash_expense->sum('amount'),
             ],
         ];
 
@@ -3809,6 +3885,7 @@ class BoxesController extends Controller
         $credit_grouped_count = count(array_filter($credit_grouped, function ($item) {
             return $item["advances"] > 0;
         }));
+        /* Log::info('Documentos de crédito filtrados con anticipos:', $credit_grouped_count); */
         /* $documents["notas"]["total"] += $advances_sale_note_credit;
         $documents["notas"]["quantity"] += $credit_grouped_count; */
 
@@ -3816,9 +3893,10 @@ class BoxesController extends Controller
         $documents["notas"]["total"] += $advances_sale_note_credit - $total_advances;
         $documents["notas"]["quantity"] += $credit_grouped_count;
 
-        Log::info('Cantidad de documentos de crédito:', $documents);
+        /* Log::info('Cantidad de documentos de crédito:', $documents); */
 
         $array_receipts = $receipts->toArray();
+        /* Log::info('Recibos montos a pagas de nota de venta a credito:', $array_receipts); */
         $all_credit_documents = array_merge($credit_grouped, $array_receipts);
         $invoices_credit = $this->get_invoice_credit($cash_id);
         $all_credit_invoices_items = $invoices_credit['items'];
@@ -3830,6 +3908,9 @@ class BoxesController extends Controller
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
+
+        Log::info('Generando reporte POS USD para caja ID: ', [$incomes_expenses_cash, $incomes_expenses_cash_digital]);
+
         ini_restore('memory_limit');
 
         try {
@@ -3869,6 +3950,7 @@ class BoxesController extends Controller
                 "sales_detail",
                 "items_detail",
                 "incomes_expenses_cash",
+                "incomes_expenses_cash_digital",
                 "documents",
                 "documents_info",
                 "cash",
@@ -4351,7 +4433,7 @@ class BoxesController extends Controller
                 "amount" => $expenses_cash->sum('amount'),
             ],
         ];
-
+        
         // 8. Optimize receipts processing
         $receipts = $this->get_receipts($cash_id);
         $documents["recibos"] = [

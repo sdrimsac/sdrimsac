@@ -24,7 +24,8 @@ class SaleNotePayment extends ModelTenant
         'payment',
         'user_id',
         'method',
-        'number_method'
+        'number_method',
+        'date_time_issue'
     ];
     
     //,'receipt'

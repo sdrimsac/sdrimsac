@@ -2433,7 +2433,7 @@
                                                                     </div>
 
                                                                     <!-- Créditos Sin Cuotas -->
-                                                                    <div class="col-md-3 mb-2">
+                                                                    <!-- <div class="col-md-3 mb-2">
                                                                         <div class="card h-100">
                                                                             <div class="card-body d-flex flex-column"
                                                                                 style="padding: 7px;">
@@ -2474,7 +2474,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <!-- Habilitar Cliente en Vendedor -->
                                                                     <div class="col-md-3 mb-2">
@@ -7775,7 +7775,7 @@
                                                         </div>
 
                                                         <!-- Mostrar el saldo pendiente de pago en  el pdf - Notas de venta credito -->
-                                                        <div class="col-md-3 mb-2">
+                                                        <!-- <div class="col-md-3 mb-2">
                                                             <div class="card h-100">
                                                                 <div class="card-body d-flex flex-column"
                                                                     style="padding: 7px;">
@@ -7812,7 +7812,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
 
                                                         <!-- Mostrar Texto pie de página -->
                                                         <div class="col-md-3 mb-2">
@@ -7915,7 +7915,7 @@
                                                                                         () =>
                                                                                             submit(
                                                                                                 'modelo 1',
-                                                                                                form.credit_nv_show_pending,
+                                                                                                form.model_01,
                                                                                                 'creditNvShowPendingIcon'
                                                                                             )
                                                                                     "></el-switch>

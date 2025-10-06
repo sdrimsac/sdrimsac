@@ -166,6 +166,46 @@ class SaleNotePaymentController extends Controller
         ];
     }
 
+    public function documentNotes($sale_note_id)
+    {
+        $sale_note = SaleNote::find($sale_note_id);
+
+        if (!$sale_note) {
+            return response()->json(['message' => 'Nota de venta no encontrada'], 404);
+        }
+
+        // Total general del documento
+        $total = $sale_note->total;
+
+        // Total pagado (solo los pagos NO extornados)
+        $total_paid = SaleNotePayment::where('sale_note_id', $sale_note_id)
+            ->where('extorned', 0)
+            ->sum('payment');
+
+        // Total de pagos extornados
+        $total_extorned = SaleNotePayment::where('sale_note_id', $sale_note_id)
+            ->where('extorned', 1)
+            ->sum('payment');
+
+        // Total pendiente
+        $total_difference = round($total - $total_paid, 2);
+
+        // Información básica
+        $customer_name = $sale_note->customer->name ?? 'Sin cliente';
+
+        return [
+            'customer_name' => $customer_name,
+            'series' => $sale_note->series,
+            'number' => $sale_note->number,
+            'number_full' => $sale_note->identifier,
+            'total' => $total,
+            'total_paid' => $total_paid,
+            'total_extorned' => $total_extorned,
+            'total_difference' => $total_difference,
+            'paid' => $total_difference <= 0, // pagado completamente
+        ];
+    }
+
     function createBoxRegister($amount, $date_of_payment, $payment_method_description, $cash_id, $sale_note, $sale_note_payment_id)
     {
         $boxes = new Box;
@@ -319,7 +359,6 @@ class SaleNotePaymentController extends Controller
             $sale_note_payment->save();
             $sale_note = SaleNote::find($sale_note_payment->sale_note_id);
             $amount = $sale_note_payment->payment;
-            /* $payment = Payment::find($sale_note_payment->payment_id); */
             $payment_method_description = "Efectivo";
             $payment_method_type_id = $sale_note_payment->payment_method_type_id;
             $payment_method = PaymentMethodType::where('id', $payment_method_type_id)->first();
@@ -327,7 +366,7 @@ class SaleNotePaymentController extends Controller
                 $payment_method_description = $payment_method->description;
             }
             $receipt = Receipt::where('sale_note_payment_id', $id)->first();
-            $cash_id = $receipt->cash_id;
+            $cash_id = $receipt ? $receipt->cash_id : null;
             $description_register = "EXTORNO DE PAGO DE NOTA DE VENTA" . " N° " . $sale_note->series . " - " . $sale_note->number;
 
             /** @var  User $user */
@@ -463,11 +502,14 @@ class SaleNotePaymentController extends Controller
         } else {
             $documentRealAmount = $amount;
         }
+        // Asignar fecha y hora actual al campo date_time_issue
+        $record->date_time_issue = Carbon::now();
         $record->save();
         $this->createGlobalPayment($record, $request->all());
         $this->saveFiles($record, $request, 'sale_notes');
         $payment = PaymentMethodType::where('id', $request->payment_method_type_id)->first();
-        if ($request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11") {
+        if ($request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11" 
+        || $request->payment_method_type_id == "12" || $request->payment_method_type_id == "16" || $request->payment_method_type_id == "17" || $request->payment_method_type_id == "18" || $request->payment_method_type_id == "19") {
             $boxes = new Box;
             $company = Company::first();
             $boxes->group_id = 1;
@@ -668,6 +710,7 @@ class SaleNotePaymentController extends Controller
         //     'message' => ($id)?'Pago editado con éxito':'Pago registrado con éxito'
         // ];
     }
+
     function generaIncomeAdjust($cash_id, $amount)
     {
         $box = new Box();

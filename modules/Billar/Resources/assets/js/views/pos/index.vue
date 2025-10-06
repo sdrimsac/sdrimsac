@@ -51,7 +51,6 @@
                                     </template>
                                     <template
                                         v-if="
-                                            configuration.sale_note_credit_cash &&
                                                 !this.isSeller
                                         "
                                     >
@@ -2353,7 +2352,6 @@ export default {
                     title: [" Créditos", "Nota de venta "],
                     icon: "fas fa-cash-register",
                     visible:
-                        this.configuration.sale_note_credit_cash &&
                         !this.isSeller
                 },
                 {

@@ -3452,8 +3452,7 @@ export default {
                 parseFloat(this.form.total);
             if (
                 differen < 0 &&
-                this.form.payment_condition_id == "01" &&
-                !this.configuration.sale_note_credit_cash
+                this.form.payment_condition_id == "01"
             ) {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"
@@ -3491,9 +3490,9 @@ export default {
             } else {
                 this.button_payment = true;
             }
-            if (this.configuration.sale_note_credit_cash) {
+            /* if (this.configuration.sale_note_credit_cash) {
                 this.button_payment = false;
-            }
+            } */
             //this.form.difference = _.round(this.form.difference, 2);
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
@@ -3742,7 +3741,6 @@ export default {
         },
         async clickPayment(form) {
             if (
-                this.configuration.sale_note_credit_cash &&
                 this.enter_amount != this.form.total &&
                 this.form.document_type_id == "80"
             ) {

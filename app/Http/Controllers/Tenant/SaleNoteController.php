@@ -1986,7 +1986,7 @@ class SaleNoteController extends Controller
                         }
                     } else {
                         $this->dumpWithTime("boxes 1.2");
-                        if (!$configuration->sale_note_credit_cash) {
+                        if (!$establishment->credit_warehouse) {
                             $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
                             $cajas->group_id = 1;
                             $cajas->currency_type_id = $request->currency_type_id;
@@ -2066,6 +2066,10 @@ class SaleNoteController extends Controller
                             $record->fill($payment);
                             // Asignar user_id y method manualmente si no existen en el array
                             $record->user_id = $payment['user_id'] ?? auth()->id();
+                            // Guardar fecha y hora exacta de emisión (fecha de emisión + hora actual)
+                            $date_of_issue = $request->input('date_of_issue');
+                            $current_time = date('H:i:s');
+                            $record->date_time_issue = Carbon::parse($date_of_issue . ' ' . $current_time)->format('Y-m-d H:i:s');
                             // Asignar el método de pago real si existe y no está vacío, si no, poner 'efectivo'
                             $record->method = (isset($payment['method']) && !empty($payment['method'])) ? $payment['method'] : 'Efectivo';
                             $payment["payment_destination_id"] = "cash";
@@ -2138,7 +2142,7 @@ class SaleNoteController extends Controller
                     $rq_cash_id = $cash->id;
                 }
                 $saleNoteUpdate->cash_id = $rq_cash_id;
-                if (!$paid && $configuration->sale_note_credit_cash) {
+                if (!$paid && $establishment->credit_warehouse) {
                     $saleNoteUpdate->credit_cash = true;
                 }
                 $saleNoteUpdate->paid = $paid ?? $saleNoteUpdate->paid;
