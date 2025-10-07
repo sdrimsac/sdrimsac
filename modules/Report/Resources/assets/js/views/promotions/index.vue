@@ -41,7 +41,7 @@
 
 <script>
 import Detail from "./detail.vue";
-import DataTable from "../../components/DataTableReportsCredits.vue";
+import DataTable from "../../components/DataTableReportsPromotions.vue";
 
 export default {
     props: ['configuration'],

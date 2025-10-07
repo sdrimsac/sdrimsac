@@ -101,13 +101,13 @@ export default {
         remainingPoints() {
             return this.hasPromotionText - this.totalPointsUsed;
         },
-        totalPointsUsed() {
-            return this.listPromotionItems.reduce((total, promotion) => {
-                return (
-                    total + (promotion.quantity || 0) * promotion.points_value
-                );
-            }, 0);
-        }
+            totalPointsUsed() {
+                return this.listPromotionItems.reduce((total, promotion) => {
+                    const qty = Number(promotion.quantity) || 0;
+                    const points = Number(promotion.points_value) || 0;
+                    return total + qty * points;
+                }, 0);
+            }
     },
     watch: {
         totalPointsUsed() {
@@ -117,11 +117,13 @@ export default {
     methods: {
         submit() {
             console.log(
-                "Lista de promociones con cantidades seleccionadas:",
-                this.listPromotionItems
+                "[SUBMIT] Lista de promociones con cantidades seleccionadas:",
+                JSON.parse(JSON.stringify(this.listPromotionItems))
             );
-            this.$emit("submit", this.listPromotionItems);
+            this.$emit("submit", JSON.parse(JSON.stringify(this.listPromotionItems)));
             this.$emit("update:showDialog", false);
+            // Resetear promociones después de emitir
+            this.resetPromotions();
         },
         formatUrlImage(url) {
             if (!url) return;
@@ -129,21 +131,21 @@ export default {
             return `/${formated}`;
         },
         open() {
-            // Inicializar cantidades y evitar autoasignar cantidad a productos agotados
+            // Solo inicializar cantidad si está indefinida o el stock es cero
             this.listPromotionItems.forEach(promotion => {
-                if (promotion.quantity === undefined || promotion.stock <= 0) {
+                if (promotion.quantity === undefined) {
                     this.$set(promotion, "quantity", 0);
                 }
-            });
-
-            this.distributePoints(parseInt(this.hasPromotionText));
-
-            // Forzar cantidad 0 en productos agotados después de distribuir
-            this.listPromotionItems.forEach(promotion => {
                 if (promotion.stock <= 0) {
                     promotion.quantity = 0;
                 }
             });
+
+            // Solo distribuir puntos si todas las cantidades están en cero (no hay selección previa)
+            const allZero = this.listPromotionItems.every(p => !p.quantity || p.quantity === 0);
+            if (allZero) {
+                this.distributePoints(parseInt(this.hasPromotionText));
+            }
 
             console.log(
                 "ver pasar los item relacionados con la promocion seleccionada",
@@ -199,14 +201,18 @@ export default {
             return points;
         },
         close() {
+            console.log("[CLOSE] Antes de resetPromotions", JSON.parse(JSON.stringify(this.listPromotionItems)));
             this.resetPromotions();
+            console.log("[CLOSE] Después de resetPromotions", JSON.parse(JSON.stringify(this.listPromotionItems)));
             this.$emit("update:showDialog", false);
         },
         resetPromotions() {
+            console.log("[RESET] Antes de limpiar cantidades", JSON.parse(JSON.stringify(this.listPromotionItems)));
             this.listPromotionItems.forEach(promotion => {
                 promotion.quantity = 0;
                 // Reset other properties of the promotion card if needed
             });
+            console.log("[RESET] Después de limpiar cantidades", JSON.parse(JSON.stringify(this.listPromotionItems)));
         },
         updatePoints(promotion) {
             // Si no hay stock, la cantidad debe ser 0 y no se puede modificar

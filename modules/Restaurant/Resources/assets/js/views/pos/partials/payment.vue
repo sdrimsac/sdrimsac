@@ -676,7 +676,7 @@
                             <div class="d-flex align-items-end mb-2">
                                 <div class="me-2" style="flex: 1 1 0;">
                                     <label class="control-label fw-bold">Ingrese Monto {{ currencyTypeActive.symbol
-                                        }}</label>
+                                    }}</label>
                                     <el-input id="inputTotal" ref="enter_amount" v-model="form.enter_amount"
                                         @blur="diferen()" @input="enterAmount()" class="me-1">
                                     </el-input>
@@ -748,7 +748,7 @@
                                             <td>
                                                 <strong v-if="!isNaN(paymnt.amount)">{{
                                                     Number(paymnt.amount).toFixed(2)
-                                                    }}</strong>
+                                                }}</strong>
                                             </td>
                                             <td>
                                                 <el-tooltip content="Eliminar pago" placement="top">
@@ -827,21 +827,11 @@
                                     <label>
                                         Afectación IGV CPE
                                     </label>
-                                    <el-select
-                                        v-model="affectation_optional_id"
-                                        clearable
-                                        filterable
-                                        :disabled="disableAffectationSelect"
-                                        @change="affectationwindows"
-                                    >
-                                        <el-option
-                                            v-for="option in affectation_igv_types.filter(
-                                                affectation => affectation.id == '10'
-                                            )"
-                                            :key="option.id"
-                                            :label="option.description"
-                                            :value="option.id"
-                                        >
+                                    <el-select v-model="affectation_optional_id" clearable filterable
+                                        :disabled="disableAffectationSelect" @change="affectationwindows">
+                                        <el-option v-for="option in affectation_igv_types.filter(
+                                            affectation => affectation.id == '10'
+                                        )" :key="option.id" :label="option.description" :value="option.id">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -916,27 +906,38 @@
                                 </template>
                             </div>
                             <!-- Botón Dividir Pago -->
-                            <div class="mb-2 d-flex justify-content-center" v-if="
-                                form.payment_condition_id == '01' &&
-                                configuration.split_payments_pos
-                            ">
-                                <el-button type="success" icon="el-icon-scissors" @click="handleDividirPagos"
-                                    class="btn_excelsmall" style="margin-right: 10px;">
+                            <div class="mb-2 d-flex justify-content-center">
+                                <el-button type="success" icon="el-icon-scissors" v-if="
+                                    form.payment_condition_id == '01' &&
+                                    configuration.split_payments_pos
+                                " @click="handleDividirPagos" class="btn_excelsmall" style="margin-right: 10px;">
                                     Dividir pago
                                 </el-button>
 
-                                <button class="btn_guardarsmall" type="primary" @click="handleOneClick"
-                                    :disabled="button_payment || isLocked">
-                                    <i class="fas fa-money-bill-alt"></i>
-                                    Pagar
-                                </button>
+
                             </div>
                             <hr style="margin-top: 3px; margin-bottom: 10px;" />
                             <div class="row">
                                 <!-- Pagar y Cerrar -->
                                 <div class="d-flex justify-content-center mb-3">
-                                    <button class="btn_cancelarsmall" type="danger" @click="back(false)">
+                                    <button
+                                        class="btn_cancelar bg-danger"
+                                        type="danger"
+                                        @click="back(false)"
+                                        style="font-size: 1.3rem; padding: 14px 30px; min-width: 180px;"
+                                    >
                                         <i class="fa fa-reply"></i> Regresar
+                                    </button>
+
+                                    <button
+                                        class="btn_guardar bg-primary text-white"
+                                        type="primary"
+                                        style="margin-left: 16px; font-weight: bold; font-size: 1.3rem; padding: 14px 30px; min-width: 180px;"
+                                        @click="handleOneClick"
+                                        :disabled="button_payment || isLocked"
+                                    >
+                                        <i class="fas fa-money-bill-alt"></i>
+                                        Pagar
                                     </button>
                                 </div>
                             </div>
@@ -950,7 +951,7 @@
                                     <span>OP. EXONERADAS:</span>
                                     <span class="text-end" style="min-width: 90px;">{{
                                         Number(form.total_exonerated).toFixed(2)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <div v-if="form.total_taxed > 0" class="d-flex justify-content-between">
                                     <template v-if="affectation_optional_id === '10'">
@@ -960,8 +961,8 @@
                                     </template>
                                     <template v-else>
                                         <span>OP. GRAVADAS:</span>
-                                    <span class="text-end" style="min-width: 90px;">{{
-                                        Number(form.total_taxed).toFixed(2) }}</span>
+                                        <span class="text-end" style="min-width: 90px;">{{
+                                            Number(form.total_taxed).toFixed(2) }}</span>
                                     </template>
                                 </div>
                                 <div v-if="form.total_free > 0" class="d-flex justify-content-between">
@@ -984,7 +985,7 @@
                                 <div class="d-flex justify-content-between">
                                     <span>IGV:</span>
                                     <span class="text-end" style="min-width: 90px;">{{ Number(form.total_igv).toFixed(2)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <div v-if="form.difference > 0" class="d-flex justify-content-between">
                                     <span>VUELTO:</span>
@@ -996,11 +997,10 @@
                                     <span>TOTAL A PAGAR:</span>
                                     <span class="text-end fw-bold" style="min-width: 90px;">{{
                                         Number(form.total).toFixed(2)
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <!-- Mensaje de motivo de cambio de afectación -->
-                                <div v-if="affectation_optional_id === '10'"
-                                    class="mt-2 p-2 border rounded bg-light">
+                                <div v-if="affectation_optional_id === '10'" class="mt-2 p-2 border rounded bg-light">
                                     <div class="d-flex justify-content-between">
                                         <span class="text-info">OP. GRAVADA:</span>
                                         <span>{{ opGravadaIgv10.toFixed(2) }}</span>
@@ -1871,7 +1871,11 @@ export default {
         },
         //agragado para poder agregar la cantidad de promociones que se puede canjear
         handleSubmit(updatedPromotionItems) {
-            this.listPromotionItems = updatedPromotionItems;
+            // Log para verificar los datos recibidos
+            console.log("[PROMO SUBMIT] Recibido:", JSON.parse(JSON.stringify(updatedPromotionItems)));
+            // Usar copia profunda para evitar efectos secundarios
+            this.listPromotionItems = JSON.parse(JSON.stringify(updatedPromotionItems));
+            console.log("Lista de promociones actualizada:", this.listPromotionItems);
             this.applySelectedPromotions();
         },
         Promotion() {
@@ -1900,9 +1904,12 @@ export default {
             const validItems = this.listPromotionItems.filter(
                 item => item.quantity > 0
             );
+            // Log para depuración de items antes de calcular el total
+            console.log('[PROMO] Items válidos para promoción:', JSON.parse(JSON.stringify(validItems)));
+            // Log de items actuales en el formulario
+            console.log('[PROMO] Items actuales en form.items:', JSON.parse(JSON.stringify(this.form.items)));
             validItems.forEach(item => {
                 this.form.item_promotion_id = item.id;
-
                 this.promotionPointsItem();
             });
             if (validItems.length === 0) {
@@ -2209,30 +2216,36 @@ export default {
             return affectation_igv_type_id;
         },
         addFreeItem(i) {
+            console.log("ver como esta llegando el item:", i);
             let affectation_igv_type_id = this.getFreeAfectation(
                 i.sale_affectation_igv_type_id
             );
             //  i.sale_affectation_igv_type_id ==
+            // Conversión segura para campos numéricos
+            function safeNumber(val) {
+                const n = Number(val);
+                return Number.isFinite(n) ? n : 0;
+            }
             let item = {
                 ...i,
                 warehouse_id: null,
                 item: i,
                 item_id: i.id,
                 unit_value: 0,
-                quantity: i.quantity,
-                aux_quantity: i.quantity,
+                quantity: safeNumber(i.quantity),
+                aux_quantity: safeNumber(i.quantity),
                 total_base_igv:
                     affectation_igv_type_id == 10
-                        ? (i.sale_unit_price * i.quantity) /
-                        (1 + this.percentage_igv / 100)
-                        : i.sale_unit_price * i.quantity,
-                percentage_igv: this.percentage_igv,
+                        ? safeNumber(i.sale_unit_price) * safeNumber(i.quantity) /
+                        (1 + safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) / 100)
+                        : safeNumber(i.sale_unit_price) * safeNumber(i.quantity),
+                percentage_igv: safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv),
                 total_igv:
                     affectation_igv_type_id == 10 ||
                         affectation_igv_type_id == 15
-                        ? (i.sale_unit_price *
-                            i.quantity *
-                            this.percentage_igv) /
+                        ? safeNumber(i.sale_unit_price) *
+                            safeNumber(i.quantity) *
+                            safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) /
                         100
                         : 0,
                 total_base_isc: 0.0,
@@ -2242,12 +2255,13 @@ export default {
                 percentage_other_taxes: 0.0,
                 total_other_taxes: 0.0,
                 total_taxes: 0,
-                total_value: i.quantity * i.sale_unit_price,
+                total_value: safeNumber(i.quantity) * safeNumber(i.sale_unit_price),
                 total_charge: 0.0,
                 total_discount: 0.0,
                 // total: i.sale_unit_price * i.quantity,
+                total: safeNumber(i.total),
                 price_type_id: "02",
-                unit_price: i.sale_unit_price,
+                unit_price: safeNumber(i.sale_unit_price),
                 unit_price_value: i.sale_unit_price,
                 has_igv: i.has_igv,
                 affectation_igv_type_id: affectation_igv_type_id,
@@ -3535,7 +3549,7 @@ export default {
             return total_exonerated;
         },
 
-       
+
         discountGlobal() {
             return discountInputDiscountAmountGlobal.call(this);
         },
@@ -5133,10 +5147,10 @@ export default {
             let item = this.listPromotionItems.find(
                 i => i.id == this.form.item_promotion_id
             );
-            /* console.log("ver como esta llegando el item:", item); */
+            console.log("ver como esta llegando el item:", item);
 
             if (!item || item.quantity <= 0) {
-                /* console.warn("No hay cantidad válida para este ítem."); */
+                console.warn("No hay cantidad válida para este ítem.");
                 return;
             }
 

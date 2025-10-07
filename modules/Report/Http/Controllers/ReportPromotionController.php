@@ -90,25 +90,19 @@ class ReportPromotionController extends Controller
     }
 
 
-
-
-
-
-
-
     public function records(Request $request)
     {
         $records = $this->getRecords($request);
         return new ReportPromotionDocumentCollection($records->paginate(config('tenant.items_per_page')));
     }
 
-    private function getRecords($request)
+    /* public function getRecords(Request $request)
     {
         $configuration = Configuration::first();
         $records = PromotionDocumentCustomer::query();
         $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
             $query->where('is_points', $configuration->promotions_by_points);
-        })->whereHas('customer', function ($query) use ($request) {
+        })->whereHas('customer', function ($query) {
             $query->where('name', 'not like', '%clientes varios%');
         });
         $period = $this->getDatesOfPeriod($request);
@@ -123,7 +117,73 @@ class ReportPromotionController extends Controller
         }
 
         return $records;
+    } */
+
+    public function getRecords(Request $request)
+    {
+        // Log de los valores recibidos
+        Log::info('getRecords request params', [
+            'isFromAdmin' => $request->input('isFromAdmin'),
+            'month_start' => $request->input('month_start'),
+            'month_end' => $request->input('month_end'),
+            'person_id' => $request->person_id,
+        ]);
+
+        $configuration = Configuration::first();
+        $records = PromotionDocumentCustomer::query();
+        $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
+            $query->where('is_points', $configuration->promotions_by_points);
+        })->whereHas('customer', function ($query) {
+            $query->where('name', 'not like', '%clientes varios%');
+        });
+
+        // Filtro por isFromAdmin y meses
+        $isFromAdmin = $request->input('isFromAdmin');
+        $month_start = $request->input('month_start');
+        $month_end = $request->input('month_end');
+
+        if ($isFromAdmin) {
+            if ($month_start && $month_end) {
+                // Si ambos meses vienen, filtra entre ambos
+                $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
+                $endDate = Carbon::parse($month_end.'-01')->endOfMonth();
+                Log::info('Filtrando por rango de meses', [
+                    'startDate' => $startDate->toDateString(),
+                    'endDate' => $endDate->toDateString()
+                ]);
+                $records = $records->whereBetween('created_at', [$startDate, $endDate]);
+            } elseif ($month_start) {
+                // Si solo viene month_start, filtra solo ese mes
+                $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
+                $endDate = Carbon::parse($month_start.'-01')->endOfMonth();
+                Log::info('Filtrando por mes único', [
+                    'startDate' => $startDate->toDateString(),
+                    'endDate' => $endDate->toDateString()
+                ]);
+                $records = $records->whereBetween('created_at', [$startDate, $endDate]);
+            }
+        } else {
+            // Filtro normal por fechas
+            $period = $this->getDatesOfPeriod($request);
+            if ($period['d_start'] && $period['d_end']) {
+                $d_start = Carbon::parse($period['d_start'])->startOfDay();
+                $d_end = Carbon::parse($period['d_end'])->endOfDay();
+                Log::info('Filtrando por periodo', [
+                    'd_start' => $d_start->toDateTimeString(),
+                    'd_end' => $d_end->toDateTimeString()
+                ]);
+                $records = $records->whereBetween('created_at', [$d_start, $d_end]);
+            }
+        }
+
+        $person_id = $request->person_id;
+        if ($person_id) {
+            $records = $records->where('customer_id', $person_id);
+        }
+
+        return $records;
     }
+
 
     public function pdf(Request $request)
     {
