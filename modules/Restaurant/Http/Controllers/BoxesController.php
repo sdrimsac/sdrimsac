@@ -3533,7 +3533,6 @@ class BoxesController extends Controller
         });
          
         // ingreso y salida en digital
-
         // Obtener los egresos digitales (todos los métodos menos 'Efectivo')
         $expensesdigital = Box::where('currency_type_id', 'PEN')
             ->where('type', '2')
@@ -3544,7 +3543,7 @@ class BoxesController extends Controller
             ->orderBy('date', 'asc');
         // Considerar todos los métodos de pago, no solo 'Efectivo'
         $expenses_digital = $expensesdigital; // incluye todos los métodos
-        $expenses_records = $expenses_digital->get()->transform(function ($row) {
+        $expenses_records_digital = $expenses_digital->get()->transform(function ($row) {
             $id = $row->id;
             $items = BoxesDetail::where('boxes_id', $id)->count();
             if ($items == 0 && $row->purchase_id) {
@@ -3573,7 +3572,7 @@ class BoxesController extends Controller
         $incomes_digital_sum = $incomes_digital->sum('amount');
 
         $incomes_digital_quantity = $incomes_digital->count();
-        $incomes_records = $incomes_digital->get()->transform(function ($row) {
+        $incomes_records_digital = $incomes_digital->get()->transform(function ($row) {
 
             return [
                 "description" => $row->description,
@@ -3960,6 +3959,8 @@ class BoxesController extends Controller
                 "grouped",
                 "expenses_records",
                 "incomes_records",
+                "expenses_records_digital",
+                "incomes_records_digital",
                 "difference",
                 "total_discount",
                 "datosSeries"

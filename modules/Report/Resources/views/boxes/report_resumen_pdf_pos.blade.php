@@ -1171,7 +1171,6 @@ return [
                 </div>
                 <table class="border">
                     <thead>
-
                         <tr>
                             <th>
                                 <span class="f12">
@@ -1185,23 +1184,46 @@ return [
                             </th>
                             <th>
                                 <span class="f12">
+                                    MÉTODO
+                                </span>
+                            </th>
+                            <th>
+                                <span class="f12">
                                     TOTAL
                                 </span>
                             </th>
                         </tr>
                     </thead>
-                    @if (count($expenses_records) == 0)
+                    @php
+                        $all_expenses = [];
+                        foreach ($expenses_records as $expense) {
+                            $all_expenses[] = [
+                                'items' => $expense['items'],
+                                'description' => $expense['description'],
+                                'method' => $expense['method'],
+                                'amount' => $expense['amount'],
+                            ];
+                        }
+                        foreach ($expenses_records_digital as $expense) {
+                            $all_expenses[] = [
+                                'items' => $expense['items'],
+                                'description' => $expense['description'],
+                                'method' => $expense['method'],
+                                'amount' => $expense['amount'],
+                            ];
+                        }
+                    @endphp
+                    @if (count($all_expenses) == 0)
                     <tbody>
                         <tr>
-                            <td colspan="3" class="center">
+                            <td colspan="4" class="center">
                                 <span class="f12">Sin gastos</span>
                             </td>
                         </tr>
                     </tbody>
                     @else
                     <tbody>
-
-                        @foreach ($expenses_records as $expense)
+                        @foreach ($all_expenses as $expense)
                         <tr>
                             <td>
                                 <span class="f12">
@@ -1210,21 +1232,29 @@ return [
                             </td>
                             <td>
                                 <span class="f12">
-                                    {{ $expense['description'] }} - {{ $expense['method'] }}
+                                    {{ $expense['description'] }}
                                 </span>
                             </td>
-                            <td class=" right">
+                            <td>
+                                <span class="f12">
+                                    {{ $expense['method'] }}
+                                </span>
+                            </td>
+                            <td class="right">
                                 <span class="f12">
                                     {{ $expense['amount'] }}
                                 </span>
                             </td>
                         </tr>
                         @endforeach
-
                         <tr>
                             <td colspan="3" class="right">
+                                <span class="f12">TOTAL</span>
+                            </td>
+                            <td class="right">
                                 <span class="f12">S/
-                                    {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                    {{ number_format($incomes_expenses_cash['expenses']['amount'] + $incomes_expenses_cash_digital['expenses']['amount'], 2) }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -1239,12 +1269,15 @@ return [
                 </div>
                 <table class="border">
                     <thead>
-
                         <tr>
-
                             <th>
                                 <span class="f12">
                                     DESCRIPCIÓN
+                                </span>
+                            </th>
+                            <th>
+                                <span class="f12">
+                                    MÉTODO
                                 </span>
                             </th>
                             <th>
@@ -1254,37 +1287,60 @@ return [
                             </th>
                         </tr>
                     </thead>
-                    @if (count($incomes_records) == 0)
+                    @php
+                        $all_incomes = [];
+                        foreach ($incomes_records as $income) {
+                            $all_incomes[] = [
+                                'description' => $income['description'],
+                                'method' => $income['method'],
+                                'amount' => $income['amount'],
+                            ];
+                        }
+                        foreach ($incomes_records_digital as $income) {
+                            $all_incomes[] = [
+                                'description' => $income['description'],
+                                'method' => $income['method'],
+                                'amount' => $income['amount'],
+                            ];
+                        }
+                    @endphp
+                    @if (count($all_incomes) == 0)
                     <tbody>
                         <tr>
-                            <td colspan="3" class="center">
+                            <td colspan="3" class="center"></td>
                                 <span class="f12">Sin ingresos</span>
                             </td>
                         </tr>
                     </tbody>
                     @else
                     <tbody>
-
-                        @foreach ($incomes_records as $income)
+                        @foreach ($all_incomes as $income)
                         <tr>
-
                             <td>
                                 <span class="f12">
-                                    {{ $income['description'] }} - {{ $income['method'] }}
+                                    {{ $income['description'] }}
                                 </span>
                             </td>
-                            <td class=" right">
+                            <td>
+                                <span class="f12">
+                                    {{ $income['method'] }}
+                                </span>
+                            </td>
+                            <td class="right">
                                 <span class="f12">
                                     {{ $income['amount'] }}
                                 </span>
                             </td>
                         </tr>
                         @endforeach
-
                         <tr>
-                            <td colspan="3" class="right">
+                            <td colspan="2" class="right">
+                                <span class="f12">TOTAL</span>
+                            </td>
+                            <td class="right">
                                 <span class="f12">S/
-                                    {{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                    {{ number_format($incomes_expenses_cash['incomes']['amount'] + $incomes_expenses_cash_digital['incomes']['amount'], 2) }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>
