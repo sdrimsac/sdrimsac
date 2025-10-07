@@ -115,10 +115,10 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
         $items_data = [];
         $document_total_utility = 0;
         $document_total_net_utility = 0;
-    $sum_ganancia_global_igv = 0;
-    $sum_ganancia_global_no_igv = 0;
-    $sum_ganancia_global_exo = 0;
-    $temp_items = [];
+        $sum_ganancia_global_igv = 0;
+        $sum_ganancia_global_no_igv = 0;
+        $sum_ganancia_global_exo = 0;
+        $temp_items = [];
 
         foreach ($document->items as $item) {
             $unit_price = $item->unit_price;
@@ -164,7 +164,6 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
                 'ganancia_global_no_igv' => round($ganancia_global_no_igv, 2),
                 'ganancia_unidad_exo' => round($ganancia_unidad_exo, 2),
                 'ganancia_global_exo' => round($ganancia_global_exo, 2),
-                'descuento_item_final' => round($descuento_item_final, 2),
                 'item_discount' => number_format($item_discount, 2)
             ];
             $sum_ganancia_global_igv += $ganancia_global_igv;
@@ -184,20 +183,29 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
             $porcentajes_exo[] = $sum_ganancia_global_exo != 0 ? ($temp_item['ganancia_global_exo'] / $sum_ganancia_global_exo) * 100 : 0;
         }
         // Redondear y ajustar para que sumen 100%
-        $porcentajes_igv = array_map(function($v){ return round($v,2); }, $porcentajes_igv);
-        $porcentajes_no_igv = array_map(function($v){ return round($v,2); }, $porcentajes_no_igv);
-        $porcentajes_exo = array_map(function($v){ return round($v,2); }, $porcentajes_exo);
+        $porcentajes_igv = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_igv);
+        $porcentajes_no_igv = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_no_igv);
+        $porcentajes_exo = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_exo);
         $diff_igv = 100 - array_sum($porcentajes_igv);
         $diff_no_igv = 100 - array_sum($porcentajes_no_igv);
         $diff_exo = 100 - array_sum($porcentajes_exo);
-        if (count($porcentajes_igv) > 0) $porcentajes_igv[count($porcentajes_igv)-1] += $diff_igv;
-        if (count($porcentajes_no_igv) > 0) $porcentajes_no_igv[count($porcentajes_no_igv)-1] += $diff_no_igv;
-        if (count($porcentajes_exo) > 0) $porcentajes_exo[count($porcentajes_exo)-1] += $diff_exo;
+        if (count($porcentajes_igv) > 0) $porcentajes_igv[count($porcentajes_igv) - 1] += $diff_igv;
+        if (count($porcentajes_no_igv) > 0) $porcentajes_no_igv[count($porcentajes_no_igv) - 1] += $diff_no_igv;
+        if (count($porcentajes_exo) > 0) $porcentajes_exo[count($porcentajes_exo) - 1] += $diff_exo;
+        // Call discount_global to update temp_items with descuento_item
+        $this->discount_global($document, $temp_items);
         foreach ($temp_items as $idx => $temp_item) {
             $items_data[] = array_merge($temp_item, [
                 'porcentaje_igv' => $sum_ganancia_global_igv == 0 ? 0 : $porcentajes_igv[$idx],
                 'porcentaje_no_igv' => $sum_ganancia_global_no_igv == 0 ? 0 : $porcentajes_no_igv[$idx],
                 'porcentaje_exo' => $sum_ganancia_global_exo == 0 ? 0 : $porcentajes_exo[$idx],
+                'descuento_item_final' => isset($temp_item['descuento_item']) ? $temp_item['descuento_item'] : 0,
             ]);
         }
 
@@ -224,10 +232,10 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
         $items_data = [];
         $document_total_utility = 0;
         $document_total_net_utility = 0;
-    $sum_ganancia_global_igv = 0;
-    $sum_ganancia_global_no_igv = 0;
-    $sum_ganancia_global_exo = 0;
-    $temp_items = [];
+        $sum_ganancia_global_igv = 0;
+        $sum_ganancia_global_no_igv = 0;
+        $sum_ganancia_global_exo = 0;
+        $temp_items = [];
 
         foreach ($sale_note->items as $item) {
             $unit_price = $item->unit_price;
@@ -273,7 +281,6 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
                 'ganancia_global_no_igv' => round($ganancia_global_no_igv, 2),
                 'ganancia_unidad_exo' => round($ganancia_unidad_exo, 2),
                 'ganancia_global_exo' => round($ganancia_global_exo, 2),
-                'descuento_item_final' => round($descuento_item_final, 2),
                 'item_discount' => number_format($item_discount, 2)
             ];
             $sum_ganancia_global_igv += $ganancia_global_igv;
@@ -293,20 +300,29 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
             $porcentajes_exo[] = $sum_ganancia_global_exo != 0 ? ($temp_item['ganancia_global_exo'] / $sum_ganancia_global_exo) * 100 : 0;
         }
         // Redondear y ajustar para que sumen 100%
-        $porcentajes_igv = array_map(function($v){ return round($v,2); }, $porcentajes_igv);
-        $porcentajes_no_igv = array_map(function($v){ return round($v,2); }, $porcentajes_no_igv);
-        $porcentajes_exo = array_map(function($v){ return round($v,2); }, $porcentajes_exo);
+        $porcentajes_igv = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_igv);
+        $porcentajes_no_igv = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_no_igv);
+        $porcentajes_exo = array_map(function ($v) {
+            return round($v, 2);
+        }, $porcentajes_exo);
         $diff_igv = 100 - array_sum($porcentajes_igv);
         $diff_no_igv = 100 - array_sum($porcentajes_no_igv);
         $diff_exo = 100 - array_sum($porcentajes_exo);
-        if (count($porcentajes_igv) > 0) $porcentajes_igv[count($porcentajes_igv)-1] += $diff_igv;
-        if (count($porcentajes_no_igv) > 0) $porcentajes_no_igv[count($porcentajes_no_igv)-1] += $diff_no_igv;
-        if (count($porcentajes_exo) > 0) $porcentajes_exo[count($porcentajes_exo)-1] += $diff_exo;
+        if (count($porcentajes_igv) > 0) $porcentajes_igv[count($porcentajes_igv) - 1] += $diff_igv;
+        if (count($porcentajes_no_igv) > 0) $porcentajes_no_igv[count($porcentajes_no_igv) - 1] += $diff_no_igv;
+        if (count($porcentajes_exo) > 0) $porcentajes_exo[count($porcentajes_exo) - 1] += $diff_exo;
+        // Call discount_global to update temp_items with descuento_item
+        $this->discount_global($sale_note, $temp_items);
         foreach ($temp_items as $idx => $temp_item) {
             $items_data[] = array_merge($temp_item, [
                 'porcentaje_igv' => $sum_ganancia_global_igv == 0 ? 0 : $porcentajes_igv[$idx],
                 'porcentaje_no_igv' => $sum_ganancia_global_no_igv == 0 ? 0 : $porcentajes_no_igv[$idx],
                 'porcentaje_exo' => $sum_ganancia_global_exo == 0 ? 0 : $porcentajes_exo[$idx],
+                'descuento_item_final' => isset($temp_item['descuento_item']) ? $temp_item['descuento_item'] : 0,
             ]);
         }
 
@@ -327,5 +343,42 @@ class GenerateDiscountExcelReportJob implements ShouldQueue
 
         $total_utility += $document_total_utility;
         $total_net_utility += $document_total_net_utility;
+    }
+
+
+    public function discount_global($doc, &$items_data)
+    {
+        // Prorratear el descuento global según el total de cada ítem
+        $global_discount = isset($doc->total_discount) ? $doc->total_discount : 0;
+        $total_venta_doc = isset($doc->total) ? $doc->total : 0;
+        Log::info('total venta doc: ' . $total_venta_doc);
+        Log::info('items data count: ' . count($items_data));
+
+        // Sumar el total de venta de todos los ítems
+        $sum_total_venta_items = 0;
+        foreach ($items_data as $item) {
+            $item_total = (isset($item['unit_price']) ? $item['unit_price'] : 0) * (isset($item['quantity']) ? $item['quantity'] : 0);
+            $sum_total_venta_items += $item_total;
+        }
+
+        if ($global_discount > 0 && $sum_total_venta_items > 0 && count($items_data) > 0) {
+            Log::info('descuento global: ' . $global_discount);
+            foreach ($items_data as &$item) {
+                $item_total = (isset($item['unit_price']) ? $item['unit_price'] : 0) * (isset($item['quantity']) ? $item['quantity'] : 0);
+                $proporcion = $item_total / $sum_total_venta_items;
+                $item['descuento_item'] = number_format($global_discount * $proporcion, 2);
+            }
+        }
+    }
+
+
+    public function discount_item(&$items_data)
+    {
+        // aqui ver si hay descuento por item, multiplicando por 1.18
+        $factor_igv = 1.18;
+        foreach ($items_data as &$item) {
+            $item_discount = isset($item['total_discount']) ? $item['total_discount'] : 0;
+            $item['item_discount'] = number_format($item_discount * $factor_igv, 2);
+        }
     }
 }
