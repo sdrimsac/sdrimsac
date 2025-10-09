@@ -276,10 +276,11 @@ class DocumentInput
 
                 $item = Item::find($row['item_id']);
                 $type_id = Functions::valueKeyInArray($row, "from_unit_type_id", null);
+                //Log::info("tipo id ver si aqui lo asigan en nnull ". $type_id);
                 $from_unit_type_id = null;
-                if($quotation_id){
+                /* if($quotation_id){ */
                     $from_unit_type_id = Functions::valueKeyInArray($row['item'], "from_unit_type_id", null);
-                }
+                /* } */
                 $type_desc = null;
                 if ($type_id) {
                     $unit_type = ItemUnitType::find($type_id);
@@ -388,7 +389,6 @@ class DocumentInput
                         'value' => $value,
                         'start_date' => $start_date,
                         'end_date' => $end_date,
-                        'duration' => $duration,
                     ];
                 }
                 return $attributes;

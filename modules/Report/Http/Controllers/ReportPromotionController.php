@@ -122,13 +122,6 @@ class ReportPromotionController extends Controller
     public function getRecords(Request $request)
     {
         // Log de los valores recibidos
-        Log::info('getRecords request params', [
-            'isFromAdmin' => $request->input('isFromAdmin'),
-            'month_start' => $request->input('month_start'),
-            'month_end' => $request->input('month_end'),
-            'person_id' => $request->person_id,
-        ]);
-
         $configuration = Configuration::first();
         $records = PromotionDocumentCustomer::query();
         $records = $records->whereHas('promotion_document', function ($query) use ($configuration) {
@@ -147,19 +140,11 @@ class ReportPromotionController extends Controller
                 // Si ambos meses vienen, filtra entre ambos
                 $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
                 $endDate = Carbon::parse($month_end.'-01')->endOfMonth();
-                Log::info('Filtrando por rango de meses', [
-                    'startDate' => $startDate->toDateString(),
-                    'endDate' => $endDate->toDateString()
-                ]);
                 $records = $records->whereBetween('created_at', [$startDate, $endDate]);
             } elseif ($month_start) {
                 // Si solo viene month_start, filtra solo ese mes
                 $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
                 $endDate = Carbon::parse($month_start.'-01')->endOfMonth();
-                Log::info('Filtrando por mes único', [
-                    'startDate' => $startDate->toDateString(),
-                    'endDate' => $endDate->toDateString()
-                ]);
                 $records = $records->whereBetween('created_at', [$startDate, $endDate]);
             }
         } else {
@@ -168,10 +153,6 @@ class ReportPromotionController extends Controller
             if ($period['d_start'] && $period['d_end']) {
                 $d_start = Carbon::parse($period['d_start'])->startOfDay();
                 $d_end = Carbon::parse($period['d_end'])->endOfDay();
-                Log::info('Filtrando por periodo', [
-                    'd_start' => $d_start->toDateTimeString(),
-                    'd_end' => $d_end->toDateTimeString()
-                ]);
                 $records = $records->whereBetween('created_at', [$d_start, $d_end]);
             }
         }

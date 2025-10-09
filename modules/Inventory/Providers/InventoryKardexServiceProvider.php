@@ -119,14 +119,15 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 }
             }
 
-            if (isset($document_item->item->IdLoteSelected)) {
+            /* if (isset($document_item->item->IdLoteSelected)) {
                 if ($document_item->item->IdLoteSelected != null) {
                     $lot = ItemLotsGroup::find($document_item->item->IdLoteSelected);
                     // $lot->quantity = ($lot->quantity - $document_item->quantity);
                     $lot->quantity = ($document->document_type_id === '07') ? ($lot->quantity + $document_item->quantity) : ($lot->quantity - $document_item->quantity);
+                    Log::info('Cantidad Nueva dasfdfd: '. $lot->quantity);
                     $lot->save();
                 }
-            }
+            } */
             if (isset($document_item->item->color_size)) {
                 foreach ($document_item->item->color_size as $it) {
                     $color_size_found = ItemColorSize::find($it->id);
@@ -163,11 +164,36 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $lot->save();
                 }*/
             }
+            /* if (isset($document_item->item->lotes)) {
+                foreach ($document_item->item->lotes as $it) {
+                    Log::info('Lote ID: ' . $it->id);
+                    $lot_found = ItemLotsGroup::find($it->id);
+                    if ($lot_found) {
+                        Log::info(''. $it->id);
+                        $lot_found->quantity = $lot_found->quantity - $it->quantitySelected;
+                        Log::info('Cantidad Nueva: '. $lot_found->quantity);
+                        $lot_found->save();
+                    }
+                }
+            } */
             if (isset($document_item->item->lotes)) {
                 foreach ($document_item->item->lotes as $it) {
                     $lot_found = ItemLotsGroup::find($it->id);
+                    Log::info('Lote ID: '. $it->id .''. $lot_found);
                     if ($lot_found) {
-                        $lot_found->quantity = $lot_found->quantity - $it->quantitySelected;
+                        $quantityLot  = $it->quantitySelected;
+                        Log::info('Cantidad del Lote asdfasdf: ' . $quantityLot);
+                        if (isset($document_item->item->from_unit_type_id)) {
+                            $unit_type = ItemUnitType::where('id', $document_item->item->from_unit_type_id)
+                                ->first();
+                            if ($unit_type) {
+                                Log::info('Unidad de Medida asdasdfsdfsdf: '. $unit_type->id .''. $unit_type->quantity_unit);
+
+                                $quantityLot = $it->quantitySelected * $unit_type->quantity_unit;
+                            }
+                        }
+                        $lot_found->quantity = $lot_found->quantity - $quantityLot;
+                        Log::info('Cantidad Nueva: ' . $lot_found->quantity);
                         $lot_found->save();
                     }
                 }
@@ -185,6 +211,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $lot_found = ItemLotsGroup::find($it->id);
                     if ($lot_found) {
                         $quantityLot  = $it->quantitySelected;
+                        Log::info('Cantidad del Lote asdfasdf: ' . $quantityLot);
                         if (isset($sale_note_item->item->from_unit_type_id)) {
                             $unit_type = ItemUnitType::where('id', $sale_note_item->item->from_unit_type_id)
                                 ->first();

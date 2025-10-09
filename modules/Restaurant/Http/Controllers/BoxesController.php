@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Support\Facades\Log;
+
 
 namespace Modules\Restaurant\Http\Controllers;
 
@@ -84,7 +84,8 @@ class BoxesController extends Controller
                 $customer_name = $customer->name;
                 $sale_note_id = $row->sale_note_id;
                 // $sale_note = SaleNote::find($sale_note_id);
-                $full_number_sale_note = $row->sale_note->number_full;
+                //$full_number_sale_note = $row->sale_note->number_full;
+                $full_number_sale_note = ($row->sale_note) ? $row->sale_note->number_full : null;
                 $document_id = $row->document_id;
                 if ($sale_note_id) {
                     $box = Box::where('sale_note_id', $row->sale_note_id)
@@ -1491,7 +1492,7 @@ class BoxesController extends Controller
             $total_payment = $sale_note->total_payment ?? 0;
             $debe = $sale_note->total - $total_payment;
 
-            if ($debe > 0) {
+            if ($sale_note->credit_cash == 1 && $debe > 0) {
                 $all[] = [
                     'series'        => $sale_note->series,
                     'full_number'   => $sale_note->series . "-" . $sale_note->number,
@@ -1962,7 +1963,9 @@ class BoxesController extends Controller
                 ? ($order->reason ?? 'No especificado')
                 : ($items->firstWhere('reason', '!=', null)['reason'] ?? 'No especificado');
 
-            $total_amount = $items->sum(fn($item) => $item['quantity'] * $item['price']);
+            $total_amount = $items->sum(function($item) {
+                return $item['quantity'] * $item['price'];
+            });
             $total_quantity = $items->sum('quantity');
 
             return [
