@@ -1369,7 +1369,7 @@
                                                                                 <el-input class="custom_input text-dark"
                                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
                                                                                     :disabled="isSellerConsolidated ||
-                                                                                        configuration.editar_precio_politica ===
+                                                                                        configuration.edit_price_sales ===
                                                                                         false
                                                                                         " type="number" v-model="order_pend.price
                                                                                             " @input="

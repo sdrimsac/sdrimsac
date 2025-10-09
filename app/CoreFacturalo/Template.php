@@ -140,7 +140,8 @@ class Template
                             ->get()
                             ->sum(function ($row) {
                                 $promotion_document = $row->promotion_customer->promotion_document;
-                                return ($row->total / $promotion_document->total) * $promotion_document->points_value;
+                                $units = intval($row->total / $promotion_document->total); // Solo enteros
+                                return $units * $promotion_document->points_value;
                             });
 
                         $detail_points['total_document_points'] = $currentDocumentPoints;

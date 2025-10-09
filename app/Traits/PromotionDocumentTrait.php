@@ -39,7 +39,7 @@ trait PromotionDocumentTrait
         $points_to_subtract = 0;
         $items = $document->items;
         foreach ($items as $item) {
-        
+
             if (isset($item->item->is_promotion) && $item->item->is_promotion) {
                 $item_promotion = PromotionDocumentItem::where('item_id', $item->item_id)
                     ->whereHas('promotion_document', function ($query) use ($promotion_document_id) {
@@ -115,9 +115,9 @@ trait PromotionDocumentTrait
 
         if ($configuration->promotions_by_points) {
             $changes = $changes->groupBy('item_id')
-            ->selectRaw('item_id, count(*) as total')
-            ->get()
-            ->count();
+                ->selectRaw('item_id, count(*) as total')
+                ->get()
+                ->count();
         } else {
             $changes = $changes->distinct('promotion_document_customer_id')
                 ->count('promotion_document_customer_id');
@@ -179,10 +179,20 @@ trait PromotionDocumentTrait
         }
     }
 
-    function calculatePoints($total, $total_to_points, $points_value)
+    /* function calculatePoints($total, $total_to_points, $points_value)
     {
         $points = ($total / $total_to_points) * $points_value;
         return $points;
+    } */
+
+    function calculatePoints($document_total, $limit, $points_value)
+    {
+        if ($limit <= 0) return 0; // evita división por cero
+
+        $points = ($document_total / $limit) * $points_value;
+
+        // 🔹 Toma solo la parte entera
+        return floor($points);
     }
     private function savePromotionWithoutPoins($document, $promotion_id)
     {

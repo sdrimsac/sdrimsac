@@ -4515,53 +4515,6 @@
                                                                     </div>
 
                                                                     <!-- Mostrar Cantidades Total De Productos En caja POS -->
-                                                                    <div class="col-md-3 mb-2">
-                                                                        <div class="card h-100">
-                                                                            <div class="card-body d-flex flex-column"
-                                                                                style="padding: 7px;">
-                                                                                <div
-                                                                                    class="form-group text-left flex-grow-1">
-                                                                                    <label class="control-label w-100"
-                                                                                        :style="{
-                                                                                            color: form.change_unit_type_pos
-                                                                                                ? '#28a745'
-                                                                                                : '#6c757d'
-                                                                                        }">
-                                                                                        <i
-                                                                                            class="el-icon-s-grid icon-tab"></i>
-                                                                                        Mostrar
-                                                                                        Cantidades
-                                                                                        Total
-                                                                                        De
-                                                                                        Productos
-                                                                                        En
-                                                                                        caja
-                                                                                        POS
-                                                                                        <el-tooltip class="item"
-                                                                                            effect="dark"
-                                                                                            content="Habilita la visualización de las cantidades totales de productos en el módulo de caja POS"
-                                                                                            placement="top-start">
-                                                                                            <i
-                                                                                                class="fa fa-info-circle"></i>
-                                                                                        </el-tooltip>
-                                                                                    </label>
-                                                                                    <el-switch @change="
-                                                                                        submit(
-                                                                                            'Cambiar politica de precio en la lista de productos',
-                                                                                            form.change_unit_type_pos,
-                                                                                            'change_unit_type_pos',
-                                                                                            'lockIcon'
-                                                                                        )
-                                                                                        " v-model="form.change_unit_type_pos
-                                                                                            " active-text="Si"
-                                                                                        inactive-text="No"
-                                                                                        :active-color="'#28a745'
-                                                                                            " :inactive-color="'#6c757d'
-                                                                                                "></el-switch>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
 
                                                                     <!-- Mostrar Solo Documentos de Usuario Emitido -->
                                                                     <div class="col-md-3 mt-4" v-if="
@@ -5235,6 +5188,47 @@
                                                                                                         'lockIcon'
                                                                                                     )
                                                                                                     "></el-switch>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3 mb-2">
+                                                                        <div class="card h-100">
+                                                                            <div class="card-body d-flex flex-column"
+                                                                                style="padding: 7px;">
+                                                                                <div
+                                                                                    class="form-group text-left flex-grow-1">
+                                                                                    <label class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.change_unit_type_pos
+                                                                                                ? '#28a745'
+                                                                                                : '#6c757d'
+                                                                                        }">
+                                                                                        <i
+                                                                                            class="el-icon-s-grid icon-tab"></i>
+                                                                                        Cambiar políticas en lista de productos en el lista de ordenes
+                                                                                        
+                                                                                        <el-tooltip class="item"
+                                                                                            effect="dark"
+                                                                                            content="Habilita la visualización select de politicas en el prodcuto seleccioando que tiene politicas de precios"
+                                                                                            placement="top-start">
+                                                                                            <i
+                                                                                                class="fa fa-info-circle"></i>
+                                                                                        </el-tooltip>
+                                                                                    </label>
+                                                                                    <el-switch @change="
+                                                                                        submit(
+                                                                                            'Seleccionar politica en la lista de productos seleccionados en el list ordens',
+                                                                                            form.change_unit_type_pos,
+                                                                                            'change_unit_type_pos',
+                                                                                            'lockIcon'
+                                                                                        )
+                                                                                        " v-model="form.change_unit_type_pos
+                                                                                            " active-text="Si"
+                                                                                        inactive-text="No"
+                                                                                        :active-color="'#28a745'
+                                                                                            " :inactive-color="'#6c757d'
+                                                                                                "></el-switch>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

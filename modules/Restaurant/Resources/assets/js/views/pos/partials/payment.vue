@@ -2808,7 +2808,7 @@ export default {
                         let { data } = response;
                         if (data.success) {
                             this.hasPromotionText = data.message;
-                            this.pointsMessage = data.message; // Store the points value here
+                            this.pointsMessage = data.message;
                             this.points_value = data.points_value;
                             this.total = data.total;
                             this.listPromotionItems = data.items;
@@ -2828,15 +2828,12 @@ export default {
         },
         calculatePointsEarned() {
             if (this.points_value && this.form.total && this.total) {
-                // Calculate points earned based on total sale and points_value
-                this.ventalista = parseFloat(
-                    (
-                        (this.form.total * this.points_value) /
-                        this.total
-                    ).toFixed(2)
-                );
+            // Calcula puntos ganados y solo toma la parte entera (sin decimales)
+            this.ventalista = Math.floor(
+                (this.form.total * this.points_value) / this.total
+            );
             } else {
-                this.ventalista = 0;
+            this.ventalista = 0;
             }
         },
         verifyPromotionCustomer() {
