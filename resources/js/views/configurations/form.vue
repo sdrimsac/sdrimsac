@@ -5067,7 +5067,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <!-- Editar Política De Precio en Caja -->
-                                                                    <div class="col-md-3 mb-2">
+                                                                    <!-- <div class="col-md-3 mb-2">
                                                                         <div class="card h-100">
                                                                             <div class="card-body d-flex flex-column"
                                                                                 style="padding: 7px;">
@@ -5102,7 +5102,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                     <!-- Política de precio en lista de productos -->
                                                                     <div class="col-md-3 mb-2">
@@ -5206,7 +5206,7 @@
                                                                                         }">
                                                                                         <i
                                                                                             class="el-icon-s-grid icon-tab"></i>
-                                                                                        Cambiar políticas en lista de productos en el lista de ordenes
+                                                                                        Select de política
                                                                                         
                                                                                         <el-tooltip class="item"
                                                                                             effect="dark"
