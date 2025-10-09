@@ -335,14 +335,14 @@
                                     <input v-if="discount_mode === 'amount'" class="form-control w-50 text-right"
                                         v-model="discount_amount" @input="validateAndProcess"
                                         @focus="discount_amount = ''" maxlength="8" placeholder="0.00"
-                                        :disabled="!enabled_discount || affectation_optional_id === '10' || !conf.show_discounts_payment"
+                                        :disabled="!enabled_discount || affectation_optional_id === '10' || !conf.show_discounts_payment || disableDiscount"
                                         style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;" />
                                     <!-- Input para porcentaje -->
                                     <input v-else class="form-control w-50 text-right"
                                         v-model.number="discount_percentage" @input="inputDiscountAmount"
                                         @focus="discount_percentage = ''" maxlength="6" placeholder="0" min="0"
                                         max="100"
-                                        :disabled="!enabled_discount || affectation_optional_id === '10' || !conf.show_discounts_payment"
+                                        :disabled="!enabled_discount || affectation_optional_id === '10' || !conf.show_discounts_payment || disableDiscount"
                                         style="appearance: none; -moz-appearance: textfield; -webkit-appearance: none;" />
                                 </div>
 
@@ -393,9 +393,10 @@
                                 </div>
                                 <div class="radio-tile-group2 flex-wrap">
                                     <div class="input-container2 border rounded-sm">
-                                        <input :disabled="form_payment.is_bank" id="cash" v-model="method_payments"
-                                            class="radio-button2" type="radio" name="method_payment" value="01"
-                                            @change="method_payment('Efectivo')" />
+                                        <input
+                                            :disabled="form_payment.is_bank || disablePayments"
+                                            id="cash" v-model="method_payments" class="radio-button2" type="radio"
+                                            name="method_payment" value="01" @change="method_payment('Efectivo')" />
                                         <div class="radio-tile2"
                                             style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat">
                                             <div class="icon walk-icon"></div>
@@ -403,7 +404,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.culqi">
-                                        <input :disabled="form_payment.is_bank" id="culqui" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="culqui" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="02"
                                             @change="method_payment('Culqui')" />
                                         <div class="radio-tile2"
@@ -413,7 +414,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.izipay">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="05" @change="
                                                 method_payment(
                                                     'TARJETA: IZYPAY'
@@ -426,7 +427,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.openpay">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="07" @change="
                                                 method_payment(
                                                     'TARJETA: OPENPAY'
@@ -439,7 +440,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.nubiz">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="06" @change="
                                                 method_payment(
                                                     'TARJETA: NIUBIZ'
@@ -452,7 +453,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.yape">
-                                        <input :disabled="form_payment.is_bank" id="yape" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="yape" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="03"
                                             @change="method_payment('Yape')" />
                                         <div class="radio-tile2"
@@ -469,7 +470,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.plin">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="04"
                                             @change="method_payment('PLIN')" />
                                         <div class="radio-tile2"
@@ -479,7 +480,7 @@
                                         </div>
                                     </div>
                                     <div class="input-container2 border rounded-sm" v-if="configuration.didi">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="08" @change="
                                                 method_payment('DIDI FOOD')
                                                 " />
@@ -491,7 +492,7 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.pedidosya">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="09" @change="
                                                 method_payment('PEDIDOS YA')
                                                 " />
@@ -503,7 +504,7 @@
                                     </div>
 
                                     <div class="input-container2 border rounded-sm" v-if="configuration.rappi">
-                                        <input :disabled="form_payment.is_bank" id="plin" v-model="method_payments"
+                                        <input :disabled="form_payment.is_bank || disablePayments" id="plin" v-model="method_payments"
                                             class="radio-button2" type="radio" name="method_payment" value="10"
                                             @change="method_payment('RAPPI')" />
                                         <div class="radio-tile2"
@@ -920,22 +921,14 @@
                             <div class="row">
                                 <!-- Pagar y Cerrar -->
                                 <div class="d-flex justify-content-center mb-3">
-                                    <button
-                                        class="btn_cancelar bg-danger"
-                                        type="danger"
-                                        @click="back(false)"
-                                        style="font-size: 1.3rem; padding: 14px 30px; min-width: 180px;"
-                                    >
+                                    <button class="btn_cancelar bg-danger" type="danger" @click="back(false)"
+                                        style="font-size: 1.3rem; padding: 14px 30px; min-width: 180px;">
                                         <i class="fa fa-reply"></i> Regresar
                                     </button>
 
-                                    <button
-                                        class="btn_guardar bg-primary text-white"
-                                        type="primary"
+                                    <button class="btn_guardar bg-primary text-white" type="primary"
                                         style="margin-left: 16px; font-weight: bold; font-size: 1.3rem; padding: 14px 30px; min-width: 180px;"
-                                        @click="handleOneClick"
-                                        :disabled="button_payment || isLocked"
-                                    >
+                                        @click="handleOneClick" :disabled="button_payment || isLocked">
                                         <i class="fas fa-money-bill-alt"></i>
                                         Pagar
                                     </button>
@@ -1398,6 +1391,39 @@ export default {
         method_payments(newMethod, _) {
             this.checkTotal(newMethod);
         },
+        /* 'form.payment_condition_id'(newVal) {
+            // Si es factura o boleta y se selecciona crédito a cuotas, agrega una cuota por defecto
+            if ((this.form.document_type_id === '01' || this.form.document_type_id === '03') && newVal === '03') {
+                if (this.currentPayments.length === 0) {
+                    this.currentPayments.push({
+                        id: Date.now(),
+                        method: 'Efectivo',
+                        amount: this.form.total,
+                        date: new Date()
+                    });
+                }
+            }
+        }, */
+        'form.payment_condition_id'(newVal) {
+            if ((this.form.document_type_id === '01' || this.form.document_type_id === '03') && newVal === '03') {
+                if (this.currentPayments.length === 0) {
+                    this.currentPayments.push({
+                        id: Date.now(),
+                        method: 'Crédito a cuotas',
+                        amount: this.form.total,
+                        date: new Date()
+                    });
+                }
+                this.disablePayments = true;
+                this.disableDiscount = true;
+                this.enabled_discount = false;
+            } else {
+                this.disablePayments = false;
+                this.disableDiscount = false;
+                this.enabled_discount = true;
+            }
+        },
+
         "form.items": {
             handler() {
                 this.syncEnabledDiscountFromItems();
@@ -1421,6 +1447,8 @@ export default {
 
     data() {
         return {
+            disablePayments: false,
+            disableDiscount: false,
             selectedTotal: 0,
             showDialogGenerateQr: false,
             isLocked: false,
@@ -2244,8 +2272,8 @@ export default {
                     affectation_igv_type_id == 10 ||
                         affectation_igv_type_id == 15
                         ? safeNumber(i.sale_unit_price) *
-                            safeNumber(i.quantity) *
-                            safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) /
+                        safeNumber(i.quantity) *
+                        safeNumber(i.percentage_igv ? i.percentage_igv : this.percentage_igv) /
                         100
                         : 0,
                 total_base_isc: 0.0,
@@ -2602,11 +2630,11 @@ export default {
                 return;
             }
             // Validar que no se repita el método de pago
-            const exists = this.currentPayments.some(p => p.method_payment_id === this.method_payments);
+            /* const exists = this.currentPayments.some(p => p.method_payment_id === this.method_payments);
             if (exists) {
                 this.$toast.error("No puede usar dos veces el mismo método de pago.");
                 return;
-            }
+            } */
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
@@ -2828,12 +2856,12 @@ export default {
         },
         calculatePointsEarned() {
             if (this.points_value && this.form.total && this.total) {
-            // Calcula puntos ganados y solo toma la parte entera (sin decimales)
-            this.ventalista = Math.floor(
-                (this.form.total * this.points_value) / this.total
-            );
+                // Calcula puntos ganados y solo toma la parte entera (sin decimales)
+                this.ventalista = Math.floor(
+                    (this.form.total * this.points_value) / this.total
+                );
             } else {
-            this.ventalista = 0;
+                this.ventalista = 0;
             }
         },
         verifyPromotionCustomer() {
