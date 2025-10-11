@@ -786,21 +786,11 @@ class WhatsappController extends Controller
             $parsedUrl = parse_url($resource);
             $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
-            if ($content_file === false || strlen($content_file) < 1000) {
-                Log::error('El PDF no se pudo descargar correctamente', [
-                    'url' => $request->root() . $resource,
-                    'response' => $content_file ? substr($content_file, 0, 200) : 'false'
-                ]);
-            }
+            Log::info("baseUrl", ['baseUrl' => $baseUrl ,'content_file' => $content_file]);
         } else {
             $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
+            Log::info("baseUrl", ['root' => $request->root() . $resource ,'content_file' => $content_file]);
 
-            if ($content_file === false || strlen($content_file) < 1000) {
-                Log::error('El PDF no se pudo descargar correctamente', [
-                    'url' => $request->root() . $resource,
-                    'response' => $content_file ? substr($content_file, 0, 200) : 'false'
-                ]);
-            }
         }
         $this->client = new Client([
             'verify' => false,
