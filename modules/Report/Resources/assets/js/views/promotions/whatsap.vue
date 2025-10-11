@@ -29,7 +29,6 @@ export default {
             this.showDetailDialog = newVal;
         },
         showDetailDialog(newVal) {
-            // keep parent in sync when .sync not used
             this.$emit('update:showDialog', newVal);
         }
     },
@@ -52,7 +51,7 @@ export default {
                 const response = await this.$http.post(`/whatsapp-promotion`, {
                     number: this.whatsappNumber,
                     customer_id: this.customerId, 
-                    message: 'Hola, Estimado cliente ' + this.customerId + '.',
+                    message: 'Hola, Estimado cliente tiene promociones disponibles a los cuales puedes acceder ' + this.customerId + '.',
                     file_name: "promotion_report_" + this.customerId + ".pdf",
                     sender: "sdrimsac",
                     resources: "promotions-document/exportable-pdf/4?customer_id=" + this.customerId

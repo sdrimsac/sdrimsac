@@ -779,6 +779,7 @@ class WhatsappController extends Controller
         $number = $request->number;
         $from_server = $request->from_server ?? false;
         $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
+        Log::info("sendwhatsappPromotion", ['resource' => $resource, 'from_server' => $from_server, 'file_name' => $file_name]);
         if ($from_server) {
             $parsedUrl = parse_url($resource);
             $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
