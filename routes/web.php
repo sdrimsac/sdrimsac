@@ -1096,6 +1096,8 @@ if ($hostname) {
                     Route::post('points/{id}', [PromotionDocumentController::class, 'PromotionPointsNew']);
                     Route::post('/get-records', [PromotionDocumentController::class, 'getPromotionRecords']);
                     Route::get('/exportable-pdf/{customer_id}', [PromotionDocumentController::class, 'getPromoItemsPdf']);
+
+                    Route::get('/domload-pdf/{customer_id}', [PromotionDocumentController::class, 'pdfStorageFile']);
                 });
 
                 /* Route::prefix('promotions-document-points')->group(function () {
