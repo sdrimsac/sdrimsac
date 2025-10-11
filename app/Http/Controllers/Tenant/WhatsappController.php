@@ -642,6 +642,8 @@ class WhatsappController extends Controller
         // $url = 'http://localhost:3800/api/send-media';
         $resource = $request->resource;
 
+        Log::info("sendHistorial", ['resource' => $resource]);
+
         $sender = $sender ?? 'sdrimsac';
         $message = $request->message;
         $file_name = $request->file_name;
