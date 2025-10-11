@@ -654,8 +654,10 @@ class WhatsappController extends Controller
             $parsedUrl = parse_url($resource);
             $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
+            Log::info("baseUrl", ['baseUrl' => $baseUrl ,'content_file' => $content_file]);
         } else {
             $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
+            Log::info("baseUrl", ['root' => $request->root() . $resource ,'content_file' => $content_file]);
         }
         $this->client = new Client([
             'verify' => false,
