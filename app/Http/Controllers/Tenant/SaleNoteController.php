@@ -2030,6 +2030,13 @@ class SaleNoteController extends Controller
                     //     sleep(5);
                     // }
                     dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
+
+                    //if ($configuration->promotions_by_points) {
+                        // Espera 10 segundos antes de enviar el segundo ticket
+
+                      //  (new PromotionDocumentController)->PromotionPointsNew($this->sale_note->customer_id);
+                    //}
+                    
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 $this->dumpWithTime("payments");
@@ -2053,7 +2060,6 @@ class SaleNoteController extends Controller
                             if (empty($payment['method']) && isset($payment['payment_method_type_id'])) {
                                 $payment['method'] = $payment_methods[$payment['payment_method_type_id']] ?? 'efectivo';
                             }
-                        Log::info('Método de pago recibido en SaleNotePayment:', ['method' => $payment['method'] ?? null, 'payment' => $payment]);
 
                         $total_payment += $payment['payment'];
 

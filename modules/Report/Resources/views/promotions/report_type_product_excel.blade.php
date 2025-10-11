@@ -21,7 +21,6 @@
             <tr>
                 <td colspan="10" style="background: #afd095; text-align:center;color:#006100;border:1px solid black;">
                     <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
-    
                 </td>
             </tr>
             <tr>

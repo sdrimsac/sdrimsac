@@ -9,16 +9,26 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Tenant\PromotionDocumentCollection;
 use App\Http\Resources\Tenant\PromotionDocumentResource;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\Establishment;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\Person;
+use App\Models\Tenant\Promotion;
 use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionDocumentItem;
 use App\Models\Tenant\PromotionReceived;
+use App\Models\Tenant\User;
 use App\Traits\PromotionDocumentTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
+use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\Area;
 
 class PromotionDocumentController extends Controller
 {
@@ -30,6 +40,12 @@ class PromotionDocumentController extends Controller
         $configuration = Configuration::select('is_promotion_document', 'promotions_by_points')->first();
         return view('tenant.promotion_document.index', compact('configuration'));
     }
+
+    /* public function index_points()
+    {
+        $configuration = Configuration::select('is_promotion_document', 'promotions_by_points')->first();
+        return view('tenant.promotion_document_points.index', compact('configuration'));
+    } */
 
 
     public function columns()
@@ -138,7 +154,7 @@ class PromotionDocumentController extends Controller
                 'message' => 'No tienes mas cambios disponibles'
             ];
         }
-        
+
         // Join promotion_documents table to get points_value
         $record = PromotionDocumentCustomer::where('promotion_document_customers.customer_id', $id)
             ->where('promotion_document_customers.promotion_document_id', $promotion_document_id)
@@ -155,7 +171,7 @@ class PromotionDocumentController extends Controller
         $points_value = $record->points_value; // New field from promotion_documents
         $promotion_document_id = $record->promotion_document_id;
         $total = $record->total;
-        
+
         $items = PromotionDocumentItem::where('promotion_document_id', $promotion_document_id)
             ->where('points_value', '<=', $points)
             ->with('item.itemwarehouses')
@@ -211,12 +227,12 @@ class PromotionDocumentController extends Controller
                 ->where('acc_total', $promotion->total)
                 ->where('active', 0)
                 ->count();
-                
-                if ($counts > $limit_changes) {
-                    $counts = $limit_changes;
-                }
-                $counts = $counts - $count_desactive;
-                
+
+            if ($counts > $limit_changes) {
+                $counts = $limit_changes;
+            }
+            $counts = $counts - $count_desactive;
+
             $message =  "Tiene " . $counts . " de la promoción " . $description . " por canjear";
             if ($counts > 0)
                 $promotions[] = [
@@ -235,12 +251,12 @@ class PromotionDocumentController extends Controller
     public function getItemsByPerson($id)
     {
         $promotionDocumentCustomers = PromotionDocumentCustomer::where('customer_id', $id)
-        ->join('promotion_documents','promotion_documents.id','=','promotion_document_customers.promotion_document_id')
-        ->where('acc_total','=',DB::raw('promotion_documents.total'))
-        ->first();
+            ->join('promotion_documents', 'promotion_documents.id', '=', 'promotion_document_customers.promotion_document_id')
+            ->where('acc_total', '=', DB::raw('promotion_documents.total'))
+            ->first();
         $items = [];
 
-        if($promotionDocumentCustomers){
+        if ($promotionDocumentCustomers) {
             $promotion_document = PromotionDocument::find($promotionDocumentCustomers->promotion_document_id);
             $items = $promotion_document->getFormattedItems();
         }
@@ -342,5 +358,326 @@ class PromotionDocumentController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function promotionPointsPdf($customer_id)
+    {
+        $customer = Person::find($customer_id);
+        $promotion_items = $this->getAvailablePromotions($customer_id);
+
+        if ($promotion_items->isEmpty()) {
+            return null;
+        }
+
+        $base_height = 500;
+        $item_height = 30;
+        $total_items = count($promotion_items);
+        $height = $base_height + ($total_items * $item_height);
+
+        try {
+            // Usa la vista de la ruta proporcionada
+            $pdf = PDF::loadView('tenant.promotion.promotion_points_80', compact(
+                'customer',
+                'promotion_items'
+            ))->setPaper(array(0, 0, 249.45, $height));
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el PDF',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+        $timestamp = Carbon::now()->format('YmdHis');
+
+        return $pdf->stream($timestamp . '_promociones_.pdf');
+    }
+
+    public function PromotionPointsNew($customer_id)
+    {
+
+        $establishment = Establishment::find(auth()->user()->establishment_id);
+
+        $area_id = $this->getBoxArea();
+        $area = Area::find($area_id);
+        $printer = $area->printer ?? $establishment->printer;
+
+        event(new PrintEvent($customer_id, "PR", true, $area_id, [], true));
+
+        return [
+            'success' => true,
+            'printer' => $printer,
+            'direct_printing' => (bool) $establishment->direct_printing,
+            'printer_serve' => $establishment->printer_serve,
+            'print'   => url('') . "/caja/promotions-document/promotionPointsPdf/{$customer_id}",
+        ];
+    }
+
+    function getBoxArea()
+    {
+        $establishment_id = auth()->user()->establishment_id;
+        $user_box = User::whereHas('area', function ($query) {
+            $query->where('description', 'like', '%CAJ%');
+        })->where('establishment_id', $establishment_id)->first();
+        if ($user_box) {
+            $area_box = $user_box->area;
+            return $area_box->id;
+        }
+        $area_box = Area::where('description', 'like', '%CAJ%')->first();
+
+        if ($area_box != null) {
+            return $area_box->id;
+        }
+        return null;
+    }
+
+    private function getAvailablePromotions($customer_id)
+    {
+        $customer = Person::find($customer_id);
+        if (!$customer) {
+            return collect();
+        }
+
+        $customer_name = $customer->name;
+        $now = now();
+
+        $promotions = PromotionDocument::where('active', true)
+            ->where('date_start', '<=', $now)
+            ->where('date_end', '>=', $now)
+            ->get();
+
+        $result = [];
+
+        foreach ($promotions as $promo) {
+            $promoCustomer = PromotionDocumentCustomer::where('customer_id', $customer_id)
+                ->where('promotion_document_id', $promo->id)
+                ->first();
+
+            if (!$promoCustomer || $promoCustomer->points <= 0) {
+                continue;
+            }
+
+            $items = PromotionDocumentItem::where('promotion_document_id', $promo->id)
+                ->with('item')
+                ->where('points_value', '<=', $promoCustomer->points)
+                ->get();
+
+            foreach ($items as $item) {
+                $itemData = $item->item ?? null;
+
+                $result[] = [
+                    'customer_id' => $customer_id,
+                    'customer_name' => $customer_name,
+                    'customer_points' => $promoCustomer->points,
+                    'promotion_id' => $promo->id,
+                    'promotion_description' => $promo->description,
+                    'promotion_end_date' => $promo->date_end,
+                    'item_id' => $item->item_id,
+                    'item_name' => $itemData->name ?? '',
+                    'item_description' => $itemData->description ?? '',
+                    'item_image' => $itemData->image ?? '',
+                    'item_points_value' => $item->points_value,
+                    'item_quantity' => $item->quantity,
+                ];
+            }
+        }
+
+        return collect($result);
+    }
+
+    /**
+     * Helper to compute promotion records by customer id
+     */
+    protected function getPromotionRecordsById($customer_id)
+    {
+        $customer = Person::find($customer_id);
+        if (!$customer) {
+            return collect();
+        }
+
+        $customer_name = $customer->name;
+        $now = now();
+
+        $promotions = PromotionDocument::where('active', true)
+            ->where('date_start', '<=', $now)
+            ->where('date_end', '>=', $now)
+            ->get();
+
+        $result = [];
+
+        foreach ($promotions as $promo) {
+            $promoCustomer = PromotionDocumentCustomer::where('customer_id', $customer_id)
+                ->where('promotion_document_id', $promo->id)
+                ->first();
+
+            if (!$promoCustomer || $promoCustomer->points <= 0) {
+                continue;
+            }
+
+            $items = PromotionDocumentItem::where('promotion_document_id', $promo->id)
+                ->with('item')
+                ->where('points_value', '<=', $promoCustomer->points)
+                ->get();
+
+            foreach ($items as $item) {
+                $itemData = $item->item ?? null;
+
+                $result[] = [
+                    'customer_id' => $customer_id,
+                    'customer_name' => $customer_name,
+                    'customer_points' => $promoCustomer->points,
+                    'promotion_id' => $promo->id,
+                    'promotion_description' => $promo->description,
+                    'promotion_end_date' => $promo->date_end,
+                    'item_id' => $item->item_id,
+                    'item_name' => $itemData->name ?? '',
+                    'item_description' => $itemData->description ?? '',
+                    'item_image' => $itemData->image ?? '',
+                    'item_points_value' => $item->points_value,
+                    'item_quantity' => $item->quantity,
+                ];
+            }
+        }
+
+        return collect($result);
+    }
+
+    public function getPromotionRecords(Request $request)
+    {
+        $customer_id = $request->input('customer_id');
+        return $this->getPromotionRecordsById($customer_id);
+    }
+
+    /* public function getPromoItemsPdf($customer_id)
+    {
+
+        $customer = Person::find($customer_id);
+        if (!$customer) {
+            return collect();
+        }
+
+        $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('points');
+
+        $points_available = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('acc_total');
+
+        $customer_name = $customer->name;
+
+        $records = $this->getPromotionRecordsById($customer_id);
+
+        try {
+            // Usa la vista de la ruta proporcionada
+            $pdf = PDF::loadView('tenant.promotion.report_points', compact(
+                'customer',
+                'records',
+                'points',
+                'points_available'
+            ))->setPaper('a4');
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el PDF',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+        return $pdf->stream('promociones_por_puntos.pdf');
+    } */
+
+    public function getPromoItemsPdf($customer_id)
+    {
+        $customer = Person::find($customer_id);
+        if (!$customer) {
+            return collect();
+        }
+
+        $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('points');
+
+        $points_available = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('acc_total');
+
+        $customer_name = $customer->name;
+        $records = $this->getPromotionRecordsById($customer_id);
+
+        try {
+            // Asegurar opciones de renderizado para evitar caracteres ilegibles
+            PDF::setOptions([
+                'defaultFont' => 'DejaVu Sans',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+            $pdf = PDF::loadView('tenant.promotion.report_points', compact(
+                'customer',
+                'records',
+                'points',
+                'points_available'
+            ))->setPaper('a4');
+
+            // Ruta donde se guardará el PDF dentro de la carpeta 'promocion'
+            $directory = 'promocion'; // storage/app/public/promocion
+            $fileName = "promociones_por_puntos_{$customer_id}.pdf";
+            $relativePath = $directory . '/' . $fileName;
+
+            // Crear la carpeta 'promocion' si no existe en el disco público
+            if (!Storage::disk('public')->exists($directory)) {
+                Storage::disk('public')->makeDirectory($directory);
+            }
+
+            // Eliminar el archivo anterior si existe
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
+
+            // Guardar el nuevo PDF en storage/app/public/promocion
+            $absolutePath = storage_path('app/public/' . $relativePath);
+            $pdf->save($absolutePath);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el PDF',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+
+        // Opcional: retorna el PDF en el navegador
+        return $pdf->stream($fileName);
+    }
+
+    /* public function pdfStorageFile($id)
+    {
+        //obtner el pdf de promocion guardado 
+        $customer = Customer::find($id);
+
+        $customer = Customer::findOrFail($id);
+    } */
+
+    public function pdfStorageFile($id)
+    {
+        // Buscar el cliente (puedes validar si existe)
+        $customer = Customer::findOrFail($id);
+
+        // Construir la ruta relativa del PDF
+        $directory = 'promocion';
+        $fileName = "promociones_por_puntos_{$id}.pdf";
+        $relativePath = $directory . '/' . $fileName;
+
+        // Verificar si el archivo existe en el disco público
+        if (!Storage::disk('public')->exists($relativePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El archivo PDF no existe para este cliente.'
+            ], 404);
+        }
+
+        // Retornar el archivo como descarga
+        return response()->file(storage_path('app/public/' . $relativePath));
     }
 }

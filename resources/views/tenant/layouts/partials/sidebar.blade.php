@@ -854,7 +854,6 @@
                             </a>
                         </li>
                     @endif
-
                     {{-- Reporte de Créditos --}}
                     @if (
                         $user->type == 'superadmin' ||

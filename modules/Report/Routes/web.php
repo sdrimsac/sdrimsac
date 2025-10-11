@@ -27,6 +27,14 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
             Route::get('excel',[ReportPromotionController::class,'excel']);
             Route::get('pdf',[ReportPromotionController::class,'pdf']);
         });
+        /* Route::prefix('points')->group(function (){
+            Route::get('',[ReportPromotionController::class,'index'])->name('reports.points.index');
+            Route::get('filter',[ReportPromotionController::class,'filter']);
+            Route::get('records',[ReportPromotionController::class,'records']);
+            Route::get('detail/{id}',[ReportPromotionController::class,'detail']);
+            Route::get('excel',[ReportPromotionController::class,'excel']);
+            Route::get('pdf',[ReportPromotionController::class,'pdf']);
+        }); */
         Route::get('credits', [ReportCreditController::class, 'index'])->name('reports.credits.index');
         Route::get('credits/cash_credit', [ReportCreditController::class, 'index_cash'])->name('reports.credits.credit_index');
         Route::get('credits/cash_credit/filter', [ReportCreditController::class, 'index_cash_filter']);
@@ -160,7 +168,6 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('sales-consolidated/excel', 'ReportSaleConsolidatedController@excel');
         Route::get('sales-consolidated/filter', 'ReportSaleConsolidatedController@filter');
         Route::get('sales-consolidated/records', 'ReportSaleConsolidatedController@records');
-
 
         Route::prefix('user-commissions')->group(function () {
 

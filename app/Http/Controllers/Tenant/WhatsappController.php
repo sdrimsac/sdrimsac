@@ -749,6 +749,137 @@ class WhatsappController extends Controller
             }
         }
     }
+
+    public function sendwhatsappPromotion(Request $request)
+    {
+        //Log::info("sendwhatsappPromotion",$request->all());
+        $configuration = Configuration::first();
+        $sender = $request->sender ?? 'sdrimsac';
+        if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://" . $sender . "." . $web_whatsapp . '/api/send-media';
+        } else {
+            if ($sender == 'tunegociofactvillacorpnet') {
+                $sender = 'sdrimsac';
+            }
+
+            if ($sender == "sdrimsac" || $sender == null) {
+                $web_whatsapp = config('app.web_whatsapp');
+                $url = "https://" . $web_whatsapp . '/api/send-media';
+            } else {
+                $url = config('app.whatsapp_url') . '/api/send-media';
+            }
+        }
+        // $url = 'http://localhost:3800/api/send-media';
+        $resource = $request->resource;
+
+        $sender = $sender ?? 'sdrimsac';
+        $message = $request->message;
+        $file_name = $request->file_name;
+        $number = $request->number;
+        $from_server = $request->from_server ?? false;
+        $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
+        if ($from_server) {
+            $parsedUrl = parse_url($resource);
+            $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+            $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
+        } else {
+            $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
+        }
+        $this->client = new Client([
+            'verify' => false,
+            'stream' => false,
+            'headers' => [
+                'User-Agent' => 'Testing 1.0'
+            ]
+        ]);
+        $company = Company::first();
+        $api_extern_whatsapp_url = $company->api_extern_whatsapp_url;
+        $api_extern_whatsapp_token = $company->api_extern_whatsapp_token;
+        $api_extern_whatsapp_token2 = $company->api_extern_whatsapp_token_2;
+
+        if ($api_extern_whatsapp_url != null && $api_extern_whatsapp_token != null && $api_extern_whatsapp_token2 != null) {
+            $client = new Client([
+                'verify' => false,
+                'stream' => false,
+                'headers' => [
+                    'User-Agent' => 'Testing 1.0'
+                ]
+            ]);
+            Log::info("api_extern_whatsapp_url", ['url' => $api_extern_whatsapp_url]);
+            try {
+                $client2 = new Client();
+                $response2 = $client2->get($resource, ['stream' => true]);
+                $pdfContent = $response2->getBody()->getContents();
+                $type = $request->type ?? '.pdf';
+                // Crear un archivo temporal
+                $tempFilePath = storage_path('app/public/temp_pdf_' . time() . $type);
+                file_put_contents($tempFilePath, $pdfContent);
+
+                // Generar una URL para descargar el archivo temporal
+                $downloadUrl = url('storage/temp_pdf_' . time() . $type);
+                //remove domain fot the $downloadUrl
+                $downloadUrl = str_replace(url(''), '', $downloadUrl);
+                $downloadUrl = $baseUrl . $downloadUrl;
+                // $downloadUrl = $request->root() . $downloadUrl;
+                //change domain fot the $urlx
+                Log::info($downloadUrl);
+                $response = $client->post($api_extern_whatsapp_url . "/api/create-message", [
+                    'json' => [
+                        'appkey' => $api_extern_whatsapp_token,
+                        'authkey' => $api_extern_whatsapp_token2,
+                        'to' => "+51" . $number,
+                        'message' => $message,
+                        'file' => $downloadUrl,
+                    ]
+                ]);
+
+                return  $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                Log::warning("error", ['message' => $e->getMessage()]);
+                return response([
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ], 500);
+                exit;
+            }
+        } else {
+            try {
+                $response = $this->client->post($url, [
+                    'multipart' => [
+                        [
+                            'name'     => 'number',
+                            'contents' => "51" . $number
+                        ],
+                        [
+                            'name'     => 'caption',
+                            'contents' => $message,
+                        ],
+                        [
+                            'name'     => 'sender',
+                            'contents' => $sender
+                        ],
+                        [
+                            'name'     => 'file',
+                            'contents' => $content_file,
+                            'filename' =>   $file_name
+                        ],
+
+                    ]
+                ]);
+
+                ob_get_clean();
+                return  $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                Log::warning( "error del sendWhatsappPromotion", ['message' => $e->getMessage()]);
+                return response([
+                    "message" => $e->getMessage(),
+                    "line" => $e->getLine(),
+                ], 500);
+                exit;
+            }
+        }
+    }
     public function sendReporteDocumentos(Request $request)
     {
         $sender = $request->sender ?? 'sdrimsac';
@@ -810,7 +941,7 @@ class WhatsappController extends Controller
             }
             return  $response->getBody()->getContents();
         } catch (\Exception $e) {
-            \Log::error('Línea 647 - Error en el proceso: ' . $e->getMessage());
+            Log::error('Línea 647 - Error en el proceso: ' . $e->getMessage());
             return response([
                 "message" => $e->getMessage(),
                 "line" => $e->getLine(),

@@ -43,6 +43,7 @@
                                 v-model="form.month_start"
                                 type="month"
                                 class="w-100"
+                                placeholder="Seleccione un mes"
                                 @change="changeDisabledMonths"
                                 value-format="yyyy-MM"
                                 format="MM/yyyy"
@@ -58,6 +59,7 @@
                                 v-model="form.month_end"
                                 type="month"
                                 :picker-options="pickerOptionsMonths"
+                                placeholder="Seleccione un mes"
                                 value-format="yyyy-MM"
                                 format="MM/yyyy"
                                
@@ -282,8 +284,10 @@ export default {
             },
             pickerOptionsMonths: {
                 disabledDate: time => {
-                    time = moment(time).format("YYYY-MM");
-                    return this.form.month_start > time;
+                    // Si no hay mes inicial seleccionado, no deshabilitar nada
+                    if (!this.form.month_start) return false;
+                    const formatted = moment(time).format("YYYY-MM");
+                    return this.form.month_start > formatted;
                 }
             },
             sellers: []
@@ -494,8 +498,8 @@ export default {
                 period: "month",
                 date_start: moment().format("YYYY-MM-DD"),
                 date_end: moment().format("YYYY-MM-DD"),
-                month_start: moment().format("YYYY-MM"),
-                month_end: moment().format("YYYY-MM"),
+                month_start: null,
+                month_end: null,
                 seller_id: null,
                 state_type_id: null,
                 typeresult: "Detallado"
@@ -580,23 +584,20 @@ export default {
             // this.loadAll();
         },
         changeDisabledMonths() {
-            if (this.form.month_end < this.form.month_start) {
+            // Sólo ajustar si ambos valores están presentes
+            if (this.form.month_start && this.form.month_end && this.form.month_end < this.form.month_start) {
                 this.form.month_end = this.form.month_start;
             }
             // this.loadAll();
         },
         changePeriod() {
             if (this.form.period === "month") {
-                this.form.month_start = moment().format("YYYY-MM");
-                this.form.month_end = moment().format("YYYY-MM");
+                this.form.month_start = null;
+                this.form.month_end = null;
             }
             if (this.form.period === "between_months") {
-                this.form.month_start = moment()
-                    .startOf("year")
-                    .format("YYYY-MM"); //'2019-01';
-                this.form.month_end = moment()
-                    .endOf("year")
-                    .format("YYYY-MM");
+                this.form.month_start = null;
+                this.form.month_end = null;
             }
             if (this.form.period === "date") {
                 this.form.date_start = moment().format("YYYY-MM-DD");

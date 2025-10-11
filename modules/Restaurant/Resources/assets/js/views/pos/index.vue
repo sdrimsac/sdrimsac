@@ -5722,7 +5722,6 @@ export default {
                 };
                 return;
             }
-            console.log("Printing document:", document);
             let paperConfig = {
                 scaleContent: false
             };

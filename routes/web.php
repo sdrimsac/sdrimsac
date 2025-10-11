@@ -77,6 +77,7 @@ if ($hostname) {
             Route::get('print/{model}/{external_id}/{format?}', [App\Http\Controllers\Tenant\DownloadController::class, 'toPrint']);
             Route::get('quotations/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\QuotationController::class, 'toPrint']);
             Route::get('sale-notes/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'toPrint']);
+            Route::get('sale-notes/print/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'toPrint']);
             Route::get('sale-notes/schedule/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'schedule']);
             Route::get('sale-notes/cash_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'cash_schedule']);
             Route::get('sale-notes/hogar_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'hogar_schedule']);
@@ -86,6 +87,8 @@ if ($hostname) {
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
 
             Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
+
+            Route::get('caja/promotions-document/promotionPointsPdf/{customer_id}', [PromotionDocumentController::class, 'promotionPointsPdf']);
 
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
@@ -263,6 +266,7 @@ if ($hostname) {
                 Route::post('whatsapp/init', [WhatsappController::class, 'initWhatsapp']);
                 Route::post('whatsapp/get-file', [WhatsappController::class, 'getFile']);
                 /* Route::post('whatsapp/user', [WhatsappController::class, 'user']); */
+                Route::post('whatsapp-promotion', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsappPromotion']);
                 Route::post('caja/whatsapp/user/{id}', [WhatsappController::class, 'user']);
 
                 Route::prefix('health-global')->group(function () {
@@ -1089,7 +1093,27 @@ if ($hostname) {
                     Route::get('points-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'pointsByCustomer']);
                     Route::post('reset-points/{id}', [PromotionDocumentController::class, 'resetPoints']);
                     Route::post('deactivate/{id}', [PromotionDocumentController::class, 'deactivatePromotion']);
+                    Route::post('points/{id}', [PromotionDocumentController::class, 'PromotionPointsNew']);
+                    Route::post('/get-records', [PromotionDocumentController::class, 'getPromotionRecords']);
+                    Route::get('/exportable-pdf/{customer_id}', [PromotionDocumentController::class, 'getPromoItemsPdf']);
                 });
+
+                /* Route::prefix('promotions-document-points')->group(function () {
+                    Route::get('/', [PromotionDocumentController::class, 'index'])->name('tenant.promotions_document_points.index')->middleware('just.admin');
+                    Route::get('/columns', [PromotionDocumentController::class, 'columns']);
+                    Route::get('/records', [PromotionDocumentController::class, 'records']);
+                    Route::get('/record/{id}', [PromotionDocumentController::class, 'record']);
+                    Route::post('/', [PromotionDocumentController::class, 'store']);
+                    Route::delete('/{id}', [PromotionDocumentController::class, 'destroy']);
+                    Route::get("/get-items/{person_id}", [PromotionDocumentController::class, 'getItemsByPerson']);
+                    Route::get('records-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'byCustomer']);
+                    Route::get('points-customers/{customer_id}/{promotion_document_id}', [PromotionDocumentController::class, 'pointsByCustomer']);
+                    Route::post('reset-points/{id}', [PromotionDocumentController::class, 'resetPoints']);
+                    Route::post('deactivate/{id}', [PromotionDocumentController::class, 'deactivatePromotion']);
+                    Route::post('points/{id}', [PromotionDocumentController::class, 'PromotionPointsNew']);
+                    Route::post('/get-records', [PromotionDocumentController::class, 'getPromotionRecords']);
+                }); */
+
                 Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
 
                 Route::get('/search-ce/{ce}', [App\Http\Controllers\Tenant\PersonController::class, 'serviceCe']);
