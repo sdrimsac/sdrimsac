@@ -260,7 +260,7 @@ if ($hostname) {
                 Route::get('whatsapp/numbers', [App\Http\Controllers\Tenant\WhatsappController::class, 'getNumbers']);
                 Route::post('whatsapp/historial', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendHistorial']);
                 Route::get('report_cash/report/pdf', [CashController::class, 'report_cash_pdf']);
-                Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
+                //Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
                 Route::get('whatsapp', [WhatsappController::class, 'index'])->name('whatsapp');
                 Route::get('whatsapp/get-sesion', [WhatsappController::class, 'getStatus']);
                 Route::post('whatsapp/init', [WhatsappController::class, 'initWhatsapp']);
