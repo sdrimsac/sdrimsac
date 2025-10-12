@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Tenant\PromotionDocumentCollection;
 use App\Http\Resources\Tenant\PromotionDocumentResource;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Establishment;
@@ -587,12 +588,14 @@ class PromotionDocumentController extends Controller
         return $pdf->stream('promociones_por_puntos.pdf');
     } */
 
-    public function getPromoItemsPdf($customer_id)
+    /* public function getPromoItemsPdf($customer_id)
     {
         $customer = Person::find($customer_id);
         if (!$customer) {
             return collect();
         }
+
+        $company_number = Str::padLeft(auth()->user()->establishment->number, 3, '0');
 
         $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
             ->where('active', 1)
@@ -637,6 +640,7 @@ class PromotionDocumentController extends Controller
 
             // Guardar el nuevo PDF en storage/app/public/promocion
             $absolutePath = storage_path('app/public/' . $relativePath);
+            $pdf->save(storage_path('app/public/promociones_por_puntos_' . $customer_id . '_' . $company_number . '_' . '.pdf'));
             $pdf->save($absolutePath);
         } catch (\Throwable $e) {
             return response()->json([
@@ -649,24 +653,62 @@ class PromotionDocumentController extends Controller
 
         // Opcional: retorna el PDF en el navegador
         return $pdf->stream($fileName);
-    }
-
-    /* public function pdfStorageFile($id)
-    {
-        //obtner el pdf de promocion guardado 
-        $customer = Customer::find($id);
-
-        $customer = Customer::findOrFail($id);
     } */
+    public function getPromoItemsPdf($customer_id)
+    {
+        $customer = Person::find($customer_id);
+        if (!$customer) {
+            return collect();
+        }
+
+        $company_number = Company::first()->number;
+
+        $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('points');
+
+        $points_available = PromotionDocumentCustomer::where('customer_id', $customer_id)
+            ->where('active', 1)
+            ->sum('acc_total');
+
+        $records = $this->getPromotionRecordsById($customer_id);
+
+        try {
+            PDF::setOptions([
+                'defaultFont' => 'DejaVu Sans',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+            $pdf = PDF::loadView('tenant.promotion.report_points', compact(
+                'customer',
+                'records',
+                'points',
+                'points_available'
+            ))->setPaper('a4');
+
+
+                $fileName = "promociones_por_puntos_{$customer_id}_{$company_number}_.pdf";
+                $absolutePath = storage_path('app/public/' . $fileName);
+
+                $pdf->save($absolutePath);
+            /* } */
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar el PDF',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+        return $pdf->stream('pdf_file.pdf');
+    }
 
     public function pdfStorageFile($id)
     {
-        // Buscar el cliente (puedes validar si existe)
-        $customer = Customer::findOrFail($id);
-
-        // Construir la ruta relativa del PDF
+        $number = Company::first()->number;
         $directory = 'promocion';
-        $fileName = "promociones_por_puntos_{$id}.pdf";
+        $fileName = "promociones_por_puntos_{$id}_{$number}.pdf";
         $relativePath = $directory . '/' . $fileName;
 
         // Verificar si el archivo existe en el disco público

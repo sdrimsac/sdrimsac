@@ -3911,8 +3911,6 @@ class BoxesController extends Controller
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
 
-        Log::info('Generando reporte POS USD para caja ID: ', [$incomes_expenses_cash, $incomes_expenses_cash_digital]);
-
         ini_restore('memory_limit');
 
         try {

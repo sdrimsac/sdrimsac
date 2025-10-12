@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\CashController;
 use Modules\Inventory\Http\Controllers\TransferPlaceController;
+use Modules\Report\Http\Controllers\ReportPromotionController;
 use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\MaderaController;
 
@@ -89,7 +90,9 @@ if ($hostname) {
             Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
 
             Route::get('caja/promotions-document/promotionPointsPdf/{customer_id}', [PromotionDocumentController::class, 'promotionPointsPdf']);
+            Route::get('/promotions-document/download-pdf/{id}', [PromotionDocumentController::class, 'pdfStorageFile']);
 
+            Route::get('/reports/pdf-points/{customer_id}',[ReportPromotionController::class, 'reportItems']);
 
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
@@ -1096,8 +1099,6 @@ if ($hostname) {
                     Route::post('points/{id}', [PromotionDocumentController::class, 'PromotionPointsNew']);
                     Route::post('/get-records', [PromotionDocumentController::class, 'getPromotionRecords']);
                     Route::get('/exportable-pdf/{customer_id}', [PromotionDocumentController::class, 'getPromoItemsPdf']);
-
-                    Route::get('/domload-pdf/{customer_id}', [PromotionDocumentController::class, 'pdfStorageFile']);
                 });
 
                 /* Route::prefix('promotions-document-points')->group(function () {

@@ -54,7 +54,7 @@ export default {
                     message: 'Hola, Estimado cliente tiene promociones disponibles a los cuales puedes acceder ' + this.customerId + '.',
                     file_name: "promotion_report_" + this.customerId + ".pdf",
                     sender: "sdrimsac",
-                    resource: "/promotions-document/domload-pdf/" + this.customerId
+                    resource: "/promotions-document/download-pdf/" + this.customerId
                 });
 
                 if (response.data.success) {

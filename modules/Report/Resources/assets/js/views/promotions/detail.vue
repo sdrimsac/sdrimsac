@@ -1,12 +1,11 @@
 <template>
-    <el-dialog
-        :visible="showDialog"
-        append-to-body
-        @open="open"
-        @close="close"
-        :title="`Productos recibidos | ${customer_name}`"
-        width="80%"
-    >
+    <el-dialog :visible="showDialog" append-to-body @open="open" @close="close"
+        :title="`Productos recibidos | ${customer_name}`" width="80%">
+        <div class="card-header">
+            <div>
+                <el-button type="primary" @click="downloadPDF">Descargar PDF</el-button>
+            </div>
+        </div>
         <div class="row m-2">
             <table class="table table-bordered" v-loading="loading">
                 <thead>
@@ -22,10 +21,7 @@
 
                 <tbody>
                     <template v-if="receiveds.length > 0">
-                        <tr
-                            v-for="(received, idx) in receiveds"
-                            :key="received.id"
-                        >
+                        <tr v-for="(received, idx) in receiveds" :key="received.id">
                             <td>{{ idx + 1 }}</td>
                             <td>{{ received.product }}</td>
                             <td>{{ received.quantity }}</td>
@@ -35,7 +31,7 @@
                             <td>
                                 {{ received.date }} <br /><small>{{
                                     received.time
-                                }}</small>
+                                    }}</small>
                             </td>
                             <td>{{ received.seller }}</td>
                         </tr>
@@ -87,9 +83,11 @@ export default {
         },
         close() {
             this.$emit("update:showDialog", false);
+        },
+        downloadPDF () {
+            const url = `/reports/pdf-points/${this.currentRow.id}`;
+            window.open(url, "_blank");
         }
     }
 };
 </script>
-
-<style></style>

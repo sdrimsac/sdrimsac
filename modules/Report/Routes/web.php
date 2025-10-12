@@ -26,6 +26,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
             Route::get('detail/{id}',[ReportPromotionController::class,'detail']);
             Route::get('excel',[ReportPromotionController::class,'excel']);
             Route::get('pdf',[ReportPromotionController::class,'pdf']);
+            Route::get('pdf-points',[ReportPromotionController::class,'reportItems']);
         });
         /* Route::prefix('points')->group(function (){
             Route::get('',[ReportPromotionController::class,'index'])->name('reports.points.index');

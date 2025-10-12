@@ -6,10 +6,10 @@
             <div class="card mb-0 pt-2 pt-md-0">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <el-button type="success" icon="el-icon-phone" @click="showWhatsappDialog = true">enviar al WhatsApp</el-button>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <el-button type="danger" icon="el-icon-document" @click="generatePDF">PDF</el-button>
                         </div>
                     </div>

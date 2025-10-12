@@ -11,6 +11,7 @@ use App\Models\Tenant\User;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Payment;
+use App\Models\Tenant\Person;
 use App\Models\Tenant\PromotionDocument;
 use App\Models\Tenant\PromotionDocumentCustomer;
 use App\Models\Tenant\PromotionReceived;
@@ -89,6 +90,39 @@ class ReportPromotionController extends Controller
         ];
     }
 
+    /* public function reportItems($document_customer_id)
+    {
+        $details = $this->detail($document_customer_id);
+        // generate PDF
+        $company = Company::first();
+        $establishment = Establishment::first();
+        $pdf = PDF::loadView('report::promotions.report_items_points_pdf', compact("document_customer", "receiveds", "company", "establishment"))
+            ->setPaper('a4', 'landscape');
+    } */
+
+    public function reportItems($document_customer_id)
+    {
+        $customer = Person::find($document_customer_id);
+        $details = $this->detail($document_customer_id);
+        $document_customer = $details['document_customer'] ?? null;
+        $receiveds = $details['receiveds'] ?? collect();
+
+        $company = Company::first();
+        $establishment = Establishment::first();
+
+        $pdf = PDF::loadView(
+            'report::promotions.report_items_points',
+            compact("document_customer", "receiveds", "company", "establishment", "customer")
+        )->setPaper('a4', );
+        // Guardar PDF
+        //$path = storage_path("app/public/reports/report_items_points_{$document_customer_id}.pdf");
+        //$pdf->save($path);
+
+        // Retornar PDF al navegador
+        return $pdf->stream("report_items_points_{$document_customer_id}.pdf");
+    }
+
+
 
     public function records(Request $request)
     {
@@ -138,13 +172,13 @@ class ReportPromotionController extends Controller
         if ($isFromAdmin) {
             if ($month_start && $month_end) {
                 // Si ambos meses vienen, filtra entre ambos
-                $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
-                $endDate = Carbon::parse($month_end.'-01')->endOfMonth();
+                $startDate = Carbon::parse($month_start . '-01')->startOfMonth();
+                $endDate = Carbon::parse($month_end . '-01')->endOfMonth();
                 $records = $records->whereBetween('created_at', [$startDate, $endDate]);
             } elseif ($month_start) {
                 // Si solo viene month_start, filtra solo ese mes
-                $startDate = Carbon::parse($month_start.'-01')->startOfMonth();
-                $endDate = Carbon::parse($month_start.'-01')->endOfMonth();
+                $startDate = Carbon::parse($month_start . '-01')->startOfMonth();
+                $endDate = Carbon::parse($month_start . '-01')->endOfMonth();
                 $records = $records->whereBetween('created_at', [$startDate, $endDate]);
             }
         } else {

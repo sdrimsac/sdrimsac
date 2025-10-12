@@ -30,7 +30,7 @@
     <div class="summary">
         <h2>Cliente: {{ $customer->name }}</h2>
         <!-- <p><strong>Puntos totales:</strong> {{ $points_available }}</p> -->
-        <h6><strong>Puntos disponible:</strong> {{ $points }}</h6>
+        <h3><strong>Puntos disponible:</strong> {{ $points }}</h3>
     </div>
 
     <h3>Productos disponibles por puntos:</h3>
