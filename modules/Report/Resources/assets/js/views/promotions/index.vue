@@ -29,7 +29,7 @@
                         <td v-if="isPromotionPoints">{{ row.points }}</td>
                         <td v-else>{{ row.acc_total }}</td>
                         <td>
-                            <button class="btn btn-sm btn-success" @click="showPoints(row.customer_id)">Item disponibles</button>
+                            <button class="btn btn-sm btn-success" @click="showPoints(row.customer_id, row.customer_name)">Item disponibles</button>
                         </td>
                         <td>
                             <button class="btn btn-sm btn-primary" @click="showDetail(row)">Ver detalle</button>
@@ -42,7 +42,7 @@
         :isPromotionPoints="isPromotionPoints"
         :current-row="currentRow" :show-dialog.sync="showDetailDialog"></detail>
 
-    <points :show-dialog.sync="showPointsDialog" :customer-id="currentRow ? currentRow.customer_id : null"></points>
+    <points :show-dialog.sync="showPointsDialog" :customer-id="currentRow ? currentRow.customer_id : null" :current-row="currentRow"></points>
     </div>
 </template>
 
@@ -76,8 +76,8 @@ export default {
             this.showDetailDialog = true;
         },
 
-        showPoints(customerId) {
-            this.currentRow = { customer_id: customerId };
+        showPoints(customerId, customerName) {
+            this.currentRow = { customer_id: customerId, customer_name: customerName };
             this.showPointsDialog = true;
         }
     }

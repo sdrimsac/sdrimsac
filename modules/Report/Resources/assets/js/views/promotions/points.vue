@@ -1,7 +1,7 @@
 <template>
     <el-dialog :visible.sync="showDetailDialog" width="80%" :close-on-click-modal="false"
         :before-close="() => { showDetailDialog = false; currentRow = null; }" centered :destroy-on-close="true"
-        :title="`Detalle de la promoción`" appended-to-body>
+        :title="`Detalle de la promoción ${currentRow ? currentRow.promotion_name : ''}` " appended-to-body>
         <div>
             <div class="card mb-0 pt-2 pt-md-0">
                 <div class="card-header">
@@ -48,13 +48,13 @@
                 </div>
             </div>
         </div>
-    <Whatsapp :customer-id="customerId" :showDialog.sync="showWhatsappDialog"/>
+    <Whatsapp :customer-id="customerId" :showDialog.sync="showWhatsappDialog" :currentRow="currentRow"/>
     </el-dialog>
 </template>
 <script>
 import Whatsapp from "./whatsap.vue";
 export default {
-    props: ['isPromotionPoints', 'showDialog', 'customerId'],
+    props: ['isPromotionPoints', 'showDialog', 'customerId', 'currentRow'],
     components: { Whatsapp },
     data() {
         return {

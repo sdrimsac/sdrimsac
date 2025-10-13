@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-    props: ['showDialog', 'customerId'],
+    props: ['showDialog', 'customerId', 'currentRow'],
     data() {
         return {
             showDetailDialog: this.showDialog,
@@ -50,14 +50,15 @@ export default {
             try {
                 const response = await this.$http.post(`/whatsapp-promotion`, {
                     number: this.whatsappNumber,
-                    customer_id: this.customerId, 
-                    message: 'Hola, Estimado cliente tiene promociones disponibles a los cuales puedes acceder ' + this.customerId + '.',
-                    file_name: "promotion_report_" + this.customerId + ".pdf",
+                    customer_id: this.customerId,
+                    message: 'Hola, Estimado cliente ' + this.currentRow.customer_name + ' tiene promociones disponibles a los cuales puedes acceder.',
+                    file_name: "promotion_report_" + this.currentRow.customer_id + ".pdf",
                     sender: "sdrimsac",
                     resource: "/promotions-document/download-pdf/" + this.customerId
                 });
 
-                if (response.data.success) {
+                    console.log('Respuesta backend:', response);
+                if (response.data.status) {
                     this.$message.success('Mensaje enviado correctamente.');
                     this.closeDialog();
                 } else {

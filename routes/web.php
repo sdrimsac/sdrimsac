@@ -90,6 +90,8 @@ if ($hostname) {
             Route::post('users/cambiar_contrasena', [App\Http\Controllers\Tenant\UserController::class, 'cambiarContrasena'])->name('cambiar_contrasena');
 
             Route::get('caja/promotions-document/promotionPointsPdf/{customer_id}', [PromotionDocumentController::class, 'promotionPointsPdf']);
+
+            //Route::post('/promotions-document/download-pdf/{id}', [PromotionDocumentController::class, 'pdfStorageFile']);
             Route::get('/promotions-document/download-pdf/{id}', [PromotionDocumentController::class, 'pdfStorageFile']);
 
             Route::get('/reports/pdf-points/{customer_id}',[ReportPromotionController::class, 'reportItems']);

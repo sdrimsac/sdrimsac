@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title>Promocion</title>
     <style>
-        /* @page {
-            margin: 0;
-        } */
+        @page {
+            margin: 3px;
+        }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
@@ -18,7 +18,8 @@
         }
 
         .ticket {
-            width: 226.77px; /* 80mm */
+            width: 226.77px;
+            /* 80mm */
             padding: 0;
             margin: 0;
         }
@@ -65,7 +66,6 @@
 </head>
 
 <body>
-    <!-- encabezado de prueba removido para evitar desplazamientos -->
     <div class="ticket">
         <div class="center" style="margin-bottom: 6px;">
             <div class="center">
@@ -90,18 +90,25 @@
                     <span style="font-weight:bold;">{{ $item['customer_points'] }}</span>
                 </div>
                 <div style="font-size:12px;">Descripción: {{ $item['item_description'] }}</div>
-                @if(!empty($item['item_image']))
+                @php
+                // Determinar la ruta de la imagen del producto si existe, de lo contrario usar la imagen por defecto
+                $imageFile = $item['item_image'] ?? null;
+                $candidatePublicPath = $imageFile ? public_path('storage/uploads/items/' . $imageFile) : null;
+                $hasImage = $candidatePublicPath && file_exists($candidatePublicPath);
+                $imgSrc = $hasImage
+                ? asset('storage/uploads/items/' . $imageFile)
+                : asset('logo/imagen-no-disponible.jpg');
+                @endphp
                 <div style="text-align:center; margin:4px 0;">
-                    <img src="{{ public_path('storage/uploads/items/' . $item['item_image']) }}" alt="{{ $item['item_name'] }}" style="width:25%; height:auto; display:inline-block;">
+                    <br>
+                    <img src="{{ $imgSrc }}" alt="{{ $item['item_name'] }}" style="width:25%; height:auto; display:inline-block;">
+                    <div style="font-size:12px;">Puntos requeridos: <span style="font-weight:bold;">{{ $item['item_points_value'] }}</span></div>
+                    <div style="font-size:12px;">Cantidad: <span style="font-weight:bold;">{{ $item['item_quantity'] }}</span></div>
+                    <div style="font-size:12px;">Fecha de vencimiento: <span style="font-weight:bold;">{{ $item['promotion_end_date'] }}</span></div>
                 </div>
-                @endif
-                <div style="font-size:12px;">Puntos requeridos: <span style="font-weight:bold;">{{ $item['item_points_value'] }}</span></div>
-                <div style="font-size:12px;">Cantidad: <span style="font-weight:bold;">{{ $item['item_quantity'] }}</span></div>
-                <div style="font-size:12px;">Fecha de vencimiento: <span style="font-weight:bold;">{{ $item['promotion_end_date'] }}</span></div>
             </div>
             @endforeach
             @endif
-        </div>
 </body>
 
 </html>

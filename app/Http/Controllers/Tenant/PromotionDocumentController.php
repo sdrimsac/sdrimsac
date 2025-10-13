@@ -394,6 +394,47 @@ class PromotionDocumentController extends Controller
         return $pdf->stream($timestamp . '_promociones_.pdf');
     }
 
+    /* public function pdfStorageFile($id)
+    {
+        $number = Company::first()->number;
+        $directory = 'promocion';
+        $fileName = "promociones_por_puntos_{$id}_{$number}.pdf";
+        $relativePath = $directory . '/' . $fileName;
+
+        // Verificar si el archivo existe en el disco público
+        if (!Storage::disk('public')->exists($relativePath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El archivo PDF no existe para este cliente.'
+            ], 404);
+        }
+
+        // Retornar el archivo como descarga
+        return response()->file(storage_path('app/public/' . $relativePath));
+    } */
+
+    public function pdfStorageFile($id)
+    {
+        $number = Company::first()->number;
+        $fileName1 = "promociones_por_puntos_{$id}_{$number}.pdf";
+        $fileName2 = "promociones_por_puntos_{$id}_{$number}_.pdf";
+
+        $absolutePath1 = public_path("storage/{$fileName1}");
+        $absolutePath2 = public_path("storage/{$fileName2}");
+
+        if (file_exists($absolutePath1)) {
+            return response()->file($absolutePath1);
+        } elseif (file_exists($absolutePath2)) {
+            return response()->file($absolutePath2);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'El archivo PDF no existe para este cliente.'
+            ], 404);
+        }
+    }
+
+
     public function PromotionPointsNew($customer_id)
     {
 
@@ -549,111 +590,6 @@ class PromotionDocumentController extends Controller
         return $this->getPromotionRecordsById($customer_id);
     }
 
-    /* public function getPromoItemsPdf($customer_id)
-    {
-
-        $customer = Person::find($customer_id);
-        if (!$customer) {
-            return collect();
-        }
-
-        $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
-            ->where('active', 1)
-            ->sum('points');
-
-        $points_available = PromotionDocumentCustomer::where('customer_id', $customer_id)
-            ->where('active', 1)
-            ->sum('acc_total');
-
-        $customer_name = $customer->name;
-
-        $records = $this->getPromotionRecordsById($customer_id);
-
-        try {
-            // Usa la vista de la ruta proporcionada
-            $pdf = PDF::loadView('tenant.promotion.report_points', compact(
-                'customer',
-                'records',
-                'points',
-                'points_available'
-            ))->setPaper('a4');
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al generar el PDF',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ], 500);
-        }
-        return $pdf->stream('promociones_por_puntos.pdf');
-    } */
-
-    /* public function getPromoItemsPdf($customer_id)
-    {
-        $customer = Person::find($customer_id);
-        if (!$customer) {
-            return collect();
-        }
-
-        $company_number = Str::padLeft(auth()->user()->establishment->number, 3, '0');
-
-        $points = PromotionDocumentCustomer::where('customer_id', $customer_id)
-            ->where('active', 1)
-            ->sum('points');
-
-        $points_available = PromotionDocumentCustomer::where('customer_id', $customer_id)
-            ->where('active', 1)
-            ->sum('acc_total');
-
-        $customer_name = $customer->name;
-        $records = $this->getPromotionRecordsById($customer_id);
-
-        try {
-            // Asegurar opciones de renderizado para evitar caracteres ilegibles
-            PDF::setOptions([
-                'defaultFont' => 'DejaVu Sans',
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-            ]);
-
-            $pdf = PDF::loadView('tenant.promotion.report_points', compact(
-                'customer',
-                'records',
-                'points',
-                'points_available'
-            ))->setPaper('a4');
-
-            // Ruta donde se guardará el PDF dentro de la carpeta 'promocion'
-            $directory = 'promocion'; // storage/app/public/promocion
-            $fileName = "promociones_por_puntos_{$customer_id}.pdf";
-            $relativePath = $directory . '/' . $fileName;
-
-            // Crear la carpeta 'promocion' si no existe en el disco público
-            if (!Storage::disk('public')->exists($directory)) {
-                Storage::disk('public')->makeDirectory($directory);
-            }
-
-            // Eliminar el archivo anterior si existe
-            if (Storage::disk('public')->exists($relativePath)) {
-                Storage::disk('public')->delete($relativePath);
-            }
-
-            // Guardar el nuevo PDF en storage/app/public/promocion
-            $absolutePath = storage_path('app/public/' . $relativePath);
-            $pdf->save(storage_path('app/public/promociones_por_puntos_' . $customer_id . '_' . $company_number . '_' . '.pdf'));
-            $pdf->save($absolutePath);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al generar el PDF',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ], 500);
-        }
-
-        // Opcional: retorna el PDF en el navegador
-        return $pdf->stream($fileName);
-    } */
     public function getPromoItemsPdf($customer_id)
     {
         $customer = Person::find($customer_id);
@@ -688,10 +624,10 @@ class PromotionDocumentController extends Controller
             ))->setPaper('a4');
 
 
-                $fileName = "promociones_por_puntos_{$customer_id}_{$company_number}_.pdf";
-                $absolutePath = storage_path('app/public/' . $fileName);
+            $fileName = "promociones_por_puntos_{$customer_id}_{$company_number}_.pdf";
+            $absolutePath = storage_path('app/public/' . $fileName);
 
-                $pdf->save($absolutePath);
+            $pdf->save($absolutePath);
             /* } */
         } catch (\Throwable $e) {
             return response()->json([
@@ -702,24 +638,5 @@ class PromotionDocumentController extends Controller
             ], 500);
         }
         return $pdf->stream('pdf_file.pdf');
-    }
-
-    public function pdfStorageFile($id)
-    {
-        $number = Company::first()->number;
-        $directory = 'promocion';
-        $fileName = "promociones_por_puntos_{$id}_{$number}.pdf";
-        $relativePath = $directory . '/' . $fileName;
-
-        // Verificar si el archivo existe en el disco público
-        if (!Storage::disk('public')->exists($relativePath)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El archivo PDF no existe para este cliente.'
-            ], 404);
-        }
-
-        // Retornar el archivo como descarga
-        return response()->file(storage_path('app/public/' . $relativePath));
     }
 }
