@@ -268,7 +268,7 @@
                                         <td :class="{
                                             'text-danger': row.extorned
                                         }">
-                                            {{ row.date_of_payment }}
+                                            {{ row.date_time_issue }}
                                         </td>
                                         <td :class="{
                                             'text-danger': row.extorned

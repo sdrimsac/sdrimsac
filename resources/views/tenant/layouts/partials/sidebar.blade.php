@@ -607,6 +607,16 @@
                         </li>
                     @endif
 
+                    @if (!$roleService->isAccountant($user->worker_type_id) && $config->cotizaciones)
+                        <li>
+                            <a class="{{ $path[0] === 'quotations' ? 'active' : '' }}"
+                                href="{{ route('tenant.finanzas.index') }}">
+                                <i class="icofont-dollar" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                                <span style="font-size: 1em; ">Finanzas</span>
+                            </a>
+                        </li>
+                    @endif
+
                     @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
 
                         <li>

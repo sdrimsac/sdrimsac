@@ -175,7 +175,7 @@
                                         ></i>
                                         <span>Nota de Crédito</span>
                                     </el-button>
-                                    <el-button
+                                    <!-- <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #52c41a; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
                                         v-if="data.is_credit"
@@ -187,7 +187,7 @@
                                             style="color: white; margin-right: 10px;"
                                         ></i>
                                         <span>Pagos CPE</span>
-                                    </el-button>
+                                    </el-button> -->
                                     <el-button
                                         class="dropdown-item d-flex align-items-center"
                                         style="background-color: #1890ff; color: white; width: 100%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"

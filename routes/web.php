@@ -621,6 +621,7 @@ if ($hostname) {
                 Route::get('documents/recordsActivity', [App\Http\Controllers\Tenant\ItemController::class, 'recordsActivity']);
                 Route::get('documents/RegisterDocuments', [App\Http\Controllers\Tenant\DocumentController::class, 'RegisterDocuments']);
                 Route::get('documents/txt-validate', [App\Http\Controllers\Tenant\DocumentController::class, 'txtValidate']);
+                Route::get('documents/credit-cash-records/records', [App\Http\Controllers\Tenant\DocumentController::class, 'document_credit_cash_records']);
 
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);
@@ -973,6 +974,9 @@ if ($hostname) {
                 Route::get('quotations/records', [App\Http\Controllers\Tenant\QuotationController::class, 'records']);
                 Route::get('quotations/create/{saleOpportunityId?}', [App\Http\Controllers\Tenant\QuotationController::class, 'create'])->name('tenant.quotations.create')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('quotations/edit/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'edit'])->middleware('redirect.level')->middleware('just.admin');
+
+                // rutan finanza 
+                Route::get('finanzas', [App\Http\Controllers\Tenant\FinanzasController::class, 'index'])->name('tenant.finanzas.index')->middleware('redirect.level')->middleware('just.admin');
 
                 Route::get('quotations/state-type/{state_type_id}/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'updateStateType']);
                 Route::get('quotations/filter', [App\Http\Controllers\Tenant\QuotationController::class, 'filter']);

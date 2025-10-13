@@ -997,6 +997,8 @@ const app = new Vue({
             import("./views/quotations/form_edit.vue"),
         //report-credit-index-cash
         //report-consignment-index
+        "tenant-finanzas-index": () => import("./views/finanzas/index.vue"),
+        
         "report-consignment-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/consignment/index.vue"

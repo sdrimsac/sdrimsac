@@ -1,0 +1,1364 @@
+<!-- Modulo de Cotizaciones -->
+<template>
+    <div class="card mb-0 pt-2 pt-md-0">
+        <div class="card-header bg-primary">
+            <h4 class="my-0 text-white">
+                <i class="fas fa-clipboard-list"></i>
+                Nueva Cotización
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" v-if="loading_form">
+                <div class="invoice">
+                    <header class="clearfix">
+                        <div class="row">
+                            <div class="col-sm-2 text-center mt-3 mb-0">
+                                <logo
+                                    url="/"
+                                    :path_logo="
+                                        company.logo != null
+                                            ? `/storage/uploads/logos/${company.logo}`
+                                            : ''
+                                    "
+                                ></logo>
+                            </div>
+                            <div class="col-sm-6 text-left mt-3 mb-0">
+                                <!-- <address class="ib mr-2">
+                                <span class="font-weight-bold d-block"
+                                    >COTIZACIÓN</span
+                                >
+                        
+                                <span class="font-weight-bold">{{
+                                    company.name
+                                }}</span>
+                                <br />
+                                <div v-if="establishment.address != '-'">
+                                    {{ establishment.address }},
+                                </div>
+                                {{ establishment.district.description }},
+                                {{ establishment.province.description }},
+                                {{ establishment.department.description }} -
+                                {{ establishment.country.description }}
+                                <br />
+                                {{ establishment.email }} -
+                                <span v-if="establishment.telephone != '-'">{{
+                                    establishment.telephone
+                                }}</span>
+                            </address> -->
+                                <address
+                                    class="ib mr-2"
+                                    v-if="
+                                        establishment &&
+                                            establishment.district &&
+                                            establishment.province &&
+                                            establishment.department &&
+                                            establishment.country
+                                    "
+                                >
+                                    <span class="font-weight-bold d-block"
+                                        >COTIZACIÓN</span
+                                    >
+                                    <span class="font-weight-bold">{{
+                                        company.name
+                                    }}</span>
+                                    <br />
+                                    <div v-if="establishment.address != '-'">
+                                        {{ establishment.address }},
+                                    </div>
+                                    {{ establishment.district.description }},
+                                    {{ establishment.province.description }},
+                                    {{ establishment.department.description }} -
+                                    {{ establishment.country.description }}
+                                    <br />
+                                    {{ establishment.email }} -
+                                    <span v-if="establishment.telephone != '-'">
+                                        {{ establishment.telephone }}
+                                    </span>
+                                </address>
+                            </div>
+                            <!-- <div class="col-sm-4">
+                            <el-checkbox class="mt-3" v-model="form.active_terms_condition" @change="changeTermsCondition">Términos y condiciones del contrato</el-checkbox>
+                        </div> -->
+                        </div>
+                    </header>
+                    <form autocomplete="off" @submit.prevent="submit">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="form-group text-left flex-grow-1">
+                                    <div class="row">
+                                        <!-- Cliente -->
+                                        <div class="col-lg-3 pb-2">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.customer_id
+                                                }"
+                                            >
+                                                <label
+                                                    class="control-label font-weight-bold text-primary"
+                                                >
+                                                    <i
+                                                        class="fas fa-user fa-lg"
+                                                    ></i>
+                                                    Cliente
+                                                    <a
+                                                        href="#"
+                                                        @click.prevent="
+                                                            showDialogNewPerson = true
+                                                        "
+                                                        >[+ Nuevo]</a
+                                                    >
+                                                </label>
+                                                <el-select
+                                                    v-model="form.customer_id"
+                                                    filterable
+                                                    remote
+                                                    class="border-left rounded-left border-info"
+                                                    popper-class="el-select-customers"
+                                                    dusk="customer_id"
+                                                    placeholder="Escriba el nombre o número de documento del cliente"
+                                                    :remote-method="
+                                                        searchRemoteCustomers
+                                                    "
+                                                    :loading="loading_search"
+                                                >
+                                                    <el-option
+                                                        v-for="option in customers"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.customer_id"
+                                                    v-text="
+                                                        errors.customer_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Fecha de emisión -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.date_of_issue
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Fec. Emisión
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.date_of_issue"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="false"
+                                                    @change="changeDateOfIssue"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.date_of_issue"
+                                                    v-text="
+                                                        errors.date_of_issue[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tiempo de Validez -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.date_of_due
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Tiempo de Validez
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.date_of_due"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="true"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.date_of_due"
+                                                    v-text="
+                                                        errors.date_of_due[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tiempo de Entrega -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.delivery_date
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-calendar-check red-icon fa-lg"
+                                                    ></i>
+                                                    Tiempo de Entrega
+                                                </label>
+                                                <el-date-picker
+                                                    class="w-100"
+                                                    v-model="form.delivery_date"
+                                                    type="date"
+                                                    value-format="yyyy-MM-dd"
+                                                    :clearable="true"
+                                                ></el-date-picker>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="errors.delivery_date"
+                                                    v-text="
+                                                        errors.delivery_date[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Dirección de envío -->
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-map-marker-alt fa-lg"
+                                                    ></i>
+                                                    <i
+                                                        class="fas fa-flag-checkered fa-lg"
+                                                    ></i>
+                                                    Dirección de envío
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.shipping_address
+                                                    "
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.shipping_address
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .shipping_address[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Término de pago -->
+                                        <!-- <div class="col-lg-3">
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.payment_method_type_id
+                                            }"
+                                        >
+                                            <label class="control-label">
+                                                Término de pago
+                                            </label>
+                                            <el-select
+                                                class="w-100"
+                                                v-model="form.payment_method_type_id"
+                                                filterable
+                                                @change="changePaymentMethodType"
+                                            >
+                                                <el-option
+                                                    v-for="option in payment_method_types"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="option.description"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                class="form-control-feedback"
+                                                v-if="errors.payment_method_type_id"
+                                                v-text="
+                                                    errors.payment_method_type_id[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div> -->
+
+                                        <!-- Número de cuenta -->
+                                        <!-- <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label class="control-label">
+                                                <i class="fas fa-credit-card fa-lg"></i>
+                                                Número de cuenta
+                                            </label>
+                                            <el-input v-model="form.account_number">
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i>
+                                            </el-input>
+                                            <small
+                                                class="form-control-feedback"
+                                                v-if="errors.account_number"
+                                                v-text="errors.account_number[0]"
+                                            ></small>
+                                        </div>
+                                    </div> -->
+
+                                        <!-- Moneda -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.currency_type_id
+                                                }"
+                                            >
+                                                <label class="control-label"
+                                                    >Moneda</label
+                                                >
+                                                <el-select
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.currency_type_id
+                                                    "
+                                                    @change="changeCurrencyType"
+                                                >
+                                                    <el-option
+                                                        v-for="option in currency_types"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.description
+                                                        "
+                                                    ></el-option>
+                                                </el-select>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.currency_type_id
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .currency_type_id[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tipo de cambio -->
+                                        <div class="col-lg-3">
+                                            <div
+                                                class="form-group"
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.exchange_rate_sale
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-exchange-alt red-icon fa-lg"
+                                                    ></i>
+                                                    Tipo de cambio
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Tipo de cambio del día, extraído de SUNAT"
+                                                        placement="top-end"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="
+                                                        form.exchange_rate_sale
+                                                    "
+                                                >
+                                                    <i
+                                                        slot="prefix"
+                                                        class="el-icon-edit-outline"
+                                                    ></i>
+                                                </el-input>
+                                                <small
+                                                    class="form-control-feedback"
+                                                    v-if="
+                                                        errors.exchange_rate_sale
+                                                    "
+                                                    v-text="
+                                                        errors
+                                                            .exchange_rate_sale[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Vendedor -->
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <i
+                                                        class="fas fa-user-tie fa-lg"
+                                                    ></i>
+                                                    Vendedor
+                                                </label>
+                                                <el-select
+                                                    v-model="form.seller_id"
+                                                    filterable
+                                                >
+                                                    <el-option
+                                                        v-for="(option,
+                                                        idx) in sellers"
+                                                        :key="idx"
+                                                        :value="option.id"
+                                                        :label="option.name"
+                                                    ></el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="col-lg-12">
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.exchange_rate_sale
+                                            }"
+                                        >
+                                            <label class="control-label">
+                                                <i
+                                                    class="fas fa-comment fa-lg"
+                                                ></i>
+                                                Observaciones
+                                            </label>
+                                            <el-input
+                                                type="textarea"
+                                                :rows="3"
+                                                v-model="form.description"
+                                            >
+                                                <i
+                                                    slot="prefix"
+                                                    class="el-icon-edit-outline"
+                                                ></i
+                                            ></el-input>
+                                            <small
+                                                class="form-control-feedback"
+                                                v-if="errors.description"
+                                                v-text="errors.description[0]"
+                                            ></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-body">
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr
+                                                    slot="heading"
+                                                    class="bg-primary"
+                                                >
+                                                    <th
+                                                        class="text-white text-white"
+                                                    >
+                                                        #
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-white font-weight-bold"
+                                                    >
+                                                        Descripción
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-center font-weight-bold"
+                                                    >
+                                                        Unidad
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Cantidad
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Precio Unitario
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Sub Total
+                                                    </th>
+                                                    <!--<th class="text-end font-weight-bold">Cargo</th>-->
+                                                    <th
+                                                        class="text-white text-end font-weight-bold"
+                                                    >
+                                                        Total
+                                                    </th>
+                                                    <th
+                                                        class="text-white text-end"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-outline-white"
+                                                            @click.prevent="
+                                                                showDialogAddItem = true
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fas fa-cart-plus fa-lg"
+                                                            ></i>
+                                                            Agregar Producto
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody v-if="form.items.length > 0">
+                                                <tr
+                                                    v-for="(row,
+                                                    index) in form.items"
+                                                    :key="index"
+                                                >
+                                                    <td>{{ index + 1 }}</td>
+                                                    <td>
+                                                        {{
+                                                            row.item.description
+                                                        }}
+                                                        {{
+                                                            row.item
+                                                                .presentation &&
+                                                            row.item.presentation.hasOwnProperty(
+                                                                "description"
+                                                            )
+                                                                ? row.item
+                                                                      .presentation
+                                                                      .description
+                                                                : ""
+                                                        }}<br /><small>{{
+                                                            row
+                                                                .affectation_igv_type
+                                                                .description
+                                                        }}</small>
+                                                        <template
+                                                            v-if="
+                                                                row.item.lots &&
+                                                                    row.item
+                                                                        .lots
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(lot,
+                                                                index) in row
+                                                                    .item.lots"
+                                                                :key="index"
+                                                            >
+                                                                <b>Serie:</b>
+                                                                {{ lot.series }}
+                                                            </small>
+                                                        </template>
+
+                                                        <template
+                                                            v-if="
+                                                                row.item
+                                                                    .lots_group &&
+                                                                    row.item
+                                                                        .lots_group
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(lot,
+                                                                index) in row
+                                                                    .item
+                                                                    .lots_group"
+                                                                :key="index"
+                                                            >
+                                                                <b>Lote:</b>
+                                                                {{ lot.code }}
+                                                            </small>
+                                                        </template>
+
+                                                        <template
+                                                            v-if="
+                                                                row.item
+                                                                    .color_size &&
+                                                                    row.item
+                                                                        .color_size
+                                                                        .length >
+                                                                        0
+                                                            "
+                                                        >
+                                                            <br />
+                                                            <small
+                                                                class="text-primary"
+                                                                v-for="(color,
+                                                                index) in row.item.color_size.filter(
+                                                                    i =>
+                                                                        i.selectedQuantity
+                                                                )"
+                                                                :key="index"
+                                                            >
+                                                                Talla:
+                                                                {{
+                                                                    color.size
+                                                                }}-{{
+                                                                    color.color
+                                                                }}
+                                                                <b>Cant:</b>
+                                                                {{
+                                                                    color.selectedQuantity
+                                                                }}
+                                                            </small>
+                                                        </template>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{
+                                                            row.item
+                                                                .unit_type_id
+                                                        }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ row.quantity }}
+                                                    </td>
+                                                    <!-- <td class="text-end">{{currency_type.symbol}} {{row.unit_price}}</td> -->
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{
+                                                            getFormatUnitPriceRow(
+                                                                row.unit_price
+                                                            )
+                                                        }}
+                                                    </td>
+
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{ row.total_value }}
+                                                    </td>
+                                                    <!--<td class="text-end">{{ currency_type.symbol }} {{ row.total_charge }}</td>-->
+                                                    <td class="text-end">
+                                                        {{
+                                                            currency_type.symbol
+                                                        }}
+                                                        {{ row.total }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <button
+                                                            type="button"
+                                                            class="btn waves-effect waves-light btn-xs btn-danger"
+                                                            @click.prevent="
+                                                                clickRemoveItem(
+                                                                    index
+                                                                )
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash fa-lg"
+                                                            ></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="8"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Totales  -->
+                                <div
+                                    class="col-md-4 offset-md-8"
+                                    v-if="
+                                        form.total_exportation > 0 ||
+                                            form.total_free > 0 ||
+                                            form.total_unaffected > 0 ||
+                                            form.total_exonerated > 0 ||
+                                            form.total_taxed > 0 ||
+                                            form.total_igv > 0 ||
+                                            form.total > 0
+                                    "
+                                >
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p
+                                                class="text-end"
+                                                v-if="
+                                                    form.total_exportation > 0
+                                                "
+                                            >
+                                                OP.EXPORTACIÓN:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_exportation }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_free > 0"
+                                            >
+                                                OP.GRATUITAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_free }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_unaffected > 0"
+                                            >
+                                                OP.INAFECTAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_unaffected }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_exonerated > 0"
+                                            >
+                                                OP.EXONERADAS:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_exonerated }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_taxed > 0"
+                                            >
+                                                OP.GRAVADA:
+                                                {{ currency_type.symbol }}
+                                                {{ form.total_taxed }}
+                                            </p>
+                                            <p
+                                                class="text-end"
+                                                v-if="form.total_igv > 0"
+                                            >
+                                                IGV: {{ currency_type.symbol }}
+                                                {{ form.total_igv }}
+                                            </p>
+                                            <h6
+                                                class="text-end"
+                                                v-if="form.total > 0"
+                                            >
+                                                <b>TOTAL A PAGAR: </b
+                                                >{{ currency_type.symbol }}
+                                                {{ form.total }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2"
+                        >
+                            <!-- Cancelar -->
+                            <el-button
+                                class="btn-cancel btn-cancel:hover"
+                                icon="fas fa-times fa-lg"
+                                @click.prevent="close()"
+                            >
+                                <span>Cancelar</span>
+                            </el-button>
+
+                            <el-button
+                                class="btn-save btn-save:hover"
+                                icon="fas fa-file-alt fa-lg"
+                                type="primary"
+                                native-type="submit"
+                                :loading="loading_submit"
+                                v-if="form.items.length > 0"
+                            >
+                                <span>Generar Cotización</span>
+                            </el-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <quotation-form-item
+            :showDialog.sync="showDialogAddItem"
+            :currency-type-id-active="form.currency_type_id"
+            :exchange-rate-sale="form.exchange_rate_sale"
+            :configuration="configuration"
+            @add="addRow"
+        >
+        </quotation-form-item>
+
+        <person-form
+            :showDialog.sync="showDialogNewPerson"
+            type="customers"
+            :external="true"
+            :document_type_id="form.document_type_id"
+        ></person-form>
+
+        <quotation-options
+            :showDialog.sync="showDialogOptions"
+            :recordId="quotationNewId"
+            :typeUser="typeUser"
+            :showGenerate="false"
+            :showClose="false"
+        ></quotation-options>
+
+        <terms-condition
+            :showDialog.sync="showDialogTermsCondition"
+            :form="form"
+            :showClose="false"
+        ></terms-condition>
+    </div>
+</template>
+
+<script>
+import TermsCondition from "./partials/terms_condition.vue";
+import QuotationFormItem from "./partials/item.vue";
+import PersonForm from "../persons/form.vue";
+import QuotationOptions from "../quotations/partials/options.vue";
+import { functions, exchangeRate } from "../../mixins/functions";
+import { calculateRowItem } from "../../helpers/functions";
+import Logo from "../companies/logo.vue";
+
+export default {
+    props: ["typeUser", "saleOpportunityId", "configuration"],
+    components: {
+        QuotationFormItem,
+        PersonForm,
+        QuotationOptions,
+        Logo,
+        TermsCondition
+    },
+    mixins: [functions, exchangeRate],
+    data() {
+        return {
+            sellers: [],
+            resource: "quotations",
+            showDialogTermsCondition: false,
+            showDialogAddItem: false,
+            showDialogNewPerson: false,
+            showDialogOptions: false,
+            loading_submit: false,
+            loading_form: false,
+            errors: {},
+            form: {},
+            currency_types: [],
+            discount_types: [],
+            charges_types: [],
+            all_customers: [],
+            payment_method_types: [],
+            customers: [],
+            company: null,
+            establishments: [],
+            establishment: null,
+            currency_type: {},
+            quotationNewId: null,
+            payment_destinations: [],
+            activePanel: 0,
+            loading_search: false,
+            selectedCustomer: null
+        };
+    },
+    async created() {
+        await this.initForm();
+        await this.$http.get(`/${this.resource}/tables`).then(response => {
+            this.sellers = response.data.sellers;
+            this.currency_types = response.data.currency_types;
+            this.establishments = response.data.establishments;
+            this.all_customers = response.data.customers;
+            this.discount_types = response.data.discount_types;
+            this.charges_types = response.data.charges_types;
+            this.company = response.data.company;
+            this.form.currency_type_id =
+                this.currency_types.length > 0
+                    ? this.currency_types[0].id
+                    : null;
+            this.form.establishment_id =
+                this.establishments.length > 0
+                    ? this.establishments[0].id
+                    : null;
+            this.payment_method_types = response.data.payment_method_types;
+            this.payment_destinations = response.data.payment_destinations;
+
+            this.changeEstablishment();
+            this.changeDateOfIssue();
+            this.changeCurrencyType();
+            this.allCustomers();
+        });
+        this.loading_form = true;
+        this.$eventHub.$on("reloadDataPersons", customer_id => {
+            this.reloadDataCustomers(customer_id);
+        });
+
+        await this.createQuotationFromSO();
+    },
+    methods: {
+        changeTermsCondition() {
+            if (this.form.active_terms_condition) {
+                this.showDialogTermsCondition = true;
+            } else {
+                this.form.terms_condition = null;
+            }
+        },
+        clickAddPayment() {
+            this.form.payments.push({
+                id: null,
+                document_id: null,
+                date_of_payment: moment().format("YYYY-MM-DD"),
+                payment_method_type_id: "01",
+                reference: null,
+                payment_destination_id: "cash",
+                payment: 0
+            });
+        },
+        clickCancel(index) {
+            this.form.payments.splice(index, 1);
+        },
+        async createQuotationFromSO() {
+            if (this.saleOpportunityId) {
+                let sale_opportunity = {};
+
+                await this.$http
+                    .get(`/sale-opportunities/record/${this.saleOpportunityId}`)
+                    .then(response => {
+                        sale_opportunity = response.data.data.sale_opportunity;
+                        if (sale_opportunity.customer) {
+                            // If customer data comes in the response, use it directly
+                            this.setCustomerFromResponse(
+                                sale_opportunity.customer
+                            );
+                        } else {
+                            // Otherwise fetch customer data
+                            this.reloadDataCustomers(
+                                sale_opportunity.customer_id
+                            );
+                        }
+                    });
+
+                await this.assignDataSaleOpportunity(sale_opportunity);
+            }
+        },
+        setCustomerFromResponse(customerData) {
+            if (!customerData) return;
+
+            const customer = {
+                id: customerData.id,
+                description: `${customerData.name ||
+                    customerData.trade_name} - ${customerData.number}`,
+                name: customerData.name,
+                trade_name: customerData.trade_name,
+                number: customerData.number
+            };
+
+            this.customers = [customer];
+            this.selectedCustomer = customer;
+            this.form.customer_id = customer.id;
+
+            // Force update after setting customer
+            this.$nextTick(() => {
+                this.$forceUpdate();
+            });
+        },
+
+        assignDataSaleOpportunity(sale_opportunity) {
+            this.form.establishment_id = sale_opportunity.establishment_id;
+            this.form.time_of_issue = moment().format("HH:mm:ss");
+            this.form.customer_id = sale_opportunity.customer_id;
+            this.form.currency_type_id = sale_opportunity.currency_type_id;
+            this.form.total_exportation = sale_opportunity.total_exportation;
+            this.form.total_free = sale_opportunity.total_free;
+            this.form.total_taxed = sale_opportunity.total_taxed;
+            this.form.total_unaffected = sale_opportunity.total_unaffected;
+            this.form.total_exonerated = sale_opportunity.total_exonerated;
+            this.form.total_igv = sale_opportunity.total_igv;
+            this.form.total_taxes = sale_opportunity.total_taxes;
+            this.form.total_value = sale_opportunity.total_value;
+            this.form.total = sale_opportunity.total;
+            this.form.items = sale_opportunity.items;
+            this.form.sale_opportunity_id = sale_opportunity.id;
+        },
+        getFormatUnitPriceRow(unit_price) {
+            return _.round(unit_price, 6);
+            // return unit_price.toFixed(6)
+        },
+        async changePaymentMethodType(flag_submit = true) {
+            let payment_method_type = await _.find(this.payment_method_types, {
+                id: this.form.payment_method_type_id
+            });
+            if (payment_method_type) {
+                if (payment_method_type.number_days) {
+                    this.form.date_of_issue = moment()
+                        .add(payment_method_type.number_days, "days")
+                        .format("YYYY-MM-DD");
+                    this.changeDateOfIssue();
+                }
+                // else{
+                //     if(flag_submit){
+                //         this.form.date_of_issue = moment().format('YYYY-MM-DD')
+                //         this.changeDateOfIssue()
+                //     }
+                // }
+            }
+        },
+        onCustomerChange(customer) {
+            if (customer) {
+                this.form.customer_id = customer.id;
+                this.selectedCustomer = customer;
+            }
+        },
+
+        searchRemoteCustomers(input) {
+            if (input.length > 0) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+
+                this.$http
+                    .get(`/${this.resource}/search/customers?${parameters}`)
+                    .then(response => {
+                        if (
+                            response.data.customers &&
+                            response.data.customers.length > 0
+                        ) {
+                            this.customers = response.data.customers.map(
+                                customer => ({
+                                    id: customer.id,
+                                    description: this.formatCustomerName(
+                                        customer
+                                    ),
+                                    name: customer.name,
+                                    trade_name: customer.trade_name,
+                                    number: customer.number
+                                })
+                            );
+                        }
+                        this.loading_search = false;
+                    });
+            } else {
+                this.allCustomers();
+            }
+        },
+
+        allCustomers() {
+            this.customers = this.all_customers.map(customer => ({
+                id: customer.id,
+                description: this.formatCustomerName(customer)
+            }));
+        },
+
+        formatCustomerName(customer) {
+            // Format customer name with number
+            if (customer.identity_document_type_id && customer.number) {
+                return `${customer.name || customer.trade_name} - ${
+                    customer.number
+                }`;
+            }
+            return (
+                customer.name ||
+                customer.trade_name ||
+                customer.description ||
+                ""
+            );
+        },
+
+        initForm() {
+            this.errors = {};
+            this.form = {
+                description: "",
+                prefix: "COT",
+                establishment_id: null,
+                date_of_issue: moment().format("YYYY-MM-DD"),
+                time_of_issue: moment().format("HH:mm:ss"),
+                customer_id: null,
+                currency_type_id: null,
+                purchase_order: null,
+                exchange_rate_sale: 0,
+                total_prepayment: 0,
+                total_charge: 0,
+                total_discount: 0,
+                total_exportation: 0,
+                total_free: 0,
+                total_taxed: 0,
+                total_unaffected: 0,
+                total_exonerated: 0,
+                total_igv: 0,
+                total_base_isc: 0,
+                total_isc: 0,
+                total_base_other_taxes: 0,
+                total_other_taxes: 0,
+                total_taxes: 0,
+                total_value: 0,
+                total: 0,
+                operation_type_id: null,
+                date_of_due: null,
+                delivery_date: null,
+                items: [],
+                charges: [],
+                discounts: [],
+                attributes: [],
+                guides: [],
+                payment_method_type_id: "10",
+                additional_information: null,
+                shipping_address: null,
+                account_number: null,
+                terms_condition: null,
+                active_terms_condition: false,
+                actions: {
+                    format_pdf: "a4"
+                },
+                payments: [],
+                sale_opportunity_id: null
+            };
+
+            this.clickAddPayment();
+        },
+        resetForm() {
+            this.activePanel = 0;
+            this.initForm();
+            this.form.currency_type_id =
+                this.currency_types.length > 0
+                    ? this.currency_types[0].id
+                    : null;
+            this.form.establishment_id =
+                this.establishments.length > 0
+                    ? this.establishments[0].id
+                    : null;
+            this.changeEstablishment();
+            this.changeDateOfIssue();
+            this.changeCurrencyType();
+            this.allCustomers();
+        },
+        changeEstablishment() {
+            this.establishment = _.find(this.establishments, {
+                id: this.form.establishment_id
+            });
+        },
+        cleanCustomer() {
+            this.form.customer_id = null;
+        },
+        changeDateOfIssue() {
+            // this.form.date_of_due = this.form.date_of_issue > this.form.date_of_due ? this.form.date_of_issue:null
+            this.searchExchangeRateByDate(this.form.date_of_issue).then(
+                response => {
+                    this.form.exchange_rate_sale = response;
+                }
+            );
+        },
+        addRow(row) {
+            this.form.items.push(JSON.parse(JSON.stringify(row)));
+
+            this.calculateTotal();
+        },
+        clickRemoveItem(index) {
+            this.form.items.splice(index, 1);
+            this.calculateTotal();
+        },
+        changeCurrencyType() {
+            this.currency_type = _.find(this.currency_types, {
+                id: this.form.currency_type_id
+            });
+            let items = [];
+            this.form.items.forEach(row => {
+                items.push(
+                    calculateRowItem(
+                        row,
+                        this.form.currency_type_id,
+                        this.form.exchange_rate_sale
+                    )
+                );
+            });
+            this.form.items = items;
+            this.calculateTotal();
+        },
+        calculateTotal() {
+            let total_discount = 0;
+            let total_charge = 0;
+            let total_exportation = 0;
+            let total_taxed = 0;
+            let total_exonerated = 0;
+            let total_unaffected = 0;
+            let total_free = 0;
+            let total_igv = 0;
+            let total_value = 0;
+            let total = 0;
+            this.form.items.forEach(row => {
+                total_discount += parseFloat(row.total_discount);
+                total_charge += parseFloat(row.total_charge);
+
+                if (row.affectation_igv_type_id === "10") {
+                    total_taxed += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "20") {
+                    total_exonerated += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "30") {
+                    total_unaffected += parseFloat(row.total_value);
+                }
+                if (row.affectation_igv_type_id === "40") {
+                    total_exportation += parseFloat(row.total_value);
+                }
+                if (
+                    ["10", "20", "30", "40"].indexOf(
+                        row.affectation_igv_type_id
+                    ) < 0
+                ) {
+                    total_free += parseFloat(row.total_value);
+                }
+                if (
+                    ["10", "20", "30", "40"].indexOf(
+                        row.affectation_igv_type_id
+                    ) > -1
+                ) {
+                    total_igv += parseFloat(row.total_igv);
+                    total += parseFloat(row.total);
+                }
+                total_value += parseFloat(row.total_value);
+            });
+
+            this.form.total_exportation = _.round(total_exportation, 2);
+            this.form.total_taxed = _.round(total_taxed, 2);
+            this.form.total_exonerated = _.round(total_exonerated, 2);
+            this.form.total_unaffected = _.round(total_unaffected, 2);
+            this.form.total_free = _.round(total_free, 2);
+            this.form.total_igv = _.round(total_igv, 2);
+            this.form.total_value = _.round(total_value, 2);
+            this.form.total_taxes = _.round(total_igv, 2);
+            this.form.total = _.round(total, 2);
+        },
+        validate_payments() {
+            //eliminando items de pagos
+            for (let index = 0; index < this.form.payments.length; index++) {
+                if (parseFloat(this.form.payments[index].payment) === 0)
+                    this.form.payments.splice(index, 1);
+            }
+
+            let error_by_item = 0;
+            let acum_total = 0;
+
+            this.form.payments.forEach(item => {
+                acum_total += parseFloat(item.payment);
+                if (item.payment <= 0 || item.payment == null) error_by_item++;
+            });
+
+            return {
+                error_by_item: error_by_item,
+                acum_total: acum_total
+            };
+        },
+        async submit() {
+            let validate = await this.validate_payments();
+            if (
+                validate.acum_total > parseFloat(this.form.total) ||
+                validate.error_by_item > 0
+            ) {
+                return this.$message.error(
+                    "Los montos ingresados superan al monto a pagar o son incorrectos"
+                );
+            }
+
+            if (this.form.date_of_issue > this.form.date_of_due)
+                return this.$message.error(
+                    "La fecha de emisión no puede ser posterior a la de vencimiento"
+                );
+
+            if (this.form.date_of_issue > this.form.delivery_date)
+                return this.$message.error(
+                    "La fecha de emisión no puede ser posterior a la de entrega"
+                );
+
+            this.loading_submit = true;
+            // await this.changePaymentMethodType(false)
+            await this.$http
+                .post(`/${this.resource}`, this.form)
+                .then(response => {
+                    if (response.data.success) {
+                        this.resetForm();
+                        this.quotationNewId = response.data.data.id;
+
+                        if (this.saleOpportunityId) {
+                            this.$message.success(
+                                `La cotización ${response.data.data.number_full} fue generada`
+                            );
+                            this.close();
+                        } else {
+                            this.showDialogOptions = true;
+                        }
+                    } else {
+                        this.$message.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data;
+                    } else {
+                        this.$message.error(error.response.data.message);
+                    }
+                })
+                .then(() => {
+                    this.loading_submit = false;
+                });
+        },
+        close() {
+            location.href = "/quotations";
+        },
+        reloadDataCustomers(customer_id) {
+            if (!customer_id) return;
+
+            this.$http
+                .get(`/${this.resource}/search/customer/${customer_id}`)
+                .then(response => {
+                    if (
+                        response.data.quotation &&
+                        response.data.quotation.customer
+                    ) {
+                        this.setCustomerFromResponse(
+                            response.data.quotation.customer
+                        );
+                    } else if (
+                        response.data.customers &&
+                        response.data.customers.length > 0
+                    ) {
+                        this.setCustomerFromResponse(
+                            response.data.customers[0]
+                        );
+                    }
+                });
+        }
+    }
+};
+</script>

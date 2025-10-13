@@ -150,7 +150,6 @@
                                         </template>
                                     </template>
                                     <template v-if="
-                                        this.isCreditCash &&
                                         !this.isSeller
                                     ">
                                         <button class="btn btn-sm btn-primary" type="button"
@@ -1302,7 +1301,7 @@
         <item-set :showDialog.sync="showDialogItemSet" :external="true"
             :establishment_id.sync="establishmentId"></item-set>
         <sale-note-credit-cash :configuration="configuration"
-            :showDialog.sync="showSaleNoteCreditCash"></sale-note-credit-cash>
+            :showDialog.sync="showSaleNoteCreditCash" :isCreditCash="isCreditCash"></sale-note-credit-cash>
         <consolidated-list-modal @cancelOrden="cancelOrden" :showDialog.sync="showConsolidatedList"
             @insertOrdenQuotation="insertOrdenQuotation" :configuration="configuration"></consolidated-list-modal>
         <quotation-list-modal :showDialog.sync="showQuotationListDialog"></quotation-list-modal>

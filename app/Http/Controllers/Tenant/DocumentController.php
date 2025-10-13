@@ -137,6 +137,7 @@ use GuzzleHttp\Psr7\UploadedFile;
 use Modules\Restaurant\Models\AppointmentComment;
 use Modules\Restaurant\Models\AppointmentDocument;
 use Modules\Restaurant\Models\UserScheduleAppointment;
+use PhpParser\Comment\Doc;
 
 class DocumentController extends Controller
 {
@@ -2193,6 +2194,64 @@ class DocumentController extends Controller
                 }
             }
         }
+    }
+
+    public function document_credit_cash_records(Request $request)
+    {
+        $value = $request->value;
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $establishment_id = $request->establishment_id;
+        $records = Document::query()
+
+            ->with([
+                // Use the existing 'person' relationship on Document instead of a non-existent 'customer' relationship
+                'person:id,name,number',
+                'state_type:id,description',
+                // 'documents' is not a relationship; remove to avoid RelationNotFoundException
+                'user:id,name',
+                'boxes:id,document_id,amount'
+            ])
+            ->where('payment_condition_id', '02')
+            ->where('state_type_id', '<>', '11')
+            /* ->whereDoesntHave('credit_payments') */
+           /*  ->where('paid', 0) */
+            ->select('documents.*')
+            ->distinct(); // Usamos distinct en lugar de groupBy
+
+        // Aplicar filtros de búsqueda si existe un valor
+        if ($value) {
+            $records->where(function ($query) use ($value) {
+                $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
+
+                // Filter by the related 'person' (customer) record
+                $query->whereHas('person', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm)
+                        ->orWhere('number', 'like', $searchTerm);
+                })
+                    // Search by document number
+                    ->orWhere('number', 'like', $searchTerm);
+            });
+        }
+
+        if ($date_start) {
+            $records->where('date_of_issue', '>=', $date_start);
+        }
+
+        if ($date_end) {
+            $records->where('date_of_issue', '<=', $date_end);
+        }
+        
+        if ($establishment_id) {
+            $records->where('establishment_id', $establishment_id);
+        }
+
+
+        // Ordenar y paginar
+        return new DocumentCollection(
+            $records->latest()
+                ->paginate(config('tenant.items_per_page'))
+        );
     }
 
     public function reStoreRange(Request $request)
