@@ -317,6 +317,9 @@ class OrdenController extends Controller
 
         // Calculate PDF height
         $height = 8 * 30;
+        if ($establishment->image_yape) {
+            $height += 100;
+        }
 
         if ($ordens->count() == 1) {
             $height = $height + $ordens->count() * 50;
