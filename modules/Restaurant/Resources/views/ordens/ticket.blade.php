@@ -1047,14 +1047,14 @@
                                 </td>
                             @endif
                         </tr>
-                        {{-- @if ($establishment && $establishment->image_yape)
+                        <!-- @if ($establishment && $establishment->image_yape)
                             <tr>
                                 <td colspan="4" class="text-center">
                                     <img src="{{ public_path('storage/uploads/logos/' . $establishment->image_yape) }}"
                                         alt="payment-logo" style="max-width: 150px; height: auto;" />
                                 </td>
                             </tr>
-                        @endif --}}
+                        @endif -->
                     @endforeach
                 </tbody>
             </table>

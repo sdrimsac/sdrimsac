@@ -183,7 +183,7 @@
 
                 <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
                     clientTableData.table &&
-                    configuration.restaurant &&
+                    configuration.restaurant ||
                     configuration.hotels
                 ">
                     <strong>
@@ -191,7 +191,7 @@
                         {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
-                        {{ clientTableData.table_id }}
+                        <!-- {{ clientTableData.table_id }} -->
                     </strong>
                 </div>
 
