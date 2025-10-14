@@ -1987,7 +1987,7 @@ class SaleNoteController extends Controller
                     } else {
                         $this->dumpWithTime("boxes 1.2");
                         if (!$establishment->credit_warehouse) {
-                            $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
+                            $cajas = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
                             $cajas->group_id = 1;
                             $cajas->currency_type_id = $request->currency_type_id;
                             $cajas->category_id = 1;
@@ -2029,13 +2029,13 @@ class SaleNoteController extends Controller
                     // if($configuration->android_configuration){
                     //     sleep(5);
                     // }
-                    //dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
+                    dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
 
-                    if ($configuration->promotions_by_points) {
+                    //if ($configuration->promotions_by_points) {
                         // Espera 10 segundos antes de enviar el segundo ticket
 
-                      (new PromotionDocumentController)->PromotionPointsNew($this->sale_note->customer_id);
-                    }
+                      //(new PromotionDocumentController)->PromotionPointsNew($this->sale_note->customer_id);
+                    //}
                     
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
@@ -2065,7 +2065,6 @@ class SaleNoteController extends Controller
 
                         if ($payment['payment'] > 0) {
                             $record = new SaleNotePayment;
-                            //Log::info("Registro de pago en nota de venta", $record);
                             if (!isset($payment['payment_method_type_id'])) {
                                 $payment['payment_method_type_id'] = "01";
                             }
@@ -2095,10 +2094,8 @@ class SaleNoteController extends Controller
                         if ($total_payment >= $this->sale_note->total) {
                             $paid = 1;
                         }
-                        // $paid = 1;
                     }
                 }
-
 
                 if ($request->generate === null || $request->generate === false) {
                 } else {
@@ -2122,7 +2119,6 @@ class SaleNoteController extends Controller
                     }
 
                     if ($request->advances) {
-
                         $cajas    = new Box;
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
@@ -2160,7 +2156,6 @@ class SaleNoteController extends Controller
                 $quotation->changed = true;
                 $quotation->save();
             }
-
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
             if ($this->sale_note->variation_document_id && $configuration->hotels) {
@@ -2254,45 +2249,6 @@ class SaleNoteController extends Controller
                     }
                 }
             }
-
-            /* if (isset($request->items) && is_array($request->items)) {
-                foreach ($request->items as $it) {
-                    if (!isset($it['item_id']) || !isset($it['quantity'])) continue;
-
-                    $itemId = $it['item_id'];
-                    //$qty = (float) str_replace(',', '.', $it['quantity']);
-                    $qty = str_replace(',', '.', $it['quantity']);
-                    $qty = (float) $qty;
-                    if ($qty <= 0) continue;
-
-                    $query = DB::connection('tenant')->table('item_sales_summary');
-
-                    // Verificar si ya existe el item_id
-                    $exists = $query->where('item_id', $itemId)->exists();
-
-                    if ($exists) {
-                        // Usar update + DB::raw para sumar decimales
-                        DB::connection('tenant')
-                            ->table('item_sales_summary')
-                            ->where('item_id', $itemId)
-                            ->update([
-                                'total_quantity' => DB::raw("total_quantity + " . $qty),
-                                'updated_at' => now(),
-                            ]);
-                    } else {
-                        // Crear registro nuevo
-                        DB::connection('tenant')
-                            ->table('item_sales_summary')
-                            ->insert([
-                                'item_id' => $itemId,
-                                'total_sales' => 0,
-                                'total_quantity' => $qty,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ]);
-                    }
-                }
-            } */
 
             return [
                 'success' => true,

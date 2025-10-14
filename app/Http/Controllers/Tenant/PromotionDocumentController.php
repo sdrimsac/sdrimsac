@@ -370,17 +370,17 @@ class PromotionDocumentController extends Controller
             return null;
         }
 
-        $base_height = 500;
-        $item_height = 30;
-        $total_items = count($promotion_items);
-        $height = $base_height + ($total_items * $item_height);
-
         try {
-            // Usa la vista de la ruta proporcionada
-            $pdf = PDF::loadView('tenant.promotion.promotion_points_80', compact(
-                'customer',
-                'promotion_items'
-            ))->setPaper(array(0, 0, 249.45, $height));
+            $base_height = 300; // antes 300
+            $item_height = 80; // antes 80
+            $total_items = count($promotion_items);
+            $height = $base_height + ($total_items * $item_height);
+
+            $pdf = PDF::loadView(
+                'tenant.promotion.promotion_points_80',
+                compact('customer', 'promotion_items')
+            );
+            $pdf->getDomPDF()->setPaper([0, 0, 226.77, $height]);
         } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
@@ -393,25 +393,6 @@ class PromotionDocumentController extends Controller
 
         return $pdf->stream($timestamp . '_promociones_.pdf');
     }
-
-    /* public function pdfStorageFile($id)
-    {
-        $number = Company::first()->number;
-        $directory = 'promocion';
-        $fileName = "promociones_por_puntos_{$id}_{$number}.pdf";
-        $relativePath = $directory . '/' . $fileName;
-
-        // Verificar si el archivo existe en el disco público
-        if (!Storage::disk('public')->exists($relativePath)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El archivo PDF no existe para este cliente.'
-            ], 404);
-        }
-
-        // Retornar el archivo como descarga
-        return response()->file(storage_path('app/public/' . $relativePath));
-    } */
 
     public function pdfStorageFile($id)
     {
@@ -433,7 +414,6 @@ class PromotionDocumentController extends Controller
             ], 404);
         }
     }
-
 
     public function PromotionPointsNew($customer_id)
     {
@@ -473,7 +453,7 @@ class PromotionDocumentController extends Controller
         return null;
     }
 
-    private function getAvailablePromotions($customer_id)
+    public function getAvailablePromotions($customer_id)
     {
         $customer = Person::find($customer_id);
         if (!$customer) {
