@@ -258,6 +258,7 @@
                                             'text-danger': row.extorned
                                         }">
                                             <template v-if="row.extorned">
+                                                PAGO - {{ row.id }} <br>
                                                 Extornado por: <br>
                                                 {{ row.user_name }}
                                             </template>
@@ -265,6 +266,9 @@
                                                 PAGO-{{ row.id }}
                                             </template>
                                         </td>
+                                        <!-- <td v-if="row.extorned" class="text-danger">
+                                            PAGO-{{ row.id }}
+                                        </td> -->
                                         <td :class="{
                                             'text-danger': row.extorned
                                         }">

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible="showDialog" @close="close" @open="getData" width="65%" append-to-body>
+    <el-dialog :title="title" :visible="showDialog" @close="close" @open="getData" width="70%" append-to-body>
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12">
@@ -13,6 +13,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Fecha de pago</th>
+                                    <th>Usuario</th>
                                     <th>Método de pago</th>
                                     <th>Destino</th>
                                     <th>Referencia</th>
@@ -32,7 +33,8 @@
                                                 PAGO-{{ row.id }}
                                             </template>
                                         </td>
-                                        <td>{{ row.date_of_payment }}</td>
+                                        <td>{{ row.date_of_issue_payment ? row.date_of_issue_payment : row.date_of_payment }}</td>
+                                        <td>{{ row.user_name }} </td>
                                         <td>
                                             {{
                                                 row.payment_method_type_description
@@ -94,6 +96,7 @@
                                                         "></small>
                                             </div>
                                         </td>
+                                        <td></td>
                                         <td>
                                             <div class="form-group mb-0" :class="{
                                                 'has-danger':
@@ -388,6 +391,7 @@ export default {
             this.records.push({
                 id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
+                user_id: null,
                 payment_method_type_id: "01",
                 payment_destination_id: "cash",
                 reference: null,

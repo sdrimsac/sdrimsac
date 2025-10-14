@@ -20,6 +20,9 @@ class DocumentPayment extends ModelTenant
         'reference',
         'change',
         'payment',
+        'date_of_issue_payment',
+        'method',
+        'user_id',
     ];
 
     protected $casts = [
@@ -41,7 +44,7 @@ class DocumentPayment extends ModelTenant
         return $this->belongsTo(Document::class, 'document_id');
     }
 
-    
+
     public function global_payment()
     {
         return $this->morphOne(GlobalPayment::class, 'payment');
@@ -56,5 +59,8 @@ class DocumentPayment extends ModelTenant
     {
         return $this->morphOne(PaymentFile::class, 'payment');
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

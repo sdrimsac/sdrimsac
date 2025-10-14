@@ -3338,7 +3338,14 @@ export default {
                     this.showDialogDetraction = true;
                     break;
                 case 195:
-                    this.showSaleNoteCreditCash = true;
+                    if (this.cashId) {
+                        this.showSaleNoteCreditCash = true;  
+                    } else {
+                        this.$toast.warning(
+                            "No puede abrir créditos mientras la caja está cerrada"
+                        );
+                        return;
+                    }
                     break;
                 case 32:
                     this.showDialogItemSet = true;

@@ -5,6 +5,7 @@
                 <tr>
                     <th style="color: #fff;">  #</th>
                     <th style="color: #fff; width: 500px;">Motivo</th>
+                    <th style="color: #fff; width: 500px;">Metodo de Pago</th>
                     <th style="color: #fff; width: 100px;">Detalle</th>
                     <th style="color: #fff;width:  250px;">Fecha</th>
                     <th style="color: #fff; width: 100px; text-align: right;">Total</th>
@@ -15,6 +16,7 @@
                 <tr v-for="(data, idx) in records" :key="idx">
                     <td>{{ idx + 1 }}</td>
                     <td>{{ data.description }}</td>
+                    <td>{{ data.method }}</td>
                     <td>
                         <template v-if="data.items.length != 0">
                             <el-button @click="seeDetail(data.items)">

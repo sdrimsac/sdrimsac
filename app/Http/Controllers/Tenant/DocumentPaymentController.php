@@ -106,6 +106,14 @@ class DocumentPaymentController extends Controller
             if ($request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11") {
                 $record = DocumentPayment::firstOrNew(['id' => $id]);
                 $record->fill($request->all());
+                // Guardar date_of_issue_payment con fecha y hora
+                if ($request->has('date_of_issue_payment')) {
+                    $record->date_of_issue_payment = Carbon::parse($request->input('date_of_issue_payment'))->format('Y-m-d H:i:s');
+                } else {
+                    $record->date_of_issue_payment = Carbon::now()->format('Y-m-d H:i:s');
+                }
+                // Guardar user_id del usuario que realiza la acción
+                $record->user_id = auth()->user()->id;
                 $record->save();
                 $this->createGlobalPayment($record, $request->all());
                 $this->saveFiles($record, $request, 'documents');
@@ -121,7 +129,7 @@ class DocumentPaymentController extends Controller
                 $boxes->category_id = 1;
                 $boxes->subcategory_id = 1;
                 $boxes->amount = $request->input('payment');
-                $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d');
+                $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d H:i:s');
                 $boxes->type = '1';
                 $boxes->state = '1';
                 $boxes->cash_id = $cash_id;

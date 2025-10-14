@@ -32,6 +32,10 @@ class DocumentPaymentCollection extends ResourceCollection
                 'reference' => $row->reference,
                 'filename' => ($row->payment_file) ? $row->payment_file->filename:null,
                 'payment' => $row->payment,
+                'date_of_issue_payment' => $row->date_of_issue_payment,
+                'method' => $row->method,
+                'user_id' => $row->user_id,
+                'user_name' => $row->user_id ? $row->user->name : null,
             ];
         });
     }
