@@ -11,7 +11,9 @@
         <div class="row mt-2">
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-start">
                 <h4>
-                    {{ document.customer_name }}
+                    <span style="color:#073f68; font-family:'Roboto','Helvetica Neue',Arial,sans-serif;font-weight:600;">
+                        {{ document.customer_name }}
+                    </span>
                 </h4>
             </div>
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">

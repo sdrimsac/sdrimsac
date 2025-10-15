@@ -1,67 +1,55 @@
 <template>
-    <el-dialog
-        @open="open"
-        @close="close"
-        :visible="showDialog"
-        :close-on-click-modal="false"
-        title="Listado de colores y tallas"
-    >
-        <div class="p-1">
-            <div class="row">
-                <div class="col-md-4">
-                    <el-input
-                        v-model="inputSearch"
-                        placeholder="Buscar por color"
-                        @input="search"
-                    >
-                    </el-input>
-                </div>
-            </div>
-            <table v-loading="loading" class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Codigo</th>
-                        <th>Color</th>
-                        <th>Size</th>
-                        <th>Stock</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(colorsize, idx) in color_size" :key="idx">
-                        <td>{{ customIndex(idx) }}</td>
-                        <td>{{ colorsize.code }}</td>
-                        <td>{{ colorsize.color }}</td>
-                        <td>{{ colorsize.size }}</td>
-                        <td>{{ colorsize.stock }}</td>
-                        <td>{{ colorsize.price }}</td>
-                        <td>
-                            <el-input-number
-                                v-model="colorsize.quantity"
-                                controls-position="right"
-                                @input="saveColorSize(colorsize)"
-                                :min="0"
-                                :max="colorsize.stock"
-                            ></el-input-number>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <el-pagination
-                @current-change="getColorSize"
-                layout="total, prev, pager, next"
-                :total="pagination.total"
-                :current-page.sync="pagination.current_page"
-                :page-size="pagination.per_page"
-            >
-            </el-pagination>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="close">Cerrar</el-button>
-                <el-button type="primary" @click="save">Guardar</el-button>
-            </span>
+    <el-dialog @open="open" @close="close" :visible="showDialog" :close-on-click-modal="false"
+        title="Listado de Colores y Tallas">
+
+        <div class="row align-items-center mb-2">
+            <label class="col-auto mb-0">Buscar </label>
+            <el-input v-model="inputSearch" placeholder="Buscar " @input="search">
+            </el-input>
         </div>
+
+
+        <table v-loading="loading" class="table">
+            <thead style="background-color: #073f68; color: #fff;">
+                <tr>
+                    <th style="color: #fff;">#</th>
+                    <th style="color: #fff;">Código Familia</th>
+                    <th style="color: #fff;">Color</th>
+                    <th style="color: #fff;">Talla</th>
+                    <th style="color: #fff;">Stock</th>
+                    <th style="color: #fff;">Precio Venta</th>
+                    <th style="color: #fff;">Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(colorsize, idx) in color_size" :key="idx">
+                    <td>{{ customIndex(idx) }}</td>
+                    <td>{{ colorsize.code }}</td>
+                    <td>{{ colorsize.color }}</td>
+                    <td>{{ colorsize.size }}</td>
+                    <td>{{ colorsize.stock }}</td>
+                    <td>{{ colorsize.price }}</td>
+                    <td>
+                        <el-input-number v-model="colorsize.quantity" controls-position="right"
+                            @input="saveColorSize(colorsize)" :min="0" :max="colorsize.stock"></el-input-number>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <el-pagination @current-change="getColorSize" layout="total, prev, pager, next" :total="pagination.total"
+            :current-page.sync="pagination.current_page" :page-size="pagination.per_page">
+        </el-pagination>
+        <span slot="footer" class="dialog-footer" style="display: flex; justify-content: flex-end; gap: 8px;">
+            <el-button class="btn_cancelarsmall" type="primary" @click="close">
+            <i class="el-icon-arrow-left"></i>
+            Cerrar
+            </el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="save">
+            <i class="el-icon-plus"></i>
+            Agregar
+            </el-button>
+        </span>
+
     </el-dialog>
 </template>
 
@@ -210,32 +198,23 @@ export default {
                     this.pagination = meta;
                     this.pagination.per_page = parseInt(meta.per_page);
                 } else {
-                    const foundItem = data.find(
-                        item => item.code === this.inputSearch
-                    );
-
-                    if (foundItem) {
-                        const existingItem = this.color_size.find(
-                            item => item.id === foundItem.id
+                    // Búsqueda funcional por código, color o talla (size)
+                    const criterio = this.inputSearch.trim().toLowerCase();
+                    const filteredItems = data.filter(item => {
+                        return (
+                            (item.code && item.code.toLowerCase().includes(criterio)) ||
+                            (item.color && item.color.toLowerCase().includes(criterio)) ||
+                            (item.size && item.size.toLowerCase().includes(criterio))
                         );
+                    });
 
-                        if (existingItem) {
-                            existingItem.quantity += 1;
-                            console.log(
-                                "Cantidad actualizada:",
-                                existingItem.quantity
-                            );
-                        } else {
-                            this.$set(foundItem, "quantity", 1);
-                            console.log(
-                                "Cantidad inicializada:",
-                                foundItem.quantity
-                            );
-                            this.color_size.push(foundItem);
-                        }
-                        this.saveColorSize(foundItem);
-                    }
-                    this.inputSearch = null;
+                    this.color_size = filteredItems.map(item => ({
+                        ...item,
+                        quantity: item.quantity || 0
+                    }));
+                    this.checkColorSize();
+                    this.pagination = meta;
+                    this.pagination.per_page = parseInt(meta.per_page);
                 }
             } catch (e) {
                 console.log(e);

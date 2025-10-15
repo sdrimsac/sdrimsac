@@ -3,9 +3,9 @@
         v-loading="loading">
         <div class="row mt-2">
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-start">
-                <h4>
+                <h1 style="font-size: 2em;">
                     {{ document.customer_name }}
-                </h4>
+                </h1>
             </div>
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template v-if="
@@ -16,28 +16,14 @@
                     <h4>
                         <div>
                             Cuota N° {{ document.current_payment.num }} de
-                            {{
-                                Number(document.current_payment.amount).toFixed(
-                                    2
-                                )
-                            }}
-
+                            {{Number(document.current_payment.amount).toFixed(2)}}
                             <!-- Penalidad eliminada -->
                         </div>
                         <div>
                             Total a pagar:
-                            {{
-                                Number(
-                                    document.current_payment
-                                        .amount_withouth_penalty
-                                ).toFixed(2)
-                            }}
+                            {{Number(document.current_payment.amount_withouth_penalty).toFixed(2)}}
                             =
-                            {{
-                                Number(document.current_payment.amount).toFixed(
-                                    2
-                                )
-                            }}
+                            {{Number(document.current_payment.amount).toFixed(2)}}
                         </div>
                     </h4>
                 </template>
@@ -46,7 +32,9 @@
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12 text-center pt-2" v-if="showAddButton && document.total_difference > 0">
-                    <el-button type="primary" icon="el-icon-plus" @click="clickAddRow">Nuevo</el-button>
+                    <el-button class="btn_guardarsmall" type="primary" icon="el-icon-plus" @click="clickAddRow">
+                        Nuevo
+                    </el-button>
                     <!-- <el-button
                         v-if="
                             configuration &&
@@ -119,29 +107,30 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-condensed">
-                            <thead>
+                            <thead style="background-color: #073f68; color: #fff;">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Fecha de pago</th>
-                                    <th></th>
-                                    <th>Usuario</th>
-                                    <th>Método de pago</th>
-                                    <th>Destino</th>
-                                    <th>Referencia</th>
-                                    <th>N° de Operacion</th>
-                                    <th class="text-end">Monto</th>
+                                    <th style="color: #fff;">#</th>
+                                    <th style="color: #fff;">Fecha de pago</th>
+                                    <th style="color: #fff;"></th>
+                                    <th style="color: #fff;">Usuario</th>
+                                    <th style="color: #fff;">Método de pago</th>
+                                    <th style="color: #fff;">Destino</th>
+                                    <th style="color: #fff;">Referencia</th>
+                                    <th style="color: #fff;">N° de Operacion</th>
+                                    <th style="color: #fff;" class="text-end">Monto</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(row, index) in records" :key="index">
+                                <tr v-for="(row, index) in records" :key="index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                                     <template v-if="!row.id">
-                                        <td></td>
+                                                        <td>{{ customIndex(index) }}</td>
+                                        
                                         <td>
                                             <div class="form-group mb-0" :class="{
                                                 'has-danger':
                                                     row.errors
                                                         .date_of_payment
-                                            }">
+                                                 }">
                                                 <el-date-picker v-model="row.date_of_payment
                                                     " type="date" :disabled="configuration &&
                                                         configuration.sale_note_credit_penalty
@@ -158,9 +147,9 @@
                                         <!-- Celda vacía para alinear con cabecera vacía -->
                                         <td></td>
                                         <!-- Usuario (no editable, mostrar usuario actual o vacío) -->
-                                        <td>
+                                        <!-- <td>
 
-                                        </td>
+                                        </td> -->
                                         <td>
                                             <div class="form-group mb-0" :class="{
                                                 'has-danger':
@@ -375,6 +364,8 @@ export default {
             showImagePreviewModal: false,
             imagePreview: null,
             creditDiscount: 0,
+            // Reintroducido para evitar warnings ya que aún se referencia en clickSubmit
+            creditDiscountPenalty: 0,
             cancelCredit: false,
             title: null,
             resource: "sale_note_payments",
@@ -410,6 +401,10 @@ export default {
         }
     },
     methods: {
+        // Devuelve el índice visible (1-based). Si se desea otro criterio (ej. inverso), ajustar aquí.
+        customIndex(i) {
+            return i + 1;
+        },
 
         getPaymentMethodDescription(id) {
             const method = this.payment_method_types.find(m => m.id == id);

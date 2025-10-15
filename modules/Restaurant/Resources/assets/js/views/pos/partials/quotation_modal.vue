@@ -5,8 +5,8 @@
         @open="open"
         @close="close"
         v-loading="loading"
-     element-loading-text="Cotizando..."
-    >
+        element-loading-text="Cotizando..."
+     >
         <div class="m-2">
             <div class="row">
                 <div class="col-md-6 col-12">
@@ -48,7 +48,13 @@
                 </div>
                 <div class="col-md-6 col-12">
                     <label>Vencimiento</label>
-                    <el-date-picker class="w-100" v-model="form.date_of_due">
+                    <el-date-picker
+                        class="w-100"
+                        v-model="form.date_of_due"
+                        :default-value="moment().add(15, 'days').toDate()"
+                        value-format="yyyy-MM-dd"
+                        format="yyyy-MM-dd"
+                    >
                     </el-date-picker>
                 </div>
                 <div class="col-md-6" v-if="!isSeller">
@@ -72,7 +78,7 @@
                         class="w-100"
                         type="textarea"
                         :rows="2"
-                        placeholder="Descripción"
+                        placeholder="Ejemp.: Oferta Válida por 15 días, a partir de la emisión "
                         v-model="form.description"
                     >
                     </el-input>
@@ -81,19 +87,20 @@
         </div>
 
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-            <div
-                v-if="form.total"
-                class="text-end"
-            >
-                <h4 class="fw-bold">
-                    
-                    TOTAL: {{ currencyIdChoice == "USD" ? "$" : "S/" }} {{ form.total.toFixed(2) }}</h4>
+            <div v-if="form.total" class="text-end">
+                <h4 class="fw-bold text-primary">
+                    TOTAL: {{ currencyIdChoice == "USD" ? "$" : "S/" }} {{ form.total.toFixed(2) }}
+                </h4>
             </div>
-            
         </div>
-        <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
-            <el-button @click="close" class="btn-cancel btn-cancel:hover">Cancelar</el-button>
-            <el-button class="btn-save btn-save:hover" @click="submit">Cotizar</el-button>           
+        
+        <div class="form-actions d-flex justify-content-end align-items-center gap-3 pt-2 pb-2">
+            <el-button @click="close" type="danger" class="btn_cancelarsmall">
+                <i class="el-icon-close"></i> Cancelar
+            </el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="submit">
+                <i class="el-icon-document"></i> Cotizar
+            </el-button>
         </div>
         <person-form
             :showDialog.sync="showDialogNewPerson"
@@ -176,6 +183,7 @@ export default {
         }
     },
     methods: {
+        moment,
         async directPrint(external_id) {
             let typePrint = this.establishment.format_printer;
 
@@ -429,7 +437,7 @@ export default {
                 total_value: 0,
                 total: 0,
                 operation_type_id: null,
-                date_of_due: null,
+                date_of_due: moment().add(15, 'days').format("YYYY-MM-DD"),
                 delivery_date: null,
                 items: [],
                 charges: [],

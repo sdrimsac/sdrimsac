@@ -186,30 +186,22 @@
                                 </el-form-item>
                             </div>
                         </div>
-                        <div
-                            class="d-flex justify-content-end align-items-center mt-3"
-                            style="gap: 16px;"
-                        >
+                        <div class="d-flex justify-content-end align-items-center mt-3" style="gap: 16px;">
                             <el-button
+                                class="btn_cancelarsmall"
                                 type="danger"
                                 @click="handleDialogClose"
-                                style="max-height: 60px; min-width: 140px; font-size: 1.2rem; border-radius: 30px; padding: 16px 32px;"
+                                
                             >
-                                <i
-                                    class="fas fa-times"
-                                    style="color: white !important"
-                                ></i>
+                                <i class="fas fa-times" ></i>
                                 Cancelar
                             </el-button>
                             <el-button
                                 type="success"
                                 @click="sendOrden"
-                                style="max-height: 60px; min-width: 140px; font-size: 1.2rem; border-radius: 30px; padding: 16px 32px;"
+                                class="btn_excelsmall"
                             >
-                                <i
-                                    class="fas fa-paper-plane"
-                                    style="color: white !important"
-                                ></i>
+                                <i class="fas fa-paper-plane"></i>
                                 Enviar
                             </el-button>
                         </div>
@@ -217,11 +209,12 @@
                 </div>
             </el-form>
         </div>
+
         <person-form
             :showDialog.sync="showDialogNewPerson"
             type="customers"
             :external="true"
-        >
+            >
         </person-form>
     </el-dialog>
 </template>

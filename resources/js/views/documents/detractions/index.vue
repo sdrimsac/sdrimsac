@@ -1,4 +1,4 @@
-<!-- Listado de Comprobante de Pago -->
+<!-- Listado de Comprobante de Pago  caja y Administracion -->
 <template>
     <div>
         <!-- <div class="container-fluid p-l-0 p-r-0">
@@ -38,19 +38,19 @@
                                 class="table-striped"
                             >
                                 <tr slot="heading" class="bg-primary">
-                                    <th class="text-white">#</th>
-                                    <th class="text-white">Documento</th>
-                                    <th class="text-white">Fecha emisión</th>
-                                    <th class="text-white">Código</th>
-                                    <th class="text-white text-end">
-                                        % detraccion
+                                    <th class="text-white" style="width: 10px;">#</th>
+                                    <th class="text-white" style="width: 100px;">CPE</th>
+                                    <!-- <th class="text-white">Fecha emisión</th> -->
+                                    <th class="text-white" style="width: 250px;">Código</th>
+                                    <th class="text-white text-end" style="width: 110px;">
+                                        %
                                     </th>
-                                    <th class="text-white text-end">Total</th>
-                                    <th class="text-white text-end">Pagado</th>
-                                    <th class="text-white text-end">
+                                    <th class="text-white text-end" style="width: 110px;">Total</th>
+                                    <th class="text-white text-end" style="width: 110px;">Pagado</th>
+                                    <th class="text-white text-end" style="width: 110px;">
                                         Pendiente
                                     </th>
-                                    <th class="text-white text-end"></th>
+                                    <th class="text-white text-end" style="width: 90px;"></th>
                                 </tr>
 
                                 <tr></tr>
@@ -78,24 +78,28 @@
                                     <td>{{ index }}</td>
                                     <td>
                                         {{ row.number_full }}
+                                        </br>
+                                        {{ row.date_of_issue }}
                                     </td>
-                                    <td>{{ row.date_of_issue }}</td>
+                                    <!-- <td></td> -->
                                     <td>
-                                        {{ row.code }} -
+                                        {{ row.code }} 
+                                        </br>
                                         {{ row.detraction_description }}
                                     </td>
                                     <td class="text-end">
                                         {{ row.percentage }}%
                                     </td>
-                                    <td class="text-end">{{ row.amount }}</td>
+                                    <td class="text-end">{{ Number(row.amount).toFixed(2) }}</td>
                                     <td class="text-end">
-                                        {{ row.paid}}
+                                        {{ Number(row.paid).toFixed(2) }}
                                     </td>
                                     <td class="text-end">
-                                        {{row.pending_payment}}
+                                        {{ Number(row.pending_payment).toFixed(2) }}
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-center">
                                         <el-button
+                                            class="btn_guardarsmall"
                                             type="primary"
                                             icon="el-icon-bank-card"
                                             size="mini"

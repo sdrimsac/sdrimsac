@@ -1,13 +1,14 @@
+<!-- Modal de Lotes en Caja -->
 <template>
     <el-dialog title="Lotes" @open="open" @close="close" :visible="showDialog">
         <table class="table">
             <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Lote</th>
-                    <th>Vencimiento</th>
-                    <th>Cantidad</th>
-                    <th width="20%">Seleccionado</th>
+                <tr style="background-color: #073f68; color: #fff;">
+                    <th style="color: #fff;">#</th>
+                    <th style="color: #fff;">Lote</th>
+                    <th style="color: #fff;">Vencimiento</th>
+                    <th style="color: #fff;">Cantidad</th>
+                    <th width="20%" style="color: #fff;">Seleccionado</th>
                 </tr>
             </thead>
             <tbody>

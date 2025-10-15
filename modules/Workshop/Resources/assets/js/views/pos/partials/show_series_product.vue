@@ -25,13 +25,13 @@
                 </div> -->
             </div>
             <table v-loading="loading" class="table">
-                <thead>
+                <thead style="background-color:#073f68; color:#ffffff;">
                     <tr>
-                        <th>#</th>
-                        <th>Serie</th>
-                        <th>Fecha</th>
-                        <th>Lote</th>
-                        <th>Seleccionar</th>
+                        <th style="color:#fff; width:60px; min-width:60px;">#</th>
+                        <th style="color:#fff; width:160px; min-width:140px;">Serie</th>
+                        <th style="color:#fff; width:120px; min-width:110px;">Fecha</th>
+                        <th style="color:#fff; width:120px; min-width:110px;">Lote</th>
+                        <th style="color:#fff; width:130px; min-width:120px;">Seleccionar</th>
                     </tr>
                 </thead>
                 <tbody>

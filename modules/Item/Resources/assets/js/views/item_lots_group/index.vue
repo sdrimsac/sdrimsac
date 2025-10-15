@@ -5,18 +5,18 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card mb-0">
-                        <div class="card-header bg-primary rounded-top">
-                            <h4 class="my-0 text-white d-flex align-items-center"
+                        <div class="card-header bg-primary rounded-top" style="padding: 8px;">
+                            <h5 class="my-0 text-white d-flex align-items-center"
                                 style="font-size: 1.5rem; font-weight: bold;">
                                 <i class="el-icon-collection-tag mr-1"></i>
                                 Listado de Lotes 
-                            </h4>
+                            </h5>
                         </div>
 
                         <div class="data-table-visible-columns">
                             <el-dropdown :hide-on-click="false">
                                 <el-tooltip content="Importa Lote de Productos en bloque" placement="top">
-                                    <el-button type="primary" class="btn_buscar btn_buscar:hover"
+                                    <el-button type="primary" class="btn_guardarsmall"
                                         href="javascript:void(0)" @click.prevent="clickImport()">
                                         <i class="fa fa-upload"></i>
                                         Importar
@@ -49,7 +49,7 @@
                                 </tr>
 
                                 <tr></tr>
-                                <tr slot-scope="{ index, row }">
+                                <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                                     <td>
                                         {{ index }}
                                     </td>
@@ -102,7 +102,7 @@
                                         <el-tooltip
                                             content="Da de baja al lote completo y registra en el Kardex la salida del mismo"
                                             placement="top">
-                                            <el-button type="warning" size="mini" @click.prevent="inhabilitar(row.id)">
+                                            <el-button class="btn_canjearsmall" type="warning" size="mini" @click.prevent="inhabilitar(row.id)">
                                                 <i class="fa fa-ban"></i>
                                                 Dar de baja
                                             </el-button>

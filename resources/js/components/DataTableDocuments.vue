@@ -2,241 +2,132 @@
     <div>
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
                         <div class="form-group">
-                            <label class="control-label font-custom"
-                                ><strong>Filtros de busqueda</strong></label
-                            >
+                            <label class="control-label font-custom"><strong>Filtros de busqueda</strong></label>
                             <template v-if="!see_more">
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                    ><strong> [+ Ver más]</strong></a
-                                >
+                                <a class="control-label font-weight-bold text-info font-custom" href="#"
+                                    @click="clickSeeMore"><strong> [+ Ver más]</strong></a>
                             </template>
-                            <template v-else>
-                                <a
-                                    class="control-label font-weight-bold text-info font-custom"
-                                    href="#"
-                                    @click="clickSeeMore"
-                                    ><strong> [- Ver menos]</strong></a
-                                >
+<template v-else>
+                                <a class="control-label font-weight-bold text-info font-custom" href="#"
+                                    @click="clickSeeMore"><strong> [- Ver menos]</strong></a>
                             </template>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2" v-if="see_more">
-                    <div class="col-lg-4 col-md-4 ">
+</div>
+</div>
+</div> -->
+                <!-- <div class="row mt-1" v-if="see_more"></div> -->
+                <div class="row mt-1">
+                    <div class="col-2 ">
                         <div class="form-group">
-                            <label class="control-label w-100"
-                                >Tipo comprobante</label
-                            >
-                            <el-select
-                                v-model="search.document_type_id"
-                                @change="changeDocumentType"
-                                popper-class="el-select-document_type"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in document_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <!-- <label class="control-label w-100">Tipo comprobante</label> -->
+                            <el-select v-model="search.document_type_id" @change="changeDocumentType"
+                                popper-class="el-select-document_type" filterable clearable
+                                placeholder="Tipo comprobante">
+                                <el-option v-for="option in document_types" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Serie</label>
-                            <el-select
-                                v-model="search.series"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in series"
-                                    :key="option.number"
-                                    :value="option.number"
-                                    :label="option.label"
-                                ></el-option>
+                            <!-- <label class="control-label w-100">Serie</label> -->
+                            <el-select v-model="search.series" filterable clearable placeholder="Serie CPE">
+                                <el-option v-for="option in series" :key="option.number" :value="option.number"
+                                    :label="option.label"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Número</label>
-                            <el-input
-                                placeholder="Ingresar"
-                                v-model="search.number"
-                            >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
+                            <!-- <label class="control-label w-100">Número</label> -->
+                            <el-input placeholder="Nro. CPE" v-model="search.number">
+                                <i slot="prefix" class="el-icon-edit-outline"></i>
+                            </el-input>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 pb-2">
                         <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha inicio
-                            </label>
+                            <!-- <label class="control-label w-100">Fecha inicio
+                            </label> -->
 
-                            <el-date-picker
-                                v-model="search.d_start"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                @change="changeDisabledDates"
-                            >
+                            <el-date-picker v-model="search.d_start" type="date" style="width: 100%;"
+                                placeholder="Fecha Inicio" value-format="yyyy-MM-dd" @change="changeDisabledDates">
                             </el-date-picker>
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 pb-2">
                         <div class="form-group">
-                            <label class="control-label w-100"
-                                >Fecha término</label
-                            >
+                            <!-- <label class="control-label w-100">Fecha término</label> -->
 
-                            <el-date-picker
-                                v-model="search.d_end"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Buscar"
-                                value-format="yyyy-MM-dd"
-                                :picker-options="pickerOptionsDates"
-                                @change="changeEndDate"
-                            >
+                            <el-date-picker v-model="search.d_end" type="date" style="width: 100%;"
+                                placeholder="Fecha Final" value-format="yyyy-MM-dd" :picker-options="pickerOptionsDates"
+                                @change="changeEndDate">
                             </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2" v-if="resource == 'documents'">
+                        <div class="form-group">
+                            <!-- <label class="control-label w-100">Categoría</label> -->
+                            <el-select v-model="search.category_id" filterable clearable placeholder="Categoría">
+                                <el-option v-for="option in categories" :key="option.id" :value="option.id"
+                                    :label="option.name"></el-option>
+                            </el-select>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-4 ">
                         <div class="form-group">
-                            <label class="control-label w-100">Clientes</label>
+                            <!-- <label class="control-label w-100">Clientes</label> -->
 
-                            <el-select
-                                v-model="search.customer_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o número de documento"
-                                :remote-method="searchRemoteCustomers"
-                                :loading="loading_search"
-                            >
-                                <el-option
-                                    v-for="option in customers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <el-select v-model="search.customer_id" filterable remote popper-class="el-select-customers"
+                                clearable placeholder="Ingrese Cliente/DNI/RUC" :remote-method="searchRemoteCustomers"
+                                :loading="loading_search">
+                                <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-4 col-md-4 "
-                        v-if="resource == 'documents'"
-                    >
+                    <div class="col-2 " v-if="resource == 'documents'">
                         <div class="form-group">
-                            <label class="control-label w-100">Productos</label>
-                            <el-select
-                                class="w-100"
-                                v-model="search.item_id"
-                                filterable
-                                remote
-                                popper-class="el-select-customers"
-                                clearable
-                                placeholder="Nombre o código interno"
-                                :remote-method="searchRemoteItems"
-                                :loading="loading_search_item"
-                            >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <!-- <label class="control-label w-100">Productos</label> -->
+                            <el-select class="w-100" v-model="search.item_id" filterable remote
+                                popper-class="el-select-customers" clearable placeholder="Producto / Código Interno"
+                                :remote-method="searchRemoteItems" :loading="loading_search_item">
+                                <el-option v-for="option in items" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-2 col-md-2 col-sm-12 pb-2"
-                        v-if="resource == 'documents'"
-                    >
-                        <div class="form-group">
-                            <label class="control-label w-100">Categoría</label>
-                            <el-select
-                                v-model="search.category_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in categories"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </div>
+
                     <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
-                        <label class="control-label w-100"
-                            >Fecha de emisión</label
-                        >
-                        <el-date-picker
-                            v-model="search.date_of_issue"
-                            type="date"
-                            style="width: 100%;"
-                            placeholder="Buscar"
-                            value-format="yyyy-MM-dd"
-                            @change="changeDateOfIssue"
-                        >
+                        <!-- <label class="control-label w-100">Fecha de emisión</label> -->
+                        <el-date-picker v-model="search.date_of_issue" type="date" style="width: 100%;"
+                            placeholder="Fecha de Emisión" value-format="yyyy-MM-dd" @change="changeDateOfIssue">
                         </el-date-picker>
                     </div>
 
                     <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
-                            <label class="control-label w-100">Estado</label>
-                            <el-select
-                                v-model="search.state_type_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in state_types"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <!-- <label class="control-label w-100">Estado</label> -->
+                            <el-select v-model="search.state_type_id" filterable clearable placeholder="Estado">
+                                <el-option v-for="option in state_types" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2" >
                         <div class="form-group">
-                            <label class="control-label w-100"
-                                >Condición de pago</label
-                            >
-                            <el-select
-                                v-model="search.payment_condition_id"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in payment_conditions"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
+                            <!-- <label class="control-label w-100">Condición de pago</label> -->
+                            <el-select v-model="search.payment_condition_id" filterable clearable
+                                placeholder="Condición">
+                                <el-option v-for="option in payment_conditions" :key="option.id" :value="option.id"
+                                    :label="option.name"></el-option>
                             </el-select>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100">Vendedor</label>
                             <el-select
@@ -252,7 +143,7 @@
                                 ></el-option>
                             </el-select>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- <div class="col-lg-2 col-md-2 pb-2">
                     <div class="form-group">
                         <label class="control-label w-100">Año</label>
@@ -261,82 +152,58 @@
                         </el-date-picker>
                     </div>
                 </div> -->
-                    <div class="col-lg-2 col-md-2 col-sm-12 mt-4">
-                        <div class="form-group">
-                            <el-checkbox v-model="search.pending_payment"
-                                >PEND. DE PAGO</el-checkbox
-                            >
+
+                    <div class="col-12 mb-2">
+                        <div class="row justify-content-center">
+                            <div class="col-2">
+                                <div class="form-group d-flex justify-content-center">
+                                    <el-checkbox v-model="search.pending_payment">Pendiente de Pago</el-checkbox>
+                                </div>
+                            </div>
+                            <div class="col-10">
+                                <div class="d-flex justify-content-end">
+                                    <el-button class="btn_guardarsmall" type="primary"
+                                        @click.prevent="getRecordsByFilter" :loading="loading_submit"
+                                        icon="el-icon-search">
+                                        Buscar
+                                    </el-button>
+                                    <el-button class="btn_limpiezasmall" type="primary" @click.prevent="cleanInputs"
+                                        icon="el-icon-delete">
+                                        Limpiar
+                                    </el-button>
+                                    <el-button class="btn_excelsmall" type="primary" v-if="records.length > 0"
+                                        @click.prevent="exportRecords" icon="icofont-file-excel">
+                                        Exportar
+                                    </el-button>
+                                    <el-button v-if="userType === 'superadmin'" class="btn_excelsmall" type="danger"
+                                        @click.prevent="RegisterRecords" icon="icofont-file-excel">
+                                        Exportar CPE Registrados
+                                    </el-button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-4 col-md-4 col-md-4 col-sm-12"
-                        style="margin-top:29px"
-                    >
-                        <el-button
-                            class="submit"
-                            type="primary"
-                            @click.prevent="getRecordsByFilter"
-                            :loading="loading_submit"
-                            icon="el-icon-search"
-                            >Buscar</el-button
-                        >
-                        <el-button
-                            class="submit"
-                            type="info"
-                            @click.prevent="cleanInputs"
-                            icon="el-icon-delete"
-                            >Limpiar
-                        </el-button>
-                        <el-button
-                            class="submit"
-                            type="success"
-                            v-if="records.length > 0"
-                            @click.prevent="exportRecords"
-                            icon="el-icon-download"
-                            >Exportar
-                        </el-button>
-                        <el-button
-                            v-if="userType === 'superadmin'"
-                            class="submit"
-                            type="danger"
-                            @click.prevent="RegisterRecords"
-                            icon="el-icon-download"
-                        >
-                            Exportar Documentos registrados
-                        </el-button>
-                    </div>
+
                 </div>
             </div>
 
             <div class="col-md-12">
-                <div id="scroll1" style="overflow-x: auto">
-                    <div style="height: 20px"></div>
-                </div>
-                <div
-                    class="table-responsive"
-                    id="scroll2"
-                    style="overflow-x: auto"
-                >
+                <!-- Simplificado: se elimina scroll sincronizado (#scroll1/#scroll2) -->
+                <div class="table-responsive" style="overflow-x:auto;">
                     <table class="table">
                         <thead>
                             <slot name="heading"></slot>
                         </thead>
                         <tbody>
-                            <slot
-                                v-for="(row, index) in records"
-                                :row="row"
-                                :index="customIndex(index)"
-                            ></slot>
+                            <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
                         </tbody>
                     </table>
 
                     <div class="row mb-5" v-if="totals > 0">
                         <div class="col-md-12 text-end  border-top">
                             <h6>
-                                <b
-                                    >Total Por Pagina S/
-                                    {{ totals.toFixed(2) }}</b
-                                >
+                                <b>Total Por Pagina S/
+                                    {{ totals.toFixed(2) }}</b>
                             </h6>
                         </div>
                     </div>
@@ -346,13 +213,9 @@
                         </h6>
                     </div>
                     <div>
-                        <el-pagination
-                            @current-change="getRecordsPagination"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        >
+                        <el-pagination @current-change="getRecordsPagination" layout="total, prev, pager, next"
+                            :total="pagination.total" :current-page.sync="pagination.current_page"
+                            :page-size="pagination.per_page">
                         </el-pagination>
                     </div>
                 </div>
@@ -366,6 +229,7 @@
 .font-custom {
     font-size: 15px !important;
 }
+
 .table {
     border-collapse: separate;
     border-spacing: 0;
@@ -373,9 +237,11 @@
     background: #fff;
     font-size: 15px;
 }
+
 .table thead {
     background: #0d2d4b;
 }
+
 .table thead th {
     color: #fff;
     background: #0d2d4b;
@@ -384,12 +250,15 @@
     padding: 10px 8px;
     text-align: left;
 }
+
 .table tbody tr:nth-child(even) {
     background: #f5f1e7;
 }
+
 .table tbody tr:nth-child(odd) {
     background: #fff;
 }
+
 .table tbody td {
     border: none;
     padding: 10px 8px;
@@ -397,6 +266,7 @@
     vertical-align: middle;
     text-align: left;
 }
+
 .table tbody tr {
     border-bottom: 1px solid #e0e0e0;
 }
@@ -416,41 +286,44 @@ export default {
         resource: String
     },
     data() {
-        return {
-            fromPagination: false,
-            loading_submit: false,
-            columns: [],
-            loading: false,
-            records: [],
-            customers: [],
-            all_customers: [],
-            items: [],
-            all_items: [],
-            loading_search: false,
-            loading_search_item: false,
-            document_types: [],
-            categories: [],
-            state_types: [],
-            pagination: {},
-            search: {},
-            all_series: [],
-            establishment: null,
-            establishments: [],
-            series: [],
-            activePanel: 0,
-            payment_conditions: [],
-            sellers: [],
-            see_more: false,
-            totals: null,
-            totalSum: 0,
-            pickerOptionsDates: {
-                disabledDate: time => {
-                    time = moment(time).format("YYYY-MM-DD");
-                    return this.search.d_start > time;
+            return {
+                fromPagination: false,
+                loading_submit: false,
+                columns: [],
+                loading: false,
+                records: [],
+                customers: [],
+                all_customers: [],
+                items: [],
+                all_items: [],
+                loading_search: false,
+                loading_search_item: false,
+                document_types: [],
+                categories: [],
+                state_types: [],
+                pagination: {},
+                search: {},
+                all_series: [],
+                establishment: null,
+                establishments: [],
+                series: [],
+                activePanel: 0,
+                payment_conditions: [],
+                sellers: [],
+                see_more: false,
+                totals: null,
+                totalSum: 0,
+                pickerOptionsDates: {
+                    disabledDate: time => {
+                        time = moment(time).format("YYYY-MM-DD");
+                        return this.search.d_start > time;
+                    }
+                },
+                userType: null,
+                form: {
+                    detraction: false // Valor inicial, cámbialo según tu lógica
                 }
-            },
-            userType: null
-        };
+            };
     },
     computed: {},
     created() {
@@ -476,7 +349,6 @@ export default {
         await this.getRecords();
         await this.filterCustomers();
         await this.filterItems();
-        await this.cargalo();
     },
     methods: {
         getTotals(records) {
@@ -576,40 +448,40 @@ export default {
         },
         async RegisterRecords() {
             if (!this.search.date_of_issue) {
-            this.$showSAlert(
-                'ALERTA',
-                'Por favor seleccione una fecha para exportar',
-                 'warning'
-            );
-            return;
+                this.$showSAlert(
+                    'ALERTA',
+                    'Por favor seleccione una fecha para exportar',
+                    'warning'
+                );
+                return;
             }
 
             let parameters = this.getQueryParameters();
             try {
-            const response = await this.$http.get(
-                `/${this.resource}/RegisterDocuments?${parameters}`,
-                {
-                params: { domain: "site" },
-                responseType: "blob"
+                const response = await this.$http.get(
+                    `/${this.resource}/RegisterDocuments?${parameters}`,
+                    {
+                        params: { domain: "site" },
+                        responseType: "blob"
+                    }
+                );
+
+                if (response.data.size === 0) {
+                    console.error("El archivo txt está vacío o corrupto.");
+                    return;
                 }
-            );
 
-            if (response.data.size === 0) {
-                console.error("El archivo txt está vacío o corrupto.");
-                return;
-            }
-
-            const url = window.URL.createObjectURL(
-                new Blob([response.data])
-            );
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", "documentos_registrados.txt"); 
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", "documentos_registrados.txt");
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
             } catch (error) {
-            console.error("Error al exportar:", error);
+                console.error("Error al exportar:", error);
             }
         },
 
@@ -689,15 +561,6 @@ export default {
         },
         cleanInputs() {
             this.initForm();
-        },
-        cargalo() {
-            $("#scroll1 div").width($(".table").width());
-            $("#scroll1").on("scroll", function() {
-                $("#scroll2").scrollLeft($(this).scrollLeft());
-            });
-            $("#scroll2").on("scroll", function() {
-                $("#scroll1").scrollLeft($(this).scrollLeft());
-            });
         }
     }
 };

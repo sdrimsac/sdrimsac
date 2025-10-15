@@ -10,16 +10,16 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Fecha de pago</th>
+                                <tr style="background:#073f68;color:#fff;">
+                                    <th style="color:#fff;">#</th>
+                                    <th style="color:#fff;">Fecha de pago</th>
                                     <th>Usuario</th>
-                                    <th>Método de pago</th>
-                                    <th>Destino</th>
-                                    <th>Referencia</th>
-                                    <th>Archivo</th>
-                                    <th class="text-end">Monto</th>
-                                    <th></th>
+                                    <th style="color:#fff;">Método de pago</th>
+                                    <th style="color:#fff;">Destino</th>
+                                    <th style="color:#fff;">Referencia</th>
+                                    <th style="color:#fff;">Archivo</th>
+                                    <th style="color:#fff;" class="text-end">Monto</th>
+                                    <th style="color:#fff;"></th>
                                 </tr>
                             </thead>
                             <tbody>

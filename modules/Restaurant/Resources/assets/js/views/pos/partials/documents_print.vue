@@ -58,7 +58,7 @@
                     </div>
                 </div>
 
-                <!-- Right Column (30%) -->
+              
                 <div class="col-12 col-md-5 d-flex align-items-stretch">
                     <div class=" p-3 w-100">
                         <div class="row">

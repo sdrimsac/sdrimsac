@@ -10,10 +10,10 @@
     >   
         <div class="row m-2">
             <div class="col-12">
-                <label for="customer">Cliente/Personal</label>
+                <label for="customer">Adelanto al Personal</label>
                 <el-input
                     v-model="search.value"
-                    placeholder="Escriba el nombre o número de documento del cliente"
+                    placeholder="Escriba el nombre o número de documento del Personal"
                     @input="getRecordsTimer"
                 ></el-input>
 
@@ -21,18 +21,18 @@
         </div>
         <div class="row m-2 table-responsive">
             <table class="table table-striped">
-                <thead>
+                <thead style="background-color: var(--el-color-primary); color: white;">
                     <tr>
-                        <th>
+                        <th style="color: white;">
                             #
                         </th>
-                        <th>
+                        <th style="color: white;">
                             Cliente
                         </th>
-                        <th class="text-end">
+                        <th class="text-end" style="color: white;">
                             Pendiente
                         </th>
-                        <th></th>
+                        <th style="color: white;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,8 +74,8 @@
             >
             </el-pagination>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
+        <span slot="footer" class="dialog-footer" style="display: flex; justify-content: flex-end;">
+            <el-button class="btn_cancelarsmal" type="danger" @click="close">Cancelar</el-button>
         </span>
     </el-dialog>
 </template>

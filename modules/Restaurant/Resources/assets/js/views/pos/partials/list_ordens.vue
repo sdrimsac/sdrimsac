@@ -1,21 +1,10 @@
+<!-- List order Principal caja -->
 <template>
     <div v-loading="ordenLoading">
         <div>
+            <!-- Primera fila de Botones -->
             <div class="d-md-flex flex-wrap justify-content-between ">
-                <!-- <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span"> -->
-                <!-- <button v-if="
-                        configuration.sale_note_credit_confirm
-                            ? isAnalist || user.can_accept_credit_sale_note
-                            : true
-                    " class="btn p-2" type="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        Acciones
-                        <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top"
-                            data-bs-delay="0" title data-bs-original-title="Item Count"
-                            aria-label="Item Count">Acciones</span>
-                    </button> -->
                 <div class="pos-action-buttons">
-                    <!-- Puedes controlar el padding usando clases Bootstrap o estilos en línea -->
                     <!-- Botón Abrir Caja (rojo) -->
                     <button v-if="!cash_id && !isSeller" class="btn btn-danger mb-2" type="button" @click="openCash"
                         style="padding: 5px 5px; color: red; ">
@@ -78,14 +67,16 @@
                     <button v-if="configuration.credit_list && !isSeller" class="btn btn-primary pos-btn mb-2"
                         type="button" @click="trigerFunction(6)" style="padding: 5px 5px;">
                         <i class="fas fa-file-invoice" style="margin-right: 2px;"></i>
-                        Lista de crédito
+                        Lista 
+                        <br />
+                        de crédito
                     </button>
 
                     <el-badge :value="ordenInBox.length" class="item" v-if="
                         !configuration.college &&
                         configuration.aparcado &&
                         ordenInBox.length > 0
-                    ">
+                     ">
                         <button class="btn btn-primary pos-btn mb-2" type="button" @click="trigerFunction(4)"
                             style="padding: 5px 5px;">
                             <i class="fas fa-cart-arrow-down" style="margin-right: 2px;"></i>
@@ -111,54 +102,21 @@
                         Consolidar
                     </button>
                 </div>
-                <!-- <div class="dropdown-menu dropdown-menu-end col-md-2 col-1" style="width: 153px;">
-                        <div class="col-12" v-for="(option, idx) in optionsMenu" :key="idx" v-show="option.visible">
-                            <el-button v-if="option.visible" @click="trigerFunction(option.id)"
-                                class="btn btn-light m-1 rounded d-flex flex-column align-items-center justify-content-center col-12"
-                                style="max-width: 150px;">
-                                <div class="text-center" style="margin-bottom: 2px">
-                                    <p style="margin: 0 !important; padding: 0 !important; font-size: 15px;"
-                                        v-for="(title, idx2) in option.title" :key="idx2">
-                                        {{ title }}
-                                    </p>
-                                    <i :class="[option.icon, 'fa-1x']"></i>
-                                </div>
-                                <div></div>
-                            </el-button>
-                        </div>
-                    </div> -->
-                <!-- </div> -->
             </div>
-            <!-- <div v-if="screenWidth < 600" class="d-flex flex-wrap">
-                <div v-for="(option, idx) in optionsMenu" :key="idx" v-show="option.visible">
-                    <div v-if="option.visible && option.id != 5" @click="trigerFunction(option.id)"
-                        class="m-1 btn btn-light rounded d-flex flex-column align-items-center justify-content-center"
-                        style="max-width: 60px; max-height: 60px">
-                        <div class="text-center" style="margin-bottom: 2px"></div>
-                        <div>
-                            <label v-if="option.id == 4" style="margin-left: 2px">{{ ordenInBox.length }}</label>
-
-                            <i :class="[option.icon]"></i>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <div v-if="
-                configuration.sale_note_credit_confirm
-                    ? isAnalist || user.can_accept_credit_sale_note
-                    : true
-            " class="bg-primary align-items-center rounded-top" style="padding-top: 12px">
-                <div class="row col-12" v-if="clientTableData.table">
+           
+            <!-- Order List -->
+            <div v-if="configuration.sale_note_credit_confirm ? isAnalist || user.can_accept_credit_sale_note: true" 
+                 class="bg-primary align-items-center rounded-top" style="padding-top: 12px">
+                
+                 <div class="row col-12" v-if="clientTableData.table">
                     <div class="col-6" v-if="configuration.restaurant">
                         <h5 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
                                     ` ${isCreatingOrden
-                                        ? "Creando Orden"
+                                        ? "CREANDO COMANDA"
                                         : clientTableData.correlative
-                                            ? `(Orden N°
-                                ${clientTableData.correlative})`
+                                            ? `( COMANDA N°  ${clientTableData.correlative} )`
                                             : ""
                                     }`
                                 }}
@@ -184,8 +142,7 @@
                 <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
                     clientTableData.table &&
                     configuration.restaurant ||
-                    configuration.hotels
-                ">
+                    configuration.hotels">
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
                         {{ clientTableData.table }}- Ref:
@@ -203,7 +160,7 @@
                                     {{
                                         quotationId
                                             ? `GENERANDO COMPROBANTE - COTIZACIÓN ${cotIdentifier}`
-                                            : "VENTA DIRECTA"
+                                            : "Venta Directa"
                                     }}
                                 </template>
                                 <template v-else>LIQUIDACIÓN DE CONSIGNACIÓN</template>
@@ -219,8 +176,9 @@
                         </div>
                     </div>
                 </div>
-
+               
                 <div class="row col-12" style="padding-left: 20px;">
+                     <!-- Moneda -->
                     <div class="col-6" v-if="configuration.other_currency_pos">
                         <div class="row">
                             <div class="col-md-6">
@@ -236,37 +194,16 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
-                                    <label for="tc" class="text-white text-center w-100">T/C
+                                 
+                                    <label for="exchange_rate_sale" class="text-white w-100 text-center">
+                                        <small>T / C</small>
+                                        <span style="margin-left: 8px; font-weight: bold;">
+                                            {{ exchange_rate_sale }}
+                                        </span>
                                     </label>
-                                    <el-input v-model="exchange_rate_sale" type="number" style="width: 100px"
-                                        :controls="false" @input="calculateTotal">
-                                    </el-input>
                                 </div>
                             </div>
-                            <!-- <div class="d-flex justify-content-end" v-if="configuration.other_currency_pos">
-                                    <div style="margin-top: 5px" class="justify-content-end text-end">
-                                        <label for="currency" class="text-dark w-100 margin-top: 10px;">
-                                            <small>Moneda</small>
-                                        </label>
-                                        <el-radio-group
-                                            v-model="currency_id"
-                                            size="small"
-                                            @change="changeCurrency"
-                                        >
-                                            <el-radio-button
-                                                value="PEN"
-                                                label="S/"
-                                            ></el-radio-button>
-                                            <el-radio-button
-                                                value="USD"
-                                                label="$"
-                                            ></el-radio-button>
-                                        </el-radio-group>
-                                    </div>
-                                    <div class="text-dark text-end" style="margin-top: 5px">
-                                       
-                                    </div>
-                                </div> -->
+                            
                         </div>
                     </div>
                     <div class="col-6">
@@ -307,11 +244,7 @@
                     </div>
                 </div>
             </div>
-            <div :class="`p-1 bg-primary`" v-if="
-                configuration.sale_note_credit_confirm
-                    ? isAnalist || user.can_accept_credit_sale_note
-                    : true
-            ">
+            <div :class="`p-1 bg-primary`" v-if="configuration.sale_note_credit_confirm ? isAnalist || user.can_accept_credit_sale_note: true">
                 <div class="row col-md-12 mx-1">
                     <div>
                         <template v-if="!configuration.sale_note_credit_confirm">
@@ -347,11 +280,8 @@
                                 {{ canBeSaleOffert }}
                             </div>
                         </button>
-                        <button v-if="
-                            isCreatingOrden == true ||
-                            clientTableData.table == undefined
-                        " class="btn btn-light mt-2" type="button" @click="cancelOrden"
-                            style="max-height: 45px ; max-width: 60px;">
+                        <button v-if="isCreatingOrden == true || clientTableData.table == undefined" class="btn btn-light mt-2" type="button" @click="cancelOrden"
+                                style="max-height: 45px ; max-width: 60px;">
                             <i class="fas fa-trash" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">Limpiar</span>
@@ -361,7 +291,7 @@
                             configuration.restaurant_delivery &&
                             configuration.restaurant &&
                             !clientTableData.table
-                        " class="btn btn-light mt-2" type="button" @click="openDeliveryForm()"
+                            " class="btn btn-light mt-2" type="button" @click="openDeliveryForm()"
                             style="max-height: 45px ; max-width: 60px;">
                             <i class="fas fa-biking" style="color: var(--primary) !important"></i>
                             <br />
@@ -644,225 +574,50 @@
                             <div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left">
                                 <div class="os-resize-observer"></div>
                             </div>
-                            <div class="os-content-glue" style="margin: 0px 5px"></div>
+                            <!-- <div class="os-content-glue" style="margin: 0px 5px"></div> -->
                             <div class="os-padding">
-                                <div class="os-viewport" style="overflow-y: scroll; margin-right: 15px">
-                                    <div class="m-3"></div>
-                                    <div class="os-content" style="padding: 0px 5px; height: 100%; width: 100%">
-                                        <div v-if="variation" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                            <div v-for="(variationItem,
-                                                idx) in foodDefaults" :key="idx"
-                                                class="mx-2 coupon rounded d-flex justify-content-between">
-                                                <div class="tengah py-2 d-flex w-100 justify-content-start p-2"
-                                                    style="margin-top: 20px !important;">
-                                                    <div class="col-12 overflow-hidden card shadow-lg p-3 rounded">
-                                                        <div class="row" style="min-width: 500px;">
-                                                            <div class="col-12">
-                                                                <div class="row align-items-center">
-                                                                    <!-- Descripción: ocupa más espacio -->
-                                                                    <div class="col-8 col-md-8 col-lg-8 col-xl-8">
-                                                                        <h3 class="m-0 fw-bold"
-                                                                            style="font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;">
-                                                                            {{
-                                                                                variationItem.description.toUpperCase()
-                                                                            }}
-                                                                        </h3>
-                                                                    </div>
-
-                                                                    <!-- Botones: ocupan menos espacio -->
-                                                                    <div
-                                                                        class="col-4 col-md-4 col-lg-4 col-xl-4 text-end">
-                                                                        <el-button size="mini" round
-                                                                            class="text-white bg-primary" @click="
-                                                                                showChangeDescription(
-                                                                                    idx
-                                                                                )
-                                                                                ">Cambiar</el-button>
-                                                                        <el-button size="mini" round
-                                                                            class="text-white bg-success" v-if="
-                                                                                idx ==
-                                                                                0
-                                                                            " @click="
-                                                                                addVariation
-                                                                            ">Agregar
-                                                                            Item</el-button>
-                                                                        <el-button size="mini" round
-                                                                            class="text-white bg-danger" v-if="
-                                                                                foodDefaults.length >
-                                                                                1
-                                                                            " @click="
-                                                                                deleteDefaultFood(
-                                                                                    idx
-                                                                                )
-                                                                                ">Eliminar</el-button>
-                                                                        <!-- <el-tag
-                                                                            role="button"
-                                                                            class="text-white bg-primary me-1"
-                                                                            style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center;"
-                                                                            @click="
-                                                                                showChangeDescription(
-                                                                                    idx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            Cambiar
-                                                                        </el-tag> -->
-
-                                                                        <!-- <el-tag
-                                                                            type="success"
-                                                                            v-if="
-                                                                                idx ==
-                                                                                    0
-                                                                            "
-                                                                            role="button"
-                                                                            class="me-1"
-                                                                            style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center;"
-                                                                            @click="
-                                                                                addVariation
-                                                                            "
-                                                                        >
-                                                                            Agregar
-                                                                            item
-                                                                        </el-tag> -->
-
-                                                                        <!-- <el-tag
-                                                                            v-if="
-                                                                                foodDefaults.length >
-                                                                                    1
-                                                                            "
-                                                                            type="danger"
-                                                                            role="button"
-                                                                            @click="
-                                                                                deleteDefaultFood(
-                                                                                    idx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <i
-                                                                                class="el-icon-delete"
-                                                                            ></i>
-                                                                        </el-tag> -->
-                                                                    </div>
-                                                                </div>
+                                <div class="os-viewport" style="overflow-y: scroll; margin-right: 1px; margin-left: 15px">
+                                    <!-- <div class="m-3"></div> -->
+                                    <div class="os-content" style="padding: 0px 0px; height: 100%; width: 100%">
+                                        <!-- Variación si está activada -->
+                                        <div v-if="variation" class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2">
+                                            <div v-for="(variationItem,idx) in foodDefaults" :key="idx" 
+                                                 class="mx-2 coupon rounded d-flex justify-content-between">
+                                                <div class="tengah py-1 d-flex w-100 justify-content-start p-1" style="margin-top: 5px !important;">
+                                                    <div
+                                                        class="col-12 card p-1 rounded d-flex"
+                                                        :style="{ backgroundColor: variationItem.backgroundColor || '#f1eaee', boxShadow: 'none' }"
+                                                    >
+                                                        <div class="row align-items-center">
+                                                            <div class="col-8 col-md-8 col-lg-8 col-xl-8">
+                                                                <h5 class="m-0 fw-bold"
+                                                                    style="font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;">
+                                                                    {{variationItem.description.toUpperCase()}}
+                                                                </h5>
                                                             </div>
-
-                                                            <!-- <div class="col-12">
-                                                                <div
-                                                                    class="col-6 col-md-6 col-lg-6 col-xl-6"
-                                                                >
-                                                                    {{
-                                                                        variationItem.description.toUpperCase()
-                                                                    }}
-                                                                </div>
-                                                                <div
-                                                                    class="col-4 col-md-4 col-lg-4 col-xl-4"
-                                                                >
-                                                                    <el-tag
-                                                                        role="button"
-                                                                        class="text-white bg-primary"
-                                                                        style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                        @click="
-                                                                            showChangeDescription(
-                                                                                idx
-                                                                            )
-                                                                        "
-                                                                    >
-                                                                        Cambiar
-                                                                    </el-tag>
-
-                                                                    <el-tag
-                                                                        type="success"
-                                                                        v-if="
-                                                                            idx ==
-                                                                                0
-                                                                        "
-                                                                        role="button"
-                                                                        style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                        @click="
-                                                                            addVariation
-                                                                        "
-                                                                    >
-                                                                        Agregar
-                                                                        otro
-                                                                        item
-                                                                    </el-tag>
-                                                                    <el-tag
-                                                                        v-if="
-                                                                            foodDefaults.length >
-                                                                                1
-                                                                        "
-                                                                        type="danger"
-                                                                        role="button"
-                                                                        @click="
-                                                                            deleteDefaultFood(
-                                                                                idx
-                                                                            )
-                                                                        "
-                                                                    >
-                                                                        <i
-                                                                            class="el-icon-delete"
-                                                                        ></i>
-                                                                    </el-tag>
-                                                                </div>
-                                                            </div> -->
-                                                            <!-- <h3
-                                                                class="lead font-weight-light fw-bold"
-                                                                style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; padding: auto; min-width: 350px;"
-                                                            >
-                                                                {{
-                                                                    variationItem.description.toUpperCase()
-                                                                }}
-                                                                <el-tag
-                                                                    role="button"
-                                                                    class="text-white bg-primary"
-                                                                    style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                    @click="
-                                                                        showChangeDescription(
-                                                                            idx
-                                                                        )
-                                                                    "
-                                                                >
+                                                            
+                                                            <div class="col-12 d-flex justify-content-end" style="gap: 8px; margin-right: 1px;">
+                                                                <el-button size="mini" round
+                                                                    class="btn_guardarsmall" type="primary" @click="showChangeDescription(idx)">
                                                                     Cambiar
-                                                                </el-tag>
-
-                                                                <el-tag
-                                                                    type="success"
-                                                                    v-if="
-                                                                        idx == 0
-                                                                    "
-                                                                    role="button"
-                                                                    style="padding: 8px 18px; font-size: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; min-width: 100px; text-align: center;"
-                                                                    @click="
-                                                                        addVariation
-                                                                    "
-                                                                >
-                                                                    Agregar otro
-                                                                    item
-                                                                </el-tag>
-                                                                <el-tag
-                                                                    v-if="
-                                                                        foodDefaults.length >
-                                                                            1
-                                                                    "
-                                                                    type="danger"
-                                                                    role="button"
-                                                                    @click="
-                                                                        deleteDefaultFood(
-                                                                            idx
-                                                                        )
-                                                                    "
-                                                                >
-                                                                    <i
-                                                                        class="el-icon-delete"
-                                                                    ></i>
-                                                                </el-tag>
-                                                            </h3> -->
+                                                                </el-button>
+                                                                <el-button size="mini" round
+                                                                    class="btn_excelsmall" type="success" v-if="idx == 0" 
+                                                                    @click="addVariation">
+                                                                    + Item
+                                                                </el-button>
+                                                                <el-button size="mini" round
+                                                                    class="btn_cancelarsmall" type="danger" v-if="foodDefaults.length > 1" 
+                                                                    @click="deleteDefaultFood(idx)">
+                                                                    Eliminar
+                                                                </el-button>
+                                                            </div>
+                                                    
                                                         </div>
-                                                        <p
-                                                            class="badge bg-foreground text-uppercase font-weight-light p-0">
-                                                        </p>
+
                                                         <div class="row align-items-end">
-                                                            <div class="col-md-4">
+
+                                                            <div class="col-md-6">
                                                                 <span class="fw-bold text-primary"
                                                                     style="font-size: 1rem; font-family: 'Arial', sans-serif;">
                                                                     Cantidad
@@ -896,7 +651,7 @@
                                                                 </span>
                                                             </div>
 
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-6">
                                                                 <span class="time font-weight-light">
                                                                     <span class="fw-bold text-primary"
                                                                         style="font-size: 1rem; font-family: 'Arial', sans-serif;">
@@ -907,9 +662,7 @@
                                                                                 ">
                                                                             <span slot="prepend"
                                                                                 style="padding-left: 6px;padding-right: 6px;">
-                                                                                <template v-if="
-                                                                                    configuration.other_currency_pos
-                                                                                ">
+                                                                                <template v-if="configuration.other_currency_pos">
                                                                                     {{
                                                                                         currency_id ==
                                                                                             "USD"
@@ -930,13 +683,11 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center">
                                             <template v-if="configuration.restaurant">
                                                 <a class="bage bg-dark text-white" style="margin-right: 5px">
-                                                    <template v-if="
-                                                        localOrden.length <=
-                                                        9
-                                                    ">
+                                                    <template v-if="localOrden.length <= 9" >
                                                         0{{ localOrden.length }}
                                                     </template>
                                                     <template v-else>
@@ -944,128 +695,187 @@
                                                     </template>
                                                 </a>
                                                 <!-- terterterterterter -->
-                                                Por solicitar
-                                                <template v-if="
-                                                    configuration.divided_items
-                                                ">
-                                                    <el-checkbox v-model="localDividedItems
-                                                        " style="margin-left: 10px;" @change="
-                                                            saveDividedItemsLocalStorage
-                                                        ">Dividir ordenes
-                                                        iguales</el-checkbox>
+                                                Productos por Solicitar
+                                                <template v-if="configuration.divided_items">
+                                                    <el-checkbox    v-model="localDividedItems" 
+                                                                    style="margin-left: 10px;" 
+                                                                    @change="saveDividedItemsLocalStorage">
+                                                        Dividir Ordenes Iguales
+                                                    </el-checkbox>
                                                 </template>
                                             </template>
                                         </div>
-                                        <div class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
-                                            v-if="isAppNotIgvAndHaveIgv">
-                                            <span class="text-danger">
-                                                <i class="fas fa-exclamation-triangle"></i>
-                                                <span>
-                                                    Esta operación es gravada,
-                                                    hay productos con IGV.
-                                                </span>
+
+                                        <div v-if="isAppNotIgvAndHaveIgv" 
+                                            class="h5" 
+                                            style="margin: 0px 0 0px 16px;">
+                                            <span class="text-danger" :class="{ 'blinking': true }">
+                                               <i class="fas fa-exclamation-triangle"></i>
+                                               <span>
+                                                  Productos con IGV (Operación Onerosa)
+                                               </span>
                                             </span>
                                         </div>
+                                        
+                                        <!-- card de productos o servicios agregados a la orden -->
                                         <div v-show="localOrden.length > 0"
-                                            class="col-sm-12 col-md-12 col-lg-12 col-xl-12" v-for="(order_pend,
-                                                indexx) in localOrden" :key="indexx" v-loading="loadingCommercialTreatment
-                                                    ">
-                                            <!--  -->
+                                             class="col-sm-12 col-md-12 col-lg-12 col-xl-12" 
+                                             v-for="(order_pend,indexx) in localOrden" 
+                                             :key="indexx" 
+                                             v-loading="loadingCommercialTreatment">
+                                           
                                             <div class="mx-2 coupon rounded d-flex justify-content-between">
-                                                <div class="tengah py-2 d-flex w-100 justify-content-start p-2">
-                                                    <div class="col-12 overflow-hidden card shadow-lg p-3 rounded"
-                                                        style="
-                              box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%) !important;
-                            ">
+                                                <div class="tengah py-2 d-flex w-100 justify-content-start ">
+                                                    <div class="col-12 overflow-hidden card  p-3 rounded"
+                                                        >
                                                         <div class="row">
-                                                            <h6 class="text-danger" v-if="
-                                                                igvStatusMap[
-                                                                order_pend
-                                                                    .id
-                                                                ]
-                                                            ">
+                                                            <!-- <h6 class="text-danger" v-if="igvStatusMap[order_pend.id]">
                                                                 PRODUCTO CON IGV
-                                                            </h6>
+                                                            </h6> -->
                                                             <h3 class="lead font-weight-light fw-bold">
-                                                                <template v-if="
-                                                                    order_pend
-                                                                        .food
-                                                                        .item
-                                                                        .name_product_pdf
-                                                                ">
-                                                                    {{
-                                                                        order_pend.food.item.name_product_pdf.toUpperCase()
-                                                                    }}
-                                                                </template>
-                                                                <template v-else>
-                                                                    {{
-                                                                        order_pend.food.description.toUpperCase()
-                                                                    }}
-                                                                </template>
-
-                                                                <span v-if="
-                                                                    order_pend.type_id
-                                                                " class="text-primary">
-                                                                    <small>
-                                                                        <template v-if="
-                                                                            configuration.change_unit_type_pos
-                                                                        ">
-                                                                            <el-dropdown @command="
-                                                                                changeUnitType
-                                                                            " size="medium" type="primary">
-                                                                                <span>
-                                                                                    <strong>
-                                                                                        *{{
-                                                                                            order_pend.type_description
-                                                                                        }}
-                                                                                    </strong>
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-10">
+                                                                        <div style="display: flex; align-items: center;">
+                                                                            <el-tag
+                                                                                v-if="configuration.restaurant && !configuration.college"
+                                                                                @click="toCarry(indexx)" size="medium"
+                                                                                role="button"
+                                                                                :type="order_pend.to_carry ? 'success' : 'info'"
+                                                                                :effect="order_pend.to_carry ? 'dark' : 'plain'"
+                                                                                :style="{
+                                                                                    borderRadius: '50%',
+                                                                                    backgroundColor: order_pend.to_carry ? '#073f68' : '#6c726c',
+                                                                                    color: '#fff',
+                                                                                    width: '30px',
+                                                                                    height: '30px',
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    fontSize: '18px',
+                                                                                    marginRight: '8px'
+                                                                                }">
+                                                                                <i class="fas fa-motorcycle" style="color: white"></i>
+                                                                            </el-tag>
+                                                                            <!-- Nombre de Producto o Servicio -->
+                                                                            <template v-if="order_pend.food.item.name_product_pdf">
+                                                                                <span style="font-weight: bold; font-size: 1rem;">
+                                                                                    {{ order_pend.food.item.name_product_pdf.toUpperCase() }}
                                                                                 </span>
-                                                                                <el-dropdown-menu slot="dropdown">
-                                                                                    <el-dropdown-item v-for="(unit_type,
-                                                                                        indext) in order_pend
+                                                                            </template>
+                                                                            <template v-else>
+                                                                                <span style="font-weight: bold; font-size: 1rem;">
+                                                                                    {{ order_pend.food.description.toUpperCase() }}
+                                                                                </span>
+                                                                            </template>
+                                                                            <!-- Politcas de Precio  Select -->
+                                                                            <span v-if="order_pend.type_id" class="text-primary" style="margin-left: 8px;"><small>
+                                                                                <template v-if="configuration.change_unit_type_pos">
+                                                                                    <el-dropdown @command="changeUnitType" size="medium" type="primary">
+                                                                                        <span style="margin-left: 8px;">
+                                                                                            <el-button type="success" size="mini" style="margin-left: 8px;">
+                                                                                                <strong style="color: #006400;">
+                                                                                                    X - {{ order_pend.type_description.toUpperCase() }}
+                                                                                                </strong>
+                                                                                            </el-button>
+                                                                                        </span>
+                                                                                        <el-dropdown-menu slot="dropdown">
+                                                                                            <el-dropdown-item v-for="(unit_type, indext) in order_pend.food.types" :key="indext"
+                                                                                                :command="{ indexx, unit_type }">
+                                                                                                <strong>
+                                                                                                    X - {{ unit_type.description.toUpperCase() }}
+                                                                                                </strong>
+                                                                                            </el-dropdown-item>
+                                                                                        </el-dropdown-menu>
+                                                                                    </el-dropdown>
+                                                                                </template>
+                                                                                <template v-else>
+                                                                                    <strong>
+                                                                                        X - {{ order_pend.type_description }}
+                                                                                    </strong>
+                                                                                </template>
+                                                                            </small></span>
+                                                                            <span v-if="order_pend.categoriaMadera" class="text-primary" style="margin-left: 8px;">
+                                                                                <small>
+                                                                                    <strong style="font-size: 1rem; color: #8B4513; font-weight: bold;">
+                                                                                        -
+                                                                                        {{ `${order_pend.categoriaMadera.selectedGrosor}
+                                                                                        X
+                                                                                        ${order_pend.categoriaMadera.selectedAncho}
+                                                                                        X
+                                                                                        ${order_pend.categoriaMadera.selectedLargo}`}}
+                                                                                    </strong>
+                                                                                </small>
+                                                                            </span>
+                                                                        </div>
+
+
+                                                                        <div class="mt-2">
+                                                                            <!-- CAMBIAR NOMBRE DE PRODUCTO O SERVICIO -->
+                                                                            <el-tooltip v-if="
+                                                                                configuration.edit_name_product
+                                                                            "
+                                                                                content="Cambiar Descripción del Producto o Servicio">
+                                                                                <el-tag role="button" type="success"
+                                                                                    size="small"
+                                                                                    style="font-size: 12px; padding: 1px 1px;"
+                                                                                    @click="changeName(indexx)">
+                                                                                    <i
+                                                                                        class="fas fa-edit text-black"></i>
+                                                                                    Cambiar Nombre
+                                                                                </el-tag>
+                                                                            </el-tooltip>
+                                                                            <!-- RESTAURAR NOMBRE DE PRODUCTO O SERVICIO -->
+                                                                            <el-tooltip v-if="
+                                                                                order_pend
+                                                                                    .food
+                                                                                    .item
+                                                                                    .name_product_pdf
+                                                                            " content="Restaurar nombre del producto">
+                                                                                <el-tag role="button" type="danger"
+                                                                                    size="small"
+                                                                                    style="font-size: 12px; padding: 2px 2px;"
+                                                                                    @click="restoreName(indexx)">
+                                                                                    <i
+                                                                                        class="fas fa-times text-black"></i>
+                                                                                </el-tag>
+                                                                            </el-tooltip>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Boton de eliminar producto o servicio y si es Restaurant Observaciones-->
+                                                                    <div class="col-2" style="padding:2px;">
+                                                                        <el-button-group>
+                                                                            <el-button class="text-white" type="danger"
+                                                                                icon="el-icon-delete" size="mini" circle
+                                                                                @click="
+                                                                                    deleteFood(
+                                                                                        indexx
+                                                                                    )
+                                                                                    "></el-button>
+                                                                            <el-button v-if="
+                                                                                configuration.restaurant &&
+                                                                                !configuration.college
+                                                                            " class="text-white" type="info"
+                                                                                icon="el-icon-s-order" size="mini"
+                                                                                circle @click="
+                                                                                    openLocalObservationDialog(
+                                                                                        indexx,
+                                                                                        order_pend.observation,
+                                                                                        order_pend
                                                                                             .food
-                                                                                            .types" :key="indext
-                                                                                                " :command="{
-                                                                                                    indexx,
-                                                                                                    unit_type
-                                                                                                }">
-                                                                                        <strong>
-                                                                                            {{
-                                                                                                unit_type.description
-                                                                                            }}
-                                                                                        </strong>
-                                                                                    </el-dropdown-item>
-                                                                                </el-dropdown-menu>
-                                                                            </el-dropdown>
-                                                                        </template>
-                                                                        <template v-else>
-                                                                            <strong>
-                                                                                *{{
-                                                                                    order_pend.type_description
-                                                                                }}
-                                                                            </strong>
-                                                                        </template>
-                                                                    </small>
-                                                                </span>
-                                                                <span v-if="
-                                                                    order_pend.categoriaMadera
-                                                                " class="text-primary">
-                                                                    <small>
-                                                                        <strong>
-                                                                            {{
-                                                                                `${order_pend.categoriaMadera.selectedGrosor}x${order_pend.categoriaMadera.selectedAncho}x${order_pend.categoriaMadera.selectedLargo}`
-                                                                            }}
-                                                                        </strong>
-                                                                    </small>
-                                                                </span>
+                                                                                            .item
+                                                                                            .id
+                                                                                    )
+                                                                                    "></el-button>
+                                                                        </el-button-group>
+                                                                    </div>
+                                                                </div>
 
                                                                 <span v-if="
                                                                     configuration.quantity_prices &&
                                                                     order_pend
                                                                         .food
                                                                         .item_price_ranges
-                                                                        .length >
-                                                                    0
+                                                                        .length > 0
                                                                 ">
                                                                     <el-tooltip>
                                                                         <template slot="content">
@@ -1075,122 +885,61 @@
                                                                                     .item_price_ranges" :key="index
                                                                                         " style="margin-bottom: 4px;">
                                                                                 <strong>Cantidad:</strong>
-                                                                                {{
-                                                                                    price_range.quantity_min
-                                                                                }}
+                                                                                {{ price_range.quantity_min }}
                                                                                 <br />
                                                                                 <strong>Precio:</strong>
                                                                                 S/.
-                                                                                {{
-                                                                                    price_range.price
-                                                                                }}
+                                                                                {{ price_range.price }}
                                                                             </div>
                                                                         </template>
                                                                         <i class="fas fa-info-circle"></i>
                                                                     </el-tooltip>
                                                                 </span>
 
-                                                                <el-tooltip v-if="
-                                                                    configuration.edit_name_product
-                                                                " content="Cambiar nombre del producto">
-                                                                    <el-tag role="button" type="success" size="mini"
-                                                                        @click="
-                                                                            changeName(
-                                                                                indexx
-                                                                            )
-                                                                            ">
-                                                                        <i class="fas fa-edit text-black"></i>
-                                                                    </el-tag>
-                                                                </el-tooltip>
-                                                                <el-tooltip v-if="
-                                                                    order_pend
-                                                                        .food
-                                                                        .item
-                                                                        .name_product_pdf
-                                                                " content="Restaurar nombre del producto">
-                                                                    <el-tag role="button" type="danger" size="mini"
-                                                                        @click="
-                                                                            restoreName(
-                                                                                indexx
-                                                                            )
-                                                                            ">
-                                                                        <i class="fas fa-times text-black"></i>
-                                                                    </el-tag>
-                                                                </el-tooltip>
                                                             </h3>
-                                                            <p
-                                                                class="badge bg-foreground text-uppercase font-weight-light p-0">
-                                                            </p>
                                                         </div>
                                                         <div class="row col-12">
-                                                            <div class="col-2 col-md-2" v-if="
-                                                                !configuration.college
-                                                            ">
-                                                                <el-tag v-if="
-                                                                    configuration.restaurant
-                                                                " @click="
-                                                                    toCarry(
-                                                                        indexx
-                                                                    )
-                                                                    " size="medium" role="button" :type="order_pend.to_carry
-                                                                        ? 'success'
-                                                                        : 'info'
-                                                                        " :effect="order_pend.to_carry
-                                                                            ? 'dark'
-                                                                            : 'plain'
-                                                                            ">
-                                                                    <i class="fas fa-biking" style="color: black"></i>
-                                                                </el-tag>
-                                                            </div>
-                                                            <div class="col-4 col-md-4">
-                                                                <el-button-group>
-                                                                    <el-button class="text-white" type="danger"
-                                                                        icon="el-icon-delete" size="mini" circle @click="
-                                                                            deleteFood(
-                                                                                indexx
-                                                                            )
-                                                                            "></el-button>
-                                                                    <el-button v-if="
-                                                                        configuration.restaurant &&
-                                                                        !configuration.college
-                                                                    " class="text-white" type="info"
-                                                                        icon="el-icon-s-order" size="mini" circle
-                                                                        @click="
-                                                                            openLocalObservationDialog(
-                                                                                indexx,
-                                                                                order_pend.observation,
-                                                                                order_pend
-                                                                                    .food
-                                                                                    .item
-                                                                                    .id
-                                                                            )
-                                                                            "></el-button>
-                                                                </el-button-group>
-                                                            </div>
                                                             <div v-if="establishments.conf && establishments.conf.show_discounts_payment && !isCreatingOrden && configuration.discount_items && order_pend.price == order_pend.original_price"
-                                                                class="col-6 col-md-6">
-                                                                <label for="" class="fw-bold w-100">Descuentos</label>
-                                                                <el-input v-model="order_pend.food.item.discount"
-                                                                    style="width: 90px; font-size: 14px;" type="number"
-                                                                    controls-position="right" :min="0"
-                                                                    :max="order_pend.discount ? 99.5 : order_pend.price * order_pend.quantity"
-                                                                    @input="validateDiscount(indexx)"
-                                                                    @change="validateDiscount(indexx)"
-                                                                    @blur="validateDiscount(indexx)"
-                                                                    :disabled="!!order_pend.food.item.price"></el-input>
-                                                                <el-checkbox v-model="order_pend.discount"
-                                                                    @change="onDiscountTypeChange(indexx)"
-                                                                    :disabled="!!order_pend.food.item.price">
-                                                                    <span>
-                                                                        {{ order_pend.discount ? 'Porcentaje' : 'Monto'
+                                                                class="col-12 mt-1">
+                                                                <div class="d-flex align-items-center justify-content-end">
+                                                                    <label class="fw-bold mb-0 me-2">
+                                                                        {{
+                                                                            order_pend.discount
+                                                                                ? "Descuento  %"
+                                                                                : "Descuento S/"
                                                                         }}
-                                                                    </span>
-                                                                </el-checkbox>
+                                                                    </label>
+                                                                    <el-input
+                                                                        v-model="order_pend.food.item.discount"
+                                                                        style="width: 90px; font-size: 14px; margin-right: 10px;"
+                                                                        type="number"
+                                                                        controls-position="right"
+                                                                        :min="0"
+                                                                        :max="order_pend.discount ? 99.5 : order_pend.price * order_pend.quantity"
+                                                                        @input="validateDiscount(indexx)"
+                                                                        @change="validateDiscount(indexx)"
+                                                                        @blur="validateDiscount(indexx)"
+                                                                        :disabled="!!order_pend.food.item.price"
+                                                                    ></el-input>
+                                                                    <el-switch
+                                                                        v-model="order_pend.discount"
+                                                                        @change="onDiscountTypeChange(indexx)"
+                                                                        :disabled="!!order_pend.food.item.price"
+                                                                        active-text="Porcentaje"
+                                                                        inactive-text="Monto"
+                                                                        :active-color="'#073f68'"
+                                                                        :inactive-color="'#ff4949'"
+                                                                        active-color="#073f68"
+                                                                        inactive-color="#ff4949"
+                                                                        style="transform: scale(0.9);"
+                                                                    ></el-switch>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <!-- Cantidad de productos en lista de venta directa -->
                                                         <div class="row align-items-end">
                                                             <div class="col-6 col-4 col-md-5 col-lg-4 col-xl-4">
+                                                                <!-- CANTIDAD -->
                                                                 <span class="fw-bold "
                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;">
                                                                     Cantidad:
@@ -1232,13 +981,9 @@
                                                                                     'custom-bg-light': !configuration.item_set_quantity_pos,
                                                                                     'custom-bg-danger;':
                                                                                         configuration.item_set_quantity_pos
-                                                                                }" @input="
-                                                                                    verifyStock(
-                                                                                        order_pend,
-                                                                                        indexx
-                                                                                    )
-                                                                                    " />
+                                                                                }" @input="verifyStock(order_pend,indexx)" />
 
+                                                                        
                                                                         <div class="input-group-text">
                                                                             <button type="button" class="spin-up"
                                                                                 data-spin="up" :disabled="(order_pend
@@ -1277,6 +1022,7 @@
                                                                                         ">
                                                                                 <span class="arrow"></span>
                                                                             </button>
+                                                                            <!-- si es Consignación -->
                                                                             <button type="button" class="spin-down"
                                                                                 data-spin="down" :disabled="isConsignment ||
                                                                                     (order_pend
@@ -1300,12 +1046,8 @@
                                                                                             .item
                                                                                             .lots_group
                                                                                             .length >
-                                                                                        1)
-                                                                                    " @click="
-                                                                                        restar_orden(
-                                                                                            indexx
-                                                                                        )
-                                                                                        ">
+                                                                                        1)"
+                                                                                        @click="restar_orden(indexx)">
                                                                                 <span class="arrow"></span>
                                                                             </button>
                                                                         </div>
@@ -1315,45 +1057,30 @@
 
                                                             <!-- Precio unitario del produto en lista de venta directa -->
                                                             <template>
+                                                                <!-- PRECIO -->
                                                                 <div class="col-6 col-4 col-md-5 col-lg-5 col-xl-4">
                                                                     <span class="time font-weight-light">
                                                                         <span class="fw-bold"
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;">
-                                                                            Precio:
-                                                                            {{
-                                                                                currency_id
-                                                                            }}
-
-                                                                            <template v-if="
-                                                                                order_pend.prices
-                                                                            ">
-                                                                                <el-input v-if="
-                                                                                    isEditing &&
-                                                                                    configuration.edit_price_sales
-                                                                                " class="custom_input fw-bold"
+                                                                            Precio: {{currency_id}}
+                                                                            <template v-if="order_pend.prices">
+                                                                                <el-input   
+                                                                                    v-if="isEditing && configuration.edit_price_sales" 
+                                                                                    class="custom_input fw-bold"
                                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
-                                                                                    type="number" v-model.number="order_pend.price
-                                                                                        " @input="
-                                                                                            update_price(
-                                                                                                indexx
-                                                                                            )
-                                                                                            "
-                                                                                    placeholder="Editar precio"></el-input>
-                                                                                <el-select v-else v-model="order_pend.price
-                                                                                    "
-                                                                                    placeholder="Seleccione un precio"
-                                                                                    @change="
-                                                                                        update_price(
-                                                                                            indexx,
-                                                                                            order_pend.price
-                                                                                        )
-                                                                                        ">
+                                                                                    type="number" 
+                                                                                    v-model.number="order_pend.price" @input="update_price(indexx)"
+                                                                                    placeholder="Editar precio">
+                                                                                </el-input>
+                                                                                <el-select v-else v-model="order_pend.price"
+                                                                                    placeholder="Seleccione un precio"@change="update_price(indexx,order_pend.price)">
                                                                                     <el-option v-for="(price,
                                                                                         index) in order_pend.prices"
                                                                                         :key="index
                                                                                             " :value="price
                                                                                                 " :label="price
-                                                                                                    "></el-option>
+                                                                                                    ">
+                                                                                    </el-option>
                                                                                 </el-select>
                                                                                 <el-button v-if="
                                                                                     configuration.edit_price
@@ -1368,88 +1095,29 @@
                                                                             <template v-else>
                                                                                 <el-input class="custom_input text-dark"
                                                                                     style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;"
-                                                                                    :disabled="isSellerConsolidated ||
-                                                                                        configuration.edit_price_sales ===
-                                                                                        false
-                                                                                        " type="number" v-model="order_pend.price
-                                                                                            " @input="
-                                                                                                update_price(
-                                                                                                    indexx,
-                                                                                                    order_pend.price
-                                                                                                )
-                                                                                                ">
-                                                                                    <!-- <template
-                                                                                        slot="prepend"
-                                                                                    >
-                                                                                        {{
-                                                                                            currency_id
-                                                                                        }}
-                                                                                    </template> -->
+                                                                                    :disabled="isSellerConsolidated || configuration.edit_price_sales === false" 
+                                                                                    type="number" v-model="order_pend.price" 
+                                                                                    @input="update_price(indexx,order_pend.price)">
                                                                                 </el-input>
                                                                             </template>
                                                                         </span>
                                                                     </span>
                                                                 </div>
                                                                 <div class="col-4 col-md-2 col-lg-3 mt-2">
-                                                                    <!-- <template
-                                                                        v-if="
-                                                                            configuration.edit_subtotal_box &&
-                                                                                !isSellerConsolidated
-                                                                        "
-                                                                    >
-                                                                        <el-tag
-                                                                            v-if="
-                                                                                !order_pend.change_subtotal
-                                                                            "
-                                                                            role="button"
-                                                                            size="medium"
-                                                                            @click="
-                                                                                changeSubtotal(
-                                                                                    indexx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <i
-                                                                                class="fas fa-edit text-primary"
-                                                                            ></i>
-                                                                        </el-tag>
-
-                                                                        <el-tag
-                                                                            v-else
-                                                                            role="button"
-                                                                            size="medium"
-                                                                            @click="
-                                                                                saveSubtotal(
-                                                                                    indexx
-                                                                                )
-                                                                            "
-                                                                        >
-                                                                            <i
-                                                                                class="fas fa-save text-primary"
-                                                                            ></i>
-                                                                        </el-tag>
-                                                                    </template> -->
-                                                                    <template v-if="
-                                                                        configuration.edit_subtotal_box &&
-                                                                        !isSellerConsolidated
-                                                                    ">
-                                                                        <!-- Icono de editar o guardar, ahora arriba -->
+                                                                    <template v-if="configuration.edit_subtotal_box && !isSellerConsolidated">
                                                                         <div class="mb-1" style="text-align:center;">
-                                                                            <el-tag v-if="
-                                                                                !order_pend.change_subtotal
-                                                                            " role="button" size="medium" @click="
-                                                                                changeSubtotal(
-                                                                                    indexx
-                                                                                )
-                                                                                ">
-                                                                                <i class="fas fa-edit text-primary"></i>
+                                                                            <el-tag 
+                                                                                v-if="!order_pend.change_subtotal" 
+                                                                                role="button" size="medium" 
+                                                                                @click="changeSubtotal(indexx)">
+                                                                                <span class="fw-bold "
+                                                                                    style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1rem;">
+                                                                                    Total {{currency_id}}
+                                                                                    <i class="fas fa-edit text-primary"></i>
+                                                                                </span>
                                                                             </el-tag>
                                                                             <el-tag v-else role="button" size="medium"
-                                                                                @click="
-                                                                                    saveSubtotal(
-                                                                                        indexx
-                                                                                    )
-                                                                                    ">
+                                                                                @click="saveSubtotal(indexx)">
                                                                                 <i class="fas fa-save text-primary"></i>
                                                                             </el-tag>
                                                                         </div>
@@ -1499,184 +1167,133 @@
                                                                 </div>
                                                             </template>
                                                         </div>
-                                                        <div v-if="
-                                                            order_pend.food
-                                                                .item
-                                                                .series_enabled
-                                                        ">
-                                                            <template v-if="
-                                                                order_pend
-                                                                    .series
-                                                                    .length ==
-                                                                0
-                                                            ">
-                                                                <el-tag style="margin-top: 5px" role="button" @click="
-                                                                    showSeriesDialog(
-                                                                        order_pend,
-                                                                        indexx
-                                                                    )
-                                                                    " type="danger">
-                                                                    **Seleccione
-                                                                    una serie
-                                                                </el-tag>
-                                                            </template>
-                                                            <template v-else>
-                                                                <div v-for="(serie,
-                                                                    idx) in order_pend.series" :key="idx"
-                                                                    style="margin-top: 5px">
-                                                                    <el-tag type="primary" closable
-                                                                        :disable-transitions="false
-                                                                            " @close="
-                                                                                deleteSerie(
-                                                                                    indexx,
-                                                                                    serie.id
-                                                                                )
-                                                                                ">
-                                                                        {{
-                                                                            serie.series
-                                                                        }}
+                                                        
+                                                        <!-- Seleccionar Series   -->
+                                                        <div class="col-12" v-if="order_pend.food.item.series_enabled">
+                                                            <template v-if="order_pend.series.length ==0">
+                                                                <div class="col-6">
+                                                                    <el-tag
+                                                                        style="margin-top: 5px"
+                                                                        role="button"
+                                                                        @click="showSeriesDialog(order_pend,indexx)"
+                                                                        type="danger"
+                                                                        class="btn_guardarsmall"
+                                                                    >
+                                                                        ** Seleccione Serie **
                                                                     </el-tag>
-                                                                    <br />
                                                                 </div>
-                                                                <el-tag style="margin-top: 5px" role="button" @click="
-                                                                    showSeriesDialog(
-                                                                        order_pend,
-                                                                        indexx
-                                                                    )
-                                                                    " type="success">
-                                                                    Ver Series
-                                                                </el-tag>
-                                                            </template>
-                                                        </div>
-                                                        <div v-if="
-                                                            order_pend.food
-                                                                .item
-                                                                .has_color_size
-                                                        ">
-                                                            <template v-if="
-                                                                order_pend.color_size &&
-                                                                order_pend
-                                                                    .color_size
-                                                                    .length ==
-                                                                0
-                                                            ">
-                                                                <el-tag style="margin-top: 5px" role="button" @click="
-                                                                    showColorSizeDialog(
-                                                                        order_pend,
-                                                                        indexx
-                                                                    )
-                                                                    " type="danger">
-                                                                    **Seleccione
-                                                                    un color y
-                                                                    talla
-                                                                </el-tag>
                                                             </template>
                                                             <template v-else>
-                                                                <div v-for="(color_size,
-                                                                    idx) in order_pend.color_size" :key="idx"
-                                                                    style="margin-top: 5px">
-                                                                    <el-tag type="primary" closable
-                                                                        :disable-transitions="false
-                                                                            " @close="
-                                                                                deleteColorSize(
-                                                                                    indexx,
-                                                                                    color_size.id
-                                                                                )
-                                                                                ">
-                                                                        {{
-                                                                            color_size.color
-                                                                        }}
-                                                                        -
-                                                                        {{
-                                                                            color_size.size
-                                                                        }}
-                                                                        - Cant.
-                                                                        {{
-                                                                            color_size.quantity
-                                                                        }}
+                                                                
+                                                                <div class="col-6">
+                                                                    <el-tag 
+                                                                        style="margin-top: 5px" 
+                                                                        role="button" 
+                                                                        @click="showSeriesDialog(order_pend,indexx)" 
+                                                                        type="success"
+                                                                        class="btn_guardarsmall"
+                                                                    >
+                                                                        ** Seleccione Serie **
                                                                     </el-tag>
-                                                                    <br />
                                                                 </div>
-                                                                <el-tag style="margin-top: 5px" role="button" @click="
-                                                                    showColorSizeDialog(
-                                                                        order_pend,
-                                                                        indexx
-                                                                    )
-                                                                    " type="success">
-                                                                    Ver Colores
-                                                                    & Tallas
-                                                                </el-tag>
-                                                            </template>
-                                                        </div>
-                                                        <div v-if="
-                                                            order_pend.food
-                                                                .item
-                                                                .lots_enabled &&
-                                                            !order_pend
-                                                                .food
-                                                                .item
-                                                                .series_enabled
-                                                        ">
-                                                            <template v-if="
-                                                                order_pend
-                                                                    .lotes
-                                                                    .length ==
-                                                                0
-                                                            ">
-                                                                <el-tag style="margin-top: 5px" role="button" @click="
-                                                                    showLotesDialog
-                                                                " type="danger">
-                                                                    **Seleccione
-                                                                    el lote
-                                                                </el-tag>
-                                                            </template>
-                                                            <template v-else>
-                                                                <div v-for="(lot,
-                                                                    idx) in order_pend.lotes" :key="idx"
-                                                                    style="margin-top: 5px" v-show="lot.quantitySelected >
-                                                                        0
-                                                                        ">
-                                                                    <el-tooltip :content="`Cant. en almacén: ${lot.quantity}`
-                                                                        ">
-                                                                        <el-tag type="primary">
-                                                                            {{
-                                                                                lot.code
-                                                                            }}
-                                                                            <template v-if="
-                                                                                order_pend
-                                                                                    .food
-                                                                                    .item
-                                                                                    .lots_group
-                                                                                    .length >
-                                                                                1
-                                                                            ">
-                                                                                -
-                                                                                Cant.
-                                                                                {{
-                                                                                    lot.quantitySelected
-                                                                                }}
-                                                                            </template>
+                                                                <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; margin-top: 5px;">
+                                                                    <div v-for="(serie, idx) in order_pend.series" :key="idx">
+                                                                        <el-tag type="primary" closable
+                                                                            :disable-transitions="false" 
+                                                                            @close="deleteSerie(indexx,serie.id)">
+                                                                            {{ serie.series }}
                                                                         </el-tag>
-                                                                    </el-tooltip>
-                                                                    <br />
+                                                                    </div>
                                                                 </div>
-                                                                <el-tag v-if="
-                                                                    order_pend
-                                                                        .food
-                                                                        .item
-                                                                        .lots_group
-                                                                        .length >
-                                                                    1
-                                                                " style="margin-top: 5px" role="button" @click="
-                                                                    showLotesDialog(
-                                                                        order_pend,
-                                                                        indexx
-                                                                    )
-                                                                    " type="success">
-                                                                    Ver Lotes
-                                                                </el-tag>
+                                                            </template> 
+                                                        </div>
+                                                        <!-- Seleccionar Color y Talla -->
+                                                        <div class="col-12" v-if="order_pend.food.item.has_color_size">
+                                                            <template v-if="order_pend.color_size && order_pend.color_size.length == 0">
+                                                                <div class="col-6">
+                                                                    <el-tag  
+                                                                        style="margin-top: 5px" 
+                                                                        role="button" 
+                                                                        @click="showColorSizeDialog(order_pend,indexx)" 
+                                                                        type="danger"
+                                                                        class="btn_guardarsmall">
+                                                                        ** Seleccione Color&Talla **
+                                                                    </el-tag>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                <div class="col-6">
+                                                                    <el-tag style="margin-top: 5px" role="button" 
+                                                                        @click="showColorSizeDialog(order_pend,indexx)" 
+                                                                        type="success"
+                                                                        class="btn_guardarsmall">
+                                                                        ** Seleccione Color&Talla **
+                                                                    </el-tag>
+                                                                </div>
+                                                                <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                                                                    <div v-for="(color_size, idx) in order_pend.color_size" :key="idx">
+                                                                        <el-tag 
+                                                                            type="primary" 
+                                                                            closable
+                                                                            :disable-transitions="false" 
+                                                                            @close="deleteColorSize(indexx, color_size.id)">
+                                                                            {{ color_size.color }}
+                                                                            -
+                                                                            {{ color_size.size }}
+                                                                            - Cant.
+                                                                            ({{ color_size.quantity }})
+                                                                        </el-tag>
+                                                                    </div>
+                                                                </div>
                                                             </template>
                                                         </div>
+                                                        <!-- Seleccionar lotes -->
+                                                        <div class="col-12" v-if="order_pend.food.item.lots_enabled &&!order_pend.food.item.series_enabled">
+                                                            <template v-if="order_pend.lotes.length == 0">
+                                                                <div class="col-6">
+                                                                    <el-tag style="margin-top: 5px" role="button" 
+                                                                        @click="showLotesDialog(order_pend, indexx)" 
+                                                                        type="danger"
+                                                                        class="btn_guardarsmall"
+                                                                    >
+                                                                        ** Seleccione Lote **
+                                                                    </el-tag>
+                                                                </div>
+                                                            </template>
+                                                            <template v-else>
+                                                                
+                                                                <div class="col-6">
+                                                                    <el-tag v-if="
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .lots_group
+                                                                            .length > 1
+                                                                    " style="margin-top: 5px" role="button" 
+                                                                        @click="showLotesDialog(order_pend,indexx)" 
+                                                                        type="success"
+                                                                        class="btn_guardarsmall">
+                                                                        ** Seleccione Lote **
+                                                                    </el-tag>
+                                                                </div>
+                                                                <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; margin-top: 5px;">
+                                                                    <div v-for="(lot,idx) in order_pend.lotes" :key="idx"
+                                                                        v-show="lot.quantitySelected > 0">
+                                                                        <el-tooltip :content="`Cant. en almacén: ${lot.quantity}`">
+                                                                            <el-tag type="primary">
+                                                                                {{lot.code}}
+                                                                                <template v-if="order_pend.food.item.lots_group.length > 1">
+                                                                                    - Cant.
+                                                                                    ({{lot.quantitySelected}})
+                                                                                </template>
+                                                                            </el-tag>
+                                                                        </el-tooltip>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+
+
                                                         <div v-if="
                                                             order_pend.observation
                                                         ">
@@ -1738,8 +1355,7 @@
                                             <div class="mx-2 coupon rounded d-flex justify-content-between">
                                                 <div class="tengah py-2 d-flex w-100 justify-content-start p-2">
                                                     <div class="overflow-hidden w-100 card shadow-lg p-3" style="
-                              box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
-                            ">
+                                                        box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;">
                                                         <h3 class="lead font-weight-light fw-bold"
                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem;">
                                                             <template v-if="
@@ -1835,18 +1451,7 @@
                                                                                         : "S/"
                                                                                 }}
                                                                             </template>
-                                                                            <!-- <template
-                                                                                slot="prepend"
-                                                                                v-if="
-                                                                                    ord
-                                                                                        .food
-                                                                                        .item
-                                                                                        .currency_type_id ==
-                                                                                        'USD'
-                                                                                "
-                                                                            >
-                                                                                $
-                                                                        </template>-->
+                                                                           
                                                                         </el-input>
                                                                     </span>
                                                                 </span>
@@ -1900,49 +1505,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- <div
-                                            class="mx-4 h4 txt-info p-10 f-w-700 d-flex align-items-center"
-                                        >
-                                            <template
-                                                v-if="configuration.restaurant"
-                                            >
-                                                <a
-                                                    class="bage bg-dark text-white"
-                                                    style="margin-right: 5px"
-                                                >
-                                                    <template
-                                                        v-if="
-                                                            localOrden.length <=
-                                                                9
-                                                        "
-                                                    >
-                                                        0{{ localOrden.length }}
-                                                    </template>
-                                                    <template v-else>
-                                                        {{ localOrden.length }}
-                                                    </template>
-                                                </a>
-                                                
-                                                Por solicitar
-                                                <template
-                                                    v-if="
-                                                        configuration.divided_items
-                                                    "
-                                                >
-                                                    <el-checkbox
-                                                        v-model="
-                                                            localDividedItems
-                                                        "
-                                                        style="margin-left: 10px;"
-                                                        @change="
-                                                            saveDividedItemsLocalStorage
-                                                        "
-                                                        >Dividir ordenes
-                                                        iguales</el-checkbox
-                                                    >
-                                                </template>
-                                            </template>
-                                        </div> -->
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -1959,35 +1522,38 @@
                 <el-input v-model="localObservation"></el-input>
             </span>
             <span slot="footer" class="dialog-footer">
-                <button class="btn btn-sm btn-secondary" @click="changeLocalObservation">
+                <button type="primary" class="btn_guardarsmall m-1" @click="changeLocalObservation">
                     Cambiar
                 </button>
-                <button class="btn btn-sm btn-light" @click="closeLocalObservationDialog">
+                <button type="danger" class="btn_cancelarsmall m-1" @click="closeLocalObservationDialog">
                     Cerrar
                 </button>
             </span>
         </el-dialog>
-        <!-- modal de aparcado -->
-        <el-dialog :visible="apart" :close-on-click-modal="false" :close-on-press-escape="false" title="Aparcar orden"
-            @close="apart = false" width="20%">
-            <br />
-            <div class="card p-2">
-                <div class="col-md-12">
-                    <label class="control-label fw-bold">Datos Referenciales</label>
-                    <el-input v-model="numberCustomerApart" placeholder="Dni o Nombre"></el-input>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-light m-1" @click="apart = false">
-                        Cancelar
-                    </button>
 
-                    <button class="btn btn-primary m-1" @click="pullApartOrden">
-                        Aparcar
-                    </button>
+        <!-- modal de aparcado -->
+        <el-dialog :visible="apart" :close-on-click-modal="false" :close-on-press-escape="false" title="Aparcar Venta"
+            @close="apart = false" width="40%">
+            <div class="p-2">
+                <div class="col-md-12">
+                    <label class="control-label fw-bold">Ingrese datos de Referencia</label>
+                    <el-input v-model="numberCustomerApart" placeholder="DNI/NOMBRE/ALIAS"></el-input>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 d-flex justify-content-end align-items-center">
+                        <button type="danger" class="btn_cancelarsmall m-1" @click="apart = false">
+                            <i class="el-icon-close"></i>
+                            Cancelar
+                        </button>
+                        <button type="primary" class="btn_guardarsmall m-1" @click="pullApartOrden">
+                            <i class="fas fa-cart-arrow-down"></i>
+                            Aparcar
+                        </button>
+                    </div>
                 </div>
             </div>
-            <br />
         </el-dialog>
+
         <transfers-modal :showDialog.sync="showTransfersDialog"></transfers-modal>
         <show-lotes-product :idx="currentIdx" :orden="ordenLot" :showDialog.sync="showLotes"
             @updateLotes="updateLotes"></show-lotes-product>
@@ -2020,17 +1586,23 @@
             :showDialog.sync="showCreditForm" :items="localOrden" :customers="customers" @limpiarForm="limpiarForm"
             :cash_id="cash_id" :all_series.sync="all_series" :establishments="establishments"
             :configuration="configuration" :fromPos="true"></credit-form>
+
+
+        <!-- cambiar descripcion de variacion -->
         <el-dialog :visible.sync="showChangeDescriptionVariation" title="Cambiar descripción"
             @close="showChangeDescriptionVariation = false">
-            <div class="card p-3">
+            <div class="card p-1">
                 <el-input placeholder="Nueva descripción" v-model="descriptionTemp"></el-input>
-                <br />
-                <div class="d-flex justify-content-end">
-                    <el-button type="primary" @click="changeDescription">Cambiar</el-button>
-                    <el-button @click="showChangeDescriptionVariation = false">Cerrar</el-button>
+                <div class="row mt-2">
+                    <div class="col-12 d-flex justify-content-end align-items-center">
+                        <el-button class="btn_guardarsmall" type="primary" @click="changeDescription">Cambiar</el-button>
+                        <el-button class="btn_cancelarsmall" type="danger" @click="showChangeDescriptionVariation = false">Cerrar</el-button>
+                    </div>
                 </div>
             </div>
         </el-dialog>
+
+        <!-- Eliminar orden con pin Restarurant -->
         <el-dialog v-loading="deleteOrdenLoading" width="350px" :visible.sync="showPinRequest" title="Ingrese su PIN"
             append-to-body @closed="handlePinDialogClose">
             <div class="row mt-1">
@@ -2088,6 +1660,7 @@
                 </el-button>
             </div>
         </el-dialog>
+
         <consignment-form v-if="
             configuration.consignment && localOrden.length != 0 && !isSeller
         " :showDialog.sync="showConsignmentForm" :items="localOrden" :all_customers="customers"
@@ -2099,15 +1672,26 @@
 
         <credit-list-dialog v-if="configuration.credit_list" :showDialog.sync="showCreditListDialog"
             :amountToAdd="creditListAmount" @sendOrdenToCreditList="sendOrdenToCreditList"
-            @paymentsOrden="paymentsOrden" :fromPos="true"></credit-list-dialog>
-        <el-dialog :visible.sync="showChangeName" title="Cambiar nombre de producto" @close="showChangeName = false"
-            append-to-body>
+            @paymentsOrden="paymentsOrden" :fromPos="true">
+        </credit-list-dialog>
+
+        <!-- cambiar nombre de producto o servicio -->
+        <el-dialog :visible.sync="showChangeName" title="Cambiar Nombre de Producto o Servicio"
+            @close="showChangeName = false" append-to-body>
             <div class="row m-2">
-                <el-input v-model="name_pdf" placeholder="Ingrese un nombre"></el-input>
+                <el-input v-model="name_pdf" placeholder="Ingrese un nombre"
+                    @input="name_pdf = name_pdf ? name_pdf.toUpperCase() : ''"></el-input>
             </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="showChangeName = false">Cancelar</el-button>
-                <el-button type="primary" @click="changeNamePdf">Guardar</el-button>
+            <div slot="footer" class="dialog-footer"
+                style="display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 10px;">
+                <el-button class="btn_cancelarsmall" type="danger" @click="showChangeName = false">
+                    <i class="el-icon-close"></i>
+                    Cancelar
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" @click="changeNamePdf">
+                    <i class="el-icon-check"></i>
+                    Guardar
+                </el-button>
             </div>
         </el-dialog>
         <digital-payments :showDigitalPay.sync="showDigitalPay" />
@@ -2197,12 +1781,7 @@
     margin-bottom: 20px;
 }
 
-/* .pin-circle {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #aaa;
-    border-radius: 50%;
-} */
+
 
 .pin-circle {
     width: 20px;
@@ -2225,6 +1804,15 @@
     opacity: 0;
     pointer-events: none;
 }
+.blinking {
+  animation: blinking 1s infinite;
+}
+
+@keyframes blinking {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
 </style>
 
 <script>
@@ -2238,8 +1826,7 @@ const TableOrdensPending = () => import("./list_pending_ordens.vue");
 const ObservationForm = () => import("../../partials/observation_form.vue");
 const ExpensesIncomes = () => import("../partials/expenses_incomes.vue");
 const ShowSeriesProduct = () => import("../partials/show_series_product.vue");
-const ShowColorSizeProduct = () =>
-    import("../partials/show_color_size_product.vue");
+const ShowColorSizeProduct = () => import("../partials/show_color_size_product.vue");
 const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
 const CreditListModal = () => import("../partials/credit_list_modal.vue");
@@ -2247,7 +1834,7 @@ const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
 const ConsolidatedModal = () => import("../partials/consolidated_modal.vue");
 const DigitalPayments = () => import("../partials/digital_payments.vue");
 const OpenItems = () => import("../partials/visualizate.vue");
-import { exchangeRate } from "@mixins/functions";     
+import { exchangeRate } from "@mixins/functions";
 import DeliveryForm from "../partials/delivery_from.vue";
 import { listcalculateTotal as calculateTotal } from "./listorden/calculateTotal.js";
 import { DiscountCalcItemAmounts } from "./listorden/discountCalcItemAmount.js";
@@ -4196,47 +3783,7 @@ export default {
                     this.showDialogClose = true;
                     break;
 
-                /* if (this.cash_id) {
-                        if (this.configuration.ordens_cash) {
-                            let data = await this.checkTables();
-                            if (!data.success) {
-                                this.showDialogClose = true;
-                            } else {
-                                let { ordenes, total, items } = data;
-                                try {
-                                    await this.$confirm(
-                                        `Existen ${ordenes} ordenes pendientes por cobrar, con un total de ${total} soles. Desea emitir una nota de venta por el total?`,
-                                        "Cerrar Caja",
-                                        {
-                                            confirmButtonText: "Emitir",
-                                            cancelButtonText: "Cerrar",
-                                            type: "warning"
-                                        }
-                                    );
-
-                                    this.$emit("sendOrdensAllTables", items);
-                                } catch (e) {}
-                            }
-                        } else {
-                            this.showDialogClose = true;
-                        }
-
-                        if (this.configuration.hotels) {
-                            const expiredCount = await this.checkExpiredRooms();
-                            if (expiredCount > 0) {
-                                const msg = `Tiene ${expiredCount} habitación(es) vencida(s). Debe liberar las habitaciones vencidas para poder cerrar la caja.`;
-                                if (this.$showSAlert) this.$showSAlert("ALERTA", msg, "warning");
-                                else await Swal.fire({ title: "Alerta", text: msg, icon: "warning" });
-                                return;
-                            }
-                            
-                        } else {
-                            this.showDialogClose = true;
-                        }
-
-                    } else {
-                        this.showDialogCash = true;
-                    } */
+                
                 case 5:
                     if (!this.cash_id) {
                         this.$toast.error("Abra una caja");
@@ -4631,7 +4178,7 @@ export default {
         },
         async payOrden(offert = null) {
             // Antes de procesar el pago, asegurar que todos los productos tengan price_original
-            
+
             if (!this.checkIfHasZeroTotal()) {
                 this.$toast.error(
                     "No puede realizar una venta de productos con total 0"

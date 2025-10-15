@@ -92,71 +92,12 @@
                             <div class="d-flex flex-wrap">
                                 <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span">
                                     <button class="btn p-0" type="button" id="menu-actions" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                        aria-haspopup="true" aria-expanded="false" style="margin-right: 12px;">
                                         <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip"
                                             data-bs-placement="top" data-bs-delay="0" title
-                                            data-bs-original-title="Item Count" aria-label="Item Count">Menú de acciones
+                                            data-bs-original-title="Item Count" aria-label="Item Count">Acciones
                                         </span>
                                     </button>
-
-                                    <template v-if="
-                                        configuration.restaurant &&
-                                        !this.isSeller
-                                    ">
-                                        <!-- Boton de Mesa en Restaurante  o cuartos en Hotel -->
-                                        <template v-if="
-                                            !configuration.hotels ||
-                                            (configuration.hotels &&
-                                                !isPiscinaArea)
-                                        ">
-                                            <button class="btn btn-sm btn-primary" type="button" @click="buttonSmTables"
-                                                :title="isHotelArea
-                                                        ? '[F2] Cuartos para Alquilar'
-                                                        : '[F2] Mesas de Atención'
-                                                    ">
-                                                <i v-if="isHotelArea" class="fas fa-hotel"
-                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
-                                                <i v-else class="icofont-dining-table"
-                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
-                                            </button>
-                                        </template>
-
-                                        <template v-if="configuration.created_items">
-                                            <button class="btn btn-sm btn-success" type="button" @click="createdNew">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </template>
-
-                                        <template v-if="isAndroid">
-                                            <button class="btn btn-sm btn-primary" type="button"
-                                                @click="printLastDocument">
-                                                <i class="fas fa-print"></i>
-                                                <template v-if="lastDocument">
-                                                    {{
-                                                        lastDocument.numberPrint
-                                                    }}
-                                                </template>
-                                            </button>
-
-                                            <button class="btn btn-sm btn-success" size="small"
-                                                v-for="orden in ordenToPrint" :key="orden.id" @click="
-                                                    printOrden(
-                                                        orden.url,
-                                                        orden.id
-                                                    )
-                                                    ">
-                                                N° {{ orden.id }}
-                                            </button>
-                                        </template>
-                                    </template>
-                                    <template v-if="
-                                        !this.isSeller
-                                    ">
-                                        <button class="btn btn-sm btn-primary" type="button"
-                                            @click="trigerFunction(195)">
-                                            <i class="fas fa-cash-register"></i>
-                                        </button>
-                                    </template>
                                     <div class="dropdown-menu dropdown-menu-end col-md-2 col-1" style="width: 153px;">
                                         <div class="col-12" v-for="(option, idx) in optionsMenu" :key="idx"
                                             v-show="option.visible">
@@ -178,44 +119,86 @@
                                         </div>
                                     </div>
                                 </div>
-                                <template v-if="isHotelArea">
-                                    <el-badge :value="tablesClean.length" :hidden="tablesClean.length === 0">
-                                        <button style="margin-right: 2px;margin-left: 2px;" type="button"
-                                            class="btn btn-dirty" @click="showCleanDialog = true">
-                                            <svg fill="#ffffff" width="20px" height="20px"
-                                                viewBox="-8.08 0 122.88 122.88" version="1.1" id="Layer_1"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                style="enable-background:new 0 0 106.72 122.88" xml:space="preserve"
-                                                stroke="#ffffff" stroke-width="0.0012288" transform="rotate(0)">
-                                                <g id="SVGRepo_iconCarrier">
-                                                    <g>
-                                                        <path
-                                                            d="M4.42,33.57c-0.66-5.38,0.44-9.98,2.7-13.69c1.65-2.7,3.9-4.9,6.54-6.56c2.6-1.63,5.57-2.74,8.69-3.27 c4.94-0.84,10.29-0.24,15.13,1.96c1.72-3.29,4.16-6.1,7.33-8.19C48.46,1.41,53.04,0,58.53,0c5.96,0,11.59,2.53,15.71,6.6 c3.05,3.03,5.27,6.92,6.17,11.26c3.55-1.84,6.87-2.69,9.86-2.68c2.46,0,4.7,0.58,6.67,1.65c1.96,1.07,3.63,2.61,4.96,4.56 c2.24,3.27,3.54,7.71,3.69,12.93c0.64,0.92,1.01,2.03,1.11,3.33c0.04,0.51,0.03,1.04-0.01,1.58c-0.02,0.19-0.05,0.37-0.1,0.54 l-16,70.03c-0.01,0.03-0.02,0.07-0.03,0.1l0,0c-3.72,13.67-13.03,13.27-23.32,12.82c-1.58-0.07-3.19-0.14-5.05-0.14h-17 c-2.48,0-3.96,0.03-5.31,0.05c-14.36,0.27-17.53,0.33-22.17-19.11l0-0.01l-0.01,0l-0.23-0.97c-2.1-1.21-4.08-2.72-5.91-4.54 C1.39,87.86-3.71,67.96,3.11,35.55c0.14-0.68,0.53-1.24,1.04-1.62C4.23,33.8,4.32,33.68,4.42,33.57L4.42,33.57z M78.35,44.25 c4.2,0,7.6,3.4,7.6,7.6c0,3.49-2.36,6.43-5.56,7.32c-2.3,19.92-14.95,35.36-29.48,42.62c-6.76,3.38-13.94,5.01-20.71,4.54 c-2.24-0.16-4.43-0.54-6.55-1.16c3.28,12.33,6.04,12.28,16.15,12.09c1.88-0.03,3.95-0.07,5.39-0.07h17c1.61,0,3.46,0.08,5.28,0.16 c8.03,0.35,15.3,0.66,17.89-8.86h0l15.96-69.87c0.02-0.23,0.02-0.43,0-0.6c-0.02-0.24-0.05-0.42-0.11-0.54 c-0.1-0.08-0.19-0.17-0.28-0.27c-0.2-0.09-0.5-0.15-0.89-0.19c-0.33-0.03-0.69-0.03-1.07-0.01c-0.11,0.01-0.21,0.02-0.33,0.02H8.7 c-0.13,0.02-0.2,0.06-0.22,0.1c-0.22,0.5-0.25,1.36-0.15,2.43l13.81,59.34c2.64,1.19,5.48,1.87,8.41,2.07 c5.83,0.4,12.05-1.03,17.95-3.98c13.05-6.53,24.42-20.39,26.53-38.31c-2.54-1.23-4.29-3.83-4.29-6.84 C70.76,47.66,74.16,44.25,78.35,44.25L78.35,44.25z M15.58,94.42L5.85,52.64c-2.04,20.94,2.21,34.29,9.5,41.56 C15.43,94.28,15.5,94.35,15.58,94.42L15.58,94.42z M100,31.62c-0.4-2.9-1.26-5.35-2.54-7.21c-0.86-1.25-1.9-2.22-3.09-2.87 c-1.19-0.65-2.57-0.99-4.11-0.99c-2.97,0-6.54,1.25-10.6,4.03l0,0c-0.44,0.3-0.97,0.47-1.54,0.47c-1.47-0.02-2.65-1.22-2.65-2.69 c-0.01-0.07-0.01-0.14-0.01-0.21c0-4.56-1.95-8.71-5-11.73c-3.13-3.1-7.41-5.03-11.92-5.03c-4.4,0-7.99,1.08-10.78,2.92 c-3.01,1.98-5.16,4.9-6.46,8.33c-0.06,0.17-0.14,0.33-0.24,0.49c-0.77,1.27-2.43,1.67-3.69,0.89c-4.34-2.65-9.45-3.46-14.12-2.66 c-2.43,0.41-4.73,1.26-6.72,2.51c-1.95,1.23-3.62,2.84-4.82,4.81c-1.48,2.43-2.27,5.44-2.06,8.97h88.98 C99.1,31.62,99.56,31.61,100,31.62L100,31.62z" />
-                                                    </g>
-                                                </g>
-                                            </svg>
-                                            <span style="margin-left: 4px;">Limpieza</span>
-                                        </button>
-                                    </el-badge>
-                                    <el-badge :value="tablesLeave.length" :hidden="tablesLeave.length === 0">
-                                        <button style="margin-right: 2px;margin-left: 2px;" type="button"
-                                            class="btn btn-danger" :title="'Habitaciones vencidas'"
-                                            @click="showExpiredDialog = true">
-                                            <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
-                                            Vencidas
-                                        </button>
-                                    </el-badge>
+                                <div class="d-flex align-items-center flex-row flex-wrap gap-2">
+                                    <template v-if="configuration.restaurant && !this.isSeller">
+                                        <!-- Boton de Mesa en Restaurante  o cuartos en Hotel -->
+                                        <template
+                                            v-if="!configuration.hotels || (configuration.hotels && !isPiscinaArea)">
+                                            <button class="btn_guardarsmall" type="primary" @click="buttonSmTables"
+                                                :title="isHotelArea
+                                                    ? '[F2] Cuartos para Alquilar'
+                                                    : '[F2] Mesas de Atención'
+                                                    ">
+                                                <i v-if="isHotelArea" class="fas fa-hotel"
+                                                    style="font-size: 20px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
+                                                <i v-else class="icofont-dining-table"
+                                                    style="font-size: 35px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
+                                            </button>
+                                        </template>
 
-                                </template>
+                                        <template v-if="configuration.created_items">
+                                            <el-tooltip content="Crear Producto" placement="top">
+                                                <button class="btn_guardarsmall" type="primary" @click="createdNew">
+                                                    <i class="fas fa-plus" style="font-size: 20px;"></i>
+                                                </button>
+                                            </el-tooltip>
+                                        </template>
+
+                                        <template v-if="isAndroid">
+                                            <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
+                                                <i class="fas fa-print" style="font-size: 35px;"></i>
+                                                <template v-if="lastDocument">
+                                                    {{
+                                                        lastDocument.numberPrint
+                                                    }}
+                                                </template>
+                                            </button>
+
+                                            <button class="btn_guardarsmall" type="primary"
+                                                v-for="orden in ordenToPrint" :key="orden.id" @click="
+                                                    printOrden(
+                                                        orden.url,
+                                                        orden.id
+                                                    )
+                                                    ">
+                                                N° {{ orden.id }}
+                                            </button>
+                                        </template>
+                                    </template>
+                                    <template v-if="
+                                        !this.isSeller
+                                    ">
+                                        <button class="btn btn-sm btn-primary" type="button"
+                                            @click="trigerFunction(195)">
+                                            <i class="fas fa-cash-register"></i>
+                                        </button>
+                                    </template>
+
+                                    <template v-if="isHotelArea">
+                                        <el-badge :value="tablesClean.length" :hidden="tablesClean.length === 0">
+                                            <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                                class="btn_limpiezasmall" @click="showCleanDialog = true">
+                                                <img src="/images/imghotel/5.png" alt="Imagen" width="20" height="20" />
+                                                <span style="margin-left: 4px;">Limpieza</span>
+                                            </button>
+                                        </el-badge>
+                                        <el-badge :value="tablesLeave.length" :hidden="tablesLeave.length === 0">
+                                            <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                                class="btn_cancelarsmall" :title="'Habitaciones vencidas'"
+                                                @click="showExpiredDialog = true">
+                                                <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                                                Vencidas
+                                            </button>
+                                        </el-badge>
+                                    </template>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="row card mx-1 mt-2" v-if="
-                            configuration.sale_note_credit_confirm
-                                ? isAnalist ||
-                                user.can_accept_credit_sale_note
-                                : true
-                        ">
+                        <div class="row card mx-1 mt-2" v-if="configuration.sale_note_credit_confirm
+                            ? isAnalist ||
+                            user.can_accept_credit_sale_note
+                            : true">
                             <div>
                                 <!-- Busqueda de Categorias  Chifa China -->
                                 <template v-if="configuration.category_deslay">
@@ -230,9 +213,9 @@
                                                             category ===
                                                             null
                                                     }" @click="
-                                                            category = null;
-                                                        search_items(null);
-                                                        ">
+                                                        category = null;
+                                                    search_items(null);
+                                                    ">
                                                         <div class="category-circle">
                                                             <i class="fas fa-th text-primary"
                                                                 style="font-size: 24px;"></i>
@@ -255,7 +238,7 @@
                                                             <img v-if="
                                                                 item.icono
                                                             " :src="`/storage/uploads/category/${item.icono}`
-                                                                    " alt=""
+                                                                " alt=""
                                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;" />
                                                             <img v-else src="/logo/imagen-no-disponible.jpg"
                                                                 alt="Imagen no disponible"
@@ -294,154 +277,125 @@
 
                                 <template v-else>
                                     <!-- Card de Búsqueda -->
-
                                     <div class="row">
-                                        <!-- Series -->
-                                        <div v-if="
-                                            configuration.search_series_pos
-                                        " class="col-3 d-flex align-items-center justify-content-center">
-                                            <el-tooltip content="Envía a la lista de venta directamente (Imeis, Series)"
-                                                placement="top">
-                                                <el-checkbox v-if="
-                                                    configuration.search_series_pos
-                                                " v-model="searchSeries" @change="
-                                                        saveInLocalStorageSearchSeries
-                                                    " class="d-flex align-items-center">
-                                                    <i class="fas fa-list-alt me-2"></i>
+                                        <div class="col-2 mt-1">
+                                            <!-- Series -->
+                                            <div v-if="configuration.search_series_pos"
+                                                class="d-flex align-items-center justify-content-start">
+                                                <el-checkbox v-model="searchSeries"
+                                                    @change="saveInLocalStorageSearchSeries"
+                                                    class="d-flex align-items-center">
                                                     <span>Series</span>
                                                 </el-checkbox>
-                                            </el-tooltip>
-                                        </div>
+                                            </div>
 
-                                        <!-- Barcode -->
-                                        <div v-if="configuration.barcode"
-                                            class="col-3 d-flex align-items-center justify-content-center">
-                                            <el-tooltip content="Habilitar búsqueda por código de barras"
-                                                placement="top">
-                                                <el-checkbox v-if="configuration.barcode" v-model="barcode" @change="
-                                                    saveInLocalStorageBarcode
-                                                " class="d-flex align-items-center">
-                                                    <i class="fas fa-barcode me-2"></i>
-                                                    <span>Barcode</span>
-                                                </el-checkbox>
-                                            </el-tooltip>
-                                        </div>
-
-                                        <!-- Calidad -->
-                                        <div v-if="configuration.quality"
-                                            class="col-3 d-flex align-items-center justify-content-center">
-                                            <el-tooltip content="Filtrar por calidad del producto" placement="top">
-                                                <el-checkbox v-if="configuration.quality" v-model="quality" @change="
-                                                    saveInLocalStorageQuality
-                                                " class="d-flex align-items-center">
-                                                    <i class="fas fa-star me-2"></i>
-                                                    <span>Calidad</span>
-                                                </el-checkbox>
-                                            </el-tooltip>
-                                        </div>
-
-                                        <!-- Modelo -->
-
-                                        <div v-if="configuration.model"
-                                            class="col-3 d-flex align-items-center justify-content-center">
-                                            <el-tooltip content="Filtrar por modelo del producto" placement="top">
-                                                <el-checkbox v-if="configuration.model" v-model="model" @change="
-                                                    saveInLocalStorageModel
-                                                " class="d-flex align-items-center">
-                                                    <i class="fas fa-cube me-2"></i>
-                                                    <span>Modelo</span>
-                                                </el-checkbox>
-                                            </el-tooltip>
-                                        </div>
-                                        <!-- <div
-                                                class="col-3 d-flex align-items-center justify-content-center"
-                                            >
-                                                <el-tooltip
-                                                    content="Filtrar por modelo del producto"
-                                                    placement="top"
-                                                >
-                                                    <el-checkbox
-                                                        
-                                                        v-model="policy"
-                                                        @change="
-                                                            saveInLocalStoragePolicy
-                                                        "
-                                                        class="d-flex align-items-center"
-                                                    >
-                                                        <i
-                                                            class="fas fa-cube me-2"
-                                                        ></i>
-                                                        <span>Politica</span>
+                                            <!-- Barcode -->
+                                            <div v-if="configuration.barcode"
+                                                class="align-items-center justify-content-center">
+                                                <el-tooltip content="Habilitar búsqueda por código de barras"
+                                                    placement="top">
+                                                    <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
+                                                        class="d-flex align-items-center">
+                                                        <span>Barcode</span>
                                                     </el-checkbox>
                                                 </el-tooltip>
-                                            </div> -->
-                                    </div>
+                                            </div>
 
-                                    <div class="row">
-                                        <!-- Categorías y Marca -->
-                                        <div class="col-4" style="width: 50%;">
+                                            <!-- Calidad -->
+                                            <div v-if="configuration.quality"
+                                                class=" align-items-center justify-content-center">
+                                                <el-tooltip content="Filtrar por calidad del producto" placement="top">
+                                                    <el-checkbox v-model="quality" @change="
+                                                        saveInLocalStorageQuality
+                                                    " class="d-flex align-items-center">
+
+                                                        <span>Calidad</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+
+                                            <!-- Modelo -->
+
+                                            <div v-if="configuration.model"
+                                                class="align-items-center justify-content-center">
+                                                <el-tooltip content="Filtrar por modelo del producto" placement="top">
+                                                    <el-checkbox v-model="model" @change="
+                                                        saveInLocalStorageModel
+                                                    " class="d-flex align-items-center">
+
+                                                        <span>Modelo</span>
+                                                    </el-checkbox>
+                                                </el-tooltip>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-10">
+                                            <!-- Categorías y Marca -->
+
                                             <div class="row align-items-center">
-                                                <div class="col-7">
-                                                    <!-- Categorías -->
-                                                    <div style="padding: 0;">
-                                                        <template>
-                                                            <el-select v-model="category
-                                                                " filterable clearable placeholder="Categoría..."
-                                                                @change="
-                                                                    search_items(
-                                                                        null
-                                                                    )
-                                                                    " size="small">
-                                                                <el-option v-for="item in categories" :key="item.id
-                                                                    " :label="item.name
-                                                                        " :value="item.id
-                                                                        "></el-option>
-                                                            </el-select>
-                                                        </template>
+                                                <div class="row">
+                                                    <div class="mb-1 mt-1 col-8">
+                                                        <!-- Categorías -->
+                                                        <div style="padding: 0;">
+                                                            <template>
+                                                                <el-select v-model="category" filterable clearable
+                                                                    placeholder="Selecciones Categoría"
+                                                                    @change="search_items(null)" size="small">
+                                                                    <el-option v-for="item in categories" :key="item.id"
+                                                                        :label="item.name" :value="item.id">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </template>
+                                                        </div>
                                                     </div>
+                                                    <div v-if="configuration.list_or_card" class="col-3">
+                                                        <button @click="toggleView"
+                                                            class="btn btn-primary btn-sm ml-auto float-right">
+                                                            {{ showList ? "Mostrar Card" : "Tabla - Card" }}
+                                                        </button>
+                                                    </div>
+
+
                                                 </div>
-                                                <div class="col-5">
+                                                <div class="mb-1">
                                                     <!-- Marca -->
-                                                    <div v-if="
-                                                        configuration.brand
-                                                    ">
+                                                    <div v-if="configuration.brand">
                                                         <template>
                                                             <el-select v-model="brand" filterable clearable
-                                                                placeholder="Marca..." @change="
-                                                                    search_items(
-                                                                        null
-                                                                    )
-                                                                    " size="small">
+                                                                placeholder="Marca..." @change="search_items(null)"
+                                                                size="small">
                                                                 <el-option v-for="item in brands" :key="item.id
                                                                     " :label="item.name
-                                                                        " :value="item.id
-                                                                        "></el-option>
+                                                                        " :value="item.id">
+                                                                </el-option>
                                                             </el-select>
                                                         </template>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <!-- Buscar -->
 
-                                        <!-- Buscar -->
-                                        <div class="col-8" style="width: 50%;">
-                                            <div
-                                                style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                <template v-if="selectOption == 4">
-                                                    <el-input ref="input_items" size="small" v-model="input_item"
-                                                        placeholder="producto a buscar..." @input="search()"
-                                                        @focus="clear_input()" autofocus clearable
-                                                        style="border: 2px solid #FFC107; border-radius: 4px;">
-                                                    </el-input>
-                                                </template>
-                                                <template v-else>
-                                                    <el-input ref="input_item" size="small" v-model="input_item"
-                                                        @input="search()" @focus="clear_input()" autofocus>
-                                                    </el-input>
-                                                </template>
+                                                <div class="mb-1" style="display: flex; 
+                                                    justify-content: center; 
+                                                    align-items: center; height: 100%;">
+                                                    <template v-if="selectOption == 4">
+                                                        <el-input ref="input_items" size="small" v-model="input_item"
+                                                            placeholder="producto a buscar..." @input="search()"
+                                                            @focus="clear_input()" autofocus clearable
+                                                            style="border: 2px solid #FFC107; border-radius: 4px;">
+                                                        </el-input>
+                                                    </template>
+                                                    <template v-else>
+                                                        <el-input ref="input_item" size="small" v-model="input_item"
+                                                            @input="search()" @focus="clear_input()" autofocus>
+                                                        </el-input>
+                                                    </template>
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
+
                                 </template>
                             </div>
                         </div>
@@ -505,18 +459,18 @@
                                                         <template>
                                                             <el-input-number :disabled="disableCantidad
                                                                 " :min="1" size="mini" v-model="row.food
-                                                                        .item
-                                                                        .quantity
+                                                                    .item
+                                                                    .quantity
                                                                     " controls-position="right" @change="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price_sale
-                                                                    )
-                                                                    "></el-input-number>
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price_sale
+                                                                        )
+                                                                        "></el-input-number>
                                                         </template>
                                                     </div>
                                                 </div>
@@ -551,18 +505,18 @@
                                                     <div class="text-alternate">
                                                         <span>
                                                             <el-input v-model="row.food
-                                                                    .price
+                                                                .price
                                                                 " :disabled="disableCantidad
                                                                     " size="mini" @input="
-                                                                    calculateItem(
-                                                                        index,
-                                                                        row.food
-                                                                            .item
-                                                                            .quantity,
-                                                                        row.food
-                                                                            .price
-                                                                    )
-                                                                    ">
+                                                                        calculateItem(
+                                                                            index,
+                                                                            row.food
+                                                                                .item
+                                                                                .quantity,
+                                                                            row.food
+                                                                                .price
+                                                                        )
+                                                                        ">
                                                                 <template slot="prepend">S/.</template>
                                                             </el-input>
                                                         </span>
@@ -612,8 +566,8 @@
                             <div class="col-12 col-lg-6 col-xxl-2 mb-2" v-for="(row, index) in listar_tables"
                                 :key="index">
                                 <div class="card hover-border-secondary" :class="selecttables == row.id
-                                        ? 'border-secondary'
-                                        : ''
+                                    ? 'border-secondary'
+                                    : ''
                                     " @click="selectTable(row, index)" data-bs-toggle="offcanvas"
                                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                     <div class="h-100 row g-0 card-body align-items-center">
@@ -739,10 +693,10 @@
                                                                 data.status_id ==
                                                                 1
                                                             " :class="data.status_id ==
-                                                                        0
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
-                                                                    ">
+                                                                0
+                                                                ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                : ''
+                                                                ">
                                                                 <div
                                                                     class="col-12 d-flex align-items-center mb-2 mb-md-0 p-2 font-weight-bold">
                                                                     ORDEN Nº
@@ -757,9 +711,9 @@
                                                             <div v-for="(ordersItem,
                                                                 indexx) in data.orden_items" :key="indexx">
                                                                 <div class="card mb-1 pt-2 pb-2 border" :class="data.status_orden_id ==
-                                                                        3
-                                                                        ? 'animate__animated animate__backOutUp animate__delay-2s'
-                                                                        : ''
+                                                                    3
+                                                                    ? 'animate__animated animate__backOutUp animate__delay-2s'
+                                                                    : ''
                                                                     " v-if="
                                                                         ordersItem.status_orden_id ==
                                                                         1
@@ -803,9 +757,9 @@
                                                                                     <input type="checkbox"
                                                                                         class="form-check-input" :value="ordersItem.id
                                                                                             " v-model="selectedCatIds
-                                                                                            " @click="
-                                                                                            select
-                                                                                        " />
+                                                                                                " @click="
+                                                                                                    select
+                                                                                                " />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -847,7 +801,7 @@
                             @ordenDeleted="createOrden" @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData" @reloadProduct="search_items"
                             @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
-                            @cotizarConfirmadoChanged=" 
+                            @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
                             " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"></list-orden>
                     </div>
@@ -930,7 +884,7 @@
                                             <div class="col-12 p-1" v-for="(data,
                                                 index) in allFoods" :key="index">
                                                 <el-tooltip effect="dark" :disabled="data.item.warehouses
-                                                        .length == 1 ||
+                                                    .length == 1 ||
                                                     !configuration.show_stock_establishment_box
                                                     ">
                                                     <div slot="content">
@@ -1128,7 +1082,7 @@
                                                                     <el-dropdown-item v-for="(type,
                                                                         idx) in data.types" :key="idx
                                                                             " :command="type
-                                                                            ">
+                                                                                ">
                                                                         {{
                                                                             formatDescriptionType(
                                                                                 type
@@ -1286,7 +1240,7 @@
                 <div class="col-12 d-flex flex-wrap justify-content-center">
                     <el-button v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="num" class="m-2"
                         @click="generatePin(num)">{{
-                        num }}</el-button>
+                            num }}</el-button>
                     <el-button @click="pin = ''" class="m-2" type="danger" icon="el-icon-delete"></el-button>
                 </div>
             </div>
@@ -1580,6 +1534,8 @@ export default {
 
     data() {
         return {
+            // Control local para alternar el texto del botón (Tabla/Card)
+            showList: false,
             countdown: 0,
             latencia: 0,
             latenciaInterval: null,
@@ -1782,10 +1738,17 @@ export default {
 
     async created() {
         // LOG para ver el valor inicial de percentage_igv
-        this.$watch('percentage_igv', function(val) {
+        this.$watch('percentage_igv', function (val) {
             console.log('[LOG] WATCH percentage_igv cambió a:', val, typeof val);
         });
         this.iniciarMedicionLatencia();
+
+        // Sincronizar valor inicial desde el hijo (si ya viene con un estado)
+        this.$nextTick(() => {
+            if (this.$refs.list_foods && this.$refs.list_foods.form) {
+                this.showList = !!this.$refs.list_foods.form.show_list;
+            }
+        });
 
         /* await this.$http.get(`/companies/record`).then(response => {
             if (response.data !== "") {
@@ -2085,6 +2048,14 @@ export default {
     },
 
     methods: {
+        toggleView() {
+            // Alternar estado local
+            this.showList = !this.showList;
+            // Propagar al hijo si existe
+            if (this.$refs.list_foods && this.$refs.list_foods.form) {
+                this.$refs.list_foods.form.show_list = this.showList;
+            }
+        },
         formatUrlImage(url) {
             if (!url) return;
             let formated = "storage/uploads/items/" + url;
@@ -5566,7 +5537,7 @@ export default {
                     })),
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
-                
+
             });
             /* console.log('[DEBUG] Mapped item:', item); */
             // this.calculateTotal();
@@ -6985,6 +6956,12 @@ export default {
             this.printQueue.push(printJob);
             console.log("Print job added to queue:", printJob);
             this.processPrintQueue();
+        },
+        // Alterna la vista delegando en el componente hijo (opción 1 descrita al usuario)
+        toggleView() {
+            if (this.$refs.list_foods && this.$refs.list_foods.toggleView) {
+                this.$refs.list_foods.toggleView();
+            }
         }
     },
     beforeUnmount() {

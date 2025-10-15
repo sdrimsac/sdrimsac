@@ -2,45 +2,29 @@
     <div>
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
-                        <div class="form-group d-flex align-items-center justify-content-between flex-wrap">
-                            <div>
-                                <label class="control-label font-custom mb-0"><strong>Filtros de Busqueda de Lotes</strong></label>
-                                <template v-if="!see_more">
-                                    <a class="control-label font-weight-bold text-info font-custom ml-2" href="#" @click="clickSeeMore">
-                                        <strong>[+ Ver más]</strong>
-                                    </a>
-                                </template>
-                                <template v-else>
-                                    <a class="control-label font-weight-bold text-info font-custom ml-2" href="#" @click="clickSeeMore">
-                                        <strong>[- Ver menos]</strong>
-                                    </a>
-                                </template>
-                            </div>
-                            <div class="d-flex align-items-center" v-if="see_more">
-                                <el-button class="btn_buscarsmall" type="primary" @click.prevent="getRecords"
-                                    :loading="loading_submit" icon="el-icon-search"
-                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
-                                    Buscar
-                                </el-button>
-                                <el-button class="btn_limpiarsmall btn_limpiarsmall:hover" type="" @click.prevent="cleanInputs"
-                                    icon="el-icon-delete"
-                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
-                                    Limpiar
-                                </el-button>
-                                <el-button class="btn_excelsmall" v-if="resource == 'lotes' && records.length > 0"
-                                    type="" @click.prevent="exportRecords"
-                                    style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
-                                    <i class="icofont-file-excel"></i>
-                                    <span style="margin-left: 5px;">Exportar</span>
-                                </el-button>
-                            </div>
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <el-button class="btn_buscarsmall" type="primary" @click.prevent="getRecords"
+                                :loading="loading_submit" icon="el-icon-search"
+                                style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                Buscar
+                            </el-button>
+                            <el-button class="btn_limpiezasmall " type="" @click.prevent="cleanInputs"
+                                icon="el-icon-delete"
+                                style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                Limpiar
+                            </el-button>
+                            <el-button class="btn_excelsmall" v-if="resource == 'lotes' && records.length > 0"
+                                type="" @click.prevent="exportRecords"
+                                style="width: auto; min-width: 0; padding: 0 10px; display: inline-flex; align-items: center;">
+                                <i class="icofont-file-excel"></i>
+                                <span style="margin-left: 5px;">Exportar</span>
+                            </el-button>
                         </div>
-
                     </div>
                 </div>
-                <div class="row mb-3" v-if="see_more">
+                <div class="row mb-3" >
                     <div class="col-md-6">
                         <div class="card" style="padding: 12px 6px;">
                             <div class="card-body" style="padding: 0px 0px;">

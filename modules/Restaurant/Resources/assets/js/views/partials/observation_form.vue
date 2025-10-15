@@ -1,77 +1,52 @@
 <template>
-    <el-dialog
-        v-loading="loading"
-        append-to-body
-        @close="close"
-        @open="open"
-        :visible="showDialog"
-        title="Agregar Observacion"
-    >
+    <el-dialog v-loading="loading" append-to-body @close="close" @open="open" :visible="showDialog"
+        title="Agregar Observación">
         <div class="d-flex flex-column" style="margin-top:15px">
+            Observaciones Seleccionadas:
             <el-input readonly v-model="observation"> </el-input>
-            <div class="d-flex flex-wrap justify-content-center p-2">
-                <el-tag
-                    role="button"
-                    :type="data.selected ? 'success' : 'primary'"
-                    style="margin-right:5px;margin-top:5px"
-                    v-for="(data, idx) in tags"
-                    :key="idx"
-                    :disable-transitions="true"
-                    @click="select(idx)"
-                >
-                    {{ data.description }}
-                </el-tag>
-                <template v-if="tags.length == 0">
-                    <el-tag type="danger" :disable-transitions="true">
-                        <span> PRESIONE <b>+ AGREGAR</b> PARA GUARDARLA </span>
-                    </el-tag>
-                </template>
-            </div>
-            <div
-                class="d-flex flex-column flex-sm-row justify-content-end align-items-center"
-            >
-            </div>
-            <div
-                class="d-flex flex-column flex-sm-row justify-content-end align-items-center"
-            >
-                <el-input
-                    class="input-new-tag"
-                    @input="search"
-                    v-model="newTag"
-                    placeholder="Nueva obs.."
-                    size="medium"
-                    maxlength="25"
-                    show-word-limit
-                >
+
+            <div class="mt-2 d-flex flex-row justify-content-end align-items-center">
+                <el-input class="input-new-tag" @input="search" v-model="newTag"
+                    placeholder="Ingrese Nueva observación a Agregar" size="medium" maxlength="25" show-word-limit>
                 </el-input>
-                <el-button
-                    class="button-new-tag mt-2 mt-sm-0"
-                    size="small"
-                    type="primary"
-                    @click="handleInputConfirm"
-                    >+ Agregar</el-button
-                >
+                <el-button class="btn_guardarsmall button-new-tag" size="small" type="primary"
+                    @click="handleInputConfirm">+ Agregar</el-button>
             </div>
-            <div class="p-2 d-flex justify-content-end" style="margin-top:25px">
-                <span slot="footer" class="dialog-footer">
-                    <button
-                        class="btn btn-sm btn-primary"
-                        @click="addObservation"
-                    >
-                        Guardar
-                    </button>
-                    <button class="btn btn-sm btn-light" @click="close">
-                        Cerrar
-                    </button>
-                </span>
+
+            <div class="card mt-3">
+                <div class="d-flex flex-wrap justify-content-center p-2">
+                    <el-tag role="button" :type="data.selected ? 'success' : 'primary'"
+                        style="margin-right:5px;margin-top:5px" v-for="(data, idx) in tags" :key="idx"
+                        :disable-transitions="true" @click="select(idx)">
+                        {{ data.description }}
+                    </el-tag>
+                    <template v-if="tags.length == 0">
+                        <el-tag type="" :disable-transitions="true">
+                            <span> Presione <b>+ Agregar</b> para guardar la observación</span>
+                        </el-tag>
+                    </template>
+                </div>
+            </div>
+
+            <div class="p-2 d-flex justify-content-end align-items-center" style="margin-top:25px">
+                
+                <button class="btn_cancelarsmall" type="danger" @click="close" style="margin-left:10px;">
+                    <i class="el-icon-close" style="margin-right:5px;"></i>
+                    Cerrar
+                </button>
+                <button class="btn_guardarsmall" type="primary" @click="addObservation" style="margin-left:10px;">
+                    <i class="el-icon-check" style="margin-right:5px;"></i>
+                    Guardar
+                </button>
             </div>
         </div>
     </el-dialog>
 </template>
 <style>
-.el-tag + .el-tag {
+.el-tag+.el-tag {
     margin-left: 10px;
 }
+
 .button-new-tag {
     margin-left: 10px;
     height: 32px;
@@ -79,6 +54,7 @@
     padding-top: 0;
     padding-bottom: 0;
 }
+
 .input-new-tag {
     width: 250px;
     margin-left: 10px;
@@ -94,6 +70,7 @@
         transform: translateX(-50%) !important;
     }
 }
+
 @media (max-width: 360px) {
     .el-dialog {
         margin: 5px !important;
@@ -103,6 +80,7 @@
         transform: translateX(-50%) !important;
     }
 }
+
 @media (max-width: 412px) {
     .el-dialog {
         margin: 5px !important;
@@ -135,7 +113,7 @@ export default {
             loading: false
         };
     },
-    mounted() {},
+    mounted() { },
     methods: {
         search(input) {
             this.tags = this.observations
@@ -237,7 +215,7 @@ export default {
                     .slice(0, 10)
                     .map(o => ({
                         ...o,
-                        description: o.description.toUpperCase(),  
+                        description: o.description.toUpperCase(),
                         selected: false
                     }));
             } else {

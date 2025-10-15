@@ -51,11 +51,11 @@
                                         @click.prevent="seeProblems"
                                     >
                                         <i class="fa fa-exclamation-triangle"></i>
-                                        Cliente castigado
+                                        Cliente Castigado
                                     </a>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <label class="control-label text-primary d-block">Fecha de emisión</label>
+                                    <label class="control-label text-primary d-block">Fecha de Emisión</label>
                                     <el-date-picker
                                         class="w-100"
                                         v-model="form.date_of_issue"

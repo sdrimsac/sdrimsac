@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-loading="loading" :visible="showHistoryCash" @open="open" @close="close" :title="title" width="65%">
+    <el-dialog v-loading="loading" :visible="showHistoryCash" @open="open" @close="close" :title="title" width="85%">
         <div class="card container table-responsive col-md-12">
             <div>
                 <div class="row mb-2 align-items-end" style="margin-top: 10px; margin-left: 10px;">
@@ -29,7 +29,7 @@
                     <tr>
                         <th style="color: #fff; text-align: center; width: 40px; min-width: 40px;">#</th>
                         <th style="color: #fff; font-weight: 600; text-align: center; width: 80px; min-width: 80px;">
-                            Codigo</th>
+                            Código</th>
                         <th style="color: #fff; text-align: center; width: 160px; min-width: 120px;">Turno</th>
                         <th style="color: #fff; font-weight: 600; text-align: center; width:90px; min-width: 120px;">
                             S/. Apertura</th>

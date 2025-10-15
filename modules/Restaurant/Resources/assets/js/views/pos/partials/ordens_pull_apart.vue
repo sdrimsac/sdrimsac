@@ -7,7 +7,7 @@
         title="Ventas Aparcadas"
         @close="close"
         @open="open"
-        :width="'700px'"
+        :width="'50%'"
     >
         <div class="">
             <div v-if="ordenInBox.length > 0" class="table-responsive">
@@ -15,8 +15,8 @@
                     <thead style="background: #1e5a85; color: #fff;">
                         <tr>
                             <th style="color: #fff;">#</th>
-                            <th class="text-center" style="color: #fff;">DNI / Referencia</th>
-                            <th class="text-center" style="color: #fff;">Cantidad</th>
+                            <th class="text-center" style="color: #fff;">Referencia</th>
+                            <th class="text-center" style="color: #fff;">Nro. Pedidos</th>
                             <th class="text-center" style="color: #fff; width: 180px;">Opciones</th>
                         </tr>
                     </thead>
@@ -30,7 +30,7 @@
                             <td class="text-center">
                                 <el-tooltip content="Restaurar Venta" placement="top">
                                     <el-button
-                                        type="success"
+                                        type="primary"
                                         size="small"
                                         circle
                                         @click="restoreOrden(aparted)"
@@ -45,7 +45,7 @@
                                         size="small"
                                         circle
                                         @click="removeApart(aparted.ref)"
-                                    >
+                                     >
                                         <i class="el-icon-delete"></i>
                                     </el-button>
                                 </el-tooltip>
@@ -60,6 +60,7 @@
         </div>
         <div class="p-2 d-flex justify-content-end">
             <button type="button" class="btn_cancelarsmall" @click="close">
+                <i class="el-icon-close"></i>
                 Cerrar
             </button>
         </div>

@@ -5,9 +5,10 @@
         @open="open"
         @close="close"
         append-to-body
+        width="40%"
     >
         <div class="row mt-2">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <el-select
                     filterable
                     :remote-method="searchRemoteItems"
@@ -25,8 +26,9 @@
                 </el-select>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <el-button
+                    class="btn_guardarsmall"
                     type="primary"
                     @click="editProduct"
                     :loading="loading"
@@ -37,8 +39,8 @@
             </div>
         </div>
 
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cerrar</el-button>
+        <span slot="footer" class="dialog-footer mt-1 d-flex justify-content-end">
+            <el-button class="btn_cancelarsmall" type="primary" @click="close">Cerrar</el-button>
         </span>
         <item-form
             :showDialog.sync="showDialogNewItem"

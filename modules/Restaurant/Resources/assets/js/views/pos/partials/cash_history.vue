@@ -1,3 +1,4 @@
+<!-- Historial caja - POS principal -->
 <template>
     <el-dialog
         v-loading="loading"
@@ -5,50 +6,50 @@
         @open="open"
         @close="close"
         :title="title"
-        width="70%"
+        width="90%"
     >
         <br />
         <div class="card container table-responsive col-md-12">
-            <table
-                class="table table-hover table-striped table-condensed  table-responsive"
-                style="width:100%;     white-space: nowrap;"
-            >
-                <thead>
+            <table class="table table-hover table-striped table-condensed  table-responsive"style="width:100%; white-space: nowrap;">
+                <thead style="background-color: #073f68; color: #fff;">
                     <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>Apertura</th>
-                        <th>
-                            ◄ Dinero
-                        </th>
-                        <th>
-                            Cierre
-                        </th>
-                        <th>
-                            ◄ Dinero
-                        </th>
-                        <th>
-                            Detalle
-                        </th>
+                        <th style="color: #fff;">#</th>
+                        <th style="color: #fff;">Código</th>
+                        <th style="color: #fff;">Turno</th>
+                        <th style="color: #fff;">S/ Apertura</th>
+                        <th style="color: #fff;">Cierre</th>
+                        <th style="color: #fff;">S/ Cierre</th>
+                        <th style="color: #fff;">Reporte</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(box, idx) in boxes" :key="idx">
+                    <tr v-for="(box, idx) in boxes" :key="idx" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>
+                           <!-- {{ idx + 1 }} -->
                             {{ customIndex(idx) }}
                         </td>
-                        <td>
-                            {{
-                                `${box.date_opening}/ ${box.reference_number ||
-                                    "SIN REFERENCIA"}`
-                            }}
+                        <td>{{ box.id }}</td>
+                        <td>   
+                            {{ (() => {
+                                const date = new Date(box.date_opening);
+                                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                                let str = date.toLocaleDateString('es-ES', options);
+                                // Capitalize first letter
+                                str = str.charAt(0).toUpperCase() + str.slice(1);
+                                // Remove comma and "de"
+                                str = str.replace(/,|\sde\s/g, ' ');
+                                // Remove extra spaces
+                                str = str.replace(/\s+/g, ' ').trim();
+                                return str;
+                            })() }}
+                                <br />
+                              {{`${box.reference_number || "SIN REFERENCIA"}`}}
                         </td>
                         <td>
-                            {{ box.beginning_balance }}
+                            {{ Number(box.beginning_balance).toFixed(2) }}
                         </td>
                         <td>
-                            {{ box.date_closed || "Sin cierre" }}
+                            {{ box.date_closed || "Caja Abierta" }}
                         </td>
                         <td class="text-center">
                             <el-button

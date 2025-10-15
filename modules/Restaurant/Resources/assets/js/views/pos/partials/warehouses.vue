@@ -1,3 +1,4 @@
+<!-- Historial de ventas y compras de un item en caja -->
 <template>
   <el-dialog
     :title="titleDialog"
@@ -17,25 +18,29 @@
               <div class="col-md-12">
                 <table class="table table-striped">
                   <thead>
-                    <tr>
-                      <th class>#</th>
-                      <th class>Fecha</th>
-                      <th class="text-center">Documento</th>
-                      <th class="text-center">Cliente</th>
-                      <th class="text-center">Cantidad</th>
-                      <th class="text-end">Precio</th>
-                      <th class="text-end">Total</th>
+                    <tr style="background-color: #073f68;">
+                      <th style="color:#fff;">#</th>
+                      <th style="color:#fff;">Fecha</th>
+                      <th class="text-center" style="color:#fff;">Documento</th>
+                      <th class="text-center" style="color:#fff;">Cliente</th>
+                      <th class="text-center" style="color:#fff;">Cantidad</th>
+                      <th class="text-end" style="color:#fff;">Precio</th>
+                      <th class="text-end" style="color:#fff;">Total</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(sale, index) in sales " :key="index">
-                      <td>{{ customIndex(index)}}</td>
+                    <tr
+                      v-for="(sale, index) in sales"
+                      :key="index"
+                      :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f5f7fa' }"
+                    >
+                      <td>{{ customIndex(index) }}</td>
                       <td>{{ sale.date_of_issue }}</td>
                       <td class="text-left">{{ sale.series }}-{{ sale.number }}</td>
                       <td class="text-left">
                         {{ sale.customer_name }}
                         <br />
-                        {{sale.customer_number}}
+                        {{ sale.customer_number }}
                       </td>
                       <td class="text-center">{{ parseFloat(sale.quantity).toFixed(2) }}</td>
                       <td class="text-end">{{ parseFloat(sale.unit_value).toFixed(2) }}</td>
@@ -50,17 +55,17 @@
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th class>#</th>
-                      <th class="text-center">Fecha</th>
-                      <th class="text-center">Documento</th>
-                      <th class="text-center">Proveedor</th>
-                      <th class="text-center">Cantidad</th>
-                      <th class="text-end">Precio</th>
-                      <th class="text-end">Total</th>
-                    </tr>
-                  </thead>
+                    <thead >
+                      <tr style="background-color: #073f68;">
+                        <th class style="color: #fff;">#</th>
+                        <th class="text-center" style="color: #fff;">Fecha</th>
+                        <th class="text-center" style="color: #fff;">Documento</th>
+                        <th class="text-center" style="color: #fff;">Proveedor</th>
+                        <th class="text-center" style="color: #fff;">Cantidad</th>
+                        <th class="text-end" style="color: #fff;">Precio</th>
+                        <th class="text-end" style="color: #fff;">Total</th>
+                      </tr>
+                    </thead>
                   <tbody>
                     <tr v-for="(purchase, index) in purchases " :key="index">
                       <td>{{ customIndex(index,'purchases_') }}</td>
@@ -96,8 +101,8 @@
           ></el-pagination>-->
         </el-tabs>
       </div>
-      <div class="form-actions text-end pt-2 pb-2">
-        <el-button @click.prevent="close()">
+      <div class="form-actions d-flex justify-content-end pt-2 pb-2">
+        <el-button class="btn_cancelarsmall" type="danger" @click.prevent="close()">
           <i class="fas fa-times fa-lg"></i>
           Cerrar
         </el-button>

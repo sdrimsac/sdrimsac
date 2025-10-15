@@ -641,7 +641,7 @@
                                             {{ hasPromotionText }}
                                         </div>
 
-                                        <div class="col-md-2 form-group text-center" v-if="
+                                        <div class="col-md-2 form-group text-center mt-2" v-if="
                                             promotionByPoints &&
                                             hasPromotionText &&
                                             listPromotionItems.length > 0
@@ -890,9 +890,6 @@
                             </div>
                             <hr style="margin-top: 3px; margin-bottom: 5px;" />
                             <div class="d-flex justify-content-center">
-
-
-
                                 <template v-if="
                                     form.is_room &&
                                     !form.is_reserve &&

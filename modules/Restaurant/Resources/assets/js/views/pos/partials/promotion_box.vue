@@ -1,3 +1,4 @@
+<!-- Modulo de Promociones por Puntos -->
 <template>
     <el-dialog @open="open" @close="close" append-to-body :visible="showDialog" :title="titulo"
         :close-on-click-modal="true" width="70%">
@@ -7,23 +8,17 @@
                     <div class="row">
                         <div v-for="promotion in listPromotionItems" :key="promotion.id" class="col-md-3"
                             style="margin-bottom: 20px;">
-                            <div class="card" style="width: 100%; height: 100%; padding: 10px; position: relative;">
-                                <div class="text-center">
-                                    <template v-if="
-                                        promotion.item.image ==
-                                        'imagen-no-disponible.jpg'
-                                    ">
-                                        <img src="/images/imagen-no-disponible.jpg" alt="User Img" class="thumbail"
-                                            style="width: 100%; height: auto;" />
+                            <div class="card promotion-card">
+                                <div class="promotion-img-box">
+                                    <template v-if="promotion.item.image == 'imagen-no-disponible.jpg'">
+                                        <img src="/images/imagen-no-disponible.jpg" alt="User Img"
+                                            class="promotion-img" />
                                     </template>
                                     <template v-else>
-                                        <img :src="formatUrlImage(
-                                            promotion.item.image
-                                        )
-                                            " class="thumbail" style="width: 100%; height: auto;" />
+                                        <img :src="formatUrlImage(promotion.item.image)" class="promotion-img" />
                                     </template>
                                     <img v-if="promotion.stock <= 0" src="/status_images/agotado.png" alt="Agotado"
-                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; pointer-events: none;" />
+                                        class="promotion-img-overlay" />
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title text-center">
@@ -50,15 +45,11 @@
                                     </div>
                                     <div class="text-center">
                                         <label for="num">Ingrese Cantidad:</label>
-                                        <br />
-                                        <el-input v-model="promotion.quantity"
-                                            :min="0"
+                                        
+                                        <el-input v-model="promotion.quantity" :min="0"
                                             :max="promotion.stock > 0 ? Math.floor(remainingPoints / promotion.points_value) : 0"
-                                            @input="updatePoints(promotion)"
-                                            :disabled="promotion.stock <= 0"
-                                            type="number"
-                                            class="qquantity-promotion"
-                                        ></el-input>
+                                            @input="updatePoints(promotion)" :disabled="promotion.stock <= 0"
+                                            type="number" class="qquantity-promotion"></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -67,20 +58,74 @@
                 </div>
                 <br />
             </div>
-            <div style="margin-top: 10px; text-align: right;">
-                <el-button class="btn_cancelarsmall"  @click="close">
-                    <i class="fas fa-times me-1"></i>
-                    Cerrar
-                </el-button>
-                <el-button class="btn_cajearsmall"  @click="submit" style="margin-left: 10px;">
-                    <i class="fas fa-gift me-1"></i>
-                    Canjear
-                </el-button>
+            <div style="margin-top: 10px;">
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <el-button class="btn_cancelarsmall" @click="close">
+                        <i class="fas fa-arrow-left me-1"></i>
+                        Regresar
+                    </el-button>
+                    <el-button class="btn_guardarsmall" type="primary" @click="submit">
+                        <i class="fas fa-gift me-1"></i>
+                        Canjear
+                    </el-button>
+                </div>
             </div>
         </div>
     </el-dialog>
 </template>
 <style>
+.promotion-card {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s, transform 0.2s;
+    background: #fff;
+}
+
+.promotion-card:hover {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.promotion-img-box {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.promotion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.promotion-card:hover .promotion-img {
+    transform: scale(1.04);
+}
+
+.promotion-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
 .qquantity-promotion .el-input__inner {
     text-align: center;
 }

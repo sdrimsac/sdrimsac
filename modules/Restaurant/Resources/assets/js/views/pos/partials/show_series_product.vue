@@ -7,8 +7,9 @@
         title="Listado de series"
     >
         <div class="p-1">
-            <div class="row">
-                <div class="col-md-4">
+            <div class="row align-items-center mb-2">
+                <label class="col-auto mb-0">Buscar Serie a Vender</label>
+                <div class="col">
                     <el-input
                         v-model="inputSearch"
                         placeholder="Buscar por serie"
@@ -16,23 +17,15 @@
                     >
                     </el-input>
                 </div>
-                <!-- <div class="col-md-4">
-                    <el-button
-                        :type="showSelecteds ? 'primary' : 'danger'"
-                        @click="showSelected"
-                    >
-                        {{ showSelecteds ? "Ocultar" : "Ver seleccionados" }}
-                    </el-button>
-                </div> -->
             </div>
             <table v-loading="loading" class="table">
-                <thead>
+               <thead style="background-color:#073f68; color:#ffffff;">
                     <tr>
-                        <th>#</th>
-                        <th>Serie</th>
-                        <th>Fecha</th>
-                        <th>Lote</th>
-                        <th>Seleccionar</th>
+                        <th style="color:#fff; width:60px; min-width:60px;">#</th>
+                        <th style="color:#fff; width:160px; min-width:140px;">Serie</th>
+                        <th style="color:#fff; width:120px; min-width:110px;">Fecha de Ingreso</th>
+                        <!-- <th style="color:#fff; width:120px; min-width:110px;">Lote</th> -->
+                        <th class="text-center" style="color:#fff; width:130px; min-width:120px;">Seleccionar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,8 +33,8 @@
                         <td>{{ customIndex(idx) }}</td>
                         <td>{{ serie.series }}</td>
                         <td>{{ serie.date }}</td>
-                        <td>{{ serie.lote }}</td>
-                        <td>
+                        <!-- <td>{{ serie.lote }}</td> -->
+                        <td class="text-center">
                             <el-checkbox
                                 :disabled="serie.disabled"
                                 v-model="serie.selected"
@@ -60,10 +53,19 @@
                 :page-size="pagination.per_page"
             >
             </el-pagination>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="close">Cerrar</el-button>
-                <el-button type="primary" @click="save">Guardar</el-button>
+            <span slot="footer" class="dialog-footer" style="display: flex; justify-content: flex-end;">
+                <el-button class="btn_cancelarsmall" type="primary" @click="close">
+                    <i class="el-icon-arrow-left"></i>
+                    Cerrar
+                </el-button>
+                <el-button class="btn_guardarsmall" type="primary" @click="save">
+                    <i class="el-icon-plus"></i>
+                    Agregar
+                </el-button>
             </span>
+
+         
+            
         </div>
     </el-dialog>
 </template>

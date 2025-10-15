@@ -5678,19 +5678,21 @@
                                                                                         en
                                                                                         Caja
                                                                                     </label>
-                                                                                    <el-switch v-model="form.trunc_txt
-                                                                                        " active-text="Si"
+                                                                                    <el-switch
+                                                                                        v-model="form.trunc_txt"
+                                                                                        :active-value="false"
+                                                                                        :inactive-value="true"
+                                                                                        active-text="Si"
                                                                                         inactive-text="No"
-                                                                                        :active-color="'#28a745'
-                                                                                            " :inactive-color="'#6c757d'
-                                                                                                " @change="
-                                                                                                    submit(
-                                                                                                        'Mostrar descripción Completa del producto en Caja',
-                                                                                                        form.trunc_txt,
-                                                                                                        'trunc_txt',
-                                                                                                        'alignLeftIcon'
-                                                                                                    )
-                                                                                                    "></el-switch>
+                                                                                        :active-color="'#28a745'"
+                                                                                        :inactive-color="'#6c757d'"
+                                                                                        @change="submit(
+                                                                                            'Mostrar descripción Completa del producto en Caja',
+                                                                                            form.trunc_txt,
+                                                                                            'trunc_txt',
+                                                                                            'alignLeftIcon'
+                                                                                        )"
+                                                                                    />
                                                                                 </div>
                                                                             </div>
                                                                         </div>

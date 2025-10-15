@@ -4,24 +4,28 @@
         @close="close"
         append-to-body
         :visible="showDialog"
-        title="Productos por vencer"
-        width="70%"
+        title="Productos por Vencer"
+        width="60%"
     >
-        <div v-if="records != 0" class="d-flex justify-content-end mt-2">
+        <div v-if="records != 0" class="d-flex justify-content-end mt-2 mb-2">
             <el-button
+                class="btn_excelsmall"
                 type="success"
-                icon="el-icon-download"
-                @click="clickDownload"
                 size="small"
-                >Exportar</el-button
+                @click="clickDownload"
             >
+                <i class="icofont-file-excel"></i> Exportar
+            </el-button>
+            
             <el-button
+                class="btn_whatsappsmall"
                 type="success"
-                icon="el-icon-chat-dot-square"
                 size="small"
                 @click="clickSendWhatsapp"
-                >Enviar por whatsapp</el-button
             >
+                <i class="icofont-brand-whatsapp"></i> Enviar
+            </el-button>
+            
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -33,19 +37,16 @@
                 <template v-else>
                     <table class="table table-striped">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Producto</th>
-                                <th>Fecha de vencimiento</th>
-                                <th>Cantidad</th>
-                                <th>Lote Por Vencer</th>
+                            <tr style="background-color: #073f68; color: #fff;">
+                                <th style="color: #fff;">#</th>
+                                <th style="color: #fff;">Producto</th>
+                                <th style="color: #fff;">Fecha de vencimiento</th>
+                                <th style="color: #fff;">Cantidad</th>
+                                <th style="color: #fff;">Lote Por Vencer</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr
-                                v-for="(record, index) in records"
-                                :key="record.id"
-                            >
+                            <tr v-for="(record, index) in records" :key="record.id" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                                 <td>{{ customIndex(index) }}</td>
                                 <td>{{ record.item.description }}</td>
                                 <td>{{ record.date_of_due }}</td>
