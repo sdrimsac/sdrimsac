@@ -114,7 +114,8 @@ class TableController extends Controller
     public function index()
     {
         $configurations = Configuration::first();
-        return view('restaurant::configuration.tables', compact('configurations'));
+        $type_user = $configurations->type_user;
+        return view('restaurant::configuration.tables', compact('configurations', 'type_user'));
     }
     public function columns()
     {
