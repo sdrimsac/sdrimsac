@@ -17,6 +17,7 @@ class EstablishmentResource extends JsonResource
     {
         // $establishment = Establishment::where('id', auth()->user()->id)->first();
         return [
+            'account_workers' => (bool) $this->account_workers,
             'credit_warehouse' => (bool) $this->credit_warehouse,
             'android_configuration' => (bool) $this->android_configuration,
             'tab_single' => (bool) $this->tab_single,

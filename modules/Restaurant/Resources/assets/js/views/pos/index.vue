@@ -800,7 +800,8 @@
                             @paymentsOrden="paymentsOrden" @deletedFood="deletedFood" @cancelOrden="cancelOrden"
                             @ordenDeleted="createOrden" @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData" @reloadProduct="search_items"
-                            @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado"
+                            @cotizarConfirmado="handleCotizarConfirmado" :cotizarConfirmado.sync="cotizarConfirmado" 
+                            :isRestaurantWarehouse="isRestaurantWarehouse"
                             @cotizarConfirmadoChanged="
                                 handleCotizarConfirmadoRegreso
                             " :currencyIdChoice.sync="currencyIdChoice" :percentage_igv="percentage_igv"></list-orden>
@@ -1143,7 +1144,8 @@
                         :ordens.sync="ordensItems" @limpiarForm="limpiarForm" @total_sales="total_sales"
                         @updateOrdens="updateOrdens" @paymentsOrden="paymentsOrden" @deletedFood="deletedFood"
                         @cancelOrden="cancelOrden" @ordenDeleted="createOrden" :clientTableData.sync="clientTableData"
-                        :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv"
+                        :categories.sync="categories" @reloadProduct="search_items" :percentage_igv="percentage_igv" 
+                        :isRestaurantWarehouse="isRestaurantWarehouse"
                         :currencyIdChoice.sync="currencyIdChoice" ref="listOrdens"></list-orden>
                 </div>
                 <template>
@@ -2024,6 +2026,9 @@ export default {
         },
         isCreditCash() {
             return this.establishments.credit_warehouse;
+        },
+        isRestaurantWarehouse() {
+            return this.establishments.account_workers;
         },
         isSellerConsolidated() {
             return (

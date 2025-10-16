@@ -283,6 +283,17 @@
                                         <vs-switch color="#073f68" v-model="form.credit_warehouse" />
                                     </div>
                                 </div>
+                                <div class="col-md-3 mt-3">
+                                    <div style="display: flex; justify-content: center;">
+                                        <label class="control-label w-100 mb-1" style="text-align: center;">
+                                            <i class="el-icon-coin" style="margin-right: 4px;"></i>
+                                            A cuenta Trabajadores
+                                        </label>
+                                    </div>
+                                    <div style="display: flex; justify-content: center;">
+                                        <vs-switch color="#073f68" v-model="form.account_workers" />
+                                    </div>
+                                </div>
                                 <div v-if="configuration.health_network" class="col-md-9 mt-3">
                                     <div class="card mb-3">
                                         <div class="card-body" style="padding: 8px;">

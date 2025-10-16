@@ -1864,6 +1864,7 @@ export default {
         DeliveryForm
     },
     props: [
+        "isRestaurantWarehouse",
         "currencyIdChoice",
         "cotizarConfirmado",
         "formQtn",
@@ -2076,6 +2077,9 @@ export default {
                 return map;
             }, {});
         },
+        /* isRestaurantWarehouse() {
+            return this.establishments.account_workers;
+        }, */
         isAppNotIgvAndHaveIgv() {
             return (
                 this.configuration.affectation_igv_type_id != "10" &&
@@ -2136,9 +2140,9 @@ export default {
         // Iniciar medición de latencia
         //this.iniciarMedicionLatencia();
 
-        this.isRestaurantWarehouse = this.establishments.description.includes(
+        /* this.isRestaurantWarehouse = this.establishments.description.includes(
             "RESTAURANT"
-        );
+        ); */
 
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;

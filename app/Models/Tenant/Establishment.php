@@ -17,6 +17,7 @@ class Establishment extends ModelTenant
         // 'country', 'department', 'province', 'district',
     ];
     protected $fillable = [
+        'account_workers',
         'credit_warehouse',
         'android_configuration',
         'tab_single',
