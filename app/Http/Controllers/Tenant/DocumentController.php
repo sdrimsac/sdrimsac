@@ -2213,7 +2213,7 @@ class DocumentController extends Controller
                 'boxes:id,document_id,amount'
             ])
             ->where('payment_condition_id', '02')
-            ->where('state_type_id', '<>', '11')
+            ->whereNotIn('state_type_id', ['11', '09'])
             /* ->whereDoesntHave('credit_payments') */
            /*  ->where('paid', 0) */
             ->select('documents.*')
