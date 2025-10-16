@@ -1,7 +1,8 @@
+<!-- Creditos o A cuenta Personal -->
 <template>
     <el-dialog
         width="50%"
-        title="Lista de créditos"
+        title="Créditos de Consumo al Personal/Cliente"
         :visible="showDialog"
         @open="open"
         @close="close"
@@ -13,7 +14,7 @@
                 <label for="customer">Cliente/Personal</label>
                 <el-input
                     v-model="search.value"
-                    placeholder="Escriba el nombre o número de documento del cliente"
+                    placeholder="digite DNI, Nombre o CE del personal/cliente"
                     @input="getRecordsTimer"
                 ></el-input>
 
@@ -21,22 +22,16 @@
         </div>
         <div class="row m-2 table-responsive">
             <table class="table table-striped">
-                <thead>
+                <thead style="background-color: #073f68; color: #fff;">
                     <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            Cliente
-                        </th>
-                        <th class="text-end">
-                            Pendiente
-                        </th>
-                        <th></th>
+                        <th style="color: #fff;">#</th>
+                        <th style="color: #fff;">Cliente</th>
+                        <th class="text-end" style="color: #fff;">Pendiente</th>
+                        <th style="color: #fff;"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(record, idx) in records" :key="idx">
+                    <tr v-for="(record, idx) in records" :key="idx" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }" >
                         <td>
                             {{ customIndex(idx) }}
                         </td>
@@ -44,7 +39,7 @@
                             {{ record.customer.name }}
                         </td>
                         <td class="text-end">
-                            {{ record.balance }}
+                            {{ Number(record.balance).toFixed(2) }}
                         </td>
                         <td>
                             <!-- <el-tooltip
@@ -74,8 +69,12 @@
             >
             </el-pagination>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
+        <span slot="footer" class="dialog-footer" style="display: flex; justify-content: flex-end;">
+            <el-button class="btn_cancelarsmall" @click="close">
+                <el-icon><i class="el-icon-close"></i></el-icon>
+            Cancelar
+            
+            </el-button>
         </span>
     </el-dialog>
 </template>

@@ -1,68 +1,42 @@
+<!-- Lista de Productos A Vender caja -->
 <template>
-    <el-dialog
-        @open="open"
-        @close="close"
-        append-to-body
-        :visible="showDialog"
-        title="Lista de productos A Vender"
-        close-on-click-modal
-        width="60%"
-    >
-        <div class="card">
-            <div class="card-body">
-                <table>
-                    <thead>
-                        <tr class="bg-primary">
-                            <th class="text-center">Descripción</th>
-                            <th class="text-center">Precio</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-center">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(item, index) in localOrden"
-                            :key="index"
-                            :style="{
-                                backgroundColor:
-                                    index % 2 === 0 ? '#f9f9f9' : '#fff',
-                                transition: 'background-color 0.3s ease'
-                            }"
-                        >
-                            <td
-                                style="padding: 12px 15px; border-bottom: 1px solid #ddd;"
-                                :data-label="'Descripción'"
-                            >
-                                {{ item.food.item.description }}
-                            </td>
-                            <td
-                                style="padding: 12px 15px; border-bottom: 1px solid #ddd;"
-                                :data-label="'Precio'"
-                            >
-                                {{ Number(item.price).toFixed(2) }}
-                            </td>
-                            <td
-                                style="padding: 12px 15px; border-bottom: 1px solid #ddd;"
-                                :data-label="'Cantidad'"
-                            >
-                                {{ item.quantity }}
-                            </td>
-                            <td
-                                style="padding: 12px 15px; border-bottom: 1px solid #ddd;"
-                                :data-label="'Total'"
-                            >
-                                {{ (item.price * item.quantity).toFixed(2) }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <el-dialog @open="open" @close="close" append-to-body :visible="showDialog" title="Lista de productos A Vender"
+        close-on-click-modal width="60%">
+
+        <div class="card-body" style="padding:2px;">
+            <table>
+                <thead>
+                    <tr style="background-color: #073f68;">
+                        <th class="text-center" style="color: #fff; background-color: #073f68;">Descripción</th>
+                        <th class="text-center" style="color: #fff; background-color: #073f68;">Precio</th>
+                        <th class="text-center" style="color: #fff; background-color: #073f68;">Cantidad</th>
+                        <th class="text-center" style="color: #fff; background-color: #073f68;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in localOrden" :key="index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                        <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;" :data-label="'Descripción'">
+                            {{ item.food.item.description }}
+                        </td>
+                        <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;" :data-label="'Precio'">
+                            {{ Number(item.price).toFixed(2) }}
+                        </td>
+                        <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;" :data-label="'Cantidad'">
+                            {{ item.quantity }}
+                        </td>
+                        <td style="padding: 12px 15px; border-bottom: 1px solid #ddd;" :data-label="'Total'">
+                            {{ (item.price * item.quantity).toFixed(2) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
     </el-dialog>
 </template>
 <script>
 export default {
-    props: ["showDialog","localOrden"],
+    props: ["showDialog", "localOrden"],
     data() {
         return {
             imput: ""
@@ -89,14 +63,16 @@ export default {
 
 .card-body {
     padding: 16px;
-    overflow-x: auto; /* Permite scroll horizontal en móviles */
+    overflow-x: auto;
+    /* Permite scroll horizontal en móviles */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 16px 0;
-    min-width: 400px; /* Evita que la tabla se comprima demasiado */
+    min-width: 400px;
+    /* Evita que la tabla se comprima demasiado */
 }
 
 thead th {
@@ -130,12 +106,14 @@ tr:hover {
         margin: 0 !important;
         padding: 0 !important;
     }
+
     .card-body {
         padding: 4px;
         max-height: 50vh;
         overflow-y: auto;
         margin-top: 8px;
     }
+
     table,
     thead,
     tbody,
@@ -145,13 +123,16 @@ tr:hover {
         display: block;
         width: 100%;
     }
+
     thead {
         display: none;
     }
+
     tr {
         margin-bottom: 15px;
         border-bottom: 2px solid #eee;
     }
+
     td {
         text-align: left;
         padding-left: 0;
@@ -161,6 +142,7 @@ tr:hover {
         border-bottom: 1px solid #ddd;
         word-break: break-word;
     }
+
     td:before {
         display: block;
         position: static;
@@ -176,12 +158,15 @@ tr:hover {
         overflow: visible;
         text-overflow: unset;
     }
+
     table {
         font-size: 13px;
         min-width: unset;
         overflow-x: auto;
     }
-    thead th, tbody td {
+
+    thead th,
+    tbody td {
         padding: 6px 4px;
     }
 }

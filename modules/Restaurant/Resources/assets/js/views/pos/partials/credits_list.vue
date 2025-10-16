@@ -13,7 +13,7 @@
                 style="display: flex; align-items: center; justify-content: flex-start;"
             >
                 <i class="el-icon-s-check" style="margin-right:8px;"></i>
-                <span>Lista de créditos</span>
+                <span>Lista de Créditos Otorgados al Personal</span>
             </div>
         </template>
 

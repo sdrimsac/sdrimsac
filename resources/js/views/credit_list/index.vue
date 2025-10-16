@@ -1,218 +1,127 @@
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0" v-loading="loading">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Lista de créditos</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">A cuenta</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Container-fluid starts-->
+       
         <div class="container-fluid p-l-0 p-r-0">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card mb-0">
                         <div class="card-header bg-primary rounded-top">
-                            <h6 class="my-0  text-white">
-                                Listado de créditos
-                            </h6>
+                            <h5 class="my-0  text-white">
+                                <i class="fa fa-user me-2"></i>
+                                Listado de Créditos al Personal/Cliente
+                            </h5>
                         </div>
-                        <div class="data-table-visible-columns"></div>
-                        <div class="card-body">
-                            <div class="row m-2">
-                                <div class="col-md-3 col-lg-3 col-12">
-                                    <label for="client">
-                                        Cliente/Personal
-                                    </label>
-                                    <el-select
-                                        ref="cliente"
-                                        filterable
-                                        remote
-                                        popper-class="el-select-customers"
+
+                        <div class="data-table-visible-columns">
+                            <button v-if="showPaid" type="button" class="btn btn-success"
+                                @click="getItemsOrdenClientId">
+                                <i class="fa fa-card"></i>
+                                Pagar
+                                {{
+                                    total != 0
+                                        ? `S/ ${total.toFixed(2)}`
+                                        : ""
+                                }}
+                            </button>
+                            <button v-if="records.length > 0" type="button" class="btn btn-success"
+                                @click="clickDownload">
+                                <i class="fa fa-download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="card-body" style="padding: 4px;">
+                            <div class="row m-2 d-flex align-items-center">
+                                <div class="col-4">
+                                    <el-select ref="cliente" filterable remote clearable popper-class="el-select-customers"
                                         dusk="customer_id"
-                                        placeholder="Escriba el nombre o número de documento del cliente"
-                                        :remote-method="searchRemoteCustomers"
-                                        :loading="loading_search"
-                                        @change="changeCustomer"
-                                        v-model="form.person_id"
-                                    >
-                                        <el-option
-                                            v-for="option in customers"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.description"
-                                        ></el-option>
+                                        placeholder="Ingrese Personal / Cliente" 
+                                        :remote-method="searchRemoteCustomers" :loading="loading_search"
+                                        @change="changeCustomer" v-model="form.person_id">
+                                        <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                                            :label="option.description"></el-option>
                                     </el-select>
                                 </div>
-                                <div class="col-md-3 col-lg-3 col-12">
-                                    <label for="establishment_id">
-                                        Establecimiento
-                                    </label>
-                                    <el-select
-                                        v-model="form.establishment_id"
-                                        placeholder="Seleccione"
-                                    >
-                                        <el-option
-                                            v-for="item in establishments"
-                                            :key="item.id"
-                                            :label="item.description"
-                                            :value="item.id"
-                                        ></el-option>
+                                <div class="col-md-2 col-lg-2 col-12">
+                                    <el-select v-model="form.establishment_id" placeholder="Seleccione Establecimiento">
+                                        <el-option v-for="item in establishments" :key="item.id"
+                                            :label="item.description" :value="item.id"></el-option>
                                     </el-select>
                                 </div>
-                                <div class="col-md-3 col-lg-3 col-12">
-                                    <label for="date">
-                                        Mes
-                                    </label>
-                                    <el-date-picker
-                                        class="w-100"
-                                        v-model="form.date"
-                                        type="month"
-                                        placeholder="Seleccione"
-                                        value-format="yyyy-MM"
-                                        :picker-options="{
+                                <div class="col-md-2 col-lg-2 col-12">
+                                    <el-date-picker class="w-100" v-model="form.date" type="month"
+                                        placeholder="Seleccione Mes" value-format="yyyy-MM" :picker-options="{
                                             disabledDate(time) {
                                                 return (
                                                     time.getTime() > Date.now()
                                                 );
                                             }
-                                        }"
-                                    ></el-date-picker>
+                                        }"></el-date-picker>
                                 </div>
-                                <div class="col-md-3 col-lg-3 col-12">
-                                    <label for="state">Estado</label>
-                                    <el-select
-                                        v-model="form.paid"
-                                        placeholder="Seleccione"
-                                    >
-                                        <el-option
-                                            label="Pagado"
-                                            value="1"
-                                        ></el-option>
-                                        <el-option
-                                            label="Pendiente"
-                                            value="0"
-                                        ></el-option>
+                                <div class="col-md-2 col-lg-2 col-12">
+                                    <el-select v-model="form.paid" placeholder="Seleccione">
+                                        <el-option label="Pagado" value="1"></el-option>
+                                        <el-option label="Pendiente" value="0"></el-option>
                                     </el-select>
                                 </div>
-                            </div>
-                            <div class="row m-2 text-end">
-                                <div class="col-12">
-                                    <!-- boton para buscar -->
-                                    <button
-                                        v-if="showPaid"
-                                        type="button"
-                                        class="btn btn-success"
-                                        @click="getItemsOrdenClientId"
-                                    >
-                                        <i class="fa fa-card"></i>
-                                        Pagar
-                                        {{
-                                            total != 0
-                                                ? `S/ ${total.toFixed(2)}`
-                                                : ""
-                                        }}
-                                    </button>
-                                    <button
-                                        v-if="records.length > 0"
-                                        type="button"
-                                        class="btn btn-success"
-                                        @click="clickDownload"
-                                    >
-                                        <i class="fa fa-download"></i>
-                                        Exportar
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        @click="getRecords"
-                                    >
+                                <div class="col-2 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" @click="getRecords">
                                         Buscar
                                     </button>
                                 </div>
                             </div>
+                            
 
-                            <div
-                                class="row
-                            table-responsive"
-                            >
-                                <table class="table" v-if="records.length > 0">
-                                    <thead>
-                                        <th>#</th>
-                                        <th>ESTABLECIMIENTO</th>
-                                        <th>FECHA</th>
-                                        <th>PRODUCTO</th>
-                                        <th>CANTIDAD</th>
-                                        <th class="text-center">TOTAL</th>
-                                        <th>VENDEDOR</th>
-                                        <th></th>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(record, idx) in records"
-                                            :key="idx"
-                                        >
-                                            <td>{{ idx + 1 }}</td>
-                                            <td>{{ record.establishment }}</td>
-                                            <td>{{ record.date }}</td>
-                                            <td>{{ record.product }}</td>
-                                            <td>{{ record.quantity }}</td>
-                                            <td class="text-center">
-                                                {{ record.price }}
-                                            </td>
-                                            <td>{{ record.seller }}</td>
-                                            <td>
-                                                <el-button
-                                                    @click="
-                                                        clickPrint(record.credit_list_id)
-                                                    "
-                                                    type="success"
-                                                    size="mini"
-                                                >
-                                                    <i class="fa fa-print"></i>
-                                                </el-button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="card-body" style="padding: 8px;">
+                                <div class="row table-responsive">
+                                    <table class="table" v-if="records.length > 0">
+                                        <thead style="background-color: #073f68; color: #fff;">
+                                            <th style="color: #fff;">#</th>
+                                            <th style="color: #fff;">Establecimiento</th>
+                                            <th style="color: #fff;">Fecha</th>
+                                            <th style="color: #fff;">Producto</th>
+                                            <th style="color: #fff;">Cantidad</th>
+                                            <th class="text-center" style="color: #fff;">Total</th>
+                                            <th style="color: #fff;">Vendedor</th>
+                                            <th style="color: #fff;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(record, idx) in records" :key="idx" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                                <td>{{ idx + 1 }}</td>
+                                                <td>{{ record.establishment }}</td>
+                                                <td>{{ record.date }}</td>
+                                                <td>{{ record.product }}</td>
+                                                <td>{{ Number(record.quantity).toFixed(2) }}</td>
+                                                <td class="text-center">{{ Number(record.price).toFixed(2) }}</td>
+                                                <td>
+                                                    <template v-if="record.seller && record.seller.includes(' - ')">
+                                                        <div>{{ record.seller.substring(0, record.seller.lastIndexOf(' - ')) }}</div>
+                                                        <div>{{ record.seller.substring(record.seller.lastIndexOf(' - ') + 3) }}</div>
+                                                    </template>
+                                                    <template v-else>
+                                                        {{ record.seller }}
+                                                    </template>
+                                                </td>
+                                                <td>
+                                                    <el-button @click="clickPrint(record.credit_list_id)" type="success" size="mini">
+                                                        <i class="fa fa-print"></i>
+                                                    </el-button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <el-dialog
-                    append-to-body
-                    :visible.sync="showDialogPrinters"
-                    title="Seleccione una impresora"
-                >
-                    <el-select
-                        class="m-2"
-                        v-model="printer_id"
-                        placeholder="Seleccione una impresora"
-                    >
-                        <el-option
-                            v-for="printer in printers"
-                            :key="printer.id"
-                            :label="printer.printer"
-                            :value="printer.id"
-                        ></el-option>
+                <el-dialog append-to-body :visible.sync="showDialogPrinters" title="Seleccione una impresora">
+                    <el-select class="m-2" v-model="printer_id" placeholder="Seleccione una impresora">
+                        <el-option v-for="printer in printers" :key="printer.id" :label="printer.printer"
+                            :value="printer.id"></el-option>
                     </el-select>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @click="showDialogPrinters = false"
-                            >Cancelar</el-button
-                        >
-                        <el-button type="primary" @click="Printer"
-                            >Aceptar</el-button
-                        >
+                        <el-button @click="showDialogPrinters = false">Cancelar</el-button>
+                        <el-button type="primary" @click="Printer">Aceptar</el-button>
                     </span>
                 </el-dialog>
             </div>
@@ -471,7 +380,7 @@ export default {
                 } finally {
                     this.loading = false;
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             // this.records = response.data.data;
         },
@@ -531,21 +440,21 @@ export default {
                     unit_value:
                         i.sale_affectation_igv_type_id == 10
                             ? i.sale_unit_price /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -556,13 +465,13 @@ export default {
                     total_taxes:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_value:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -597,7 +506,7 @@ export default {
                 let t = parseFloat(
                     _.round(
                         parseFloat(orden.food.item.quantity) *
-                            parseFloat(orden.food.price),
+                        parseFloat(orden.food.price),
                         2
                     )
                 );
@@ -612,7 +521,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -675,8 +584,8 @@ export default {
                 `/${this.resource}/records_by_person_total`,
                 this.form
             );
-            let {data} = responseTotal;
-            if(data.total){
+            let { data } = responseTotal;
+            if (data.total) {
                 this.total = data.total;
             }
             const response = await this.$http.post(
@@ -697,7 +606,7 @@ export default {
                 this.showPaid = false;
             }
         },
-        changeCustomer() {},
+        changeCustomer() { },
         async searchRemoteCustomers(input) {
             if (input.length > 0) {
                 // if (input!="") {
@@ -722,7 +631,7 @@ export default {
                 this.all_series = data.series;
             }
         },
-        search() {}
+        search() { }
     }
 };
 </script>

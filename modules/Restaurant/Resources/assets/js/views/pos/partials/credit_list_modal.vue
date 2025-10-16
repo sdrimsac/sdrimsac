@@ -1,62 +1,83 @@
 <template>
-    <el-dialog
-        width="50%"
-        title="A cuenta"
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        append-to-body
-        v-loading="loading"
-    >
+    <el-dialog width="60%" title=" A Cuenta: Consumo del Personal/Cliente" :visible="showDialog" @open="open"
+        @close="close" append-to-body v-loading="loading">
         <div class="row m-2">
-            <div class="col-12">
+            <div class="col-8">
                 <label for="customer">Cliente/Personal</label>
-                <el-select
-                    ref="cliente"
-                    v-model="form.customer_id"
-                    filterable
-                    remote
-                    popper-class="el-select-customers"
-                    dusk="customer_id"
-                    placeholder="Escriba el nombre o número de documento del cliente"
-                    :remote-method="searchRemoteCustomers"
-                    @change="changeCustomer"
-                >
-                    <el-option
-                        v-for="option in customers"
-                        :key="option.id"
-                        :value="option.id"
-                        :label="option.description"
-                    ></el-option>
+                <el-select ref="cliente" v-model="form.customer_id" filterable remote popper-class="el-select-customers"
+                    dusk="customer_id" placeholder="Ingrese DNI, Nombre o CE del personal/cliente"
+                    :remote-method="searchRemoteCustomers" @change="changeCustomer">
+                    <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                        :label="option.description"></el-option>
                 </el-select>
+                <div class="col-12 mt-3" v-if="form.customer_id && form.has_credit_line">
+                    <div class="d-flex align-items-center">
+                        <label for="account" class="mr-5 mb-0">Linea de Crédito :</label>
+                        <label
+                            style="font-weight: bold; font-size: 2em; color: #218838;"
+                         >
+                            <span style="font-weight: bold; font-size: 1.2em; color: #073f68; font-family: 'Arial', 'Helvetica', sans-serif;">
+                                {{ Number(form.credit_line).toFixed(2) }}
+                            </span>
+                        </label>
+                    </div>
+
+                    <div>
+                    <span>
+                        <label>
+                            Saldo Disponible :
+                        </label>
+                        <span style="font-weight: bold; font-size: 1.5em; color: #218838;">
+                            {{ (Number(form.credit_line) - Number(form.balance)).toFixed(2) }}
+                        </span>
+                    </span>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-12">
-                <label for="account">Cuenta actual</label>
-                <el-input readonly v-model="form.balance"></el-input>
+            <div class="col-4">
+                <div class="col-12">
+                    <label for="account">Monto Utilizado</label>
+                    <el-input 
+                        readonly 
+                        :value="form.balance.toFixed(2)" 
+                        input-style="font-size: 1.5em;"
+                    ></el-input>
+                </div>
+                <div class="col-12">
+                    <label for="account">Monto a Cargar</label>
+                    <el-input 
+                        readonly 
+                        :value="Number(amountToAdd).toFixed(2)" 
+                        input-style="font-size: 1.5em;"
+                    ></el-input>
+                </div>
+                <div class="col-12">
+                    <label for="account">Consumo Total</label>
+                    <el-input 
+                        readonly 
+                        :value="Number(form.total).toFixed(2)" 
+                        input-style="font-size: 1.5em;"
+                    ></el-input>
+                </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-12">
-                <label for="account">A agregar</label>
-                <el-input readonly v-model="amountToAdd"></el-input>
-            </div>
-            <div class="col-lg-3 col-md-3 col-12">
-                <label for="account">Cuenta total</label>
-                <el-input readonly v-model="form.total"></el-input>
-            </div>
-            <div class="col-lg-3 col-md-3 col-12" v-if="form.has_credit_line">
-                <label for="account">Limite de crédito</label>
-                <el-input readonly v-model="form.credit_line"></el-input>
-            </div>
+
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">A cuenta</el-button>
+        <span slot="footer" class="dialog-footer d-flex justify-content-end">
+            <el-button class="btn_cancelarsmall" type="danger" @click="close">
+                <i class="el-icon-close"></i>
+                Cancelar
+            </el-button>
+            <el-button class="btn_guardarsmall" type="primary" @click="submit">
+                <i class="el-icon-wallet"></i>
+                Cargar a Cuenta
+            </el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
 export default {
-    props: ["showDialog", "amountToAdd","cashId", "fromPos"],
+    props: ["showDialog", "amountToAdd", "cashId", "fromPos"],
     data() {
         return {
             loading: false,
@@ -87,7 +108,7 @@ export default {
                 );
                 return;
             }
-            if(!this.form.customer_id){
+            if (!this.form.customer_id) {
                 this.$toast.error("Seleccione un cliente/personal");
                 return;
             }
@@ -95,17 +116,17 @@ export default {
             this.close();
         },
         async getBalance(customer_id) {
-            try{
-            this.loading = true;
-             const response = await this.$http(
-                `/credit-list/balance/${customer_id}`
-            );
-            this.form.balance = response.data;
-            this.form.total =
-                parseFloat(this.form.balance) + parseFloat(this.amountToAdd);
-            }catch(e){
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `/credit-list/balance/${customer_id}`
+                );
+                this.form.balance = response.data;
+                this.form.total =
+                    parseFloat(this.form.balance) + parseFloat(this.amountToAdd);
+            } catch (e) {
                 this.$toast.error(e.message);
-            }finally{
+            } finally {
                 this.loading = false;
             }
         },
@@ -115,7 +136,7 @@ export default {
             );
             this.form.credit_line = customer.credit_line;
             this.form.has_credit_line = customer.has_credit_line;
-           await this.getBalance(customer_id);
+            await this.getBalance(customer_id);
         },
 
         async searchRemoteCustomers(input) {

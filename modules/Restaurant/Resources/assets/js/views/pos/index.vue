@@ -340,7 +340,7 @@
                                                         <div style="padding: 0;">
                                                             <template>
                                                                 <el-select v-model="category" filterable clearable
-                                                                    placeholder="Selecciones Categoría"
+                                                                    placeholder="Seleccionar Categoría"
                                                                     @change="search_items(null)" size="small">
                                                                     <el-option v-for="item in categories" :key="item.id"
                                                                         :label="item.name" :value="item.id">
