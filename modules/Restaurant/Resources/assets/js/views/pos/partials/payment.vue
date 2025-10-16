@@ -1404,11 +1404,26 @@ export default {
         'form.payment_condition_id'(newVal) {
             if ((this.form.document_type_id === '01' || this.form.document_type_id === '03') && newVal === '03') {
                 if (this.currentPayments.length === 0) {
+                    // Fecha programada para la primera cuota: mañana (un día después)
+                    let tomorrow;
+                    try {
+                        // Usar moment si está disponible en el proyecto
+                        if (typeof moment !== 'undefined') {
+                            tomorrow = moment().add(1, 'days').toDate();
+                        } else {
+                            throw new Error('moment not defined');
+                        }
+                    } catch (e) {
+                        // Fallback a Date nativo: sumar 1 día
+                        tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                    }
+
                     this.currentPayments.push({
                         id: Date.now(),
                         method: 'Crédito a cuotas',
                         amount: this.form.total,
-                        date: new Date()
+                        date: tomorrow
                     });
                 }
                 this.disablePayments = true;
