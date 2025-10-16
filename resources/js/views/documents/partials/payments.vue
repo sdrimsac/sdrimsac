@@ -24,7 +24,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(row, index) in records" :key="index">
-                                    <template v-if="row.id">
+                                    <template v-if="row && row.id">
                                         <td>
                                             <template v-if="row.receipt">
                                                 {{ row.receipt }}
@@ -378,7 +378,8 @@ export default {
             await this.$http
                 .get(`/${this.resource}/records/${this.documentId}`)
                 .then(response => {
-                    this.records = response.data.data;
+                    // Filter out any null/undefined records returned by the API
+                    this.records = (response.data.data || []).filter(r => r !== null && r !== undefined);
                     console.log(
                         "🚀 ~ file: payments.vue:262 ~ getData ~ this.records:",
                         this.records

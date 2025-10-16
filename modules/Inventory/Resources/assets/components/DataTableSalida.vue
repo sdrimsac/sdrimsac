@@ -6,118 +6,60 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="control-label">Almacen</label>
-                            <el-select
-                                v-model="form.warehouse_id"
-                                clearable
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in warehouses"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <el-select v-model="form.warehouse_id" clearable filterable @change="getRecords">
+                                <el-option v-for="option in warehouses" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="control-label">Categoria</label>
-                            <el-select
-                                v-model="form.category_id"
-                                clearable
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in categories"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
+                            <el-select v-model="form.category_id" clearable filterable @change="getRecords">
+                                <el-option v-for="option in categories" :key="option.id" :value="option.id"
+                                    :label="option.name"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
                         <label for="date_start">Fecha inicial</label>
-                        <el-date-picker
-                            v-model="form.date_start"
-                            type="date"
-                            style="width: 100%;"
-                            placeholder="Fecha inicial"
-                            value-format="yyyy-MM-dd"
-                            @change="getRecords"
-                        >
+                        <el-date-picker v-model="form.date_start" type="date" style="width: 100%;"
+                            placeholder="Fecha inicial" value-format="yyyy-MM-dd" @change="getRecords">
                         </el-date-picker>
                     </div>
                     <div class="col-md-2 col-lg-3">
                         <label for="date_end">Fecha final</label>
 
-                        <el-date-picker
-                            v-model="form.date_end"
-                            type="date"
-                            style="width: 100%;"
-                            placeholder="Fecha final"
-                            value-format="yyyy-MM-dd"
-                            @change="getRecords"
-                        >
+                        <el-date-picker v-model="form.date_end" type="date" style="width: 100%;"
+                            placeholder="Fecha final" value-format="yyyy-MM-dd" @change="getRecords">
                         </el-date-picker>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="control-label"
-                                >Filtro Por Productos</label
-                            >
-                            <el-select
-                                v-model="form.description"
-                                clearable
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
+                            <label class="control-label">Filtro Por Productos</label>
+                            <el-select v-model="form.description" clearable filterable @change="getRecords">
+                                <el-option v-for="option in items" :key="option.id" :value="option.id"
+                                    :label="option.description"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="control-label">Filtro Por tipo</label>
-                            <el-select
-                                v-model="form.qty_type"
-                                clearable
-                                filterable
-                            >
-                                <el-option
-                                    v-for="option in qty_types"
-                                    :key="option.id"
-                                    :value="option.value"
-                                    :label="option.active"
-                                ></el-option>
+                            <el-select v-model="form.qty_type" clearable filterable @change="getRecords">
+                                <el-option v-for="option in qty_types" :key="option.id" :value="option.value"
+                                    :label="option.name"></el-option>
                             </el-select>
                         </div>
                     </div>
-                    <div
-                        class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center"
-                    >
-                        <el-button
-                            class="submit"
-                            type="primary"
-                            @click.prevent="getRecordsByFilter"
-                            :loading="loading_submit"
-                            icon="el-icon-search"
-                            >Buscar</el-button
-                        >
+                    <div class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
+                        <!-- <el-button class="submit" type="primary" @click.prevent="getRecordsByFilter"
+                            :loading="loading_submit" icon="el-icon-search">Buscar</el-button> -->
                         <template v-if="records.length > 0">
                             <!-- <el-button class="submit" type="danger" @click.prevent="clickDownload('pdf')"><i class="fa fa-file-pdf" ></i>  Exportal PDF</el-button> -->
-                            <el-button
-                                class="submit"
-                                type="success"
-                                @click.prevent="clickDownload('excel')"
-                                ><i class="fa fa-file-excel"></i> Exportal
-                                Excel</el-button
-                            >
+                            <el-button class="submit" type="success" @click.prevent="clickDownload('excel')"><i
+                                    class="fa fa-file-excel"></i> Exportal
+                                Excel</el-button>
                         </template>
                     </div>
                 </div>
@@ -131,21 +73,13 @@
                         <slot name="heading"></slot>
                     </thead>
                     <tbody>
-                        <slot
-                            v-for="(row, index) in records"
-                            :row="row"
-                            :index="customIndex(index)"
-                        ></slot>
+                        <slot v-for="(row, index) in records" :row="row" :index="customIndex(index)"></slot>
                     </tbody>
                 </table>
                 <div>
-                    <el-pagination
-                        @current-change="getRecords"
-                        layout="total, prev, pager, next"
-                        :total="pagination.total"
-                        :current-page.sync="pagination.current_page"
-                        :page-size="pagination.per_page"
-                    >
+                    <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
+                        :total="pagination.total" :current-page.sync="pagination.current_page"
+                        :page-size="pagination.per_page">
                     </el-pagination>
                 </div>
             </div>

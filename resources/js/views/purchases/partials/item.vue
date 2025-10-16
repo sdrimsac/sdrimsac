@@ -251,7 +251,7 @@
                                         <label class="control-label"><i class="fas fa-box"></i>
                                             Cantidad</label>
                                         <el-input controls="false" style="width: 100%;" @change="updateRealQuantity"
-                                            @input.native="onInput" name="multi" :disabled="!noIsUnid"
+                                            @input.native="onInput" name="multi" :disabled="!noIsUnid || form.item.has_color_size === false"
                                             v-model="unids"></el-input>
                                     </div>
                                     <div class="col-md-4">
@@ -260,7 +260,7 @@
                                         <el-input
                                             style="width: 100%;"
                                             v-model="form.max_quantity_description"
-                                            :disabled="!noIsUnid"
+                                            :disabled="!noIsUnid && form.item.has_color_size === false"
                                             placeholder="Ejmp. Caja, Saco, Balde, etc"
                                             @input="form.max_quantity_description = form.max_quantity_description ? form.max_quantity_description.toUpperCase() : ''"
                                         >
@@ -269,7 +269,7 @@
                                     <div class="col-md-4">
                                         <label class="control-label text-center font-weight-bold text-dark"><i
                                                 class="fas fa-calculator"></i>Total Global</label>
-                                        <el-input style="width: 100%;" :readonly="!noIsUnid"
+                                        <el-input style="width: 100%;" :readonly="!noIsUnid || form.item.has_color_size === false"
                                             v-model="form.real_quantity"></el-input>
                                     </div>
                                     <div class="col-md-6">

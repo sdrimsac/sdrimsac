@@ -69,9 +69,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
             return collect($result);
             }
 
-
-
-
             //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
             $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
             $accounts = \App\Models\Tenant\BankAccount::all();
@@ -874,17 +871,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                         @endphp
                         @foreach ($document->items as $row)
                         <tr>
-                            {{-- <td class="text-center desc-9 align-top">
-                        @if ((int) $row->quantity != $row->quantity && $configuration->is_grifo)
-                            {{ number_format($row->quantity, 3) }}
-                            @else
-                            @if (isset($row->unit_qty) && $configuration->is_grifo)
-                            {{ number_format($row->quantity, 3) }}
-                            @else
-                            {{ number_format($row->quantity, 2) }}
-                            @endif
-                            @endif
-                            </td> --}}
 
                             <td class="text-center desc-9 align-top">
                                 @if ($configuration->tap)
@@ -985,20 +971,12 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                                 @foreach ($row->discounts as $dtos)
                                 @php
                                 $dto_percent = $dtos->factor * 100;
-                                /* if ($has_igv_row) {
-                                $dto_percent = $dto_percent / 1.18;
-                                } */
+
                                 @endphp
                                 <br /> ** Descuento:<small>{{ number_format($dto_percent, 2) }}%</small>
                                 @endforeach
                                 @endif
 
-                                {{-- @if ($row->item->is_set == 1)
-                            <br>
-                            @inject('itemSet', 'App\Services\ItemSetService')
-
-                            {{ join('-', $itemSet->getItemsSet($row->item_id)) }}
-                                @endif --}}
                                 @if ($configuration->warehouse_pdf_item && $row->warehouse_id)
                                 <div>
                                     <strong>TDA: </strong>{{ $row->warehouse_id }}
@@ -1144,7 +1122,7 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                     @endif
                     <tr>
 
-                        @foreach (array_reverse((array) $document->legends) as $row)
+                    @foreach (array_reverse((array) $document->legends) as $row)
                     <tr>
                         @if ($row->code == '1000')
                         <td class="desc pt-3">Son: <span class="font-bold">{{ $row->value }}
@@ -1162,32 +1140,19 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                     @endforeach
 
                     </tr>
+
                     <tr>
+                        @php
 
-                        {{-- @if ($balance < 0)
+                        $total_boxes = 0;
+                        foreach ($boxes as $box) {
+                        $total_boxes += floatval($box->amount);
+                        }
 
-                @php
-                    $Total = $document->total + $paymet2;
-                @endphp
+                        $difference = $total_boxes - $document->total;
+                        @endphp
 
-                @foreach ($boxes as $box)
-        <tr>
-            <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
-                        {{ $document->currency_type->symbol }}</td>
-                        <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
-                    </tr>
-                    @endforeach --}}
-                    @php
-
-                    $total_boxes = 0;
-                    foreach ($boxes as $box) {
-                    $total_boxes += floatval($box->amount);
-                    }
-
-                    $difference = $total_boxes - $document->total;
-                    @endphp
-
-                    @if ($document->payment_condition_id == '01')
+                        @if ($document->payment_condition_id == '01')
                     <tr>
                         <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
                         </td>
@@ -1207,17 +1172,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                             <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
                             <td class="text-left font-bold desc">{{ mb_strtoupper($document->payment_condition->name) }}</td>
                         </tr>
-                        {{-- <tr>
-            <td class="desc pt-3"><b>OBSERVACION:</b> {{ trim($document->observation) }}
-                        @isset($document->additional_information)
-                        @foreach ($document->additional_information as $information)
-                        @if ($information)
-                        {{ $information }}<br />
-                        @endif
-                        @endforeach
-                        @endisset
-                        </td>
-                        </tr> --}}
                         @if ($document->detraction)
                         <tr>
                             <td class="desc pt-3 font-bold">
@@ -1225,36 +1179,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                             </td>
                         </tr>
                         @endif
-
-                        {{-- <tr>
-        <td class="desc pt-3">
-            @foreach ($document->additional_information as $information)
-                @if ($information)
-                    @if ($loop->first)
-                        <strong>Información adicional</strong>
-                    @endif
-                    <p>{{ $information }}</p>
-                        @endif
-                        @endforeach
-                        <br>
-                        @if (in_array($document->document_type->id, ['01', '03']))
-                        @foreach ($accounts as $account)
-                        <span class="font-bold">{{$account->bank->description}}</span> {{$account->currency_type->description}} {{$account->number}}
-                        @endforeach
-                        @endif
-
-                        </td>
-                        </tr> --}}
-                        {{--
-    <tr>
-        <td colspan="2" class="text-left pt-3" style="background:red;min-width: 250px;"><img class="qr_code" src="data:image/png;base64, {{ $document->qr }}" /></td>
-                        <td class="text-center desc">Código Hash: {{ $document->hash }}</td>
-                        <td>xd</td>
-                        </tr> --}}
-                        {{-- <tr>
-        <td class="text-center desc">Código Hash: {{ $document->hash }}</td>
-                        </tr> --}}
-
 
                         @if ($customer->department_id == 16)
                         <tr>
@@ -1293,13 +1217,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                             </td>
                         </tr>
                         @endforeach
-                        {{-- @foreach ($payments as $row)
-                <tr>
-                    <td class="desc">&#8226; {{ $row->payment_method_type->description }} -
-                        {{ $row->reference ? $row->reference . ' - ' : '' }} {{ $document->currency_type->symbol }}
-                        {{ $row->payment + $row->change }}</td>
-                        </tr>
-                        @endforeach --}}
                         @endif
                         @if (count($document->fee) > 0)
                         <tr>
@@ -1318,19 +1235,7 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                         </tr>
                         @endforeach
                         @endif
-
-
-                        {{-- <tr>
-        <td class="desc pt-2">
-        <strong>Vendedor:</strong> </td>
-    </tr>
-                <tr>
-                    <td class="desc">{{ $document->user->name }}</td>
-                        </tr> --}}
-
                         </tr>
-
-
                 </table>
                 <table class="full-width" style="margin-left:15px;margin-right:15px;">
 
@@ -1374,7 +1279,6 @@ $promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
                             <div style="text-align: center;">
                                 <strong style="font-size: 20px;">PROMOCION</strong><br>
                             </div>
-                            <!-- <span style="font-size: 20px;">{{ $customer->name ?? '-' }}</span> -->
                         </div>
                         <div>
                             @foreach($promotion_items as $item)

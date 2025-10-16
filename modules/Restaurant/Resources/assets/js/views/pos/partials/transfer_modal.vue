@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :close-on-click-modal="false" width="500px" :visible="showDialog" class="transfer-modal-dialog"
+    <el-dialog :close-on-click-modal="false" width="600px" :visible="showDialog" class="transfer-modal-dialog"
         :show-close="false">
 
         <div v-loading="loading" class="transfer-modal-bg p-0">
@@ -66,6 +66,7 @@
                                 <th class="text-center" style="color: #fff;">#</th>
                                 <th style="color: #fff;">Producto</th>
                                 <th class="text-center" style="color: #fff;">Cantidad</th>
+                                <th style="color: #fff;">Detalle</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,7 +74,26 @@
                                 :class="idx % 2 === 0 ? 'bg-white' : 'bg-light'">
                                 <td class="text-center text-muted">{{ idx + 1 }}</td>
                                 <td>{{ data.item.description }}</td>
-                                <td class="text-center fw-bold text-primary">{{ data.quantity }}</td>
+                                <td class="text-center fw-bold text-primary">{{ data.quantity }}
+                                    <!-- iterar  -->
+                                </td>
+                                <td>
+                                    <!-- si tiene color y talla  -->
+                                    <div v-if="data.series_lots && data.series_lots.color_size">
+                                        <div v-for="(cs, csIdx) in data.series_lots.color_size" :key="csIdx"
+                                            class="small text-muted">
+                                            {{ cs.code }} - {{ cs.quantity }} - Color: {{ cs.color }} - Talla:
+                                            {{ cs.size }}
+                                        </div>
+                                    </div>
+                                    <!-- si tiene lotes  -->
+                                    <div v-else-if="data.series_lots && data.series_lots.lots">
+                                        <div v-for="(lot, lotIdx) in data.series_lots.lots" :key="lotIdx"
+                                            class="small text-muted">
+                                            {{ lot.code }} - {{ lot.quantity }}
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

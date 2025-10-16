@@ -1,0 +1,1459 @@
+@php
+$establishment = $document->establishment;
+$customer = $document->customer;
+$invoice = $document->invoice;
+$seller = $document->seller;
+$establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
+$conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
+'establishment_id',
+$document->establishment_id,
+)->first();
+$print_company_address = false;
+if ($conf_establishment) {
+$print_company_address = $conf_establishment->company_address;
+}
+
+$promotion_items = getAvailablePromotions($document->customer_id);
+
+function getAvailablePromotions($customer_id)
+{
+$customer = \App\Models\Tenant\Person::find($customer_id);
+if (!$customer) {
+return collect();
+}
+
+$customer_name = $customer->name;
+$now = now();
+
+$promotions = \App\Models\Tenant\PromotionDocument::where('active', true)
+->where('date_start', '<=', $now)
+    ->where('date_end', '>=', $now)
+    ->get();
+
+    $result = [];
+
+    foreach ($promotions as $promo) {
+    $promoCustomer = \App\Models\Tenant\PromotionDocumentCustomer::where('customer_id', $customer_id)
+    ->where('promotion_document_id', $promo->id)
+    ->first();
+
+    if (!$promoCustomer || $promoCustomer->points <= 0) {
+        continue;
+        }
+
+        $items=\App\Models\Tenant\PromotionDocumentItem::where('promotion_document_id', $promo->id)
+        ->with('item')
+        ->where('points_value', '<=', $promoCustomer->points)
+            ->get();
+
+            foreach ($items as $item) {
+            $itemData = $item->item ?? null;
+
+            $result[] = [
+            'customer_id' => $customer_id,
+            'customer_name' => $customer_name,
+            'customer_points' => $promoCustomer->points,
+            'promotion_id' => $promo->id,
+            'promotion_description' => $promo->description,
+            'promotion_end_date' => $promo->date_end,
+            'item_id' => $item->item_id,
+            'item_name' => $itemData->name ?? '',
+            'item_description' => $itemData->description ?? '',
+            'item_image' => $itemData->image ?? '',
+            'item_points_value' => $item->points_value,
+            'item_quantity' => $item->quantity,
+            ];
+            }
+            }
+
+            return collect($result);
+            }
+
+
+
+
+            //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
+            $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
+            $accounts = \App\Models\Tenant\BankAccount::all();
+            $document_base = $document->note ? $document->note : null;
+            $payments = $document->payments;
+            $paymet2 = $document->payment;
+
+            $is_chifa_china = $company->number == '15609876309';
+            if ($document_base) {
+            $affected_document_number = $document_base->affected_document
+            ? $document_base->affected_document->series .
+            '-' .
+            str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT)
+            : $document_base->data_affected_document->series .
+            '-' .
+            str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
+            } else {
+            $affected_document_number = null;
+            }
+            $configuration = \App\Models\Tenant\Configuration::first();
+            $total_payment = $document->payments ? $document->payments->sum('payment') : 0;
+            //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
+            $balance = -5;
+            $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
+            $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('document_id', $document->id)->first();
+            $stablishment = \App\Models\Tenant\Establishment::find($document->establishment_id);
+            if (!function_exists('getUnitTypeId')) {
+            function getUnitTypeId($id)
+            {
+            $item_unit_types = \App\Models\Tenant\ItemUnitType::find($id);
+            return isset($item_unit_types->unit_type->symbol) ? $item_unit_types->unit_type->symbol : null;
+            }
+            }
+
+
+            if (!function_exists('getUnitType')) {
+            function getUnitType($id)
+            {
+            $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
+            }
+            }
+            $quotation_id = $document->quotation_id;
+            $infor_consolidated = null;
+            if ($quotation_id) {
+            $quotation = \App\Models\Tenant\Quotation::find($quotation_id);
+            $consolidated_id = $quotation->consolidated_id;
+            if ($consolidated_id) {
+            $consolidated = \App\Models\Tenant\Consolidated::find($consolidated_id);
+            if ($consolidated) {
+            $transport = $consolidated->transport;
+            $driver = $consolidated->driver;
+            $infor_consolidated = [
+            'plate_number' => $transport ? $transport->plate_number : null,
+            'brand' => $transport ? $transport->brand : null,
+            'driver' => $driver ? $driver->name : null,
+            ];
+            }
+            }
+            }
+            @endphp
+            <html>
+
+            <head>
+                {{-- <title>{{ $document_number }}</title> --}}
+                {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
+
+            </head>
+
+            <body>
+                @if ($configuration->show_logo_in_documents && $stablishment)
+                @if ($stablishment->logo || $stablishment->document_logo)
+                @if ($is_chifa_china)
+                <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+                    @if ($stablishment->document_logo)
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="
+                                contain"
+                        style=" max-width: 400px;max-height: 150px">
+                    @else
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="
+                                contain"
+                        style=" max-width: 400px;max-height: 150px">
+                    @endif
+                </div>
+                @else
+                <div class="text-center company_logo_box pt-5 pl-5">
+                    @if ($stablishment->document_logo)
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                    @else
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                    @endif
+                </div>
+                @endif
+                @else
+                @if ($company->logo)
+                @if ($is_chifa_china)
+                <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+                    @if ($company->document_logo)
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="
+                                    contain"
+                        style=" max-width: 400px;max-height: 150px">
+                    @else
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="
+                                    contain"
+                        style=" max-width: 400px;max-height: 150px">
+                    @endif
+                </div>
+                @else
+                <div class="text-center company_logo_box pt-5 pl-5">
+                    @if ($company->document_logo)
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                    @else
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                    @endif
+                </div>
+                @endif
+                @endif
+                @endif
+                @endif
+
+                @if ($document->state_type->id == '11')
+                <div class="company_logo_box" style="position: absolute; text-align: center; top:500px">
+                    <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'anulado.png'))) }}"
+                        alt="anulado" class="" style="opacity: 0.6;">
+                </div>
+                @endif
+                @if ($company->soap_type_id == '01' && $configuration->demo_pdf)
+                <div class="company_logo_box" style="position: absolute; text-align: center; top:350px; left: 40px;">
+                    <img src="data:{{ mime_content_type(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png')) }};base64, {{ base64_encode(file_get_contents(public_path('status_images' . DIRECTORY_SEPARATOR . 'demo.png'))) }}"
+                        alt="demo" class="" style="opacity: 0.6; transform: rotate(-45deg);">
+                </div>
+                @endif
+                <table class="full-width" style="margin-left:15px;margin-right:15px;">
+                    <tr>
+                        @if ($configuration->comercial_name)
+                        <td class="text-center">
+                            @if ($is_chifa_china)
+                            <h1>{{ $company->trade_name }}</h1>
+                            @else
+                            <h4>{{ $company->trade_name }}</h4>
+                            @endif
+                        </td>
+                        @endif
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            @if ($is_chifa_china)
+                            <h5>{{ $company->eslogan }}</h5>
+                            @else
+                            <h4>{{ $company->eslogan }}</h4>
+                            @endif
+                        </td>
+                    </tr>
+                    @if ($is_chifa_china)
+                    <tr>
+                        <td class="text-center">
+
+
+                            <h5> {{ $company->name }}</h5>
+                        </td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td class="text-center">
+                            @if ($is_chifa_china)
+                            <h5>{{ 'RUC ' . $company->number }}</h5>
+                            @else
+                            <h5>{{ 'RUC ' . $company->number }}</h5>
+                        </td>
+                        @endif
+                    </tr>
+
+
+                    @if ($establishment)
+                    <tr>
+                        <td class="text-center">
+                            {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
+                            {{ $establishment->district_id !== '-' ? '' . $establishment->district->description : '' }}
+                            {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
+                            {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
+                        </td>
+                    </tr>
+                    @endif
+                    @if ($print_company_address)
+                    @isset($establish_model->trade_address)
+                    <tr>
+                        <td class="text-center ">
+                            <strong>
+                                {{ strtoupper($establish_model->description) }}
+                            </strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-center ">
+                            {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
+                        </td>
+                    </tr>
+                    @endisset
+                    @endif
+
+                    <tr>
+                        @unless ($configuration->correo_red_salud_ticket && $establishment)
+                        <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}
+                        </td>
+                        @endunless
+                    </tr>
+                    <tr>
+                        @unless ($configuration->numero_accion_independiente_admin)
+                        <td class="text-center">
+                            <svg width="15px" height="15px" viewBox="0 0 24 24" version="1.1" id="svg8"
+                                inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="1881161.svg"
+                                xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                                xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                                <path id="path4" inkscape:connector-curvature="0"
+                                    d="M16.6,14c-0.2-0.1-1.5-0.7-1.7-0.8c-0.2-0.1-0.4-0.1-0.6,0.1c-0.2,0.2-0.6,0.8-0.8,1c-0.1,0.2-0.3,0.2-0.5,0.1c-0.7-0.3-1.4-0.7-2-1.2c-0.5-0.5-1-1.1-1.4-1.7c-0.1-0.2,0-0.4,0.1-0.5c0.1-0.1,0.2-0.3,0.4-0.4c0.1-0.1,0.2-0.3,0.2-0.4c0.1-0.1,0.1-0.3,0-0.4c-0.1-0.1-0.6-1.3-0.8-1.8C9.4,7.3,9.2,7.3,9,7.3c-0.1,0-0.3,0-0.5,0C8.3,7.3,8,7.5,7.9,7.6C7.3,8.2,7,8.9,7,9.7c0.1,0.9,0.4,1.8,1,2.6c1.1,1.6,2.5,2.9,4.2,3.7c0.5,0.2,0.9,0.4,1.4,0.5c0.5,0.2,1,0.2,1.6,0.1c0.7-0.1,1.3-0.6,1.7-1.2c0.2-0.4,0.2-0.8,0.1-1.2C17,14.2,16.8,14.1,16.6,14 M19.1,4.9C15.2,1,8.9,1,5,4.9c-3.2,3.2-3.8,8.1-1.6,12L2,22l5.3-1.4c1.5,0.8,3.1,1.2,4.7,1.2h0c5.5,0,9.9-4.4,9.9-9.9C22,9.3,20.9,6.8,19.1,4.9 M16.4,18.9c-1.3,0.8-2.8,1.3-4.4,1.3h0c-1.5,0-2.9-0.4-4.2-1.1l-0.3-0.2l-3.1,0.8l0.8-3l-0.2-0.3C2.6,12.4,3.8,7.4,7.7,4.9S16.6,3.7,19,7.5C21.4,11.4,20.3,16.5,16.4,18.9" />
+                            </svg>
+
+                            {{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}
+                        </td>
+                        @endunless
+                    </tr>
+
+
+                    @isset($establishment->web_address)
+                    <tr>
+                        <td class="text-center">
+                            {{ $establishment->web_address !== '-' ? 'Web: ' . $establishment->web_address : '' }}
+                        </td>
+                    </tr>
+                    @endisset
+
+                    @isset($establishment->aditional_information)
+                    <tr>
+                        <td class="text-center pb-3">
+                            {{ $establishment->aditional_information !== '-' ? $establishment->aditional_information : '' }}
+                        </td>
+                    </tr>
+                    @endisset
+
+                    <tr>
+                        <td class="text-center pt-3 border-top">
+                            <h4>{{ $document->document_type->description }}</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center pb-3 border-bottom">
+                            <h3>{{ $document_number }}</h3>
+                        </td>
+                    </tr>
+                </table>
+                <table class="full-width" style="margin-left:15px;margin-right:15px;">
+                    <tr>
+                        <td width="" class="pt-3">
+                            <p class="desc">F. Emisión:</p>
+                        </td>
+                        <td width="" class="pt-3">
+                            <p class="desc">{{ $document->date_of_issue }}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="">
+                            <p class="desc">H. Emisión:</p>
+                        </td>
+                        <td width="">
+                            <p class="desc">{{ $document->time_of_issue }}</p>
+                        </td>
+                    </tr>
+                    @isset($invoice->date_of_due)
+                    @if($document->payment_condition_id != '01')
+                    <tr>
+                        <td>
+                            <p class="desc">F. Vencimiento:</p>
+                        </td>
+                        <td>
+                            @php
+                            if(count($document->fee) > 0) {
+                            $date_of_due = $document->fee[0]->date;
+                            } else {
+                            $date_of_due = $invoice->date_of_due;
+                            }
+                            $date_of_due = Carbon\Carbon::parse($date_of_due)->format('Y-m-d');
+                            @endphp
+                            <p class="desc">{{ $date_of_due }}</p>
+                        </td>
+                    </tr>
+                    @endif
+                    @endisset
+
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Cliente:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ isset($customer->alias) && $configuration->alias_pdf ? $customer->alias . ' - ' . $customer->name : $customer->name }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">{{ $customer->identity_document_type->description }}:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $customer->number }}</p>
+                        </td>
+                    </tr>
+                    @isset($customer->telephone)
+                    <tr>
+                        <td>
+                            <p class="desc">TELEFONO:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $customer->telephone }}</p>
+                        </td>
+
+
+                    </tr>
+                    @endisset
+                    @isset($infor_consolidated)
+                    <tr>
+                        @if($infor_consolidated['plate_number'])
+                        <td>
+                            <p class="desc">Transporte:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $infor_consolidated['plate_number'] }}</p>
+                        </td>
+                        @endif
+
+                    </tr>
+                    <tr>
+                        @if($infor_consolidated['brand'])
+                        <td>
+                            <p class="desc">Marca:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $infor_consolidated['brand'] }}</p>
+                        </td>
+                        @endif
+                    </tr>
+                    <tr>
+                        @if($infor_consolidated['driver'])
+                        <td>
+                            <p class="desc">Conductor:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $infor_consolidated['driver'] }}</p>
+                        </td>
+                        @endif
+                    </tr>
+                    @endisset
+                    @isset($customer->sum_coins)
+                    <tr>
+                        <td>
+                            <p class="desc">Pagó con: </p>
+                        </td>
+                        <td>
+                            @php
+                            $txt = '';
+                            foreach ($customer->sum_coins as $coin) {
+                            $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
+                            }
+                            $txt = substr($txt, 0, -2);
+
+                            @endphp
+                            <p class="desc">
+                                {{ $txt }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endisset
+                    @if (isset($students) && count($students) > 0)
+                    @if (is_array($students) && count($students) > 0)
+                        @foreach ($students as $student)
+                    @endif
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Alumno:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ $student['name'] }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Clase:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ $student['class'] }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                    @if ($customer->address !== '')
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Dirección:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ $customer->address }}
+                                {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}
+                                {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
+                                {{ $customer->department_id !== '-' ? '- ' . $customer->department->description : '' }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endif
+
+                    @if ($configuration->consolidated_quotations)
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Vendedor:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                @if (!$document->quotation_id)
+                                {{ $document->user->name }}
+                                @else
+                                {{ $document->quotation->user->name }}
+                                @endif
+                            </p>
+                        </td>
+                    </tr>
+                    @if ($document->quotation_id)
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">N° atención:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ $document->quotation->num_orden }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Zona:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \App\Models\Tenant\Person::getZone($document->customer_id) }}
+                            </p>
+                        </td>
+                    </tr>
+                    @else
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Vendedor:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                @if ($seller)
+                                {{ $seller->name }}
+                                @else
+                                {{ $document->user->name }}
+                                @endif
+                            </p>
+                        </td>
+                    </tr>
+                    @endif
+                    @if (count($detail_points) > 0)
+                    <tr>
+                        <td>
+                            <p class="desc">Puntos adquiridos:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $detail_points['total_document_points'] }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Puntos acumulados:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $detail_points['acc_points'] }}</p>
+                        </td>
+                    </tr>
+                    @endif
+                    @if (isset($detail_message['message']))
+                    <tr>
+                        <td colspan="2">
+                            <p class="desc">{{ $detail_message['message'] }}</p>
+                        </td>
+                    </tr>
+                    @endif
+                    @if ($hotel_rent)
+                    @php
+                    $hotel_rent_items = $hotel_rent->items;
+
+                    @endphp
+                    @if (is_array($hotel_rent_items) && count($hotel_rent_items) > 0)
+                        @foreach ($hotel_rent_items as $hri)
+                    @endif
+                    <tr>
+                        <td>
+                            <p class="desc">Habitación:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $hri->table->number }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Entrada:</p>
+
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Salida:</p>
+
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
+                                {{ $hri->checkout_time }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                    @if ($hotel_rent_advance)
+                    @php
+                    $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
+
+                    @endphp
+                    @if (is_array($hotel_rent_items) && count($hotel_rent_items) > 0)
+                        @foreach ($hotel_rent_items as $hri)
+                    @endif
+                    @if ($hri->is_reserve)
+                    <tr>
+                        <td>
+                            <p class="desc">Habitación:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $hri->table->number }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Reserva:</p>
+
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }}
+                                {{ $hri->checkin_time }}
+                            </p>
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
+                    @endif
+                    @if ($hotel_rent)
+                    @php
+                    $advances = $hotel_rent->documents->toArray();
+                    $observation_hotel = '';
+                    if (count($advances) > 0) {
+                    $observation_hotel = 'Adelantos : ';
+
+                    foreach ($advances as $adv) {
+                    if ($adv['is_advance']) {
+                    $document_hotel = $adv['document'] ?? $adv['sale_note'];
+                    $full_number = $document_hotel['series'] . '-' . $document_hotel['number'];
+                    $total = $document_hotel['total'];
+                    $observation_hotel .= ' ' . $full_number . ' S/' . $total . ' ';
+                    }
+                    }
+                    }
+                    @endphp
+                    @endif
+                    @php
+                    $fot_totals = 0;
+                    $quantity_totals = 0;
+                    @endphp
+                    @if (is_iterable($document->items) && count($document->items) > 0)
+                        @foreach ($document->items as $row)
+                    @endif
+                    @php
+                    // Aquí calculas los totales en base a los items
+                    if (isset($row->item->categoriaMadera)) {
+                    $madera = $row->item->categoriaMadera;
+                    $ancho = $madera->selectedAncho;
+                    $largo = $madera->selectedLargo;
+                    $grosor = $madera->selectedGrosor;
+                    $quantity_totals += $row->quantity;
+                    $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+                    }
+                    @endphp
+                    @endforeach
+                    <tr>
+                        <td colspan="2" class="align-top">
+                            <b>Observación:</b> {{ trim($document->observation) }}
+
+                            @isset($document->additional_information)
+                            @if (is_array($document->additional_information) && count($document->additional_information) > 0)
+                                @foreach ($document->additional_information as $information)
+                            @endif
+                            @if ($information)
+                            {{ $information }}<br />
+                            @endif
+                            @endforeach
+                            @endisset
+                            @isset($observation_hotel)
+                            <br>
+                            <b>{{ $observation_hotel }}</b>
+                            @endisset
+                        </td>
+                    </tr>
+                    @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+                    <tr>
+                        <td colspan="3" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="text-align: left; padding-right: 20px; font-size: 8px;">TOTAL PIES: <span
+                                            class="font-bold">{{ number_format($fot_totals, 2) }}</span></td>
+                                    <td style="text-align: right; font-size: 8px;">TOTAL CANT: <span
+                                            class="font-bold">{{ number_format($quantity_totals, 2) }}</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    @endif
+                    @if ($document->comercial_treatment)
+                    <tr>
+                        <td colspan="2" class="align-top">
+                            <b>Tratamiento Comercial:</b> {{ $document->comercial_treatment->description }}
+                        </td>
+                    </tr>
+                    @endif
+                    @if ($document->detraction)
+                    {{-- <strong>Operación sujeta a detracción</strong> --}}
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">N. Cta Detracciones:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->detraction->bank_account }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">B/S Sujeto a detracción:</p>
+                        </td>
+                        @inject('detractionType', 'App\Services\DetractionTypeService')
+                        <td>
+                            <p class="desc">{{ $document->detraction->detraction_type_id }} -
+                                {{ $detractionType->getDetractionTypeDescription($document->detraction->detraction_type_id) }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Método de pago:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ $detractionType->getPaymentMethodTypeDescription($document->detraction->payment_method_id) }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Porcentaje detracción:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->detraction->percentage }}%</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Monto detracción:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->currency_type->symbol }} {{ $document->detraction->amount }}</p>
+                        </td>
+                    </tr>
+                    @if ($document->detraction->pay_constancy)
+                    <tr>
+                        <td class="align-top">
+                            <p class="desc">Constancia de pago:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->detraction->pay_constancy }}</p>
+                        </td>
+                    </tr>
+                    @endif
+                    @endif
+
+                    @if ($document->prepayments)
+                    @if (is_iterable($document->prepayments) && count($document->prepayments) > 0)
+                        @foreach ($document->prepayments as $p)
+                    @endif
+                    <tr>
+                        <td>
+                            <p class="desc">Anticipo :</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $p->number }}</p>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                    @if ($document->purchase_order)
+                    <tr>
+                        <td>
+                            <p class="desc">Orden de Compra:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->purchase_order }}</p>
+                        </td>
+                    </tr>
+                    @endif
+                    @isset($document->quotation->delivery_date)
+                    <tr>
+                        <td>
+                            <p class="desc">F. Entrega</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->quotation->delivery_date }}</p>
+                        </td>
+                    </tr>
+                    @endisset
+                    @isset($document->quotation->sale_opportunity)
+                    <tr>
+                        <td>
+                            <p class="desc">O. Venta</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $document->quotation->sale_opportunity->number_full }}</p>
+                        </td>
+                    </tr>
+                    @endisset
+                </table>
+
+                @if ($document->guides)
+                {{-- <strong>Guías:</strong> --}}
+                <table>
+                    @if (is_iterable($document->guides) && count($document->guides) > 0)
+                        @foreach ($document->guides as $guide)
+                    @endif
+                    <tr>
+                        @if (isset($guide->document_type_description))
+                        <td class="desc">{{ $guide->document_type_description }}</td>
+                        @else
+                        <td class="desc">{{ $guide->document_type_id }}</td>
+                        @endif
+                        <td class="desc">:</td>
+                        <td class="desc">{{ $guide->number }}</td>
+                    </tr>
+                    @endforeach
+                </table>
+                @endif
+
+
+                @if (!is_null($document_base))
+                <table>
+                    <tr>
+                        <td class="desc">Documento Afectado:</td>
+                        <td class="desc">{{ $affected_document_number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="desc">Tipo de nota:</td>
+                        <td class="desc">
+                            {{ $document_base->note_type === 'credit' ? $document_base->note_credit_type->description : $document_base->note_debit_type->description }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-top desc">Descripción:</td>
+                        <td class="text-left desc">{{ $document_base->note_description }}</td>
+                    </tr>
+                </table>
+                @endif
+
+                <table class="full-width mt-10 mb-10" style="margin-left:15px;margin-right:15px;">
+                    <thead class="">
+                        <tr>
+                            <th class="border-top-bottom desc-9 text-left">CANT.</th>
+                            <th class="border-top-bottom desc-9 text-left">UNID.</th>
+                            <th class="border-top-bottom desc-9 text-center">DESCRIPCIÓN</th>
+                            <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
+                            <th class="border-top-bottom desc-9 text-end">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                        $fot_totals = 0;
+                        $quantity_totals = 0;
+                        @endphp
+                        @if (is_iterable($document->items) && count($document->items) > 0)
+                            @foreach ($document->items as $row)
+                        @endif
+                        <tr>
+                            {{-- <td class="text-center desc-9 align-top">
+                        @if ((int) $row->quantity != $row->quantity && $configuration->is_grifo)
+                            {{ number_format($row->quantity, 3) }}
+                            @else
+                            @if (isset($row->unit_qty) && $configuration->is_grifo)
+                            {{ number_format($row->quantity, 3) }}
+                            @else
+                            {{ number_format($row->quantity, 2) }}
+                            @endif
+                            @endif
+                            </td> --}}
+
+                            <td class="text-center desc-9 align-top">
+                                @if ($configuration->tap)
+                                {{ number_format($row->quantity, 3) }}
+                                @else
+                                {{ number_format($row->quantity, 2) }}
+                                @endif
+                            </td>
+
+                            <td class="text-center desc-9 align-top">
+                                @if (isset($row->item->from_unit_type_id))
+                                {{ getUnitTypeId($row->item->from_unit_type_id) }}
+                                @else
+                                {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
+                                @endif
+                            </td>
+                            <td class="text-left desc-9 align-top">
+                                @if ($configuration->show_internal_code_ticket)
+                                @if (isset($row->item->internal_id))
+                                {{ $row->item->internal_id }} <br>
+                                @endif
+                                @endif
+                                @if (isset($row->name_product_pdf))
+                                {!! $row->name_product_pdf !!}
+                                @else
+                                @if (isset($row->item->description_internet))
+                                {!! $row->item->description_internet !!}
+                                @else
+                                @if (isset($row->item->origin) && $configuration->pdf_origin_enabled)
+                                {{ $row->item->origin }} <br>
+                                @endif
+                                {!! $row->item->description !!} <br>
+                                @if (!empty($row->warranty_end_date))
+                                Garantía Hasta el {{ $row->warranty_end_date }}
+                                @endif
+                                @endif
+                                @if (isset($row->item->categoriaMadera))
+                                -
+                                @php
+                                $madera = $row->item->categoriaMadera;
+                                $ancho = $madera->selectedAncho;
+                                $largo = $madera->selectedLargo;
+                                $grosor = $madera->selectedGrosor;
+                                $quantity_totals += $row->quantity;
+                                $fot_locals = $row->quantity * (($ancho * $largo * $grosor) / 12);
+                                $fot_totals += $row->quantity * (($ancho * $largo * $grosor) / 12);
+
+                                $m_description = "${grosor}x${ancho}x${largo}";
+                                @endphp
+                                {{ $m_description }} <br />
+                                ({{ number_format($fot_locals, 2) }} PIES)
+                                @endif
+                                @if (isset($row->item->lots))
+                                @if (is_iterable($row->item->lots) && count($row->item->lots) > 0)
+                                    @foreach ($row->item->lots as $lot)
+                                @endif
+                                <br />{!! $lot->series !!}
+                                @endforeach
+                                @endif
+                                @if (isset($row->item->is_promotion) && $row->item->is_promotion)
+                                <br />
+                                <small>**Promoción**</small>
+                                @endif
+                                @if (isset($row->item->color_size))
+                                @if (is_iterable($row->item->color_size) && count($row->item->color_size) > 0)
+                                    @foreach ($row->item->color_size as $color_size)
+                                @endif
+                                <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
+                                {{ $color_size->quantity }}
+                                @endforeach
+                                @endif
+                                @if (isset($row->item->second_name) && $configuration->warehouses_product)
+                                - {!! $row->item->second_name !!}
+                                @endif
+                                @if (isset($row->item->has_unit_type))
+                                - {!! $row->item->has_unit_type !!}
+                                @endif
+                                @if (isset($row->unit_desc))
+                                {!! $row->unit_desc !!}
+                                @endif
+                                @endif
+
+                                @if (!empty($row->item->presentation))
+                                {!! $row->item->presentation->description !!}
+                                @endif
+
+                                @if (is_array($row->additional_information) && count($row->additional_information) > 0)
+                                    @foreach ($row->additional_information as $information)
+                                @endif
+                                @if ($information)
+                                <br />{{ $information }}
+                                @endif
+                                @endforeach
+
+                                @if ($row->attributes)
+                                @if (is_iterable($row->attributes) && count($row->attributes) > 0)
+                                    @foreach ($row->attributes as $attr)
+                                @endif
+                                <br />{!! $attr->description !!} : {{ $attr->value }}
+                                @endforeach
+                                @endif
+                                @if ($row->discounts)
+                                @php
+                                $has_igv_row = ($document->total_igv > 0) || ($document->total_taxed > 0);
+                                @endphp
+                                @if (is_iterable($row->discounts) && count($row->discounts) > 0)
+                                    @foreach ($row->discounts as $dtos)
+                                @endif
+                                @php
+                                $dto_percent = $dtos->factor * 100;
+                                /* if ($has_igv_row) {
+                                $dto_percent = $dto_percent / 1.18;
+                                } */
+                                @endphp
+                                <br /> ** Descuento:<small>{{ number_format($dto_percent, 2) }}%</small>
+                                @endforeach
+                                @endif
+
+                                {{-- @if ($row->item->is_set == 1)
+                            <br>
+                            @inject('itemSet', 'App\Services\ItemSetService')
+
+                            {{ join('-', $itemSet->getItemsSet($row->item_id)) }}
+                                @endif --}}
+                                @if ($configuration->warehouse_pdf_item && $row->warehouse_id)
+                                <div>
+                                    <strong>TDA: </strong>{{ $row->warehouse_id }}
+                                </div>
+                                @endif
+                            </td>
+                            <td class="text-right desc-9 align-top">
+
+                                @if (isset($row->price_unit))
+                                {{ number_format($row->price_unit, 2) }}
+                                @else
+                                {{ number_format($row->unit_price, 2) }}
+                                @endif
+                            </td>
+                            <td class="text-right desc-9 align-top">{{ number_format($row->total, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="border-bottom"></td>
+                        </tr>
+                        @endforeach
+
+                        @if ($document->prepayments)
+                        @if (is_iterable($document->prepayments) && count($document->prepayments) > 0)
+                            @foreach ($document->prepayments as $p)
+                        @endif
+                        <tr>
+                            <td class="text-center desc-9 align-top">
+                                1
+                            </td>
+                            <td class="text-center desc-9 align-top">NIU</td>
+                            <td class="text-left desc-9 align-top">
+                                ANTICIPO: {{ $p->document_type_id == '02' ? 'FACTURA' : 'BOLETA' }} NRO.
+                                {{ $p->number }}
+                            </td>
+                            <td class="text-right  desc-9 align-top">-{{ number_format($p->total, 2) }}</td>
+                            <td class="text-right  desc-9 align-top">-{{ number_format($p->total, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="border-bottom"></td>
+                        </tr>
+                        @endforeach
+                        @endif
+
+                        @if ($document->total_exportation > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">OP. EXPORTACIÓN:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_exportation, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if ($document->total_free > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">OP. GRATUITAS:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_free, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if ($document->total_unaffected > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">OP. INAFECTAS:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_unaffected, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if ($document->total_exonerated > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">OP. EXONERADAS:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_exonerated, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if ($document->total_taxed > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">OP. GRAVADAS:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_taxed, 2) }}</td>
+                        </tr>
+                        @endif
+                        @php
+                        // Calcular descuento total: suma de descuento global + descuentos por ítem
+                        $total_item_discounts = 0;
+                        foreach ($document->items as $item) {
+                        if ($item->discounts) {
+                        foreach ($item->discounts as $discount) {
+                        if ($discount->amount > 0) {
+                        $total_item_discounts += $discount->amount;
+                        }
+                        }
+                        }
+                        }
+                        // El descuento global ya viene en $document->total_discount
+                        $total_discount_gross = $document->total_discount + $total_item_discounts;
+                        // Si el documento tiene IGV, mostrar el descuento dividido entre 1.18 (descuento base sin IGV)
+                        $has_igv = ($document->total_igv > 0) || ($document->total_taxed > 0);
+                        $total_discount = $has_igv ? ($total_discount_gross / 1.18) : $total_discount_gross;
+                        @endphp
+
+                        @if ($total_discount > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">DESCUENTO TOTAL:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">
+                                {{ number_format($total_discount, 2) }}
+                            </td>
+                        </tr>
+                        @endif
+                        @if ($document->total_plastic_bag_taxes > 0)
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">ICBPER:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_plastic_bag_taxes, 2) }}
+                            </td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total_igv, 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-right font-bold desc">TOTAL A PAGAR:
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-right font-bold desc">{{ number_format($document->total, 2) }}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <table class="full-width" style="margin-left:15px;margin-right:15px;">
+                    @if ($fot_totals > 0 && isset($madera->sumTotals) && $madera->sumTotals == true)
+                    <tr>
+                        <td class="desc pt-3"> TOTAL PIES: <span
+                                class="font-bold">{{ number_format($fot_totals, 2) }}</span>
+                            TOTAL CANTIDAD: <span class="font-bold">{{ number_format($quantity_totals, 2) }}</span>
+                        </td>
+                    </tr>
+                    @endif
+                    <tr>
+
+                        @php $legends_array = array_reverse((array) $document->legends); @endphp
+                        @if (is_array($legends_array) && count($legends_array) > 0)
+                            @foreach ($legends_array as $row)
+                        @endif
+                    <tr>
+                        @if ($row->code == '1000')
+                        <td class="desc pt-3">Son: <span class="font-bold">{{ $row->value }}
+                                {{ $document->currency_type->description }}</span></td>
+                        @if (count((array) $document->legends) > 1)
+                    <tr>
+                        <td class="desc pt-3"><span class="font-bold">Leyendas</span></td>
+                    </tr>
+                    @endif
+                    @else
+                    <td class="desc pt-3">{{ $row->code }}: {{ $row->value }}</td>
+                    @endif
+
+                    </tr>
+                    @endforeach
+
+                    </tr>
+                    <tr>
+
+                        {{-- @if ($balance < 0)
+
+                @php
+                    $Total = $document->total + $paymet2;
+                @endphp
+
+                @if (is_iterable($boxes) && count($boxes) > 0)
+                    @foreach ($boxes as $box)
+                @endif
+        <tr>
+            <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
+                        {{ $document->currency_type->symbol }}</td>
+                        <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                    </tr>
+                    @endforeach --}}
+                    @php
+
+                    $total_boxes = 0;
+                    foreach ($boxes as $box) {
+                    $total_boxes += floatval($box->amount);
+                    }
+
+                    $difference = $total_boxes - $document->total;
+                    @endphp
+
+                    @if ($document->payment_condition_id == '01')
+                    <tr>
+                        <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
+                        </td>
+                        <td class="text-left font-bold desc">{{ number_format(abs($paymet2), 2, '.', '') }}</td>
+                    </tr>
+                    @endif
+                    {{-- @endif --}}
+                    </tr>
+                    @if ($difference < 0 && $configuration->consolidated_quotation_details)
+                        <tr>
+                            <td colspan="4" class="text-left font-bold desc"> SALDO PENDIENTE: {{ $document->currency_type->symbol }}
+                            </td>
+                            <td class="text-left font-bold desc">{{ number_format(abs($difference), 2, '.', '') }}</td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
+                            <td class="text-left font-bold desc">{{ mb_strtoupper($document->payment_condition->name) }}</td>
+                        </tr>
+                        {{-- <tr>
+            <td class="desc pt-3"><b>OBSERVACION:</b> {{ trim($document->observation) }}
+                        @isset($document->additional_information)
+                        @if (is_array($document->additional_information) && count($document->additional_information) > 0)
+                            @foreach ($document->additional_information as $information)
+                        @endif
+                        @if ($information)
+                        {{ $information }}<br />
+                        @endif
+                        @endforeach
+                        @endisset
+                        </td>
+                        </tr> --}}
+                        @if ($document->detraction)
+                        <tr>
+                            <td class="desc pt-3 font-bold">
+                                Operación sujeta al Sistema de Pago de Obligaciones Tributarias
+                            </td>
+                        </tr>
+                        @endif
+
+                        {{-- <tr>
+        <td class="desc pt-3">
+            @if (is_array($document->additional_information) && count($document->additional_information) > 0)
+                @foreach ($document->additional_information as $information)
+            @endif
+                @if ($information)
+                    @if ($loop->first)
+                        <strong>Información adicional</strong>
+                    @endif
+                    <p>{{ $information }}</p>
+                        @endif
+                        @endforeach
+                        <br>
+                        @if (in_array($document->document_type->id, ['01', '03']))
+                        @if (is_iterable($accounts) && count($accounts) > 0)
+                            @foreach ($accounts as $account)
+                        @endif
+                        <span class="font-bold">{{$account->bank->description}}</span> {{$account->currency_type->description}} {{$account->number}}
+                        @endforeach
+                        @endif
+
+                        </td>
+                        </tr> --}}
+                        {{--
+    <tr>
+        <td colspan="2" class="text-left pt-3" style="background:red;min-width: 250px;"><img class="qr_code" src="data:image/png;base64, {{ $document->qr }}" /></td>
+                        <td class="text-center desc">Código Hash: {{ $document->hash }}</td>
+                        <td>xd</td>
+                        </tr> --}}
+                        {{-- <tr>
+        <td class="text-center desc">Código Hash: {{ $document->hash }}</td>
+                        </tr> --}}
+
+
+                        @if ($customer->department_id == 16)
+                        <tr>
+                            <td class="text-center desc pt-5">
+                                Representación impresa del Comprobante de Pago Electrónico.
+                                <br />Esta puede ser consultada en:
+                                <br /> <b>{!! url('/buscar') !!}</b>
+                                <br /> "Bienes transferidos en la Amazonía
+                                <br />para ser consumidos en la misma
+                            </td>
+                        </tr>
+                        @endif
+                        {{-- <h3> $payments->count= {{ $payments->count() }} </h3> --}}
+                        @if ($document->payment_condition_id == '01')
+                        <tr>
+                            <td class="desc pt-5">
+                                <strong>PAGOS:</strong>
+                            </td>
+                        </tr>
+                        @if (is_iterable($boxes) && count($boxes) > 0)
+                            @foreach ($boxes as $box)
+                        @endif
+                        <tr>
+                            <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
+                                @if ($box->bank_account_operation)
+                                <br>
+                                <small>N° Op: {{ $box->bank_account_operation }}</small>
+                                @endif
+                                @if ($box->operation_number)
+                                <br>
+                                <small>N° Operación: {{ $box->operation_number }}</small>
+                                @endif
+                                :
+                                {{ $document->currency_type->symbol }}
+                            </td>
+                            <td valign='bottom' class="text-left font-bold desc">
+                                {{ number_format(abs($box->amount), 2, '.', '') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                        {{-- @foreach ($payments as $row)
+                <tr>
+                    <td class="desc">&#8226; {{ $row->payment_method_type->description }} -
+                        {{ $row->reference ? $row->reference . ' - ' : '' }} {{ $document->currency_type->symbol }}
+                        {{ $row->payment + $row->change }}</td>
+                        </tr>
+                        @endforeach --}}
+                        @endif
+                        @if (count($document->fee) > 0)
+                        <tr>
+                            <td class="desc pt-5">
+                                <strong>CUOTAS:</strong>
+                            </td>
+                        </tr>
+                        @foreach ($document->fee as $key => $quote)
+                        <tr>
+                            <td class="desc">
+                                &#8226;
+                                {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
+                                / Fecha: {{ $quote->date->format('d-m-Y') }} /
+                                Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}
+                            </td>
+                        </tr>
+                        @endforeach
+                        @endif
+
+
+                        {{-- <tr>
+        <td class="desc pt-2">
+        <strong>Vendedor:</strong> </td>
+    </tr>
+                <tr>
+                    <td class="desc">{{ $document->user->name }}</td>
+                        </tr> --}}
+
+                        </tr>
+
+
+                </table>
+                <table class="full-width" style="margin-left:15px;margin-right:15px;">
+
+                    <tr>
+                        <td class="text-left" style="vertical-align: top;"><img style="width: 80px;"
+                                src="data:image/png;base64, {{ $document->qr }}" /></td>
+                        <td class="text-left " style="vertical-align: top; padding-top:5px">
+                            <b>Código Hash</b>: {{ $document->hash }} <br>
+                            <b>Usuario</b>: {{ $document->user->name }} <br>
+                            @php
+                            $code = null;
+                            $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
+                            if ($box) {
+                            $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                            if ($cash) {
+                            $code = $cash->reference_number;
+                            }
+                            }
+                            @endphp
+                            @if ($code)
+                            <b>Código A.</b>: {{ $code }} <br>
+                            @endif
+                        </td>
+                    </tr>
+                    @if ($footer_text)
+                    <tr>
+                        <td colspan="6" class="text-center desc pt-3">{{ $footer_text }}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td colspan="6" class="text-center desc pt-3">Para consultar el comprobante ingresar a
+                            {!! url('/buscar') !!}</td>
+                    </tr>
+                </table>
+                @if ($configuration->promotions_by_points && $configuration->promotion_pdf )
+                @php
+                    $promotion_items_array = is_array($promotion_items) ? $promotion_items : (is_object($promotion_items) ? $promotion_items->toArray() : []);
+                @endphp
+                @if (!empty($promotion_items_array))
+                <div>
+                    <div class="ticket">
+                        <div class="center" style="margin-bottom: 6px;">
+                        </div>
+                        <div class="center">
+                            <div style="text-align: center;">
+                                <strong style="font-size: 20px;">PROMOCION</strong><br>
+                            </div>
+                            <!-- <span style="font-size: 20px;">{{ $customer->name ?? '-' }}</span> -->
+                        </div>
+                        <div>
+                            @foreach($promotion_items_array as $item)
+                            <div class="voucher-item" style="border:1px solid #222; margin:4px 0; padding:2px; text-align:center;">
+                                <div style="font-size:12px; font-weight:bold;">{{ $item['promotion_description'] }}</div>
+                                <div style="font-size:12px;">
+                                    Puntos acumulados:
+                                    <span style="font-weight:bold;">{{ $item['customer_points'] }}</span>
+                                </div>
+                                <div style="font-size:12px;">Descripción: {{ $item['item_description'] }}</div>
+                                @php
+                                // Determinar la ruta de la imagen del producto si existe, de lo contrario usar la imagen por defecto
+                                $imageFile = $item['item_image'] ?? null;
+                                $candidatePublicPath = $imageFile ? public_path('storage/uploads/items/' . $imageFile) : null;
+                                $hasImage = $candidatePublicPath && file_exists($candidatePublicPath);
+                                $imgSrc = $hasImage
+                                ? asset('storage/uploads/items/' . $imageFile)
+                                : asset('logo/imagen-no-disponible.jpg');
+                                @endphp
+                                <div style="text-align:center; margin:4px 0;">
+                                    <br>
+                                    <img src="{{ $imgSrc }}" alt="{{ $item['item_name'] }}" style="width:30px; height:auto; display:inline-block;">
+                                    <div style="font-size:12px;">Puntos requeridos: <span style="font-weight:bold;">{{ $item['item_points_value'] }}</span></div>
+                                    <div style="font-size:12px;">Cantidad: <span style="font-weight:bold;">{{ $item['item_quantity'] }}</span></div>
+                                    <div style="font-size:12px;">Fecha de vencimiento: <span style="font-weight:bold;">{{ $item['promotion_end_date'] }}</span></div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+                @endif
+                @endif
+            </body>
+
+            </html>

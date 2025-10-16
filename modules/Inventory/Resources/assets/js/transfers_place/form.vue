@@ -230,7 +230,7 @@
                                                             form_add.lots_enabled
                                                     "
                                                     href="#"
-                                                    class="text-center font-weight-bold text-info"
+                                                    class="btn bg-primary text-white"
                                                     @click.prevent="
                                                         clickLotescodeOutput
                                                     "
@@ -243,7 +243,7 @@
                                                             has_color_size
                                                     "
                                                     href="#"
-                                                    class="text-center font-weight-bold text-info"
+                                                    class="btn bg-primary text-white"
                                                     @click.prevent="
                                                         clickColorcodeOutput
                                                     "
@@ -561,7 +561,6 @@
                     </div>
                 </form>
             </div>
-
             <output-lots-form
                 :showDialog.sync="showDialogLotsOutput"
                 :lots="form_add.lots"
@@ -575,6 +574,8 @@
             ></output-lotes-form>
             <output-color-form
                 :color_size="form_add.color_size"
+                :item_id="form_add.item_id"
+                :warehouse_id="form.warehouse_id"
                 @sumColor_size="sumColor_size"
                 :showDialog.sync="showDialogColorOutput"
                 @addRowOutputColor_size="addRowOutputColor_size"

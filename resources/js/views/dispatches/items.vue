@@ -78,6 +78,7 @@
                             :step="1"
                             :min="1"
                             :max="99999999"
+                            :disabled="item && item.has_color_size"
                             :value="form.quantity === undefined ? 1 : form.quantity"
                             @change="val => form.quantity = val"
                         ></el-input-number>
@@ -296,19 +297,17 @@ export default {
             this.showDialogColorSize = true;
         },
         addRowSelectColor_size(color_size){
-            // Establecer cantidad como la suma total de todas las tallas/colores seleccionados
             console.log("ver que datos esta pasando:", color_size);
             if (Array.isArray(color_size)) {
                 const seleccionados = color_size.filter(r => Number(r.selectedQuantity) > 0);
                 if (seleccionados.length) {
                     const total = seleccionados.reduce((acc, r) => acc + Number(r.selectedQuantity || 0), 0);
                     this.form.quantity = total;
-                    // Normalizar: convertir selectedQuantity -> quantity (lo que espera el backend)
                     const normalizados = seleccionados.map(({ selectedQuantity, ...rest }) => ({
                         ...rest,
                         quantity: Number(selectedQuantity)
                     }));
-                    this.form.selected_color_size = normalizados; // detalle listo para enviar
+                    this.form.selected_color_size = normalizados;
                 } else {
                     this.form.selected_color_size = [];
                 }
@@ -368,6 +367,9 @@ export default {
                 if (Array.isArray(this.form.selected_color_size) && this.form.selected_color_size.length) {
                     // Ya vienen normalizados con 'quantity'. Clonar para no mutar referencia.
                     item.color_size = this.form.selected_color_size.map(cs => ({ ...cs }));
+                    // Alias de compatibilidad: algunos componentes/consumers pueden esperar
+                    // 'selected_color_size' en lugar de 'color_size'. Mantener ambas claves.
+                    item.selected_color_size = item.color_size.map(cs => ({ ...cs }));
                 }
 
                 const quantity = this.form.quantity;

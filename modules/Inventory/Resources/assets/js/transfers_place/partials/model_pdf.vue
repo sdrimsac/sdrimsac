@@ -84,43 +84,6 @@
                 ></small>
             </div>
         </div>
-        <!-- <div class="row mt-3">
-            <div class="col-md-12">
-                <el-input
-                    v-model="form.customer_telephone"
-                    placeholder="Ingrese Número de WhatsApp"
-                    style="color: navy;"
-                >
-                    <template slot="prepend">
-                        <span style="color: navy; font-weight: bold;">+51</span>
-                    </template>
-                    <el-button
-                        slot="append"
-                        @click="clickSendWhatsapp"
-                        style="color: green; font-size: 18px; font-weight: bold;"
-                    >
-                        Enviar
-                        <el-tooltip
-                            class="item"
-                            effect="dark"
-                            content="Es necesario tener aperturado Whatsapp web"
-                            placement="top-start"
-                        >
-                            <i
-                                class="fab fa-whatsapp"
-                                style="font-size: 24px; color: green;"
-                            ></i>
-                        </el-tooltip>
-                    </el-button>
-                    <i slot="prefix" class="el-icon-edit-outline"></i>
-                </el-input>
-                <small
-                    class="form-control-feedback"
-                    v-if="errors.customer_telephone"
-                    v-text="errors.customer_telephone[0]"
-                ></small>
-            </div>
-        </div> -->
         <br />
         <div class="form-actions d-flex justify-content-end gap-3 pt-2 pb-2">
             <template v-if="showClose">
@@ -386,6 +349,7 @@ export default {
                         /* let is80mm  =
                             document.toLowerCase().includes("thermal") ||
                             document.toLowerCase().includes("80mm"); */
+                        let is80 = document.toLowerCase().includes("80mm");
                         let isA4 = document.toLowerCase().includes("a4");
                         let isA5 = document.toLowerCase().includes("a5");
                         console.log(this.configuration, " configuration");
@@ -410,7 +374,7 @@ export default {
                                 paperConfig.density = 700;
                                 paperConfig.orientation = "portrait";
                             } else {
-                                paperConfig.density = 350;
+                                paperConfig.density = 200;
                                 paperConfig.orientation = "portrait";
                             }
                             console.log(
@@ -436,7 +400,7 @@ export default {
                                     " tipo bandeja"
                                 );
                             } else if (!isTicket && tipoBandejaImpresora == 0) {
-                                paperConfig.density = 350;
+                                paperConfig.density = 200;
                                 paperConfig.orientation = orientation;
                                 console.log("ver si ingresa aqui");
                                 let margins = {};

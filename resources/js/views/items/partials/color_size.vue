@@ -33,10 +33,10 @@
                                 <el-input v-model="row.size" placeholder="Talla"></el-input>
                             </td>
                             <td>
-                                <el-input type="number" v-model="row.stock" placeholder="Stock"></el-input>
+                                <el-input type="number" v-model="row.stock" step="1" placeholder="Stock" :min="1" @change="onInputNumber(row, 'stock')"></el-input>
                             </td>
                             <td>
-                                <el-input type="number" v-model="row.price" step="0.01" placeholder="Precio"></el-input>
+                                <el-input type="number" v-model="row.price" step="1" placeholder="Precio" :min="1" @change="onInputNumber(row, 'price')"></el-input>
                             </td>
                             <td class="text-center">
                                 <el-tooltip content="Eliminar Producto" placement="top">
@@ -155,7 +155,6 @@ export default {
                     "El stock total no puede ser mayor al stock del producto",
                     "warning"
                 );
-                /* this.$toast.warning("El stock total no puede ser mayor al stock del producto"); */
                 return;
             }
             const lastCode = !this.colorSizes.length ? this.lastColorSize + 1 : this.colorSizes.length + 1;
@@ -163,8 +162,8 @@ export default {
             this.colorSizes.push({
                 color: "",
                 size: "",
-                stock: 0,
-                price: 0,
+                stock: 1,
+                price: 1,
                 code
             });
         },
@@ -222,7 +221,16 @@ export default {
                     }
                 }
             });
-        }
+        },
+        onInputNumber(row, field) {
+            // Solo corregir si el valor es menor a 1 o no es número
+            if (row[field] === '' || isNaN(row[field]) || Number(row[field]) < 1) {
+                row[field] = 1;
+            } else {
+                // Permitir cualquier número entero >= 1
+                row[field] = Math.floor(Number(row[field]));
+            }
+        },
     }
 };
 </script>

@@ -21,7 +21,9 @@ use Modules\Inventory\Models\Category;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Str;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use PgSql\Lob;
 
 class ProductosController extends Controller
 {
@@ -268,7 +270,7 @@ class ProductosController extends Controller
 
     public function recordPdf($type, Request $request)
     {
-        $transfer = Inventory::find($type);
+        $transfer = Inventory::with(['item'])->find($type);
         $company = Company::first();
         $warehouse_id = $transfer->warehouse_id;
         $establishment_id = Warehouse::find($warehouse_id)->establishment_id; 
@@ -281,13 +283,14 @@ class ProductosController extends Controller
         $filename80 = 'pdfs/pdf_80mm_' . $type . '.pdf';
         $filenameA4 = 'pdfs/pdf_a4_' . $type . '.pdf';
 
-        // Calculate height for 80mm receipt
-        $height = 8 * 30;
-        if ($transfer->count() == 1) {
-            $height = $height + $transfer->count() * 50;
-        } else {
-            $height = $height + ($transfer->count() * 30);
+        // Calcular altura dinámica según cantidad de tallas/colores
+        $base_height = 8 * 30; // altura base
+        $extra_height = 0;
+        $color_size = is_string($transfer->color_size) ? json_decode($transfer->color_size, true) : $transfer->color_size;
+        if (!empty($color_size) && is_array($color_size)) {
+            $extra_height = count($color_size) * 30; // 30px por cada talla/color
         }
+        $height = $base_height + $extra_height + 50; // 50px extra para cabecera y márgenes
 
         // Check if files don't exist before generating
         if (!Storage::disk('public')->exists($filename80)) {
@@ -319,7 +322,9 @@ class ProductosController extends Controller
 
     public function printTransfer($type)
     {
-        $transfer = Inventory::find($type);
+        $transfer = Inventory::with(['item'])->find($type);
+
+        Log::info("Imprimiendo traslado de inventario ID: " . $transfer->id);
 
         $company = Company::first();
         $warehouse_id = $transfer->warehouse_id;
@@ -334,4 +339,5 @@ class ProductosController extends Controller
 
         return $pdf->stream('guides_salida.pdf');
     }
+
 }

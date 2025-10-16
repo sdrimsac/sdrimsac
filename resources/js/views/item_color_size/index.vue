@@ -53,23 +53,28 @@
                                 typeUser === 'admin' ||
                                 typeUser === 'superadmin'
                             ">
-                                <!-- <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-xs btn-info btn-sm"
-                                    @click.prevent="clickCreate(row.id)"
-                                >
-                                    Editar
-                                </button> -->
-                                <el-tooltip content="Eliminar producto con Color y Talla" placement="top">
-                                    <button
-                                        type="button"
-                                        class="btn btn-xs btn-danger btn-circle"
-                                        style="border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
-                                        @click.prevent="clickDelete(row.id)"
-                                    >
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </el-tooltip>
+                                <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                                    <el-tooltip content="Eliminar producto con Color y Talla" placement="top">
+                                        <button
+                                            type="button"
+                                            class="btn btn-xs btn-danger btn-circle"
+                                            style="border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                                            @click.prevent="clickDelete(row.id)"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Editar precio con Color y Talla" placement="top">
+                                        <button
+                                            type="button"
+                                            class="btn btn-xs btn-primary btn-circle"
+                                            style="border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
+                                            @click.prevent="clickEdit(row.id)"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
                             </template>
                         </td>
                     </tr>
@@ -78,6 +83,7 @@
 
             <items-form :showDialog.sync="showDialog" :recordId="recordId"></items-form>
             <import-color-size :showDialog.sync="showImportColorSizeDialog"></import-color-size>
+            <form-edit :showDialog.sync="showDialogFormEdit" :recordId="recordId" @records="records" @price-updated="onPriceUpdated"></form-edit>
         </div>
     </div>
 </template>
@@ -92,6 +98,7 @@
 import ItemsForm from "./form.vue";
 import ImportColorSize from "./import.vue";
 import DataTable from "../../../../resources/js/components/DataTable.vue";
+import FormEdit from "./partials/form_edit.vue";
 //'../../../components/DataTable.vue'
 import { deletable } from "../../../../resources/js/mixins/deletable";
 
@@ -101,7 +108,8 @@ export default {
     components: {
         ItemsForm,
         DataTable,
-        ImportColorSize
+        ImportColorSize,
+        FormEdit
     },
     data() {
         return {
@@ -113,11 +121,20 @@ export default {
             recordId: null,
             warehousesDetail: [],
             warehouses: [],
+            showDialogFormEdit: false
         };
     },
     created() {
     },
     methods: {
+        records() {
+            this.$eventHub.$emit("reloadData")
+        },
+        onPriceUpdated(data) {
+            // Aquí puedes manejar la actualización, por ejemplo recargar la tabla o mostrar un mensaje
+            this.$eventHub.$emit("reloadData");
+            this.$message.success('El precio fue actualizado correctamente');
+        },
         clickImportSetIndividual() {
             this.showImportSetIndividualDialog = true;
         },
@@ -137,6 +154,10 @@ export default {
                 this.$eventHub.$emit("reloadData")
             );
         },
+        clickEdit(id) {
+            this.recordId = id;
+            this.showDialogFormEdit = true;
+        }
     }
 };
 </script>

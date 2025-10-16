@@ -36,8 +36,11 @@
                                     show-word-limit
                                     controls-position="right"
                                     :min="0"
+                                    :max="row.stock"
+                                    @change="onQuantityChange(row, index)"
                                 >
                                 </el-input-number>
+                                <div v-if="row._error" class="text-danger" style="font-size:12px;margin-top:4px">{{ row._error }}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -77,7 +80,7 @@ export default {
             handler(val) {
                 // Clonar para evitar mutaciones reactivas inesperadas y forzar actualización
                 this.color_size_ = Array.isArray(val)
-                    ? val.map(r => ({ ...r }))
+                    ? val.map(r => ({ ...r, stock: (r.stock !== null && r.stock !== undefined) ? Number(r.stock) : 0, selectedQuantity: r.selectedQuantity != null ? Number(r.selectedQuantity) : 0 }))
                     : [];
             },
             deep: true,
@@ -89,16 +92,35 @@ export default {
             // Asegurar que al abrir el modal se tenga una copia fresca
             if (!this.color_size_ || this.color_size_.length === 0) {
                 this.color_size_ = Array.isArray(this.color_size)
-                    ? this.color_size.map(r => ({ ...r }))
+                    ? this.color_size.map(r => ({ ...r, stock: (r.stock !== null && r.stock !== undefined) ? Number(r.stock) : 0, selectedQuantity: r.selectedQuantity != null ? Number(r.selectedQuantity) : 0 }))
                     : [];
             }
         },
         async submit() {
             // Filtrar solo filas con cantidad válida (>0) y definida
-            const selectedRows = this.color_size_.filter(row => row.selectedQuantity != null && row.selectedQuantity !== '' && Number(row.selectedQuantity) > 0);
+            // validar que ninguna cantidad exceda el stock
+            let hasError = false;
+            const selectedRows = [];
+            this.color_size_.forEach(row => {
+                // reset previous errors
+                if (row._error) delete row._error;
+                const qty = row.selectedQuantity != null && row.selectedQuantity !== '' ? Number(row.selectedQuantity) : 0;
+                if (qty > 0) {
+                    if (typeof row.stock === 'number' && qty > row.stock) {
+                        row._error = `La cantidad (${qty}) excede el stock disponible (${row.stock}).`;
+                        hasError = true;
+                    } else {
+                        selectedRows.push(row);
+                    }
+                }
+            });
 
-            if (selectedRows.length === 0) {
+            if (selectedRows.length === 0 && !hasError) {
                 return this.$toast.error('Debe ingresar al menos una cantidad mayor a 0.');
+            }
+
+            if (hasError) {
+                return this.$toast.error('Hay cantidades que exceden el stock. Corrija antes de continuar.');
             }
 
             // Emitir únicamente las filas con cantidades válidas
@@ -111,9 +133,29 @@ export default {
             // Al cerrar desde el botón (no desde submit) opcionalmente emitir solo las filas con cantidad válida
             if (emitSelection) {
                 const selectedRows = this.color_size_.filter(row => row.selectedQuantity != null && row.selectedQuantity !== '' && Number(row.selectedQuantity) > 0);
+                // additionally ensure no row has an active error
+                const invalid = selectedRows.some(row => row._error);
+                if (invalid) {
+                    this.$toast.error('Hay cantidades inválidas en la selección. Corrija antes de cerrar.');
+                    return;
+                }
                 this.$emit("addRowSelectColor_size", selectedRows);
             }
             this.$emit("update:showDialog", false);
+        },
+        onQuantityChange(row, index) {
+            // normalize value
+            const qty = row.selectedQuantity != null && row.selectedQuantity !== '' ? Number(row.selectedQuantity) : 0;
+            if (qty < 0) {
+                row.selectedQuantity = 0;
+            }
+            if (typeof row.stock === 'number') {
+                if (qty > row.stock) {
+                    row._error = `La cantidad (${qty}) excede el stock disponible (${row.stock}).`;
+                } else {
+                    if (row._error) delete row._error;
+                }
+            }
         },
         async clickCancelSubmit() {}
     }

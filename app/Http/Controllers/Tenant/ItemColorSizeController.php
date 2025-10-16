@@ -172,15 +172,37 @@ class ItemColorSizeController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $item_color_size = ItemColorSize::findOrFail($id);
+
+            // Validación 1: Si el stock es 0, no permitir borrar
+            if ($item_color_size->stock == 0) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede eliminar porque ya realizó ventas y el stock es 0.'
+                ];
+            }
+
+            // Validación 2: Si ya se realizó una venta con esta talla/color, no permitir borrar
+            // Asumiendo que existe una relación con ventas, por ejemplo SaleItemColorSize
+            /* $hasSale = false;
+            if (class_exists('App\\Models\\Tenant\\SaleItemColorSize')) {
+                $hasSale = \App\Models\Tenant\SaleItemColorSize::where('item_color_size_id', $item_color_size->id)->exists();
+            }
+            if ($hasSale) {
+                return [
+                    'success' => false,
+                    'message' => 'No se puede eliminar porque ya se realizó una venta con esta talla/color.'
+                ];
+            } */
+
             $item_id = $item_color_size->item_id;
             $item = Item::findOrFail($item_id);
             $item->stock = $item->stock - $item_color_size->stock;
             $warehouse_id = $item_color_size->warehouse_id;
             $warehouse_item = ItemWarehouse::where('item_id', $item_id)
-                                         ->where('warehouse_id', $warehouse_id)
-                                         ->first();
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
             $warehouse_item->stock = $warehouse_item->stock - $item_color_size->stock;
             $item->save();
             $warehouse_item->save();
@@ -208,7 +230,7 @@ class ItemColorSizeController extends Controller
             $inventory->save();
 
             DB::commit();
-            
+
             return [
                 'success' => true,
                 'message' => 'Talla eliminada con éxito'
@@ -221,6 +243,19 @@ class ItemColorSizeController extends Controller
             ];
         }
     }
+    public function updatePrice(Request $request, $id)
+    {
+        $item_color_size = ItemColorSize::findOrFail($id);
+        $item_color_size->update([
+            'price' => $request->input('price'),
+        ]);
+
+        return [
+            'success' => true,
+            'message' => 'Precio actualizado con éxito',
+        ];
+    }
+
 
     public function tables()
     {

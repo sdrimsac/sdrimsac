@@ -87,7 +87,7 @@
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </el-tooltip>
-                                        <el-tooltip content="Imprimir" placement="top">
+                                        <el-tooltip content="Imprimir" placement="top" v-if="row.status !== 3">
                                             <button
                                                 @click="clickPrint(row.code)"
                                                 type="button"
@@ -270,12 +270,17 @@ export default {
 
                 if (response.data.success) {
                     this.$message.success(response.data.message);
+                    //this.$eventHub.$emit("reloadData");
+                    this.reloadDataTable();
                 } else {
                     this.$message.error("Error al cancelar el traslado");
                 }
             } catch (error) {
                 this.$message.error("Ocurrió un error al cancelar el traslado");
                 console.error(error);
+            } finally {
+                // Emitir evento para recargar por defecto
+                this.$eventHub.$emit("reloadData");
             }
         },
         clickPrint(code) {
@@ -284,27 +289,6 @@ export default {
             this.currentCode = code;
             console.log("Código actual:", this.currentCode);
         }
-        /* clickPrint(code) {
-            this.showDialogPrinters = true;
-            this.currentCode = code;
-
-            // this.Printer(url);
-        }, */
-        /* clickCreate(recordId = null) {
-            location.href = `/${this.resource}/create`;
-            //this.recordId = recordId
-            //this.showDialog = true
-        }, */
-        /* clickDelete(id) {
-            this.destroy(`/${this.resource}/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
-        } */
-        /* cancel(id) {
-            this.destroy(`/${this.resource}/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
-        } */
     }
 };
 </script>

@@ -322,6 +322,11 @@
                                     <br><small>Lote: {{ $lot['code'] }} - Cant. {{ $lot['quantity'] }}</small>
                                 @endforeach
                             @endif
+                            @if (isset($it->series_lots))
+                            @foreach ($it->series_lots['color_size'] as $lot)
+                            <div class="lot-line">codigo: {{ $lot['code'] }} - Cant. {{ $lot['quantity'] }} - color {{ $lot['color'] }} -talla {{ $lot['size'] }}</div>
+                            @endforeach
+                            @endif
                         </td>
                         <td class="celda_center description_preparacion">
                             @if (!empty($it['formatted_quantity']))

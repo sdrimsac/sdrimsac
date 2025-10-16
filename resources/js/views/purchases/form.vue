@@ -2536,10 +2536,15 @@ export default {
             if (this.form.total == null || isNaN(this.form.total)) {
                 this.form.total = 0;
             }
-            if (this.form.items.length == 0) {
-                this.$toast.error("Debe agregar al menos un item");
-                return;
-            }
+
+                if (!this.form.supplier_id) {
+                    this.$toast.error("Debe seleccionar un proveedor");
+                    return;
+                }
+                if (this.form.items.length == 0) {
+                    this.$toast.error("Debe agregar al menos un item");
+                    return;
+                }
 
             let validate = await this.validate_payments();
             if (!validate.success) {

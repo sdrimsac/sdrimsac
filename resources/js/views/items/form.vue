@@ -1595,7 +1595,7 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane
-                        v-if="configuration.quantity_prices"
+                        v-if="configuration.quantity_prices && form.has_color_size === false"
                         label="Precios por rango de cantidad"
                         name="price-ranges"
                     >
@@ -1658,7 +1658,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Lista de Precios" name="price-list" v-if="form.series_enabled === false">
+                    <el-tab-pane label="Lista de Precios" name="price-list" v-if="form.series_enabled === false && form.has_color_size === false">
                         <div class="row">
                             <div
                                 v-if="form.unit_type_id != 'ZZ'"
@@ -2264,7 +2264,7 @@
                         v-if="
                             configuration.quantity_prices &&
                                 form.item_unit_types &&
-                                form.item_unit_types.length > 0
+                                form.item_unit_types.length > 0 && form.has_color_size === false
                         "
                         label="Precios por rango en politica de precio"
                         name="price-range-policy"
@@ -2481,7 +2481,7 @@
                         </el-tab-pane>
                     </template>
                     <el-tab-pane
-                        v-if="configuration.commercial_treatment_items"
+                        v-if="configuration.commercial_treatment_items && form.has_color_size === false"
                         label="Tratamiento Comercial"
                         name="commercial-treatment"
                     >

@@ -654,10 +654,14 @@
                                                                 Lote: {{ lote.code }}<span v-if="lote.date"> | Vencimiento: {{ lote.date }}</span>
                                                             </span>
                                                         </template>
-                                                        <!-- Talla y color: solo si el producto tiene color_size -->
-                                                        <template v-if="row.item && row.item.item && row.item.item.color_size && row.item.item.color_size.length">
+                                                        <!-- Talla y color: robust render (soporta varios shapes de row) -->
+                                                        <template v-if="(row.color_size && row.color_size.length) || (row.item && row.item.color_size && row.item.color_size.length) || (row.item && row.item.item && row.item.item.color_size && row.item.item.color_size.length)">
                                                             <br />
-                                                            <span v-for="(color, index) in row.item.item.color_size" :key="'cs-' + (color.id || color.color + '-' + color.size + '-' + index)" style="color:#14532d;font-size:1.1em;font-weight:bold;display:block;">
+                                                            <span
+                                                                v-for="(color, index) in (row.color_size || (row.item && row.item.color_size) || (row.item && row.item.item && row.item.item.color_size) || [])"
+                                                                :key="'cs-' + (color.id || color.color + '-' + color.size + '-' + index)"
+                                                                style="color:#14532d;font-size:1.1em;font-weight:bold;display:block;"
+                                                            >
                                                                 Color: {{ color.color }} Talla: {{ color.size }}
                                                             </span>
                                                         </template>
@@ -703,7 +707,7 @@
                                             <tfoot>
                                                 <tr>
                                                     <td></td>
-                                                    <td class="text-center">{{ totalQuantity }}</td>
+                                                    <td class="text-center">CANTIDAD TOTAL: {{ totalQuantity }}</td>
                                                     <td ></td>
                                                     <td ></td>
                                                     <td v-if="
@@ -1344,9 +1348,35 @@ export default {
         addItem(form) {
             let it = form.item;
             let qty = form.quantity;
-            let exist = this.form.items.find(
-                item => item.id == it.id && item.unit_type_id == it.unit_type_id
-            );
+            // Find existing item to increment quantity only when it's truly the same
+            // product without color/size or lot/series selections. If either the
+            // existing line or the new item has color_size or lots/series, we
+            // should treat them as distinct lines.
+            let exist = this.form.items.find(item => {
+                if (item.id != it.id || item.unit_type_id != it.unit_type_id)
+                    return false;
+
+                const existingHasColor =
+                    Array.isArray(item.color_size) && item.color_size.length > 0;
+                const newHasColor =
+                    Array.isArray(it.color_size) && it.color_size.length > 0;
+
+                const existingHasLots =
+                    (Array.isArray(item.lots) && item.lots.length > 0) ||
+                    (Array.isArray(item.selected_series) && item.selected_series.length > 0) ||
+                    !!item.IdLoteSelected;
+                const newHasLots =
+                    (Array.isArray(it.lots) && it.lots.length > 0) ||
+                    (Array.isArray(it.selected_series) && it.selected_series.length > 0) ||
+                    !!it.IdLoteSelected;
+
+                // If either has color/size or lots/series, don't merge
+                if (existingHasColor || newHasColor || existingHasLots || newHasLots)
+                    return false;
+
+                // Otherwise consider them the same
+                return true;
+            });
             let attributes = null;
             if (it.attributes) {
                 attributes = it.attributes;

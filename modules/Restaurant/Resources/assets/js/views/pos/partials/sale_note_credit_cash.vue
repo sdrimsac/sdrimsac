@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible="showDialog" title="Notas de venta - Crédito" @open="open" @close="close" width="80%"
+    <el-dialog :visible="showDialog" title="Finanzas CPE y NV." @open="open" @close="close" width="80%"
         append-to-body>
         <el-tabs type="border-card" v-model="activeTab" @tab-click="handleTabClick">
             <el-tab-pane label="Creditos CPE" name="cpe">

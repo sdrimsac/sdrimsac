@@ -160,6 +160,7 @@ if ($hostname) {
                         Route::post('/', [ItemColorSizeController::class, 'store']);
                         Route::get('/export_excel', [ItemColorSizeController::class, 'exportable']);
                         Route::get('/last-record/{item_id}', [ItemColorSizeController::class, 'lastRecord']);
+                        Route::post('/update-price/{id}', [ItemColorSizeController::class, 'updatePrice']);
                     });
                 Route::prefix('warranty')
                     ->group(function () {

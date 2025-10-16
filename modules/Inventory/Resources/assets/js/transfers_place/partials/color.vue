@@ -1,14 +1,6 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        width="40%"
-        :visible="showDialog"
-        @open="create"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        append-to-body
-        :show-close="false"
-    >
+    <el-dialog :title="titleDialog" width="40%" :visible="showDialog" @open="create" :close-on-click-modal="false"
+        :close-on-press-escape="false" append-to-body :show-close="false">
         <div class="form-body">
             <div class="row">
                 <div class="col-lg-12 col-md-12 table-responsive">
@@ -22,11 +14,8 @@
                                 <th>Seleccione Cantidad</th>
                             </tr>
                         </thead>
-                        <tbody>                            <tr
-                                v-for="(color, index) in localColorSize"
-                                :key="index"
-                                width="100%"
-                            >
+                        <tbody>
+                            <tr v-for="(color, index) in localColorSize" :key="index" width="100%">
                                 <td>
                                     {{ color.size }}
                                 </td>
@@ -40,12 +29,8 @@
                                     {{ color.price }}
                                 </td>
                                 <td>
-                                    <el-input-number
-                                        v-model.number="color.quantity"
-                                        controls-position="right"
-                                        :min="0"
-                                        :max="Number(color.stock) || 100"
-                                    ></el-input-number>
+                                    <el-input-number v-model.number="color.quantity" controls-position="right" :min="0"
+                                        :max="Number(color.stock) || 100"></el-input-number>
                                 </td>
                                 <br />
                             </tr>
@@ -69,7 +54,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "color_size"],
+    props: ["showDialog", "color_size", "item_id", "warehouse_id"],
     data() {
         return {
             titleDialog: "Talla Color",
@@ -78,7 +63,7 @@ export default {
             form: {},
             localColorSize: [] // Copia local reactiva
         };
-    },    watch: {
+    }, watch: {
         showDialog(val) {
             if (val) {
                 this.updateLocalColorSize();
@@ -92,11 +77,11 @@ export default {
             immediate: true
         }
     },
-    async created() {},
+    async created() { },
     methods: {
-        create() {
-            this.updateLocalColorSize();
-        },        updateLocalColorSize() {
+        async create() {
+            await this.fetchColorSize();
+        }, updateLocalColorSize() {
             // Crear una copia profunda para romper la referencia
             this.localColorSize = Array.isArray(this.color_size)
                 ? this.color_size.map(row => ({
@@ -106,7 +91,7 @@ export default {
                 : [];
 
             console.log('Copia local actualizada:', this.localColorSize);
-            
+
             // Marca de depuración para seguir el flujo
             console.log('MODAL: Color_size actual:', this.color_size);
             console.log('MODAL: Copia local después de actualización:', this.localColorSize);
@@ -148,7 +133,33 @@ export default {
             console.log("que pasa aqui", this.color_size);
             this.$emit("update:showDialog", false);
         },
-        async clickCancelSubmit() {}
+
+        /* ItemColorSize(itemId) {
+            this.get(`/item-item-color-size/recordsCash/${itemId}`).then(response => {
+                this.items = response.data.data;
+            });
+        }, */
+
+        async fetchColorSize() {
+            if (!this.item_id || !this.warehouse_id) {
+                this.updateLocalColorSize();
+                return;
+            }
+            try {
+                const response = await this.$http.get(`/item-color-size/recordsCash?item_id=${this.item_id}&warehouse_id=${this.warehouse_id}`);
+                if (Array.isArray(response.data)) {
+                    this.localColorSize = response.data.map(row => ({ ...row, quantity: 0 }));
+                } else if (response.data.data && Array.isArray(response.data.data)) {
+                    this.localColorSize = response.data.data.map(row => ({ ...row, quantity: 0 }));
+                } else {
+                    this.localColorSize = [];
+                }
+            } catch (e) {
+                this.localColorSize = [];
+            }
+        },
+
+        async clickCancelSubmit() { }
     }
 };
 </script>

@@ -167,11 +167,11 @@
                         v-if="form.item_id && form.series_enabled"
                     >
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
-                        <el-button
+                        <el-button type="primary"
                             href="#"
                             class="text-center font-weight-bold text-info"
                             @click.prevent="clickSelectLots"
-                            >[&#10004; Seleccionar series]</el-button
+                            > Seleccionar series</el-button
                         >
                     </div>
                     <div
@@ -185,11 +185,14 @@
                     >
                         <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
                         <el-button
+                            type="primary"
                             href="#"
-                            class="text-center font-weight-bold text-info"
+                            class="text-center font-weight-bold text-white"
+                            style="border-radius: 20px;"
                             @click.prevent="clickSelectColorSize"
-                            >[&#10004; Seleccionar color & talla]</el-button
                         >
+                            Seleccionar color & talla
+                        </el-button>
                     </div>
                     <div class="col-md-8">
                         <div

@@ -278,10 +278,6 @@
                     </th>
                 </tr>
                 <tr>
-
-                    {{-- <th colspan="2" class="header_title0">
-                        MOVIMIENTO: {{ $transfer->inventoryTransaction->type }}
-                    </th> --}}
                     <th colspan="2" class="header_title0">
                         MOVIMIENTO:
                         @if ($transfer->inventoryTransaction->type === 'input')
@@ -308,15 +304,13 @@
         </table>
 
         <table border="0" style="border:0px solid;width:90%; margin-top: 10px;">
-            <thead>
-                <tr>
-                    <th class="header_title1">#</th>
-                    <th class="header_title1">CODIGO</th>
-                    <th class="header_title1">PRODUCTO</th>
-                    <th class="header_title1">CANTIDAD</th>
-                </tr>
-            </thead>
             <tbody>
+                <tr>
+                    <td class="header_title1"><strong>#</strong></td>
+                    <td class="header_title1"><strong>CODIGO</strong></td>
+                    <td class="header_title1"><strong>PRODUCTO</strong></td>
+                    <td class="header_title1"><strong>CANTIDAD</strong></td>
+                </tr>
                 <tr>
                     <td class="description_preparacion">1</td>
                     <td class="description_preparacion">
@@ -329,6 +323,25 @@
                         {{ $transfer->quantity }}
                     </td>
                 </tr>
+                @php
+                    $color_size = is_string($transfer->color_size) ? json_decode($transfer->color_size, true) : $transfer->color_size;
+                @endphp
+                @if (!empty($color_size) && is_array($color_size))
+                    @foreach ($color_size as $cs_idx => $cs)
+                        <tr>
+                            <td class="description_preparacion"></td>
+                            <td class="description_preparacion">
+                                {{ $cs['code'] ?? '' }}
+                            </td>
+                            <td class="description_preparacion">
+                                Color: {{ $cs['color'] ?? '' }}, Talla: {{ $cs['size'] ?? '' }}
+                            </td>
+                            <td class="celda_center description_preparacion">
+                                {{ $cs['stock'] ?? '' }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>

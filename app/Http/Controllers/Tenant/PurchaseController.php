@@ -621,9 +621,17 @@ class PurchaseController extends Controller
                     // Color/Size
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {
-                            $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
+                            // Validar que el code sea único para el item y almacén
+                            $code_exists = ItemColorSize::where('item_id', $row['item_id'])
                                 ->where('warehouse_id', $row['warehouse_id'])
                                 ->where('code', $color_size['code'])
+                                ->first();
+                            if ($code_exists) {
+                                $message = "El código '{$color_size['code']}' ya existe para este item y almacén.";
+                                throw new Exception($message);
+                            }
+                            $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
+                                ->where('warehouse_id', $row['warehouse_id'])
                                 ->where('color', $color_size['color'])
                                 ->where('size', $color_size['size'])
                                 ->first();

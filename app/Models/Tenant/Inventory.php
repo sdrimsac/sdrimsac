@@ -21,9 +21,15 @@ class Inventory extends ModelTenant
         "system_stock",
         'inventory_transaction_id',
         'created_at',
-        
+        'color_size',
+        'lots',
+
+
     ];
     protected $table = 'inventories';
+    /* protected $casts = [
+        'color_size' => 'array',
+    ]; */
 
     public function warehouse()
     {

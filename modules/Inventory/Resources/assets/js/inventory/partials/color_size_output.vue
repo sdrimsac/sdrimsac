@@ -42,7 +42,10 @@
                               @input="saveColorSize(colorsize)"
                               controls-position="right"  
                               :min="0" 
-                              :max="100">
+                              :max="colorsize.stock"
+                              :step="1"
+                              :disabled="colorsize.stock === 0"
+                              >
                             </el-input-number>
                         </td>
                     </tr>
@@ -56,10 +59,10 @@
                 :page-size="pagination.per_page"
             >
             </el-pagination>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="close">Cerrar</el-button>
-                <el-button type="primary" @click="save">Guardar</el-button>
-            </span>
+            <div slot="footer" class="dialog-footer d-flex justify-content-end">
+                <el-button @click="close" size="large" type="danger" style="min-width:120px;">Cerrar</el-button>
+                <el-button type="primary" @click="save" size="large" style="min-width:120px; margin-left: 10px;">Guardar</el-button>
+            </div>
         </div>
     </el-dialog>
 </template>

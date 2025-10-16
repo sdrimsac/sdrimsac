@@ -49,6 +49,8 @@
                                 <el-input
                                     type="number"
                                     v-model="row.stock"
+                                    :min="1"
+                                    @input="e => { if (e === '' || e === null) { row.stock = ''; } else if (Number(e) < 1) { row.stock = 1; } else { row.stock = Number(e); } }"
                                 ></el-input>
                             </td>
                             <td>
@@ -56,6 +58,8 @@
                                     type="number"
                                     step="0.01"
                                     v-model="row.price"
+                                    :min="1"
+                                    @input="e => { if (e === '' || e === null) { row.price = ''; } else if (Number(e) < 1) { row.price = 1; } else { row.price = Number(e); } }"
                                 ></el-input>
                             </td>
                             <td>
@@ -78,8 +82,8 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="addColorSize">Aceptar</el-button>
+            <el-button type="danger" @click="close" size="large">Cancelar</el-button>
+            <el-button type="primary" @click="addColorSize" size="large">Aceptar</el-button>
         </span>
     </el-dialog>
 </template>
@@ -105,7 +109,7 @@ export default {
                 this.resetForm();
                 this.close();
             } else {
-                this.$toast.warning("Debe llenar todos los campos");
+                this.$toast.warning("Debe llenar todos los campos y el stock/precio debe ser mínimo 1");
             }
         },
         resetForm() {
@@ -114,10 +118,17 @@ export default {
             this.addMoreColorSizes();
         },
         verifyCompleteData() {
-            //verificar si todos los campos estan llenos
+            //verificar si todos los campos estan llenos y stock/precio >= 1
             let complete = true;
             this.colorSizes.forEach(item => {
-                if (item.color == "" || item.size == "" || item.stock == 0) {
+                if (
+                    item.color === "" ||
+                    item.size === "" ||
+                    item.stock === null ||
+                    item.price === null ||
+                    Number(item.stock) < 1 ||
+                    Number(item.price) < 1
+                ) {
                     complete = false;
                 }
             });
@@ -127,8 +138,8 @@ export default {
             this.colorSizes.push({
                 color: "",
                 size: "",
-                stock: 0,
-                price: 0,
+                stock: 1, // por defecto 1
+                price: 1, // por defecto 1
                 code: ""
             });
         },

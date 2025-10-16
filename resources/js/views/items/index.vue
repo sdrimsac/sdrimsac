@@ -195,7 +195,7 @@
 
                             <td class="text-center">{{ row.internal_id }}</td>
                             <td class="text-center">{{ row.unit_type_id }}</td>
-                            <td class="text-left">
+                            <td class="text-center">
                                 <span style="font-weight: bold; font-size: 1.2em;">{{ row.description }}</span>
                                 <br />
                                 {{ row.second_name }}
