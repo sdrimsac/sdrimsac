@@ -315,7 +315,7 @@ class DashboardController extends Controller
 
     public function data_table()
     {
-        $mozos = Mozo::where('active', 1)->get();
+        $mozos = Mozo::all();
         return compact('mozos');
     }
 }
