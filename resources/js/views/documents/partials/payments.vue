@@ -25,25 +25,50 @@
                             <tbody>
                                 <tr v-for="(row, index) in records" :key="index">
                                     <template v-if="row.id">
-                                        <td>
+                                        <!-- <td :class="{
+                                            'text-danger': row.extorned
+                                        }">
                                             <template v-if="row.receipt">
                                                 {{ row.receipt }}
                                             </template>
                                             <template v-else>
                                                 PAGO-{{ row.id }}
                                             </template>
+                                        </td> -->
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">
+                                            <template v-if="row.extorned">
+                                                PAGO - {{ row.id }} <br>
+                                                Extornado por: <br>
+                                                {{ row.user_name }}
+                                            </template>
+                                            <template v-else>
+                                                PAGO-{{ row.id }}
+                                            </template>
                                         </td>
-                                        <td>{{ row.date_of_issue_payment ? row.date_of_issue_payment : row.date_of_payment }}</td>
-                                        <td>{{ row.user_name }} </td>
-                                        <td>
+
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">{{ row.date_of_issue_payment ? row.date_of_issue_payment : row.date_of_payment }}</td>
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">{{ row.user_name }} </td>
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">
                                             {{
                                                 row.payment_method_type_description
                                             }}
                                         </td>
-                                        <td>
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">
                                             {{ row.destination_description }}
                                         </td>
-                                        <td>{{ row.reference }}</td>
+                                        <td :class="{
+                                            'text-danger': row.extorned
+                                        }">{{ row.reference }}</td>
                                         <!-- <td>{{ row.filename }}</td> -->
                                         <td class="text-center">
                                             <button type="button" v-if="row.filename"
@@ -55,8 +80,8 @@
                                                 <i class="fas fa-file-download"></i>
                                             </button>
                                         </td>
-                                        <td class="text-end">
-                                            {{ row.payment }}
+                                        <td class="text-end" :class="{ 'text-danger': row.extorned }">
+                                            {{ Number(row.payment).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                                         </td>
                                         <td class="series-table-actions text-end">
                                             <button v-if="row.receipt_file" type="button"
@@ -68,11 +93,14 @@
                                                     ">
                                                 Recibo
                                             </button>
-                                            <button type="button" class="btn waves-effect waves-light btn-sm btn-danger"
+                                            <button 
+                                            v-if="row.can_extorned && row.canCancel && !row.extorned"
+                                            type="button" 
+                                            class="btn waves-effect waves-light btn-sm btn-danger"
                                                 @click.prevent="
                                                     clickDelete(row.id)
                                                     ">
-                                                Eliminar
+                                                Extornar
                                             </button>
                                             <!--<el-button type="danger" icon="el-icon-delete" plain @click.prevent="clickDelete(row.id)"></el-button>-->
                                         </td>
@@ -372,6 +400,7 @@ export default {
                 .get(`/${this.resource}/document/${this.documentId}`)
                 .then(response => {
                     this.document = response.data;
+                    
                     this.title =
                         "Pagos del comprobante: " + this.document.number_full;
                 });
@@ -379,10 +408,10 @@ export default {
                 .get(`/${this.resource}/records/${this.documentId}`)
                 .then(response => {
                     this.records = response.data.data;
-                    console.log(
-                        "🚀 ~ file: payments.vue:262 ~ getData ~ this.records:",
-                        this.records
-                    );
+
+                    if (this.records[0].date_of_issue_payment) {
+                        this.records[0].canCancel = true;
+                    }
                 });
 
             this.$eventHub.$emit("reloadDataUnpaid");

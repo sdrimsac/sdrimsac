@@ -447,6 +447,13 @@ class SaleNote extends ModelTenant
     {
         return $this->hasMany(SaleNotePayment::class);
     }
+
+    public function sale_note_payments()
+    {
+        return $this->hasMany(SaleNotePayment::class, 'sale_note_id');
+    }
+
+
     public function credit_payments()
     {
         return $this->hasMany(Payment::class);

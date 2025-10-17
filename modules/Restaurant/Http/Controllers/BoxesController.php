@@ -199,6 +199,68 @@ class BoxesController extends Controller
         ];
     }
 
+    function get_sale_credit($cash_id)
+    {
+        $items = [];
+        $documents_credit = [];
+        $invoice_credit = SaleNote::where('cash_id', $cash_id)
+            ->where('credit_cash', '1')
+            ->get();
+        foreach ($invoice_credit as $idx => $invoice) {
+
+            $invoice_items = $invoice->items;
+            foreach ($invoice_items as $idx => $invoice_item) {
+                $item = $invoice_item->item;
+                $item = (array)$item;
+                $id_exist  = false;
+                if (count($items) > 0) {
+                    $id_exist = array_search($item['description'], array_column($items, 'description'));
+                }
+                if (gettype($id_exist) == "integer") {
+                    $items[$id_exist] = [
+                        "price" => $invoice_item->unit_price,
+                        "description" => $item['description'],
+                        "category" => isset($invoice_item->item->category) ?  $invoice_item->item->category->name : "OTROS",
+                        "quantity" => $items[$id_exist]["quantity"] + $invoice_item->quantity,
+                        "total" => $items[$id_exist]["total"] + $invoice_item->total
+                    ];
+                } else {
+                    $items[] = [
+                        "price" => $invoice_item->unit_price,
+                        "description" => $item['description'],
+                        "category" => isset($invoice_item->item->category) ?  $invoice_item->item->category->name : "OTROS",
+                        "quantity" => $invoice_item->quantity,
+                        "total" => $invoice_item->total
+                    ];
+                }
+            }
+            $documents_credit[] =    [
+                "id" => $invoice->id,
+                "number" => $invoice->getNumberFullAttribute(),
+                "time" => Carbon::parse($invoice->time_of_issue)->format('H:m:s'),
+                "date" => Carbon::parse($invoice->date_of_issue)->format('d-m-Y'),
+                "customer_number" => $invoice->customer->number,
+                "customer_name" => $invoice->customer->name,
+                "method" => "-",
+                "amount" => "-",
+                "paid" => false,
+                "remaining" => $invoice->total,
+            ];
+        }
+        $grouped = array_reduce($items, function ($carry, $item) {
+            $category = $item['category'];
+            $carry[$category][] = $item;
+            return $carry;
+        }, []);
+        usort($grouped, function ($a, $b) {
+            return count($a) < count($b);
+        });
+        return [
+            "items" => $grouped,
+            /* "sale_note" => $documents_credit */
+        ];
+    }
+
     function get_items_from_credit($cash_id)
     {
         $items = [];
@@ -350,7 +412,7 @@ class BoxesController extends Controller
     {
 
         $boxes = Box::where('cash_id', $cash_id)
-            ->select('document_id', 'sale_note_id')
+            ->select('document_id', 'sale_note_id', 'document_payment_id', 'sale_note_payment_id')
             // ->addSelect(DB::raw('false as is_credit'))
             ->whereNull('sale_note_payment_id')
             ->get();
@@ -577,7 +639,7 @@ class BoxesController extends Controller
         $configuration = Configuration::first();
         $boxes = Box::where('currency_type_id', $currency_type_id)
             ->where('cash_id', $cash_id)
-            ->select('document_id', 'sale_note_id', 'method')
+            ->select('document_id', 'sale_note_id', 'method', 'document_payment_id', 'sale_note_payment_id')
             ->whereNull('sale_note_payment_id')
             ->get();
         $all_methods = [];
@@ -593,7 +655,7 @@ class BoxesController extends Controller
         foreach ($boxes as $box) {
             $total = 0;
             $method = $box->method;
-            if ($box->document_id) {
+            if ($box->document_id && $box->document_payment_id == null) {
                 $document = Document::find($box->document_id);
                 if ($method != "Efectivo") {
                     $this->add_method($all_methods, $method, $document->total, $document->number_full, $document->date_of_issue, $document->customer);
@@ -710,23 +772,143 @@ class BoxesController extends Controller
 
                         $items = $sale_note->items;
 
-                        foreach ($items as $item) {
-                            if ($item) {
-                                $item_db = Item::find($item->item_id);
+                        // If the sale note is a credit sale, do not include its items in the grouped/all_items
+                        // (they shouldn't be treated as sold in the grouped output)
+                        if (isset($sale_note->credit_cash) && $sale_note->credit_cash == 1) {
+                            // skip adding items for credit sale notes
+                        } else {
+                            foreach ($items as $item) {
+                                if ($item) {
+                                    $item_db = Item::find($item->item_id);
 
-                                if ($configuration->hotels) {
-                                    if ($item_db) {
-                                        $category_id = $item_db->category_id;
+                                    if ($configuration->hotels) {
+                                        if ($item_db) {
+                                            $category_id = $item_db->category_id;
 
-                                        $category_name = "HABITACIONES";
-                                        if (array_key_exists($category_name, $categories)) {
-                                            $categories[$category_name] += $item->total;
+                                            $category_name = "HABITACIONES";
+                                            if (array_key_exists($category_name, $categories)) {
+                                                $categories[$category_name] += $item->total;
+                                            } else {
+                                                $categories[$category_name] = $item->total;
+                                            }
+                                            if ($configuration->hotels) {
+                                                $description_item = $item->item->description;
+                                            } else {
+                                                $description_item = $item_db->description;
+
+                                                if (isset($item->item->categoriaMadera)) {
+                                                    $cat = $item->item->categoriaMadera;
+
+                                                    if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                        $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
+                                                        $description_item .= " - {$medidas}";
+                                                    }
+                                                }
+
+                                                if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                                    $description_item .= " - Media tarifa";
+                                                }
+                                            }
+
+                                            $key = $description_item . "-" . $item->unit_price;
+                                            $id_exist = array_search($key, array_column($all_items, 'key'));
+
+                                            $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
+
+                                            if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                                if ($id_exist !== false) {
+                                                    $all_items[$id_exist] = [
+                                                        "price" => $item->unit_price,
+                                                        "key" => $key,
+                                                        "category" => $this->get_category($item),
+                                                        "description" => $description_item,
+                                                        "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                        "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
+                                                } else {
+                                                    $all_items[] = [
+                                                        "key" => $key,
+                                                        "price" => $item->unit_price,
+                                                        "description" => $description_item,
+                                                        "quantity" => $item->quantity,
+                                                        "category" => $this->get_category($item),
+                                                        "total" => $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
+                                                }
+                                            }
                                         } else {
-                                            $categories[$category_name] = $item->total;
+                                            Log::info("Item no tiene categoria: " . $item->item_id);
                                         }
-                                        if ($configuration->hotels) {
-                                            $description_item = $item->item->description;
+                                    } elseif ($configuration->mod_renta) {
+                                        if ($item_db) {
+                                            $category_id = $item_db->category_id;
+
+                                            $category_name = "HABITACIONES";
+                                            if (array_key_exists($category_name, $categories)) {
+                                                $categories[$category_name] += $item->total;
+                                            } else {
+                                                $categories[$category_name] = $item->total;
+                                            }
+                                            if ($configuration->mod_renta) {
+                                                $description_item = $item->item->description;
+                                            } else {
+                                                $description_item = $item_db->description;
+
+                                                if (isset($item->item->categoriaMadera)) {
+                                                    $cat = $item->item->categoriaMadera;
+
+                                                    if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
+                                                        $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
+                                                        $description_item .= " - {$medidas}";
+                                                    }
+                                                }
+
+                                                if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                                    $description_item .= " - Media tarifa";
+                                                }
+                                            }
+
+                                            $key = $description_item . "-" . $item->unit_price;
+                                            $id_exist = array_search($key, array_column($all_items, 'key'));
+                                            $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
+                                            if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                                if ($id_exist !== false) {
+                                                    $all_items[$id_exist] = [
+                                                        "price" => $item->unit_price,
+                                                        "key" => $key,
+                                                        "category" => $this->get_category($item),
+                                                        "description" => $description_item,
+                                                        "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                        "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
+                                                } else {
+                                                    $all_items[] = [
+                                                        "key" => $key,
+                                                        "price" => $item->unit_price,
+                                                        "description" => $description_item,
+                                                        "quantity" => $item->quantity,
+                                                        "category" => $this->get_category($item),
+                                                        "total" => $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
+                                                }
+                                            }
                                         } else {
+                                            Log::info("Item no tiene categoria: " . $item->item_id);
+                                        }
+                                    } else {
+                                        if ($item_db && $item_db->category_id) {
+                                            $category_id = $item_db->category_id;
+                                            $category = CategoryItem::find($category_id);
+                                            $category_name = $category->name;
+                                            if (array_key_exists($category_name, $categories)) {
+                                                $categories[$category_name] += $item->total;
+                                            } else {
+                                                $categories[$category_name] = $item->total;
+                                            }
                                             $description_item = $item_db->description;
 
                                             if (isset($item->item->categoriaMadera)) {
@@ -738,156 +920,42 @@ class BoxesController extends Controller
                                                 }
                                             }
 
+
                                             if (mb_stripos($description_item, 'Media tarifa') !== false) {
                                                 $description_item .= " - Media tarifa";
                                             }
-                                        }
-
-                                        $key = $description_item . "-" . $item->unit_price;
-                                        $id_exist = array_search($key, array_column($all_items, 'key'));
-
-                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
-
-                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
-                                            if ($id_exist !== false) {
-                                                $all_items[$id_exist] = [
-                                                    "price" => $item->unit_price,
-                                                    "key" => $key,
-                                                    "category" => $this->get_category($item),
-                                                    "description" => $description_item,
-                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            } else {
-                                                $all_items[] = [
-                                                    "key" => $key,
-                                                    "price" => $item->unit_price,
-                                                    "description" => $description_item,
-                                                    "quantity" => $item->quantity,
-                                                    "category" => $this->get_category($item),
-                                                    "total" => $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            }
-                                        }
-                                    } else {
-                                        Log::info("Item no tiene categoria: " . $item->item_id);
-                                    }
-                                } elseif ($configuration->mod_renta) {
-                                    if ($item_db) {
-                                        $category_id = $item_db->category_id;
-
-                                        $category_name = "HABITACIONES";
-                                        if (array_key_exists($category_name, $categories)) {
-                                            $categories[$category_name] += $item->total;
-                                        } else {
-                                            $categories[$category_name] = $item->total;
-                                        }
-                                        if ($configuration->mod_renta) {
-                                            $description_item = $item->item->description;
-                                        } else {
-                                            $description_item = $item_db->description;
-
-                                            if (isset($item->item->categoriaMadera)) {
-                                                $cat = $item->item->categoriaMadera;
-
-                                                if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
-                                                    $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
-                                                    $description_item .= " - {$medidas}";
+                                            $key = $description_item . "-" . $item->unit_price;
+                                            $id_exist = array_search($key, array_column($all_items, 'key'));
+                                            $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
+                                            if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
+                                                if ($id_exist !== false) {
+                                                    $all_items[$id_exist] = [
+                                                        "price" => $item->unit_price,
+                                                        "key" => $key,
+                                                        "category" => $this->get_category($item),
+                                                        "description" => $description_item,
+                                                        "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                                        "total" => $all_items[$id_exist]["total"] + $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
+                                                } else {
+                                                    $all_items[] = [
+                                                        "key" => $key,
+                                                        "price" => $item->unit_price,
+                                                        "description" => $description_item,
+                                                        "quantity" => $item->quantity,
+                                                        "category" => $this->get_category($item),
+                                                        "total" => $item->total,
+                                                        "unit_type_id" => $unit_type_id,
+                                                    ];
                                                 }
                                             }
-
-                                            if (mb_stripos($description_item, 'Media tarifa') !== false) {
-                                                $description_item .= " - Media tarifa";
-                                            }
+                                        } else {
+                                            Log::info("Item no tiene categoria: " . $item->item_id);
                                         }
-
-                                        $key = $description_item . "-" . $item->unit_price;
-                                        $id_exist = array_search($key, array_column($all_items, 'key'));
-                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
-                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
-                                            if ($id_exist !== false) {
-                                                $all_items[$id_exist] = [
-                                                    "price" => $item->unit_price,
-                                                    "key" => $key,
-                                                    "category" => $this->get_category($item),
-                                                    "description" => $description_item,
-                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            } else {
-                                                $all_items[] = [
-                                                    "key" => $key,
-                                                    "price" => $item->unit_price,
-                                                    "description" => $description_item,
-                                                    "quantity" => $item->quantity,
-                                                    "category" => $this->get_category($item),
-                                                    "total" => $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            }
-                                        }
-                                    } else {
-                                        Log::info("Item no tiene categoria: " . $item->item_id);
                                     }
                                 } else {
-                                    if ($item_db && $item_db->category_id) {
-                                        $category_id = $item_db->category_id;
-                                        $category = CategoryItem::find($category_id);
-                                        $category_name = $category->name;
-                                        if (array_key_exists($category_name, $categories)) {
-                                            $categories[$category_name] += $item->total;
-                                        } else {
-                                            $categories[$category_name] = $item->total;
-                                        }
-                                        $description_item = $item_db->description;
-
-                                        if (isset($item->item->categoriaMadera)) {
-                                            $cat = $item->item->categoriaMadera;
-
-                                            if (isset($cat->selectedAncho, $cat->selectedLargo, $cat->selectedGrosor)) {
-                                                $medidas = "{$cat->selectedGrosor}x{$cat->selectedAncho}x{$cat->selectedLargo}";
-                                                $description_item .= " - {$medidas}";
-                                            }
-                                        }
-
-
-                                        if (mb_stripos($description_item, 'Media tarifa') !== false) {
-                                            $description_item .= " - Media tarifa";
-                                        }
-                                        $key = $description_item . "-" . $item->unit_price;
-                                        $id_exist = array_search($key, array_column($all_items, 'key'));
-                                        $unit_type_id = isset($item->unit_type_id) ? $item->unit_type_id : (isset($item->item->unit_type_id) ? $item->item->unit_type_id : null);
-                                        if ($item->unit_price != 0 && $item->unit_price != "0.000000") {
-                                            if ($id_exist !== false) {
-                                                $all_items[$id_exist] = [
-                                                    "price" => $item->unit_price,
-                                                    "key" => $key,
-                                                    "category" => $this->get_category($item),
-                                                    "description" => $description_item,
-                                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                                    "total" => $all_items[$id_exist]["total"] + $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            } else {
-                                                $all_items[] = [
-                                                    "key" => $key,
-                                                    "price" => $item->unit_price,
-                                                    "description" => $description_item,
-                                                    "quantity" => $item->quantity,
-                                                    "category" => $this->get_category($item),
-                                                    "total" => $item->total,
-                                                    "unit_type_id" => $unit_type_id,
-                                                ];
-                                            }
-                                        }
-                                    } else {
-                                        Log::info("Item no tiene categoria: " . $item->item_id);
-                                    }
                                 }
-                            } else {
                             }
                         }
                         $all_documents["notas"]["total"] += $sale_note->total;
@@ -1348,10 +1416,6 @@ class BoxesController extends Controller
         }
         $items = collect($items);
         return $items;
-        return [
-            "success" => true,
-            "data"    => $items,
-        ];
     }
 
     function formatPromotions($promotions)
@@ -1963,7 +2027,7 @@ class BoxesController extends Controller
                 ? ($order->reason ?? 'No especificado')
                 : ($items->firstWhere('reason', '!=', null)['reason'] ?? 'No especificado');
 
-            $total_amount = $items->sum(function($item) {
+            $total_amount = $items->sum(function ($item) {
                 return $item['quantity'] * $item['price'];
             });
             $total_quantity = $items->sum('quantity');
@@ -3032,7 +3096,7 @@ class BoxesController extends Controller
                 "amount" => $expenses_cash_sum + $credit_cash_expense->sum('amount'),
             ],
         ];
-        
+
         /* $incomes_expenses_digital = [
             "incomes" => [
                 "quantity" => $digital_incomes_quantity,
@@ -3043,7 +3107,7 @@ class BoxesController extends Controller
                 "amount" => 0,
             ],
         ]; */
-    
+
 
         $date = Carbon::now()->format("d/m/Y");
         $time = Carbon::now()->format("H:i");
@@ -3387,7 +3451,7 @@ class BoxesController extends Controller
         $sales_cash_records = $sales_cash->get();
         $sales_cash_sum = 0;
         foreach ($sales_cash_records as $ringreso) {
-            if ($ringreso["sale_note_id"]) {
+            /* if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
                 $coins = $this->get_to_carry($sale_note);
                 if ($coins) {
@@ -3416,8 +3480,163 @@ class BoxesController extends Controller
                         $total_discount += $sale_note->total_discount;
                     }
                 }
+            } */
+            /* if ($ringreso["sale_note_id"]) {
+                $sale_note = SaleNote::find($ringreso["sale_note_id"]);
+                $coins = $this->get_to_carry($sale_note);
+
+                if ($coins) {
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
+
+                // 🔍 Si tiene pagos registrados (crédito)
+                if ($sale_note->creditPayments && $sale_note->creditPayments->count() > 0) {
+                    // Sumar solo pagos efectivos (no extornados)
+                    $sum_payments = $sale_note->creditPayments()
+                        ->where('extorned', 0)
+                        ->sum('payment');
+                    $sales_cash_sum += $sum_payments;
+                }
+                // 💰 Si no es crédito, tratamos normalmente
+                elseif ($ringreso["sale_note_payment_id"]) {
+                    $sales_cash_sum += $ringreso["amount"];
+                } else {
+                    $to_sum = min($sale_note->total, $ringreso["amount"]);
+
+                    $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)
+                        ->where('id', '<>', $ringreso["id"]);
+
+                    if ($boxes_ringreso->exists()) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = $sale_note->total - $sum;
+                    }
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+                if ($sale_note->total_discount) {
+                    $total_discount += $sale_note->total_discount;
+                }
+            } */
+
+            if ($ringreso["sale_note_id"]) {
+                $sale_note = SaleNote::find($ringreso["sale_note_id"]);
+                $coins = $this->get_to_carry($sale_note);
+
+                if ($coins) {
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
+
+                // ✅ Si tiene pagos de crédito (pagos parciales)
+                if ($ringreso["sale_note_payment_id"]) {
+                    // Busca el pago asociado
+                    $payment = SaleNotePayment::find($ringreso["sale_note_payment_id"]);
+
+                    // Sumar solo si no está extornado
+                    if ($payment && $payment->extorned == 0) {
+                        $sales_cash_sum += $payment->payment;
+                    }
+                }
+                // 💰 Si fue al contado (sin pagos de crédito)
+                else {
+                    $to_sum = min($sale_note->total, $ringreso["amount"]);
+
+                    $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)
+                        ->where('id', '<>', $ringreso["id"]);
+
+                    if ($boxes_ringreso->exists()) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = $sale_note->total - $sum;
+                    }
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+                if ($sale_note->total_discount) {
+                    $total_discount += $sale_note->total_discount;
+                }
             }
+
             if ($ringreso["document_id"]) {
+                $document = Document::find($ringreso["document_id"]);
+                $coins = $this->get_to_carry($document);
+
+                if ($coins) {
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
+
+                // ✅ Si el documento tiene un pago de crédito
+                if ($ringreso["document_payment_id"]) {
+                    $payment = DocumentPayment::find($ringreso["document_payment_id"]);
+
+                    if ($payment && $payment->extorned == 0) {
+                        $sales_cash_sum += $payment->payment;
+                    }
+                }
+                // 💰 Si fue contado
+                else {
+                    $to_sum = min($document->total, $ringreso["amount"]);
+
+                    $boxes_ringreso = Box::where('document_id', $document->id)
+                        ->where('id', '<>', $ringreso["id"]);
+
+                    if ($boxes_ringreso->exists()) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = $document->total - $sum;
+                    }
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+                if ($document->total_discount) {
+                    $total_discount += $document->total_discount;
+                }
+            }
+
+
+            /* if ($ringreso["document_id"]) {
+                $document = Document::find($ringreso["document_id"]);
+                $coins = $this->get_to_carry($document);
+
+                if ($coins) {
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
+
+                // 🔍 Si tiene pagos registrados (crédito)
+                if ($document->payments && $document->payments->count() > 0) {
+                    $sum_payments = $document->payments()
+                        ->where('extorned', 0)
+                        ->sum('payment');
+                    $sales_cash_sum += $sum_payments;
+                } else {
+                    $to_sum = min($document->total, $ringreso["amount"]);
+
+                    $boxes_ringreso = Box::where('document_id', $document->id)
+                        ->where('id', '<>', $ringreso["id"]);
+
+                    if ($boxes_ringreso->exists()) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = $document->total - $sum;
+                    }
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+                if ($document->total_discount) {
+                    $total_discount += $document->total_discount;
+                }
+            } */
+
+
+            /* if ($ringreso["document_id"]) {
                 $document = Document::find($ringreso["document_id"]);
                 $coins = $this->get_to_carry($document);
                 if ($coins) {
@@ -3442,7 +3661,7 @@ class BoxesController extends Controller
                 if ($document->total_discount) {
                     $total_discount += $document->total_discount;
                 }
-            }
+            } */
         }
         $sales_amount += $sales_cash_sum;
         $sales_cash_quantity = $sales_cash->count();
@@ -3534,7 +3753,7 @@ class BoxesController extends Controller
                 "method" => $row->method
             ];
         });
-         
+
         // ingreso y salida en digital
         // Obtener los egresos digitales (todos los métodos menos 'Efectivo')
         $expensesdigital = Box::where('currency_type_id', 'PEN')
@@ -3879,6 +4098,7 @@ class BoxesController extends Controller
         $documents["notas_credito"]["quantity"] = count($sales_credit_notes);
         //Log::info('Documentos de crédito en notas de ventas:', $sales_credit_notes);
         $all_credit_items = $documents_credit['items'];
+        //$all_credit_items = $sales_credit_notes['items'];
         $credit_grouped = $documents_credit['documents'];
         $advances_sale_note_credit = $documents_credit['advances'];
         /* Log::info('Documentos de crédito:', $advances_sale_note_credit); */
@@ -3901,6 +4121,7 @@ class BoxesController extends Controller
         /* Log::info('Recibos montos a pagas de nota de venta a credito:', $array_receipts); */
         $all_credit_documents = array_merge($credit_grouped, $array_receipts);
         $invoices_credit = $this->get_invoice_credit($cash_id);
+        $all_credit_items = $this->get_sale_credit($cash_id);
         $all_credit_invoices_items = $invoices_credit['items'];
         $all_credit_invoices_documents = $invoices_credit['documents'];
         $detraction_payments = [];
@@ -3908,6 +4129,7 @@ class BoxesController extends Controller
             $detraction_payments = $this->get_detraction_payments($cash_id);
         }
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
+        /* Log::info('Documentos de crédito en notas dasdasdsdadasd:', $all_credit_items); */
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
 
@@ -4435,7 +4657,7 @@ class BoxesController extends Controller
                 "amount" => $expenses_cash->sum('amount'),
             ],
         ];
-        
+
         // 8. Optimize receipts processing
         $receipts = $this->get_receipts($cash_id);
         $documents["recibos"] = [

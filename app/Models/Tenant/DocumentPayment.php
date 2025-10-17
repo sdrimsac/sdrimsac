@@ -23,6 +23,8 @@ class DocumentPayment extends ModelTenant
         'date_of_issue_payment',
         'method',
         'user_id',
+        'extorned',
+        'number_method',
     ];
 
     protected $casts = [

@@ -515,7 +515,7 @@ class SaleNoteController extends Controller
         if ($date_end) {
             $records->where('date_of_issue', '<=', $date_end);
         }
-        
+
         if ($establishment_id) {
             $records->where('establishment_id', $establishment_id);
         }
@@ -1843,7 +1843,7 @@ class SaleNoteController extends Controller
                                     'user_id' => auth()->id(),
                                     'method' => $method,
                                 ]);
-                            
+
                                 $number_receipt = str_pad(($i + 1), 7, "0", STR_PAD_LEFT);
                                 Receipt::create([
                                     'user_id' => $user->id,
@@ -2032,11 +2032,11 @@ class SaleNoteController extends Controller
                     dispatch(new PrintOrderJob($this->sale_note->id, "80", $request->printerOn, 0, [], true, null, null, auth()->user()->id, url('')));
 
                     //if ($configuration->promotions_by_points) {
-                        // Espera 10 segundos antes de enviar el segundo ticket
+                    // Espera 10 segundos antes de enviar el segundo ticket
 
-                      //(new PromotionDocumentController)->PromotionPointsNew($this->sale_note->customer_id);
+                    //(new PromotionDocumentController)->PromotionPointsNew($this->sale_note->customer_id);
                     //}
-                    
+
                     // event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
                 }
                 $this->dumpWithTime("payments");
@@ -2044,22 +2044,22 @@ class SaleNoteController extends Controller
                     $total_payment = 0;
 
                     foreach ($request->payments as $payment) {
-                            // Mapeo automático de payment_method_type_id a method
-                            $payment_methods = [
-                                '01' => 'Efectivo',
-                                '02' => 'Culqui',
-                                '05' => 'TARJETA: IZYPAY',
-                                '07' => 'TARJETA: OPENPAY',
-                                '06' => 'TARJETA: NIUBIZ',
-                                '03' => 'YAPE',
-                                '04' => 'PLIN',
-                                '08' => 'DIDI FOOD',
-                                '09' => 'PEDIDOS YA',
-                                '18' => 'RAPPI',
-                            ];
-                            if (empty($payment['method']) && isset($payment['payment_method_type_id'])) {
-                                $payment['method'] = $payment_methods[$payment['payment_method_type_id']] ?? 'efectivo';
-                            }
+                        // Mapeo automático de payment_method_type_id a method
+                        $payment_methods = [
+                            '01' => 'Efectivo',
+                            '02' => 'Culqui',
+                            '05' => 'TARJETA: IZYPAY',
+                            '07' => 'TARJETA: OPENPAY',
+                            '06' => 'TARJETA: NIUBIZ',
+                            '03' => 'YAPE',
+                            '04' => 'PLIN',
+                            '08' => 'DIDI FOOD',
+                            '09' => 'PEDIDOS YA',
+                            '18' => 'RAPPI',
+                        ];
+                        if (empty($payment['method']) && isset($payment['payment_method_type_id'])) {
+                            $payment['method'] = $payment_methods[$payment['payment_method_type_id']] ?? 'efectivo';
+                        }
 
                         $total_payment += $payment['payment'];
 

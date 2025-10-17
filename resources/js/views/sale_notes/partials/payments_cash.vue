@@ -150,6 +150,7 @@
                                         <!-- <td>
 
                                         </td> -->
+                                        <td></td>
                                         <td>
                                             <div class="form-group mb-0" :class="{
                                                 'has-danger':

@@ -228,23 +228,23 @@
     </style>
 </head>
 @php
-$digital = $total_coins_virtual;
-$transfer = $total_coins_transfert;
-$bank = $total_coins_bank;
-$configuration = \App\Models\Tenant\Configuration::first();
-function get_coin($coin, $counter)
-{
-if (array_key_exists($coin, $counter)) {
-return [
-'quantity' => $counter[$coin],
-'total' => number_format(floatval($counter[$coin]) * floatval($coin), 2),
-];
-}
-return [
-'quantity' => 0,
-'total' => '-',
-];
-}
+    $digital = $total_coins_virtual;
+    $transfer = $total_coins_transfert;
+    $bank = $total_coins_bank;
+    $configuration = \App\Models\Tenant\Configuration::first();
+    function get_coin($coin, $counter)
+    {
+        if (array_key_exists($coin, $counter)) {
+            return [
+                'quantity' => $counter[$coin],
+                'total' => number_format(floatval($counter[$coin]) * floatval($coin), 2),
+            ];
+        }
+        return [
+            'quantity' => 0,
+            'total' => '-',
+        ];
+    }
 
 @endphp
 @inject('roleService', 'App\Services\RoleService')
@@ -265,39 +265,39 @@ return [
         <table cellpadding="0" cellspacing="0" style="border-collapse: collapse; ">
             <tr>
                 @if ($establishment->logo || $establishment->document_logo)
-                <td width="50%">
-                    <div>
-                        @if ($establishment->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->document_logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo"
-                            style="width: 200px; height:80px;">
-                        @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo"
-                            style="width: 200px; height:80px;">
-                        @endif
-                    </div>
-                </td>
+                    <td width="50%">
+                        <div>
+                            @if ($establishment->document_logo)
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->document_logo}"))) }}"
+                                    alt="{{ $company->trade_name }}" class="company_logo"
+                                    style="width: 200px; height:80px;">
+                            @else
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$establishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$establishment->logo}"))) }}"
+                                    alt="{{ $company->trade_name }}" class="company_logo"
+                                    style="width: 200px; height:80px;">
+                            @endif
+                        </div>
+                    </td>
                 @else
-                @if ($company->logo)
-                <td width="50%">
-                    <div>
-                        @if ($company->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo"
-                            style="width: 200px; height:80px;">
-                        @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
-                            alt="{{ $company->trade_name }}" class="company_logo"
-                            style="width: 200px; height:80px;">
-                        @endif
-                    </div>
-                </td>
-                @else
-                <td width="50%">
-                    {{-- <img src="{{ asset('logo/logo.jpg') }}" class="company_logo" style="max-width: 150px"> --}}
-                </td>
-                @endif
+                    @if ($company->logo)
+                        <td width="50%">
+                            <div>
+                                @if ($company->document_logo)
+                                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                        alt="{{ $company->trade_name }}" class="company_logo"
+                                        style="width: 200px; height:80px;">
+                                @else
+                                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                        alt="{{ $company->trade_name }}" class="company_logo"
+                                        style="width: 200px; height:80px;">
+                                @endif
+                            </div>
+                        </td>
+                    @else
+                        <td width="50%">
+                            {{-- <img src="{{ asset('logo/logo.jpg') }}" class="company_logo" style="max-width: 150px"> --}}
+                        </td>
+                    @endif
                 @endif
                 {{-- <td width="50%">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/500px-LEGO_logo.svg.png"
@@ -325,8 +325,8 @@ return [
                         APERTURA {{ Carbon\Carbon::parse($cash->date_opening)->format('d/m/Y') }}
                         {{ $cash->time_opening }}
                         @if ($cash->date_closed)
-                        - CIERRE
-                        {{ Carbon\Carbon::parse($cash->date_closed)->format('d/m/Y') }} {{ $cash->time_closed }}
+                            - CIERRE
+                            {{ Carbon\Carbon::parse($cash->date_closed)->format('d/m/Y') }} {{ $cash->time_closed }}
                         @endif
                     </span>
                 </td>
@@ -337,465 +337,468 @@ return [
             <tr>
                 @if (!$roleService->isArcaUserId($user->id))
 
-                <td width="60%">
-                    <div>
-                        <span class="f12">DIRECCIÓN:{{ mb_strtoupper($establishment->address) }}</span>
-                    </div>
-                    <div>
-                        <span class="f12"> USER:
-                            {{ mb_strtoupper($user->name) }}
-                        </span>
-                    </div>
-                    <table>
-                        <tr>
-                            @if (!$roleService->isArcaUserId($user->id))
-                            <td width="58%">
-                                <table class="border">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="3" style="text-align: center;" class="thead">
-                                                <span class="f12">
-                                                    LISTADO DE DOCUMENTOS
-                                                </span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span
-                                                    class="f12">{{ $documents['facturas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">FACTURAS</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($documents['facturas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span
-                                                    class="f12">{{ $documents['boletas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">BOLETAS</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($documents['boletas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span
-                                                    class="f12">{{ $documents['notas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">NOTAS</span></td>
-                                            <td class="right"><span class="f12">
-                                                    {{ number_format($documents['notas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span
-                                                    class="f12">{{ $documents['notas_credito']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">NOTAS V. CREDITO</span></td>
-                                            <td class="right"><span class="f12">
-                                                    {{ number_format($documents['notas_credito']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span
-                                                    class="f12">{{ $documents['recibos']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">RECIBOS</span></td>
-                                            <td class="right"><span class="f12">
-                                                    {{ number_format($documents['recibos']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right" colspan="3">
-                                                <span class="f12">
-                                                    {{ $is_usd ? '$ ' : 'S/ ' }}
-                                                    {{ number_format($documents['facturas']['total'] + $documents['boletas']['total'] + $documents['notas']['total'] + $documents['recibos']['total'], 2) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
+                    <td width="60%">
+                        <div>
+                            <span class="f12">DIRECCIÓN:{{ mb_strtoupper($establishment->address) }}</span>
+                        </div>
+                        <div>
+                            <span class="f12"> USER:
+                                {{ mb_strtoupper($user->name) }}
+                            </span>
+                        </div>
+                        <table>
+                            <tr>
+                                @if (!$roleService->isArcaUserId($user->id))
+                                    <td width="58%">
+                                        <table class="border">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3" style="text-align: center;" class="thead">
+                                                        <span class="f12">
+                                                            LISTADO DE DOCUMENTOS
+                                                        </span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['facturas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">FACTURAS</span></td>
+                                                    <td class="right"><span class="f12 right">
+                                                            {{ number_format($documents['facturas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['boletas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">BOLETAS</span></td>
+                                                    <td class="right"><span class="f12 right">
+                                                            {{ number_format($documents['boletas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['notas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">NOTAS</span></td>
+                                                    <td class="right"><span class="f12">
+                                                            {{ number_format($documents['notas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['notas_credito']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">NOTAS V. CREDITO</span></td>
+                                                    <td class="right"><span class="f12">
+                                                            {{ number_format($documents['notas_credito']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['recibos']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">RECIBOS</span></td>
+                                                    <td class="right"><span class="f12">
+                                                            {{ number_format($documents['recibos']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="right" colspan="3">
+                                                        <span class="f12">
+                                                            {{ $is_usd ? '$ ' : 'S/ ' }}
+                                                            {{ number_format($documents['facturas']['total'] + $documents['boletas']['total'] + $documents['notas']['total'] + $documents['recibos']['total'], 2) }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                @endif
+
+                                <td width="42%" style="vertical-align: top">
+                                    <table class="border">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" style="text-align: center;" class="thead">
+                                                    <span class="f12">
+                                                        E/SALIDAS DE EFECTIVO
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="f12">INGRESO</span></td>
+                                                <td class="right"><span
+                                                        class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="f12">SALIDA</span></td>
+                                                <td class="right"><span class="f12 right">
+                                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="40%" style="vertical-align: top">
+                        <table class="border f12">
+                            @if (!$configuration->methods_arca_cash)
+                                <tr>
+                                    <td>
+                                        <span class="f12">SALDO DE APERTURA</span>
+                                    </td>
+                                    <td class="right">
+                                        <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
+                                    </td>
+                                </tr>
                             @endif
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12"> {{ number_format($sales_detail['cash']['sum'], 2) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS DIGITAL</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($digital * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS BANCO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($bank * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">TRANSFERENCIAS</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($transfer * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">INGRESO EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">SALIDA EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12" style="color: red">
+                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}
 
-                            <td width="42%" style="vertical-align: top">
-                                <table class="border">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">INGRESO DIGITAL</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format($incomes_expenses_cash_digital['incomes']['amount'], 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">SALIDA DIGITAL</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12" style="color: red">
+                                        {{ number_format($incomes_expenses_cash_digital['expenses']['amount'], 2) }}
+
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <span class="f12">TOTAL CIERRE</span>
+                                </td>
+                                <td class="right">
+                                    @php
+                                        $total_cierre =
+                                            $transfer +
+                                            $bank +
+                                            $digital +
+                                            $sales_detail['cash']['sum'] +
+                                            $cash->beginning_balance +
+                                            $incomes_expenses_cash['incomes']['amount'] -
+                                            $incomes_expenses_cash['expenses']['amount'] +
+                                            $incomes_expenses_cash_digital['incomes']['amount'] -
+                                            $incomes_expenses_cash_digital['expenses']['amount'];
+
+                                    @endphp
+                                    <span
+                                        class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_cierre, 2) }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                @endif
+            </tr>
+        </table>
+        <table>
+            <tr>
+                @if (!$roleService->isArcaUserId($user->id))
+                    @php
+                        $itemsPerTable = 18;
+                        $chunks = array_chunk($anulate_documents, $itemsPerTable);
+                    @endphp
+
+                    @foreach ($chunks as $chunk)
+                        <td width="35%" style="vertical-align: top; padding-right: 10px;">
+                            @if (count($chunk) > 0)
+                                <table class="border f12">
                                     <thead>
-                                        <tr>
-                                            <th colspan="2" style="text-align: center;" class="thead">
-                                                <span class="f12">
-                                                    E/SALIDAS DE EFECTIVO
-                                                </span>
+                                        <tr class="thead">
+                                            <th colspan="4">
+                                                <span class="f12">DOCUMENTOS ANULADOS</span>
                                             </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="center">FECHA</th>
+                                            <th colspan="2" class="center">NRO DOC</th>
+                                            <th class="center">TOTAL</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $t_d = 0;
+                                        @endphp
+                                        @foreach ($chunk as $document)
+                                            <tr>
+                                                <td class="center">
+                                                    <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                                </td>
+                                                <td colspan="2" class="center">
+                                                    <span class="f12">{{ $document['full_number'] }}</span>
+                                                </td>
+                                                @php
+                                                    $t_d += $document['total'];
+                                                @endphp
+                                                <td class="right">
+                                                    <span
+                                                        class="f12">{{ number_format($document['total'], 2) }}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                         <tr>
-                                            <td><span class="f12">INGRESO</span></td>
-                                            <td class="right"><span
-                                                    class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                            <td class="center">
+                                                <span class="f12">TOTAL</span>
+                                            </td>
+                                            <td colspan="3" class="right">
+                                                <span
+                                                    class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td><span class="f12">SALIDA</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
-                                            </td>
-                                        </tr>
-
-
                                     </tbody>
                                 </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="40%" style="vertical-align: top">
-                    <table class="border f12">
-                        @if (!$configuration->methods_arca_cash)
-                        <tr>
-                            <td>
-                                <span class="f12">SALDO DE APERTURA</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
-                            </td>
-                        </tr>
+                            @endif
+                        </td>
+                    @endforeach
+                @endif
+            </tr>
+        </table>
+        <table>
+            <tr>
+                @if (!$roleService->isArcaUserId($user->id))
+
+                    <td width="35%">
+                        @if (count($credit_notes) > 0)
+                            <table class="border f12">
+                                <thead>
+                                    <tr class="thead">
+                                        <th colspan="4">
+                                            <span class="f12">NOTAS DE CRÉDITO</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="center">FECHA</th>
+                                        <th colspan="2" class="center">NRO DOC</th>
+                                        <th class="center">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $t_d = 0;
+
+                                    @endphp
+                                    @foreach ($credit_notes as $document)
+                                        <tr>
+                                            <td class="center">
+                                                <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                            </td>
+                                            <td colspan="2" class="center">
+                                                <span class="f12">{{ $document['full_number'] }}</span>
+                                            </td>
+                                            @php
+                                                $t_d += $document['total'];
+                                            @endphp
+                                            <td class="right">
+                                                <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td class="center">
+                                            <span class="f12">TOTAL</span>
+                                        </td>
+                                        <td colspan="3" class="right">
+                                            <span
+                                                class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         @endif
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12"> {{ number_format($sales_detail['cash']['sum'], 2) }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS DIGITAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($digital * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS BANCO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($bank * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">TRANSFERENCIAS</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($transfer * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">INGRESO EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">SALIDA EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12" style="color: red">
-                                    {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}
+                        @if ($total_discount > 0)
+                            <table class="border f12">
+                                <thead>
+                                    <tr class="thead">
+                                        <th colspan="4">
+                                            <span class="f12">TOTAL DESCUENTOS</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" class="center">
+                                            <span
+                                                class="f12 bold">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_discount, 2) }}</span>
 
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">INGRESO DIGITAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format($incomes_expenses_cash_digital['incomes']['amount'], 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">SALIDA DIGITAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12" style="color: red">
-                                    {{ number_format($incomes_expenses_cash_digital['expenses']['amount'], 2) }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @endif
 
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <span class="f12">TOTAL CIERRE</span>
-                            </td>
-                            <td class="right">
-                                @php
-                                $total_cierre =
-                                $transfer +
-                                $bank +
-                                $digital +
-                                $sales_detail['cash']['sum'] +
-                                $cash->beginning_balance +
-                                $incomes_expenses_cash['incomes']['amount'] -
-                                $incomes_expenses_cash['expenses']['amount'];
-                                @endphp
-                                <span
-                                    class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_cierre, 2) }}</span>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                @endif
-            </tr>
-        </table>
-        <table>
-            <tr>
-                @if (!$roleService->isArcaUserId($user->id))
-                @php
-                $itemsPerTable = 18;
-                $chunks = array_chunk($anulate_documents, $itemsPerTable);
-                @endphp
-
-                @foreach ($chunks as $chunk)
-                <td width="35%" style="vertical-align: top; padding-right: 10px;">
-                    @if (count($chunk) > 0)
-                    <table class="border f12">
-                        <thead>
-                            <tr class="thead">
-                                <th colspan="4">
-                                    <span class="f12">DOCUMENTOS ANULADOS</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="center">FECHA</th>
-                                <th colspan="2" class="center">NRO DOC</th>
-                                <th class="center">TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                            $t_d = 0;
-                            @endphp
-                            @foreach ($chunk as $document)
-                            <tr>
-                                <td class="center">
-                                    <span class="f12">{{ $document['date_of_issue'] }}</span>
-                                </td>
-                                <td colspan="2" class="center">
-                                    <span class="f12">{{ $document['full_number'] }}</span>
-                                </td>
-                                @php
-                                $t_d += $document['total'];
-                                @endphp
-                                <td class="right">
-                                    <span
-                                        class="f12">{{ number_format($document['total'], 2) }}</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                            <tr>
-                                <td class="center">
-                                    <span class="f12">TOTAL</span>
-                                </td>
-                                <td colspan="3" class="right">
-                                    <span
-                                        class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @endif
-                </td>
-                @endforeach
-                @endif
-            </tr>
-        </table>
-        <table>
-            <tr>
-                @if (!$roleService->isArcaUserId($user->id))
-
-                <td width="35%">
-                    @if (count($credit_notes) > 0)
-                    <table class="border f12">
-                        <thead>
-                            <tr class="thead">
-                                <th colspan="4">
-                                    <span class="f12">NOTAS DE CRÉDITO</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="center">FECHA</th>
-                                <th colspan="2" class="center">NRO DOC</th>
-                                <th class="center">TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                            $t_d = 0;
-
-                            @endphp
-                            @foreach ($credit_notes as $document)
-                            <tr>
-                                <td class="center">
-                                    <span class="f12">{{ $document['date_of_issue'] }}</span>
-                                </td>
-                                <td colspan="2" class="center">
-                                    <span class="f12">{{ $document['full_number'] }}</span>
-                                </td>
-                                @php
-                                $t_d += $document['total'];
-                                @endphp
-                                <td class="right">
-                                    <span class="f12">{{ number_format($document['total'], 2) }}</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                            <tr>
-                                <td class="center">
-                                    <span class="f12">TOTAL</span>
-                                </td>
-                                <td colspan="3" class="right">
-                                    <span
-                                        class="f12">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t_d, 2) }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @endif
-                    @if ($total_discount > 0)
-                    <table class="border f12">
-                        <thead>
-                            <tr class="thead">
-                                <th colspan="4">
-                                    <span class="f12">TOTAL DESCUENTOS</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4" class="center">
-                                    <span
-                                        class="f12 bold">{{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($total_discount, 2) }}</span>
-
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @endif
-
-                    <table class="border f12">
-                        <thead>
-                            <tr class="thead">
-                                <th colspan="4">
-                                    <span class="f12">ARTICULOS VENDIDOS</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4" class="center">
-                                    <span class="f12 bold">ARTICULOS</span>
-                                    <span class="f12">{{ $items_detail['uniques'] }}</span>
-                                    <span class="f12 bold">UND</span>
-                                    <span class="f12">{{ $items_detail['unds'] }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
+                        <table class="border f12">
+                            <thead>
+                                <tr class="thead">
+                                    <th colspan="4">
+                                        <span class="f12">ARTICULOS VENDIDOS</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="center">
+                                        <span class="f12 bold">ARTICULOS</span>
+                                        <span class="f12">{{ $items_detail['uniques'] }}</span>
+                                        <span class="f12 bold">UND</span>
+                                        <span class="f12">{{ $items_detail['unds'] }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 @endif
                 @if ($roleService->isArcaUserId($user->id))
-                <td width="35%">
-                    <table class="border">
-                        <thead>
-                            <tr>
-                                <th colspan="2" style="text-align: center;" class="thead">
-                                    <span class="f12">
-                                        E/SALIDAS DE EFECTIVO
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="f12">INGRESO</span></td>
-                                <td class="right"><span
-                                        class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="f12">SALIDA</span></td>
-                                <td class="right"><span class="f12 right">
-                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
-                                </td>
-                            </tr>
+                    <td width="35%">
+                        <table class="border">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="text-align: center;" class="thead">
+                                        <span class="f12">
+                                            E/SALIDAS DE EFECTIVO
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="f12">INGRESO</span></td>
+                                    <td class="right"><span
+                                            class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="f12">SALIDA</span></td>
+                                    <td class="right"><span class="f12 right">
+                                            {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                    </td>
+                                </tr>
 
 
-                        </tbody>
-                    </table>
-                </td>
+                            </tbody>
+                        </table>
+                    </td>
                 @endif
                 <td width="65%" style="text-align: right;">
                     <span style="font-size:20px !important;">EFECTIVO : {{ $is_usd ? '$ ' : 'S/ ' }}</span>
                     <span style="font-size:20px !important; color: blue;">
                         @php
-                        $n =
-                        $cash->beginning_balance +
-                        $sales_detail['cash']['sum'] -
-                        $incomes_expenses_cash['expenses']['amount'] +
-                        $incomes_expenses_cash['incomes']['amount'];
+                            $n =
+                                $cash->beginning_balance +
+                                $sales_detail['cash']['sum'] -
+                                $incomes_expenses_cash['expenses']['amount'] +
+                                $incomes_expenses_cash['incomes']['amount'];
 
                         @endphp
                         {{ number_format($n, 2) }}
                     </span>
                     @if (!$is_usd)
-                    @isset($difference)
-                    @php
-                    \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
-                    $result = $difference - $cash->final_balance + $cash->beginning_balance;
-                    @endphp
-                    @if ($difference != 0 && $difference != number_format($n, 2) && $result != 0)
-                    <br>
-                    @php
-                    @endphp
-                    <span
-                        style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
-                        @if ($result < 0)
-                            SOBRANTE
-                            {{ number_format($result * -1, 2) }}
-                            @else
-                            DIFERENCIA DE CONTEO
-                            {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
+                        @isset($difference)
+                            @php
+                                \Log::info('DIFERENCIA DE CONTEO: ' . $difference);
+                                $result = $difference - $cash->final_balance + $cash->beginning_balance;
+                            @endphp
+                            @if ($difference != 0 && $difference != number_format($n, 2) && $result != 0)
+                                <br>
+                                @php
+                                @endphp
+                                <span
+                                    style="font-size:20px !important;@if ($difference < 0 && $result != 0) color: red;@else color:blue; @endif">
+                                    @if ($result < 0)
+                                        SOBRANTE
+                                        {{ number_format($result * -1, 2) }}
+                                    @else
+                                        DIFERENCIA DE CONTEO
+                                        {{ number_format($difference - $cash->final_balance + $cash->beginning_balance, 2) }}
+                                    @endif
+                                </span>
                             @endif
-                            </span>
-                            @endif
-                            @endisset
-                            @endif
+                        @endisset
+                    @endif
                 </td>
             </tr>
         </table>
@@ -815,72 +818,72 @@ return [
                         </thead>
                         <tbody>
                             @foreach ($sales_detail as $detail)
-                            @if ($detail['sum'] > 0)
-                            <tr>
-                                <td class="f12">{{ $detail['quantity'] }}</td>
-                                <td class="f12">{{ strtoupper($detail['desc']) }}</td>
-                                <td class="f12 right">{{ number_format($detail['sum'], 2) }}</td>
-                            </tr>
-                            @endif
+                                @if ($detail['sum'] > 0)
+                                    <tr>
+                                        <td class="f12">{{ $detail['quantity'] }}</td>
+                                        <td class="f12">{{ strtoupper($detail['desc']) }}</td>
+                                        <td class="f12 right">{{ number_format($detail['sum'], 2) }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
                     @if (count($detraction_payments) > 0)
-                    <table class="border" style="margin-top:4px;">
-                        <thead>
-                            <tr>
-                                <th class="thead" colspan="2">
-                                    <span class="f12">DETALLES DETRACCIONES</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($detraction_payments as $detail)
-                            <tr>
-                                <td class="f12">{{ strtoupper($detail['document']) }}</td>
-                                <td class="f12 right">{{ number_format($detail['amount'], 2) }}</td>
-                            </tr>
-                            @endforeach
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="2">
+                                        <span class="f12">DETALLES DETRACCIONES</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($detraction_payments as $detail)
+                                    <tr>
+                                        <td class="f12">{{ strtoupper($detail['document']) }}</td>
+                                        <td class="f12 right">{{ number_format($detail['amount'], 2) }}</td>
+                                    </tr>
+                                @endforeach
 
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     @endif
                     @if (isset($coinsReceive) && count($coinsReceive) > 0)
-                    <div>
-                        <br>
-                    </div>
-                    <table class="border" style="margin-top:4px;">
-                        <thead>
-                            <tr>
-                                <th class="thead" colspan="3">
-                                    <span class="f12">BILLETE/MONEDAS RECIBIDAS</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                            $total_detail = 0;
-                            @endphp
-                            @foreach ($coinsReceive as $detail)
-                            <tr>
-                                <td class="f12">{{ number_format($detail->value, 2) }}</td>
-                                <td class="f12">{{ $detail->quantity }}</td>
+                        <div>
+                            <br>
+                        </div>
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="3">
+                                        <span class="f12">BILLETE/MONEDAS RECIBIDAS</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @php
-                                $total_detail += $detail->quantity * $detail->value;
+                                    $total_detail = 0;
                                 @endphp
-                                <td class="f12 right">
-                                    {{ number_format($detail->quantity * $detail->value, 2) }}
-                                </td>
-                            </tr>
-                            @endforeach
-                            <tr>
-                                <td colspan="2"></td>
-                                <td class="f12 right">{{ number_format($total_detail, 2) }}</td>
-                            </tr>
+                                @foreach ($coinsReceive as $detail)
+                                    <tr>
+                                        <td class="f12">{{ number_format($detail->value, 2) }}</td>
+                                        <td class="f12">{{ $detail->quantity }}</td>
+                                        @php
+                                            $total_detail += $detail->quantity * $detail->value;
+                                        @endphp
+                                        <td class="f12 right">
+                                            {{ number_format($detail->quantity * $detail->value, 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td class="f12 right">{{ number_format($total_detail, 2) }}</td>
+                                </tr>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
                     @endif
                 </td>
                 <td width="65%">
@@ -914,22 +917,22 @@ return [
                                     </thead>
                                     <tbody>
                                         @php
-                                        $part_1 = ['0.1', '0.2', '0.5', '1', '2', '5'];
+                                            $part_1 = ['0.1', '0.2', '0.5', '1', '2', '5'];
                                         @endphp
                                         @foreach ($part_1 as $coin)
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $coin }}</span>
-                                            </td>
-                                            <td class="center">
-                                                <span
-                                                    class="f12">{{ get_coin($coin, $counter)['quantity'] }}</span>
-                                            </td>
-                                            <td class="center">
-                                                <span
-                                                    class="f12">{{ get_coin($coin, $counter)['total'] }}</span>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="f12">{{ $coin }}</span>
+                                                </td>
+                                                <td class="center">
+                                                    <span
+                                                        class="f12">{{ get_coin($coin, $counter)['quantity'] }}</span>
+                                                </td>
+                                                <td class="center">
+                                                    <span
+                                                        class="f12">{{ get_coin($coin, $counter)['total'] }}</span>
+                                                </td>
+                                            </tr>
                                         @endforeach
 
                                     </tbody>
@@ -957,22 +960,22 @@ return [
                                     </thead>
                                     <tbody>
                                         @php
-                                        $part_2 = ['10', '20', '50', '100', '200'];
+                                            $part_2 = ['10', '20', '50', '100', '200'];
                                         @endphp
                                         @foreach ($part_2 as $coin)
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $coin }}</span>
-                                            </td>
-                                            <td class="center">
-                                                <span
-                                                    class="f12">{{ get_coin($coin, $counter)['quantity'] }}</span>
-                                            </td>
-                                            <td class="center">
-                                                <span
-                                                    class="f12">{{ get_coin($coin, $counter)['total'] }}</span>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="f12">{{ $coin }}</span>
+                                                </td>
+                                                <td class="center">
+                                                    <span
+                                                        class="f12">{{ get_coin($coin, $counter)['quantity'] }}</span>
+                                                </td>
+                                                <td class="center">
+                                                    <span
+                                                        class="f12">{{ get_coin($coin, $counter)['total'] }}</span>
+                                                </td>
+                                            </tr>
                                         @endforeach
 
                                         <tr>
@@ -991,176 +994,177 @@ return [
             </tr>
         </table>
         @if (!empty($totem_detail))
-        <table style="margin-top: 10px;">
-            <tr>
-                <td width="50%" style="vertical-align: top">
-                    <div>
-                        <br>
-                    </div>
-                    <table class="border" style="margin-top:4px;">
-                        <thead>
-                            <tr>
-                                <th class="thead" colspan="4">
-                                    <span class="f12">DETALLE PRECIOS TOTEM</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="thead">
-                                    <span class="f12">#</span>
-                                </th>
-                                <th class="thead">
-                                    <span class="f12">COMBUSTIBLE</span>
-                                </th>
-                                <th class="thead">
-                                    <span class="f12">PRECIO</span>
-                                </th>
+            <table style="margin-top: 10px;">
+                <tr>
+                    <td width="50%" style="vertical-align: top">
+                        <div>
+                            <br>
+                        </div>
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="4">
+                                        <span class="f12">DETALLE PRECIOS TOTEM</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="thead">
+                                        <span class="f12">#</span>
+                                    </th>
+                                    <th class="thead">
+                                        <span class="f12">COMBUSTIBLE</span>
+                                    </th>
+                                    <th class="thead">
+                                        <span class="f12">PRECIO</span>
+                                    </th>
                                     <th class="thead">
                                         <span class="f12">FECHA</span>
                                     </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                            @foreach ($totem_detail as $index => $detailseries)
-                            <tr>
-                                <td width="10%" class="f12 center">{{ $index + 1 }}</td>
-                                <td width="30%" class="f12 center">{{ $detailseries->item->description }}</td>
-                                <td width="10%" class="f12 right">{{ $detailseries->price }}</td>
-                                <td width="10%" class="f12 right">{{ $detailseries->date_of_price }}</td>
-                            </tr>
-                            @endforeach
+                                @foreach ($totem_detail as $index => $detailseries)
+                                    <tr>
+                                        <td width="10%" class="f12 center">{{ $index + 1 }}</td>
+                                        <td width="30%" class="f12 center">{{ $detailseries->item->description }}
+                                        </td>
+                                        <td width="10%" class="f12 right">{{ $detailseries->price }}</td>
+                                        <td width="10%" class="f12 right">{{ $detailseries->date_of_price }}</td>
+                                    </tr>
+                                @endforeach
 
 
-                        </tbody>
-                    </table>
-                </td>
+                            </tbody>
+                        </table>
+                    </td>
 
-            </tr>
-        </table>
+                </tr>
+            </table>
         @endif
 
         @if (!empty($datosSeries))
-        <table style="margin-top: 10px;">
-            <tr>
-                <td width="50%" style="vertical-align: top">
-                    <div>
-                        <br>
+            <table style="margin-top: 10px;">
+                <tr>
+                    <td width="50%" style="vertical-align: top">
+                        <div>
+                            <br>
 
-                    </div>
-                    <table class="border" style="margin-top:4px;">
-                        <thead>
-                            <tr>
-                                <th class="thead" colspan="4">
-                                    <span class="f12">DETALLE SERIES VENDIDAS</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="thead">
-                                    <span class="f12">#</span>
-                                </th>
-                                <th class="thead">
-                                    <span class="f12">DOCUMENTO</span>
-                                </th>
-                                <th class="thead">
-                                    <span class="f12">PRODUCTO</span>
-                                </th>
-                                <th class="thead">
-                                    <span class="f12">SERIE</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        </div>
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="4">
+                                        <span class="f12">DETALLE SERIES VENDIDAS</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="thead">
+                                        <span class="f12">#</span>
+                                    </th>
+                                    <th class="thead">
+                                        <span class="f12">DOCUMENTO</span>
+                                    </th>
+                                    <th class="thead">
+                                        <span class="f12">PRODUCTO</span>
+                                    </th>
+                                    <th class="thead">
+                                        <span class="f12">SERIE</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                            @foreach ($datosSeries as $index => $detailseries)
-                            <tr>
-                                <td width="10%" class="f12 center">{{ $index + 1 }}</td>
-                                <td width="10%" class="f12 center">{{ $detailseries[0] }}</td>
-                                <td width="70%" class="f12">{{ strtoupper($detailseries[1]) }}</td>
-                                <td width="35%" class="f12 right">{{ $detailseries[2] }}</td>
-                            </tr>
-                            @endforeach
+                                @foreach ($datosSeries as $index => $detailseries)
+                                    <tr>
+                                        <td width="10%" class="f12 center">{{ $index + 1 }}</td>
+                                        <td width="10%" class="f12 center">{{ $detailseries[0] }}</td>
+                                        <td width="70%" class="f12">{{ strtoupper($detailseries[1]) }}</td>
+                                        <td width="35%" class="f12 right">{{ $detailseries[2] }}</td>
+                                    </tr>
+                                @endforeach
 
 
-                        </tbody>
-                    </table>
-                </td>
+                            </tbody>
+                        </table>
+                    </td>
 
-            </tr>
-        </table>
+                </tr>
+            </table>
         @endif
 
         @if (count($bill_series) > 0)
-        @php
-        $bills = [
-        [
-        'label' => '10',
-        'value' => 'diez',
-        ],
-        [
-        'label' => '20',
-        'value' => 'veinte',
-        ],
-        [
-        'label' => '50',
-        'value' => 'cincuenta',
-        ],
-        [
-        'label' => '100',
-        'value' => 'cien',
-        ],
-        [
-        'label' => '200',
-        'value' => 'doscientos',
-        ],
-        ];
+            @php
+                $bills = [
+                    [
+                        'label' => '10',
+                        'value' => 'diez',
+                    ],
+                    [
+                        'label' => '20',
+                        'value' => 'veinte',
+                    ],
+                    [
+                        'label' => '50',
+                        'value' => 'cincuenta',
+                    ],
+                    [
+                        'label' => '100',
+                        'value' => 'cien',
+                    ],
+                    [
+                        'label' => '200',
+                        'value' => 'doscientos',
+                    ],
+                ];
 
-        @endphp
-        <table class="border" style="margin-top:10px;">
-            <thead>
-                <tr>
-                    <th colspan="{{ count($bill_series) }}">
-                        <span style="font-size: 18px !important; font-weight: bold;">
-                            SERIE DE BILLETES
-                        </span>
-                    </th>
-                </tr>
-                <tr>
-                    @foreach ($bills as $bill)
-                    <th>
-                        <span class="f12">
-                            {{ $bill['label'] }}
-                        </span>
-                    </th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-
-                @if (count($bill_series) > 0)
-                @php
-                $maxRows = max(array_map('count', $bill_series));
-                @endphp
-
-                @for ($i = 0; $i < $maxRows; $i++)
+            @endphp
+            <table class="border" style="margin-top:10px;">
+                <thead>
                     <tr>
-                    @foreach ($bill_series as $values)
-                    <td>
-                        @if (isset($values[$i]))
-                        <span class="f12">
-                            {{ $values[$i] }}
-                        </span>
-                        @endif
-                    </td>
-                    @endforeach
+                        <th colspan="{{ count($bill_series) }}">
+                            <span style="font-size: 18px !important; font-weight: bold;">
+                                SERIE DE BILLETES
+                            </span>
+                        </th>
                     </tr>
-                    @endfor
+                    <tr>
+                        @foreach ($bills as $bill)
+                            <th>
+                                <span class="f12">
+                                    {{ $bill['label'] }}
+                                </span>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (count($bill_series) > 0)
+                        @php
+                            $maxRows = max(array_map('count', $bill_series));
+                        @endphp
+
+                        @for ($i = 0; $i < $maxRows; $i++)
+                            <tr>
+                                @foreach ($bill_series as $values)
+                                    <td>
+                                        @if (isset($values[$i]))
+                                            <span class="f12">
+                                                {{ $values[$i] }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endfor
                     @else
-                    <tr>
-                        <td colspan="{{ count($bill_series) }}">-</td>
-                    </tr>
+                        <tr>
+                            <td colspan="{{ count($bill_series) }}">-</td>
+                        </tr>
                     @endif
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         @endif
         <table style="margin-top:10px;">
             <td width="50%">
@@ -1214,50 +1218,50 @@ return [
                         }
                     @endphp
                     @if (count($all_expenses) == 0)
-                    <tbody>
-                        <tr>
-                            <td colspan="4" class="center">
-                                <span class="f12">Sin gastos</span>
-                            </td>
-                        </tr>
-                    </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="center">
+                                    <span class="f12">Sin gastos</span>
+                                </td>
+                            </tr>
+                        </tbody>
                     @else
-                    <tbody>
-                        @foreach ($all_expenses as $expense)
-                        <tr>
-                            <td>
-                                <span class="f12">
-                                    {{ $expense['items'] }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="f12">
-                                    {{ $expense['description'] }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="f12">
-                                    {{ $expense['method'] }}
-                                </span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ $expense['amount'] }}
-                                </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="3" class="right">
-                                <span class="f12">TOTAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">S/
-                                    {{ number_format($incomes_expenses_cash['expenses']['amount'] + $incomes_expenses_cash_digital['expenses']['amount'], 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
+                        <tbody>
+                            @foreach ($all_expenses as $expense)
+                                <tr>
+                                    <td>
+                                        <span class="f12">
+                                            {{ $expense['items'] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="f12">
+                                            {{ $expense['description'] }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="f12">
+                                            {{ $expense['method'] }}
+                                        </span>
+                                    </td>
+                                    <td class="right">
+                                        <span class="f12">
+                                            {{ $expense['amount'] }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="3" class="right">
+                                    <span class="f12">TOTAL</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">S/
+                                        {{ number_format($incomes_expenses_cash['expenses']['amount'] + $incomes_expenses_cash_digital['expenses']['amount'], 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
                     @endif
                 </table>
             </td>
@@ -1305,350 +1309,391 @@ return [
                         }
                     @endphp
                     @if (count($all_incomes) == 0)
-                    <tbody>
-                        <tr>
-                            <td colspan="3" class="center"></td>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="center"></td>
                                 <span class="f12">Sin ingresos</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                    @else
-                    <tbody>
-                        @foreach ($all_incomes as $income)
-                        <tr>
-                            <td>
-                                <span class="f12">
-                                    {{ $income['description'] }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="f12">
-                                    {{ $income['method'] }}
-                                </span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ $income['amount'] }}
-                                </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="2" class="right">
-                                <span class="f12">TOTAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">S/
-                                    {{ number_format($incomes_expenses_cash['incomes']['amount'] + $incomes_expenses_cash_digital['incomes']['amount'], 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                    @endif
-                </table>
             </td>
+            </tr>
+            </tbody>
+        @else
+            <tbody>
+                @foreach ($all_incomes as $income)
+                    <tr>
+                        <td>
+                            <span class="f12">
+                                {{ $income['description'] }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="f12">
+                                {{ $income['method'] }}
+                            </span>
+                        </td>
+                        <td class="right">
+                            <span class="f12">
+                                {{ $income['amount'] }}
+                            </span>
+                        </td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="2" class="right">
+                        <span class="f12">TOTAL</span>
+                    </td>
+                    <td class="right">
+                        <span class="f12">S/
+                            {{ number_format($incomes_expenses_cash['incomes']['amount'] + $incomes_expenses_cash_digital['incomes']['amount'], 2) }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+            @endif
+        </table>
+        </td>
         </table>
         @if ($all_credit_invoices_documents && count($all_credit_invoices_documents) > 0)
-        <table style="margin-top: 10px;" class="border">
-            <thead>
-                <tr>
-                    <th colspan="9">
-                        <span class="f12">
-                            FACTURAS/BOLETAS CREDITO
-                        </span>
-                    </th>
-                </tr>
-                <tr>
-                    <th class="center">FECHA</th>
-                    <th class="center">HORA</th>
-                    <th class="center">NRO DOC</th>
-                    <th class="center">DNI/RUC</th>
-                    <th class="center">CLIENTE</th>
-                    <th class="center">METODO DE PAGO</th>
-                    <th class="center">MONTO PAGADO</th>
-                    <th class="center">ESTADO</th>
-                    <th class="center">PAGO</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($all_credit_invoices_documents as $credit_document)
-                <tr>
-                    <td>
-                        {{ $credit_document['date'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['time'] }}
-
-                    </td>
-                    <td>
-                        {{ $credit_document['number'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['customer_number'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['customer_name'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['method'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['amount'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['paid'] ? 'CANCELADO' : 'DEBE' }}
-                    </td>
-                    <td>
-                        {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @endif
-        @if ($all_credit_documents && count($all_credit_documents) > 0)
-        <table style="margin-top: 10px;" class="border">
-            <thead>
-                <tr>
-                    <th colspan="9">
-                        <span class="f12">
-                            CREDITOS Y PAGOS
-                        </span>
-                    </th>
-                </tr>
-                <tr>
-                    <th class="center">FECHA</th>
-                    <th class="center">HORA</th>
-                    <th class="center">NRO DOC</th>
-                    <th class="center">DNI/RUC</th>
-                    <th class="center">CLIENTE</th>
-                    <th class="center">METODO DE PAGO</th>
-                    <th class="center">MONTO PAGADO</th>
-                    <th class="center">ESTADO</th>
-                    <th class="center">PAGO</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($all_credit_documents as $credit_document)
-                <tr>
-                    <td>
-                        {{ $credit_document['date'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['time'] }}
-
-                    </td>
-                    <td>
-                        {{ $credit_document['number'] }}
-                        @isset($credit_document['full_number_sale_note'])
-                        <small>
-                            <br>
-                            <strong>
-                                {{ $credit_document['full_number_sale_note'] }}
-                            </strong>
-                        </small>
-                        @endisset
-                    </td>
-                    <td>
-                        {{ $credit_document['customer_number'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['customer_name'] }}
-                    </td>
-                    <td>
-                        {{ $credit_document['method'] }}
-                    </td>
-                    <td class="text-end">
-                        {{ $credit_document['amount'] }}
-                    </td>
-                    <td class="text-end">
-                        {{ $credit_document['paid'] ? 'PAGADO' : 'DEBE' }}
-                    </td>
-                    <td class="text-end">
-                        {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @endif
-
-        <!--productos dados a creditos  -->
-        @if (!empty($sale_credit) && count($sale_credit) > 0)
-        <div style="margin-top: 10px;">
-            <table class="border" width="100%">
+            <table style="margin-top: 10px;" class="border">
                 <thead>
                     <tr>
-                        <th colspan="7">
+                        <th colspan="9">
                             <span class="f12">
-                                PRODUCTOS A CREDITO
+                                FACTURAS/BOLETAS CREDITO
                             </span>
                         </th>
                     </tr>
                     <tr>
                         <th class="center">FECHA</th>
+                        <th class="center">HORA</th>
                         <th class="center">NRO DOC</th>
+                        <th class="center">DNI/RUC</th>
                         <th class="center">CLIENTE</th>
-                        <th class="center">PRODUCTOS</th>
-                        <th class="center">TOTAL</th>
+                        <th class="center">METODO DE PAGO</th>
+                        <th class="center">MONTO PAGADO</th>
+                        <th class="center">ESTADO</th>
                         <th class="center">PAGO</th>
-                        <th class="center">RESTA</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($sale_credit as $note)
-                    <tr>
-                        <td class="center">{{ $note['date_of_issue']->format('d/m/Y') }}</td>
-                        <td class="center">{{ $note['number'] }}</td>
-                        <td>{{ $note['customer_name'] }}</td>
-                        <td>
-                            @foreach ($note['products'] as $prod)
-                                <div>
-                                    {{ number_format($prod['quantity'], 2) }}  - {{ $prod['description'] }}
-                                </div>
-                            @endforeach
-                        </td>
-                        <td class="right">{{ number_format($note['total'], 2) }}</td>
-                        <td>
-                            @if (!empty($note['payments']))
-                            @foreach ($note['payments'] as $pay)
-                            <!-- <div>{{ $pay['date_of_payment']->format('d/m/Y') }}: {{ number_format($pay['payment'], 2) }} ({{ $pay['payment_method_type_id'] }})</div>
-                            @endforeach -->
-                            <div><strong>{{ number_format($note['total_paid'], 2) }}</strong></div>
-                            @else
-                            <span>Sin pagos</span>
-                            @endif
-                        </td>
-                        <td class="right">{{ number_format($note['remaining'], 2) }}</td>
-                    </tr>
+                    @foreach ($all_credit_invoices_documents as $credit_document)
+                        <tr>
+                            <td>
+                                {{ $credit_document['date'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['time'] }}
+
+                            </td>
+                            <td>
+                                {{ $credit_document['number'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['customer_number'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['customer_name'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['method'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['amount'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['paid'] ? 'CANCELADO' : 'DEBE' }}
+                            </td>
+                            <td>
+                                {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
-        </div>
         @endif
+        @if ($all_credit_documents && count($all_credit_documents) > 0)
+            <table style="margin-top: 10px;" class="border">
+                <thead>
+                    <tr>
+                        <th colspan="9">
+                            <span class="f12">
+                                CREDITOS Y PAGOS
+                            </span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="center">FECHA</th>
+                        <th class="center">HORA</th>
+                        <th class="center">NRO DOC</th>
+                        <th class="center">DNI/RUC</th>
+                        <th class="center">CLIENTE</th>
+                        <th class="center">METODO DE PAGO</th>
+                        <th class="center">MONTO PAGADO</th>
+                        <th class="center">ESTADO</th>
+                        <th class="center">PAGO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($all_credit_documents as $credit_document)
+                        <tr>
+                            <td>
+                                {{ $credit_document['date'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['time'] }}
+
+                            </td>
+                            <td>
+                                {{ $credit_document['number'] }}
+                                @isset($credit_document['full_number_sale_note'])
+                                    <small>
+                                        <br>
+                                        <strong>
+                                            {{ $credit_document['full_number_sale_note'] }}
+                                        </strong>
+                                    </small>
+                                @endisset
+                            </td>
+                            <td>
+                                {{ $credit_document['customer_number'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['customer_name'] }}
+                            </td>
+                            <td>
+                                {{ $credit_document['method'] }}
+                            </td>
+                            <td class="text-end">
+                                {{ $credit_document['amount'] }}
+                            </td>
+                            <td class="text-end">
+                                {{ $credit_document['paid'] ? 'PAGADO' : 'DEBE' }}
+                            </td>
+                            <td class="text-end">
+                                {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        <!--productos dados a creditos  -->
+        @if (!empty($sale_credit) && count($sale_credit) > 0)
+            <div style="margin-top: 10px;">
+                <table class="border" width="100%">
+                    <thead>
+                        <tr>
+                            <th colspan="7">
+                                <span class="f12">
+                                    NOTAS DE VENTA A CREDITO
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="center">FECHA</th>
+                            <th class="center">NRO DOC</th>
+                            <th class="center">CLIENTE</th>
+                            <th class="center">PRODUCTOS</th>
+                            <th class="center">TOTAL</th>
+                            <th class="center">PAGO</th>
+                            <th class="center">RESTA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($sale_credit as $note)
+                            <tr>
+                                <td class="center">{{ $note['date_of_issue']->format('d/m/Y') }}</td>
+                                <td class="center">{{ $note['number'] }}</td>
+                                <td>{{ $note['customer_name'] }}</td>
+                                <td>
+                                    @foreach ($note['products'] as $prod)
+                                        <div>
+                                            {{ number_format($prod['quantity'], 2) }} - {{ $prod['description'] }}
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td class="right">{{ number_format($note['total'], 2) }}</td>
+                                <td>
+                                    @if (!empty($note['payments']))
+                                        @foreach ($note['payments'] as $pay)
+                                            <!-- <div>{{ $pay['date_of_payment']->format('d/m/Y') }}: {{ number_format($pay['payment'], 2) }} ({{ $pay['payment_method_type_id'] }})</div>
+@endforeach -->
+                                            <div><strong>{{ number_format($note['total_paid'], 2) }}</strong></div>
+                                        @else
+                                            <span>Sin pagos</span>
+                                        @endif
+                                </td>
+                                <td class="right">{{ number_format($note['remaining'], 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
+        {{-- @foreach ($all_credit_items as $group) --}}
+        {{-- @php
+                if (isset($group[0]) && is_array($group[0]) && isset($group[0][0])) {
+                    $group = $group[0];
+                }
+            @endphp --}}
+
+        {{-- @if (isset($group[0]['category'])) 
+                <table class="border">
+                    <thead>
+                        <tr>
+                            <th colspan="4" class="left">
+                                <span class="f12">
+                                    {{ $group[0]['category'] }}
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th><span class="f12">UNIDAD</span></th>
+                            <th><span class="f12">DESCRIPCION</span></th>
+                            <th><span class="f12">PRECIO</span></th>
+                            <th><span class="f12">TOTAL</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($group as $a_item)
+                            <tr>
+                                <td class="f12 center">{{ intval($a_item['quantity']) }}</td>
+                                <td class="f12">{{ $a_item['description'] }}</td>
+                                <td class="f12 right">{{ number_format(floatval($a_item['price']), 2) }}</td>
+                                <td class="f12 right">{{ number_format($a_item['total'], 2) }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="2"></td>
+                            <td class="f12 right">TOTAL</td>
+                            <td class="f12 right">
+                                @php
+                                    $t = array_reduce(
+                                        $group,
+                                        fn($carry, $item) => $carry + floatval($item['total']),
+                                        0,
+                                    );
+                                @endphp
+                                {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            @endif --}}
+        {{-- @endforeach --}}
 
         @if ($all_credit_items && count($all_credit_items) > 0)
-        <div style="text-align:center;">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="4">
-                            <span class="f12">
-                                PRODUCTOS DADOS A CRÉDITO
-                            </span>
-                        </th>
-                    </tr>
-                </thead>
-            </table>
+            <div style="text-align:center;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="4">
+                                <span class="f12">
+                                    PRODUCTOS DADOS A CRÉDITO
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
 
-            @foreach ($all_credit_items as $group)
-            <table class="border">
-                <thead>
-                    <tr>
-                        <th colspan="4" class="left">
-                            <span class="f12">
-                                {{ $group[0]['category'] }}
-                            </span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="f12">UNIDAD</span>
-                        </th>
-                        <th>
-                            <span class="f12">DESCRIPCION</span>
-                        </th>
-                        <th>
-                            <span class="f12">PRECIO</span>
-                        </th>
-                        <th>
-                            <span class="f12">TOTAL</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($group as $a_item)
-                    <tr>
-                        <td class="f12 center">
-                            {{ intval($a_item['quantity']) }}
-                        </td>
-                        <td class="f12">
-                            {{ $a_item['description'] }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format(floatval($a_item['price']), 2) }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($a_item['total'], 2) }}
-                        </td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="2"></td>
-                        <td class="f12 right">TOTAL</td>
-                        <td class="f12 right">
-                            @php
-                            $t = array_reduce(
-                            $group,
-                            function ($carry, $item) {
-                            return $carry + $item['total'];
-                            },
-                            0,
-                            );
-                            @endphp
-                            {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            @endforeach
-        </div>
+                @foreach ($all_credit_items as $group)
+                    @php
+                        if (isset($group[0]) && is_array($group[0]) && isset($group[0][0])) {
+                            $group = $group[0];
+                        }
+                    @endphp
+                    @if (isset($group[0]['category']))
+                        <table class="border">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="left">
+                                        <span class="f12">
+                                            {{ $group[0]['category'] }}
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th><span class="f12">UNIDAD</span></th>
+                                    <th><span class="f12">DESCRIPCION</span></th>
+                                    <th><span class="f12">PRECIO</span></th>
+                                    <th><span class="f12">TOTAL</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($group as $a_item)
+                                    <tr>
+                                        <td class="f12 center">{{ intval($a_item['quantity']) }}</td>
+                                        <td class="f12">{{ $a_item['description'] }}</td>
+                                        <td class="f12 right">{{ number_format(floatval($a_item['price']), 2) }}</td>
+                                        <td class="f12 right">{{ number_format($a_item['total'], 2) }}</td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td class="f12 right">TOTAL</td>
+                                    <td class="f12 right">
+                                        @php
+                                            $t = array_reduce(
+                                                $group,
+                                                fn($carry, $item) => $carry + floatval($item['total']),
+                                                0,
+                                            );
+                                        @endphp
+                                        {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @endif
+                @endforeach
+            </div>
         @endif
         @if (count($promotions_give) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE DE PROMOCIONES CREADAS
-            </span>
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PROMOCIONES CREADAS
+                </span>
 
-            <table class="border" width="50%">
-                <thead>
-                    <tr>
-                        <th>HABITACIÓN</th>
-                        <th>SERVICIOS</th>
-                    </tr>
+                <table class="border" width="50%">
+                    <thead>
+                        <tr>
+                            <th>HABITACIÓN</th>
+                            <th>SERVICIOS</th>
+                        </tr>
 
-                </thead>
-                <tbody>
-                    @php
-                    $total = [];
-                    @endphp
-                    @foreach ($promotions_give as $key => $promotion)
-                    <tr>
-                        <td class="f12 center">
-                            {{ $key }}
-                        </td>
-                        <td class="f12 center">
-                            @foreach ($promotion as $name => $item)
-                            @php
-                            if (!isset($total[$item['service']])) {
-                            $total[$item['service']] = 0;
-                            }
-                            $total[$item['service']] += $item['quantity'];
+                    </thead>
+                    <tbody>
+                        @php
+                            $total = [];
+                        @endphp
+                        @foreach ($promotions_give as $key => $promotion)
+                            <tr>
+                                <td class="f12 center">
+                                    {{ $key }}
+                                </td>
+                                <td class="f12 center">
+                                    @foreach ($promotion as $name => $item)
+                                        @php
+                                            if (!isset($total[$item['service']])) {
+                                                $total[$item['service']] = 0;
+                                            }
+                                            $total[$item['service']] += $item['quantity'];
 
-                            @endphp
-                            {{ $item['service'] }} ({{ $item['quantity'] }})<br>
-                            @endforeach
-                        </td>
+                                        @endphp
+                                        {{ $item['service'] }} ({{ $item['quantity'] }})<br>
+                                    @endforeach
+                                </td>
 
-                    </tr>
-                    @endforeach
-                    @foreach ($total as $k => $t)
-                    <tr>
-                        <td class="f12 center"><strong>{{ $k }}</strong></td>
-                        <td class="f12 center"><strong>{{ $t }}</strong></td>
-                    </tr>
-                    @endforeach
-                    {{-- <tr>
+                            </tr>
+                        @endforeach
+                        @foreach ($total as $k => $t)
+                            <tr>
+                                <td class="f12 center"><strong>{{ $k }}</strong></td>
+                                <td class="f12 center"><strong>{{ $t }}</strong></td>
+                            </tr>
+                        @endforeach
+                        {{-- <tr>
                             <td colspan="2"></td>
                             <td class="f12 right">TOTAL</td>
                             <td class="f12 right">
@@ -1664,54 +1709,54 @@ return [
                                 {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
                     </td>
                     </tr> --}}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-        </div>
+            </div>
         @endif
         @if (count($promotions) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE DE PROMOCIONES ENTREGADAS
-            </span>
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PROMOCIONES ENTREGADAS
+                </span>
 
-            <table class="border" width="50%">
-                <thead>
-                    <tr>
-                        <th>HABITACIÓN</th>
-                        <th>SERVICIOS</th>
-                    </tr>
+                <table class="border" width="50%">
+                    <thead>
+                        <tr>
+                            <th>HABITACIÓN</th>
+                            <th>SERVICIOS</th>
+                        </tr>
 
-                </thead>
-                <tbody>
-                    @php
-                    $total = [];
-                    @endphp
-                    @foreach ($promotions as $key => $promotion)
-                    <tr>
-                        <td class="f12 center">
-                            {{ $key }}
-                        </td>
-                        <td class="f12 center">
-                            @foreach ($promotion as $name => $quantity)
-                            @php
-                            if (!isset($total[$name])) {
-                            $total[$name] = 0;
-                            }
-                            $total[$name] += $quantity;
+                    </thead>
+                    <tbody>
+                        @php
+                            $total = [];
+                        @endphp
+                        @foreach ($promotions as $key => $promotion)
+                            <tr>
+                                <td class="f12 center">
+                                    {{ $key }}
+                                </td>
+                                <td class="f12 center">
+                                    @foreach ($promotion as $name => $quantity)
+                                        @php
+                                            if (!isset($total[$name])) {
+                                                $total[$name] = 0;
+                                            }
+                                            $total[$name] += $quantity;
 
-                            @endphp
-                            {{ $name }} ({{ $quantity }})<br>
-                            @endforeach
-                        </td>
+                                        @endphp
+                                        {{ $name }} ({{ $quantity }})<br>
+                                    @endforeach
+                                </td>
 
-                    </tr>
-                    @endforeach
-                    @foreach ($total as $k => $t)
-                    <td class="f12 center"><strong>{{ $k }}</strong></td>
-                    <td class="f12 center"><strong>{{ $t }}</strong></td>
-                    @endforeach
-                    {{-- <tr>
+                            </tr>
+                        @endforeach
+                        @foreach ($total as $k => $t)
+                            <td class="f12 center"><strong>{{ $k }}</strong></td>
+                            <td class="f12 center"><strong>{{ $t }}</strong></td>
+                        @endforeach
+                        {{-- <tr>
                             <td colspan="2"></td>
                             <td class="f12 right">TOTAL</td>
                             <td class="f12 right">
@@ -1727,193 +1772,194 @@ return [
                                 {{$is_usd ? '$ ' :'S/ '}}{{ number_format($t, 2) }}
                     </td>
                     </tr> --}}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
         @endif
         @if ($credit_list_ordens_customers && count($credit_list_ordens_customers) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE DE PERSONAL/CLIENTES RECIBIERON A CUENTA
-            </span>
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PERSONAL/CLIENTES RECIBIERON A CUENTA
+                </span>
 
-            <table class="border">
-                <thead>
+                <table class="border">
+                    <thead>
 
-                    <tr>
-                        <th>
-                            <span class="f12">NOMBRE</span>
-                        </th>
-                        <th>
-                            <span class="f12">FECHA</span>
-                        </th>
-                        <th>
-                            <span class="f12">TOTAL</span>
-                        </th>
+                        <tr>
+                            <th>
+                                <span class="f12">NOMBRE</span>
+                            </th>
+                            <th>
+                                <span class="f12">FECHA</span>
+                            </th>
+                            <th>
+                                <span class="f12">TOTAL</span>
+                            </th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($credit_list_ordens_customers as $name => $orden_items)
-                    @foreach ($orden_items as $idx => $ord_item)
-                    <tr>
-                        @if ($idx == 0)
-                        <td class="f12 center" rowspan="{{ count($orden_items) }}">
-                            {{ $name }}
-                        </td>
-                        @endif
-                        <td class="f12 right">
-                            @php
-                            $date_array = explode(' ', $ord_item['date']);
-                            $date = $date_array[0];
-                            $time = $date_array[1];
-                            @endphp
-                            {{ $date }}
-                            <br>
-                            <small>
-                                {{ $time }}
-                            </small>
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($ord_item['total'], 2) }}
-                        </td>
-                    </tr>
-                    @endforeach
-                    @endforeach
-                    <tr>
-                        <td class="f12 text-left" colspan="2">TOTAL</td>
-                        <td class="f12 right">
-                            @php
-                            $t = array_reduce(
-                            $credit_list_ordens_customers,
-                            function ($carry, $item) {
-                            return $carry +
-                            array_reduce(
-                            $item,
-                            function ($carry, $item) {
-                            return $carry + $item['total'];
-                            },
-                            0,
-                            );
-                            },
-                            0,
-                            );
-                            @endphp
-                            {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($credit_list_ordens_customers as $name => $orden_items)
+                            @foreach ($orden_items as $idx => $ord_item)
+                                <tr>
+                                    @if ($idx == 0)
+                                        <td class="f12 center" rowspan="{{ count($orden_items) }}">
+                                            {{ $name }}
+                                        </td>
+                                    @endif
+                                    <td class="f12 right">
+                                        @php
+                                            $date_array = explode(' ', $ord_item['date']);
+                                            $date = $date_array[0];
+                                            $time = $date_array[1];
+                                        @endphp
+                                        {{ $date }}
+                                        <br>
+                                        <small>
+                                            {{ $time }}
+                                        </small>
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($ord_item['total'], 2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                        <tr>
+                            <td class="f12 text-left" colspan="2">TOTAL</td>
+                            <td class="f12 right">
+                                @php
+                                    $t = array_reduce(
+                                        $credit_list_ordens_customers,
+                                        function ($carry, $item) {
+                                            return $carry +
+                                                array_reduce(
+                                                    $item,
+                                                    function ($carry, $item) {
+                                                        return $carry + $item['total'];
+                                                    },
+                                                    0,
+                                                );
+                                        },
+                                        0,
+                                    );
+                                @endphp
+                                {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         @endif
         @if ($credit_list_orden && count($credit_list_orden) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE DE PRODUCTOS DADOS A CUENTA
-            </span>
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PRODUCTOS DADOS A CUENTA
+                </span>
 
-            <table class="border">
-                <thead>
+                <table class="border">
+                    <thead>
 
-                    <tr>
-                        <th>
-                            <span class="f12">UNIDAD</span>
-                        </th>
-                        <th>
-                            <span class="f12">DESCRIPCION</span>
-                        </th>
-                        <th>
-                            <span class="f12">PRECIO</span>
-                        </th>
-                        <th>
-                            <span class="f12">TOTAL</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($credit_list_orden as $cl_orden)
-                    <tr>
-                        <td class="f12 center">
-                            {{ $cl_orden['quantity'] }}
-                        </td>
-                        <td class="f12">
-                            {{ $cl_orden['description'] }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($cl_orden['price'], 2) }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($cl_orden['total'], 2) }}
-                        </td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="2"></td>
-                        <td class="f12 right">TOTAL</td>
-                        <td class="f12 right">
-                            @php
-                            $t = array_reduce(
-                            $credit_list_orden,
-                            function ($carry, $item) {
-                            return $carry + $item['total'];
-                            },
-                            0,
-                            );
-                            @endphp
-                            {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        <tr>
+                            <th>
+                                <span class="f12">UNIDAD</span>
+                            </th>
+                            <th>
+                                <span class="f12">DESCRIPCION</span>
+                            </th>
+                            <th>
+                                <span class="f12">PRECIO</span>
+                            </th>
+                            <th>
+                                <span class="f12">TOTAL</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($credit_list_orden as $cl_orden)
+                            <tr>
+                                <td class="f12 center">
+                                    {{ $cl_orden['quantity'] }}
+                                </td>
+                                <td class="f12">
+                                    {{ $cl_orden['description'] }}
+                                </td>
+                                <td class="f12 right">
+                                    {{ number_format($cl_orden['price'], 2) }}
+                                </td>
+                                <td class="f12 right">
+                                    {{ number_format($cl_orden['total'], 2) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="2"></td>
+                            <td class="f12 right">TOTAL</td>
+                            <td class="f12 right">
+                                @php
+                                    $t = array_reduce(
+                                        $credit_list_orden,
+                                        function ($carry, $item) {
+                                            return $carry + $item['total'];
+                                        },
+                                        0,
+                                    );
+                                @endphp
+                                {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         @endif
         @if ($grouped && count($grouped) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE DE PRODUCTOS/SERVICIOS VENDIDOS
-            </span>
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PRODUCTOS/SERVICIOS VENDIDOS
+                </span>
 
-            @foreach ($grouped as $group)
-            <table class="border">
-                <thead>
-                    <tr>
-                        <th colspan="4" class="left">
-                            <span class="f12">
-                                {{ $group[0]['category'] }}
-                            </span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="f12">CANTIDAD</span>
-                        </th>
-                        <th>
-                            <span class="f12">DESCRIPCION</span>
-                        </th>
+                @foreach ($grouped as $group)
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="left">
+                                    <span class="f12">
+                                        {{ $group[0]['category'] }}
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="f12">CANTIDAD</span>
+                                </th>
+                                <th>
+                                    <span class="f12">DESCRIPCION</span>
+                                </th>
 
-                        <th>
-                            <span class="f12">PRECIO</span>
-                        </th>
-                        <th>
-                            <span class="f12">TOTAL</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($group as $a_item)
-                    <!-- log para saber que datos llegan el elemento -->
-                    <tr>
-                        <td class="f12 center">
-                            @if($configuration->tap && $a_item['category'] == "COMBUSTIBLE")
-                                {{ number_format($a_item['quantity'], 3) }} - {{ $a_item['unit_type_id'] }}
-                            @else
-                                {{ fmod($a_item['quantity'], 1) == 0 ? intval($a_item['quantity']) : number_format($a_item['quantity'], 2) }}
-                            @endif
-                        </td>
-                        <td class="f12">
-                            {{ $a_item['description'] }}
-                        </td>
-                        {{-- <td>
+                                <th>
+                                    <span class="f12">PRECIO</span>
+                                </th>
+                                <th>
+                                    <span class="f12">TOTAL</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($group as $a_item)
+                                <!-- log para saber que datos llegan el elemento -->
+                                <tr>
+                                    <td class="f12 center">
+                                        @if ($configuration->tap && $a_item['category'] == 'COMBUSTIBLE')
+                                            {{ number_format($a_item['quantity'], 3) }} -
+                                            {{ $a_item['unit_type_id'] }}
+                                        @else
+                                            {{ fmod($a_item['quantity'], 1) == 0 ? intval($a_item['quantity']) : number_format($a_item['quantity'], 2) }}
+                                        @endif
+                                    </td>
+                                    <td class="f12">
+                                        {{ $a_item['description'] }}
+                                    </td>
+                                    {{-- <td>
                                         @foreach ($sales_detail as $detail)
                                         @if ($detail['sum'] > 0)
                                         
@@ -1923,218 +1969,218 @@ return [
                         @endforeach
                         </td> --}}
 
-                        <td class="f12 right">
-                            {{ number_format(floatval($a_item['price']), 2) }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($a_item['total'], 2) }}
-                        </td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="2"></td>
-                        <td class="f12 right">TOTAL</td>
-                        <td class="f12 right">
-                            @php
-                            $t = array_reduce(
-                            $group,
-                            function ($carry, $item) {
-                            return $carry + $item['total'];
-                            },
-                            0,
-                            );
-                            @endphp
-                            {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            @endforeach
-        </div>
+                                    <td class="f12 right">
+                                        {{ number_format(floatval($a_item['price']), 2) }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($a_item['total'], 2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="f12 right">TOTAL</td>
+                                <td class="f12 right">
+                                    @php
+                                        $t = array_reduce(
+                                            $group,
+                                            function ($carry, $item) {
+                                                return $carry + $item['total'];
+                                            },
+                                            0,
+                                        );
+                                    @endphp
+                                    {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @endforeach
+            </div>
         @endif
 
         @if ($configuration->report_cash_methods)
-        @if ($all_methods_info && count($all_methods_info) > 0)
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                DETALLE METODOS DE PAGO (NO EFECTIVO)
-            </span>
+            @if ($all_methods_info && count($all_methods_info) > 0)
+                <div style="text-align:center;">
+                    <span style="font-size: 18px !important;">
+                        DETALLE METODOS DE PAGO (NO EFECTIVO)
+                    </span>
 
-            @foreach ($all_methods_info as $title_method => $moves)
-            <table class="border">
-                <thead>
-                    <tr>
-                        <th colspan="4" class="left">
-                            <span class="f12">
-                                {{ $title_method }}
-                            </span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="f12">DOCUMENTO</span>
-                        </th>
-                        <th>
-                            <span class="f12">FECHA</span>
-                        </th>
+                    @foreach ($all_methods_info as $title_method => $moves)
+                        <table class="border">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="left">
+                                        <span class="f12">
+                                            {{ $title_method }}
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <span class="f12">DOCUMENTO</span>
+                                    </th>
+                                    <th>
+                                        <span class="f12">FECHA</span>
+                                    </th>
 
-                        <th>
-                            <span class="f12">CLIENTE</span>
-                        </th>
-                        <th>
-                            <span class="f12">TOTAL</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($moves as $move)
-                    <tr>
-                        <td class="f12 center">
-                            {{ $move['document'] }}
-                        </td>
-                        <td class="f12 center">
-                            {{ $move['date_of_issue'] }}
-                        </td>
+                                    <th>
+                                        <span class="f12">CLIENTE</span>
+                                    </th>
+                                    <th>
+                                        <span class="f12">TOTAL</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($moves as $move)
+                                    <tr>
+                                        <td class="f12 center">
+                                            {{ $move['document'] }}
+                                        </td>
+                                        <td class="f12 center">
+                                            {{ $move['date_of_issue'] }}
+                                        </td>
 
-                        <td class="f12 center">
-                            {{ $move['customer_name'] }}
-                            <br>
-                            <small>
-                                {{ $move['customer_number'] }}
-                            </small>
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($move['amount'], 2) }}
-                        </td>
-                    </tr>
+                                        <td class="f12 center">
+                                            {{ $move['customer_name'] }}
+                                            <br>
+                                            <small>
+                                                {{ $move['customer_number'] }}
+                                            </small>
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ number_format($move['amount'], 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
                     @endforeach
 
-                </tbody>
-            </table>
-            @endforeach
-
-        </div>
-        @endif
+                </div>
+            @endif
         @endif
         @if (count($stock_init_report['product']) > 0)
-        {{-- @dd($stock_init_report['product']) --}}
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
-            </span>
-            <table class="border">
-                <thead>
-                    <tr>
-                        <th colspan="6" class="left">
-                            <span class="f12">
-                                STOCK DE PRODUCTOS
-                            </span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="f19">CÓDIGO</span>
-                        </th>
-                        <th>
-                            <span class="f19">PRODUCTO</span>
-                        </th>
-                        <th>
-                            <span class="f19">STOCK INICIAL</span>
-                        </th>
-                        <th>
-                            <span class="f19">COMPRA REALIZADA</span>
-                        </th>
-                        <th>
-                            <span class="f19">CANTIDAD VENDIDO</span>
-                        </th>
-                        <th>
-                            <span class="f19">STOCK ACTUAL</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($stock_init_report['product'] as $product)
-                    <tr>
-                        <td class="f19 center">
-                            {{ $product['item_id'] ?? 'N/A' }}
-                        </td>
-                        <td class="f19">
-                            {{ $product['name'] ?? 'N/A' }}
-                        </td>
-                        <td class="f19 right">
-                            {{ $product['initial_stock'] ?? 'N/A' }}
-                        </td>
-                        <td class="f19 right">
-                            {{ $product['compras_estimadas'] ?? 'N/A' }}
-                        </td>
-                        <td class="f19 right" style="color: red;">
-                            {{ $product['difference'] ?? 'N/A' }}
-                        </td>
-                        <td class="f19 right">
-                            {{ $product['actual_stock'] ?? 'N/A' }}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+            {{-- @dd($stock_init_report['product']) --}}
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
+                </span>
+                <table class="border">
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="left">
+                                <span class="f12">
+                                    STOCK DE PRODUCTOS
+                                </span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span class="f19">CÓDIGO</span>
+                            </th>
+                            <th>
+                                <span class="f19">PRODUCTO</span>
+                            </th>
+                            <th>
+                                <span class="f19">STOCK INICIAL</span>
+                            </th>
+                            <th>
+                                <span class="f19">COMPRA REALIZADA</span>
+                            </th>
+                            <th>
+                                <span class="f19">CANTIDAD VENDIDO</span>
+                            </th>
+                            <th>
+                                <span class="f19">STOCK ACTUAL</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($stock_init_report['product'] as $product)
+                            <tr>
+                                <td class="f19 center">
+                                    {{ $product['item_id'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19">
+                                    {{ $product['name'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    {{ $product['initial_stock'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    {{ $product['compras_estimadas'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right" style="color: red;">
+                                    {{ $product['difference'] ?? 'N/A' }}
+                                </td>
+                                <td class="f19 right">
+                                    {{ $product['actual_stock'] ?? 'N/A' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @endif
 
         @if ($configuration->image_comand)
-        @if (count($order_anulate_items['cancelado_orders']) > 0)
-        {{-- @dd($order_anulate_items['cancelado_orders']) --}}
-        <div style="text-align:center;">
-            <span style="font-size: 18px !important;">
-                ORDENES ANULADOS
-            </span>
+            @if (count($order_anulate_items['cancelado_orders']) > 0)
+                {{-- @dd($order_anulate_items['cancelado_orders']) --}}
+                <div style="text-align:center;">
+                    <span style="font-size: 18px !important;">
+                        ORDENES ANULADOS
+                    </span>
 
-            <table class="border">
-                <thead>
-                    <tr>
-                        <th colspan="6" class="left">
-                            <span class="f12">
-                                ORDENES ANULADOS
-                            </span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th><span class="f12">N° ORDEN Y HORA</span></th>
-                        <th><span class="f12">CANTIDAD</span></th>
-                        <th><span class="f12">PRODUCTO</span></th>
-                        <th><span class="f12">MONTO</span></th>
-                        <th><span class="f12">USUARIO</span></th>
-                        <th><span class="f12">MOTIVO</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($order_anulate_items['cancelado_orders'] as $a_item)
-                    @foreach ($a_item['items'] as $product)
-                    <tr>
-                        <td class="f12 center">
-                            {{ $a_item['order_number'] }} - {{ $a_item['time'] }}
-                        </td>
-                        <td class="f12 center">
-                            {{ number_format($product['quantity'], 2) }}
-                        </td>
-                        <td class="f12">
-                            {{ $product['product'] }}
-                        </td>
-                        <td class="f12 right">
-                            {{ number_format($product['price'], 2) }}
-                        </td>
-                        <td class="f12 right">
-                            {{ $product['user'] ?? 'Usuario desconocido' }}
-                        </td>
-                        <td class="f12 right">
-                            {{ $a_item['reason'] }}
-                        </td>
-                    </tr>
-                    @endforeach
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        @endif
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="left">
+                                    <span class="f12">
+                                        ORDENES ANULADOS
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th><span class="f12">N° ORDEN Y HORA</span></th>
+                                <th><span class="f12">CANTIDAD</span></th>
+                                <th><span class="f12">PRODUCTO</span></th>
+                                <th><span class="f12">MONTO</span></th>
+                                <th><span class="f12">USUARIO</span></th>
+                                <th><span class="f12">MOTIVO</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order_anulate_items['cancelado_orders'] as $a_item)
+                                @foreach ($a_item['items'] as $product)
+                                    <tr>
+                                        <td class="f12 center">
+                                            {{ $a_item['order_number'] }} - {{ $a_item['time'] }}
+                                        </td>
+                                        <td class="f12 center">
+                                            {{ number_format($product['quantity'], 2) }}
+                                        </td>
+                                        <td class="f12">
+                                            {{ $product['product'] }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ number_format($product['price'], 2) }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ $product['user'] ?? 'Usuario desconocido' }}
+                                        </td>
+                                        <td class="f12 right">
+                                            {{ $a_item['reason'] }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         @endif
     </div>
 </body>

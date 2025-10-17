@@ -1937,7 +1937,6 @@ export default {
             latencia: 0, // Variable para almacenar la latencia en ms
             latenciaInterval: null, // Interval para medir latencia periódicamente
             num_orden: 0,
-            isRestaurantWarehouse: true,
             showConsolidated: false,
             quotationDirect: false,
             exchange_rate_sale: 1,
@@ -2097,9 +2096,6 @@ export default {
                 return map;
             }, {});
         },
-        /* isRestaurantWarehouse() {
-            return this.establishments.account_workers;
-        }, */
         isAppNotIgvAndHaveIgv() {
             return (
                 this.configuration.affectation_igv_type_id != "10" &&

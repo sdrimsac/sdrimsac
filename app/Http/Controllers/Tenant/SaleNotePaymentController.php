@@ -509,7 +509,8 @@ class SaleNotePaymentController extends Controller
         $this->saveFiles($record, $request, 'sale_notes');
         $payment = PaymentMethodType::where('id', $request->payment_method_type_id)->first();
         if ($request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11" 
-        || $request->payment_method_type_id == "12" || $request->payment_method_type_id == "16" || $request->payment_method_type_id == "17" || $request->payment_method_type_id == "18" || $request->payment_method_type_id == "19") {
+        || $request->payment_method_type_id == "12" || $request->payment_method_type_id == "16" || $request->payment_method_type_id == "17" || 
+        $request->payment_method_type_id == "18" || $request->payment_method_type_id == "19") {
             $boxes = new Box;
             $company = Company::first();
             $boxes->group_id = 1;

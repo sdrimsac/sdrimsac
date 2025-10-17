@@ -88,6 +88,7 @@ use App\Exports\DocumentExport;
 use App\Exports\DocumentVenta;
 use App\Http\Controllers\Api\DocumentController as ApiDocumentController;
 use App\Http\Resources\Tenant\DocumentDetractionCollection;
+use App\Http\Resources\Tenant\DocumentLiteCollection;
 use App\Http\Resources\Tenant\DocumentVentaCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
@@ -2248,7 +2249,7 @@ class DocumentController extends Controller
 
 
         // Ordenar y paginar
-        return new DocumentCollection(
+        return new DocumentLiteCollection(
             $records->latest()
                 ->paginate(config('tenant.items_per_page'))
         );

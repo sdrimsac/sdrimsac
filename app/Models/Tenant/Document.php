@@ -435,7 +435,35 @@ class Document extends ModelTenant
     }
     public function payments()
     {
-        return $this->hasMany(DocumentPayment::class);
+        return $this->hasMany(DocumentPayment::class, 'document_id', 'id');
+    }
+
+    /**
+     * Payments that are not extorned (extorned = 0)
+     * Use this relation when calculating amounts that should consider
+     * only effective (non-annulled) payments.
+     */
+    public function paymentsNotExtorned()
+    {
+        return $this->hasMany(DocumentPayment::class)->where('extorned', 0);
+    }
+
+    /**
+     * Sum of payments that are not extorned.
+     * @return float
+     */
+    public function totalPaymentsNotExtorned()
+    {
+        return (float) $this->paymentsNotExtorned()->sum('payment');
+    }
+
+    /**
+     * Sum of payments that are extorned (annulled).
+     * @return float
+     */
+    public function totalPaymentsExtorned()
+    {
+        return (float) $this->payments()->where('extorned', 1)->sum('payment');
     }
 
     public function fee()

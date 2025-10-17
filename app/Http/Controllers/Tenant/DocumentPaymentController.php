@@ -20,6 +20,8 @@ use App\Models\System\Configuration;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Receipt;
 use Illuminate\Support\Str;
+use PhpParser\Comment\Doc;
+
 class DocumentPaymentController extends Controller
 {
 
@@ -40,7 +42,7 @@ class DocumentPaymentController extends Controller
         ];
     }
 
-    public function document($document_id)
+    /* public function document($document_id)
     {
         $document = Document::find($document_id);
 
@@ -61,9 +63,47 @@ class DocumentPaymentController extends Controller
             'total' => $total,
             'total_difference' => $total_difference
         ];
+    } */
+
+    public function document($document_id)
+    {
+        $document = Document::find($document_id);
+
+        // Total de pagos válidos (no extornados)
+        $total_paid = $document->payments
+            ->where('extorned', 0)
+            ->sum('payment');
+
+        // Total extornado (pagos anulados)
+        $total_extorned = $document->payments
+            ->where('extorned', 1)
+            ->sum('payment');
+
+        // Total del documento
+        if ($document->total_payment == 0) {
+            $total = $document->total;
+        } else {
+            $total = $document->total_payment;
+        }
+
+        // Diferencia pendiente
+        $total_difference = round($total - $total_paid, 2);
+
+        return [
+            'number_full' => $document->number_full,
+            'document_type_id' => $document->document_type_id,
+            'total_paid' => $total_paid,
+            'total_extorned' => $total_extorned,
+            'total' => $total,
+            'total_difference' => $total_difference
+        ];
     }
-    function create_receipt($request,$cash_id,$document_save,$record){
-        
+
+
+
+    function create_receipt($request, $cash_id, $document_save, $record)
+    {
+
         $receipt = new Receipt;
         $receipt->fill($request->all());
         $receipt->user_id = auth()->user()->id;
@@ -73,16 +113,16 @@ class DocumentPaymentController extends Controller
         $receipt->document_id = $document_save->id;
         $receipt->document_payment_id = $record->id;
         $type = $document_save->document_type_id == "01" ? "FACTURA ELECTRONICA" : "BOLETA DE VENTA ELECTRONICA";
-        $receipt->detail = "PAGO DE ".$type. " N° " . $document_save->series . " - " . $document_save->number;
+        $receipt->detail = "PAGO DE " . $type . " N° " . $document_save->series . " - " . $document_save->number;
         $receipt->hour = date('H:i:s');
         $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
 
         $last_receipt = Receipt::orderBy('id', 'desc')->first();
         $number_receipt = null;
-        if($last_receipt){
+        if ($last_receipt) {
             $number_receipt = intval($last_receipt->number);
         }
-        
+
         if ($number_receipt !== null) {
             $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
         } else {
@@ -93,17 +133,34 @@ class DocumentPaymentController extends Controller
         $receipt->external_id = Str::uuid()->toString();
 
         $receipt->save();
-
-
     }
     public function store(DocumentPaymentRequest $request)
     {
-        // dd($request->all());
+        $user_id = auth()->user()->id;
+        $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+        if ($cash == null) {
+            $cash = Cash::create([
+                'user_id' => auth()->user()->id,
+                'date_opening' => date('Y-m-d'),
+                'time_opening' => date('H:i:s'),
+                'date_closed' => null,
+                'time_closed' => null,
+                'beginning_balance' => 0,
+                'final_balance' => 0,
+                'income' => 0,
+                'state' => true,
+                'reference_number' => null
+            ]);
+        }
 
         $id = $request->input('id');
         DB::connection('tenant')->transaction(function () use ($id, $request) {
 
-            if ($request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11") {
+            if (
+                $request->payment_method_type_id == "01" || $request->payment_method_type_id == "04" || $request->payment_method_type_id == "11"
+                || $request->payment_method_type_id == "12" || $request->payment_method_type_id == "16" || $request->payment_method_type_id == "17" ||
+                $request->payment_method_type_id == "18" || $request->payment_method_type_id == "19"
+            ) {
                 $record = DocumentPayment::firstOrNew(['id' => $id]);
                 $record->fill($request->all());
                 // Guardar date_of_issue_payment con fecha y hora
@@ -133,6 +190,7 @@ class DocumentPaymentController extends Controller
                 $boxes->type = '1';
                 $boxes->state = '1';
                 $boxes->cash_id = $cash_id;
+                $boxes->incomes = 1;
                 $boxes->method = $method_payment->description;
                 $boxes->document_id = $request->document_id;
                 $boxes->document_payment_id = $record->id;
@@ -141,11 +199,11 @@ class DocumentPaymentController extends Controller
                 switch ($document_save->document_type_id) {
                     case "01":
                         $type_document = "FACTURA ELECTRONICA";
-                        $this->create_receipt($request,$cash_id,$document_save,$record);
+                        $this->create_receipt($request, $cash_id, $document_save, $record);
                         break;
                     case "03":
                         $type_document = "BOLETA DE VENTA ELECTRONICA";
-                        $this->create_receipt($request,$cash_id,$document_save,$record);
+                        $this->create_receipt($request, $cash_id, $document_save, $record);
                         break;
                     case "07":
                         $type_document = "NOTA DE CREDITO";
@@ -168,7 +226,7 @@ class DocumentPaymentController extends Controller
         ];
     }
 
-    public function destroy($id)
+    /* public function destroy($id)
     {
         $item = DocumentPayment::findOrFail($id);
         Box::where('document_payment_id', $id)->delete();
@@ -184,6 +242,54 @@ class DocumentPaymentController extends Controller
             'success' => true,
             'message' => 'Pago eliminado con éxito'
         ];
+    } */
+
+    public function destroy($id)
+    {
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $document_payment = DocumentPayment::find($id);
+            $document_payment->extorned = true;
+            $document_payment->user_id = auth()->user()->id;
+            $document_payment->save();
+            $document = Document::find($document_payment->document_id);
+            $amount = $document_payment->payment;
+            $payment_method_description = "Efectivo";
+            $payment_method_type_id = $document_payment->payment_method_type_id;
+            $payment_method = PaymentMethodType::where('id', $payment_method_type_id)->first();
+            if ($payment_method) {
+                $payment_method_description = $payment_method->description;
+            }
+            $receipt = Receipt::where('document_payment_id', $id)->first();
+            $cash_id = $receipt ? $receipt->cash_id : null;
+            $description_register = "EXTORNO DE PAGO DE " . $document->type . " N° " . $document->series . " - " . $document->number;
+
+            /** @var  User $user */
+            $user = auth()->user();
+
+            $cash_id = $user->get_cash_id();
+            Box::createExpense(
+                $amount,
+                $payment_method_description,
+                $description_register,
+                $cash_id,
+                $document->id,
+                null,
+                $document_payment->id
+            );
+
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => 'Pago extornado con éxito'
+            ];
+        } catch (Exception $e) {
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Error al extornar el pago: ' . $e->getMessage(),
+            ];
+        }
     }
 
     public function initialize_balance()

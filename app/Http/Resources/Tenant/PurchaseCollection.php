@@ -15,7 +15,7 @@ class PurchaseCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($row, $key) {
+    return $this->collection->transform(function ($row, $key) {
 
             $total = $row->total;
             if ($row->total_perception) {
@@ -69,16 +69,42 @@ class PurchaseCollection extends ResourceCollection
                     ];
                 }),
                 'items' => $row->items->transform(function ($row, $key) {
-                    $item = Item::find($row->item_id);
+                    $itemModel = Item::find($row->item_id);
+                    // $row->item puede ser null o stdClass sin todas las propiedades
+                    $itemObj = isset($row->item) ? $row->item : null;
+                    $internal_id = null;
+                    $description = null;
+                    $unit_type_id = null;
+                    $color_size = null;
+                    $lots_group = null;
+
+                    if ($itemObj) {
+                        // si es array o stdClass, intentar obtener las propiedades de forma segura
+                        if (is_array($itemObj)) {
+                            $internal_id = $itemObj['internal_id'] ?? null;
+                            $description = $itemObj['description'] ?? null;
+                            $unit_type_id = $itemObj['unit_type_id'] ?? null;
+                            $color_size = $itemObj['color_size'] ?? null;
+                            $lots_group = $itemObj['lots_group'] ?? null;
+                        } else {
+                            // objeto (puede ser stdClass o modelo)
+                            $internal_id = property_exists($itemObj, 'internal_id') ? $itemObj->internal_id : (isset($itemObj->internalId) ? $itemObj->internalId : null);
+                            $description = property_exists($itemObj, 'description') ? $itemObj->description : null;
+                            $unit_type_id = property_exists($itemObj, 'unit_type_id') ? $itemObj->unit_type_id : null;
+                            $color_size = property_exists($itemObj, 'color_size') ? $itemObj->color_size : null;
+                            $lots_group = property_exists($itemObj, 'lots_group') ? $itemObj->lots_group : null;
+                        }
+                    }
+
                     return [
                         'key' => $key + 1,
                         'id' => $row->id,
-                        'internal_id' => $row->item->internal_id,
-                        'description' => $row->item->description,
+                        'internal_id' => $internal_id,
+                        'description' => $description,
                         'quantity' => round($row->quantity, 2),
-                        'unit_type_id' => $row->item->unit_type_id,
-                        'max_quantity' => $item->max_quantity,
-                        'max_quantity_description' => $item->max_quantity_description,
+                        'unit_type_id' => $unit_type_id,
+                        'max_quantity' => $itemModel ? $itemModel->max_quantity : null,
+                        'max_quantity_description' => $itemModel ? $itemModel->max_quantity_description : null,
                         'lots' => collect($row->lots)->transform(function ($row, $key) {
                             return [
                                 'id' => $row->id,
@@ -87,9 +113,9 @@ class PurchaseCollection extends ResourceCollection
                                 'item_lot_id' => $row->item_lot_id,
                             ];
                         }),
-                        'color_size' => $row->item->color_size,
-                        'lots_group' => (isset($row->item->lots_group) && $row->item->lots_group)
-                            ? collect($row->item->lots_group)->transform(function ($row, $key) {
+                        'color_size' => $color_size,
+                        'lots_group' => ($lots_group && is_iterable($lots_group))
+                            ? collect($lots_group)->transform(function ($row, $key) {
                                 return [
                                     'id' => isset($row->id) ? $row->id : null,
                                     'code' => isset($row->code) ? $row->code : null,
@@ -104,6 +130,6 @@ class PurchaseCollection extends ResourceCollection
                     ];
                 }),
             ];
-        });
+        })->all();
     }
 }

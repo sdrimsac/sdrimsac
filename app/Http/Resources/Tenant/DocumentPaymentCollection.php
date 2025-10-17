@@ -17,8 +17,9 @@ class DocumentPaymentCollection extends ResourceCollection
     public function toArray($request)
     {
         //receipt/print/a1231acd-7fcc-435e-9cab-831dc861d67b
+        $can_extorned = true;
 
-        return $this->collection->transform(function($row, $key) {
+        return $this->collection->transform(function($row, $key) use ($can_extorned) {
             $receipt = Receipt::where('document_payment_id', $row->id)->first();
             $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
             return [
@@ -36,6 +37,9 @@ class DocumentPaymentCollection extends ResourceCollection
                 'method' => $row->method,
                 'user_id' => $row->user_id,
                 'user_name' => $row->user_id ? $row->user->name : null,
+                'extorned' => (bool)$row->extorned,
+                'number_method' => $row->number_method,
+                'can_extorned' => $can_extorned,
             ];
         });
     }

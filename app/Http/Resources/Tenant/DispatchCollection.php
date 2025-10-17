@@ -15,7 +15,9 @@ class DispatchCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
-            return $row->getCollectionData();
+            if (method_exists($row, 'getCollectionData')) {
+                return $row->getCollectionData();
+            }
 
             return [
                 'id' => $row->id,
