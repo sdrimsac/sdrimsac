@@ -255,6 +255,8 @@ export default {
                         route = "caja/worker/salon-pos";
                     } else if (this.config.tap) {
                         route = "grifo/worker/dashboard-pos";
+                    } else if (this.config.meat_shop) {
+                        route = "meatshop/worker/dashboard-pos";
                     } else {
                         route = "caja/worker/dashboard-pos";
                     }

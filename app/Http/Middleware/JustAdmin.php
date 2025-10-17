@@ -122,6 +122,7 @@ class JustAdmin
                 $rent = (bool) $config->mod_renta;
                 $salon = (bool) $config->mode_salon;
                 $tap = (bool) $config->tap;
+                $meatshop = (bool) $config->meat_shop;
 
                 if ($config->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
@@ -133,8 +134,9 @@ class JustAdmin
                     $redirect_to = "/billar/worker/";
                 } elseif($tap) {
                     $redirect_to = "/grifo/worker/";
-                }
-                else if ($workshop) {
+                } elseif ($meatshop) {
+                    $redirect_to = "/meatshop/worker/";
+                }else if ($workshop) {
                     if ($description_type == 'CAJERO MECANICO') {
 
                         $redirect_to = "/workshop/worker/";
@@ -162,8 +164,9 @@ class JustAdmin
                     }
                     else if($tap){
                         $redirect_to .= 'dashboard-pos';
-                    }
-                    else{
+                    } elseif ($meatshop){
+                        $redirect_to .= 'dashboard-pos';
+                    } else{
                         $redirect_to .= 'dashboard-pos';
                     }
                 } else if ($description_type == 'LIMPIEZA') {

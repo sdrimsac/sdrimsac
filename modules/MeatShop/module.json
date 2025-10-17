@@ -1,0 +1,13 @@
+{
+    "name": "MeatShop",
+    "alias": "meatshop",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\MeatShop\\Providers\\MeatShopServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

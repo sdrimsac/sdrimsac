@@ -29,7 +29,7 @@ Vue.prototype.$eventHub = new Vue();
 Vue.prototype.$http = Axios;
 
 Vue.prototype.$socketUrl = "https://casadedako.xyz";
-Vue.prototype.$setStorage = function(name, obj) {
+Vue.prototype.$setStorage = function (name, obj) {
     localStorage.setItem(name, JSON.stringify(obj));
 };
 // Vue.prototype.$socketUrl = "http://localhost:3800";
@@ -46,7 +46,7 @@ const options = {
 };
 
 window.globalCountdown = 900;
-window.startGlobalInactivityTimer = function() {
+window.startGlobalInactivityTimer = function () {
     let timeoutDuration = 900;
     let lastActivityTime = Date.now();
 
@@ -161,7 +161,7 @@ import 'vuesax/dist/vuesax.css';
 
 Vue.use(Vuesax);
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     getDesarrollador();
     getAreaPrinter();
     getCashId();
@@ -193,7 +193,7 @@ const getDesarrollador = async () => {
                 Vue.prototype.$desarrollador = data;
             }
         }
-    } catch (e) {}
+    } catch (e) { }
 };
 const getAreaPrinter = async () => {
     try {
@@ -208,7 +208,7 @@ const getAreaPrinter = async () => {
                 Vue.prototype.$areaPrinter = null;
             }
         }
-    } catch (e) {}
+    } catch (e) { }
 };
 /* function limpiarcache(reload = true) {
     if ("caches" in window) {
@@ -265,7 +265,7 @@ axios.get("/commit/store").then(response => {
             customClass: {
                 popup: "swal2-no-border"
 
-            
+
             },
             didOpen: popup => {
                 const swalContainer = Swal.getPopup();
@@ -453,7 +453,7 @@ const app = new Vue({
                 "../../modules/Etiquetas/Resources/assets/js/views/index.vue"
             ),
 
-            "etiqueta-codes-index": () =>
+        "etiqueta-codes-index": () =>
             import(
                 "../../modules/Etiquetas/Resources/assets/js/views/codes/index.vue"
             ),
@@ -536,6 +536,10 @@ const app = new Vue({
         "tenant-grifo-pos": () =>
             import(
                 "../../modules/Grifo/Resources/assets/js/views/pos/index.vue"
+            ),
+        "tenant-meatshop-pos": () =>
+            import(
+                "../../modules/MeatShop/Resources/assets/js/views/pos/index.vue"
             ),
         "tenant-dashboard-index": () =>
             import(
@@ -999,7 +1003,7 @@ const app = new Vue({
         //report-credit-index-cash
         //report-consignment-index
         "tenant-finanzas-index": () => import("./views/finanzas/index.vue"),
-        
+
         "report-consignment-index": () =>
             import(
                 "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
