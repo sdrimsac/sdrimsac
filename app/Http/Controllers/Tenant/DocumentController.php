@@ -2197,7 +2197,7 @@ class DocumentController extends Controller
         }
     }
 
-    public function document_credit_cash_records(Request $request)
+    /* public function document_credit_cash_records(Request $request)
     {
         $value = $request->value;
         $date_start = $request->date_start;
@@ -2215,8 +2215,6 @@ class DocumentController extends Controller
             ])
             ->where('payment_condition_id', '02')
             ->whereNotIn('state_type_id', ['11', '09'])
-            /* ->whereDoesntHave('credit_payments') */
-           /*  ->where('paid', 0) */
             ->select('documents.*')
             ->distinct(); // Usamos distinct en lugar de groupBy
 
@@ -2242,7 +2240,7 @@ class DocumentController extends Controller
         if ($date_end) {
             $records->where('date_of_issue', '<=', $date_end);
         }
-        
+
         if ($establishment_id) {
             $records->where('establishment_id', $establishment_id);
         }
@@ -2253,7 +2251,65 @@ class DocumentController extends Controller
             $records->latest()
                 ->paginate(config('tenant.items_per_page'))
         );
+    } */
+
+    public function document_credit_cash_records(Request $request)
+    {
+        $value = $request->value;
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $establishment_id = $request->establishment_id;
+
+        $records = Document::query()
+            ->with([
+                'person:id,name,number',
+                'state_type:id,description',
+                'user:id,name',
+                'boxes:id,document_id,amount'
+            ])
+            ->where('payment_condition_id', '02')
+            ->whereNotIn('state_type_id', ['11', '09'])
+            ->whereNotIn('id', function ($query) {
+                $query->select('affected_document_id')
+                    ->from('notes')
+                    ->whereNotNull('affected_document_id');
+            })
+            ->select('documents.*')
+            ->distinct();
+
+        // 🔎 Filtro de búsqueda
+        if ($value) {
+            $records->where(function ($query) use ($value) {
+                $searchTerm = '%' . str_replace(' ', '%', $value) . '%';
+
+                $query->whereHas('person', function ($subQuery) use ($searchTerm) {
+                    $subQuery->where('name', 'like', $searchTerm)
+                        ->orWhere('number', 'like', $searchTerm);
+                })
+                    ->orWhere('number', 'like', $searchTerm);
+            });
+        }
+
+        // 📅 Filtros por fecha
+        if ($date_start) {
+            $records->where('date_of_issue', '>=', $date_start);
+        }
+
+        if ($date_end) {
+            $records->where('date_of_issue', '<=', $date_end);
+        }
+
+        // 🏢 Filtro por establecimiento
+        if ($establishment_id) {
+            $records->where('establishment_id', $establishment_id);
+        }
+
+        // 📋 Resultado final
+        return new DocumentLiteCollection(
+            $records->latest()->paginate(config('tenant.items_per_page'))
+        );
     }
+
 
     public function reStoreRange(Request $request)
     {
@@ -3500,7 +3556,7 @@ class DocumentController extends Controller
         // cambiar de estado el document 
 
         $id = $request->id;
-        $records = Document::where('id', $id)->update(['state_type_id' => $request->state_type_id]);            
+        $records = Document::where('id', $id)->update(['state_type_id' => $request->state_type_id]);
         return [
             'success' => true,
             'message' => 'Estado actualizado con éxito',
