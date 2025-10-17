@@ -1,60 +1,32 @@
 <template>
-    <el-dialog
-        title="Cotización"
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        v-loading="loading"
-        element-loading-text="Cotizando..."
-     >
+    <el-dialog title="Cotización" :visible="showDialog" @open="open" @close="close" v-loading="loading"
+        element-loading-text="Cotizando...">
         <div class="m-2">
             <div class="row">
                 <div class="col-md-6 col-12">
                     <label>
                         Cliente
-                        <a href="#" @click.prevent="showDialogNewPerson = true"
-                            >[+ Nuevo]</a
-                        >
+                        <a href="#" @click.prevent="showDialogNewPerson = true">[+ Nuevo]</a>
                     </label>
-                    <el-select
-                        v-model="form.customer_id"
-                        filterable
-                        remote
-                        class="border-left rounded-left border-info"
-                        popper-class="el-select-customers"
-                        dusk="customer_id"
+                    <el-select v-model="form.customer_id" filterable remote class="border-left rounded-left border-info"
+                        popper-class="el-select-customers" dusk="customer_id"
                         placeholder="Escriba el nombre o número de documento del cliente"
-                        :remote-method="searchRemoteCustomers"
-                        :loading="loading_search"
-                    >
-                        <el-option
-                            v-for="option in customers"
-                            :key="option.id"
-                            :value="option.id"
-                            :label="option.description"
-                        ></el-option>
+                        :remote-method="searchRemoteCustomers" :loading="loading_search">
+                        <el-option v-for="option in customers" :key="option.id" :value="option.id"
+                            :label="option.description"></el-option>
                     </el-select>
                 </div>
                 <div class="col-md-6 col-12">
                     <label>Fecha de emisión</label>
-                    <el-date-picker
-                        class="w-100"
-                        value-format="yyyy-MM-dd"
-                        format="yyyy-MM-dd"
-
-                        v-model="form.date_of_issue"
-                    >
+                    <el-date-picker class="w-100" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                        v-model="form.date_of_issue">
                     </el-date-picker>
                 </div>
                 <div class="col-md-6 col-12">
                     <label>Vencimiento</label>
-                    <el-date-picker
-                        class="w-100"
-                        v-model="form.date_of_due"
-                        :default-value="moment().add(15, 'days').toDate()"
-                        value-format="yyyy-MM-dd"
-                        format="yyyy-MM-dd"
-                    >
+                    <el-date-picker class="w-100" v-model="form.date_of_due"
+                        :default-value="moment().add(15, 'days').toDate()" value-format="yyyy-MM-dd"
+                        format="yyyy-MM-dd">
                     </el-date-picker>
                 </div>
                 <div class="col-md-6" v-if="!isSeller">
@@ -62,25 +34,28 @@
                         Vendedor
                     </label>
                     <el-select v-model="form.seller_id" filterable>
-                        <el-option
-                            v-for="(option, idx) in sellers"
-                            :key="idx"
-                            :value="option.id"
-                            :label="option.name"
-                        ></el-option>
+                        <el-option v-for="(option, idx) in sellers" :key="idx" :value="option.id"
+                            :label="option.name"></el-option>
                     </el-select>
+                </div>
+                <div class="col-md-6" v-if="!isSeller">
+                    <label>
+                        Numero de whatsapp del cliente
+                    </label>
+                    <el-input class="w-100" placeholder="" v-model="form.customer_telephone">
+                        <el-button slot="append">
+                            Enviar
+                            <i class="fab fa-whatsapp" style="margin-left:6px"></i>
+                        </el-button>
+                    </el-input>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <label>Descripción</label>
-                    <el-input
-                        class="w-100"
-                        type="textarea"
-                        :rows="2"
+                    <el-input class="w-100" type="textarea" :rows="2"
                         placeholder="Ejemp.: Oferta Válida por 15 días, a partir de la emisión "
-                        v-model="form.description"
-                    >
+                        v-model="form.description">
                     </el-input>
                 </div>
             </div>
@@ -93,7 +68,7 @@
                 </h4>
             </div>
         </div>
-        
+
         <div class="form-actions d-flex justify-content-end align-items-center gap-3 pt-2 pb-2">
             <el-button @click="close" type="danger" class="btn_cancelarsmall">
                 <i class="el-icon-close"></i> Cancelar
@@ -102,20 +77,10 @@
                 <i class="el-icon-document"></i> Cotizar
             </el-button>
         </div>
-        <person-form
-            :showDialog.sync="showDialogNewPerson"
-            type="customers"
-            :external="true"
-        >
+        <person-form :showDialog.sync="showDialogNewPerson" type="customers" :external="true">
         </person-form>
-        <quotation-options
-            :showDialog.sync="showDialogOptions"
-            :recordId="quotationNewId"
-            :showGenerate="false"
-            :showClose="true"
-            :external="true"
-            @close="close"
-        ></quotation-options>
+        <quotation-options :showDialog.sync="showDialogOptions" :recordId="quotationNewId" :showGenerate="false"
+            :showClose="true" :external="true" @close="close"></quotation-options>
     </el-dialog>
 </template>
 
@@ -165,11 +130,11 @@ export default {
             this.reloadDataCustomers(customer_id);
         });
         console.log("Props categoriaMadera recibido :", {
-        items: this.items,
-    });
-    if (this.fromPos) {
-        this.open();
-    }
+            items: this.items,
+        });
+        if (this.fromPos) {
+            this.open();
+        }
     },
     watch: {
         all_customers(newCustomer, _) {
@@ -244,21 +209,21 @@ export default {
                     unit_value:
                         i.sale_affectation_igv_type_id == 10
                             ? i.sale_unit_price /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_base_isc: 0.0,
                     percentage_isc: 0.0,
@@ -269,13 +234,13 @@ export default {
                     total_taxes:
                         i.sale_affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
-                                  (1 + this.percentage_igv / 100)) *
-                              (this.percentage_igv / 100)
+                                (1 + this.percentage_igv / 100)) *
+                            (this.percentage_igv / 100)
                             : 0,
                     total_value:
                         i.sale_affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
-                              (1 + this.percentage_igv / 100)
+                            (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
                     total_charge: 0.0,
                     total_discount: 0.0,
@@ -324,7 +289,7 @@ export default {
                 if (row.sale_affectation_igv_type_id === "10") {
                     total_igv += _.round(
                         parseFloat(row.total_value) *
-                            (this.percentage_igv / 100),
+                        (this.percentage_igv / 100),
                         2
                     );
                     total_value += _.round(row.total_value, 2);
@@ -395,11 +360,18 @@ export default {
                         this.close();
                     } else {
                         this.showDialogOptions = true;
+                        this.clickSendWhatsapp(
+                            'COT',
+                            response.data.data.id,
+                            this.form.customer_telephone,
+                            { customer_telephone: this.form.customer_telephone }
+                        );
+
                     }
                     this.localCotizarConfirmado = false;
                     this.$emit('cotizarConfirmadoChanged', this.localCotizarConfirmado);
-                    /* console.log("🚀 ~ submit ~ this.localCotizarConfirmado", this.localCotizarConfirmado) */
                     this.$toast.success("Cotizacion creada con exito");
+
 
                     this.$emit('cotizacionCreada', false);
                 }
@@ -473,6 +445,88 @@ export default {
         },
         close() {
             this.$emit("update:showDialog", false);
+        },
+
+        async clickSendWhatsapp(
+            document_type_id,
+            document_id,
+            number,
+            form = {}
+        ) {
+            // Prefer an explicit phone number passed as `number`, then `form.customer_telephone`, then this.form.customer_telephone
+            const customerPhone = number || form.customer_telephone || this.form.customer_telephone;
+
+            if (!customerPhone) {
+                // Nothing to send
+                this.$toast.error('Ingrese un número de Whatsapp válido');
+                return;
+            }
+
+            // Use the provided document_id (usually the DB id). If backend expects external_id, change accordingly.
+            let formWhatsapp = {
+                id: this.recordId,
+                document_id: document_id,
+                document_type_id: document_type_id,
+                customer_telephone: customerPhone,
+                sender: "sdrimsac",
+                mensaje:
+                    "Su cotización electrónica a sido generado" +
+                    " por el monto S/" +
+                    this.form.total +
+                    " de *" +
+                    (this.company && this.company.trade_name ? this.company.trade_name : '') +
+                    "*, ha sido generado correctamente a través del facturador electrónico de " +
+                    "*" +
+                    (this.$desarrollador || '') +
+                    "*"
+            };
+
+            try {
+                this.loading = true;
+                let response = await this.$http.post(
+                    `/whatsapp`,
+                    formWhatsapp
+                );
+                if (response.data && response.data.success == true) {
+                    this.$toast.success(response.data.message);
+                }
+
+                if (
+                    this.configuration &&
+                    this.configuration.xml_whatsapp &&
+                    document_type_id != "80"
+                ) {
+                    formWhatsapp.xml = true;
+                    response = await this.$http.post(`/whatsapp`, formWhatsapp);
+                    if (response.data && response.data.success == true) {
+                        this.$toast.success(response.data.message);
+                    }
+                }
+            } catch (e) {
+                console.log(e, " error");
+                this.$toast.error('Error al enviar Whatsapp');
+            } finally {
+                this.loading = false;
+            }
+        },
+        // Handler for the local WhatsApp send button
+        async handleSendWhatsapp() {
+            // Use the phone number from the form
+            const number = this.form.customer_telephone;
+            if (!number) {
+                return this.$toast.error('Ingrese un número de Whatsapp válido');
+            }
+
+            // Require that the quotation has been created
+            if (!this.quotationNewId) {
+                return this.$toast.error('Primero genere la cotización antes de enviar por WhatsApp');
+            }
+
+            // document_type_id for quotations
+            const document_type_id = 'COT';
+
+            // call the existing generic method with the created quotation id
+            await this.clickSendWhatsapp(document_type_id, this.quotationNewId, number, { customer_telephone: number });
         }
     }
 };

@@ -52,8 +52,7 @@ Route::prefix('caja')->group(function () {
     Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', [OrdenController::class, 'printTicket']);
 
-    Route::get('delivery/ticket', [OrdenController::class, 'DeliveryOrden']);
-    //Route::get('delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
+    Route::get('/delivery/ticket', [OrdenController::class, 'DeliveryOrden']);
 
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/cash/print-report-usd', [CashController::class, 'print_report_usd']);
@@ -99,6 +98,7 @@ Route::prefix('caja')->group(function () {
             $keyword = request("message");
             event(new MessageEvent($keyword));
         });
+        Route::get('/delivery/DeliveryPrinter', [OrdenController::class, 'DeliveryPrinter']);
         Route::prefix('estilista')->group(function () {
             Route::get('time-worker', [EstilistaController::class, 'index'])->name('estilista.worker.time');
             Route::get('workers', [EstilistaController::class, 'workers'])->name('estilista.workers');

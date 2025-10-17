@@ -363,7 +363,7 @@
                                 ></small>
                             </div>
                         </div>
-                        <div
+                        <!-- <div
                             class="col-md-4"
                             v-if="
                                 type == 'caja/tables' &&
@@ -378,7 +378,7 @@
                                 <i class="fas fa-snowflake mr-2"></i> ¿Usar mesa
                                 para delivery?
                             </el-checkbox>
-                        </div>
+                        </div> -->
                         <template
                             v-if="
                                 type == 'caja/rooms' && all_services.length > 0
@@ -820,7 +820,7 @@ export default {
                 establishment_id: null,
                 area_id: null,
                 has_frigobar: false,
-                is_delivery: false,
+               /*  is_delivery: false, */
                 description: null,
                 id: null,
                 description: null,
@@ -948,7 +948,7 @@ export default {
 
                 this.form = response.data.data;
                 this.form.images = [];
-                this.form.is_delivery = this.form.is_delivery == 1 || this.form.is_delivery == "1";
+                /* this.form.is_delivery = this.form.is_delivery == 1 || this.form.is_delivery == "1"; */
                 // Coerce IDs to numbers when possible to match option values
                 this.form.table_type_id = this.parseId(this.form.table_type_id);
                 this.form.tower_id = this.parseId(this.form.tower_id);

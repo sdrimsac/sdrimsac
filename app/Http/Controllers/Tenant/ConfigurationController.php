@@ -26,6 +26,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Services\RoleService;
 use Illuminate\Queue\Worker;
+use Illuminate\Support\Facades\Log;
 
 class ConfigurationController extends Controller
 {
@@ -199,7 +200,7 @@ class ConfigurationController extends Controller
     function check_and_set_restaurant()
     {
         $CategoryItem = [
-            ['name' => 'IMSUMOS', 'identifier' => null, 'icono' => null, 'pos_drag' => false, 'user_id' => null, 'active' => 1, 'show_count_pos' => false, 'images' => null],
+            ['name' => 'INSUMOS', 'identifier' => null, 'icono' => null, 'pos_drag' => false, 'user_id' => null, 'active' => 1, 'show_count_pos' => false, 'images' => null],
 
         ];
 
@@ -355,6 +356,21 @@ class ConfigurationController extends Controller
             }
         }
     }
+
+    function check_and_set_delivery()
+    {
+        $Table = [
+            ['number' => 'DELIVERY', 'enabled' => true, 'description' => null, 'area_id' => 5, 'status_table_id' => 1, 'establishment_id' => 1, 'is_room' => false, 'floor_id' => null, 'table_type_id' => null, 'is_cleaning' => false, 'cleaning_start_date' => null, 'price' => 0.00, 'month_price' => 0.00, 'has_frigobar' => false, 'has_billar' => false, 'zone_id' => null, 'is_delivery' => true],
+
+        ];
+
+        foreach ($Table as $table) {
+            $existingTable = DB::connection('tenant')->table('tables')->where('number', $table['number'])->first();
+            if (!$existingTable) {
+                DB::connection('tenant')->table('tables')->insert($table);
+            }
+        }
+    }
     function get_area_id($name)
     {
         if ($name == 'MOZO') {
@@ -436,11 +452,14 @@ class ConfigurationController extends Controller
         $id = $request->input('id');
         $configuration = Configuration::find($id);
         $configuration->fill($request->all());
-        //dd($request->all());
         $configuration->save();
 
         if ($configuration->restaurant) {
             $this->check_and_set_restaurant();
+        }
+        
+        if ($configuration->restaurant_delivery) {
+            $this->check_and_set_delivery();
         }
 
         return [
@@ -449,7 +468,6 @@ class ConfigurationController extends Controller
             'data' => $configuration
         ];
     }
-
 
     public function icbper(Request $request)
     {
