@@ -141,8 +141,7 @@ class ConfigurationController extends Controller
     }
     public function addSeeder()
     {
-        $reiniciar =  DB::connection('tenant')->table('format_templates')
-            ->truncate();
+        DB::connection('tenant')->table('format_templates')->truncate();
         $archivos = Storage::disk('core')->allDirectories('Templates/pdf');
         $colection = array();
         $valor = array();
@@ -292,6 +291,8 @@ class ConfigurationController extends Controller
             ]
         ];
 
+        // Ensure item_warehouse records are created for items (default warehouse_id = 1)
+
         foreach ($CategoryItem as $category) {
             $existingCategory = DB::connection('tenant')->table('categories')->where('name', $category['name'])->first();
             if (!$existingCategory) {
@@ -319,7 +320,7 @@ class ConfigurationController extends Controller
             }
         } */
 
-        foreach ($Item as &$item) {
+    foreach ($Item as &$item) {
             // Asegurar que attributes no sea null ni array PHP
             if (is_array($item['attributes'])) {
                 $item['attributes'] = json_encode($item['attributes']);
@@ -332,7 +333,26 @@ class ConfigurationController extends Controller
                 ->first();
 
             if (!$existingItem) {
-                DB::connection('tenant')->table('items')->insert($item);
+                // insert and get id
+                $item_id = DB::connection('tenant')->table('items')->insertGetId($item);
+            } else {
+                $item_id = $existingItem->id;
+            }
+
+            // ensure item_warehouse relationship exists for default warehouse (1)
+            $warehouse_id = 1;
+            $existingWarehouse = DB::connection('tenant')->table('item_warehouse')
+                ->where('item_id', $item_id)
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
+
+            if (!$existingWarehouse) {
+                DB::connection('tenant')->table('item_warehouse')->insert([
+                    'item_id' => $item_id,
+                    'warehouse_id' => $warehouse_id,
+                    'stock' => isset($item['stock']) ? $item['stock'] : 0,
+                    'active' => 1,
+                ]);
             }
         }
 
@@ -455,9 +475,17 @@ class ConfigurationController extends Controller
         $configuration->save();
 
         if ($configuration->restaurant) {
+            // Actualiza el campo created_items a true
+            $configuration->update([
+                'created_items' => true,
+                'box_ordenes' => true,
+                'show_variation_dcto' => true,
+            ]);
+
             $this->check_and_set_restaurant();
         }
-        
+
+
         if ($configuration->restaurant_delivery) {
             $this->check_and_set_delivery();
         }

@@ -821,6 +821,7 @@ export default {
                 area_id: null,
                 has_frigobar: false,
                /*  is_delivery: false, */
+               status_table_id: 1,
                 description: null,
                 id: null,
                 description: null,

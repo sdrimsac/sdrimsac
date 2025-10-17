@@ -432,14 +432,15 @@ export default {
                 tower_id: null,
                 floor_id: null,
                 table_type_id: null,
-                status_table_id: null,
+                // Default estado id 1 => 'LIBRE'
+                status_table_id: 1,
                 area_id: null,
                 establishment_id: null,
                 description: null,
                 printer: null,
                 copies: null,
                 active: 1,
-                prefix: null,
+                prefix: '',
                 zone_id: null,
             };
         },
@@ -519,9 +520,14 @@ export default {
         },
         createNumbers() {
             let { initNumberTable, finalNumberTable, prefix } = this.form;
+            prefix = prefix == null ? '' : String(prefix).trim();
             let numbers = [];
             for (let i = initNumberTable; i <= finalNumberTable; i++) {
-                numbers.push(`${i}  ${prefix}`);
+                if (prefix !== '') {
+                    numbers.push(`${i} ${prefix}`);
+                } else {
+                    numbers.push(String(i));
+                }
             }
             return numbers;
         },
@@ -531,8 +537,15 @@ export default {
             }
             this.loading_submit = true;
             this.form.numbers = this.createNumbers();
+
+            // Prepare payload: don't send prefix if it's empty or null
+            let payload = Object.assign({}, this.form);
+            if (payload.prefix === null || payload.prefix === '' || (typeof payload.prefix === 'string' && payload.prefix.trim() === '')) {
+                delete payload.prefix;
+            }
+
             this.$http
-                .post(`/${this.resource}/massive`, this.form)
+                .post(`/${this.resource}/massive`, payload)
                 .then(response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);

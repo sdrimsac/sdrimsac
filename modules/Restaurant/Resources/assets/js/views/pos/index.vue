@@ -143,6 +143,16 @@
                                                 </button>
                                             </el-tooltip>
                                         </template>
+                                        <el-tooltip content="Crear Producto" placement="top">
+                                                <button class="btn_guardarsmall" type="primary" @click="createdNewLibrary">
+                                                    <i class="fas fa-plus" style="font-size: 20px;">prod</i>
+                                                </button>
+                                            </el-tooltip>
+                                            <el-tooltip content="Crear Producto" placement="top">
+                                                <button class="btn_guardarsmall" type="primary" @click="trigerFunction(7)">
+                                                    <i class="fas fa-plus" style="font-size: 20px;">Historial</i>
+                                                </button>
+                                            </el-tooltip>
 
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
@@ -253,7 +263,7 @@
                                         </div>
 
                                         <!-- Buscar -->
-                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.search_new">
+                                        <div class="col-12 col-lg-4 p-2" v-if="configuration.category_deslay">
                                             <h2 class="font-weight-bold custom-text-size">
                                                 Buscar
                                             </h2>
@@ -1282,6 +1292,7 @@
             @openRoom="tableOpen" :cash_id.sync="cashId" />
         <Pos-form :showDialog.sync="showDialog" :recordId.sync="recordId" :external="true"
             @addDataMozo="recibirItem"></Pos-form>
+        <Pos-library :showDialog.sync="showDialogLibrary" :recordId.sync="recordId" :external="true"></Pos-library>
         <Stock-min :showDialog.sync="showDialogStockMin" :fromPos="true"></Stock-min>
     </div>
 </template>
@@ -1451,6 +1462,7 @@ import UnitTypeModal from "../pos/partials/unit_type_modal.vue";
 import DigitalPayComponent from "./partials/digital_pay_component.vue";
 
 import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue";
+import PosLibrary from "../../../../../../../resources/js/views/items/form_library.vue";
 import StockMin from "./partials/stock_min.vue";
 import Swal from "sweetalert2";
 const CleanModal = () => import("./partials/clean.vue");
@@ -1497,6 +1509,7 @@ export default {
     },
     components: {
         StockMin,
+        PosLibrary,
         PosForm,
         Warranty,
         MonthSales,
@@ -1537,6 +1550,7 @@ export default {
     data() {
         return {
             // Control local para alternar el texto del botón (Tabla/Card)
+            showDialogLibrary: false,
             showList: false,
             countdown: 0,
             latencia: 0,
@@ -2151,6 +2165,9 @@ export default {
 
         createdNew() {
             this.showDialog = true;
+        },
+        createdNewLibrary() {
+            this.showDialogLibrary = true;
         },
         async updateCashId(id) {
             // Cuando se abre la caja

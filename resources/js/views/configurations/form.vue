@@ -10148,47 +10148,6 @@
                                                                     style="padding: 7px;">
                                                                     <div class="form-group text-left flex-grow-1">
                                                                         <label class="control-label w-100" :style="{
-                                                                            color: form.variation_hotel
-                                                                                ? '#28a745'
-                                                                                : '#6c757d'
-                                                                        }">
-                                                                            <i ref="variationIcon"
-                                                                                class="fas fa-boxes tab-icon"></i>
-                                                                            Producto
-                                                                            -
-                                                                            Variación
-                                                                            <el-tooltip class="item" effect="dark"
-                                                                                content="Seleccionar variación del producto"
-                                                                                placement="top-start">
-                                                                                <i class="fa fa-info-circle"></i>
-                                                                            </el-tooltip>
-                                                                        </label>
-                                                                        <el-select :disabled="!form.variation_hotel
-                                                                            " ref="producto" v-model="form.item_variation_id
-                                                                                " @change="
-                                                                                    changeItem
-                                                                                " filterable remote
-                                                                            placeholder="Buscar..."
-                                                                            popper-class="el-select-items"
-                                                                            :remote-method="searchRemoteItems
-                                                                                " :loading="loading_search
-                                                                                    ">
-                                                                            <el-option v-for="option in items" :key="option.id
-                                                                                " :value="option.id
-                                                                                    " :label="option.full_description ||
-                                                                                        option.description
-                                                                                        "></el-option>
-                                                                        </el-select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="card h-100">
-                                                                <div class="card-body d-flex flex-column"
-                                                                    style="padding: 7px;">
-                                                                    <div class="form-group text-left flex-grow-1">
-                                                                        <label class="control-label w-100" :style="{
                                                                             color: form.delete_mozo
                                                                                 ? '#28a745'
                                                                                 : '#6c757d'
@@ -10240,8 +10199,8 @@
                                                                             Mostrar
                                                                             categrotia
                                                                             en
-                                                                            scrol
-                                                                            seleccionable
+                                                                            scroll
+                                                                            seleccionable y  buscador
                                                                             <el-tooltip class="item" effect="dark"
                                                                                 content="activar esta opcion para mostrar las categorias en scroll con un formato mas visible como chifa china"
                                                                                 placement="top-start">
@@ -10844,8 +10803,7 @@
                                                                             <i ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"></i>
                                                                             Crear
-                                                                            productos
-                                                                            nuevos
+                                                                            Nuevo plato
                                                                             desde
                                                                             caja
                                                                             <el-tooltip class="item" effect="dark"
@@ -10872,7 +10830,7 @@
                                                         </div>
 
                                                         <!-- Activar buscador en caja -->
-                                                        <div class="col-md-3 mb-2">
+                                                        <!-- <div class="col-md-3 mb-2">
                                                             <div class="card h-100">
                                                                 <div class="card-body d-flex flex-column"
                                                                     style="padding: 7px;">
@@ -10909,7 +10867,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
 
                                                         <!-- Quitar opcion de dividir ordenes en una misma meza -->
                                                         <div class="col-md-3 mb-2">
