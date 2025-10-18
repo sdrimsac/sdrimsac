@@ -450,9 +450,9 @@
                     <td><br></td>
                 </tr>
                 <tr>
-
-                    <table>
-                        <thead>
+                    <td colspan="3" style="padding:0;">
+                        <table style="width:100%; border-collapse: collapse;">
+                            <thead>
                             <tr>
                                 <th class="celda btl">N°</th>
                                 <th class="celda" width="10%">FECHA</th>
@@ -531,7 +531,8 @@
                                 @endif
                             @endfor
                         </tbody>
-                    </table>
+                            </table>
+                    </td>
                 </tr>
             </table>
         </td>
@@ -619,9 +620,9 @@
                     <td><br></td>
                 </tr>
                 <tr>
-
-                    <table>
-                        <thead>
+                    <td colspan="3" style="padding:0;">
+                        <table style="width:100%; border-collapse: collapse;">
+                            <thead>
                             <tr>
                                 <th class="celda btl">N°</th>
                                 <th class="celda" width="10%">FECHA</th>
@@ -684,7 +685,8 @@
                                 @endif
                             @endfor
                         </tbody>
-                    </table>
+                            </table>
+                    </td>
                 </tr>
             </table>
         </td>
