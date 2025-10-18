@@ -125,7 +125,8 @@ class Box extends ModelTenant
         $cash_id,
         $sale_note_id = null,
         $document_id = null,
-        $sale_note_payment_id = null
+        $sale_note_payment_id = null,
+        $document_payment_id = null
     ) {
         $boxes = new Box;
         $company = Company::first();
@@ -144,6 +145,7 @@ class Box extends ModelTenant
         $boxes->description =  $description_register;
         $boxes->soap_type_id = $company->soap_type_id;
         $boxes->sale_note_payment_id = $sale_note_payment_id;
+        $boxes->document_payment_id = $document_payment_id;
         $boxes->cash_id = $cash_id;
         $boxes->save();
     }

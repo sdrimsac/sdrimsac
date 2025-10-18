@@ -273,9 +273,12 @@ class DocumentPaymentController extends Controller
                 $payment_method_description,
                 $description_register,
                 $cash_id,
+                null,
                 $document->id,
                 null,
-                $document_payment->id
+                $document_payment->id,
+
+
             );
 
             DB::connection('tenant')->commit();
