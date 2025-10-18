@@ -409,8 +409,51 @@ export default {
                 .then(response => {
                     this.records = response.data.data;
 
-                    if (this.records[0].date_of_issue_payment) {
-                        this.records[0].canCancel = true;
+                    // Clear any previous canCancel flags
+                    this.records.forEach(r => {
+                        r.canCancel = false;
+                    });
+
+                    // Find the latest payment by date+time (prefer date_of_issue_payment when available)
+                    // We expect dates to be in 'YYYY-MM-DD' and times may be in 'HH:mm:ss' or included in the field.
+                    try {
+                        let latestIndex = -1;
+                        let latestMoment = null;
+
+                        this.records.forEach((r, idx) => {
+                            if (r.extorned) return; // skip extorned payments
+
+                            // prefer date_of_issue_payment, otherwise date_of_payment
+                            let datePart = r.date_of_issue_payment ? r.date_of_issue_payment : r.date_of_payment;
+
+                            // if there's a separate time field use it, otherwise parse combined
+                            // attempt common combined formats, fallback to date only
+                            let m = null;
+                            if (datePart) {
+                                m = moment(datePart, moment.ISO_8601, true);
+                                if (!m.isValid()) {
+                                    // try without strict ISO parse
+                                    m = moment(datePart);
+                                }
+                            }
+
+                            // if still invalid, skip
+                            if (!m || !m.isValid()) return;
+
+                            if (latestMoment === null || m.isAfter(latestMoment)) {
+                                latestMoment = m;
+                                latestIndex = idx;
+                            }
+                        });
+
+                        if (latestIndex !== -1) {
+                            this.records[latestIndex].canCancel = true;
+                        }
+                    } catch (e) {
+                        // fallback: if first record has a date, keep old behavior
+                        if (this.records[0] && this.records[0].date_of_issue_payment) {
+                            this.records[0].canCancel = true;
+                        }
                     }
                 });
 

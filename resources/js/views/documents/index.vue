@@ -419,7 +419,7 @@
                                                         </button>
 
                                                         <!-- Pagos CPE -->
-                                                        <button v-if="row.is_credit" type="button"
+                                                        <!-- <button v-if="row.is_credit" type="button"
                                                             class="btn btn-secondary text-white rounded w-100 d-flex align-items-center"
                                                             style="height: 40px;" @click.prevent="
                                                                 clickPayment(
@@ -428,7 +428,7 @@
                                                                 ">
                                                             <i class="fas fa-money-bill-wave me-2"></i>
                                                             <span>Pagos CPE</span>
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </template>
 

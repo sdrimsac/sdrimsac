@@ -742,7 +742,7 @@
                                                 </el-button>
                                             </td>
                                             <td v-if="form.payment_condition_id !== '01'">
-                                                <el-date-picker :clearable="false"
+                                                <el-date-picker :clearable="false" :disabled-date="disabledDate"
                                                     v-model="paymnt.date"></el-date-picker>
                                             </td>
                                             <td>{{ paymnt.method }}</td>
@@ -1830,6 +1830,33 @@ export default {
         window.removeEventListener("resize", this.updateDialogWidth);
     },
     methods: {
+        // Disable dates before today for payment installments
+        // Accepts Date object, timestamp (number) or moment object
+        disabledDate(time) {
+            try {
+                if (time === null || time === undefined) return false;
+                let dateObj;
+                // moment.js instance check
+                if (typeof moment !== 'undefined' && moment.isMoment && moment.isMoment(time)) {
+                    dateObj = time.toDate();
+                } else if (typeof time === 'number') {
+                    dateObj = new Date(time);
+                } else {
+                    // assume Date-like
+                    dateObj = new Date(time);
+                }
+
+                if (isNaN(dateObj.getTime())) return false;
+
+                const selected = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+                const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                // disable if selected date is strictly before todayStart
+                return selected < todayStart;
+            } catch (e) {
+                return false;
+            }
+        },
         affectationwindows(newVal) {
             console.log("affectationwindows ver si ingresa", newVal, this.form.total);
             // Solo mostrar si afectación es '10'

@@ -1129,12 +1129,12 @@
                                                                         indexx
                                                                     )
                                                                     " size="medium" role="button" :type="order_pend.to_carry
-                                                                            ? 'success'
-                                                                            : 'info'
-                                                                            " :effect="order_pend.to_carry
-                                                                            ? 'dark'
-                                                                            : 'plain'
-                                                                            ">
+                                                                        ? 'success'
+                                                                        : 'info'
+                                                                        " :effect="order_pend.to_carry
+                                                                                ? 'dark'
+                                                                                : 'plain'
+                                                                                ">
                                                                     <i class="fas fa-biking" style="color: black"></i>
                                                                 </el-tag>
                                                             </div>
@@ -1203,14 +1203,13 @@
                                                                                 1)
                                                                             " class="form-control text-center fw-bold"
                                                                             style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif;"
-                                                                            v-model="order_pend.quantity"
-                                                                            :type="'text'"
+                                                                            v-model="order_pend.quantity" :type="'text'"
                                                                             data-rule="currency" :class="{
                                                                                 'custom-bg-light': !configuration.item_set_quantity_pos,
                                                                                 'custom-bg-danger;': configuration.item_set_quantity_pos
                                                                             }" @input="
                                                                                 verifyStock(order_pend, indexx)
-                                                                            " />
+                                                                                " />
 
                                                                         <div class="input-group-text">
                                                                             <button type="button" class="spin-up"
@@ -1326,17 +1325,17 @@
                                                                                         :key="index
                                                                                             " :value="price
                                                                                                 " :label="price
-                                                                                                "></el-option>
+                                                                                                    "></el-option>
                                                                                 </el-select>
                                                                                 <el-button v-if="
                                                                                     configuration.edit_price
                                                                                 " @click="
                                                                                     toggleEdit
                                                                                 ">{{
-                                                                                        isEditing
-                                                                                            ? "C"
-                                                                                            : "E"
-                                                                                    }}</el-button>
+                                                                                    isEditing
+                                                                                        ? "C"
+                                                                                        : "E"
+                                                                                }}</el-button>
                                                                             </template>
                                                                             <template v-else>
                                                                                 <el-input class="custom_input text-dark"
@@ -1346,11 +1345,11 @@
                                                                                         false
                                                                                         " type="number" v-model="order_pend.price
                                                                                             " @input="
-                                                                                            update_price(
-                                                                                                indexx,
-                                                                                                order_pend.price
-                                                                                            )
-                                                                                            ">
+                                                                                                update_price(
+                                                                                                    indexx,
+                                                                                                    order_pend.price
+                                                                                                )
+                                                                                                ">
                                                                                     <!-- <template
                                                                                         slot="prepend"
                                                                                     >
@@ -1364,18 +1363,22 @@
                                                                     </span>
                                                                 </div>
                                                                 <div class="col-4 col-md-2 col-lg-3 mt-2" v-if="
-                                                                            
-                                                                                !isSellerConsolidated
-                                                                        ">
 
-                                                                    <strong style="font-size: 1.3rem; margin-left: 60px;">
-                                                                        {{ typeof order_pend.newSubtotal === 'number' ? Number(order_pend.newSubtotal).toFixed(2) : parseFloat(order_pend.price * order_pend.quantity).toFixed(2) }}
+                                                                    !isSellerConsolidated
+                                                                ">
+
+                                                                    <strong
+                                                                        style="font-size: 1.3rem; margin-left: 60px;">
+                                                                        {{ typeof order_pend.newSubtotal === 'number' ?
+                                                                            Number(order_pend.newSubtotal).toFixed(2) :
+                                                                        parseFloat(order_pend.price *
+                                                                        order_pend.quantity).toFixed(2) }}
                                                                     </strong>
 
                                                                     <el-input class="input-new-tag1 text-center w-100"
                                                                         style="font-weight: bold; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; text-align: center;"
-                                                                        v-model="order_pend.newSubtotal"
-                                                                        type="number" step="0.01"
+                                                                        v-model="order_pend.newSubtotal" type="number"
+                                                                        step="0.01"
                                                                         @input="val => handleSubtotalInput(val, indexx)"
                                                                         placeholder="0.00" size="medium" />
 
@@ -3444,7 +3447,7 @@ export default {
             this.currentIdx = index;
             this.showSeries = true;
         },
-        
+
         justNumber(indexx) {
             let val = this.localOrden[indexx].newSubtotal;
             val = String(val).replace(/[^0-9.]/g, "");

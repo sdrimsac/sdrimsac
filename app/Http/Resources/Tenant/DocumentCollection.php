@@ -232,49 +232,6 @@ class DocumentCollection extends ResourceCollection
                 'external_id' => $row->external_id,
                 'observation' => $row->observation,
                 'balance' => $balance,
-                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
-                    ? [[
-                        'document_id' => $row->document_affected_note->document_id,
-                        'affected_document_id' => $row->document_affected_note->affected_document_id,
-                        'number_full' => $row->number_full,
-
-                    ]]
-                    : [], */
-                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
-                    ? [[
-                        'document_id' => $row->document_affected_note->document_id,
-                        'affected_document_id' => $row->document_affected_note->affected_document_id,
-                        'series' => optional($row->document_affected_note->document)->series,
-                        'number' => optional($row->document_affected_note->document)->number,
-                    ]]
-                    : [], */
-                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
-                    ? [[
-                        'document_id' => $row->document_affected_note->document_id,
-                        'affected_document_id' => $row->document_affected_note->affected_document_id,
-                        'series' => optional($row->document_affected_note->document)->series,
-                        'number' => optional($row->document_affected_note->document)->number,
-                        'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
-                        'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
-                    ]]
-                    : [], */
-                /* 'document_affected_notes' => $row->relationLoaded('document_affected_note') && $row->document_affected_note
-                    ? [[
-                        'document_id' => $row->document_affected_note->document_id,
-                        'affected_document_id' => $row->document_affected_note->affected_document_id,
-                        // Si es nota de crédito, mostrar datos del documento afectado
-                        'series' => $row->document_type_id == '07'
-                            ? optional(Document::find($row->document_affected_note->affected_document_id))->series
-                            : optional($row->document_affected_note->document)->series,
-                        'number' => $row->document_type_id == '07'
-                            ? optional(Document::find($row->document_affected_note->affected_document_id))->number
-                            : optional($row->document_affected_note->document)->number,
-                        // Puedes agregar ambos si quieres mostrar siempre ambos campos
-                        'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
-                        'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
-                    ]]
-                    : [], */
-
                 'document_affected_notes' =>
                 // Si es nota de crédito, buscar el documento afectado manualmente
                 $row->document_type_id == '07'

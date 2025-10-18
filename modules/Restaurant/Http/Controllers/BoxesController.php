@@ -1977,7 +1977,7 @@ class BoxesController extends Controller
         return implode(' | ', $result);
     }
 
-    function get_orden_item_anulate($cash_id)
+    /* function get_orden_item_anulate($cash_id)
     {
         $cash = Cash::find($cash_id);
         $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
@@ -1985,12 +1985,6 @@ class BoxesController extends Controller
 
         $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
         $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
-
-        /* $query = Orden::with(['orden_items' => function ($q) {
-            $q->where('status_orden_id', 5);
-        }, 'orden_items.food', 'orden_items.user', 'orden_items.ordens_delete'])
-            ->whereDate('created_at', '>=', $date_opening)
-            ->whereTime('created_at', '>=', $time_opening); */
 
         $query = Orden::with(['orden_items' => function ($q) {
             $q->where('status_orden_id', 5);
@@ -2052,7 +2046,107 @@ class BoxesController extends Controller
             'time_closed' => $time_closed,
             'cancelado_orders' => $cancelado_orders
         ];
+    } */
+
+    function get_orden_item_anulate($cash_id)
+    {
+        $cash = Cash::find($cash_id);
+
+        $date_opening = Carbon::parse($cash->date_opening)->format('Y-m-d');
+        $time_opening = Carbon::parse($cash->time_opening)->format('H:i:s');
+
+        $date_closed = $cash->date_closed ? Carbon::parse($cash->date_closed)->format('Y-m-d') : null;
+        $time_closed = $cash->time_closed ? Carbon::parse($cash->time_closed)->format('H:i:s') : null;
+
+        // 🔸 1. Consultamos órdenes anuladas o con ítems anulados
+        $query = Orden::with([
+            'orden_items.food',
+            'orden_items.user',
+            'orden_items.ordens_delete'
+        ])
+            ->where(function ($q) {
+                // incluir órdenes anuladas completas o con ítems anulados
+                $q->where('status_orden_id', 5)
+                    ->orWhereHas('orden_items', function ($sub) {
+                        $sub->where('status_orden_id', 5);
+                    });
+            })
+            ->whereDate('created_at', '>=', $date_opening)
+            ->whereTime('created_at', '>=', $time_opening);
+
+        // 🔸 2. Filtrar por usuario dueño de la caja
+        $query->whereHas('orden_items', function ($q) use ($cash) {
+            $q->where('user_id', $cash->user_id);
+        });
+
+        // 🔸 3. Si la caja está cerrada, filtrar por fecha/hora de cierre
+        if ($date_closed && $time_closed) {
+            $query->whereDate('created_at', '<=', $date_closed)
+                ->whereTime('created_at', '<=', $time_closed);
+        }
+
+        // 🔸 4. Procesar resultados
+        $cancelado_orders = $query->get()->map(function ($order) {
+
+            // Si la orden completa fue anulada (status_orden_id = 5)
+            if ($order->status_orden_id == 5) {
+                $items = $order->orden_items->map(function ($item) {
+                    return [
+                        'quantity' => $item->quantity,
+                        'product' => $item->food->description ?? 'Sin descripción',
+                        'price' => $item->price,
+                        'user' => $item->user->name ?? 'Usuario desconocido',
+                        'reason' => optional($item->ordens_delete->first())->reason ?? 'Anulación completa',
+                    ];
+                });
+
+                return [
+                    'order_number' => $order->id,
+                    'date' => $order->created_at->format('Y-m-d'),
+                    'time' => $order->created_at->format('H:i:s'),
+                    'items' => $items,
+                    'total_amount' => $items->sum(fn($i) => $i['quantity'] * $i['price']),
+                    'reason' => $order->reason ?? 'Anulación completa',
+                    'total_items' => $items->sum('quantity'),
+                    'is_anulated' => true
+                ];
+            }
+
+            // Si solo algunos ítems fueron anulados
+            $anulated_items = $order->orden_items->where('status_orden_id', 5);
+
+            $items = $anulated_items->map(function ($item) {
+                return [
+                    'quantity' => $item->quantity,
+                    'product' => $item->food->description ?? 'Sin descripción',
+                    'price' => $item->price,
+                    'user' => $item->user->name ?? 'Usuario desconocido',
+                    'reason' => optional($item->ordens_delete->first())->reason ?? 'No especificado',
+                ];
+            });
+
+            return [
+                'order_number' => $order->id,
+                'date' => $order->created_at->format('Y-m-d'),
+                'time' => $order->created_at->format('H:i:s'),
+                'items' => $items,
+                'total_amount' => $items->sum(fn($i) => $i['quantity'] * $i['price']),
+                'reason' => $items->firstWhere('reason', '!=', null)['reason'] ?? 'No especificado',
+                'total_items' => $items->sum('quantity'),
+                'is_anulated' => false
+            ];
+        });
+
+        return [
+            'cash_id' => $cash_id,
+            'date_opening' => $date_opening,
+            'time_opening' => $time_opening,
+            'date_closed' => $date_closed,
+            'time_closed' => $time_closed,
+            'cancelado_orders' => $cancelado_orders
+        ];
     }
+
 
     public function save_info_pharmacy(Request $request, $cash_id)
     {

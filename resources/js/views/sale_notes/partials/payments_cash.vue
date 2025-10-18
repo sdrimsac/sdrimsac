@@ -35,28 +35,6 @@
                     <el-button class="btn_guardarsmall" type="primary" icon="el-icon-plus" @click="clickAddRow">
                         Nuevo
                     </el-button>
-                    <!-- <el-button
-                        v-if="
-                            configuration &&
-                                configuration.sale_note_credit_penalty
-                        "
-                        type="primary"
-                        icon="el-icon-payment"
-                        @click="clickAddCancelCredit"
-                    >
-                        Cancelar crédito</el-button
-                    > -->
-
-                    <!-- <el-button
-                        type="primary"
-                        @click="seeDetail"
-                        icon="el-icon-view"
-                        v-if="
-                            configuration &&
-                                configuration.sale_note_credit_penalty
-                        "
-                        >Ajustes</el-button
-                    > -->
                 </div>
                 <div class="col-md-12" v-if="records.length > 0">
                     <div class="table-responsive">
@@ -132,9 +110,7 @@
                                                         .date_of_payment
                                                  }">
                                                 <el-date-picker v-model="row.date_of_payment
-                                                    " type="date" :disabled="configuration &&
-                                                        configuration.sale_note_credit_penalty
-                                                        " :clearable="false" format="dd/MM/yyyy"
+                                                    " type="date"  :clearable="false" format="dd/MM/yyyy"
                                                     value-format="yyyy-MM-dd"></el-date-picker>
                                                 <small class="form-control-feedback" v-if="
                                                     row.errors
@@ -222,13 +198,13 @@
                                             </div>
                                         </td>
                                         <td class="series-table-actions text-end">
-                                            <button :disabled="is_paying" v-if="
+                                            <!-- <button :disabled="is_paying" v-if="
                                                 configuration.sale_note_credit_penalty
                                             " type="button" class="btn waves-effect waves-light btn-sm btn-success"
                                                 @click.prevent="payLastPayment">
                                                 <i class="fa fa-check"></i>
-                                            </button>
-                                            <button v-else :disabled="is_paying" type="button"
+                                            </button> -->
+                                            <button  :disabled="is_paying" type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-info" @click.prevent="
                                                     clickSubmit(index)
                                                     ">
