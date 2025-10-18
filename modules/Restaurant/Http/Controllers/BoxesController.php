@@ -3544,76 +3544,8 @@ class BoxesController extends Controller
         $sales_cash = Box::where('currency_type_id', 'PEN')->where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_cash_records = $sales_cash->get();
         $sales_cash_sum = 0;
+
         foreach ($sales_cash_records as $ringreso) {
-            /* if ($ringreso["sale_note_id"]) {
-                $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                $coins = $this->get_to_carry($sale_note);
-                if ($coins) {
-                    foreach ($coins["coins"] as $coin) {
-                        $deliveries[] = $coin;
-                    }
-                }
-                if ($ringreso["sale_note_payment_id"]) {
-                    $sales_cash_sum += $ringreso["amount"];
-                } else {
-                    $to_sum = 0;
-                    if ($sale_note->total > $ringreso["amount"]) {
-
-                        $to_sum = $ringreso["amount"];
-                    } else {
-                        $to_sum = $sale_note->total;
-                    }
-                    $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)->where('id', '<>', $ringreso["id"]);
-                    $count = $boxes_ringreso->count();
-                    if ($count > 0) {
-                        $sum = $boxes_ringreso->sum('amount');
-                        $to_sum = $sale_note->total - $sum;
-                    }
-                    $sales_cash_sum += $to_sum;
-                    if ($sale_note->total_discount) {
-                        $total_discount += $sale_note->total_discount;
-                    }
-                }
-            } */
-            /* if ($ringreso["sale_note_id"]) {
-                $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                $coins = $this->get_to_carry($sale_note);
-
-                if ($coins) {
-                    foreach ($coins["coins"] as $coin) {
-                        $deliveries[] = $coin;
-                    }
-                }
-
-                // 🔍 Si tiene pagos registrados (crédito)
-                if ($sale_note->creditPayments && $sale_note->creditPayments->count() > 0) {
-                    // Sumar solo pagos efectivos (no extornados)
-                    $sum_payments = $sale_note->creditPayments()
-                        ->where('extorned', 0)
-                        ->sum('payment');
-                    $sales_cash_sum += $sum_payments;
-                }
-                // 💰 Si no es crédito, tratamos normalmente
-                elseif ($ringreso["sale_note_payment_id"]) {
-                    $sales_cash_sum += $ringreso["amount"];
-                } else {
-                    $to_sum = min($sale_note->total, $ringreso["amount"]);
-
-                    $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)
-                        ->where('id', '<>', $ringreso["id"]);
-
-                    if ($boxes_ringreso->exists()) {
-                        $sum = $boxes_ringreso->sum('amount');
-                        $to_sum = $sale_note->total - $sum;
-                    }
-
-                    $sales_cash_sum += $to_sum;
-                }
-
-                if ($sale_note->total_discount) {
-                    $total_discount += $sale_note->total_discount;
-                }
-            } */
 
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
@@ -3625,30 +3557,72 @@ class BoxesController extends Controller
                     }
                 }
 
-                // ✅ Si tiene pagos de crédito (pagos parciales)
                 if ($ringreso["sale_note_payment_id"]) {
+                    // Pago sobre crédito
+                    $payment = SaleNotePayment::find($ringreso["sale_note_payment_id"]);
+                    if ($payment && $payment->extorned == 0) {
+                        $sales_cash_sum += $payment->payment;
+                        Log::info('Pago encontrado para Sale NotePayment ID ' . $payment->id . ', suma: ' . $payment->payment);
+                    }
+                } else {
+                    // Pago en caja
+                    $to_sum = $ringreso["amount"];
+
+                    // Suma de otras cajas (excluyendo este ringreso)
+                    $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
+                        ->where('id', '<>', $ringreso["id"])
+                        ->sum('amount');
+
+                    // Suma de pagos sobre crédito
+                    $paid_credit = SaleNotePayment::where('sale_note_id', $sale_note->id)
+                        ->where('extorned', 0)
+                        ->sum('payment');
+
+                    // Lo que realmente queda por pagar en efectivo para este ringreso
+                    $remaining_to_pay = max(0, $sale_note->total - ($other_boxes_sum + $paid_credit));
+
+                    // El to_sum real es lo mínimo entre el monto de este ringreso y lo que queda
+                    $to_sum = min($to_sum, $remaining_to_pay);
+
+                    Log::info("Valor ajustado to_sum final", [$to_sum]);
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+
+                /* if ($ringreso["sale_note_payment_id"]) {
                     // Busca el pago asociado
                     $payment = SaleNotePayment::find($ringreso["sale_note_payment_id"]);
 
-                    // Sumar solo si no está extornado
                     if ($payment && $payment->extorned == 0) {
                         $sales_cash_sum += $payment->payment;
+                        Log::info('Pago encontrado para Sale Note ID ' . $sales_cash_sum);
                     }
-                }
-                // 💰 Si fue al contado (sin pagos de crédito)
-                else {
+                } else {
                     $to_sum = min($sale_note->total, $ringreso["amount"]);
+
+                    Log::info("Valor to_sum inicial", [$to_sum]);
 
                     $boxes_ringreso = Box::where('sale_note_id', $sale_note->id)
                         ->where('id', '<>', $ringreso["id"]);
 
                     if ($boxes_ringreso->exists()) {
                         $sum = $boxes_ringreso->sum('amount');
+                        Log::info("Valor sum boxes_ringreso aadd", [$sum]);
                         $to_sum = $sale_note->total - $sum;
+
+                        Log::info("Valor ajustado to_sum", [$to_sum]);
+                    }
+
+                    if ($boxes_ringreso->exists()) {
+                        $sum = $boxes_ringreso->sum('amount');
+                        $to_sum = max(0, $to_sum - $sum);
+
+                        Log::info("Valor ajustado to_sum con max", [$to_sum]);
                     }
 
                     $sales_cash_sum += $to_sum;
-                }
+                } */
 
                 if ($sale_note->total_discount) {
                     $total_discount += $sale_note->total_discount;
@@ -3665,16 +3639,13 @@ class BoxesController extends Controller
                     }
                 }
 
-                // ✅ Si el documento tiene un pago de crédito
                 if ($ringreso["document_payment_id"]) {
                     $payment = DocumentPayment::find($ringreso["document_payment_id"]);
 
                     if ($payment && $payment->extorned == 0) {
                         $sales_cash_sum += $payment->payment;
                     }
-                }
-                // 💰 Si fue contado
-                else {
+                } else {
                     $to_sum = min($document->total, $ringreso["amount"]);
 
                     $boxes_ringreso = Box::where('document_id', $document->id)
@@ -3692,70 +3663,6 @@ class BoxesController extends Controller
                     $total_discount += $document->total_discount;
                 }
             }
-
-
-            /* if ($ringreso["document_id"]) {
-                $document = Document::find($ringreso["document_id"]);
-                $coins = $this->get_to_carry($document);
-
-                if ($coins) {
-                    foreach ($coins["coins"] as $coin) {
-                        $deliveries[] = $coin;
-                    }
-                }
-
-                // 🔍 Si tiene pagos registrados (crédito)
-                if ($document->payments && $document->payments->count() > 0) {
-                    $sum_payments = $document->payments()
-                        ->where('extorned', 0)
-                        ->sum('payment');
-                    $sales_cash_sum += $sum_payments;
-                } else {
-                    $to_sum = min($document->total, $ringreso["amount"]);
-
-                    $boxes_ringreso = Box::where('document_id', $document->id)
-                        ->where('id', '<>', $ringreso["id"]);
-
-                    if ($boxes_ringreso->exists()) {
-                        $sum = $boxes_ringreso->sum('amount');
-                        $to_sum = $document->total - $sum;
-                    }
-
-                    $sales_cash_sum += $to_sum;
-                }
-
-                if ($document->total_discount) {
-                    $total_discount += $document->total_discount;
-                }
-            } */
-
-
-            /* if ($ringreso["document_id"]) {
-                $document = Document::find($ringreso["document_id"]);
-                $coins = $this->get_to_carry($document);
-                if ($coins) {
-
-                    foreach ($coins["coins"] as $coin) {
-                        $deliveries[] = $coin;
-                    }
-                }
-                $to_sum = 0;
-                if ($document->total > $ringreso["amount"]) {
-                    $to_sum =  $ringreso["amount"];
-                } else {
-                    $to_sum = $document->total;
-                }
-                $boxes_ringreso = Box::where('document_id', $document->id)->where('id', '<>', $ringreso["id"]);
-                $count = $boxes_ringreso->count();
-                if ($count > 0) {
-                    $sum = $boxes_ringreso->sum('amount');
-                    $to_sum = $document->total - $sum;
-                }
-                $sales_cash_sum += $to_sum;
-                if ($document->total_discount) {
-                    $total_discount += $document->total_discount;
-                }
-            } */
         }
         $sales_amount += $sales_cash_sum;
         $sales_cash_quantity = $sales_cash->count();

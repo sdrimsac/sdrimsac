@@ -23,14 +23,24 @@ class SaleNotePaymentCollection extends ResourceCollection
 
             $external_id = ($receipt == null) ? "" : url('') . "/receipt/print/{$receipt->external_id}";
             $user_app = auth()->user();
-            $configuration = Configuration::first();
-            $can_extorned = $user_app->can_accept_credit_sale_note || $configuration->extorned_analist;
 
+            $configuration = Configuration::first();
             $establishment = Establishment::first();
-            if ($establishment->credit_warehouse) {
+
+            // Determine if current user or system settings allow extorned.
+            // Respect user permission, configuration flag or establishment flag.
+            $can_extorned = false;
+
+            if ($user_app && data_get($user_app, 'can_accept_credit_sale_note')) {
                 $can_extorned = true;
-            } else {
-                $can_extorned = false;
+            }
+
+            if (!$can_extorned && $configuration && data_get($configuration, 'extorned_analist')) {
+                $can_extorned = true;
+            }
+
+            if (!$can_extorned && $establishment && data_get($establishment, 'credit_warehouse')) {
+                $can_extorned = true;
             }
 
             return [

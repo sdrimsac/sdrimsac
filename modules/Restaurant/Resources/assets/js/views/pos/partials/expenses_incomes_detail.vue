@@ -30,7 +30,7 @@
                         <div style="color: #1e5a85;">{{ data.date.split(' ')[1] }}</div>
                     </td>
                     <td style="text-align: right;">{{ data.amount }}</td>
-                    <td>
+                    <td v-if="data.sale_note_payment_id == null && data.document_payment_id == null">
                         <el-dropdown trigger="click">
                             <el-button class="btn_guardarsmall" type="primary" size="mini">
                                 Acciones <i class="el-icon-arrow-down el-icon--right"></i>

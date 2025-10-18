@@ -212,7 +212,7 @@ class DocumentPaymentController extends Controller
                         $type_document = "NOTA DE DEBITO";
                         break;
                 }
-                $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+                $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number . " numero de cuota: " . $record->id;
                 $boxes->description = "PAGO DE " . $documents_rows;
                 $boxes->soap_type_id = $company->soap_type_id;
 

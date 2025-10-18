@@ -525,7 +525,7 @@ class SaleNotePaymentController extends Controller
             $boxes->user_id = auth()->user()->id;
             $type_document = "NOTA DE VENTA";
             $boxes->sale_note_id = $document_save->id;
-            $boxes->description = "PAGO DE " . $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+            $boxes->description = "PAGO DE " . $type_document . " N° " . $document_save->series . " - " . $document_save->number . " numero de cuota: " . $record->id;
             $boxes->soap_type_id = $company->soap_type_id;
             $boxes->sale_note_payment_id = $record->id;
             $boxes->cash_id = $cash->id;
