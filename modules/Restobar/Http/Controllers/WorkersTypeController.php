@@ -1,0 +1,128 @@
+<?php
+
+namespace Modules\Restobar\Http\Controllers;
+
+use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentUserExcluded;
+use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Series;
+use App\Models\Tenant\User;
+use App\Models\Tenant\UserSerie;
+use App\Models\Tenant\Warehouse;
+use Illuminate\Routing\Controller;
+
+use Modules\Restobar\Models\WorkersType;
+use Modules\Restobar\Http\Requests\WorkersTypeRequest;
+use Modules\Restobar\Http\Resources\WorkersTypeCollection;
+use Illuminate\Http\Request;
+
+class WorkersTypeController extends Controller
+{
+
+    public function index()
+    {
+        $configurations = Configuration::first();
+        return view('restobar::configuration.workers_type', compact('configurations'));
+    }
+    public function columns()
+    {
+        return [
+            'description' => 'Descripción',
+            'active'      => 'Estado'
+        ];
+    }
+    public function records(Request $request)
+    {
+        if ($request->column && $request->value == "Activado") {
+            $records = WorkersType::where($request->column, '=', 1);
+        } else if ($request->column && $request->value == "Desactivado") {
+            $records = WorkersType::where($request->column, '=', 0);
+        } 
+        else if($request->column  == 'active'){
+            $records = WorkersType::where('active', $request->value );
+        }
+        else if ($request->column && $request->value) {
+            $records = WorkersType::where($request->column, 'like', "%{$request->value}%")
+                ->where('active', 1);
+        } else {
+            $records = WorkersType::where('active', 1);
+        }
+
+        return new WorkersTypeCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    
+    public function actives()
+    {
+        $user = User::find(auth()->user()->id);
+        // $user_id = $user->id;
+        // $user_series = UserSerie::where('user_id', $user_id)->get();
+        $is_arca = $user->isWorkerType('arca');
+        $workers_type = WorkersType::where('active', 1);
+        if ($is_arca) {
+            //no mostrar el tipo de trabajador arca
+            $workers_type = $workers_type->where('description', '<>', 'ARCA');
+        }
+        $series = Series::where('document_type_id', '01')->get();
+        $workers_type = $workers_type->get();
+        $establishments = Establishment::all();
+        $warehouses = Warehouse::all();
+        $commercial_treatment = CommercialTreatment::query()->get()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+                'active' => (bool) $row->active,
+            ];
+        });
+        return [
+            'success' => true,
+            'commercial_treatment' => $commercial_treatment,
+            'workers_type' => $workers_type,
+            'establishments' => $establishments,
+            'warehouses' => $warehouses,
+            'series' => $series
+        ];
+    }
+
+    public function record($id)
+    {
+        $workers_type = WorkersType::find($id);
+
+        return [
+            'success' => true,
+            'data' => $workers_type
+        ];
+    }
+    public function active($id)
+    {
+        $workers_type = WorkersType::find($id);
+        $workers_type->active = !$workers_type->active;
+        $workers_type->save();
+        return [
+            'success' => true,
+            'data' => $workers_type,
+            'message' => 'Tipo ' . ($workers_type->active ? 'activado' : 'desactivado')
+        ];
+    }
+    public function store(WorkersTypeRequest $request)
+    {
+
+        $id = $request->input('id');
+        $worker_type = WorkersType::firstOrNew(['id' => $id]);
+        $worker_type->fill($request->all());
+        $worker_type->save();
+
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Tipo actualizado con éxito' : 'Tipo creado con éxito'
+        ];
+    }
+
+
+
+    public function destroy($id)
+    {
+        //
+    }
+}

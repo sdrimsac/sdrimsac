@@ -1229,7 +1229,7 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant && !$roleService->isAccountant($user->worker_type_id))
+    @if ($config->restaurant || $config->restobar_home && !$roleService->isAccountant($user->worker_type_id))
 
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
@@ -1241,7 +1241,7 @@
             </a>
 
             <ul id="restaurantUl" class="collapse">
-                @if ($config->restaurant && !$roleService->isLogistic())
+                @if ($config->restaurant || $config->restobar_home && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
                             href="{{ route('restaurant.tables') }}">
@@ -1278,7 +1278,7 @@
                         <span style="font-size: 1em; ">Receta</span>
                     </a>
                 </li>
-                @if ($config->restaurant && !$roleService->isLogistic())
+                @if ($config->restaurant || $config->restobar_home && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.mozo.index') }}">

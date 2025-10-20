@@ -1,0 +1,13 @@
+{
+    "name": "Restobar",
+    "alias": "restobar",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Restobar\\Providers\\RestobarServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

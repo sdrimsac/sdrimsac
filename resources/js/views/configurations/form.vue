@@ -740,6 +740,88 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-2 mb-2" v-if="canSee">
+                                                                    <div class="card h-100">
+                                                                        <div class="card-body d-flex flex-column"
+                                                                            style="padding: 7px;">
+                                                                            <div class="form-group text-left flex-grow-1"
+                                                                                style="margin-left: 5px;">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <label class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.credits_home
+                                                                                                ? '#073f68'
+                                                                                                : '#6c757d'
+                                                                                        }">
+
+                                                                                            <i class="fas fa-drumstick-bite" style="font-size: 2rem;"></i>
+                                                                                        Creditos
+                                                                                    </label>
+                                                                                    <vs-checkbox
+                                                                                        color="#073f68"
+                                                                                        v-model="form.credits_home"
+                                                                                        @change="() =>
+                                                                                            submit(
+                                                                                                'Habilitar Creditos',
+                                                                                                form.credits_home,
+                                                                                                'quotationIcon'
+                                                                                            )
+                                                                                        "
+                                                                                        :style="{
+                                                                                            width: 'auto',
+                                                                                            boxSizing: 'border-box',
+                                                                                            marginRight: '8px',
+                                                                                            border: form.tap ? 'none' : '2px solid #073f68',
+                                                                                            borderRadius: '8px',
+                                                                                            transition: 'border 0.2s'
+                                                                                        }"
+                                                                                    ></vs-checkbox>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 mb-2" v-if="canSee">
+                                                                    <div class="card h-100">
+                                                                        <div class="card-body d-flex flex-column"
+                                                                            style="padding: 7px;">
+                                                                            <div class="form-group text-left flex-grow-1"
+                                                                                style="margin-left: 5px;">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <label class="control-label w-100"
+                                                                                        :style="{
+                                                                                            color: form.restobar_home
+                                                                                                ? '#073f68'
+                                                                                                : '#6c757d'
+                                                                                        }">
+
+                                                                                            <i class="fas fa-drumstick-bite" style="font-size: 2rem;"></i>
+                                                                                        Restobar nuevo
+                                                                                    </label>
+                                                                                    <vs-checkbox
+                                                                                        color="#073f68"
+                                                                                        v-model="form.restobar_home"
+                                                                                        @change="() =>
+                                                                                            submit(
+                                                                                                'Habilitar Restobar nuevo',
+                                                                                                form.restobar_home,
+                                                                                                'quotationIcon'
+                                                                                            )
+                                                                                        "
+                                                                                        :style="{
+                                                                                            width: 'auto',
+                                                                                            boxSizing: 'border-box',
+                                                                                            marginRight: '8px',
+                                                                                            border: form.tap ? 'none' : '2px solid #073f68',
+                                                                                            borderRadius: '8px',
+                                                                                            transition: 'border 0.2s'
+                                                                                        }"
+                                                                                    ></vs-checkbox>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9592,7 +9674,7 @@
                                     </el-tab-pane>
 
                                     <!-- Restaurant-------- -->
-                                    <el-tab-pane v-if="form.restaurant" name="restaurant">
+                                    <el-tab-pane v-if="form.restaurant || form.restobar_home" name="restaurant">
                                         <template #label>
                                             <div class="tab-label">
                                                 <i class="fas fa-utensils tab-icon"></i>

@@ -143,16 +143,21 @@
                                                 </button>
                                             </el-tooltip>
                                         </template>
-                                        <el-tooltip content="Crear Producto" placement="top">
+                                        <!-- <template v-if="restaurant_library">
+                                            <el-tooltip content="Crear Producto" placement="top">
                                                 <button class="btn_guardarsmall" type="primary" @click="createdNewLibrary">
                                                     <i class="fas fa-plus" style="font-size: 20px;">prod</i>
                                                 </button>
                                             </el-tooltip>
+                                            </template> -->
                                             <el-tooltip content="Crear Producto" placement="top">
                                                 <button class="btn_guardarsmall" type="primary" @click="trigerFunction(7)">
                                                     <i class="fas fa-plus" style="font-size: 20px;">Historial</i>
                                                 </button>
                                             </el-tooltip>
+
+                                        
+                                        
 
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">

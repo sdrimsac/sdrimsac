@@ -484,6 +484,16 @@ class ConfigurationController extends Controller
 
             $this->check_and_set_restaurant();
         }
+        if ($configuration->restobar_home) {
+            // Actualiza el campo created_items a true
+            $configuration->update([
+                'created_items' => true,
+                'box_ordenes' => true,
+                'show_variation_dcto' => true,
+            ]);
+
+            $this->check_and_set_restaurant();
+        }
 
 
         if ($configuration->restaurant_delivery) {

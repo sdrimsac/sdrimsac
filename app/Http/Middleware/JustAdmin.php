@@ -123,6 +123,8 @@ class JustAdmin
                 $salon = (bool) $config->mode_salon;
                 $tap = (bool) $config->tap;
                 $meatshop = (bool) $config->meat_shop;
+                $restobar = (bool) $config->restobar_home;
+                $credits = (bool) $config->credits_home;
 
                 if ($config->toll) {
                     $redirect_to = "/caja/worker/dashboard-pos";
@@ -136,7 +138,11 @@ class JustAdmin
                     $redirect_to = "/grifo/worker/";
                 } elseif ($meatshop) {
                     $redirect_to = "/meatshop/worker/";
-                }else if ($workshop) {
+                } elseif ($restobar) {
+                    $redirect_to = "/restobar/worker/";
+                } elseif ($credits) {
+                    $redirect_to = "/credits/worker/";
+                } else if ($workshop) {
                     if ($description_type == 'CAJERO MECANICO') {
 
                         $redirect_to = "/workshop/worker/";
@@ -165,6 +171,10 @@ class JustAdmin
                     else if($tap){
                         $redirect_to .= 'dashboard-pos';
                     } elseif ($meatshop){
+                        $redirect_to .= 'dashboard-pos';
+                    } elseif ($restobar){
+                        $redirect_to .= 'dashboard-pos';
+                    } elseif ($credits){
                         $redirect_to .= 'dashboard-pos';
                     } else{
                         $redirect_to .= 'dashboard-pos';

@@ -707,7 +707,7 @@
                                 <!-- Delivery -->
                                 <div
                                     class="col-xl-3 col-lg-4 col-md-6 px-2"
-                                    v-if="configuration.restaurant"
+                                    v-if="configuration.restaurant || configuration.restobar_home"
                                 >
                                     <div class="form-group">
                                         <label
@@ -3056,7 +3056,7 @@ export default {
                     ? this.affectation_igv_types[0].id
                     : null;
 
-            if (!this.configuration.restaurant) {
+            if (!this.configuration.restaurant && !this.configuration.restobar_home) {
                 this.areas = this.areas.filter(
                     a =>
                         !["BARRA", "COCINA", "MOZO", "MESA"].some(

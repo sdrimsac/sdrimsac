@@ -33,5 +33,7 @@
     "Workshop": true,
     "Dental": true,
     "Grifo": true,
-    "MeatShop": true
+    "MeatShop": true,
+    "Restobar": true,
+    "Credits": true
 }

@@ -462,6 +462,58 @@ const app = new Vue({
             import(
                 "../../modules/Inventory/Resources/assets/js/inventory/inventory.vue"
             ),
+        /* rutas para restobar */
+        "restobar-food-list": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/food/index.vue"
+            ),
+
+        "tenant-restobar-index": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/restaurant.vue"
+            ),
+
+        "tenant-restobar-kitchen": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/kitchen.vue"
+            ),
+
+        "tenant-restobar-items": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/configuration/items.vue"
+            ),
+        "restobar-ordens-index": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/ordens/index.vue"
+            ),
+
+        "restobar-worker-login": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/login/login.vue"
+            ),
+        "restobar-worker-dashboard": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/worker/dashboard.vue"
+            ),
+        "restobar-kitchen-dashboard": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/kitchen/dashboard.vue"
+            ),
+        "tenant-restobar-workers": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/workers/workers.vue"
+            ),
+        "tenant-restobar-pos": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/pos/index.vue"
+            ),
+        "restobar-documents-index": () =>
+            import(
+                "../../modules/Restobar/Resources/assets/js/views/documents/index.vue"
+            ),
+
+        /* fin rutas para restobar */
+
         "restaurant-food-list": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/food/index.vue"
@@ -485,11 +537,6 @@ const app = new Vue({
             import(
                 "../../modules/Billar/Resources/assets/js/views/configuration/items.vue"
             ),
-
-        /* "tenant-items-index": () =>
-            import(
-                "../../modules/items/Resources/assets/js/views/configuration/items.vue"
-            ), */
 
         "restaurant-ordens-index": () =>
             import(

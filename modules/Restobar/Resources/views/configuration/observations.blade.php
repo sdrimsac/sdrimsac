@@ -1,0 +1,10 @@
+{{-- listado de obsevaciones de restaurant --}}
+<?php
+$configurations = App\Models\Tenant\Configuration::first();
+?>
+@extends('tenant.layouts.app')
+@section('content')
+    <tenant-restobar-items type='caja/observations' :configurations="{{ json_encode($configurations) }}"
+        title='Listado de observaciones'>
+    </tenant-restobar-items>
+@endsection

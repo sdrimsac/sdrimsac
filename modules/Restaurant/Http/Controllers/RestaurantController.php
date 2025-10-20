@@ -564,6 +564,7 @@ class RestaurantController extends Controller
             $collector = false;
             $logistic = false;
             $mechanic = false;
+            $restobar = false;
             if (strtolower($user->worker_type->description) == "mozo") {
                 $waiter = true;
             } else if (strtolower($user->worker_type->description) == "cajero mecanico") {
@@ -579,6 +580,8 @@ class RestaurantController extends Controller
                 $maintenance =  true;
             } else if (strtolower($user->worker_type->description) == "estilista") {
                 $estilista = true;
+            }else if (strtolower($user->worker_type->description) == "restobar") {
+                $restobar = true;
             } else if (strtolower($user->worker_type->description) == "grifo") {
                 $grifo = true;
                 $pos = true;
@@ -604,6 +607,7 @@ class RestaurantController extends Controller
             }
 
             $response = [
+                'restobar' => $restobar, 
                 'grifo' => $grifo,
                 'estilista' => $estilista,
                 'mechanic' => $mechanic,

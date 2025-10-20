@@ -257,6 +257,10 @@ export default {
                         route = "grifo/worker/dashboard-pos";
                     } else if (this.config.meat_shop) {
                         route = "meatshop/worker/dashboard-pos";
+                    } else if (this.config.credits_home) {
+                        route = "credits/worker/dashboard-pos";
+                    } else if (this.config.restobar_home) {
+                        route = "restobar/worker/dashboard-pos";
                     } else {
                         route = "caja/worker/dashboard-pos";
                     }

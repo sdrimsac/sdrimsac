@@ -48,18 +48,34 @@
                         </td>
                         <td class="text-center">{{ box.id }}</td>
                         <td>   
-                            {{ (() => {
-                                const date = new Date(box.date_opening);
-                                const options = { weekday: 'long', day: 'numeric', month: 'long' };
-                                let str = date.toLocaleDateString('es-ES', options);
-                                // Capitalize first letter
-                                str = str.charAt(0).toUpperCase() + str.slice(1);
-                                // Remove comma and "de"
-                                str = str.replace(/,|\sde\s/g, ' ');
-                                // Remove extra spaces
-                                str = str.replace(/\s+/g, ' ').trim();
-                                return str;
-                            })() }}
+              {{ (() => {
+                // box.date_opening may come as 'YYYY-MM-DD' (no timezone)
+                // new Date('YYYY-MM-DD') is treated as UTC by some browsers,
+                // which can show the previous day depending on local TZ.
+                // To avoid that, parse 'YYYY-MM-DD' into a local Date.
+                const raw = box.date_opening;
+                let date;
+                if (typeof raw === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+                  const parts = raw.split('-').map(Number);
+                  // year, monthIndex (0-based), day
+                  date = new Date(parts[0], parts[1] - 1, parts[2]);
+                } else {
+                  // Fallback: try native parsing for full datetimes or other formats
+                  date = new Date(raw);
+                }
+                if (!(date instanceof Date) || isNaN(date.getTime())) {
+                  return '';
+                }
+                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                let str = date.toLocaleDateString('es-ES', options);
+                // Capitalize first letter
+                str = str.charAt(0).toUpperCase() + str.slice(1);
+                // Remove comma and "de"
+                str = str.replace(/,|\sde\s/g, ' ');
+                // Remove extra spaces
+                str = str.replace(/\s+/g, ' ').trim();
+                return str;
+              })() }}
                                 <br />
                               {{`${box.reference_number || "SIN REFERENCIA"}`}}
                         </td>
@@ -236,6 +252,7 @@
 <script>
 import queryString from "query-string";
 import CashModal from "./cash_modal.vue";
+import { parseLocalDateFromYYYYMMDD, formatDateLongES } from '../../../../../../../../resources/js/utils/date';
 export default {
   components: { CashModal },
   props: ["showHistoryCash", "cash_id", "area_id", "sender", "configuration"],
@@ -255,11 +272,13 @@ export default {
       showFrame: false,
       searchCode: '',
       searchDate: ''
+
     };
   },
-  computed: {
+  computed : {
     filteredBoxes() {
       return this.boxes.filter(box => {
+        const date = parseLocalDateFromYYYYMMDD(box.date_opening);
         if (this.searchCode && !String(box.id).includes(this.searchCode)) {
           return false;
         }

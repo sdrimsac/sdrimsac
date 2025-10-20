@@ -228,7 +228,7 @@
                                         <vs-switch color="#073f68" v-model="conf.company_address" />
                                     </div>
                                 </div>
-                                <div class="col-md-3" v-if="configuration.restaurant">
+                                <div class="col-md-3" v-if="configuration.restaurant || configuration.restobar_home">
                                     <div style="display: flex; justify-content: center;">
                                         <label class="control-label w-100 mb-1" style="text-align: center;">
                                             <i class="el-icon-printer" style="margin-right: 4px;"></i>
@@ -440,7 +440,7 @@
                         <small class="form-control-feedback" v-if="errors.document_default"
                             v-text="errors.document_default[0]"></small>
                     </div>
-                    <div class="col-md-12" v-if="soap_type_id != '03' && configuration.restaurant">
+                    <div class="col-md-12" v-if="soap_type_id != '03' && (configuration.restaurant || configuration.restobar_home)">
                         <label class="control-label"></label>
                         <div class="form-group" :class="{ 'has-danger': errors.has_igv_31556 }">
                             <vs-checkbox color="#073f68" v-model="form.has_igv_31556">
@@ -484,7 +484,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-4" v-if="configuration.restaurant">
+                <div class="col-md-4" v-if="configuration.restaurant || configuration.restobar_home">
                     <div class="col-md-12" v-if="seriesDefault.length == 0 || recordId">
                         <label class="control-label">QR yape</label>
                         <div class="d-flex align-items-center">
