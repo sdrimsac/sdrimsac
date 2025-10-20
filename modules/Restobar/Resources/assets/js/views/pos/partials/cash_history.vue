@@ -1,43 +1,54 @@
 <!-- Historial caja - POS principal -->
 <template>
-  <el-dialog v-loading="loading" :visible="showHistoryCash" @open="open" @close="close" :title="title" width="95%">
-    <!-- Filtros de búsqueda -->
-    <div class="row mb-3">
-      <div class="col-md-3">
-        <el-input v-model="searchCode" placeholder="Buscar por código" clearable></el-input>
-      </div>
-      <div class="col-md-3">
-        <el-date-picker v-model="searchDate" type="date" placeholder="Buscar por fecha" format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd" clearable></el-date-picker>
-      </div>
-      <!-- <div class="col-md-2">
+    <el-dialog
+        v-loading="loading"
+        :visible="showHistoryCash"
+        @open="open"
+        @close="close"
+        :title="title"
+        width="75%"
+    >
+            <!-- Filtros de búsqueda -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <el-input v-model="searchCode" placeholder="Buscar por código" clearable></el-input>
+                </div>
+                <div class="col-md-3">
+                    <el-date-picker
+                        v-model="searchDate"
+                        type="date"
+                        placeholder="Buscar por fecha"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        clearable
+                    ></el-date-picker>
+                </div>
+                <!-- <div class="col-md-2">
                     <el-button type="primary" @click="getRecords">Buscar</el-button>
                 </div> -->
-    </div>
-    <div class="card container table-responsive col-md-12">
-      <table class="table table-hover table-striped table-condensed table-bordered table-responsive"
-        style="width:100%; white-space: nowrap;">
-        <thead style="background-color: #073f68; color: #fff;">
-          <tr>
-            <th style="color: #fff; width: 10px; text-align: center;">#</th>
-            <th style="color: #fff; width: 80px; text-align: center;">Código</th>
-            <th style="color: #fff; width: 220px;">Turno</th>
-            <th style="color: #fff; width: 120px; text-align: center;">S/ Apertura</th>
-            <th style="color: #fff; width: 80px;">F.Cierre</th>
-            <th style="color: #fff; width: 80px;">S/ Cierre</th>
-            <th style="color: #fff; width: 420px; text-align: center;">Reporte</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(box, idx) in filteredBoxes" :key="idx"
-            :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
-            <td>
-              <!-- {{ idx + 1 }} -->
-              {{ customIndex(idx) }}
-            </td>
-            <td class="text-center">{{ box.id }}</td>
-            <td>
-              {{(() => {
+            </div>
+        <div class="card container table-responsive col-md-12">
+            <table class="table table-hover table-striped table-condensed table-bordered table-responsive"style="width:100%; white-space: nowrap;">
+                <thead style="background-color: #073f68; color: #fff;">
+                    <tr>
+                        <th style="color: #fff; width: 10px; text-align: center;">#</th>
+                        <th style="color: #fff; width: 50px; text-align: center;">Código</th>
+                        <th style="color: #fff; width: 200px;">Turno</th>
+                        <th style="color: #fff; width: 120px; text-align: center;">S/ Apertura</th>
+                        <th style="color: #fff; width: 120px; text-align: right;">S/ Cierre</th>
+                        <th style="color: #fff; width: 120px; text-align: center;">F.Cierre</th>
+                        <th style="color: #fff; width: 250px; text-align: center;">Reporte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(box, idx) in filteredBoxes" :key="idx" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                        <td>
+                           <!-- {{ idx + 1 }} -->
+                            {{ customIndex(idx) }}
+                        </td>
+                        <td class="text-center">{{ box.id }}</td>
+                        <td>   
+              {{ (() => {
                 // box.date_opening may come as 'YYYY-MM-DD' (no timezone)
                 // new Date('YYYY-MM-DD') is treated as UTC by some browsers,
                 // which can show the previous day depending on local TZ.
@@ -64,110 +75,194 @@
                 // Remove extra spaces
                 str = str.replace(/\s+/g, ' ').trim();
                 return str;
-              })()}}
-              <br />
-              {{ `${box.reference_number || "SIN REFERENCIA"}` }}
-            </td>
-            <td class="text-right">
-              {{ Number(box.beginning_balance).toFixed(2) }}
-            </td>
-            <td>
-              {{ box.date_closed || "Caja Abierta" }}
-            </td>
-            <td class="text-center">
-              <el-button type="success" class="text-white"
-                :style="{ backgroundColor: '#388e3c', borderColor: '#388e3c' }" @click="getFinalBalance(box.id, idx)">
-                <i v-if="box.final_balance == 0" class="fas fa-eye" style="font-size: 1.5em;"></i>
-                <span v-if="box.final_balance > 0" style="font-weight: bold; font-size: 1.5em; color: #fff;">
-                  {{ box.final_balance.toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}
-                </span>
-              </el-button>
-            </td>
-            <td>
-              <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
-                <template v-if="box.is_loading_report">
-                  <el-button class="btn_guardarsmall" type="primary" disabled>
-                    <i class="el-icon-loading"></i>
-                    Generando reportes
-                  </el-button>
-                </template>
-                <template v-else>
-                  <el-button type="success" class="btn_whatsappsmall" @click="openWhastappForm(box)">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                  </el-button>
-                  <el-button class="btn_guardarsmall" type="primary"
-                    :type="`${box.has_ticket ? 'primary' : 'danger'}`" @click="openDetail(box, idx)">
-                    Ver
-                  </el-button>
-                  <el-button class="btn_guardarsmall" type="primary" v-if="configuration.other_currency_pos"
-                    :type="`${box.has_ticket_usd ? 'primary' : 'danger'}`" @click="openDetailUsd(box, idx)">
-                    Ver $
-                  </el-button>
-                  <el-button class="btn_guardarsmall" type="primary" :type="`${box.has_a4 ? 'primary' : 'danger'}`"
-                    @click="openA4(box, idx)">
-                    A4
-                  </el-button>
-                  <el-button class="btn_guardarsmall" type="primary" v-if="configuration.other_currency_pos"
-                    :type="`${box.has_a4_usd ? 'primary' : 'danger'}`" @click="openA4Usd(box, idx)">
-                    A4 $
-                  </el-button>
-                </template>
-
-                <el-tooltip class="item" effect="dark" content="Reporte de los yapes realziados en la caja"
-                  placement="top">
-                  <el-button class="btn_yapesmall" type="primary" v-if="configuration.yape_report"
-                    :style="{ backgroundColor: '#7F3FBF', borderColor: '#7F3FBF', color: 'white' }"
-                    @click="openYape(box)">
-                    YAPE
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="Borrar reporte" placement="top">
-                  <el-button class="btn_cancelarsmall" type="danger" @click="deleteReport(box)">
-                    <i class="el-icon-delete"></i>
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip v-if="box.tab_single" class="item" effect="dark" content="Reporte tabulado" placement="top">
-                  <el-button class="btn_guardarsmall" type="primary" icon="el-icon-download" circle
-                    v-if="box.stock_file" @click="openSaludSingle(box.id)">
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="Descargar Excel del stock al momento de cerrar caja"
-                  placement="top">
-                  <el-button class="btn_excelsmall" type="success" circle v-if="box.stock_file" @click="openExcel(box)"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <i class="icofont-file-excel" style="margin: 0 auto;"></i>
-                  </el-button>
-                </el-tooltip>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
-        :current-page.sync="pagination.current_page" :page-size="Number(pagination.per_page)">
-      </el-pagination>
-    </div>
-    <br />
-
-    <cash-modal v-if="currentBox" :cash.sync="currentBox" :area_id="area_id" :showDetail.sync="showDetail"></cash-modal>
-    <el-dialog append-to-body width="40%" title="Enviar reporte por whatsapp" :visible.sync="showWhatsappForm">
-      <div class="p-3" v-loading="loading" element-loading-text="Enviando..">
-        <label for="">Número</label>
-        <el-input v-model="number" style="width:100%"></el-input>
-        <div class="d-flex justify-content-end p-1">
-          <el-button @click="sendWhatsapp">Enviar</el-button>
+              })() }}
+                                <br />
+                              {{`${box.reference_number || "SIN REFERENCIA"}`}}
+                        </td>
+                        <td class="text-right">
+                            {{ Number(box.beginning_balance).toFixed(2) }}
+                        </td>
+                        <td>
+                            {{ box.date_closed || "Caja Abierta" }}
+                        </td>
+                        <td class="text-center">
+                            <el-button
+                                type="success"
+                                class="text-white"
+                                :style="{ backgroundColor: '#388e3c', borderColor: '#388e3c' }"
+                                @click="getFinalBalance(box.id, idx)"
+                            >
+                                <i v-if="box.final_balance == 0" class="fas fa-eye" style="font-size: 1.5em;"></i>
+                                <span v-if="box.final_balance > 0" style="font-weight: bold; font-size: 1.5em; color: #fff;">
+                                    {{ box.final_balance.toLocaleString('es-PE', { minimumFractionDigits: 2 }) }}
+                                </span>
+                            </el-button>
+                        </td>
+                        <td>
+                            <!-- Botones de Reportes historial -->
+                            <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
+                              <template v-if="box.is_loading_report">
+                              <el-button class="btn_guardarsmall" type="primary" disabled
+                                   style="margin:0; padding:3px 6px; min-width:auto; height:28px; font-size:12px;">
+                                <i class="el-icon-loading" style="font-size:14px"></i>
+                                <span style="font-size:12px; margin-left:6px;">Generando reportes</span>
+                              </el-button>
+                              </template>
+                              <template v-else>
+                              <el-button
+                                type="success"
+                                class="btn_whatsappsmall"
+                                @click="openWhastappForm(box)"
+                                style="margin:0; padding:4px 6px; min-width:40px !important; height:28px; font-size:12px;">
+                                <i class="fab fa-whatsapp" aria-hidden="true" style="font-size:14px"></i>
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                @click="openDetail(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                Ver
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket_usd ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                v-if="configuration.other_currency_pos"
+                                @click="openDetailUsd(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                Ver $
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                @click="openA4(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                A4
+                              </el-button>
+                              <!-- A4 $ -->
+                              <el-button
+                                :class="box.has_a4_usd ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                v-if="configuration.other_currency_pos"
+                                @click="openA4Usd(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                A4 $
+                              </el-button>
+                              </template>
+                              
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Reporte de los yapes realziados en la caja"
+                              placement="top">
+                              <el-button class="btn_yapesmall" type="primary"
+                                v-if="configuration.yape_report"
+                                :style="{ backgroundColor: '#7F3FBF', borderColor: '#7F3FBF', color: 'white', padding: '4px 6px', height: '28px', fontSize: '12px' }"
+                                @click="openYape(box)"
+                              >
+                                YAPE
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Borrar reporte"
+                              placement="top">
+                              <el-button
+                                class="btn_cancelarsmall"
+                                type="danger"
+                                @click="deleteReport(box)"
+                                style="margin:0; padding:4px 6px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                <i class="el-icon-delete" style="font-size:14px"></i>
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              v-if="box.tab_single"
+                              class="item"
+                              effect="dark"
+                              content="Reporte tabulado"
+                              placement="top">
+                              <el-button class="btn_guardarsmall" type="primary"
+                                icon="el-icon-download"
+                                circle
+                                v-if="box.stock_file"
+                                @click="openSaludSingle(box.id)"
+                                style="margin:0; min-width:40px !important; height:28px; padding:0; font-size:12px;">
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Descargar Excel del stock al momento de cerrar caja"
+                              placement="top">
+                              <el-button
+                                class="btn_excelsmall"
+                                type="success"
+                                circle
+                                v-if="box.stock_file"
+                                @click="openExcel(box)"
+                                style="display: flex; align-items: center; justify-content: center; margin:0; min-width:40px !important; height:28px; padding:0; font-size:12px;">
+                                <i class="icofont-file-excel" style="font-size:14px; margin: 0;"></i>
+                              </el-button>
+                              </el-tooltip>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <el-pagination
+                @current-change="getRecords"
+                layout="total, prev, pager, next"
+                :total="pagination.total"
+                :current-page.sync="pagination.current_page"
+                :page-size="Number(pagination.per_page)"
+            >
+            </el-pagination>
         </div>
-      </div>
-    </el-dialog>
-    <el-dialog append-to-body width="40%" title="Detalle" :visible.sync="showFrame">
-      <iframe :src="currentUrlBox" frameborder="0" style="width:100%;height:550px"></iframe>
+        <br />
 
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="print">Imprimir</el-button>
-        <el-button @click="showFrame = false">Cerrar</el-button>
-      </span>
+        <cash-modal
+            v-if="currentBox"
+            :cash.sync="currentBox"
+            :area_id="area_id"
+            :showDetail.sync="showDetail"
+        ></cash-modal>
+        <el-dialog
+            append-to-body
+            width="40%"
+            title="Enviar reporte por whatsapp"
+            :visible.sync="showWhatsappForm"
+        >
+            <div
+                class="p-3"
+                v-loading="loading"
+                element-loading-text="Enviando.."
+            >
+                <label for="">Número</label>
+                <el-input v-model="number" style="width:100%"></el-input>
+                <div class="d-flex justify-content-end p-1">
+                    <el-button @click="sendWhatsapp">Enviar</el-button>
+                </div>
+            </div>
+        </el-dialog>
+        <el-dialog
+            append-to-body
+            width="40%"
+            title="Detalle"
+            :visible.sync="showFrame"
+        >
+            <iframe
+                :src="currentUrlBox"
+                frameborder="0"
+                style="width:100%;height:550px"
+            ></iframe>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="print">Imprimir</el-button>
+                <el-button @click="showFrame = false">Cerrar</el-button>
+            </span>
+        </el-dialog>
     </el-dialog>
-  </el-dialog>
 </template>
 
 <script>
@@ -196,7 +291,7 @@ export default {
 
     };
   },
-  computed: {
+  computed : {
     filteredBoxes() {
       return this.boxes.filter(box => {
         const date = parseLocalDateFromYYYYMMDD(box.date_opening);
@@ -218,7 +313,7 @@ export default {
         1
       );
     },
-    async print() {
+        async print() {
       try {
         this.loadingPrint = true;
         const response = await this.$http(
@@ -268,7 +363,7 @@ export default {
       }
     },
     getFinalBalance(id, idx) {
-      this.$http(`/restobar/worker/cash/get-final-balance/${id}`).then(
+      this.$http(`/caja/worker/cash/get-final-balance/${id}`).then(
         response => {
           if (response.status == 200) {
             this.$toast.success(
@@ -283,7 +378,7 @@ export default {
     generateReports(id, idx) {
       this.loading = true;
       this.boxes[idx].is_loading_report = true;
-      this.$http(`/restobar/worker/cash/generate_reports/${id}`)
+      this.$http(`/caja/worker/cash/generate_reports/${id}`)
         .then(response => {
           if (response.status == 200) {
             this.$toast.success(
@@ -296,7 +391,7 @@ export default {
         });
     },
     openSaludSingle(id) {
-      window.open(`/restobar/report-boxes/cashes_salud_single?cash_id=${id}`);
+      window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
     },
     openExcel(cash) {
       let { id } = cash;
@@ -305,7 +400,7 @@ export default {
     openWhastappForm(cash) {
       this.number = null;
       this.message = `Reporte de ${cash.user} ${cash.date_opening}`;
-      this.resource = `/restobar/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
+      this.resource = `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
       this.showWhatsappForm = true;
     },
     async sendWhatsapp() {
@@ -335,7 +430,7 @@ export default {
     openA4(cash, idx) {
       if (cash.has_a4) {
         window.open(
-          `/restobar/report-boxes/reports_resumen_type?cash_id=${cash.id}`
+          `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
         );
       } else {
         this.generateReports(cash.id, idx);
@@ -344,7 +439,7 @@ export default {
     openYape(cash, idx) {
       if (cash.has_a4) {
         window.open(
-          `/restobar/report-boxes/reports_resumen_yape?cash_id=${cash.id}`
+          `/caja/report-boxes/reports_resumen_yape?cash_id=${cash.id}`
         );
       } else {
         this.generateReports(cash.id, idx);
@@ -353,7 +448,7 @@ export default {
     openA4Usd(cash, idx) {
       if (cash.has_a4) {
         window.open(
-          `/restobar/report-boxes/reports_resumen_type_usd?cash_id=${cash.id}`
+          `/caja/report-boxes/reports_resumen_type_usd?cash_id=${cash.id}`
         );
       } else {
         this.generateReports(cash.id, idx);
@@ -362,7 +457,7 @@ export default {
     deleteReport(cash) {
       this.loading = true;
       this.$http
-        .delete(`/restobar/report-boxes/delete-report/${cash.id}`)
+        .delete(`/caja/report-boxes/delete-report/${cash.id}`)
         .then(response => {
           if (response.status == 200) {
             this.$toast.success("Reportes eliminados");

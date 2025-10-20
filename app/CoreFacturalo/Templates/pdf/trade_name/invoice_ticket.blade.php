@@ -1,17 +1,17 @@
 @php
-    $establishment = $document->establishment;
-    $customer = $document->customer;
-    $invoice = $document->invoice;
-    $seller = $document->seller;
-    $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
-    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
-        'establishment_id',
-        $document->establishment_id,
-    )->first();
-    $print_company_address = false;
-    if ($conf_establishment) {
-        $print_company_address = $conf_establishment->company_address;
-    }
+        $establishment = $document->establishment;
+        $customer = $document->customer;
+        $invoice = $document->invoice;
+        $seller = $document->seller;
+        $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
+        $conf_establishment = \App\Models\Tenant\ConfEstablishment::where(
+                'establishment_id',
+                $document->establishment_id,
+        )->first();
+        $print_company_address = false;
+        if ($conf_establishment) {
+                $print_company_address = $conf_establishment->company_address;
+        }
 
     $promotion_items = getAvailablePromotions($document->customer_id);
 

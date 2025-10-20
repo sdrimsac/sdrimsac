@@ -2,8 +2,8 @@
 <template>
     <div>
         <div class="row p-2" v-loading="loadingItems">
-            
-                <!-- <div class="col-9 d-flex align-items-center">
+
+            <!-- <div class="col-9 d-flex align-items-center">
                     <h2 class="small-title" style="color: blue; font-weight: bold;">
                         Productos
                     </h2>
@@ -12,8 +12,8 @@
                             <label>No Hay Productos</label>
                         </div>
                     </template>
-                </div> -->
-                <!-- <div class="col-3">
+</div> -->
+            <!-- <div class="col-3">
                     <div v-if="configuration.list_or_card">
                         <button @click="toggleView" class="btn btn-primary btn-sm ml-auto float-right">
                             {{
@@ -24,7 +24,7 @@
                         </button>
                     </div>
                 </div> -->
-            
+
             <!-- Card o Tabla -->
             <template v-if="configuration.list_or_card">
                 <!-- Tabla    -->
@@ -62,12 +62,10 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="(data, index) in foods" :key="index"
-                                                @click="handleRowClick(data, index)"
-                                                :style="{
+                                                @click="handleRowClick(data, index)" :style="{
                                                     backgroundColor: index % 2 === 0 ? '#fff' : '#afafaf',
                                                     color: 'inherit'
-                                                }"
-                                            >
+                                                }">
                                                 <td>
                                                     <div role="button">
                                                         <span :class="`lead-font-weight-700 ${configuration.trunc_txt
@@ -224,8 +222,7 @@
                                             : addFood(index)
                                         ">
 
-                                        <div class="d-flex justify-content-between align-items-center"
-                                             style="width: 100%; 
+                                        <div class="d-flex justify-content-between align-items-center" style="width: 100%; 
                                              padding: 0px; 
                                              margin-top: 1px; 
                                              margin-bottom: 0px;">
@@ -253,20 +250,39 @@
                                             </div>
                                         </div>
 
+                                        <!-- Descripción -->
+
                                         <div
                                             style="background-color: #073f68; color: #fff; padding: 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                            <span :class="`lead-font-weight-500 ${configuration.trunc_txt
-                                                ? 'd-inline-block text-truncate'
-                                                : ''
-                                                }`" style="color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                {{ data.description.toUpperCase() }}
-                                            </span>
-                                            <template v-if="configuration.trunc_txt">
-                                                <el-tooltip class="item" effect="dark"
+                                            <el-tooltip class="item" effect="dark"
+                                                :content="data.description.toUpperCase()" placement="top-start">
+                                                <span :class="`lead-font-weight-600 `" style="color: #fff;">
+                                                    {{ data.description.toUpperCase() }}
+                                                </span>
+                                            </el-tooltip>
+                                            <!-- <el-tooltip class="item" effect="dark"
+                                                :content="data.description.toUpperCase()" placement="top-start">
+                                                <span :class="`lead-font-weight-500 ${configuration.trunc_txt
+                                                    ? 'd-inline-block text-truncate'
+                                                    : ''
+                                                    }`"
+                                                    style="color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    {{ data.description.toUpperCase() }}
+                                                </span>
+                                            </el-tooltip> -->
+                                            <!-- <template v-if="configuration.trunc_txt">
+
+                                                <div class="col-11 pr-1">
+
+                                                </div>
+                                                <div class="col-1 pr-1">
+                                                    <el-tooltip class="item" effect="dark"
                                                     :content="data.description.toUpperCase()" placement="top-start">
                                                     <i class="fas fa-ellipsis-h" style="color: #fff;"></i>
                                                 </el-tooltip>
-                                            </template>
+                                                </div>
+                                                
+                                            </template> -->
                                         </div>
 
                                         <div class="row">
@@ -292,7 +308,9 @@
                                                     style="text-align: right; margin-right:4px;">
                                                     <span>Ubc.:</span>
                                                     <span style="color: red; font-weight: bold;">
-                                                    :  {{ data.item.location && data.item.location.trim() !== '' ? data.item.location.toUpperCase() : 'S-U' }}
+                                                        : {{ data.item.location && data.item.location.trim() !== '' ?
+                                                            data.item.location.toUpperCase() :
+                                                            'S-U' }}
                                                     </span>
                                                 </div>
                                                 <div v-if="data.types && data.types.length > 0"
@@ -331,7 +349,7 @@
                                                 <div v-else>
                                                     <span class="text-muted">.</span>
                                                 </div>
-                                                 <!-- <div class="d-flex flex-wrap justify-content-center m-1" v-if="
+                                                <!-- <div class="d-flex flex-wrap justify-content-center m-1" v-if="
                                                     data.item.lots_enabled == 1 &&
                                                     data.item.date_of_due
                                                     ">
@@ -347,17 +365,14 @@
                                                 </div> -->
 
                                                 <!-- Badges (lote / serie / color&talla / servicio) con placeholder -->
-                                                <template
-                                                    v-if="(data.item.lots_enabled == 1 && data.item.date_of_due) ||
-                                                           data.item.series_enabled == 1 ||
-                                                           data.item.has_color_size == 1 ||
-                                                           data.item.unit_type_id == 'ZZ'"
-                                                >
+                                                <template v-if="(data.item.lots_enabled == 1 && data.item.date_of_due) ||
+                                                    data.item.series_enabled == 1 ||
+                                                    data.item.has_color_size == 1 ||
+                                                    data.item.unit_type_id == 'ZZ'">
                                                     <!-- Si TIENE Lote -->
                                                     <div v-if="data.item.lots_enabled == 1 && data.item.date_of_due"
-                                                         class="col-12 mb-1" style="text-align:right;">
-                                                        <span
-                                                            class="badge"
+                                                        class="col-12 mb-1" style="text-align:right;">
+                                                        <span class="badge"
                                                             style="background:#6f42c1; color:#fff;
                                                                    font-weight:bold; padding:4px 10px;
                                                                    border-radius:4px; letter-spacing:.5px;
@@ -367,10 +382,9 @@
                                                     </div>
 
                                                     <!-- SI TIENE SERIE -->
-                                                    <div v-if="data.item.series_enabled == 1"
-                                                         class="col-12 mb-1" style="text-align:right;">
-                                                        <span
-                                                            class="badge"
+                                                    <div v-if="data.item.series_enabled == 1" class="col-12 mb-1"
+                                                        style="text-align:right;">
+                                                        <span class="badge"
                                                             style="background:#1e5a85; color:#fff;
                                                                    font-weight:bold; padding:4px 10px;
                                                                    border-radius:4px; letter-spacing:.5px;
@@ -380,10 +394,9 @@
                                                     </div>
 
                                                     <!-- SI TIENE COLOR Y TALLA -->
-                                                    <div v-if="data.item.has_color_size == 1"
-                                                         class="col-12 mb-1" style="text-align:right;">
-                                                        <span
-                                                            class="badge"
+                                                    <div v-if="data.item.has_color_size == 1" class="col-12 mb-1"
+                                                        style="text-align:right;">
+                                                        <span class="badge"
                                                             style="background:#20c997; color:#fff;
                                                                    font-weight:bold; padding:4px 10px;
                                                                    border-radius:4px; letter-spacing:.5px;
@@ -393,10 +406,9 @@
                                                     </div>
 
                                                     <!-- SI ES SERVICIO -->
-                                                    <div v-if="data.item.unit_type_id == 'ZZ'"
-                                                         class="col-12 mb-1" style="text-align:right;">
-                                                        <span
-                                                            class="badge"
+                                                    <div v-if="data.item.unit_type_id == 'ZZ'" class="col-12 mb-1"
+                                                        style="text-align:right;">
+                                                        <span class="badge"
                                                             style="background:#0e7ea6; color:#fff;
                                                                    font-weight:bold; padding:4px 10px;
                                                                    border-radius:4px; letter-spacing:.5px;
@@ -408,8 +420,7 @@
                                                 <template v-else>
                                                     <!-- Placeholder para conservar la altura/espacio -->
                                                     <div class="col-12 mb-1" style="text-align:right;">
-                                                        <span
-                                                            class="badge"
+                                                        <span class="badge"
                                                             style="background:transparent; color:#fff;
                                                                    font-weight:bold; padding:4px 10px;
                                                                    border-radius:4px; letter-spacing:.5px;
@@ -419,38 +430,42 @@
                                                     </div>
                                                 </template>
                                                 <!-- Stock en Caja -->
-                                                <div
-                                                    v-if="data.item.is_set == 0 && data.item.unit_type_id !='ZZ' && configuration.show_stock_cash == true"
+                                                <div v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
                                                     class="cold-12 d-flex justify-content-end"
                                                     style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px; text-align: right;">
                                                     <template v-if="data.item.stock > 0">
                                                         <div class="d-flex flex-column align-items-end">
                                                             <!-- <span>Stock</span> -->
-                                                            <span   class="badge"
-                                                                    style="background:#1e5a85; color:#fff; 
+                                                            <span class="badge"
+                                                                style="background:#1e5a85; color:#fff; 
                                                                     font-weight:bold; padding:4px 10px; 
                                                                     border-radius:4px; letter-spacing:.5px; display:inline-block; min-width:100px; text-align:center;">
                                                                 <template v-if="data.item.max_quantity">
-                                                                    {{ formatedStockPresentation(data.item, data.item.stock).replace(/\bNIU\b/g, 'UND').toUpperCase() }}
+                                                                    {{ formatedStockPresentation(data.item,
+                                                                        data.item.stock).replace(/\bNIU\b/g,
+                                                                            'UND').toUpperCase() }}
                                                                 </template>
                                                                 <template v-else>
-                                                                    {{ parseFloat(data.item.stock) }} {{ data.item.unit_type && data.item.unit_type.id ? (data.item.unit_type.id === 'NIU' ? 'UND' : data.item.unit_type.id) : '' }}
+                                                                    {{ parseFloat(data.item.stock) }} {{
+                                                                        data.item.unit_type && data.item.unit_type.id ?
+                                                                            (data.item.unit_type.id === 'NIU' ? 'UND' :
+                                                                                data.item.unit_type.id) : '' }}
                                                                 </template>
                                                             </span>
                                                         </div>
                                                     </template>
                                                     <template v-else>
-                                                        <template v-if="data.item.unit_type_id !='ZZ'">
+                                                        <template v-if="data.item.unit_type_id != 'ZZ'">
                                                             <div class="text-center"
                                                                 style="width: 100%; position: relative; height: 20px; text-align: right;">
                                                                 <img src="/status_images/stock.png"
-                                                                    style="position: absolute; top: 15px; right: 0; transform: translateY(-50%); opacity: 1; pointer-events: none; width: 300px; height: 100px;" class="" />
+                                                                    style="position: absolute; top: 15px; right: 0; transform: translateY(-50%); opacity: 1; pointer-events: none; width: 300px; height: 100px;"
+                                                                    class="" />
                                                             </div>
                                                         </template>
                                                         <template v-else>
                                                             <div class="col-12 mb-1" style="text-align:right;">
-                                                                <span
-                                                                    class="badge"
+                                                                <span class="badge"
                                                                     style="background:transparent; color:#fff;
                                                                         font-weight:bold; padding:4px 10px;
                                                                         border-radius:4px; letter-spacing:.5px;
@@ -461,53 +476,38 @@
                                                         </template>
                                                     </template>
                                                 </div>
-                                                <div class="d-flex justify-content-end align-items-center" style="margin-right: 8px;">
+                                                <div class="d-flex justify-content-end align-items-center"
+                                                    style="margin-right: 8px;">
                                                     <!-- Historial Compra/Venta -->
-                                                    <span
-                                                        class="button-container"
-                                                        v-if="configuration.compra_venta"
-                                                        style="margin-left: 4px;"
-                                                        @click.stop
-                                                    >
+                                                    <span class="button-container" v-if="configuration.compra_venta"
+                                                        style="margin-left: 4px;" @click.stop>
                                                         <el-row>
-                                                            <el-button
-                                                                size="mini"
-                                                                class="bg-info custom-el-button"
-                                                                round
-                                                                title="Ver historial de compra/venta"
+                                                            <el-button size="mini" class="bg-info custom-el-button"
+                                                                round title="Ver historial de compra/venta"
                                                                 @click.stop.prevent="clickWarehouseDetail(
                                                                     data.id,
                                                                     data.has_series,
                                                                     data.warehouses,
                                                                     data.unit_type,
                                                                     data.item
-                                                                )"
-                                                            >
+                                                                )">
                                                                 <i class="fas fa-history" style="color: #fff;"></i>
                                                             </el-button>
                                                         </el-row>
                                                     </span>
                                                     <!-- Visualizar imagen grande -->
-                                                    <span
-                                                        v-if="configuration.zones_workers"
-                                                        class="button-container"
-                                                        style="margin-left: 4px;"
-                                                        @click.stop
-                                                    >
+                                                    <span v-if="configuration.zones_workers" class="button-container"
+                                                        style="margin-left: 4px;" @click.stop>
                                                         <el-row>
-                                                            <el-button
-                                                                size="mini"
-                                                                class="bg-warning custom-el-button"
-                                                                round
-                                                                title="Ver imagen ampliada"
-                                                                @click.stop.prevent="clickFoodsImages(data.id)"
-                                                            >
+                                                            <el-button size="mini" class="bg-warning custom-el-button"
+                                                                round title="Ver imagen ampliada"
+                                                                @click.stop.prevent="clickFoodsImages(data.id)">
                                                                 <i class="fas fa-search-plus" style="color: #fff;"></i>
                                                             </el-button>
                                                         </el-row>
                                                     </span>
                                                 </div>
-                                                
+
                                             </div>
 
                                         </div>
@@ -523,7 +523,8 @@
                 <!-- Card del Producto o Servicio Primero  RESTAURANT-->
                 <div class="d-flex flex-wrap">
                     <div class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
-                        <el-tooltip effect="dark" :disabled="data.item.warehouses.length == 1 ||!configuration.show_stock_establishment_box">
+                        <el-tooltip effect="dark"
+                            :disabled="data.item.warehouses.length == 1 || !configuration.show_stock_establishment_box">
                             <div slot="content">
                                 Stock Almacenes
                                 <br />
@@ -552,26 +553,25 @@
                                 </span>
                             </div>
                             <div id="card"
-                                 class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-light"
-                                 :style="`${configuration.trunc_txt ? 'min-height:190px;' : 'height:190px;'}`">
+                                class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-light"
+                                :style="`${configuration.trunc_txt ? 'min-height:190px;' : 'height:210px;'}`">
                                 <div @click="
                                     (configuration.consolidated_quotations || configuration.direct_unit_type) &&
-                                    data.types && data.types.length > 0
+                                        data.types && data.types.length > 0
                                         ? clickCommand(data.types[0])
                                         : addFood(index)
-                                ">
+                                    ">
                                     <!-- Barra superior: código + precio -->
                                     <div class="d-flex justify-content-between align-items-center"
-                                         style="width:100%;padding:0;margin-top:1px;margin-bottom:0;">
+                                        style="width:100%;padding:0;margin-top:1px;margin-bottom:0;">
                                         <div>
-                                            <i class="fas fa-barcode mr-2" style="font-size:1.2em;color:#073f68;"></i>
                                             <span style="font-size:1.1em;">{{ data.code }}</span>
                                         </div>
                                         <div class="d-flex flex-column align-items-end" style="flex:1;">
                                             <div class="block mb-2">
                                                 <span class="time font-weight-light">
                                                     <span class="lead-font-weight-500"
-                                                          style="font-weight:bold;font-family:'Arial Black', Arial, sans-serif;">
+                                                        style="font-weight:bold;font-family:'Arial Black', Arial, sans-serif;">
                                                         {{ data.item.currency_type_id == 'PEN' ? 'S/' : '$' }}
                                                         <span style="font-size:1.5em;">{{ data.price }}</span>
                                                     </span>
@@ -581,34 +581,55 @@
                                     </div>
 
                                     <!-- Descripción -->
-                                    <div style="background-color:#073f68;color:#fff;padding:4px;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                                        
-                                        <span :class="`lead-font-weight-500 ${configuration.trunc_txt ? 'd-inline-block text-truncate' : ''}`"
-                                              style="color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    <div class="overflow-hidden coupon rounded d-flex flex-column justify-content-between p-1 bg-primary text-white"
+                                        >
+                                        <el-tooltip class="item" effect="dark" :content="data.description.toUpperCase()"
+                                            placement="top-start">
+                                            <!-- <span :class="`lead-font-weight-600 fw-bold`" style="color: #fff; ">
+                                                <span v-if="data.description && data.description.toUpperCase().length > 30"
+                                                        v-html="data.description.toUpperCase().slice(0,30) + '<br/>' + data.description.toUpperCase().slice(30)">
+                                                    </span>
+
+                                                <span v-else>{{ data.description.toUpperCase() }}</span>
+                                            </span> -->
+                                            <span :class="`lead-font-weight-700 ${configuration.trunc_txt
+                                                    ? 'd-inline-block text-truncate'
+                                                    : ''
+                                                    }`
+                                                    ">
+                                                    {{
+                                                        data.description.toUpperCase()
+                                                    }}
+                                                </span>
+                                        </el-tooltip>
+
+                                        <!-- <span
+                                            :class="`lead-font-weight-500 ${configuration.trunc_txt ? 'd-inline-block text-truncate' : ''}`"
+                                            style="color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                             {{ data.description.toUpperCase() }}
                                         </span>
                                         <template v-if="configuration.trunc_txt">
                                             <el-tooltip class="item" effect="dark"
-                                                        :content="data.description.toUpperCase()"
-                                                        placement="top-start">
+                                                :content="data.description.toUpperCase()" placement="top-start">
                                                 <i class="fas fa-ellipsis-h" style="color:#fff;"></i>
                                             </el-tooltip>
-                                        </template>
+                                        </template> -->
                                     </div>
 
                                     <div class="row">
                                         <!-- Imagen -->
                                         <div class="col-4">
-                                            <div style="height:120px;width:120px;display:flex;align-items:center;justify-content:center;">
-                                                <el-tooltip :disabled="data.second_name==null" effect="dark"
-                                                            :content="data.second_name" placement="top-start">
-                                                    <template v-if="data.image=='imagen-no-disponible.jpg'">
+                                            <div
+                                                style="height:120px;width:120px;display:flex;align-items:center;justify-content:center;">
+                                                <el-tooltip :disabled="data.second_name == null" effect="dark"
+                                                    :content="data.second_name" placement="top-start">
+                                                    <template v-if="data.image == 'imagen-no-disponible.jpg'">
                                                         <img src="/images/imagen-no-disponible.jpg"
-                                                             style="width:100%;height:100%;object-fit:contain;display:block;" />
+                                                            style="width:100%;height:100%;object-fit:contain;display:block;" />
                                                     </template>
                                                     <template v-else>
                                                         <img :src="formatUrlImage(data.image)"
-                                                             style="width:100%;height:120%;object-fit:contain;display:block;" />
+                                                            style="width:100%;height:120%;object-fit:contain;display:block;" />
                                                     </template>
                                                 </el-tooltip>
                                             </div>
@@ -618,31 +639,33 @@
                                         <div class="col-8">
                                             <!-- Ubicación -->
                                             <div class="d-flex justify-content-end align-items-center"
-                                                 style="text-align:right;margin-right:4px;">
+                                                style="text-align:right;margin-right:4px;">
                                                 <span>Ubc.:</span>
                                                 <span style="color:red;font-weight:bold;">
-                                                    : {{ data.item.location && data.item.location.trim() !== '' ? data.item.location.toUpperCase() : 'S-U' }}
+                                                    : {{ data.item.location && data.item.location.trim() !== '' ?
+                                                        data.item.location.toUpperCase() :
+                                                        'S-U' }}
                                                 </span>
                                             </div>
 
                                             <!-- Dropdown de precios -->
                                             <div v-if="data.types && data.types.length > 0"
-                                                 style="width:100%;display:flex;justify-content:flex-end;">
+                                                style="width:100%;display:flex;justify-content:flex-end;">
                                                 <el-dropdown @command="clickCommand">
                                                     <span class="el-dropdown-link"
-                                                          style="color:green;font-weight:bold;">
+                                                        style="color:green;font-weight:bold;">
                                                         Precios
                                                         <i class="el-icon-arrow-down el-icon--right"></i>
                                                     </span>
                                                     <el-dropdown-menu slot="dropdown" class="custom-dropdown-menu"
-                                                                      style="min-width:200px;">
-                                                        <el-dropdown-item v-for="(type,idx) in data.types"
-                                                                          :key="idx"
-                                                                          :command="type"
-                                                                          class="custom-dropdown-item">
-                                                            <div class="d-flex align-items-center justify-content-between w-100">
+                                                        style="min-width:200px;">
+                                                        <el-dropdown-item v-for="(type, idx) in data.types" :key="idx"
+                                                            :command="type" class="custom-dropdown-item">
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-between w-100">
                                                                 <div>
-                                                                    <span class="font-weight-bold" style="color:#073f68;">
+                                                                    <span class="font-weight-bold"
+                                                                        style="color:#073f68;">
                                                                         {{ type.description.toUpperCase() }}
                                                                     </span>
                                                                     <span class="small text-muted ml-2">
@@ -650,7 +673,7 @@
                                                                     </span>
                                                                 </div>
                                                                 <span class="badge ml-3"
-                                                                      style="font-size:1em;min-width:30px;text-align:right;color:#000;">
+                                                                    style="font-size:1em;min-width:30px;text-align:right;color:#000;">
                                                                     S/ {{ Number(getDefaultPrice(type)).toFixed(2) }}
                                                                 </span>
                                                             </div>
@@ -663,36 +686,35 @@
                                             </div>
 
                                             <!-- Badges (lote, serie, color&talla, servicio) -->
-                                            <template
-                                                v-if="(data.item.lots_enabled == 1 && data.item.date_of_due) ||
-                                                       data.item.series_enabled == 1 ||
-                                                       data.item.has_color_size == 1 ||
-                                                       data.item.unit_type_id == 'ZZ'">
+                                            <template v-if="(data.item.lots_enabled == 1 && data.item.date_of_due) ||
+                                                data.item.series_enabled == 1 ||
+                                                data.item.has_color_size == 1 ||
+                                                data.item.unit_type_id == 'ZZ'">
                                                 <div v-if="data.item.lots_enabled == 1 && data.item.date_of_due"
-                                                     class="col-12 mb-1" style="text-align:right;">
+                                                    class="col-12 mb-1" style="text-align:right;">
                                                     <span class="badge"
-                                                          style="background:#6f42c1;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                        style="background:#6f42c1;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                         LOTE
                                                     </span>
                                                 </div>
-                                                <div v-if="data.item.series_enabled == 1"
-                                                     class="col-12 mb-1" style="text-align:right;">
+                                                <div v-if="data.item.series_enabled == 1" class="col-12 mb-1"
+                                                    style="text-align:right;">
                                                     <span class="badge"
-                                                          style="background:#1e5a85;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                        style="background:#1e5a85;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                         SERIE
                                                     </span>
                                                 </div>
-                                                <div v-if="data.item.has_color_size == 1"
-                                                     class="col-12 mb-1" style="text-align:right;">
+                                                <div v-if="data.item.has_color_size == 1" class="col-12 mb-1"
+                                                    style="text-align:right;">
                                                     <span class="badge"
-                                                          style="background:#20c997;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                        style="background:#20c997;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                         COLOR&TALLA
                                                     </span>
                                                 </div>
-                                                <div v-if="data.item.unit_type_id == 'ZZ'"
-                                                     class="col-12 mb-1" style="text-align:right;">
+                                                <div v-if="data.item.unit_type_id == 'ZZ'" class="col-12 mb-1"
+                                                    style="text-align:right;">
                                                     <span class="badge"
-                                                          style="background:#0e7ea6;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                        style="background:#0e7ea6;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                         SERVICIO
                                                     </span>
                                                 </div>
@@ -700,7 +722,7 @@
                                             <template v-else>
                                                 <div class="col-12 mb-1" style="text-align:right;">
                                                     <span class="badge"
-                                                          style="background:transparent;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                        style="background:transparent;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                         .
                                                     </span>
                                                 </div>
@@ -708,18 +730,22 @@
 
                                             <!-- Stock -->
                                             <div v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
-                                                 class="cold-12 d-flex justify-content-end"
-                                                 style="margin:0 2px 2px 2px;text-align:right;">
+                                                class="cold-12 d-flex justify-content-end"
+                                                style="margin:0 2px 2px 2px;text-align:right;">
                                                 <template v-if="data.item.stock > 0">
                                                     <div class="d-flex flex-column align-items-end">
                                                         <span class="badge"
-                                                              style="background:#1e5a85;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                            style="background:#1e5a85;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                             <template v-if="data.item.max_quantity">
-                                                                {{ formatedStockPresentation(data.item, data.item.stock).replace(/\bNIU\b/g,'UND').toUpperCase() }}
+                                                                {{ formatedStockPresentation(data.item,
+                                                                    data.item.stock).replace(/\bNIU\b/g, 'UND').toUpperCase()
+                                                                }}
                                                             </template>
                                                             <template v-else>
                                                                 {{ parseFloat(data.item.stock) }}
-                                                                {{ data.item.unit_type && data.item.unit_type.id ? (data.item.unit_type.id === 'NIU' ? 'UND' : data.item.unit_type.id) : '' }}
+                                                                {{ data.item.unit_type && data.item.unit_type.id ?
+                                                                    (data.item.unit_type.id === 'NIU' ? 'UND' :
+                                                                        data.item.unit_type.id) : '' }}
                                                             </template>
                                                         </span>
                                                     </div>
@@ -727,15 +753,15 @@
                                                 <template v-else>
                                                     <template v-if="data.item.unit_type_id != 'ZZ'">
                                                         <div class="text-center"
-                                                             style="width:100%;position:relative;height:20px;text-align:right;">
+                                                            style="width:100%;position:relative;height:20px;text-align:right;">
                                                             <img src="/status_images/stock.png"
-                                                                 style="position:absolute;top:15px;right:0;transform:translateY(-50%);opacity:1;pointer-events:none;width:300px;height:100px;" />
+                                                                style="position:absolute;top:15px;right:0;transform:translateY(-50%);opacity:1;pointer-events:none;width:300px;height:100px;" />
                                                         </div>
                                                     </template>
                                                     <template v-else>
                                                         <div class="col-12 mb-1" style="text-align:right;">
                                                             <span class="badge"
-                                                                  style="background:transparent;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
+                                                                style="background:transparent;color:#fff;font-weight:bold;padding:4px 10px;border-radius:4px;letter-spacing:.5px;display:inline-block;min-width:100px;text-align:center;">
                                                                 .
                                                             </span>
                                                         </div>
@@ -744,37 +770,29 @@
                                             </div>
 
                                             <!-- Botones (historial / imagen) -->
-                                            <div class="d-flex justify-content-end align-items-center" style="margin-right:8px;">
-                                                <span class="button-container"
-                                                      v-if="configuration.compra_venta"
-                                                      style="margin-left:4px;"
-                                                      @click.stop>
+                                            <div class="d-flex justify-content-end align-items-center"
+                                                style="margin-right:8px;">
+                                                <span class="button-container" v-if="configuration.compra_venta"
+                                                    style="margin-left:4px;" @click.stop>
                                                     <el-row>
-                                                        <el-button size="mini"
-                                                                   class="bg-info custom-el-button"
-                                                                   round
-                                                                   title="Ver historial de compra/venta"
-                                                                   @click.stop.prevent="clickWarehouseDetail(
-                                                                        data.id,
-                                                                        data.has_series,
-                                                                        data.warehouses,
-                                                                        data.unit_type,
-                                                                        data.item
-                                                                   )">
+                                                        <el-button size="mini" class="bg-info custom-el-button" round
+                                                            title="Ver historial de compra/venta" @click.stop.prevent="clickWarehouseDetail(
+                                                                data.id,
+                                                                data.has_series,
+                                                                data.warehouses,
+                                                                data.unit_type,
+                                                                data.item
+                                                            )">
                                                             <i class="fas fa-history" style="color:#fff;"></i>
                                                         </el-button>
                                                     </el-row>
                                                 </span>
-                                                <span v-if="configuration.zones_workers"
-                                                      class="button-container"
-                                                      style="margin-left:4px;"
-                                                      @click.stop>
+                                                <span v-if="configuration.zones_workers" class="button-container"
+                                                    style="margin-left:4px;" @click.stop>
                                                     <el-row>
-                                                        <el-button size="mini"
-                                                                   class="bg-warning custom-el-button"
-                                                                   round
-                                                                   title="Ver imagen ampliada"
-                                                                   @click.stop.prevent="clickFoodsImages(data.id)">
+                                                        <el-button size="mini" class="bg-warning custom-el-button" round
+                                                            title="Ver imagen ampliada"
+                                                            @click.stop.prevent="clickFoodsImages(data.id)">
                                                             <i class="fas fa-search-plus" style="color:#fff;"></i>
                                                         </el-button>
                                                     </el-row>
@@ -786,8 +804,8 @@
 
                                 <!-- Lote simple (cuando aplica y no se muestran grupos) -->
                                 <div class="d-flex justify-content-center m-1"
-                                     v-if="data.item.lots_enabled == 1 && data.item.date_of_due">
-                                    <el-tag :type="`${isExpired(data.item.date_of_due) ? 'danger':'primary'}`">
+                                    v-if="data.item.lots_enabled == 1 && data.item.date_of_due">
+                                    <el-tag :type="`${isExpired(data.item.date_of_due) ? 'danger' : 'primary'}`">
                                         {{ data.item.lot_code }} - {{ data.item.date_of_due }}
                                     </el-tag>
                                 </div>
@@ -805,36 +823,15 @@
             :unit_type.sync="unit_type" :itemId="itemId" :hasSerie="hasSerie" :item="currentItem" :config="config"
             :user="user"></warehouses-detail>
         <images-food :showDialog.sync="showImagesFoods" :item="currentItem" :config="config"></images-food>
-        <modal-unit-type-id
-            @selectUnitType="onSeriesConfirm"
-            :showDialog.sync="showDialogUnitType"
-            :item="currentItem"
-        ></modal-unit-type-id>
-        <show-color-size-product
-            :limitQty="limitQty"
-            :idx="currentIdx"
-            :item="currentItem"
-            :showDialog.sync="showColorSize"
-            :colorSizeSelected.sync="currentColorSize"
-            :establishments="establishments"
-            @updateColorSize="updateColorSize"
-        />
-        <show-lotes-product
-            :idx="currentIdx"
-            :orden="ordenLot"
-            :item="currentItem"
-            :showDialog.sync="showLotes"
-            @updateLotes="updateLotes"
-        />
-        <show-series-product
-            :limitQty="limitQty"
-            :idx="currentIdx"
-            :item="currentItem"
-            :showDialog.sync="showSeries"
-            :seriesSelected.sync="seriesSelected"
-            :establishments="establishments"
-            @updateSeries="onSeriesConfirm"
-        />
+        <modal-unit-type-id @selectUnitType="onSeriesConfirm" :showDialog.sync="showDialogUnitType"
+            :item="currentItem"></modal-unit-type-id>
+        <show-color-size-product :limitQty="limitQty" :idx="currentIdx" :item="currentItem"
+            :showDialog.sync="showColorSize" :colorSizeSelected.sync="currentColorSize" :establishments="establishments"
+            @updateColorSize="updateColorSize" />
+        <show-lotes-product :idx="currentIdx" :orden="ordenLot" :item="currentItem" :showDialog.sync="showLotes"
+            @updateLotes="updateLotes" />
+        <show-series-product :limitQty="limitQty" :idx="currentIdx" :item="currentItem" :showDialog.sync="showSeries"
+            :seriesSelected.sync="seriesSelected" :establishments="establishments" @updateSeries="onSeriesConfirm" />
     </div>
 </template>
 <style>
@@ -942,7 +939,7 @@ export default {
             hasSerie: false,
             user: false,
             config: {},
-            
+
             currentIdx: null,
             showImagesFoods: false,
             showWarehousesDetail: false,
@@ -1680,7 +1677,7 @@ export default {
             if (
                 this.blockAdd &&
                 !this.configuration.box_orden &&
-                this.configuration.restobar_home
+                this.configuration.restaurant
             ) {
                 this.$showSAlert(
                     "ORDEN",
@@ -1743,7 +1740,7 @@ export default {
                         qty += 1;
                     }
                     let pass; // declare once and reuse
-                    if (this.configuration.restobar_home) {
+                    if (this.configuration.restaurant) {
                         pass = await this.setItemCheckStock(
                             this.selectedFood.item.id,
                             qty

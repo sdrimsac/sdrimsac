@@ -2,98 +2,34 @@
 <template>
     <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
         <!-- Hora y Fecha del sistema -->
-        <div class="container-fluid pos-header-bar mb-0" style="
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            z-index: 10;
-            border-radius: 8px;
-            
-            padding: 0.5rem 1.2rem;
-            margin-top: 10px;
-            ">
-            <div class="card-body bg-tertiary rounded w-100"
-                style=" padding: 0.2rem 0.9rem !important; z-index: 1; width: 100%;" v-if="screenWidth > 678">
-                <div class="row align-items-center">
-                    <!-- límite de monto para venta de CPE -->
-                    <div class="col-5">
-                        <div class="col-12" v-if="limitAmount">
-                            <div :class="[
-                                `alert alert-${limitAmount.color}`,
-                                'pos-alert-warning'
-                            ]"
-                                style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;">
-                                <i class="fas fa-exclamation-triangle me-2"
-                                    style="font-size: 1.3em; color: #ff9800;"></i>
-                                <p style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;" :class="{
-                                    'blink-alert-text':
-                                        limitAmount.tipo === 'critico'
-                                }">
-                                    {{ limitAmount.mensaje }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2 text-white text-end">
-                        <el-tooltip content="Tiempo restante para refrescar la pantalla" placement="top">
-                            <button class="btn btn-success" type="button">
-                                <i class="fas fa-clock"></i>
-
-                                {{ formattedCountdown }}
-                            </button>
-                        </el-tooltip>
-                    </div>
-                    <div class="col-2 text-white text-center">
-                        <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
-                            <button class="btn" type="button" :style="{
-                                backgroundColor: getPingBackground(),
-                                color: 'white'
-                            }">
-                                Internet
-
-                                <i class="fas fa-wifi"></i>
-                                <span style="color: white;">{{ latencia }} ms</span>
-                            </button>
-                        </el-tooltip>
-                    </div>
-                    <div class="col-3 text-white text-end">
-                        {{
-                            new Date()
-                                .toLocaleDateString("es-ES", {
-                                    weekday: "long",
-                                    day: "numeric",
-                                    month: "long"
-                                })
-                                .replace(/^\w/, c => c.toUpperCase())
-                        }}
-                        {{ new Date().getFullYear() }}
+        <div class="row" style="margin-top: 10px;">
+            <div class="row">
+                <div class="col-4" v-if="limitAmount">
+                    <div :class="[
+                        `alert alert-${limitAmount.color}`,
+                        'pos-alert-warning'
+                    ]"
+                        style="padding: 0.2rem 0.7rem; margin-bottom: 0.3rem; display: flex; align-items: center; background: #fff;">
+                        <i class="fas fa-exclamation-triangle me-2" style="font-size: 1.3em; color: #ff9800;"></i>
+                        <p style="font-size: 15px; font-weight: bold; margin: 0; color: #9f1019;" :class="{
+                            'blink-alert-text':
+                                limitAmount.tipo === 'critico'
+                        }">
+                            {{ limitAmount.mensaje }}
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Alerta de límite de monto para venta de CPE -->
-        <!-- <div class="row" v-if="limitAmount">
-            <div class="col-12">
-                <div :class="`alert alert-${limitAmount.color}`">
-                    <h6>Atención</h6>
-                    <p style="font-size: 16px; font-weight: bold">
-                        {{ limitAmount.mensaje }}
-                    </p>
-                </div>
-            </div>
-        </div> -->
-        <div class="row" style="margin-top: 50px;">
+
             <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
                 <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
-                    <div class="card-body p-2">
+                    <div class="card-body p-1">
                         <div class="row">
                             <div class="d-flex flex-wrap">
                                 <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span">
                                     <button class="btn p-0" type="button" id="menu-actions" data-bs-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false" style="margin-right: 12px;">
-                                        <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip"
+                                        <span class="btn_guardarsmall dropdown-toggle" data-bs-toggle="tooltip"
                                             data-bs-placement="top" data-bs-delay="0" title
                                             data-bs-original-title="Item Count" aria-label="Item Count">Acciones
                                         </span>
@@ -122,34 +58,27 @@
                                 <div class="d-flex align-items-center flex-row flex-wrap gap-2">
                                     <template v-if="configuration.restobar_home && !this.isSeller">
                                         <!-- Boton de Mesa en Restaurante  o cuartos en Hotel -->
-                                        <template v-if="configuration.restobar_home">
+                                        <template
+                                            v-if="!configuration.hotels || (configuration.hotels && !isPiscinaArea)">
                                             <button class="btn_guardarsmall" type="primary" @click="buttonSmTables"
-                                                :title="'[F2] Mesas de Atención'
+                                                :title="isHotelArea
+                                                    ? '[F2] Cuartos para Alquilar'
+                                                    : '[F2] Mesas de Atención'
                                                     ">
-
-                                                <i class="icofont-dining-table"
-                                                    style="font-size: 35px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
+                                                <i v-if="isHotelArea" class="fas fa-hotel"
+                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
+                                                <i v-else class="icofont-dining-table"
+                                                    style="font-size: 15px; margin-top:-5px; color: white; display: flex; justify-content: center; align-items: center;"></i>
                                             </button>
                                         </template>
 
                                         <template v-if="configuration.created_items">
                                             <el-tooltip content="Crear Producto" placement="top">
                                                 <button class="btn_guardarsmall" type="primary" @click="createdNew">
-                                                    <i class="fas fa-plus" style="font-size: 20px;"></i>
+                                                    <i class="fas fa-plus" style="font-size: 10px;"></i>
                                                 </button>
                                             </el-tooltip>
                                         </template>
-                                        <!-- <el-tooltip content="Crear Producto" placement="top">
-                                                <button class="btn_guardarsmall" type="primary" @click="createdNewLibrary">
-                                                    <i class="fas fa-plus" style="font-size: 20px;">prod</i>
-                                                </button>
-                                            </el-tooltip>
-                                            <el-tooltip content="Crear Producto" placement="top">
-                                                <button class="btn_guardarsmall" type="primary" @click="trigerFunction(7)">
-                                                    <i class="fas fa-plus" style="font-size: 20px;">Historial</i>
-                                                </button>
-                                            </el-tooltip> -->
-
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
                                                 <i class="fas fa-print" style="font-size: 35px;"></i>
@@ -171,15 +100,81 @@
                                             </button>
                                         </template>
                                     </template>
-                                    <template v-if="
-                                        !this.isSeller
-                                    ">
-                                        <button class="btn btn-sm btn-primary" type="button"
-                                            @click="trigerFunction(195)">
-                                            <i class="fas fa-cash-register"></i>
-                                        </button>
+                                    <!-- Finanzas -->
+                                    <template v-if="!this.isSeller">
+                                        <el-tooltip content="Finanzas" placement="top">
+                                            <button class="btn_guardarsmall" type="primary" @click="trigerFunction(195)"
+                                                style="height:42px; min-width:42px; padding:0 10px; margin-right:8px;">
+                                                <i class="fas fa-cash-register"></i>
+                                            </button>
+                                        </el-tooltip>
+                                    </template>
+
+                                    <template v-if="isHotelArea">
+                                        <!-- Limpieza Hotel -->
+                                        <el-badge :value="tablesClean.length" :hidden="tablesClean.length === 0">
+                                            <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                                class="btn_limpiezasmall" @click="showCleanDialog = true">
+                                                <img src="/images/imghotel/5.png" alt="Imagen" width="20" height="20" />
+                                                
+                                            </button>
+                                        </el-badge>
+                                        <!-- Habitaciones Vencidas -->
+                                        <el-badge :value="tablesLeave.length" :hidden="tablesLeave.length === 0">
+                                            <button style="margin-right: 2px;margin-left: 2px;" type="button"
+                                                class="btn_cancelarsmall" :title="'Habitaciones vencidas'"
+                                                @click="showExpiredDialog = true">
+                                                <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                                                
+                                            </button>
+                                        </el-badge>
                                     </template>
                                 </div>
+                                <div class="d-flex align-items-center" style="gap:12px; flex-wrap:nowrap;">
+                                    <!-- <el-tooltip content="Crear Productos" placement="top">
+                                        <button
+                                            class="btn_guardarsmall d-flex align-items-center justify-content-center"
+                                            type="button"
+                                            @click="createdNewLibrary"
+                                            style="height:42px; min-width:42px; padding:0 10px;">
+                                            <i class="fas fa-box-open" style="font-size:18px;"></i>
+                                            
+                                        </button>
+                                    </el-tooltip> -->
+
+                                    <el-tooltip content="Historial" placement="top">
+                                        <button
+                                            class="btn_guardarsmall d-flex align-items-center justify-content-center"
+                                            type="button"
+                                            @click="trigerFunction(7)"
+                                            style="height:42px; min-width:42px; padding:0 10px;">
+                                            <i class="fas fa-history" style="font-size:18px;"></i>
+                                        </button>
+                                    </el-tooltip>
+
+                                    <!-- Tiempo restante -->
+                                    
+                                        <button
+                                            class="btn_excelsmall d-flex align-items-center justify-content-center"
+                                            type="button"
+                                            style=" min-width:42px; padding:0 10px;">
+                                            <i class="fas fa-clock me-2"  style="font-size:18px;"></i>
+                                            <small>{{ formattedCountdown }}</small>
+                                        </button>
+                                    
+
+                                    <!-- Estado Internet / Latencia -->
+                                    <el-tooltip content="Estado de Estabilidad de Internet" placement="top">
+                                        <button
+                                            class="btn d-flex align-items-center justify-content-center"
+                                            type="button"
+                                            :style="{ backgroundColor: getPingBackground(), color: 'white', height: '28px', padding: '0 12px' }">
+                                            <i class="fas fa-wifi me-2" style="font-size:18px;"></i>
+                                            <small>{{ latencia }} ms</small>
+                                        </button>
+                                    </el-tooltip>
+                                </div>
+
 
                             </div>
                         </div>
@@ -280,13 +275,13 @@
                                             <!-- Barcode -->
                                             <div v-if="configuration.barcode"
                                                 class="align-items-center justify-content-center">
-                                                <el-tooltip content="Habilitar búsqueda por código de barras"
-                                                    placement="top">
+                                               
+                                                    
                                                     <el-checkbox v-model="barcode" @change="saveInLocalStorageBarcode"
                                                         class="d-flex align-items-center">
                                                         <span>Barcode</span>
                                                     </el-checkbox>
-                                                </el-tooltip>
+                                               
                                             </div>
 
                                             <!-- Calidad -->
@@ -766,7 +761,7 @@
                     </div>
                 </div>
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
-                    <div class="card-body p-2">
+                    <div class="">
                         <list-orden :divided_items.sync="divided_items" @searchFoodByCustomerUnitTypeId="
                             searchFoodByCustomerUnitTypeId
                         " :formQtn.sync="formQtn" @updateCurrencyChoice="updateCurrencyChoice"
@@ -2042,11 +2037,23 @@ export default {
             return `/${formated}`;
         },
         iniciarMedicionLatencia() {
-            setInterval(async () => {
+            // Guardar el id del intervalo para poder detenerlo después
+            try {
+                if (this._latencyIntervalId) {
+                    clearInterval(this._latencyIntervalId);
+                }
+            } catch (e) {}
+
+            this._latencyIntervalId = setInterval(async () => {
                 const valor = await this.medirLatencia();
                 this.latencia = valor;
                 //console.log("⏱️ Latencia medida:", valor, "ms");
             }, 2000); // Cada 2 segundos
+
+            // Fallback global reference (algunos componentes pueden usar ventana global)
+            try {
+                window.__latencyIntervalId = this._latencyIntervalId;
+            } catch (e) {}
         },
         async medirLatencia() {
             // Usa la función existente para medir la latencia con una imagen
@@ -2078,11 +2085,23 @@ export default {
         },
 
         iniciarMedicionLatencia() {
-            setInterval(async () => {
+            // Guardar el id del intervalo para poder detenerlo después
+            try {
+                if (this._latencyIntervalId) {
+                    clearInterval(this._latencyIntervalId);
+                }
+            } catch (e) {}
+
+            this._latencyIntervalId = setInterval(async () => {
                 const valor = await this.medirLatencia();
                 this.latencia = valor;
                 //console.log("⏱️ Latencia medida:", valor, "ms");
             }, 2000); // Cada 2 segundos
+
+            // Fallback global reference (algunos componentes pueden usar ventana global)
+            try {
+                window.__latencyIntervalId = this._latencyIntervalId;
+            } catch (e) {}
         },
         async ItemNew(productId) {
             try {
@@ -2190,7 +2209,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restobar/worker/print_last_document`
+                    `/caja/worker/print_last_document`
                 );
 
                 if (response.status == 200) {
@@ -2336,15 +2355,44 @@ export default {
             if (description.toLowerCase() == type.toLowerCase()) return true;
             return false;
         },
-        async tableOpen(id) {
-            if (!this.cashId) {
-                this.$message({
-                    showClose: true,
-                    type: "warning",
-                    message: "Seleccione una caja para poder abrir una mesa"
-                });
-                return;
+        async roomCleaned(id) {
+            const response = await this.$http(`/caja/rooms/cleaned/${id}`);
+            /* if (response.status == 200) {
+                this.tablesClean = this.tablesClean.filter(t => t.id != id);
+            } */
+            if (response.status == 200) {
+                // Si el backend retorna success: false, mostramos el mensaje de error
+                if (response.data && response.data.success === false) {
+                    this.$showSAlert(
+                        "ALERTA",
+                        response.data.message,
+                        "warning"
+                    );
+                    return;
+                }
+                this.tablesClean = this.tablesClean.filter(t => t.id != id);
             }
+        },
+        roomWasCleaned(id) {
+            this.tablesClean = this.tablesClean.filter(t => t.id != id);
+        },
+        onCleanTableFromModal(table) {
+            if (!table || !table.id) return;
+            this.isCleaned(table.id);
+        },
+        async isCleaned(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de marcar como limpiada la habitación?",
+                    "Mensaje",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                await this.roomCleaned(id);
+            } catch (e) { }
         },
         playSound(sound = "services_sound.mp3") {
             let audio = new Audio(`/sounds/${sound}`);
@@ -2430,6 +2478,12 @@ export default {
         setMenuOptions() {
             this.optionsMenu = [
                 {
+                    id: 256,
+                    title: ["Garantia"],
+                    icon: "fa fa-guarantee",
+                    visible: true && this.configuration.warranty_product
+                },
+                {
                     id: 74,
                     title: ["Venta del mes"],
                     icon: "fas fa-history ",
@@ -2485,8 +2539,12 @@ export default {
                     visible:
                         !this.isSeller &&
                         this.cashId &&
-                        this.configuration.restobar_home
-
+                        this.configuration.restobar_home &&
+                        !this.configuration.college &&
+                        this.worker.area.description.toUpperCase() !==
+                        "HOTEL" &&
+                        this.worker.area.description.toUpperCase() !==
+                        "CAJA PISCINA"
                 },
 
                 {
@@ -2517,6 +2575,16 @@ export default {
                         !this.isSeller &&
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
+
+                {
+                    id: 9,
+                    title: ["Matriculas", "Mensualidades"],
+                    icon: "fas fa-user-edit",
+                    visible:
+                        this.configuration.college &&
+                        !this.isSeller &&
+                        this.cashId
+                },
                 {
                     id: 10,
                     title: ["Canjear", "Promocion"],
@@ -2526,8 +2594,18 @@ export default {
                         !this.isSeller &&
                         this.cashId
                 },
+                {
+                    id: 33,
+                    title: ["Créditos"],
+                    icon: "fas fa-credit-card",
+                    visible: this.configuration.credits && !this.isSeller
+                },
                 /* {
-                    
+                    id: 25,
+                    title: ["Guías", "Remisión"],
+                    icon: "fas fa-file",
+                    visible: this.configuration.dispatch && !this.isSeller && this.cashId
+                }, */
                 {
                     id: 102,
                     title: ["Cambiar", "Categorías"],
@@ -2544,6 +2622,12 @@ export default {
                     visible: this.configuration.edit_product_pos && this.cashId
                 },
                 {
+                    id: 109,
+                    title: ["Ver", "Consignaciones"],
+                    icon: "fa fa-edit",
+                    visible: this.configuration.consignment && !this.isSeller
+                },
+                {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
@@ -2555,6 +2639,12 @@ export default {
                     icon: "el-icon-connection",
                     visible: this.configuration.item_set_caja && !this.isSeller
                 },
+                {
+                    id: 34,
+                    title: ["Reporte", "Diario Crédito"],
+                    icon: "el-icon-connection",
+                    visible: this.configuration.sale_note_credit_confirm
+                }
                 /* {
                     id: 35,
                     title: ["Stock Minimo"],
@@ -2689,8 +2779,8 @@ export default {
                 });
                 return;
             }
-            this.openTables();
-
+                this.openTables();
+            
         },
         handleKeydown(event) {
             let { keyCode, key } = event;
@@ -2705,10 +2795,13 @@ export default {
                     break;
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
+                    
+                        if (this.configuration.restobar_home) {
+                            this.openTables();
+                        }
+                        
+                    
 
-                    if (this.configuration.restobar_home) {
-                        this.openTables();
-                    }
                     break;
 
                 default:
@@ -2732,7 +2825,7 @@ export default {
         },
         async getPrinter() {
             const response = await this.$http.get(
-                `/restobar/worker/cash/get_printer/${this.worker.area_id}`
+                `/caja/worker/cash/get_printer/${this.worker.area_id}`
             );
             if (response.status == 200) {
                 const { printer } = response.data;
@@ -3881,6 +3974,138 @@ export default {
                                 orden.prices = newPrices;
                             }
                         }
+                        // Unificar lógica de escaneo de códigos de barras
+                        /* if (
+                            Array.isArray(orden?.food?.item?.item_codes) &&
+                            this.barcode === true &&
+                            this.input_item
+                        ) {
+                            // Buscar el objeto real en localOrden (para presentaciones usar type_id)
+                            let realIndex = this.localOrden.findIndex(
+                                p => p.id == food_id && p.type_id == type.id
+                            );
+                            let realItem =
+                                realIndex !== -1
+                                    ? this.localOrden[realIndex].food.item
+                                    : orden.food.item;
+
+                            const scanned = String(this.input_item)
+                                .trim()
+                                .toLowerCase();
+
+                            // Inicializar _all_item_codes si no existe o está vacía
+                            if (
+                                !Array.isArray(realItem._all_item_codes) ||
+                                realItem._all_item_codes.length === 0
+                            ) {
+                                realItem._all_item_codes = [
+                                    ...realItem.item_codes
+                                ];
+                            } else {
+                                // Si el código escaneado no está en _all_item_codes pero sí en item_codes, agregarlo
+                                const existsInAll = realItem._all_item_codes.some(
+                                    c =>
+                                        String(c.code_barcode)
+                                            .trim()
+                                            .toLowerCase() === scanned
+                                );
+                                const existsInItemCodes = realItem.item_codes.some(
+                                    c =>
+                                        String(c.code_barcode)
+                                            .trim()
+                                            .toLowerCase() === scanned
+                                );
+                                if (!existsInAll && existsInItemCodes) {
+                                    const codeToAdd = realItem.item_codes.find(
+                                        c =>
+                                            String(c.code_barcode)
+                                                .trim()
+                                                .toLowerCase() === scanned
+                                    );
+                                    realItem._all_item_codes.push(codeToAdd);
+                                    console.log(
+                                        "[SCAN] Se agregó el código escaneado a _all_item_codes:",
+                                        codeToAdd
+                                    );
+                                }
+                            }
+
+                            if (!Array.isArray(realItem.item_codes_scanned)) {
+                                this.$set(realItem, "item_codes_scanned", []);
+                            }
+
+                            console.log(
+                                "[SCAN] _all_item_codes:",
+                                realItem._all_item_codes
+                            );
+                            console.log(
+                                "[SCAN] item_codes_scanned antes:",
+                                realItem.item_codes_scanned
+                            );
+
+                            const foundCode = realItem._all_item_codes.find(
+                                c =>
+                                    String(c.code_barcode)
+                                        .trim()
+                                        .toLowerCase() === scanned
+                            );
+
+                            if (!foundCode) {
+                                this.$toast.error(
+                                    "Código no válido para este producto."
+                                );
+                                this.input_item = "";
+                                return;
+                            }
+
+                            const alreadyScanned = realItem.item_codes_scanned.some(
+                                c =>
+                                    String(c.code_barcode)
+                                        .trim()
+                                        .toLowerCase() === scanned
+                            );
+
+                            if (alreadyScanned) {
+                                this.$toast.warning(
+                                    "Este código ya fue escaneado."
+                                );
+                                this.input_item = "";
+                                return;
+                            }
+
+                            realItem.item_codes_scanned.push(foundCode);
+                            // Mostrar el contenido real del array, no el Observer
+                            try {
+                                console.log(
+                                    "[SCAN] item_codes_scanned después (raw):",
+                                    JSON.parse(
+                                        JSON.stringify(
+                                            realItem.item_codes_scanned
+                                        )
+                                    )
+                                );
+                                console.log(
+                                    "[SCAN] item_codes_scanned count:",
+                                    realItem.item_codes_scanned.length
+                                );
+                                console.log(
+                                    "[SCAN] Último agregado:",
+                                    foundCode
+                                );
+                                console.log(
+                                    "[SCAN] Todos los code_barcode:",
+                                    realItem.item_codes_scanned.map(
+                                        c => c.code_barcode
+                                    )
+                                );
+                            } catch (e) {
+                                console.log(
+                                    "[SCAN] item_codes_scanned después (fallback):",
+                                    realItem.item_codes_scanned
+                                );
+                            }
+                        } */
+
                         // orden.quantity = Number(type.quantity_unit);
                         orden.quantity = orden.food.item.series_enabled
                             ? 0
@@ -4249,7 +4474,7 @@ export default {
                             }
                         }
                         const response = await this.$http.get(
-                            `/restobar/worker/ordens-status`
+                            `/caja/worker/ordens-status`
                         );
                         if (response.status == 200) {
                             let Ordens = response.data.ordens;
@@ -4283,7 +4508,7 @@ export default {
                             index++
                         ) {
                             const response = await this.$http.get(
-                                `/restobar/worker/ordens-ready/` +
+                                `/caja/worker/ordens-ready/` +
                                 this.selectedCatIds[index]
                             );
                             if (response.data.success == true) {
@@ -4320,7 +4545,7 @@ export default {
                             }
                         }
                         const response = await this.$http.get(
-                            `/restobar/worker/ordens-status`
+                            `/caja/worker/ordens-status`
                         );
                         if (response.status == 200) {
                             let Ordens = response.data.ordens;
@@ -4491,7 +4716,7 @@ export default {
         async view_modal() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restobar/worker/totales_sales?cash_id=${this.cashId}&send=1`
+                `/caja/worker/totales_sales?cash_id=${this.cashId}&send=1`
             );
             let { total_sales } = response.data;
             if (total_sales) {
@@ -4504,7 +4729,7 @@ export default {
             }
             if (this.configuration.other_currency_pos) {
                 const response_usd = await this.$http.get(
-                    `/restobar/worker/totales_sales_usd?cash_id=${this.cashId}&send=1`
+                    `/caja/worker/totales_sales_usd?cash_id=${this.cashId}&send=1`
                 );
                 let { total_sales_usd } = response_usd.data;
                 if (total_sales_usd) {
@@ -4519,7 +4744,7 @@ export default {
         async list_tables() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restobar/worker/${this.resource}/listtables`
+                `/caja/worker/${this.resource}/listtables`
             );
             this.listtables = response.data;
             this.listar_tables = response.data;
@@ -5918,6 +6143,36 @@ export default {
             } finally {
                 this.loadingItems = false;
             }
+        },
+        async getTablesToLeave() {
+            try {
+                const response = await this.$http.get(
+                    `/caja/rooms/tables_to_leave`
+                );
+                if (response.status == 200) {
+                    const { data } = response.data;
+                    this.tablesLeave = data;
+                    this.tablesLeave = this.tablesLeave.map(t => ({
+                        ...t,
+                        timer: null
+                    }));
+                }
+            } catch (e) { }
+        },
+        async getTablesToClean() {
+            try {
+                const response = await this.$http.get(
+                    `/caja/rooms/tables_to_clean`
+                );
+                if (response.status == 200) {
+                    const { data } = response.data;
+                    this.tablesClean = data;
+                    this.tablesClean = this.tablesClean.map(t => ({
+                        ...t,
+                        time_to_finish: null
+                    }));
+                }
+            } catch (e) { }
         },
         async getTables() {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});

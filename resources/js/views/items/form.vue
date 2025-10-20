@@ -1581,9 +1581,12 @@
                                     'has-danger': errors.purchase_unit_price
                                 }">
                                     <label class="control-label">Precio Unitario (Compra)</label>
-                                    <el-input v-model="form.purchase_unit_price" dusk="purchase_unit_price" @input="
-                                        calculatePercentageOfProfitByPurchase
-                                    ">
+                                    <el-input
+                                        :value="displayPurchaseUnitPrice"
+                                        dusk="purchase_unit_price"
+                                        @input="onPurchaseUnitPriceInput"
+                                        @blur="formatPurchaseUnitPrice"
+                                    >
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
                                     </el-input>
                                     <small class="text-danger" v-if="errors.purchase_unit_price"
@@ -2036,6 +2039,19 @@ export default {
                 this.form.sale_unit_price = isNaN(numericValue)
                     ? null
                     : numericValue;
+            }
+        }
+
+        ,
+        displayPurchaseUnitPrice: {
+            get() {
+                return this.form.purchase_unit_price !== null && this.form.purchase_unit_price !== undefined
+                    ? parseFloat(this.form.purchase_unit_price).toFixed(2)
+                    : "";
+            },
+            set(value) {
+                const numericValue = parseFloat(String(value).replace(/[^0-9.]/g, ""));
+                this.form.purchase_unit_price = isNaN(numericValue) ? null : numericValue;
             }
         }
     },
@@ -2815,6 +2831,26 @@ export default {
                     (this.form.purchase_unit_price *
                         (100 + parseFloat(this.form.percentage_of_profit))) /
                     100;
+        },
+        // Handler for direct input in the purchase unit price field.
+        onPurchaseUnitPriceInput(value) {
+            // Accept both string and numeric input, keep raw numeric value in the model
+            const cleaned = String(value).replace(/[^0-9.]/g, "");
+            const numericValue = parseFloat(cleaned);
+            this.form.purchase_unit_price = isNaN(numericValue) ? null : numericValue;
+
+            // Keep existing behavior: recalculate sale price if percentage mode enabled
+            this.calculatePercentageOfProfitByPurchase();
+        },
+        // Format the displayed value to two decimals on blur
+        formatPurchaseUnitPrice() {
+            if (this.form.purchase_unit_price === null || this.form.purchase_unit_price === undefined) return;
+            // Round to 2 decimals and update model with numeric value (not string)
+            const rounded = Math.round(parseFloat(this.form.purchase_unit_price) * 100) / 100;
+            // Ensure model keeps the numeric rounded value
+            this.form.purchase_unit_price = rounded;
+            // Force Vue to update any dependent computed watchers
+            this.$forceUpdate();
         },
         calculatePercentageOfProfitByPercentage() {
             if (this.form.percentage_of_profit === "") {

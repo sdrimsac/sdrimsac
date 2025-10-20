@@ -608,6 +608,12 @@ class PurchaseController extends Controller
                         ItemWarehousePrice::where('item_id', $row['item_id'])
                             ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
                     }
+                    Log::info('Actualizar precio de compra del item', ['item_id' => $row['item_id'], 'unit_price' => $unit_price]);
+
+                    /* aqui si la affectation_igv_type_id = 10 el unit_price lo debe multiplicar por 1.18 aho si es 20 ahi si no*/
+                    if ($row['affectation_igv_type_id'] == 10) {
+                        $unit_price *= 1.18;
+                    }
 
                     if ($unit_price != floatval($item->purchase_unit_price)) {
                         $item->purchase_unit_price = $unit_price;
@@ -953,7 +959,6 @@ class PurchaseController extends Controller
             ],
         ];
     }
-
 
     /*public function store(PurchaseRequest $request)
     {
