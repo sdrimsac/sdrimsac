@@ -5,7 +5,7 @@
         append-to-body
         @open="open"
         @close="close"
-        width="30%"
+        width="60%"
         :close-on-click-modal="false"
         class="rounded-dialog"
     >
@@ -49,16 +49,16 @@
         </div>
         <div class="row m-2">
             <table class="table">
-                <thead>
+                <thead style="background-color: #073f68; color: #fff;">
                     <tr>
-                        <th>Descripción|Número</th>
-                        <th v-if="type == 'floors'">Torre</th>
-                        <th v-if="type == 'table_types'">Precio</th>
-                        <th></th>
+                        <th style="color:#fff">Descripción|Número</th>
+                        <th v-if="type == 'floors'" style="color:#fff">Torre</th>
+                        <th v-if="type == 'table_types'" style="color:#fff">Precio</th>
+                        <th style="color:#fff"></th>
                     </tr>
                 </thead>
                 <tbody v-if="type == 'floors'">
-                    <tr v-for="(floor, idx) in floors" :key="idx">
+                    <tr v-for="(floor, idx) in floors" :key="idx" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ floor.name }}</td>
                         <td>{{ floor.tower.name }}</td>
                         <td>

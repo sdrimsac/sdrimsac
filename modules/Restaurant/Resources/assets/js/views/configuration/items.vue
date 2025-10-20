@@ -7,17 +7,27 @@
             <div class="card mb-0">
                 <template>
                     <div>
-                        <div class="card-header bg-primary d-flex align-items-center">
+                        <div class="card-header bg-primary d-flex align-items-center" style="padding: 10px;">
                             <template v-if="resource == 'caja/tables'">
-                                <i class="fas fa-table text-white mr-2"
-                                    style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                                <i class="icofont-dining-table text-white mr-2" style="font-size: 1.5rem; margin-right: 0.5rem;" title="Mesas" aria-hidden="true"></i>
+                                <h4 class="my-0 text-white d-flex align-items-center"
+                                    style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
                             </template>
-                            <template v-if="resource == 'caja/rooms'">
+                            <template v-else-if="resource == 'caja/rooms'">
                                 <i class="fas fa-door-open text-white mr-2"
-                                    style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                                    style="font-size: 1rem; margin-right: 0.5rem;"></i>
+                                <h4 class="my-0 text-white d-flex align-items-center"
+                                    style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
                             </template>
-                            <h4 class="my-0 text-white d-flex align-items-center"
-                                style="font-size: 1.5rem; font-weight: bold;">{{ title }}</h4>
+                            <template v-else>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-print text-white mr-2"
+                                        style="font-size: 1rem; margin-right: 0.5rem;"
+                                        title="Área de impresión" aria-hidden="true"></i>
+                                    <h4 class="my-0 text-white d-flex align-items-center"
+                                        style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </template>
@@ -89,13 +99,13 @@
                                 type != 'caja/tables' &&
                                 type != 'caja/rooms'
                             ">
-                                Descripción
+                                Zona
                             </th>
                             <th class="text-white" v-if="
                                 type != 'caja/tables' &&
                                 type != 'caja/rooms'
                             ">
-                                producto
+                                Producto
                             </th>
                             <th class="text-white" v-if="
                                 type == 'caja/tables' ||
@@ -146,7 +156,7 @@
                         </tr>
 
                         <tr></tr>
-                        <tr slot-scope="{ index, row }">
+                        <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }" >
                             <td>{{ index }}</td>
                             <td :class="row.active ? '' : 'text-danger'" v-if="
                                 type != 'caja/tables' &&
@@ -207,42 +217,45 @@
                             <td class="text-end">
                                 <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip"
+                                    <span class="btn_guardarsmall dropdown-toggle" data-bs-toggle="tooltip"
                                         data-bs-placement="top" data-bs-delay="0" title
                                         data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-end" style>
-                                    <a type="button" class="dropdown-item" @click.prevent="clickCreate(row.id)">
-                                        <i class="fa fa-edit"></i> Editar
-                                    </a>
-                                    <a type="button" class="dropdown-item" :class="row.active
-                                        ? 'btn btn-danger btn-sm'
-                                        : 'btn btn-success btn-sm'
-                                        " @click.prevent="
-                                            clickDelete(row.id, row.active)
-                                            ">
-                                        <i class="fa fa-delete"></i>
-                                        <template v-if="
-                                            type == 'caja/workers-type' ||
-                                            type == 'caja/observations'
-                                        ">
-                                            <template v-if="row.active">Desactivar</template>
-                                            <template v-else>Activar</template>
-                                        </template>
-                                        <template v-else>
-                                            <!-- <template v-if="typeUser == 'superadmin'">
-                                                <i class="fa fa-delete"></i> Eliminar
-                                            </template>
-                                            <template v-else>
-                                            </template> -->
-                                            <i class="fa fa-delete"></i>
-                                            Eliminar
-                                        </template>
-                                    </a>
-                                    <a v-if="type == 'caja/observations'" type="button" class="dropdown-item"
-                                        @click.prevent="clickRemove(row.id)">
-                                        <i class="fa fa-trash"></i> Eliminar
-                                    </a>
+                                <div class="dropdown-menu dropdown-menu-end p-1" style="min-width:80px;">
+                                    <button
+                                        type="button"
+                                        class="custom-button w-100 d-flex align-items-center"
+                                        @click.prevent="clickCreate(row.id)"
+                                        style="justify-content:flex-start; gap:8px;"
+                                    >
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                        <span>Editar</span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="custom-button w-95 d-flex align-items-center mt-2"
+                                        :style="row.active ? { backgroundColor: '#dc3545' } : { backgroundColor: '#28a745' }"
+                                        @click.prevent="clickDelete(row.id, row.active)"
+                                        style="justify-content:flex-start; gap:8px;"
+                                    >
+                                        <i :class="row.active ? 'fa fa-ban' : 'fa fa-check'" aria-hidden="true"></i>
+                                        <span v-if="type == 'caja/workers-type' || type == 'caja/observations'">
+                                            <span v-if="row.active">Desactivar</span><span v-else>Activar</span>
+                                        </span>
+                                        <span v-else>Eliminar</span>
+                                    </button>
+
+                                    <button
+                                        v-if="type == 'caja/observations'"
+                                        type="button"
+                                        class="custom-button w-95 d-flex align-items-center mt-2"
+                                        style="justify-content:flex-start; gap:8px; background-color:#b21f2d;"
+                                        @click.prevent="clickRemove(row.id)"
+                                    >
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        <span>Eliminar</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>

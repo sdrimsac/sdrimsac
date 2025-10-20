@@ -11,28 +11,28 @@
                 </div>
 
                 <div class="data-table-visible-columns d-flex align-items-center">
-                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                    <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;" href="javascript:void(0)"
                         @click.prevent="clickSaleOffert()" v-if="config.sale_offert">
                         <i class="fas fa-tag"></i>
                         Ofertas de ventas
                     </el-button>
-                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                    <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;" href="javascript:void(0)"
                         @click.prevent="clickBonus()" v-if="config.consolidated_quotations">
                         <i class="fas fa-gift"></i>
                         Bonificaciones
                     </el-button>
-                    <el-button v-if="config.unique_code_unit_types" type="primary" class="btn_buscar"
+                    <el-button v-if="config.unique_code_unit_types" type="primary" class="btn_guardarsmall"
                         style="margin-right: 5px;" href="javascript:void(0)" @click.prevent="clickGenerate()">
                         <!-- <i class="fa fa-plus"></i> -->
-                        Generar Codigo de Familia
+                        Generar Código de Familia
                     </el-button>
-                    <el-button type="primary" class="btn_buscar" style="margin-right: 5px;" href="javascript:void(0)"
+                    <el-button type="primary" class="btn_guardarsmall" style="margin-right: 5px;" href="javascript:void(0)"
                         @click.prevent="clickCreate()">
                         <i class="fa fa-plus"></i>
                         Nuevo
                     </el-button>
                     <div class="dropdown">
-                        <button class="btn_buscar" type="Primary" data-bs-toggle="dropdown" aria-expanded="false"
+                        <button class="btn_guardarsmall" type="Primary" data-bs-toggle="dropdown" aria-expanded="false"
                             aria-haspopup="true" style="margin-right: 5px;">
                             <i class="fa fa-upload me-2"></i>
                             Importar
@@ -97,7 +97,8 @@
                             <th class="text-white text-center" style="width: 100px;">Estado</th>
                         </tr>
 
-                        <tr slot-scope="{ index, row }" :class="{ disable_color: !row.active }">
+                        <tr slot-scope="{ index, row }" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }"
+ >
                             <td>{{ index + 1 }}</td>
                             <td class="text-start">
                                 <template>

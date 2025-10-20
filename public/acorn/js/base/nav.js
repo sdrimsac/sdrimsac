@@ -41,8 +41,18 @@ class Nav {
     this.pinButton = this.element.querySelector('#pinButton');
     this.colorButton = this.element.querySelector('#colorButton');
     this.menuContainer = this.element.querySelector('.menu-container');
-    this.menuPlainOuter = this.element.querySelector('#menu').outerHTML;
-    this.menuPlainInner = this.element.querySelector('#menu').innerHTML;
+    // The #menu element may not be present at the time Nav is initialized
+    // (different templates / partials or asynchronous rendering). Guard
+    // against null to avoid "Cannot read properties of null (reading 'outerHTML')".
+    const menuElement = this.element.querySelector('#menu');
+    if (menuElement) {
+      this.menuPlainOuter = menuElement.outerHTML;
+      this.menuPlainInner = menuElement.innerHTML;
+    } else {
+      // Fallback empty menu — the rest of the code creates/builds the menu
+      this.menuPlainOuter = '<ul id="menu" class="menu"></ul>';
+      this.menuPlainInner = '';
+    }
 
     this.html = document.documentElement;
 

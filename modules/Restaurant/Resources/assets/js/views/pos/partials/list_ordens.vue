@@ -356,18 +356,21 @@
                             <span style="display: flex; justify-content: center;">
                                 Enviar</span>
                         </button>
-                        <button v-if="
-                            isCreatingOrden == false &&
-                            clientTableData.table != undefined &&
-                            ordens.length != 0
-                        " class="btn btn-light mt-2" type="button" @click="printOrden()"
-                            style="max-height: 45px ; max-width: 65px;">
-                            <i class="fas fa-print" style="color: var(--primary) !important"></i>
-                            <br />
-                            <span style="display: flex; justify-content: center;">
-                                Precuenta
-                            </span>
-                        </button>
+                        <el-tooltip
+                            v-if="isCreatingOrden == false && clientTableData.table != undefined && ordens.length != 0"
+                            content="Imprimir Precuenta directa"
+                            placement="top"
+                            effect="dark"
+                        >
+                            <button class="btn btn-light mt-2" type="button" @click="printOrden()"
+                                style="max-height: 45px ; max-width: 65px;">
+                                <i class="fas fa-print" style="color: var(--primary) !important"></i>
+                                <br />
+                                <span style="display: flex; justify-content: center;">
+                                    Precuenta
+                                </span>
+                            </button>
+                        </el-tooltip>
                         <button v-if="
                             isCreatingOrden == false &&
                             clientTableData.table != undefined &&
@@ -684,12 +687,12 @@
                                                         {{ localOrden.length }}
                                                     </template>
                                                 </a>
-                                                <!-- terterterterterter -->
-                                                Productos por Solicitar
+                                                
+                                                Por Solicitar
                                                 <template v-if="configuration.divided_items">
                                                     <el-checkbox v-model="localDividedItems" style="margin-left: 10px;"
                                                         @change="saveDividedItemsLocalStorage">
-                                                        Dividir Ordenes Iguales
+                                                        Dividir Pedidos Iguales
                                                     </el-checkbox>
                                                 </template>
                                             </template>
@@ -3155,6 +3158,29 @@ export default {
             })
                 .then(() => Math.round(performance.now() - start))
                 .catch(() => -1);
+        },
+
+        // Detener la medición de latencia de forma segura.
+        // Antes aquí se llamaba a `this.detenerMedicionLatencia()` en beforeDestroy,
+        // pero la función no siempre existía, provocando errores. Ahora garantizamos
+        // que la función exista y trate de limpiar cualquier interval conocido.
+        detenerMedicionLatencia() {
+            try {
+                // Intervalo almacenado en la instancia (si se llegó a guardar)
+                if (this._latencyIntervalId) {
+                    clearInterval(this._latencyIntervalId);
+                    this._latencyIntervalId = null;
+                }
+
+                // Some modules may set a global interval id; clear it defensively
+                if (window && window.__latencyIntervalId) {
+                    clearInterval(window.__latencyIntervalId);
+                    window.__latencyIntervalId = null;
+                }
+            } catch (e) {
+                // No queremos romper el ciclo de vida por un error de limpieza
+                console.warn("detenerMedicionLatencia: error al limpiar interval", e);
+            }
         },
 
         async updateColorSize(idx, color_size) {

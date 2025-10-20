@@ -1,3 +1,4 @@
+<!-- Zona de Atención Caja -->
 <template>
     <el-dialog
         :visible="showTables"
@@ -5,7 +6,7 @@
         @open="open"
         @close="close"
         width="80%"
-        title="ZONA DE ATENCIÓN"
+        title="Zona de Atención"
         :close-on-click-modal="false"
         :class="{ top }"
     >

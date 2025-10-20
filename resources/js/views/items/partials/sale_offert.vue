@@ -1,29 +1,30 @@
 <!-- Ofertas de Venta 3x2 etc -->
 <template>
-<el-dialog title="Ofertas de venta" :visible.sync="showDialog" @close="close" @open="open" append-to-body v-loading="loading">
+<el-dialog title="Módulo Ofertas de Venta" :visible.sync="showDialog" @close="close" @open="open" append-to-body v-loading="loading">
     <div class="row mt-2">
-        <div class="col-md-5">
-            <label>
-                Cantidad a Entregar
-                <el-tooltip content="Cantidad Total de productos a entregar" placement="top">
-                    <i class="el-icon-info"></i>
-                </el-tooltip>
-            </label>
-            <el-input v-model="form.quantity_free" placeholder="Cantidad gratis"></el-input>
+        <div class="col-md-4">
+            <label>Se Entrega</label>
+            <el-input
+                v-model="form.quantity_free"
+                placeholder="Cantidad gratis"
+                maxlength="2"
+                @input="val => { const v = String(val).replace(/\D/g,'').slice(0,2); this.form.quantity_free = v === '' ? 0 : Number(v); }"
+            ></el-input>
         </div>
         <div class="col-md-5">
-            <label>
-                Cantidad a Pagar
-                <el-tooltip content="Cantidad Total de productos a Pagar" placement="top">
-                    <i class="el-icon-info"></i>
-                </el-tooltip>
+            <label>Se Paga:
             </label>
-            <el-input v-model="form.quantity_total" placeholder="Cantidad total"></el-input>
+            <el-input
+                v-model="form.quantity_total"
+                placeholder="Cantidad total"
+                maxlength="2"
+                @input="val => { const v = String(val).replace(/\D/g,'').slice(0,2); this.form.quantity_total = v === '' ? 0 : Number(v); }"
+            />
         </div>
 
         <div class="col-md-2 d-flex justify-content-center">
-            <el-button  class="btn-agregar btn-save:hover" 
-                        icon="fas fa-plus fa-lg" 
+            <el-button  class="btn_guardarsmall " 
+                        
                         type="primary" 
                         @click="save()"
             >
@@ -36,24 +37,25 @@
         <div class="table-responsive">
             <table class="table">
                 <thead>
-                    <tr style="background-color: #1e5a85;  text-align: center;">
-                        <th style="color: #f1f1f1;">Unidades a Entregar</th>
-                        <th style="color: #f1f1f1;">Unidades a pagar</th>
-                        <th style="color: #f1f1f1;">Nombre de Oferta</th>
-                        <th></th>
+                    <tr style="background-color: #073f68;  text-align: center;">
+                        
+                        <th style="color: #f1f1f1;">A Entregar</th>
+                        <th style="color: #f1f1f1;">Por pagar</th>
+                        <th style="color: #f1f1f1; text-align: center; vertical-align: middle;">Descripción</th>
+                        <th style="color: #f1f1f1; text-align: center; vertical-align: middle;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="record in records" :key="record.id" style="text-align: center;">
-                        <td>{{ record.quantity_free }}</td>
-                        <td>{{ record.quantity_total }}</td>
-                        <td>
-                            <h3>
-                                {{ record.quantity_free }} x
-                                {{ record.quantity_total }}
+                    <tr v-for="record in records" :key="record.id" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                        
+                        <td style="text-align:center; vertical-align:middle;">{{ record.quantity_free }}</td>
+                        <td style="text-align:center; vertical-align:middle;">{{ record.quantity_total }}</td>
+                        <td style="text-align:center; vertical-align:middle;">
+                            <h3 style="margin:0;">
+                                {{ record.quantity_free }} x {{ record.quantity_total }}
                             </h3>
                         </td>
-                        <td>
+                        <td style="text-align:center; vertical-align:middle;">
                             <el-button type="danger" @click="deleteRecord(record)">
                                 <i class="el-icon-delete"></i>
                             </el-button>

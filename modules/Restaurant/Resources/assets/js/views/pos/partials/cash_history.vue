@@ -6,7 +6,7 @@
         @open="open"
         @close="close"
         :title="title"
-        width="95%"
+        width="75%"
     >
             <!-- Filtros de búsqueda -->
             <div class="row mb-3">
@@ -32,12 +32,12 @@
                 <thead style="background-color: #073f68; color: #fff;">
                     <tr>
                         <th style="color: #fff; width: 10px; text-align: center;">#</th>
-                        <th style="color: #fff; width: 80px; text-align: center;">Código</th>
-                        <th style="color: #fff; width: 220px;">Turno</th>
+                        <th style="color: #fff; width: 50px; text-align: center;">Código</th>
+                        <th style="color: #fff; width: 200px;">Turno</th>
                         <th style="color: #fff; width: 120px; text-align: center;">S/ Apertura</th>
-                        <th style="color: #fff; width: 80px;">F.Cierre</th>
-                        <th style="color: #fff; width: 80px;">S/ Cierre</th>
-                        <th style="color: #fff; width: 420px; text-align: center;">Reporte</th>
+                        <th style="color: #fff; width: 120px; text-align: right;">S/ Cierre</th>
+                        <th style="color: #fff; width: 120px; text-align: center;">F.Cierre</th>
+                        <th style="color: #fff; width: 250px; text-align: center;">Reporte</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,96 +99,112 @@
                             </el-button>
                         </td>
                         <td>
+                            <!-- Botones de Reportes historial -->
                             <div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center;">
-                                <template v-if="box.is_loading_report">
-                                    <el-button class="btn_guardarsmall" type="primary" disabled>
-                                        <i class="el-icon-loading"></i>
-                                        Generando reportes
-                                    </el-button>
-                                </template>
-                                <template v-else>
-                                    <el-button
-                                        type="success"
-                                        class="btn_whatsappsmall"
-                                        @click="openWhastappForm(box)">
-                                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                    </el-button>
-                                    <el-button class="btn_guardarsmall" type="primary"
-                                        :type="`${ box.has_ticket ? 'primary' : 'danger' }`"
-                                        @click="openDetail(box, idx)">
-                                        Ver
-                                    </el-button>
-                                    <el-button class="btn_guardarsmall" type="primary"
-                                        v-if="configuration.other_currency_pos"
-                                        :type="`${box.has_ticket_usd ? 'primary' : 'danger'}`"
-                                        @click="openDetailUsd(box, idx)">
-                                        Ver $
-                                    </el-button>
-                                    <el-button class="btn_guardarsmall" type="primary"
-                                        :type="`${box.has_a4 ? 'primary' : 'danger'}`"
-                                        @click="openA4(box, idx)">
-                                        A4
-                                    </el-button>
-                                    <el-button class="btn_guardarsmall" type="primary"
-                                        v-if="configuration.other_currency_pos"
-                                        :type="`${box.has_a4_usd ? 'primary' : 'danger'}`"
-                                        @click="openA4Usd(box, idx)">
-                                        A4 $
-                                    </el-button>
-                                </template>
-                                
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Reporte de los yapes realziados en la caja"
-                                    placement="top">
-                                    <el-button class="btn_yapesmall" type="primary"
-                                        v-if="configuration.yape_report"
-                                        :style="{ backgroundColor: '#7F3FBF', borderColor: '#7F3FBF', color: 'white' }"
-                                        @click="openYape(box)">
-                                        YAPE
-                                    </el-button>
-                                </el-tooltip>
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Borrar reporte"
-                                    placement="top">
-                                    <el-button
-                                        class="btn_cancelarsmall"
-                                        type="danger"
-                                        @click="deleteReport(box)">
-                                        <i class="el-icon-delete"></i>
-                                    </el-button>
-                                </el-tooltip>
-                                <el-tooltip
-                                    v-if="box.tab_single"
-                                    class="item"
-                                    effect="dark"
-                                    content="Reporte tabulado"
-                                    placement="top">
-                                    <el-button class="btn_guardarsmall" type="primary"
-                                        icon="el-icon-download"
-                                        circle
-                                        v-if="box.stock_file"
-                                        @click="openSaludSingle(box.id)">
-                                    </el-button>
-                                </el-tooltip>
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Descargar Excel del stock al momento de cerrar caja"
-                                    placement="top">
-                                    <el-button
-                                        class="btn_excelsmall"
-                                        type="success"
-                                        circle
-                                        v-if="box.stock_file"
-                                        @click="openExcel(box)"
-                                        style="display: flex; align-items: center; justify-content: center;">
-                                        <i class="icofont-file-excel" style="margin: 0 auto;"></i>
-                                    </el-button>
-                                </el-tooltip>
+                              <template v-if="box.is_loading_report">
+                              <el-button class="btn_guardarsmall" type="primary" disabled
+                                   style="margin:0; padding:3px 6px; min-width:auto; height:28px; font-size:12px;">
+                                <i class="el-icon-loading" style="font-size:14px"></i>
+                                <span style="font-size:12px; margin-left:6px;">Generando reportes</span>
+                              </el-button>
+                              </template>
+                              <template v-else>
+                              <el-button
+                                type="success"
+                                class="btn_whatsappsmall"
+                                @click="openWhastappForm(box)"
+                                style="margin:0; padding:4px 6px; min-width:40px !important; height:28px; font-size:12px;">
+                                <i class="fab fa-whatsapp" aria-hidden="true" style="font-size:14px"></i>
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                @click="openDetail(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                Ver
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket_usd ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                v-if="configuration.other_currency_pos"
+                                @click="openDetailUsd(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                Ver $
+                              </el-button>
+                              <el-button
+                                :class="box.has_ticket ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                @click="openA4(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                A4
+                              </el-button>
+                              <!-- A4 $ -->
+                              <el-button
+                                :class="box.has_a4_usd ? 'btn_guardarsmall' : 'btn_cancelarsmall'"
+                                v-if="configuration.other_currency_pos"
+                                @click="openA4Usd(box, idx)"
+                                style="margin:0; padding:4px 8px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                A4 $
+                              </el-button>
+                              </template>
+                              
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Reporte de los yapes realziados en la caja"
+                              placement="top">
+                              <el-button class="btn_yapesmall" type="primary"
+                                v-if="configuration.yape_report"
+                                :style="{ backgroundColor: '#7F3FBF', borderColor: '#7F3FBF', color: 'white', padding: '4px 6px', height: '28px', fontSize: '12px' }"
+                                @click="openYape(box)"
+                              >
+                                YAPE
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Borrar reporte"
+                              placement="top">
+                              <el-button
+                                class="btn_cancelarsmall"
+                                type="danger"
+                                @click="deleteReport(box)"
+                                style="margin:0; padding:4px 6px; min-width:40px !important; height:28px; font-size:12px;"
+                              >
+                                <i class="el-icon-delete" style="font-size:14px"></i>
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              v-if="box.tab_single"
+                              class="item"
+                              effect="dark"
+                              content="Reporte tabulado"
+                              placement="top">
+                              <el-button class="btn_guardarsmall" type="primary"
+                                icon="el-icon-download"
+                                circle
+                                v-if="box.stock_file"
+                                @click="openSaludSingle(box.id)"
+                                style="margin:0; min-width:40px !important; height:28px; padding:0; font-size:12px;">
+                              </el-button>
+                              </el-tooltip>
+                              <el-tooltip
+                              class="item"
+                              effect="dark"
+                              content="Descargar Excel del stock al momento de cerrar caja"
+                              placement="top">
+                              <el-button
+                                class="btn_excelsmall"
+                                type="success"
+                                circle
+                                v-if="box.stock_file"
+                                @click="openExcel(box)"
+                                style="display: flex; align-items: center; justify-content: center; margin:0; min-width:40px !important; height:28px; padding:0; font-size:12px;">
+                                <i class="icofont-file-excel" style="font-size:14px; margin: 0;"></i>
+                              </el-button>
+                              </el-tooltip>
                             </div>
                         </td>
                     </tr>

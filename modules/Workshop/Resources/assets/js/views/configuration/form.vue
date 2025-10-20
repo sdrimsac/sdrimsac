@@ -9,6 +9,7 @@
     append-to-body
     :close-on-click-modal="false"
     class="rounded-dialog"
+    width="60%"
   >
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">

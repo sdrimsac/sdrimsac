@@ -1,127 +1,83 @@
 <template>
-    <el-dialog
-        :title="title"
-        :visible="showDialog"
-        append-to-body
-        @open="open"
-        @close="close"
-        width="30%"
-        :close-on-click-modal="false"
-        class="rounded-dialog"
-    >
+    <el-dialog :title="title" :visible="showDialog" append-to-body @open="open" @close="close" width="60%"
+        :close-on-click-modal="false" class="rounded-dialog">
         <div class="row-m-2">
             <div class="col-12">
                 <label for="name">Número/Descripción</label>
-                <el-input
-                    v-model="form.name"
-                    placeholder="Número/Descripción"
-                ></el-input>
+                <el-input v-model="form.name" placeholder="Número/Descripción"></el-input>
             </div>
             <div class="col-12" v-if="type == 'towers'">
                 <label for="name">Almacen </label>
-        <el-select v-model="form.establishment_id" filterable clearable>
-                    <el-option
-                        v-for="warehouse in warehouses"
-                        :key="warehouse.id"
-                        :label="warehouse.description"
-            :value="warehouse.establishment_id"
-                    ></el-option>
+                <el-select v-model="form.establishment_id" filterable clearable>
+                    <el-option v-for="warehouse in warehouses" :key="warehouse.id" :label="warehouse.description"
+                        :value="warehouse.establishment_id"></el-option>
                 </el-select>
             </div>
             <div class="col-12" v-if="type == 'table_types'">
                 <label for="price">Precio</label>
-                <el-input
-                    type="number"
-                    v-model="form.price"
-                    placeholder="precio"
-                ></el-input>
+                <el-input type="number" v-model="form.price" placeholder="precio"></el-input>
             </div>
             <div class="col-12" v-if="type == 'floors'">
                 <label for="name">Torre</label>
-                <el-select
-                    v-model="form.tower_id"
-                    placeholder="Torre"
-                    @change="filterFloors"
-                >
-                    <el-option
-                        v-for="tower in all_towers"
-                        :key="tower.id"
-                        :label="tower.name"
-                        :value="tower.id"
-                    ></el-option>
+                <el-select v-model="form.tower_id" placeholder="Torre" @change="filterFloors">
+                    <el-option v-for="tower in all_towers" :key="tower.id" :label="tower.name"
+                        :value="tower.id"></el-option>
                 </el-select>
             </div>
-            <div class="col-12 mt-1">
-                <el-button type="primary" @click="submit">Guardar</el-button>
-                <el-button v-if="form.id" type="danger" @click="cancel"
-                    >Cancelar</el-button
-                >
+            <div class="col-12 mt-1" style="display:flex; justify-content:flex-end; gap:8px;">
+                <el-button class="btn_guardarsmall" type="primary" @click="submit">Guardar</el-button>
+                <el-button class="btn_cancelarsmall" v-if="form.id" type="danger" @click="cancel">Cancelar</el-button>
             </div>
         </div>
         <div class="row m-2">
             <table class="table">
-                <thead>
+                <thead style="background-color: #073f68; color: #fff;">
                     <tr>
-                        <th>Descripción|Número</th>
-                        <th v-if="type == 'floors'">Torre</th>
-                        <th v-if="type == 'table_types'">Precio</th>
-                        <th></th>
+                        <th style="color: #fff">Descripción|Número</th>
+                        <th v-if="type == 'floors'" style="color: #fff">Torre</th>
+                        <th v-if="type == 'table_types'" style="color: #fff">Precio</th>
+                        <th style="color: #fff"></th>
                     </tr>
                 </thead>
                 <tbody v-if="type == 'floors'">
-                    <tr v-for="(floor, idx) in floors" :key="idx">
+                    <tr v-for="(floor, idx) in floors" :key="idx"
+                        :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ floor.name }}</td>
                         <td>{{ floor.tower.name }}</td>
                         <td>
-                            <button
-                                @click="editFloor(floor.id)"
-                                class="btn btn-primary btn-sm"
-                            >
+                            <button @click="editFloor(floor.id)" class="btn btn-primary btn-sm">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button
-                                @click="removeItem(floor.id)"
-                                class="btn btn-danger btn-sm"
-                            >
+                            <button @click="removeItem(floor.id)" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
                 </tbody>
                 <tbody v-else-if="type == 'towers'">
-                    <tr v-for="(tower, idx) in all_towers" :key="idx">
+                    <tr v-for="(tower, idx) in all_towers" :key="idx"
+                        :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ tower.name }}</td>
                         <td>
-                            <button
-                                @click="editTower(tower.id)"
-                                class="btn btn-primary btn-sm"
-                            >
+                            <button @click="editTower(tower.id)" class="btn btn-primary btn-sm">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button
-                                @click="removeItem(tower.id)"
-                                class="btn btn-danger btn-sm"
-                            >
+                            <button @click="removeItem(tower.id)" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     </tr>
                 </tbody>
                 <tbody v-else>
-                    <tr v-for="(type, idx) in all_table_types" :key="idx">
+                    <tr v-for="(type, idx) in all_table_types" :key="idx"
+                        :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ type.name }}</td>
                         <td>{{ type.price.toFixed(2) }}</td>
                         <td>
-                            <button
-                                @click="editType(type.id)"
-                                class="btn btn-primary btn-sm"
-                            >
+                            <button @click="editType(type.id)" class="btn btn-primary btn-sm">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button
-                                @click="removeItem(type.id)"
-                                class="btn btn-danger btn-sm"
-                            >
+                            <button @click="removeItem(type.id)" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -134,9 +90,9 @@
 
 <style>
 .el-dialog {
-    border-radius: 10px; 
-    overflow: hidden; 
-  }
+    border-radius: 10px;
+    overflow: hidden;
+}
 </style>
 
 <script>
@@ -172,8 +128,8 @@ export default {
                 this.type == "floors"
                     ? "Pisos"
                     : this.type == "towers"
-                    ? "Torres"
-                    : "Tipo de habitación";
+                        ? "Torres"
+                        : "Tipo de habitación";
         },
         cancel() {
             this.setTitle();
@@ -202,7 +158,7 @@ export default {
                     console.log(e);
                     this.$toast.error("Error al eliminar");
                 }
-            } catch (e) {}
+            } catch (e) { }
         },
 
         editType(id) {

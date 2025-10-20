@@ -14,7 +14,7 @@
                             class="rounded-pill" clearable></el-input>
                     </div>
                     <div class="col-5 d-flex align-items-center">
-                        <el-input :disabled="!transfer" show-password v-model="pin" placeholder="PIN" size="large"
+                        <el-input :disabled="!transfer" show-password v-model="pin" placeholder="PIN de Usuario" size="large"
                             class="rounded-pill" clearable></el-input>
                     </div>
                 </div>

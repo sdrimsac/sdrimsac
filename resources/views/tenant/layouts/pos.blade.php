@@ -61,19 +61,21 @@
             <div class="nav-content d-flex justify-content-between">
                 <!-- Logo Start -->
                 <div class="fix-logo" style="display: flex; align-items: center; height: 100%; margin-right: 24px;">
-                    <div class="logo position-relative" style="height: 75px; width: 130px; display: flex; align-items: center;">
+                    <div class="logo position-relative logo-3by2" style="width: 300px; height: 200px; display: flex; align-items: center;">
                         <a href="javascript:void(0)" style="display: flex; align-items: center; height: 100%; width: 100%;">
                             <div class="img" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                 @if (isset($vc_establishment->logo))
                                     <img src="{{ asset('storage/uploads/logos/' . $vc_establishment->logo) }}"
+                                         width="300" height="200"
                                          style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
                                 @else
                                     @if ($vc_company->logo)
                                         <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}"
+                                             width="300" height="200"
                                              style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;" />
                                     @else
-                                        <img style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;"
-                                             src="{{ asset('logo/logo.png') }}" class="icono" />
+                                <img width="300" height="200" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;"
+                                    src="{{ asset('logo/logo.png') }}" class="icono" />
                                     @endif
                                 @endif
                             </div>
@@ -81,24 +83,32 @@
                     </div>
                 </div>
                 <style>
-                    .fix-logo .logo {
-                        aspect-ratio: 180/75;
-                        width: 180px;
-                        max-width: 100vw;
-                        height: 75px;
-                        max-height: 100px;
+                    /* Logo container forced to 3:2 (300x200) but will scale down with max-width */
+                    .fix-logo .logo,
+                    .fix-logo .logo.logo-3by2 {
+                        aspect-ratio: 3/2;
+                        width: 300px; /* preferred width */
+                        height: 200px; /* preferred height */
+                        max-width: 100%;
+                        max-height: 200px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
+                    /* Image fills the container but preserves aspect ratio */
                     .fix-logo .logo .img img {
                         width: 100%;
                         height: 100%;
                         object-fit: contain;
-                        aspect-ratio: 180/75;
+                        aspect-ratio: 3/2;
                         display: block;
                     }
                     @media (max-width: 600px) {
-                        .fix-logo .logo {
-                            width: 120px;
-                            height: 50px;
+                        /* smaller screens: scale proportionally (3:2) */
+                        .fix-logo .logo,
+                        .fix-logo .logo.logo-3by2 {
+                            width: 180px;
+                            height: 120px;
                         }
                     }
                 </style>

@@ -10158,11 +10158,9 @@
                                                                         }">
                                                                             <i ref="dividedItemsIcon"
                                                                                 class="fas fa-file-alt tab-icon"></i>
-                                                                            Dvidir
-                                                                            Ordenes
-                                                                            Iguales
+                                                                            Dividir Pedidos Iguales
                                                                             <el-tooltip class="item" effect="dark"
-                                                                                content="Habilitar opción para dividir órdenes iguales"
+                                                                                content="Habilitar opción para dividir pedidos iguales Mozo/Caja"
                                                                                 placement="top-start">
                                                                                 <i class="fa fa-info-circle"></i>
                                                                             </el-tooltip>
@@ -10209,25 +10207,22 @@
                                                                                 <i class="fa fa-info-circle fa-lg"></i>
                                                                             </el-tooltip>
                                                                         </label>
-                                                                        <el-switch v-model="form.ordens_cash
-                                                                            " active-text="Si" inactive-text="No"
-                                                                            :active-color="'#28a745'
-                                                                                " :inactive-color="'#6c757d'
-                                                                                    " @change="
-                                                                                        () =>
-                                                                                            submit(
-                                                                                                'Evitar Cerrar Caja con Ordenes Pendientes',
-                                                                                                form.ordens_cash,
-                                                                                                'lockIcon'
-                                                                                            )
-                                                                                    "></el-switch>
+                                                                        <!-- Mostrar siempre activo y deshabilitado -->
+                                                                        <el-switch
+                                                                            :value="true"
+                                                                            disabled
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'">
+                                                                        </el-switch>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <!-- Emitir documento con variación -->
-                                                        <div class="col-md-3 mb-2">
+                                                        <!-- <div class="col-md-3 mb-2">
                                                             <div class="card h-100">
                                                                 <div class="card-body d-flex flex-column"
                                                                     style="padding: 7px;">
@@ -10264,51 +10259,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
 
-                                                        <!-- Producto - Variación -->
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="card h-100">
-                                                                <div class="card-body d-flex flex-column"
-                                                                    style="padding: 7px;">
-                                                                    <div class="form-group text-left flex-grow-1">
-                                                                        <label class="control-label w-100" :style="{
-                                                                            color: form.delete_mozo
-                                                                                ? '#28a745'
-                                                                                : '#6c757d'
-                                                                        }">
-                                                                            <i ref="variationIcon"
-                                                                                class="fas fa-file-alt tab-icon"></i>
-                                                                            Quitar
-                                                                            la
-                                                                            opcion
-                                                                            de
-                                                                            cancelar
-                                                                            pedidos
-                                                                            en
-                                                                            nmozo
-                                                                            <el-tooltip class="item" effect="dark"
-                                                                                content="con esta opciopn se ocultara la opcion de cancelar pedidos parcial o completo"
-                                                                                placement="top-start">
-                                                                                <i class="fa fa-info-circle"></i>
-                                                                            </el-tooltip>
-                                                                        </label>
-                                                                        <el-switch v-model="form.delete_mozo
-                                                                            " active-text="Si" inactive-text="No"
-                                                                            :active-color="'#28a745'
-                                                                                " :inactive-color="'#6c757d'
-                                                                                    " @change="
-                                                                                        () =>
-                                                                                            submit(
-                                                                                                'ocular la opcion de cancelar pedidos en mozo',
-                                                                                                form.delete_mozo,
-                                                                                                'variationIcon'
-                                                                                            )
-                                                                                    "></el-switch>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        
                                                         <div class="col-md-3 mb-2">
                                                             <div class="card h-100">
                                                                 <div class="card-body d-flex flex-column"
@@ -10321,13 +10274,10 @@
                                                                         }">
                                                                             <i ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"></i>
-                                                                            Mostrar
-                                                                            categrotia
-                                                                            en
-                                                                            scroll
-                                                                            seleccionable y  buscador
+                                                                            Mostrar Categorías Scroll y Buscador
+                                                                            
                                                                             <el-tooltip class="item" effect="dark"
-                                                                                content="activar esta opcion para mostrar las categorias en scroll con un formato mas visible como chifa china"
+                                                                                content="activar esta opcion para mostrar las categorías en scroll con un formato mas visible como chifa china"
                                                                                 placement="top-start">
                                                                                 <i class="fa fa-info-circle"></i>
                                                                             </el-tooltip>
@@ -10339,7 +10289,7 @@
                                                                                     " @change="
                                                                                         () =>
                                                                                             submit(
-                                                                                                'activar la categoria en scroll',
+                                                                                                'activar la categoría en scroll',
                                                                                                 form.category_deslay,
                                                                                                 'variationIcon'
                                                                                             )
@@ -10382,6 +10332,68 @@
                                                                                                 'variationIcon'
                                                                                             )
                                                                                     "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Crear Platos desde Caja -->
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.created_items
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                        }">
+                                                                            <i ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"></i>
+                                                                            Crear Platos desde Caja
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="con esta opcion habilitada podra crear Platos nuevos desde caja"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.created_items
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'Crear productos nuevos desde mozo o caja',
+                                                                                                form.created_items,
+                                                                                                'variationIcon'
+                                                                                            )
+                                                                                    "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Mostrar cambiar mesa en Caja -->
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.edit_mesa ? '#28a745' : '#6c757d'
+                                                                        }">
+                                                                            <i ref="editMesaIcon" class="fas fa-print tab-icon"></i>
+                                                                            Mostrar cambiar mesa en Caja
+                                                                            <el-tooltip class="item" effect="dark" content="Habilitar opción para cambiar mesa desde la caja" placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="form.edit_mesa"
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'"
+                                                                            @change="() => submit('Mostrar cambiar mesa en Caja', form.edit_mesa, 'editMesaIcon')"
+                                                                        ></el-switch>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -10772,6 +10784,78 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <!-- Crear Platos desde mozo -->
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.chifa_china
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                             }">
+                                                                            <i ref="chifaChinaIcon" class="fas fa-utensils tab-icon"></i>
+                                                                             Crear Platos desde Mozo
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="Habilitar creación de Platos en mozo"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.chifa_china
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'Crear productos en mozo',
+                                                                                                form.chifa_china,
+                                                                                                'chifaChinaIcon'
+                                                                                            )
+                                                                                    "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                         <!-- OcultarCancelar pedidos en Mozo -->
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.delete_mozo
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                        }">
+                                                                            <i ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"></i>
+                                                                            OcultarCancelar pedidos en Mozo
+                                                                            
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="con esta opciopn se ocultara la opcion de cancelar pedidos parcial o completo"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.delete_mozo
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'ocular la opcion de cancelar pedidos en mozo',
+                                                                                                form.delete_mozo,
+                                                                                                'variationIcon'
+                                                                                            )
+                                                                                    "></el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -10873,86 +10957,9 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Crear productos en mozo -->
-                                                        <!-- pasarlo aqui el otro boton -->
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="card h-100">
-                                                                <div class="card-body d-flex flex-column"
-                                                                    style="padding: 7px;">
-                                                                    <div class="form-group text-left flex-grow-1">
-                                                                        <label class="control-label w-100" :style="{
-                                                                            color: form.chifa_china
-                                                                                ? '#28a745'
-                                                                                : '#6c757d'
-                                                                        }">
-                                                                            <i ref="chifaChinaIcon"
-                                                                                class="fas fa-utensils tab-icon"></i>
-                                                                            Crear
-                                                                            productos
-                                                                            en
-                                                                            mozo
-                                                                            <el-tooltip class="item" effect="dark"
-                                                                                content="Habilitar creación de productos en mozo"
-                                                                                placement="top-start">
-                                                                                <i class="fa fa-info-circle"></i>
-                                                                            </el-tooltip>
-                                                                        </label>
-                                                                        <el-switch v-model="form.chifa_china
-                                                                            " active-text="Si" inactive-text="No"
-                                                                            :active-color="'#28a745'
-                                                                                " :inactive-color="'#6c757d'
-                                                                                    " @change="
-                                                                                        () =>
-                                                                                            submit(
-                                                                                                'Crear productos en mozo',
-                                                                                                form.chifa_china,
-                                                                                                'chifaChinaIcon'
-                                                                                            )
-                                                                                    "></el-switch>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        
 
-                                                        <!--  -->
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="card h-100">
-                                                                <div class="card-body d-flex flex-column"
-                                                                    style="padding: 7px;">
-                                                                    <div class="form-group text-left flex-grow-1">
-                                                                        <label class="control-label w-100" :style="{
-                                                                            color: form.created_items
-                                                                                ? '#28a745'
-                                                                                : '#6c757d'
-                                                                        }">
-                                                                            <i ref="variationIcon"
-                                                                                class="fas fa-file-alt tab-icon"></i>
-                                                                            Crear
-                                                                            Nuevo plato
-                                                                            desde
-                                                                            caja
-                                                                            <el-tooltip class="item" effect="dark"
-                                                                                content="con esta opcion habilitada podra crear productos nuevos desde caja"
-                                                                                placement="top-start">
-                                                                                <i class="fa fa-info-circle"></i>
-                                                                            </el-tooltip>
-                                                                        </label>
-                                                                        <el-switch v-model="form.created_items
-                                                                            " active-text="Si" inactive-text="No"
-                                                                            :active-color="'#28a745'
-                                                                                " :inactive-color="'#6c757d'
-                                                                                    " @change="
-                                                                                        () =>
-                                                                                            submit(
-                                                                                                'crear productos nuevos desde mozo o caja',
-                                                                                                form.created_items,
-                                                                                                'variationIcon'
-                                                                                            )
-                                                                                    "></el-switch>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        
 
                                                         <!-- Activar buscador en caja -->
                                                         <!-- <div class="col-md-3 mb-2">
@@ -11032,128 +11039,98 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 mt-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label w-100">
-                                                                    <i class="fas fa-print fa-lg"
-                                                                        style="margin-right: 10px;"></i>
-                                                                    MOSTRAR
-                                                                    NOMBRE EN
-                                                                    COMANDA Y
-                                                                    PRECUENTA
-                                                                </label>
-                                                                <el-switch v-model="form.nane_comand
-                                                                    " active-text="Si" inactive-text="No"
-                                                                    :active-color="'#28a745'
-                                                                        " :inactive-color="'#6c757d'
-                                                                            " @change="
-                                                                                submit(
-                                                                                    'Buscar en caja',
-                                                                                    form.name_comand,
-                                                                                    'search_new',
-                                                                                    'printIcon'
-                                                                                )
-                                                                                "></el-switch>
+                                                        <!-- Mostrar Imágen de Comanda y Pre-Cuenta -->
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{ color: form.name_comand ? '#28a745' : '#6c757d' }">
+                                                                            <i ref="nameComandIcon" class="fas fa-print tab-icon"></i>
+                                                                            Mostrar Imágen de Comanda y Pre-Cuenta
+                                                                            <el-tooltip class="item" effect="dark" content="Mostrar el nombre en comanda y precuenta" placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="form.name_comand"
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'"
+                                                                            @change="() => submit('Mostrar Imágen de COMANDA Y PRECUENTA', form.name_comand, 'nameComandIcon')"
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 mt-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label w-100">
-                                                                    <i class="fas fa-print fa-lg"
-                                                                        style="margin-right: 10px;"></i>
-                                                                    Ocultar
-                                                                    reimpresion
-                                                                    de comanda
-                                                                    caja y mozo
-                                                                </label>
-                                                                <el-switch v-model="form.re_printer
-                                                                    " active-text="Si" inactive-text="No"
-                                                                    :active-color="'#28a745'
-                                                                        " :inactive-color="'#6c757d'
-                                                                            " @change="
-                                                                                submit(
-                                                                                    'Buscar en caja',
-                                                                                    form.re_printer,
-                                                                                    'search_new',
-                                                                                    'printIcon'
-                                                                                )
-                                                                                "></el-switch>
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{ color: form.re_printer ? '#28a745' : '#6c757d' }">
+                                                                            <i ref="rePrinterIcon" class="fas fa-print tab-icon"></i>
+                                                                            Ocultar reimpresion de comanda caja y mozo
+                                                                            <el-tooltip class="item" effect="dark" content="Ocultar la opción de reimpresión de comanda en caja y mozo" placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="form.re_printer"
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'"
+                                                                            @change="() => submit('Ocultar reimpresion de comanda caja y mozo', form.re_printer, 'rePrinterIcon')"
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 mt-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label w-100">
-                                                                    <i class="fas fa-print fa-lg"
-                                                                        style="margin-right: 10px;"></i>
-                                                                    Ocultar la
-                                                                    opcion de
-                                                                    cambiar mesa
-                                                                    en caja
-                                                                </label>
-                                                                <el-switch v-model="form.edit_mesa
-                                                                    " active-text="Si" inactive-text="No"
-                                                                    :active-color="'#28a745'
-                                                                        " :inactive-color="'#6c757d'
-                                                                            " @change="
-                                                                                submit(
-                                                                                    'Buscar en caja',
-                                                                                    form.edit_mesa,
-                                                                                    'search_new',
-                                                                                    'printIcon'
-                                                                                )
-                                                                                "></el-switch>
+                                                        
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{ color: form.image_comand ? '#28a745' : '#6c757d' }">
+                                                                            <i ref="printIcon" class="fas fa-print tab-icon"></i>
+                                                                            Imprimir Anulado Zona de Preparación
+                                                                            <el-tooltip class="item" effect="dark" content="Imprimir comanda de anulado en zona de preparación" placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="form.image_comand"
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'"
+                                                                            @change="() => submit('Imprimir comanda anulado', form.image_comand, 'printIcon')"
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 mt-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label w-100">
-                                                                    <i class="fas fa-print fa-lg"
-                                                                        style="margin-right: 10px;"></i>
-                                                                    Imprimir
-                                                                    comanda
-                                                                    anulado en
-                                                                    las areas de
-                                                                    preparacion
-                                                                </label>
-                                                                <el-switch v-model="form.image_comand
-                                                                    " active-text="Si" inactive-text="No"
-                                                                    :active-color="'#28a745'
-                                                                        " :inactive-color="'#6c757d'
-                                                                            " @change="
-                                                                                submit(
-                                                                                    'imprimir comanda anulado',
-                                                                                    form.image_comand,
-                                                                                    'search_new',
-                                                                                    'printIcon'
-                                                                                )
-                                                                                "></el-switch>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2 mt-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label w-100">
-                                                                    <i class="fas fa-print fa-lg"
-                                                                        style="margin-right: 10px;"></i>
-                                                                    Imprimir
-                                                                    comanda del
-                                                                    area de
-                                                                    barra
-                                                                    tambien en
-                                                                    el area
-                                                                    menaje
-                                                                </label>
-                                                                <el-switch v-model="form.menaje_barra
-                                                                    " active-text="Si" inactive-text="No"
-                                                                    :active-color="'#28a745'
-                                                                        " :inactive-color="'#6c757d'
-                                                                            " @change="
-                                                                                submit(
-                                                                                    'imprimir comanda de barra tambien en el area de menaje',
-                                                                                    form.menaje_barra,
-                                                                                    'search_new',
-                                                                                    'printIcon'
-                                                                                )
-                                                                                "></el-switch>
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column" style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{ color: form.menaje_barra ? '#28a745' : '#6c757d' }">
+                                                                            <i ref="menajeBarraIcon" class="fas fa-print tab-icon"></i>
+                                                                            Imprimir Comanda de Barra en Menaje
+                                                                            <el-tooltip class="item" effect="dark" content="Imprimir comanda de barra también en el área de menaje" placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch
+                                                                            v-model="form.menaje_barra"
+                                                                            active-text="Si"
+                                                                            inactive-text="No"
+                                                                            :active-color="'#28a745'"
+                                                                            :inactive-color="'#6c757d'"
+                                                                            @change="() => submit('Imprimir comanda de barra en menaje', form.menaje_barra, 'menajeBarraIcon')"
+                                                                        ></el-switch>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

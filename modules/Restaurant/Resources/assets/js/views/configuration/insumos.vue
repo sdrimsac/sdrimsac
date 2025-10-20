@@ -1,6 +1,8 @@
+<!-- Insumos de Hotelería -->
+
 <template>
     <el-dialog
-        title="Insumos"
+        title="Insumos de Hotelería"
         :visible="showDialog"
         append-to-body
         @close="close"
@@ -31,11 +33,13 @@
             </div>
             <div class="col-md-4 col-lg-4 col-12 d-flex align-items-center">
                 <el-button
+                    class="btn_guardarsmall"
                     type="primary"
                     icon="el-icon-plus"
                     size="mini"
                     @click="add"
-                    >Agregar</el-button
+                    >Agregar
+                </el-button
                 >
             </div>
         </div>
@@ -43,9 +47,9 @@
         <div class="row m-2" v-if="records.length > 0">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>
+                    <tr style="background-color: #073f68; color: #ffffff;">
+                        <th style="color: #ffffff;">Descripción</th>
+                        <th style="color: #ffffff;">
                             Factor por días
 
                             <el-tooltip
@@ -54,10 +58,10 @@
                                 content="Cada insumo se multiplica por el número de días que fue ocupada la habitación"
                                 placement="top"
                             >
-                                <i class="el-icon-info"></i>
+                                <i class="el-icon-info" style="color: #ffffff;"></i>
                             </el-tooltip>
                         </th>
-                        <th>
+                        <th style="color: #ffffff;">
                             Factor por personas
 
                             <el-tooltip
@@ -66,14 +70,14 @@
                                 content="Cada insumo se multiplica por el número de personas que se encuentran en la habitación"
                                 placement="top"
                             >
-                                <i class="el-icon-info"></i>
+                                <i class="el-icon-info" style="color: #ffffff;"></i>
                             </el-tooltip>
                         </th>
-                        <th>Acciones</th>
+                        <th style="color: #ffffff;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="record in records" :key="record.id">
+                    <tr v-for="record in records" :key="record.id" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                         <td>{{ record.item.description }}</td>
                         <td class="text-center">
                             <el-checkbox
