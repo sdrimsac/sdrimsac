@@ -255,17 +255,18 @@ class DocumentInput
 
             foreach ($inputs['items'] as $row) {
                 $desc = null;
-                if (array_key_exists('item', $row)) {
-                    if (array_key_exists('is_stock', $row['item'])) {
-                        if ($variation) {
-                            $desc = $row['item']['description'];
-                        }
-                        $is_stock = $row['item']['is_stock'];
-                    } else {
-                        $is_stock = "No";
+                // Ensure 'item' key exists to avoid undefined index notices (some clients may send row without 'item')
+                if (!array_key_exists('item', $row) || !is_array($row['item'])) {
+                    $row['item'] = ['is_stock' => 'Si'];
+                }
+
+                if (array_key_exists('is_stock', $row['item'])) {
+                    if ($variation) {
+                        $desc = isset($row['item']['description']) ? $row['item']['description'] : null;
                     }
+                    $is_stock = $row['item']['is_stock'];
                 } else {
-                    $is_stock = "Si";
+                    $is_stock = "No";
                 }
                 $desc = Functions::valueKeyInArray($row, 'description', null);
                 if ($configuration->hotels) {
