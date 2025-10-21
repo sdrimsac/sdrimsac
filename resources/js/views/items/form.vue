@@ -1581,14 +1581,14 @@
                                     'has-danger': errors.purchase_unit_price
                                 }">
                                     <label class="control-label">Precio Unitario (Compra)</label>
-                                    <el-input
-                                        :value="displayPurchaseUnitPrice"
+                                    <el-input-number
+                                        v-model="form.purchase_unit_price"
+                                        :min="0.00"
+                                        :precision="2"
                                         dusk="purchase_unit_price"
-                                        @input="onPurchaseUnitPriceInput"
-                                        @blur="formatPurchaseUnitPrice"
                                     >
                                         <i slot="prefix" class="el-icon-edit-outline"></i>
-                                    </el-input>
+                                    </el-input-number>
                                     <small class="text-danger" v-if="errors.purchase_unit_price"
                                         v-text="errors.purchase_unit_price[0]"></small>
                                 </div>
@@ -2833,7 +2833,7 @@ export default {
                     100;
         },
         // Handler for direct input in the purchase unit price field.
-        onPurchaseUnitPriceInput(value) {
+        /* onPurchaseUnitPriceInput(value) {
             // Accept both string and numeric input, keep raw numeric value in the model
             const cleaned = String(value).replace(/[^0-9.]/g, "");
             const numericValue = parseFloat(cleaned);
@@ -2841,7 +2841,7 @@ export default {
 
             // Keep existing behavior: recalculate sale price if percentage mode enabled
             this.calculatePercentageOfProfitByPurchase();
-        },
+        }, */
         // Format the displayed value to two decimals on blur
         formatPurchaseUnitPrice() {
             if (this.form.purchase_unit_price === null || this.form.purchase_unit_price === undefined) return;

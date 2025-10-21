@@ -411,8 +411,8 @@
                                                         </td>
 
                                                         <td class="text-center">
-                                                            <el-input v-model="row.qty_free
-                                                                " type="number" step="1" pattern="^\d*(\.\d{0,2})?$">
+                                <el-input v-model="row.qty_free
+                                    " type="text" inputmode="numeric" pattern="^\d+(?:\.\d{0,2})?$" @input="handleIntegerLikeInput($event)">
                                                                 <i slot="prefix" class="el-icon-edit-outline"></i>
                                                             </el-input>
                                                         </td>

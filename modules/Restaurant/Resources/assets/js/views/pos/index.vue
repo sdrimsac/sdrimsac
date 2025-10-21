@@ -86,6 +86,10 @@
                                                 </button>
                                             </el-tooltip>
                                             </template> -->
+                                           
+                                        
+                                        
+
                                         <template v-if="isAndroid">
                                             <button class="btn_guardarsmall" type="primary" @click="printLastDocument">
                                                 <i class="fas fa-print" style="font-size: 35px;"></i>

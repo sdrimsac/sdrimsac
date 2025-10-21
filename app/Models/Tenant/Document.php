@@ -190,6 +190,7 @@ class Document extends ModelTenant
             );
         });
     }
+    
     public function hasDuplicate($serie, $number, $soap_type_id)
     {
         $count = Document::where('series', $serie)->where('number', $number)->where('soap_type_id', $soap_type_id)->count();
