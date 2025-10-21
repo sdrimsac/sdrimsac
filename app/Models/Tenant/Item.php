@@ -755,16 +755,18 @@ class Item extends ModelTenant
     {
         return $query->where('internal_id', '!=', null);
     }
+
     protected static function boot()
     {
         parent::boot();
         //created
-        item::created(function ($model) {
+        static::created(function ($model) {
             $request = Request::capture();
             $description = "Nuevo Producto Creado";
             $data = $model->toArray();
-            $created_at = $created_at ?? now();
-            RegisterMovementTrait::registerCreate(
+            $created_at = now();
+            // call trait method on the instance (non-static)
+            $model->registerCreate(
                 $model,
                 $request,
                 $description,
@@ -772,14 +774,15 @@ class Item extends ModelTenant
                 $created_at
             );
         });
-        item::updated(function ($model) {
+        static::updated(function ($model) {
             $request = Request::capture();
             $description = null;
             $original_model = Item::find($model->id);
             $description = "Producto actualizado";
             $data = $original_model->toArray();
-            $created_at = $created_at ?? now();
-            RegisterMovementTrait::registerUpdate(
+            $created_at = now();
+            // call trait method on the instance (non-static)
+            $model->registerUpdate(
                 $model,
                 $request,
                 $description,
@@ -788,13 +791,14 @@ class Item extends ModelTenant
             );
         });
 
-        item::deleted(
+        static::deleted(
             function ($model) {
                 $request = Request::capture();
                 $description = "Producto Elimindo";
                 $data = $model->toArray();
-                $created_at = $created_at ?? now();
-                RegisterMovementTrait::registerDelete(
+                $created_at = now();
+                // call trait method on the instance (non-static)
+                $model->registerDelete(
                     $model,
                     $request,
                     $description,
