@@ -136,7 +136,7 @@ class Document extends ModelTenant
             $description = "Nuevo Documento Creado";
             $data = $model->toArray();
             $created_at = now();
-            RegisterMovementTrait::registerCreate(
+            $model->registerCreate(
                 $model,
                 $request,
                 $description,
@@ -165,7 +165,7 @@ class Document extends ModelTenant
 
             $data = $model->toArray();
 
-            RegisterMovementTrait::registerUpdate(
+            $model->registerUpdate(
                 $model,
                 $request,
                 $description,
@@ -181,7 +181,7 @@ class Document extends ModelTenant
             $data = $model->toArray();
             $created_at = now();
 
-            RegisterMovementTrait::registerDelete(
+            $model->registerDelete(
                 $model,
                 $request,
                 $description,
@@ -190,7 +190,7 @@ class Document extends ModelTenant
             );
         });
     }
-    
+
     public function hasDuplicate($serie, $number, $soap_type_id)
     {
         $count = Document::where('series', $serie)->where('number', $number)->where('soap_type_id', $soap_type_id)->count();
