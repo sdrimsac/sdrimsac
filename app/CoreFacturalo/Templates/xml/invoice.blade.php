@@ -541,31 +541,40 @@
                     </cac:StandardItemIdentification>
                 @endif
                 @if ($row->attributes)
-                    @foreach ($row->attributes as $attr)
-                        <cac:AdditionalItemProperty>
-                            <cbc:Name>
-                                <![CDATA[{{ $attr->description }}]]>
-                            </cbc:Name>
-                            <cbc:NameCode>{{ $attr->attribute_type_id }}</cbc:NameCode>
-                            @if ($attr->value)
-                                <cbc:Value>{{ $attr->value }}</cbc:Value>
-                            @endif
-                            @if ($attr->start_date || $attr->end_date || $attr->duration)
-                                <cac:UsabilityPeriod>
-                                    @if ($attr->start_date)
-                                        <cbc:StartDate>{{ $attr->start_date }}</cbc:StartDate>
-                                    @endif
-                                    @if ($attr->end_date)
-                                        <cbc:EndDate>{{ $attr->end_date }}</cbc:EndDate>
-                                    @endif
-                                    @if ($attr->duration)
-                                        <cbc:DurationMeasure unitCode="DAY">{{ $attr->duration }}</cbc:DurationMeasure>
-                                    @endif
-                                </cac:UsabilityPeriod>
-                            @endif
-                        </cac:AdditionalItemProperty>
-                    @endforeach
-                @endif
+    @foreach ($row->attributes as $attr)
+        <cac:AdditionalItemProperty>
+            <cbc:Name>
+                <![CDATA[{{ $attr->description }}]]>
+            </cbc:Name>
+            <cbc:NameCode>{{ $attr->attribute_type_id }}</cbc:NameCode>
+
+            @if (!empty($attr->value))
+                <cbc:Value>{{ $attr->value }}</cbc:Value>
+            @endif
+
+            @if (
+                (isset($attr->start_date) && $attr->start_date) ||
+                (isset($attr->end_date) && $attr->end_date) ||
+                (isset($attr->duration) && $attr->duration)
+            )
+                <cac:UsabilityPeriod>
+                    @if (isset($attr->start_date) && $attr->start_date)
+                        <cbc:StartDate>{{ $attr->start_date }}</cbc:StartDate>
+                    @endif
+
+                    @if (isset($attr->end_date) && $attr->end_date)
+                        <cbc:EndDate>{{ $attr->end_date }}</cbc:EndDate>
+                    @endif
+
+                    @if (isset($attr->duration) && $attr->duration)
+                        <cbc:DurationMeasure unitCode="DAY">{{ $attr->duration }}</cbc:DurationMeasure>
+                    @endif
+                </cac:UsabilityPeriod>
+            @endif
+        </cac:AdditionalItemProperty>
+    @endforeach
+@endif
+
             </cac:Item>
             <cac:Price>
                 <cbc:PriceAmount currencyID="{{ $document->currency_type_id }}">{{ $row->unit_value }}</cbc:PriceAmount>
