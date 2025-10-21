@@ -58,49 +58,67 @@ class DocumentSaludProccess implements ShouldQueue
         }
         if (key_exists('detalle', $inputs)) {
             $items = [];
-            foreach ($inputs['detalle'] as $row) {
-                $quantity = $row['cantidadItem'];
-                $price = $row['precioItem'];
-                $total = $quantity * $price;
-                $items[] = [
-                    'warehouse_id' => $warehouse_id,
-                    'internal_id' => isset($row['codItem']) ? $row['codItem'] : '',
-                    'description' => $row['nombreItem'],
-                    'name' => null,
-                    'second_name' => null,
-                    'item_type_id' => '01',
-                    'item_code' => Functions::valueKeyInArray($row, 'codItem'),
-                    'item_code_gs1' => null,
-                    'unit_type_id' => strtoupper($row['unidadMedidaItem']),
-                    'currency_type_id' => $document['tipoMoneda'],
-                    'name_product_pdf' => null,
-                    'quantity' => Functions::valueKeyInArray($row, 'cantidadItem'),
-                    'unit_value' => Functions::valueKeyInArray($row, 'precioItemSinIgv'),
-                    'price_type_id' => null,
-                    'unit_price' => Functions::valueKeyInArray($row, 'precioItem'),
-                    'affectation_igv_type_id' => Functions::valueKeyInArray($row, 'codAfectacionIgv'),
-                    'total_base_igv' => Functions::valueKeyInArray($row, 'precioItemSinIgv'),
-                    'percentage_igv' => 18,
-                    'total_igv' => Functions::valueKeyInArray($row, 'montoIgv'),
-                    'system_isc_type_id' => null,
-                    'total_base_isc' => 0,
-                    'percentage_isc' => null,
-                    'total_isc' => 0,
-                    'total_base_other_taxes' => 0,
-                    'percentage_other_taxes' => 0,
-                    'total_other_taxes' => 0,
-                    'total_plastic_bag_taxes' => 0,
-                    'total_taxes' => Functions::valueKeyInArray($row, 'montoIgv'),
-                    'total_value' => Functions::valueKeyInArray($row, 'precioItemSinIgv'),
-                    'total_charge' => 0,
-                    'total_discount' => 0,
-                    'total' => $total,
-                    'attributes' => null,
-                    'discounts' => null,
-                    'charges' => null,
-                    'additional_information' => Functions::valueKeyInArray($row, 'informacion_adicional'),
+            foreach ($inputs['detalle'] as $index => $row) {
+                try {
+                    // Defensive reads
+                    $quantity = Functions::valueKeyInArray($row, 'cantidadItem', 0);
+                    $price = Functions::valueKeyInArray($row, 'precioItem', 0);
+                    $total = $quantity * $price;
 
-                ];
+                    $unit_type = Functions::valueKeyInArray($row, 'unidadMedidaItem', null);
+                    $currency_type = Functions::valueKeyInArray($document, 'tipoMoneda', null);
+
+                    $items[] = [
+                        'warehouse_id' => $warehouse_id,
+                        'internal_id' => Functions::valueKeyInArray($row, 'codItem', ''),
+                        'description' => Functions::valueKeyInArray($row, 'nombreItem', ''),
+                        'name' => null,
+                        'second_name' => null,
+                        'item_type_id' => '01',
+                        'item_code' => Functions::valueKeyInArray($row, 'codItem'),
+                        'item_code_gs1' => null,
+                        'unit_type_id' => $unit_type ? strtoupper($unit_type) : null,
+                        'currency_type_id' => $currency_type,
+                        'name_product_pdf' => null,
+                        'quantity' => $quantity,
+                        'unit_value' => Functions::valueKeyInArray($row, 'precioItemSinIgv', 0),
+                        'price_type_id' => null,
+                        'unit_price' => $price,
+                        'affectation_igv_type_id' => Functions::valueKeyInArray($row, 'codAfectacionIgv', null),
+                        'total_base_igv' => Functions::valueKeyInArray($row, 'precioItemSinIgv', 0),
+                        'percentage_igv' => 18,
+                        'total_igv' => Functions::valueKeyInArray($row, 'montoIgv', 0),
+                        'system_isc_type_id' => null,
+                        'total_base_isc' => 0,
+                        'percentage_isc' => null,
+                        'total_isc' => 0,
+                        'total_base_other_taxes' => 0,
+                        'percentage_other_taxes' => 0,
+                        'total_other_taxes' => 0,
+                        'total_plastic_bag_taxes' => 0,
+                        'total_taxes' => Functions::valueKeyInArray($row, 'montoIgv', 0),
+                        'total_value' => Functions::valueKeyInArray($row, 'precioItemSinIgv', 0),
+                        'total_charge' => 0,
+                        'total_discount' => 0,
+                        'total' => $total,
+                        'attributes' => null,
+                        'discounts' => null,
+                        'charges' => null,
+                        'additional_information' => Functions::valueKeyInArray($row, 'informacion_adicional', null),
+
+                    ];
+                } catch (\Throwable $e) {
+                    // Log the problematic row with index and keys to help identify missing index
+                    Log::error('Error processing detalle row', [
+                        'file' => isset($this->store_path) ? $this->store_path : null,
+                        'row_index' => $index,
+                        'row_preview' => is_array($row) ? json_encode($row) : (string)$row,
+                        'error_message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+                    // Re-throw to be handled by outer try/catch so the document is marked as failed
+                    throw $e;
+                }
             }
 
             return $items;
@@ -211,11 +229,20 @@ class DocumentSaludProccess implements ShouldQueue
             $b = intval(str_replace('Registro_', '', str_replace('.txt', '', $b)));
             return $a - $b;
         });
-        foreach ($files as $file) {
+    foreach ($files as $file) {
             $extension = pathinfo($file, PATHINFO_EXTENSION);
             if ($extension === 'txt') {
                 $path =  storage_path($store_path . '/' . $file);
                 if (file_exists($path) && is_readable($path)) {
+                    // Convert PHP notices/warnings to ErrorException temporarily so we can catch undefined index errors
+                    $previous_error_handler = set_error_handler(function ($severity, $message, $fileErr, $line) {
+                        // Only convert notices and warnings
+                        if (error_reporting() === 0) {
+                            // Error suppressed with @
+                            return false;
+                        }
+                        throw new \ErrorException($message, 0, $severity, $fileErr, $line);
+                    });
                     $document = file_get_contents($path);
                     $document = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $document);
                     $document = str_replace('�', '', $document);
@@ -261,15 +288,42 @@ class DocumentSaludProccess implements ShouldQueue
                             $document_salud->status = 'Fallido';
                             $this->sendMessage($establishment_id, $full_number, $this->user_id);
                         }
-                    } catch (Exception $e) {
-                        Log::info($e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
-                        $this->sendMessage($establishment_id, $full_number, $this->user_id);
+                    } catch (\Throwable $e) {
+                        // Log detailed context to help identify the exact missing index or data
+                        Log::error('DocumentSaludProccess error: ' . $e->getMessage(), [
+                            'file' => $file,
+                            'path' => $path,
+                            'exception_file' => $e->getFile(),
+                            'exception_line' => $e->getLine(),
+                            'exception_trace' => $e->getTraceAsString(),
+                            'document_preview' => is_array($document) ? json_encode(array_slice($document, 0, 20)) : substr((string)$document, 0, 1000),
+                        ]);
+
+                        // If the exception contains 'Undefined index', try to add more specific context
+                        if (strpos($e->getMessage(), 'Undefined index') !== false) {
+                            // try to detect which index
+                            preg_match('/Undefined index: ([^\s]+)/', $e->getMessage(), $m);
+                            $missing = $m[1] ?? null;
+                            Log::error('Undefined index detected', [
+                                'missing_index' => $missing,
+                                'document_keys' => is_array($document) ? array_keys($document) : null,
+                            ]);
+                        }
+
+                        $this->sendMessage($establishment_id ?? null, $full_number ?? null, $this->user_id ?? null);
                         $document_salud->status = 'Fallido';
                         $message = $e->getMessage();
                         $message = substr($message, 0, 190);
                         $document_salud->error = $message;
                         Log::info('error: file: ' . $file . " " . $e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
                     } finally {
+                        // restore previous error handler
+                        if (isset($previous_error_handler) && $previous_error_handler !== null) {
+                            set_error_handler($previous_error_handler);
+                        } else {
+                            restore_error_handler();
+                        }
+
                         $document_salud->save();
                     }
                 } else {
