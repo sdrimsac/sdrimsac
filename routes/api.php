@@ -85,6 +85,8 @@ if ($hostname) {
             //Route::get('service/ruc/{number}', 'System\ServiceController@ruc');
             Route::get('service/{type}/{number}',  [Modules\Services\Http\Controllers\ServiceController::class, 'service']);
 
+            Route::get('item-sets/check/{id}/{qty}', [App\Http\Controllers\Tenant\ItemSetController::class, 'set_item_check_stock']);
+
             //Company
             Route::get('companies/record', '\App\Http\Controllers\Tenant\CompanyController@record');
             //Customer
