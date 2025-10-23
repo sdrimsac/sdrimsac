@@ -1583,7 +1583,7 @@
             @endif --}}
         {{-- @endforeach --}}
 
-        @if ($all_credit_items && isset($all_credit_items['items']) && count($all_credit_items['items']) > 0)
+        {{-- @if ($all_credit_items && isset($all_credit_items['items']) && count($all_credit_items['items']) > 0)
             <div style="text-align:center;">
                 <table>
                     <thead>
@@ -1651,7 +1651,96 @@
                     @endif
                 @endforeach
             </div>
+        @endif --}}
+
+        @if ($all_credit_items && count($all_credit_items) > 0)
+            @php
+                // Unificar todos los grupos, sin importar si vienen dentro de "items" o como claves numéricas
+                $groups = [];
+
+                if (isset($all_credit_items['items'])) {
+                    foreach ($all_credit_items['items'] as $g) {
+                        $groups[] = $g;
+                    }
+                }
+
+                // Incluir también los que vienen con claves numéricas
+                foreach ($all_credit_items as $key => $value) {
+                    if (is_numeric($key)) {
+                        $groups[] = $value;
+                    }
+                }
+            @endphp
+
+            <div style="text-align:center;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="4">
+                                <span class="f12">
+                                    PRODUCTOS DADOS A CRÉDITO
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+
+                @foreach ($groups as $group)
+                    @php
+                        // Desanidar si hay un nivel extra
+                        while (isset($group[0]) && is_array($group[0]) && isset($group[0][0])) {
+                            $group = $group[0];
+                        }
+                    @endphp
+
+                    @if (isset($group[0]['category']))
+                        <table class="border" style="margin-top: 10px; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="left">
+                                        <span class="f12">
+                                            {{ $group[0]['category'] }}
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th><span class="f12">UNIDAD</span></th>
+                                    <th><span class="f12">DESCRIPCIÓN</span></th>
+                                    <th><span class="f12">PRECIO</span></th>
+                                    <th><span class="f12">TOTAL</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($group as $a_item)
+                                    <tr>
+                                        <td class="f12 center">{{ intval($a_item['quantity']) }}</td>
+                                        <td class="f12">{{ $a_item['description'] }}</td>
+                                        <td class="f12 right">{{ number_format(floatval($a_item['price']), 2) }}</td>
+                                        <td class="f12 right">{{ number_format(floatval($a_item['total']), 2) }}</td>
+                                    </tr>
+                                @endforeach
+
+                                @php
+                                    $t = array_reduce(
+                                        $group,
+                                        fn($carry, $item) => $carry + floatval($item['total']),
+                                        0,
+                                    );
+                                @endphp
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td class="f12 right">TOTAL</td>
+                                    <td class="f12 right">
+                                        {{ $is_usd ? '$ ' : 'S/ ' }}{{ number_format($t, 2) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @endif
+                @endforeach
+            </div>
         @endif
+
 
         @if (count($promotions_give) > 0)
             <div style="text-align:center;">
