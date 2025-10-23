@@ -45,7 +45,7 @@
                 <tbody>
                     <tr v-for="(data, idx) in records" :key="idx" :class="{
                         'row-danger-border':data.state_type_id == '11' || data.state_type_id == '13'}" 
-                        class="text-center align-middle" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                        class="text-center align-middle" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                        
                          <!-- Si el CPE esta anulado  muestra esto -->
                         <td v-if="type == 'documents' && type !== 'saleNotes'" :class="{

@@ -1,0 +1,205 @@
+<?php
+
+namespace App\Http\Resources\Tenant;
+
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentItem;
+use App\Models\Tenant\ItemWarranty;
+use Modules\Restaurant\Models\Food;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Item\Models\ItemLotsGroup;
+
+class ItemPromoResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $foods = Food::where('item_id', $this->id)->first();
+        $lot_code = null;
+        $date_of_due = null;
+        if ($this->lots_enabled) {
+            $lot_group = ItemLotsGroup::where('item_id', $this->id)->first();
+
+            if ($lot_group) {
+                $lot_code = $lot_group->code;
+                $date_of_due = $lot_group->date_of_due;
+            }
+        }
+
+        $commercial_treatments = $this->commercial_treatments->transform(function ($row, $key) {
+            return [
+                'id' => $row->id,
+                'item_id' => $row->item_id,
+                'commercial_treatment_id' => $row->commercial_treatment_id,
+                'amount' => $row->amount,
+                'active' => (bool) $row->active,
+                'commercial_treatment_description' => $row->commercial_treatment->description,
+            ];
+        });
+        $ids_commercial_treatments = $commercial_treatments->pluck('commercial_treatment_id');
+        $all_commercial_treatments = CommercialTreatment::whereNotIn('id', $ids_commercial_treatments)->get();
+        $all_commercial_treatments = $all_commercial_treatments->transform(function ($row, $key) {
+            return [
+                'id' => null,
+                'item_id' => $this->id,
+                'commercial_treatment_id' => $row->id,
+                'amount' => null,
+                'active' => (bool) $row->active,
+                'commercial_treatment_description' => $row->description,
+            ];
+        });
+        //array_merge
+        $commercial_treatments =  array_merge($commercial_treatments->toArray(), $all_commercial_treatments->toArray());
+        return [
+            'codes_family' => (bool)$this->codes_family,
+            'commission' => $this->commission,
+            'init_report' => (bool)$this->init_report,
+            'item_price_ranges' => $this->item_price_ranges,
+            'subject_to_detraction' => (bool) $this->subject_to_detraction,
+            'commercial_treatments' => $commercial_treatments,
+            'has_warranty' => (bool) $this->has_warranty,
+            'month_day' => $this->month_day,
+            'init_report' => (bool) $this->init_report,
+            'has_color_size' => (bool) $this->has_color_size,
+            'is_manufactured' => (bool) $this->is_manufactured,
+            'max_quantity_description' => $this->max_quantity_description,
+            'id' => $this->id,
+            'weight' => $this->weight,
+            'max_quantity' => $this->max_quantity,
+            'delivery_cost' => $this->delivery_cost,
+            'description' => $this->description,
+            'model' => $this->model,
+            'quality' => $this->quality,
+            'origin' => $this->origin,
+            'name' => $this->name,
+            'barcode' => $this->barcode,
+            'second_name' => $this->second_name,
+            'location' => $this->location,
+            'warehouse_id' => $this->warehouse_id,
+            'internal_id' => $this->internal_id,
+            'item_code' => $this->item_code,
+            'item_code_gsl' => $this->item_code_gsl,
+            'currency_type_id' => $this->currency_type_id,
+            'sale_unit_price' => number_format($this->sale_unit_price, 2, '.', ''),
+            'purchase_unit_price' => $this->purchase_unit_price,
+            'unit_type_id' => $this->unit_type_id,
+            'has_isc' => (bool) $this->has_isc,
+            'system_isc_type_id' => $this->system_isc_type_id,
+            'percentage_isc' => $this->percentage_isc,
+            'suggested_price' => $this->suggested_price,
+            'stock' => $this->getStockByWarehouse(),
+            'stock_min' => $this->stock_min,
+            'percentage_of_profit' => $this->percentage_of_profit,
+            'sale_affectation_igv_type_id' => $this->sale_affectation_igv_type_id,
+            'purchase_affectation_igv_type_id' => $this->purchase_affectation_igv_type_id,
+            'calculate_quantity' => (bool) $this->calculate_quantity,
+            'has_igv' => (bool) $this->has_igv,
+            'has_perception' => (bool) $this->has_perception,
+            'lots_enabled' => (bool) $this->lots_enabled,
+            'percentage_perception' => $this->percentage_perception,
+            'item_unit_types' => $this->item_unit_types,
+            'item_codes' => collect($this->item_codes)->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->item_id,
+                    'code_barcode' => $row->code_barcode,
+                    'is_primary' => (bool) $row->is_primary,
+                    'active' => (bool) $row->active,
+                ];
+            }),
+            'image' => $this->image,
+            'account_id' => $this->account_id,
+            'category_id' => $this->category_id,
+            'categoria_madera_item' => $this->categoria_madera,
+            'brand_id' => $this->brand_id,
+            'date_of_due' => $date_of_due,
+            /* 'warranty_end_date' => $warranty_end_date, */
+            'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),
+            'individual_items' => $this->promotion_items->transform(function ($row, $key) {
+                // The related item is available via the `promotion_item` relation on ItemPromotion
+                $promotionItem = $row->promotion_item;
+
+                // Build a human friendly description from the related item if available
+                $full_description = '';
+                if ($promotionItem) {
+                    $full_description = ($promotionItem->internal_id) ? $promotionItem->internal_id . ' - ' . $promotionItem->description : $promotionItem->description;
+                }
+
+                // Prefer the sale_unit_price stored on the related item; if not present, fall back to the promotion row value
+                $sale_unit_price = 0;
+                if ($promotionItem && isset($promotionItem->sale_unit_price)) {
+                    $sale_unit_price = (float) $promotionItem->sale_unit_price;
+                } elseif (isset($row->sale_unit_price)) {
+                    $sale_unit_price = (float) $row->sale_unit_price;
+                }
+
+                return [
+                    'id' => $row->id,
+                    'item_id' => $row->item_id,
+                    'promotion_item_id' => $row->promotion_item_id,
+                    'full_description' => $full_description,
+                    'sale_unit_price' => $sale_unit_price,
+                    'quantity' => (float) $row->quantity,
+                    'unit_type_description' => ($promotionItem && $promotionItem->unit_type) ? $promotionItem->unit_type->description : null,
+                    'max_quantity' => (float) $row->max_quantity,
+                ];
+            }),
+            'area_id' => ($foods == null) ? null : $foods->area_id,
+            'apply_store' => (bool)$this->apply_store,
+            'commission_amount' => $this->commission_amount,
+            'lot_code' => $lot_code,
+            'lots' => $this->lots->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'series' => $row->series,
+                    'date' => $row->date,
+                    'item_id' => $row->item_id,
+                    'warehouse_id' => $row->warehouse_id,
+                    'item_loteable_type' => $row->item_loteable_type,
+                    'item_loteable_id' => $row->item_loteable_id,
+                    'has_sale' => $row->has_sale,
+                    'state' => $row->state,
+                    'created_at' => $row->created_at,
+                    'updated_at' => $row->updated_at,
+                    'deleted' => false
+                ];
+            }),
+            'commission_type' => $this->commission_type ?? 'amount',
+            'attributes' => $this->attributes ? $this->attributes : [],
+            'warehouse_prices' => collect($this->item_warehouse_prices)->transform(function ($row) {
+
+                return [
+                    "id" => $row->id,
+                    "warehouse_id" => $row->warehouse_id,
+                    "price" => $row->price,
+                    "warehouse" => $row->getWarehouseDescription()
+                ];
+            }),
+            'warehouses' => collect($this->warehouses)->transform(function ($row) {
+
+                return [
+                    "id" => $row->id,
+                    "warehouse_id" => $row->warehouse_id,
+                    "warehouse_description" => $row->warehouse_description,
+                    "stock" => $row->stock,
+                    /* "warehouse" => $row->getWarehouseDescription() */
+                ];
+            }),
+            'series_enabled' => $this->series_enabled,
+            'is_promotion' => (bool) $this->is_promotion,
+            'promotion_count' => $this->promotion_count,
+
+            // 'warehouses' => collect($this->warehouses)->transform(function($row) {
+            //     return [
+            //         'warehouse_description' => $row->warehouse->description,
+            //         'stock' => $row->stock,
+            //     ];
+            // })
+        ];
+    }
+}

@@ -4570,7 +4570,6 @@ export default {
                         this.orden_items
                     );
                     if (!responses.data.success) {
-                        // Mostrar mensaje de error del servidor
                         this.$showSAlert(
                             "ALERTA",
                             responses.data.message,

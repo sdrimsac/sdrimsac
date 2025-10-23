@@ -863,7 +863,7 @@ export default {
             }
         },
         async getItems() {
-            if (this.type == "caja/observations/items") {
+            if (this.type == "caja/observations") {
                 const response = await this.$http("/caja/observations/items");
             if (response.status == 200) {
                 const { items } = response.data;
@@ -931,9 +931,9 @@ export default {
             }
         },
         async create() {
-            /* if (configurations.mod_renta) { */
-            this.getItems();
-            /* } */
+            if (this.type == "caja/observations") {
+                await this.getItems();
+            }
             if (this.type == "caja/rooms") {
                 await this.getTables();
             }

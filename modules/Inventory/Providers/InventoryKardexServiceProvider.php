@@ -7,6 +7,8 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemColorSize;
+use App\Models\Tenant\ItemPromotion;
+use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\SaleNoteItem;
@@ -64,6 +66,71 @@ class InventoryKardexServiceProvider extends ServiceProvider
             $warehouse = ($document_item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($document_item->warehouse_id)->establishment_id) : $this->findWarehouse();
             $presentationQuantity = (!empty($document_item->item->presentation)) ? $document_item->item->presentation->quantity_unit : 1;
             if (!$document_item->item->is_set) {
+
+                if ($document_item->item->promotions_items) {
+
+                    // Obtener los items de la promoción
+                    $promotion_item = ItemPromotion::where('item_id', $document_item->item_id)->get();
+
+                    foreach ($promotion_item as $promo) {
+
+                        // Obtener el item hijo
+                        $child_item = Item::find($promo->promotion_item_id);
+
+                        if (!$child_item) {
+                            Log::warning("Item promocional no encontrado. Promotion ID: {$promo->id}, promotion_item_id: {$promo->promotion_item_id}");
+                            continue;
+                        }
+
+                        // Cantidad total a descontar considerando la cantidad vendida
+                        $promo_quantity = $document_item->quantity * $promo->quantity;
+
+                        // Si el item es receta (is_set = 1)
+                        if ($child_item->is_set) {
+                            $recipe_items = ItemSet::where('item_id', $child_item->id)->get();
+
+                            //Log::info("ver si ingresa aqui", $recipe_items);
+
+                            foreach ($recipe_items as $ingredient) {
+                                $ingredient_item = Item::find($ingredient->individual_item_id);
+
+                                if (!$ingredient_item) {
+                                    Log::warning("Ingrediente no encontrado. ItemSet ID: {$ingredient->id}, individual_item_id: {$ingredient->individual_item_id}");
+                                    continue;
+                                }
+
+                                $ingredient_quantity = $promo_quantity * $ingredient->quantity;
+
+                                // Registrar en kardex
+                                $this->createInventoryKardexSaleNote(
+                                    $document_item->document,
+                                    $ingredient_item->id,
+                                    -$ingredient_quantity,
+                                    $warehouse->id,
+                                    $document_item->id
+                                );
+
+                                // Descontar stock
+                                $this->updateStock($ingredient_item->id, -$ingredient_quantity, $warehouse->id);
+                            }
+                        } else {
+                            // Item normal
+                            $this->createInventoryKardexSaleNote(
+                                $document_item->document,
+                                $child_item->id,
+                                -$promo_quantity,
+                                $warehouse->id,
+                                $document_item->id
+                            );
+
+                            $this->updateStock($child_item->id, -$promo_quantity, $warehouse->id);
+                        }
+                    }
+
+                    // Terminó de procesar la promoción
+                    return;
+                }
+
                 $quantity = $document_item->quantity;
 
                 if (isset($document_item->item->has_unit_type)) {
@@ -179,7 +246,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
             if (isset($document_item->item->lotes)) {
                 foreach ($document_item->item->lotes as $it) {
                     $lot_found = ItemLotsGroup::find($it->id);
-                    Log::info('Lote ID: '. $it->id .''. $lot_found);
+                    Log::info('Lote ID: ' . $it->id . '' . $lot_found);
                     if ($lot_found) {
                         $quantityLot  = $it->quantitySelected;
                         Log::info('Cantidad del Lote asdfasdf: ' . $quantityLot);
@@ -187,7 +254,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                             $unit_type = ItemUnitType::where('id', $document_item->item->from_unit_type_id)
                                 ->first();
                             if ($unit_type) {
-                                Log::info('Unidad de Medida asdasdfsdfsdf: '. $unit_type->id .''. $unit_type->quantity_unit);
+                                Log::info('Unidad de Medida asdasdfsdfsdf: ' . $unit_type->id . '' . $unit_type->quantity_unit);
 
                                 $quantityLot = $it->quantitySelected * $unit_type->quantity_unit;
                             }
@@ -249,7 +316,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 } else {
                     $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
                 }
-                if (!$sale_note_item->item->is_set) {
+                /* if (!$sale_note_item->item->is_set) {
                     $quantity = $sale_note_item->quantity;
 
                     if (isset($sale_note_item->item->from_unit_type_id)) {
@@ -263,6 +330,99 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
 
                     $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
+                    if (!$sale_note_item->sale_note->order_note_id) {
+                        $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
+                    }
+                } */
+
+                if (!$sale_note_item->item->is_set) {
+
+                    // 🧩 Caso especial: si es una promoción
+                    if ($sale_note_item->item->promotions_items) {
+
+                        // Obtener los items de la promoción
+                        $promotion_item = ItemPromotion::where('item_id', $sale_note_item->item_id)->get();
+
+                        foreach ($promotion_item as $promo) {
+
+                            // Obtener el item hijo
+                            $child_item = Item::find($promo->promotion_item_id);
+
+                            if (!$child_item) {
+                                Log::warning("Item promocional no encontrado. Promotion ID: {$promo->id}, promotion_item_id: {$promo->promotion_item_id}");
+                                continue;
+                            }
+
+                            // Cantidad total a descontar considerando la cantidad vendida
+                            $promo_quantity = $sale_note_item->quantity * $promo->quantity;
+
+                            // Si el item es receta (is_set = 1)
+                            if ($child_item->is_set) {
+                                $recipe_items = ItemSet::where('item_id', $child_item->id)->get();
+
+                                //Log::info("ver si ingresa aqui", $recipe_items);
+
+                                foreach ($recipe_items as $ingredient) {
+                                    $ingredient_item = Item::find($ingredient->individual_item_id);
+
+                                    if (!$ingredient_item) {
+                                        Log::warning("Ingrediente no encontrado. ItemSet ID: {$ingredient->id}, individual_item_id: {$ingredient->individual_item_id}");
+                                        continue;
+                                    }
+
+                                    $ingredient_quantity = $promo_quantity * $ingredient->quantity;
+
+                                    // Registrar en kardex
+                                    $this->createInventoryKardexSaleNote(
+                                        $sale_note_item->sale_note,
+                                        $ingredient_item->id,
+                                        -$ingredient_quantity,
+                                        $warehouse->id,
+                                        $sale_note_item->id
+                                    );
+
+                                    // Descontar stock
+                                    $this->updateStock($ingredient_item->id, -$ingredient_quantity, $warehouse->id);
+                                }
+                            } else {
+                                // Item normal
+                                $this->createInventoryKardexSaleNote(
+                                    $sale_note_item->sale_note,
+                                    $child_item->id,
+                                    -$promo_quantity,
+                                    $warehouse->id,
+                                    $sale_note_item->id
+                                );
+
+                                $this->updateStock($child_item->id, -$promo_quantity, $warehouse->id);
+                            }
+                        }
+
+                        // Terminó de procesar la promoción
+                        return;
+                    }
+
+                    $quantity = $sale_note_item->quantity;
+
+                    if (isset($sale_note_item->item->from_unit_type_id)) {
+                        $unit_type = ItemUnitType::where('id', $sale_note_item->item->from_unit_type_id)->first();
+                        if ($unit_type) {
+                            $quantity = $quantity * $unit_type->quantity_unit;
+                        }
+                    }
+
+                    $presentationQuantity = (!empty($sale_note_item->item->presentation))
+                        ? $sale_note_item->item->presentation->quantity_unit
+                        : 1;
+
+                    $this->createInventoryKardexSaleNote(
+                        $sale_note_item->sale_note,
+                        $sale_note_item->item_id,
+                        (-1 * ($quantity * $presentationQuantity)),
+                        $warehouse->id,
+                        $sale_note_item->id
+                    );
+
                     if (!$sale_note_item->sale_note->order_note_id) {
                         $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
                     }

@@ -1127,15 +1127,15 @@ if ($hostname) {
                 Route::get('promotion-document/items-by-person/{id}', [PromotionDocumentController::class, 'getItemsByPerson']);
 
                 Route::get('/search-ce/{ce}', [App\Http\Controllers\Tenant\PersonController::class, 'serviceCe']);
-                //Promotion
-                Route::get('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
-                Route::get('promotions/columns', [App\Http\Controllers\Tenant\PromotionController::class, 'columns']);
-                Route::get('promotions/tables', [App\Http\Controllers\Tenant\PromotionController::class, 'tables']);
-                Route::get('promotions/records', [App\Http\Controllers\Tenant\PromotionController::class, 'records']);
-                Route::get('promotions/record/{tag}', [App\Http\Controllers\Tenant\PromotionController::class, 'record']);
-                Route::post('promotions', [App\Http\Controllers\Tenant\PromotionController::class, 'store']);
-                Route::delete('promotions/{promotion}', [App\Http\Controllers\Tenant\PromotionController::class, 'destroy']);
-                Route::post('promotions/upload', [App\Http\Controllers\Tenant\PromotionController::class, 'upload']);
+                // Promotion (singular) - avoid collision with promotions/* (items)
+                Route::get('promotion', [App\Http\Controllers\Tenant\PromotionController::class, 'index'])->name('tenant.promotion.index')->middleware('just.admin');
+                Route::get('promotion/columns', [App\Http\Controllers\Tenant\PromotionController::class, 'columns']);
+                Route::get('promotion/tables', [App\Http\Controllers\Tenant\PromotionController::class, 'tables']);
+                Route::get('promotion/records', [App\Http\Controllers\Tenant\PromotionController::class, 'records']);
+                Route::get('promotion/record/{tag}', [App\Http\Controllers\Tenant\PromotionController::class, 'record']);
+                Route::post('promotion', [App\Http\Controllers\Tenant\PromotionController::class, 'store']);
+                Route::delete('promotion/{promotion}', [App\Http\Controllers\Tenant\PromotionController::class, 'destroy']);
+                Route::post('promotion/upload', [App\Http\Controllers\Tenant\PromotionController::class, 'upload']);
 
 
                 Route::get('item-sets', [App\Http\Controllers\Tenant\ItemSetController::class, 'index'])->name('tenant.item_sets.index')->middleware('just.admin');
@@ -1169,6 +1169,23 @@ if ($hostname) {
                 Route::post('receta/visible_store', [App\Http\Controllers\Tenant\RecetaController::class, 'visibleStore']);
                 Route::get('receta/item/tables', [App\Http\Controllers\Tenant\RecetaController::class, 'item_tables']);
                 Route::get('receta/receta-warehouse/{item}', [App\Http\Controllers\Tenant\RecetaController::class, 'Warehouses']);
+
+                //creacion de promociones para los platos
+                Route::get('promotions', [App\Http\Controllers\Tenant\PromotionsController::class, 'index'])->name('tenant.promotions.index')->middleware('just.admin');
+                Route::get('promotions/columns', [App\Http\Controllers\Tenant\PromotionsController::class, 'columns']);
+                Route::get('promotions/records', [App\Http\Controllers\Tenant\PromotionsController::class, 'records']);
+                Route::get('promotions/check/{id}/{qty}', [App\Http\Controllers\Tenant\PromotionsController::class, 'set_item_check_stock']);
+                Route::get('promotions/item-promotion/{id}', [App\Http\Controllers\Tenant\PromotionsController::class, 'ItemPromotion']);
+                Route::get('promotions/tables', [App\Http\Controllers\Tenant\PromotionsController::class, 'tables']);
+                Route::get('promotions/record/{item}', [App\Http\Controllers\Tenant\PromotionsController::class, 'record']);
+                Route::post('promotions', [App\Http\Controllers\Tenant\PromotionsController::class, 'store']);
+                Route::delete('promotions/{item}', [App\Http\Controllers\Tenant\PromotionsController::class, 'destroy']);
+                Route::delete('promotions/item-unit-type/{item}', [App\Http\Controllers\Tenant\PromotionsController::class, 'destroyItemUnitType']);
+                Route::post('promotions/import', [App\Http\Controllers\Tenant\PromotionsController::class, 'import']);
+                Route::post('promotions/upload', [App\Http\Controllers\Tenant\PromotionsController::class, 'upload']);
+                Route::post('promotions/visible_store', [App\Http\Controllers\Tenant\PromotionsController::class, 'visibleStore']);
+                Route::get('promotions/item/tables', [App\Http\Controllers\Tenant\PromotionsController::class, 'item_tables']);
+                Route::get('promotions/receta-warehouse/{item}', [App\Http\Controllers\Tenant\PromotionsController::class, 'Warehouses']);
 
                 //para el reporte de los platos vendidos
                 Route::get('foods', [App\Http\Controllers\Tenant\FoodsController::class, 'index'])->name('tenant.foods.index')->middleware('just.admin');

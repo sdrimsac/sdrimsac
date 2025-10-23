@@ -40,9 +40,12 @@ use Modules\Restobar\Http\Resources\OrdenCollection;
 use Modules\Restobar\Http\Resources\OrdenItemCollection;
 use Modules\Restobar\Models\Food;
 use Modules\Restobar\Models\Observation;
+use Modules\Restobar\Models\OrderitemDetail;
 use App\Events\MessageEvent;
+use App\Jobs\Print2OrderJob;
 use App\Jobs\PrintOrderJob;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\ItemPromotion;
 use App\Models\Tenant\ItemSet;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
@@ -208,9 +211,9 @@ class OrdenController extends Controller
             $orden_items_obj = OrdenItem::whereIn('id', $requested_items)->get();
 
             $all_items_cancelled = $orden_items_obj->count() > 0 &&
-                $orden_items_obj->every(fn($item) => $item->status_orden_id == 5);
+                $orden_items_obj->every(function($item) { return $item->status_orden_id == 5; });
 
-            $some_items_cancelled = $orden_items_obj->contains(fn($item) => $item->status_orden_id == 5);
+            $some_items_cancelled = $orden_items_obj->contains(function($item) { return $item->status_orden_id == 5; });
 
             // Verifica si la orden completa fue anulada
             $orden_cancelled = $ordenes->status_orden_id == 5;
@@ -289,6 +292,7 @@ class OrdenController extends Controller
                 $to_carry[] = $ord_itm;
             }
             $user_name = $ord_itm->user->name;
+            Log::info('Usuario en ítem de orden para ticket', ['user_name' => $user_name]);
             if (!in_array($user_name, $users)) {
                 $users[] = $user_name;
             }
@@ -701,7 +705,7 @@ class OrdenController extends Controller
 
         // Aseguramos la inicialización para evitar "Undefined variable" si no hay mozo asignado
         $mozo_name = null;
-        
+
         if (!is_null($orden->mozo_id)) {
             $mozo = DB::connection('tenant')->table('seller_mozo')->where('id', $orden->mozo_id)->first();
             $mozo_name = $mozo ? $mozo->name : null;
@@ -964,6 +968,7 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('Iniciando creación de orden con datos:', ['request' => $request->all()]);
         try {
             $user = auth()->user();
             $ref = $request->ref;
@@ -1034,8 +1039,61 @@ class OrdenController extends Controller
                         ];
                     }
 
-                    // Verificar si el código interno comienza con "PACK000" o "PLAT000" (es una receta)
-                    if (Str::startsWith($food->item->internal_id, ['PACK0', 'PLAT0'])) {
+                    if (Str::startsWith($food->item->internal_id, ['PROM00'])) {
+                        // 🔹 Obtener los productos que forman la promoción
+                        $promotion_items = ItemPromotion::where('item_id', $food->item_id)->get();
+
+                        foreach ($promotion_items as $promo) {
+                            $product = Item::find($promo->promotion_item_id);
+
+                            if (!$product) continue;
+
+                            // Cantidad requerida de este producto en la promoción
+                            $required_qty_promo = floatval($promo->quantity) * floatval($item['quantity']);
+
+                            // 🔹 Verificar si este producto tiene receta (ItemSet)
+                            $recipe_items = ItemSet::where('item_id', $product->id)->get();
+
+                            if ($recipe_items->count() > 0) {
+                                // ✅ Producto con receta — validar cada ingrediente
+                                foreach ($recipe_items as $ingredient_row) {
+                                    $ingredient = Item::find($ingredient_row->individual_item_id);
+                                    if (!$ingredient) continue;
+
+                                    $warehouse_stock = ItemWarehouse::where([
+                                        'item_id' => $ingredient->id,
+                                        'warehouse_id' => $establishment_warehouse->id,
+                                        'active' => 1,
+                                    ])->value('stock') ?? 0;
+
+                                    $required_quantity = floatval($ingredient_row->quantity) * $required_qty_promo;
+
+                                    if ($required_quantity > $warehouse_stock) {
+                                        return [
+                                            'success' => false,
+                                            'message' => "El ingrediente {$ingredient->description} de la receta {$product->description} (dentro de la promoción {$food->description}) solo tiene {$warehouse_stock} unidades en el almacén {$establishment_warehouse->description}, y se requieren {$required_quantity}.",
+                                        ];
+                                    }
+                                }
+                            } else {
+                                // ✅ Producto sin receta — validar stock directo
+                                if ($product->unit_type_id !== 'ZZ') { // Evitar validar servicios
+                                    $warehouse_stock = ItemWarehouse::where([
+                                        'item_id' => $product->id,
+                                        'warehouse_id' => $establishment_warehouse->id,
+                                        'active' => 1,
+                                    ])->value('stock') ?? 0;
+
+                                    if ($required_qty_promo > $warehouse_stock) {
+                                        return [
+                                            'success' => false,
+                                            'message' => "El producto {$product->description} dentro de la promoción {$food->description} solo tiene {$warehouse_stock} unidades disponibles en el almacén {$establishment_warehouse->description}, y se requieren {$required_qty_promo}.",
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                    } else if (Str::startsWith($food->item->internal_id, ['PACK0', 'PLAT0'])) {
                         // Obtener los productos individuales que componen la receta
                         $item_set = ItemSet::where('item_id', $food->item_id)->get();
 
@@ -1155,7 +1213,6 @@ class OrdenController extends Controller
                         // Solo actualiza los campos que han cambiado
                         $updated = false;
                         foreach ($deliveryData as $key => $value) {
-                            // Para address, reference y telephone, solo actualiza si el nuevo valor no es '-' o si el valor actual es '-'
                             if (in_array($key, ['address', 'reference', 'telephone'])) {
                                 if ($delivery->$key !== $value && $value !== '-') {
                                     $delivery->$key = $value;
@@ -1338,6 +1395,23 @@ class OrdenController extends Controller
                 ];
             });
 
+            /* $promotion_items = collect($items)->filter(function ($item) use ($orden_items) {
+                return ¨[
+                    'food_id' => $item['food']['id'],
+                    'orden_item_id' => $orden_item->id,
+                    'description' => $item['food']['description'],
+                    'quantity' => $item['quantity'],
+                ];
+            }); */
+
+            // NOTE: $orden_items is a Collection built from the request items. Accessing
+            // $orden_items->promotions_items is invalid (property does not exist on Collection).
+            // Promotion details must be created for each created OrdenItem after we have
+            // the real OrdenItem IDs (after insert). The code that creates the promotion
+            // details will run after the DB insert/commit below.
+
+
+
             // Inserción masiva y obtención de IDs
             DB::beginTransaction();
             try {
@@ -1358,6 +1432,43 @@ class OrdenController extends Controller
                 $orden_items_ids_for_kitchen = $created_items->map(function ($item) {
                     return ['orden_id' => $item->id, 'area_id' => $item->area_id];
                 })->toArray();
+
+                // Create OrderItemDetail records for promotion components
+                foreach ($created_items as $created) {
+                    try {
+                        // Load the OrdenItem model including relation to food -> item
+                        $ordenItemModel = OrdenItem::with(['food', 'food.item'])->find($created->id);
+                        if (!$ordenItemModel) continue;
+
+                        $food = $ordenItemModel->food;
+                        if (!$food || !$food->item) continue;
+
+                        $mainItem = $food->item;
+
+                        // Find promotions for the underlying item
+                        $promotionComponents = ItemPromotion::where('item_id', $mainItem->id)->get();
+                        if ($promotionComponents->isEmpty()) continue;
+
+                        foreach ($promotionComponents as $promo) {
+                            $subItem = Item::find($promo->promotion_item_id);
+                            if (!$subItem) continue;
+
+                            // The quantity to create is the promotion quantity * orden item quantity
+                            $detailQuantity = (float)$promo->quantity * (float)$ordenItemModel->quantity;
+
+                            OrderItemDetail::create([
+                                'orden_item_id' => $ordenItemModel->id,
+                                'item_id' => $subItem->id,
+                                'description' => $subItem->description,
+                                'quantity' => $detailQuantity,
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        // Log and continue — promotion details are auxiliary
+                        Log::error('Error creating promotion details for orden item: ' . $created->id, ['error' => $e->getMessage()]);
+                        continue;
+                    }
+                }
 
                 // Actualizar stock en batch si es posible
                 foreach ($created_items as $item) {
@@ -1400,70 +1511,70 @@ class OrdenController extends Controller
             $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
 
             // Si printerDefault=true, permite imprimir aunque sea habitación
-        
-                if ($conopy_kitchen) {
+
+            if ($conopy_kitchen) {
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    $area_found = Area::find($area_id);
+
+                    if ($area_found && ($area_found->printer || $area_found->search_print == 1)) {
+                        if (
+                            in_array($area_found->description, ['COCINA']) ||
+                            (
+                                $configuration['menaje_barra'] &&
+                                in_array($area_found->description, ['BARRA'])
+                            )
+                        ) {
+                            $menaje_id = $this->getMenaje();
+
+                            // Imprime en el área original
+                            //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+
+                            // Si hay menaje o el área busca impresión
+                            if ($menaje_id !== null || $area_found->search_print == 1) {
+                                $area_id = $menaje_id;
+                                //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                            }
+                        } else {
+                            // Imprimir en el área actual
+                            //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                        }
+                    }
+                }
+            } else {
+                // Only dispatch kitchen print jobs when configuration allows it AND
+                // the incoming request is NOT asking to skip printing ($printing == false).
+                if ($print_kitchen && !$printing) {
                     $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                    $user_id = auth()->id();
                     foreach ($ids_areas as $area_id) {
                         $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
                             return $area_id == $a['area_id'];
                         }), "orden_id");
                         $area_found = Area::find($area_id);
+                        if ($area_found) {
+                            $copies = $area_found->copies ?? 0;
+                            $total_copies = $copies + 1;
 
-                        if ($area_found && ($area_found->printer || $area_found->search_print == 1)) {
-                            if (
-                                in_array($area_found->description, ['COCINA']) ||
-                                (
-                                    $configuration['menaje_barra'] &&
-                                    in_array($area_found->description, ['BARRA'])
-                                )
-                            ) {
-                                $menaje_id = $this->getMenaje();
-
-                                // Imprime en el área original
-                                //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-
-                                // Si hay menaje o el área busca impresión
-                                if ($menaje_id !== null || $area_found->search_print == 1) {
-                                    $area_id = $menaje_id;
-                                    //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                }
-                            } else {
-                                // Imprimir en el área actual
-                                //dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                            }
-                        }
-                    }
-                } else {
-                    // Only dispatch kitchen print jobs when configuration allows it AND
-                    // the incoming request is NOT asking to skip printing ($printing == false).
-                    if ($print_kitchen && !$printing) {
-                        $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-                        $user_id = auth()->id();
-                        foreach ($ids_areas as $area_id) {
-                            $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                                return $area_id == $a['area_id'];
-                            }), "orden_id");
-                            $area_found = Area::find($area_id);
-                            if ($area_found) {
-                                $copies = $area_found->copies ?? 0;
-                                $total_copies = $copies + 1;
-
-                                if ($area_found->printer || $area_found->search_print == 1) {
-                                    for ($i = 0; $i < $total_copies; $i++) {
-                                        dispatch(new PrintOrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
-                                        sleep(1);
-                                    }
+                            if ($area_found->printer || $area_found->search_print == 1) {
+                                for ($i = 0; $i < $total_copies; $i++) {
+                                    dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                                    sleep(1);
                                 }
                             }
                         }
                     }
                 }
+            }
 
-                $isFromBox = $this->isArea("CAJ", $user->area_id);
+            $isFromBox = $this->isArea("CAJ", $user->area_id);
 
-                if ($print_box) {
-                    dispatch(new PrintOrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
-                }
+            if ($print_box) {
+                dispatch(new Print2OrderJob($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids, null, null, null, $user_id, url('')));
+            }
 
             $id = strval($orden->id);
             $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -1918,7 +2029,7 @@ class OrdenController extends Controller
             $establishment = Establishment::find(auth()->user()->establishment_id);
 
             if ($configuration->delivery_caja) {
-                
+
                 $area_id = $this->getBoxArea();
                 $area = Area::find($area_id);
                 $printer = $area->printer ?? $establishment->printer;

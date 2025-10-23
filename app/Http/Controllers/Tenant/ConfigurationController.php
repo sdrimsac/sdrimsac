@@ -480,6 +480,7 @@ class ConfigurationController extends Controller
                 'created_items' => true,
                 'box_ordenes' => true,
                 'show_variation_dcto' => true,
+                'box_orden' => true,
             ]);
 
             $this->check_and_set_restaurant();
@@ -490,6 +491,7 @@ class ConfigurationController extends Controller
                 'created_items' => true,
                 'box_ordenes' => true,
                 'show_variation_dcto' => true,
+                'box_orden' => true,
             ]);
 
             $this->check_and_set_restaurant();

@@ -718,6 +718,7 @@
                                                                                     }}
                                                                                 </span>
                                                                             </template>
+                                                        
                                                                             <!-- Politcas de Precio  Select -->
                                                                             <span v-if="order_pend.type_id"
                                                                                 class="text-primary"
@@ -814,6 +815,18 @@
                                                                                         class="fas fa-times text-black"></i>
                                                                                 </el-tag>
                                                                             </el-tooltip>
+                                                                        </div>
+                                                                        <div class="mt-2">
+                                                                            <!-- CAMBIAR NOMBRE DE PRODUCTO O SERVICIO -->
+                                                                            <tr v-for="(tag, idx) in order_pend.food.promotion_items"
+                                                                                :key="idx">
+                                                                                <el-tag
+                                                                                    style="font-size: 12px; margin-right: 4px;"
+                                                                                    type="info">
+                                                                                   {{  tag._promo_quantity }} - {{ tag.description }}
+                                                                                </el-tag>
+
+                                                                            </tr>
                                                                         </div>
                                                                     </div>
                                                                     <!-- Boton de eliminar producto o servicio y si es Restaurant Observaciones-->
@@ -4164,7 +4177,7 @@ export default {
 
             this.disableSend = true;
             let form_submit = {
-                id: null,
+                id: this.clientTableData && this.clientTableData.orden_id ? this.clientTableData.orden_id : null,
                 caja: true,
                 printDocument: this.printing,
                 printing: this.configuration.print_commands,

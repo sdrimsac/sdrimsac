@@ -4472,14 +4472,23 @@ export default {
             form.items = form.items.map(flattenItem);
             // --- Fin sincronización ---
             // form.date_of_issue = moment().format("YYYY-MM-DD");
-            if (form.document_type_id === "80") {
-                form.prefix = "NV";
-                form.paid = this.form.total == this.form.enter_amount;
-                this.resource_documents = "sale-notes";
-                console.log("es nota de venta paso por aqui");
-                this.resource_payments = "sale_note_payments";
-                this.resource_options = this.resource_documents;
-            } else {
+                if (form.document_type_id === "80") {
+                    form.prefix = "NV";
+                    // Consider split payments (currentPayments) and floating point tolerance
+                    try {
+                        const entered = (parseFloat(this.form.enter_amount) || 0) +
+                            (this.currentPayments || []).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+                        const total = parseFloat(this.form.total) || 0;
+                        form.paid = Math.abs(entered - total) < 0.01;
+                    } catch (e) {
+                        // fallback to simple comparison
+                        form.paid = this.form.total == this.form.enter_amount;
+                    }
+                    this.resource_documents = "sale-notes";
+                    console.log("es nota de venta paso por aqui");
+                    this.resource_payments = "sale_note_payments";
+                    this.resource_options = this.resource_documents;
+                } else {
                 form.prefix = null;
                 this.resource_documents = "documents";
                 this.resource_payments = "document_payments";

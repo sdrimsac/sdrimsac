@@ -100,7 +100,7 @@
                                                 </td>
                                                 <td class="text-center" v-if="configuration.show_stock_cash == true">
                                                     <template v-if="
-                                                        data.item.is_set == 0 &&
+                                                        data.item.is_set == 0 && data.item.promotions_items == 0 &&
                                                         data.item.unit_type_id != 'ZZ' &&
                                                         data.item.stock > 0
                                                     ">
@@ -249,9 +249,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- Descripción -->
-
                                         <div
                                             style="background-color: #073f68; color: #fff; padding: 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             <el-tooltip class="item" effect="dark"
@@ -430,7 +427,7 @@
                                                     </div>
                                                 </template>
                                                 <!-- Stock en Caja -->
-                                                <div v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
+                                                <div v-if="data.item.is_set == 0 && data.item.promotions_items == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
                                                     class="cold-12 d-flex justify-content-end"
                                                     style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px; text-align: right;">
                                                     <template v-if="data.item.stock > 0">
@@ -729,7 +726,7 @@
                                             </template>
 
                                             <!-- Stock -->
-                                            <div v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
+                                            <div v-if="data.item.is_set == 0 && data.item.promotions_items == 0 && data.item.unit_type_id != 'ZZ' && configuration.show_stock_cash == true"
                                                 class="cold-12 d-flex justify-content-end"
                                                 style="margin:0 2px 2px 2px;text-align:right;">
                                                 <template v-if="data.item.stock > 0">
@@ -832,6 +829,9 @@
             @updateLotes="updateLotes" />
         <show-series-product :limitQty="limitQty" :idx="currentIdx" :item="currentItem" :showDialog.sync="showSeries"
             :seriesSelected.sync="seriesSelected" :establishments="establishments" @updateSeries="onSeriesConfirm" />
+    <!-- Pass the inner item object so items_promotions can read item.id -->
+    <items-promotions :showDialog.sync="showDialogItemPromotion" 
+    :selectedFood="selectedFood && selectedFood.item" :selectedItemId="selectedFood && selectedFood.item && selectedFood.item.id" @addPromotionItems="onAddPromotionItems"/>
     </div>
 </template>
 <style>
@@ -879,11 +879,13 @@ import UnitTypeModal from "./unit_type_modal.vue";
 import ModalUnitTypeId from "./modal_unit_type_id.vue";
 import ImagesFood from "./images_food.vue";
 import itemSet from "./itemSet.vue";
+import ItemsPromotions from "./items_promotions.vue";
 const ShowColorSizeProduct = () =>
     import("../partials/show_color_size_product.vue");
 import swal from "sweetalert2";
 export default {
     components: {
+        ItemsPromotions,
         WarehousesDetail,
         UnitTypeModal,
         ModalUnitTypeId,
@@ -919,6 +921,7 @@ export default {
     ],
     data() {
         return {
+            showDialogItemPromotion: false,
             showDialogItemSet: false,
             // Components for item sets (reactive to avoid Vue warn)
             itemSetComponents: [],
@@ -1123,6 +1126,156 @@ export default {
         }
     },
     methods: {
+        async onAddPromotionItems(items) {
+            this.showDialogItemPromotion = false;
+
+            if (!Array.isArray(items) || items.length === 0) return;
+
+            const groups = items.reduce((acc, it) => {
+                const pid = it.promotion_id;
+                if (!acc[pid]) acc[pid] = [];
+                acc[pid].push(it);
+                return acc;
+            }, {});
+
+            for (const promotionId of Object.keys(groups)) {
+                const group = groups[promotionId];
+
+                // Construir array detallado de items de la promoción
+                const promoItemsDetailed = [];
+
+                for (const promo of group) {
+                    const promoItemId = promo.promotion_item_id;
+                    const qty = Number(promo.quantity) || 1;
+                    const description = promo.description || promo.descripcion || null;
+
+                    // Buscar el item en listFoods (vista actual) o en foods (fallback)
+                    let found = this.listFoods.find(
+                        f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                    );
+                    if (!found) {
+                        found = this.foods.find(
+                            f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                        );
+                    }
+
+                    if (!found) {
+                        console.warn(`onAddPromotionItems: item promocional no encontrado id=${promoItemId}`);
+                        continue;
+                    }
+
+                    // Realizar verificaciones similares a addFood si el item es set/promocion
+                    try {
+                        let foodFound = this.localOrden.filter(f => f.id == (found.item ? found.item.id : found.id));
+                        let existingQty = 0;
+                        if (foodFound.length != 0) {
+                            existingQty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                        }
+
+                        // Validaciones por unidad (si aplica)
+                        let pass = true;
+                        const quotation_stock = (localStorage.getItem("quotation_stock") || 0) == 1;
+
+                        if ((found.item && found.item.is_set == 1) || (found.item && found.item.promotions_items == 1)) {
+                            if (this.configuration.sales_stock == true && !quotation_stock && found.item.unit_type_id != "ZZ") {
+                                if (this.configuration.restaurant) {
+                                    pass = await this.setItemCheckStock(found.item.id, existingQty + qty);
+                                } else {
+                                    pass = await this.setItemPolicy(found.item.id, existingQty + qty);
+                                }
+                            }
+                            if (pass === false) {
+                                console.info(`Promoción: el check para el item ${found.item.id} falló, no se agregará.`);
+                                continue;
+                            }
+                        }
+
+                        // Añadir al detalle de la promoción (clonando para evitar mutaciones)
+                        const cloned = JSON.parse(JSON.stringify(found));
+                        cloned._promo_quantity = qty; // cantidad dentro de la promoción
+                        cloned._promo_description = description;
+                        cloned.promotion = { promotion_id: promotionId, promotion_item_id: promoItemId };
+                        // Asegurar que la estructura que espera el padre esté presente
+                        if (!cloned.item) cloned.item = {};
+                        promoItemsDetailed.push(cloned);
+                    } catch (err) {
+                        console.error("Error procesando item de promoción:", err);
+                        continue;
+                    }
+                }
+
+                if (promoItemsDetailed.length === 0) {
+                    console.warn(`onAddPromotionItems: ningun item valido para la promoción ${promotionId}`);
+                    continue;
+                }
+
+                // Intentar encontrar el item de promoción real (el padre) en foods/listFoods
+                let promotionItem = this.listFoods.find(
+                    f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                );
+                if (!promotionItem) {
+                    promotionItem = this.foods.find(
+                        f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                    );
+                }
+
+                let promotionFood;
+                if (promotionItem) {
+                    // Clonar el item real y anexar los promotion_items
+                    promotionFood = JSON.parse(JSON.stringify(promotionItem));
+                    promotionFood.promotion_items = promoItemsDetailed;
+                    // Aseguramos la marca de que es una promoción
+                    promotionFood.item = promotionFood.item || {};
+                    promotionFood.item.promotions_items = 1;
+                } else {
+                    // Si no existe el item de promoción como tal, crear un objeto genérico
+                    promotionFood = {
+                        id: `PROMO-${promotionId}`,
+                        description: `Promoción ${promotionId}`,
+                        price: 0,
+                        promotion_id: promotionId,
+                        promotion_items: promoItemsDetailed,
+                        item: {
+                            lots_group: [],
+                            currency_type_id: null,
+                            lots_enabled: 0,
+                            promotions_items: 1,
+                            unit_type_id: "ZZ",
+                            stock: 0,
+                            is_set: 0,
+                            has_color_size: false,
+                            has_series: false,
+                            item_unit_types: [],
+                            warehouses: [],
+                            lot_code: null,
+                            date_of_due: null,
+                            subject_to_detraction: 0
+                        },
+                        series: []
+                    };
+                }
+
+                const currentFood = {
+                    id: promotionFood.id,
+                    food: promotionFood,
+                    observation: null,
+                    price: promotionFood.price || 0,
+                    quantity: 1
+                };
+
+                // Emitir la promoción con sus componentes. El padre debe interpretar 'food.promotion_items'
+                this.$emit("insertOrden", currentFood, currentFood.id, null, false, null, []);
+
+                this.$notify({
+                    title: promotionFood.description || `Promoción ${promotionId}`,
+                    duration: 1000,
+                    iconClass: "el-icon-star-on",
+                    message: "Promoción agregada con sus items",
+                    position: "bottom-left"
+                });
+            }
+        },
+        
         handleRowClick(data, index) {
             console.log('handleRowClick llamado', data, index);
             // Lógica de lote
@@ -1629,6 +1782,21 @@ export default {
             return pass;
         },
 
+        async setItemCheckPromotions(id, quantity) {
+            let pass = true;
+            const response = await this.$http.get(
+                `/promotions/check/${id}/${quantity}`
+            );
+            if (response.status == 200) {
+                const { success, message } = response.data;
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+            return pass;
+        },
+
         async setItemPolicy(id, quantity) {
             let pass = true;
             const response = await this.$http.get(
@@ -1724,8 +1892,48 @@ export default {
             let foodFound = this.localOrden.filter(
                 f => f.id == this.selectedFood.id
             );
+            if (this.selectedFood.item.promotions_items == 1) {
+                if (
+                    this.configuration.sales_stock == true &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
+                    let qty = 1;
+                    if (foodFound.length != 0) {
+                        qty = foodFound.reduce(
+                            (a, b) => a + Number(b.quantity),
+                            0
+                        );
+                        qty += 1;
+                    }
+                    let pass; // declare once and reuse
+                    if (this.configuration.restobar_home) {
+                        // Debug: print the selectedFood and the inner item id we're about to send
+                        console.log('Opening promotions modal. selectedFood:', this.selectedFood);
+                        console.log('Opening promotions modal. selectedFood.item.id:', this.selectedFood && this.selectedFood.item && this.selectedFood.item.id);
 
-            if (this.selectedFood.item.is_set == 1) {
+                        // Ensure selectedFood is propagated to the child before opening the dialog
+                        // so the modal's watcher sees the item.id and doesn't receive an empty prop.
+                        this.$nextTick(() => {
+                            this.showDialogItemPromotion = true;
+                        });
+                        return;
+                        /*
+                        pass = await this.setItemCheckPromotions(
+                            this.selectedFood.item.id,
+                            qty
+                        );
+                        */
+                    }
+                    if (pass === false) return;
+                    // Si el item-set requiere selección (modal abierto) detenemos aquí y guardamos contexto
+                    if (this.showDialogItemSet) {
+                        this.pendingItemSetAdd = { index, type, selectSerie, categoria, color_size };
+                        console.log("addFood pausado esperando confirmación de item set", this.pendingItemSetAdd);
+                        return; // Esperar a addconfirm
+                    }
+                }
+            } else if (this.selectedFood.item.is_set == 1) {
                 if (
                     this.configuration.sales_stock == true &&
                     !quotation_stock &&
@@ -1840,7 +2048,7 @@ export default {
                 // Validate stock again before adding
                 if (
                     this.configuration.sales_stock == true &&
-                    this.selectedFood.item.is_set == 0 &&
+                    this.selectedFood.item.is_set == 0 && this.selectedFood.item.promotions_items == 0 &&
                     !quotation_stock &&
                     this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
@@ -1858,7 +2066,7 @@ export default {
                     let qty = type.quantity_unit;
                     if (
                         this.configuration.sales_stock == true &&
-                        this.selectedFood.item.is_set == 0 &&
+                        this.selectedFood.item.is_set == 0  && this.selectedFood.item.promotions_items == 0 &&
                         !quotation_stock &&
                         this.selectedFood.item.unit_type_id != "ZZ"
                     ) {

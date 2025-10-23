@@ -3617,10 +3617,26 @@ class BoxesController extends Controller
                     // 💵 Venta registrada en caja (sin sale_note_payment_id)
 
                     // 🔹 Verificar si es venta al contado o a crédito
+                    /* if ($sale_note->credit_cash == 0) {
+                        $box = Box::where('sale_note_id', $sale_note->id)
+                            ->where('cash_id', $cash_id)
+                            ->where('id', $ringreso["id"])
+                            ->first();
+                        $sales_cash_sum += $box ? $box->amount : 0;
+                        Log::info("Venta al contado detectada. Suma directa total: {$sales_cash_sum}");
+                    } */
                     if ($sale_note->credit_cash == 0) {
-                        // ✅ Venta al contado: sumar todo el monto
-                        $sales_cash_sum += $sale_note->total;
-                        Log::info("Venta al contado detectada. Suma directa total: {$sale_note->total}");
+                        // 🔍 Buscar solo los pagos en efectivo de esta nota
+                        $cash_boxes = Box::where('sale_note_id', $sale_note->id)
+                            ->where('cash_id', $cash_id)
+                            ->where('method', 'Efectivo') // '01' = efectivo
+                            ->get();
+
+                        $sum_cash = $cash_boxes->sum('amount');
+
+                        $sales_cash_sum += $sum_cash;
+
+                        Log::info("Venta al contado detectada. Total efectivo sumado: {$sum_cash}");
                     } else {
                         // 🟠 Venta a crédito: hacer cálculo detallado
 
@@ -4156,7 +4172,7 @@ class BoxesController extends Controller
             $detraction_payments = $this->get_detraction_payments($cash_id);
         }
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
-        /* Log::info('Documentos de crédito en notas dasdasdsdadasd:', $all_credit_items); */
+        Log::info('Documentos de crédito en notas de venta a crédito:', $all_credit_items);
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
 

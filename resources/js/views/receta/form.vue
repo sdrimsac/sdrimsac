@@ -511,6 +511,7 @@ export default {
                 unit_type_id: "NIU",
                 currency_type_id: "PEN",
                 sale_unit_price: 0,
+                delivery_cost: "0.00",
                 commission: 0,
                 purchase_unit_price: 0,
                 has_isc: false,
@@ -622,6 +623,10 @@ export default {
                                 price: price.price
                             })
                         );
+                        // Asegurar delivery_cost si viene vacío
+                        if (!this.form.delivery_cost && this.form.delivery_cost !== 0) {
+                            this.form.delivery_cost = "0.00";
+                        }
                         this.changeAffectationIgvType();
                     });
             } else {
@@ -762,6 +767,10 @@ export default {
             this.form.attributes = this.form.attributes
                 ? this.form.attributes
                 : [];
+            // Forzar valor por defecto de delivery_cost si está vacío
+            if (this.form.delivery_cost === null || this.form.delivery_cost === undefined || this.form.delivery_cost === "") {
+                this.form.delivery_cost = "0.00";
+            }
             this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)

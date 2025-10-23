@@ -323,6 +323,7 @@ class DocumentInput
                         'presentation' => (key_exists('item', $row)) ? (isset($row['item']['presentation']) ? $row['item']['presentation'] : []) : [],
                         'amount_plastic_bag_taxes' => $item->amount_plastic_bag_taxes,
                         'is_set' => $item->is_set,
+                        'promotions_items' => $item->promotions_items,
                         'categoriaMadera' => (isset($row['item']['categoriaMadera'])) ? $row['item']['categoriaMadera'] : null,
                         'is_stock' => $is_stock,
                         'lots' => (isset($row['item']['lots'])) ?

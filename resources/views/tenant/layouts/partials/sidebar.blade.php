@@ -1278,6 +1278,13 @@
                         <span style="font-size: 1em; ">Receta</span>
                     </a>
                 </li>
+                <li>
+                    <a class="{{ $path[0] === 'promotions' && $path[1] === '' ? 'active' : '' }}"
+                        href="{{ route('tenant.promotions.index') }}">
+                        <i class="icofont-book" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                        <span style="font-size: 1em; ">Promociones</span>
+                    </a>
+                </li>
                 @if ($config->restaurant || $config->restobar_home && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"

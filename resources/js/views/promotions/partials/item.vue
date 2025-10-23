@@ -1,0 +1,185 @@
+<template>
+    <el-dialog
+        :title="titleDialog"
+        :visible="showDialog"
+        @open="create"
+        @close="close"
+        append-to-body
+        :close-on-click-modal="false"
+    >
+        <form autocomplete="off" @submit.prevent="clickAddItem">
+            <div class="form-body">
+                <br>
+                <div class="row">
+                    <div class="col-md-8 col-lg-8 col-xl-8 col-sm-8">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.promotion_item_id }"
+                        >
+                            <label class="control-label">
+                                Producto
+                            </label>
+                            <el-select
+                                v-model="form.promotion_item_id"
+                                @change="changeItem"
+                                remote
+                                :remote-method="getRecords"
+                                filterable
+                                placeholder="Buscar"
+                            >
+                                <el-option
+                                    v-for="option in individual_items"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.full_description"
+                                ></el-option>
+                            </el-select>
+
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.promotion_item_id"
+                                v-text="errors.promotion_item_id[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.quantity }"
+                        >
+                            <label class="control-label">Cantidad</label>
+                            <el-input-number
+                                class="w-100"
+                                v-model="form.quantity"
+                                :min="0.001"
+                                :precision="3"
+                                @keypress="onlyAllowNumbers"
+                                controls-position="right"
+                            ></el-input-number>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.quantity"
+                                v-text="errors.quantity[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.max_quantity }"
+                        >
+                            <label class="control-label">Cantidad maxima si aplica el mismo producto </label>
+                            <el-input-number
+                                class="w-100"
+                                v-model="form.max_quantity"
+                                :min="0.00"
+                                :precision="2"
+                                @keypress="onlyAllowNumbers"
+                                controls-position="right"
+                            ></el-input-number>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.max_quantity"
+                                v-text="errors.max_quantity[0]"
+                            ></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions text-right mt-2">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cerrar</el-button>
+                <el-button
+                    type="primary"
+                    native-type="submit"
+                    v-if="form.promotion_item_id"
+                    >
+
+                    Agregar</el-button
+                >
+            </div>
+            <br>
+        </form>
+    </el-dialog>
+</template>
+<style>
+.el-select-dropdown {
+    max-width: 80% !important;
+    margin-right: 5% !important;
+}
+</style>
+<script>
+export default {
+    props: ["showDialog", "warehouse_id"],
+    data() {
+        return {
+            titleDialog: "Agregar Producto",
+            resource: "promotions",
+            errors: {},
+            form: {},
+            individual_items: [],
+            timer: null
+        };
+    },
+    created() {
+        this.initForm();
+    },
+    methods: {
+        getRecords(input = "") {
+            let timeout = 350;
+            if (input == "") {
+                timeout = 0;
+            }
+            if (this.timer != null) clearTimeout(this.timer);
+
+            this.timer = setTimeout(() => {
+                this.$http
+                    .get(
+                        `/${this.resource}/item/tables?warehouse_id=${this
+                            .warehouse_id || ""}&input=${input || ""}`
+                    )
+                    .then(response => {
+                        this.individual_items = response.data.individual_items;
+                        console.log(this.individual_items);
+                    });
+            }, timeout);
+        },
+        initForm() {
+            this.errors = {};
+
+            this.form = {
+                unit_type_description: null,
+                promotion_item_id: null,
+                sale_unit_price: 0,
+                quantity: 1,
+                max_quantity: 1,
+                full_description: null
+            };
+        },
+        create() {
+            this.getRecords();
+        },
+        onlyAllowNumbers(event) {
+            const charCode = event.which ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                event.preventDefault();
+            }
+        },
+        close() {
+            this.initForm();
+            this.$emit("update:showDialog", false);
+        },
+        changeItem() {
+            let item = _.find(this.individual_items, {
+                id: this.form.promotion_item_id
+            });
+            this.form.sale_unit_price = item.sale_unit_price;
+            this.form.full_description = item.full_description;
+            this.form.unit_type_description = item.unit_type_description;
+        },
+        async clickAddItem() {
+            this.$emit("add", this.form);
+            this.initForm();
+        }
+    }
+};
+</script>

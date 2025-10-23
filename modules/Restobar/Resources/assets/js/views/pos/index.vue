@@ -3020,7 +3020,7 @@ export default {
         },
         async setPaymentOrden(items, allTables = false) {
             let form = {
-                id: null,
+                id: this.clientTableData && this.clientTableData.orden_id ? this.clientTableData.orden_id : null,
                 caja: true,
                 printDocument: false,
                 printing: this.configuration.print_commands,

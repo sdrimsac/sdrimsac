@@ -1077,7 +1077,7 @@ class ItemController extends Controller
         $show_inactive = filter_var($request->show_inactive ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         $records = Item::whereTypeUser()
-            ->whereNotIsSet();
+            ->whereNotIsSet()->whereNotPromotionItems();
         /** @var User $user */
         $user = auth()->user();
         $type = $user->getUserTypeArca();

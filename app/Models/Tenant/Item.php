@@ -48,6 +48,7 @@ class Item extends ModelTenant
     }
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'promotions_items',
         'calculate_price',
         'commission',
         'init_report',
@@ -342,6 +343,7 @@ class Item extends ModelTenant
             'lots_enabled'   => (bool)$this->lots_enabled,
             'series_enabled' => (bool)$this->series_enabled,
             'is_set'         => (bool)$this->is_set,
+            'promotions_items'         => (bool)$this->promotions_items,
 
             'lot_code'    => $this->lot_code,
             'date_of_due' => $this->date_of_due,
@@ -584,6 +586,11 @@ class Item extends ModelTenant
         return $query->where('is_set', false);
     }
 
+    public function scopeWhereNotPromotionItems($query)
+    {
+        return $query->where('promotions_items', false);
+    }
+
     public function scopeWhereIsActive($query)
     {
         return $query->where('active', true);
@@ -592,6 +599,11 @@ class Item extends ModelTenant
     public function scopeWhereIsSet($query)
     {
         return $query->where('is_set', true);
+    }
+
+    public function scopeWhereIsPromotionItems($query)
+    {
+        return $query->where('promotions_items', true);
     }
 
     public function getStockByWarehouse()
@@ -636,6 +648,13 @@ class Item extends ModelTenant
     {
         return $this->hasMany(ItemSet::class, 'item_id');
     }
+
+    public function promotion_items()
+    {
+        return $this->hasMany(ItemPromotion::class, 'item_id');
+    }
+
+
 
     public function brand()
     {
