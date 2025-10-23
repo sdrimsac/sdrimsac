@@ -134,6 +134,7 @@ class DocumentInput
             'currentAppointment' => Functions::valueKeyInArray($inputs, 'currentAppointment', null),
             'due_date' => Functions::valueKeyInArray($inputs, 'due_date', null),
             'vehiculo_id' => Functions::valueKeyInArray($inputs, 'vehiculo_id'),
+            'receive_promotion' => Functions::valueKeyInArray($inputs, 'receive_promotion', false),
             'promotion_id' => Functions::valueKeyInArray($inputs, 'promotion_id'),
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),
             'is_list_credit' => Functions::valueKeyInArray($inputs, 'is_list_credit', false),

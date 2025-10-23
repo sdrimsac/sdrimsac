@@ -2012,6 +2012,9 @@ class SaleNoteController extends Controller
                 }
                 $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
                 $this->dumpWithTime("promotion");
+                /* if ($request->boolean('receive_promotion')) {
+                    $this->updatePromotion($this->sale_note);
+                } */
                 if ($request->receive_promotion) {
                     $this->updatePromotion($this->sale_note);
                 }

@@ -29,18 +29,32 @@ trait PromotionDocumentTrait
     function subtractPromotionPoints($document)
     {
         $customer_id = $document->customer_id;
+        // Log inicial para diagnosticar llamadas a la resta de puntos
+        try {
+            Log::info('subtractPromotionPoints called', ['document_id' => $document->id, 'document_type_id' => $document->document_type_id, 'customer_id' => $customer_id]);
+        } catch (\Exception $e) {
+            // no bloquear ejecución por errores de logging
+        }
         $promotion_customer = PromotionDocumentCustomer::where('customer_id', $customer_id)
             ->where('active', 1)
             ->whereHas('promotion_document', function ($query) {
                 $query->where('is_points', true);
             })
             ->orderBy('id', 'desc')->first();
+        if (!$promotion_customer) {
+            try { Log::info('subtractPromotionPoints: no active promotion_customer found', ['customer_id' => $customer_id]); } catch (\Exception $e) {}
+            return;
+        }
+
         $promotion_document_id = $promotion_customer->promotion_document_id;
         $points_to_subtract = 0;
         $items = $document->items;
         foreach ($items as $item) {
 
             if (isset($item->item->is_promotion) && $item->item->is_promotion) {
+                try {
+                    Log::info('Promotion item detected in subtractPromotionPoints', ['document_id' => $document->id, 'document_type_id' => $document->document_type_id, 'item_id' => $item->item_id, 'quantity' => $item->quantity]);
+                } catch (\Exception $e) {}
                 $item_promotion = PromotionDocumentItem::where('item_id', $item->item_id)
                     ->whereHas('promotion_document', function ($query) use ($promotion_document_id) {
                         $query->where('is_points', true);
@@ -50,6 +64,10 @@ trait PromotionDocumentTrait
                 $this->savePromotionReceived($promotion_customer, $item->item_id, $item->quantity, $document);
             }
         }
+        // Log antes de guardar los puntos actualizados
+        try {
+            Log::info('Saving promotion_customer points', ['promotion_customer_id' => $promotion_customer->id, 'points_to_subtract' => $points_to_subtract, 'points_before' => $promotion_customer->points]);
+        } catch (\Exception $e) {}
         $promotion_customer->points -= $points_to_subtract;
         $promotion_customer->save();
     }
@@ -66,6 +84,9 @@ trait PromotionDocumentTrait
         } else {
             $promotion_received->document_id = $document->id;
         }
+        try {
+            Log::info('Creating PromotionReceived', ['promotion_document_customer_id' => $promotion_customer->id, 'item_id' => $item_id, 'quantity' => $quantity, 'document_type_id' => $document_type_id, 'document_id' => $document->id]);
+        } catch (\Exception $e) {}
         $user = auth()->user();
         $promotion_received->user_id = $user->id;
         $promotion_received->save();

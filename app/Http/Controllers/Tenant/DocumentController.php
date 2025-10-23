@@ -1720,6 +1720,11 @@ class DocumentController extends Controller
                 $document->seller_id = auth()->user()->id;
                 $document->save(); */
 
+            // Diagnostic log: record whether the request included receive_promotion (as boolean)
+            try {
+                Log::info('DocumentController: receive_promotion check', ['receive_promotion' => $request->receive_promotion]);
+            } catch (\Exception $e) {}
+
             if ($request->receive_promotion) {
                 $this->updatePromotion($document);
             }
