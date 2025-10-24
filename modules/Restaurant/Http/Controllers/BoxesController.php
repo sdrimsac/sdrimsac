@@ -3695,7 +3695,14 @@ class BoxesController extends Controller
                         ->where('method', 'Efectivo')
                         ->get();
 
+                    /* $sum_cash = floatval($cash_boxes->sum('amount'));
+                    $sales_cash_sum += $sum_cash; */
+
                     $sum_cash = floatval($cash_boxes->sum('amount'));
+
+                    // Si el monto cobrado excede el total, solo toma el total
+                    $sum_cash = min($sum_cash, floatval($sale_note->total));
+
                     $sales_cash_sum += $sum_cash;
                     Log::info("Venta al contado detectada. Total efectivo sumado: {$sum_cash}");
                 } else {
