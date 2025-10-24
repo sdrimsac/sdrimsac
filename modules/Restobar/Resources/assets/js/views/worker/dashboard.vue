@@ -966,7 +966,7 @@ export default {
         },
         async userorden() {
             try {
-                const response = await this.$http.get(`/caja/tables/UserTable`);
+                const response = await this.$http.get(`/restobar/tables/UserTable`);
                 if (response.status === 200 && response.data.success) {
                     this.tableUsers = response.data.data;
                     return response.data.data;
@@ -996,7 +996,7 @@ export default {
                     }
                 );
                 const response = await this.$http.post(
-                    `/caja/tables/disabled-table`,
+                    `/restobar/tables/disabled-table`,
                     {
                         table_id: id
                     }
@@ -1027,7 +1027,7 @@ export default {
                     }
                 );
                 const response = await this.$http.post(
-                    `/caja/tables/enabled-table`,
+                    `/restobar/tables/enabled-table`,
                     {
                         table_id: id
                     }
@@ -1443,7 +1443,7 @@ export default {
             this.loading = true;
             try {
                 const deliveryResp = await this.$http(
-                    `/caja/tables/orden/${this.deliveryTable.id}`
+                    `/restobar/tables/orden/${this.deliveryTable.id}`
                 );
                 if (deliveryResp.status == 200) {
                     this.deliveryOrders = deliveryResp.data.ordens;

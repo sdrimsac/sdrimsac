@@ -24,6 +24,7 @@ class TableCollection extends ResourceCollection
                 ->with(['orden_items' => function($query) {
                     $query->where('status_orden_id', '!=', 5);
                 }])
+                ->with('orden_items.order_item_details')
             //without     protected $with = ['orden_items', 'status_orden', 'salenote', 'document', 'customer', 'mesa'];
             
             ->where('status_orden_id', '!=', 5)

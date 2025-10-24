@@ -252,14 +252,34 @@ class OrdenController extends Controller
         $ordens = OrdenItem::where('orden_id', $orden);
 
         $diff_ordens = [];
-        $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get()->groupBy(function ($elemento) use (&$diff_ordens) {
+        // Obtener los ítems originales (sin agrupar) para poder recuperar los detalles asociados
+        $raw_orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get();
+
+        $orden_items = $raw_orden_items->groupBy(function ($elemento) use (&$diff_ordens) {
             $diff_ordens[] = $elemento->orden_id;
             return $elemento->food_id . '-' . $elemento->price . '-' . $elemento->observations;
         })->map(function ($grupo) {
 
             $cantidadTotal = $grupo->sum('quantity');
-            return $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
+            // Tomamos el primer elemento del grupo como representante y actualizamos la cantidad
+            $item = $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
+
+            // Adjuntar los detalles asociados a los orden_items de este grupo (si existen)
+            try {
+                $orden_item_ids = $grupo->pluck('id')->toArray();
+                $details = OrderitemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
+                // Adjuntamos la colección de detalles al objeto para que esté disponible en la vista
+                $item->order_item_details = $details;
+            } catch (\Exception $e) {
+                // En caso de error, dejamos order_item_details vacía y seguimos
+                $item->order_item_details = collect();
+                Log::error('Error cargando order_item_details para ticket: ' . $e->getMessage());
+            }
+
+            return $item;
         });
+
+        Log::info("ver darta orden_items", ['orden_items' => $orden_items]);
         // eliminar los elementos repetidos de $diff_ordens
         $diff_ordens = array_unique($diff_ordens);
         $two_or_more = count($diff_ordens) > 1;

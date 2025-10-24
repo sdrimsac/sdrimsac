@@ -327,15 +327,18 @@ class TableController extends Controller
 
     public function get_ordens($id)
     {
-
         ini_set('memory_limit', '500M');
+
         $ordens = Orden::where('table_id', $id)
-            ->where('status_orden_id', '<>', 4)
-            ->where('status_orden_id', '<>', 5)
-            ->with(['orden_items' => function ($query) {
-                $query->where('status_orden_id', '<>', 4)
-                    ->where('status_orden_id', '<>', 5);
-            }])
+            ->whereNotIn('status_orden_id', [4, 5])
+            ->with([
+                // Cargar orden_items aplicando el mismo filtro
+                'orden_items' => function ($query) {
+                    $query->whereNotIn('status_orden_id', [4, 5]);
+                },
+                // Cargar los detalles de cada orden_item (relación en OrdenItem)
+                'orden_items.order_item_details'
+            ])
             ->get();
 
         return compact('ordens');

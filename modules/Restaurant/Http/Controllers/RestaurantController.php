@@ -565,8 +565,13 @@ class RestaurantController extends Controller
             $logistic = false;
             $mechanic = false;
             $restobar = false;
+            $restaurant_waiter = false;
             if (strtolower($user->worker_type->description) == "mozo") {
-                $waiter = true;
+                if ($configuration->restobar_home) {
+                    $restaurant_waiter = true;
+                } else {
+                    $waiter = true;
+                }
             } else if (strtolower($user->worker_type->description) == "cajero mecanico") {
                 $mechanic = true;
                 $pos = true;
@@ -580,13 +585,12 @@ class RestaurantController extends Controller
                 $maintenance =  true;
             } else if (strtolower($user->worker_type->description) == "estilista") {
                 $estilista = true;
-            }else if (strtolower($user->worker_type->description) == "restobar") {
+            } else if (strtolower($user->worker_type->description) == "restobar") {
                 $restobar = true;
             } else if (strtolower($user->worker_type->description) == "grifo") {
                 $grifo = true;
                 $pos = true;
-            }
-            else {
+            } else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $billar = strripos(strtolower($user->area->description), "billar");
@@ -607,7 +611,7 @@ class RestaurantController extends Controller
             }
 
             $response = [
-                'restobar' => $restobar, 
+                'restobar' => $restobar,
                 'grifo' => $grifo,
                 'estilista' => $estilista,
                 'mechanic' => $mechanic,
@@ -618,6 +622,7 @@ class RestaurantController extends Controller
                 'logistic' => $logistic,
                 'pos' => $pos,
                 'waiter' => $waiter,
+                'restaurant_waiter' => $restaurant_waiter,
                 "collector" => $collector,
                 "cleaner" => $cleaner,
                 "maintenance" => $maintenance,

@@ -1948,7 +1948,7 @@ export default {
                         qty += 1;
                     }
                     let pass; // declare once and reuse
-                    if (this.configuration.restaurant) {
+                    if (this.configuration.restobar_home) {
                         pass = await this.setItemCheckStock(
                             this.selectedFood.item.id,
                             qty

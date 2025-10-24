@@ -112,19 +112,16 @@ class OrdenItem extends ModelTenant
             $exist = DB::connection('tenant')->table('stock_order_item')
                 ->where('order_item_id', $this->id)
                 ->first();
-            if($exist){
-                
-
+            if ($exist) {
             }
-            if($warehouse){
-                
+            if ($warehouse) {
             }
             if ($warehouse && $exist) {
                 $warehouse_id = $warehouse->id;
                 $item_id = $this->food->item->id;
                 $quantity = $this->quantity;
-                
-                
+
+
                 ItemWarehouse::where('item_id', $item_id)
                     ->where('warehouse_id', $warehouse_id)
                     ->increment('stock', $quantity);
@@ -134,7 +131,8 @@ class OrdenItem extends ModelTenant
             }
         }
     }
-    public function item(){
+    public function item()
+    {
         return $this->belongsTo(Item::class);
     }
     public function info_item()
@@ -185,6 +183,10 @@ class OrdenItem extends ModelTenant
         return $this->belongsTo(Area::class);
     }
 
+    public function order_item_details()
+    {
+        return $this->hasMany(OrderItemDetail::class, 'orden_item_id');
+    }
     public function getUsuarioCuandoOcupado()
     {
         return $this->orden && $this->orden->estatus_orden_id == 'ocupado'

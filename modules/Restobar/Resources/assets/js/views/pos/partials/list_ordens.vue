@@ -47,7 +47,7 @@
                         Gastos<br />Ingresos
                     </button>
 
-                    <button v-if="localOrden.length > 0 " class="btn btn-primary pos-btn mb-2" type="button"
+                    <button v-if="localOrden.length > 0" class="btn btn-primary pos-btn mb-2" type="button"
                         @click="openOrden" style="padding: 5px 5px;">
                         <i class="el-icon-view" style="margin-right: 2px;"></i>
                         Lista
@@ -55,8 +55,8 @@
                         Productos
                     </button>
 
-                    <button class="btn btn-primary pos-btn mb-2"
-                        type="button" @click="openDigitalPay" style="background-color: #800080; padding: 5px 5px;">
+                    <button class="btn btn-primary pos-btn mb-2" type="button" @click="openDigitalPay"
+                        style="background-color: #800080; padding: 5px 5px;">
                         <i class="fas fa-mobile-alt" style="margin-right: 2px;"></i>
                         Pagos<br />Digitales
                     </button>
@@ -123,7 +123,7 @@
                 <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
                     clientTableData.table &&
                     configuration.restobar_home
-                    ">
+                ">
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
                         {{ clientTableData.table }}- Ref:
@@ -313,9 +313,10 @@
                             <span style="display: flex; justify-content: center;">Crédito</span>
                         </button>
 
-                        <button v-if="isCreatingOrden == false && configuration.credit_list && localOrden.length != 0 && !isSeller && isRestaurantWarehouse" 
-                                class="btn btn-light mt-2" type="button" @click="toCreditList"
-                                style="max-height: 45px ; max-width: 60px;">
+                        <button
+                            v-if="isCreatingOrden == false && configuration.credit_list && localOrden.length != 0 && !isSeller && isRestaurantWarehouse"
+                            class="btn btn-light mt-2" type="button" @click="toCreditList"
+                            style="max-height: 45px ; max-width: 60px;">
                             <i class="far fa-credit-card" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">
@@ -365,9 +366,10 @@
                             isCreatingOrden == false &&
                             clientTableData.table != undefined &&
                             ordens.length != 0
-                             " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;" @click="
-                            cancelGeneralOrden(clientTableData.orden_id)
-                            ">
+                        " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;"
+                            @click="
+                                cancelGeneralOrden(clientTableData.orden_id)
+                                ">
                             <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">Cancelar</span>
@@ -409,7 +411,7 @@
                                 </button>
                             </template>
                         </div>
-                        
+
                     </div>
 
                     <div v-if="clientTableData.table" class="col-md-3">
@@ -706,7 +708,7 @@
                                                                                 <span
                                                                                     style="font-weight: bold; font-size: 1rem;">
                                                                                     {{
-                                                                                    order_pend.food.item.name_product_pdf.toUpperCase()
+                                                                                        order_pend.food.item.name_product_pdf.toUpperCase()
                                                                                     }}
                                                                                 </span>
                                                                             </template>
@@ -714,11 +716,11 @@
                                                                                 <span
                                                                                     style="font-weight: bold; font-size: 1rem;">
                                                                                     {{
-                                                                                    order_pend.food.description.toUpperCase()
+                                                                                        order_pend.food.description.toUpperCase()
                                                                                     }}
                                                                                 </span>
                                                                             </template>
-                                                        
+
                                                                             <!-- Politcas de Precio  Select -->
                                                                             <span v-if="order_pend.type_id"
                                                                                 class="text-primary"
@@ -738,7 +740,7 @@
                                                                                                     <strong
                                                                                                         style="color: #006400;">
                                                                                                         X - {{
-                                                                                                        order_pend.type_description.toUpperCase()
+                                                                                                            order_pend.type_description.toUpperCase()
                                                                                                         }}
                                                                                                     </strong>
                                                                                                 </el-button>
@@ -751,7 +753,7 @@
                                                                                                     :command="{ indexx, unit_type }">
                                                                                                     <strong>
                                                                                                         X - {{
-                                                                                                        unit_type.description.toUpperCase()
+                                                                                                            unit_type.description.toUpperCase()
                                                                                                         }}
                                                                                                     </strong>
                                                                                                 </el-dropdown-item>
@@ -761,7 +763,7 @@
                                                                                     <template v-else>
                                                                                         <strong>
                                                                                             X - {{
-                                                                                            order_pend.type_description
+                                                                                                order_pend.type_description
                                                                                             }}
                                                                                         </strong>
                                                                                     </template>
@@ -778,7 +780,7 @@
                                                                                         X
                                                                                         ${order_pend.categoriaMadera.selectedAncho}
                                                                                         X
-                                                                                        ${order_pend.categoriaMadera.selectedLargo}`}}
+                                                                                        ${order_pend.categoriaMadera.selectedLargo}` }}
                                                                                     </strong>
                                                                                 </small>
                                                                             </span>
@@ -823,7 +825,9 @@
                                                                                 <el-tag
                                                                                     style="font-size: 12px; margin-right: 4px;"
                                                                                     type="info">
-                                                                                   {{  tag._promo_quantity }} - {{ tag.description }}
+                                                                                    {{ tag._promo_quantity }} - {{
+                                                                                    tag.description
+                                                                                    }}
                                                                                 </el-tag>
 
                                                                             </tr>
@@ -1378,6 +1382,15 @@
                                                         <p
                                                             class="badge bg-foreground text-uppercase font-weight-light p-0">
                                                         </p>
+                                                        <div class="mt-2">
+                                                            <!-- CAMBIAR NOMBRE DE PRODUCTO O SERVICIO -->
+                                                            <tr v-for="(tag, idx) in ord.order_item_details" :key="idx">
+                                                                <el-tag style="font-size: 12px; margin-right: 4px;"
+                                                                    type="info">
+                                                                    {{ tag.quantity }} - {{ tag.description }}
+                                                                </el-tag>
+                                                            </tr>
+                                                        </div>
                                                         <div class="row align-items-end">
                                                             <div class="col-5 col-md-5 col-lg-3 col-xl-4">
                                                                 <span class=""

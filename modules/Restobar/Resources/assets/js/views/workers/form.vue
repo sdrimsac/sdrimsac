@@ -236,7 +236,7 @@
                                 <span class="text-danger"></span>
                             </label>
                             <el-upload class="avatar-uploader bg-white" :data="{ type: 'workers' }" :headers="headers"
-                                :action="`/caja/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess">
+                                :action="`/restobar/${resource}/uploads`" :show-file-list="false" :on-success="onSuccess">
                                 <img v-if="form.image_url" :src="form.image_url" class="avatar" />
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>

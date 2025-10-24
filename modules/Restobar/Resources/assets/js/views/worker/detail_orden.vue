@@ -6,17 +6,11 @@
                 <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
                         <div class="col-md-12 p-2">
-                            <div
-                                class="card_profile"
-                                :data-id="o.id"
-                                :class="
-                                    ordenSelectedId == o.id ? 'bg-active' : ''
-                                "
-                                @click="
+                            <div class="card_profile" :data-id="o.id" :class="ordenSelectedId == o.id ? 'bg-active' : ''
+                                " @click="
                                     selectOrden(o.id);
-                                    show_orders();
-                                "
-                            >
+                                show_orders();
+                                ">
                                 <div class="card__avatar">
                                     <div class="badge"></div>
                                 </div>
@@ -35,134 +29,66 @@
         </div>
 
         <div class="row">
-            <div
-                v-if="screenWidth > 698"
-                class="col-sm-6 col-md-5 col-lg-6 col-xl-8 p-1"
-            >
-                <list-food
-                    ref="list_foods"
-                    @insertOrden="insertOrden"
-                    :configuration="configuration"
-                    :pagination="pagination"
-                    :table="table"
-                    :categories="categories"
-                    :showMenu.sync="showMenu"
-                    :localOrden.sync="localOrden"
-                    :foods.sync="foods"
-                    :divided_items="divided_items"
-                    @changePage="changePage"
-                ></list-food>
+            <div v-if="screenWidth > 698" class="col-sm-6 col-md-5 col-lg-6 col-xl-8 p-1">
+                <list-food ref="list_foods" @insertOrden="insertOrden" :configuration="configuration"
+                    :pagination="pagination" :table="table" :categories="categories" :showMenu.sync="showMenu"
+                    :localOrden.sync="localOrden" :foods.sync="foods" :divided_items="divided_items"
+                    @changePage="changePage"></list-food>
             </div>
             <!--  inicio sidebar -->
             <div v-else>
                 <!-- Modo Celular/ Movil -->
                 <div class="d-flex flex-wrap ">
-                    <button
-                        type="button"
-                        class="btn settings-button btn-gradient-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#settings"
-                        id="settingsButton"
-                    >
+                    <button type="button" class="btn settings-button btn-gradient-primary" data-bs-toggle="modal"
+                        data-bs-target="#settings" id="settingsButton">
                         <i class="fas fa-shopping-basket"></i>
                     </button>
-                    <div
-                        class="modal fade modal-right scroll-out-negative"
-                        id="settings"
-                        data-bs-backdrop="true"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="settings"
-                        aria-hidden="true"
-                    >
-                        <div
-                            class="modal-dialog modal-dialog-scrollable full"
-                            role="document"
-                        >
+                    <div class="modal fade modal-right scroll-out-negative" id="settings" data-bs-backdrop="true"
+                        tabindex="-1" role="dialog" aria-labelledby="settings" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable full" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h5
-                                        class="modal-title"
-                                        style="color: var(--light-text) !important;"
-                                    >
+                                    <h5 class="modal-title" style="color: var(--light-text) !important;">
                                         Visualizacion de Productos
                                     </h5>
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                        aria-label="Close"
-                                    ></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
-                                <div
-                                    class="modal-body"
-                                    style="padding-right: 2px;"
-                                >
-                                    <div
-                                        class="scroll-track-visible"
-                                        style="overflow-y: auto;"
-                                    >
+                                <div class="modal-body" style="padding-right: 2px;">
+                                    <div class="scroll-track-visible" style="overflow-y: auto;">
                                         <div class="row ">
                                             <div class="col-12">
                                                 <template>
-                                                    <h2
-                                                        class="font-weight-bold custom-text-size"
-                                                    >
+                                                    <h2 class="font-weight-bold custom-text-size">
                                                         Categorias
                                                     </h2>
-                                                    <el-select
-                                                        v-model="category"
-                                                        filterable
-                                                        clearable
-                                                        placeholder="Selecionar aqui...."
-                                                        @change="
+                                                    <el-select v-model="category" filterable clearable
+                                                        placeholder="Selecionar aqui...." @change="
                                                             searchOrden(
                                                                 category
                                                             )
-                                                        "
-                                                    >
-                                                        <el-option
-                                                            v-for="item in categories"
-                                                            :key="item.id"
-                                                            :label="item.name"
-                                                            :value="item.id"
-                                                        >
+                                                            ">
+                                                        <el-option v-for="item in categories" :key="item.id"
+                                                            :label="item.name" :value="item.id">
                                                         </el-option>
                                                     </el-select>
                                                 </template>
                                             </div>
                                             <div class="col-12 ">
-                                                <h2
-                                                    class="font-weight-bold custom-text-size"
-                                                >
+                                                <h2 class="font-weight-bold custom-text-size">
                                                     Buscar
                                                 </h2>
-                                                <el-input
-                                                    ref="input_item"
-                                                    size="small"
-                                                    v-model="input_item"
-                                                    @input="searchOrden()"
-                                                    @focus="clear_input()"
-                                                    autofocus
-                                                    placeholder="Ingrese Nombre de Producto"
-                                                >
-                                                    <el-button
-                                                        slot="append"
-                                                        icon="el-icon-search"
-                                                        @click="searchOrden()"
-                                                    ></el-button>
+                                                <el-input ref="input_item" size="small" v-model="input_item"
+                                                    @input="searchOrden()" @focus="clear_input()" autofocus
+                                                    placeholder="Ingrese Nombre de Producto">
+                                                    <el-button slot="append" icon="el-icon-search"
+                                                        @click="searchOrden()"></el-button>
                                                 </el-input>
                                             </div>
                                             <div class="row d-flex flex-wrap">
-                                                <div
-                                                    class="col-12  p-1"
-                                                    v-for="(data,
-                                                    index) in foods"
-                                                    :key="index"
-                                                >
-                                                    <div
-                                                        id="card"
-                                                        class="
+                                                <div class="col-12  p-1" v-for="(data,
+                                                    index) in foods" :key="index">
+                                                    <div id="card" class="
                                                                     overflow-hidden
                                                                     coupon
                                                                     rounded
@@ -171,58 +97,34 @@
                                                                     justify-content-between
                                                                     p-1
                                                                     "
-                                                        style="height: 112px; width: 297px ; margin-left: 9px; "
-                                                    >
-                                                        <div
-                                                            @click="
-                                                                addFood(index)
-                                                            "
-                                                        >
+                                                        style="height: 112px; width: 297px ; margin-left: 9px; ">
+                                                        <div @click="
+                                                            addFood(index)
+                                                            ">
                                                             <div>
-                                                                <span
-                                                                    class="lead-font-weight-700 h5"
-                                                                >
+                                                                <span class="lead-font-weight-700 h5">
                                                                     {{
                                                                         data.description.toUpperCase()
                                                                     }}
                                                                 </span>
                                                             </div>
-                                                            <div
-                                                                class="d-flex align-items-end justify-content-between"
-                                                            >
-                                                                <div
-                                                                    class="p-1"
-                                                                >
-                                                                    <div
-                                                                        class="icon-container"
-                                                                    >
-                                                                        <div
-                                                                            class="icon-container_box"
-                                                                        >
-                                                                            <template
-                                                                                v-if="
-                                                                                    data.image ==
-                                                                                        'imagen-no-disponible.jpg'
-                                                                                "
-                                                                            >
-                                                                                <img
-                                                                                    hidden
+                                                            <div class="d-flex align-items-end justify-content-between">
+                                                                <div class="p-1">
+                                                                    <div class="icon-container">
+                                                                        <div class="icon-container_box">
+                                                                            <template v-if="
+                                                                                data.image ==
+                                                                                'imagen-no-disponible.jpg'
+                                                                            ">
+                                                                                <img hidden
                                                                                     src="/images/imagen-no-disponible.jpg"
-                                                                                    alt="User Img"
-                                                                                    class="thumbail"
-                                                                                />
+                                                                                    alt="User Img" class="thumbail" />
                                                                             </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
-                                                                                <img
-                                                                                    :src="
-                                                                                        formatUrlImage(
-                                                                                            data.image
-                                                                                        )
-                                                                                    "
-                                                                                    class="thumbail"
-                                                                                />
+                                                                            <template v-else>
+                                                                                <img :src="formatUrlImage(
+                                                                                    data.image
+                                                                                )
+                                                                                    " class="thumbail" />
                                                                             </template>
                                                                         </div>
                                                                     </div>
@@ -232,56 +134,43 @@
                                                                         data.code
                                                                     }}
                                                                 </div>
-                                                                <div
-                                                                    class="d-flex flex-column align-items-end"
-                                                                >
-                                                                    <div
-                                                                        class="block mb-2"
-                                                                    >
-                                                                        <span
-                                                                            class="time font-weight-light"
-                                                                        >
+                                                                <div class="d-flex flex-column align-items-end">
+                                                                    <div class="block mb-2">
+                                                                        <span class="time font-weight-light">
                                                                             <span
-                                                                                class="text-muted lead-font-weight-700"
-                                                                            >
+                                                                                class="text-muted lead-font-weight-700">
                                                                                 S/
                                                                                 {{
                                                                                     data.price
-                                                                                }}</span
-                                                                            >
+                                                                                }}</span>
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <template
-                                                                            v-if="
+                                                                        <template v-if="
+                                                                            data
+                                                                                .item
+                                                                                .is_set ==
+                                                                            0 && data
+                                                                                .item
+                                                                                .promotions_items == 0 &&
+                                                                            data
+                                                                                .item
+                                                                                .unit_type_id !=
+                                                                            'ZZ' && configuration.show_stock_cash == true
+                                                                        ">
+                                                                            <template v-if="
                                                                                 data
                                                                                     .item
-                                                                                    .is_set ==
-                                                                                    0 &&
-                                                                                    data
-                                                                                        .item
-                                                                                        .unit_type_id !=
-                                                                                        'ZZ' && configuration.show_stock_cash == true
-                                                                            "
-                                                                        >
-                                                                            <template
-                                                                                v-if="
-                                                                                    data
-                                                                                        .item
-                                                                                        .stock >
-                                                                                        0
-                                                                                "
-                                                                            >
+                                                                                    .stock >
+                                                                                0
+                                                                            ">
                                                                                 <span
-                                                                                    class="badge rounded-pill bg-primary m-l-0"
-                                                                                    >Stock
-                                                                                    <template
-                                                                                        v-if="
-                                                                                            data
-                                                                                                .item
-                                                                                                .max_quantity
-                                                                                        "
-                                                                                    >
+                                                                                    class="badge rounded-pill bg-primary m-l-0">Stock
+                                                                                    <template v-if="
+                                                                                        data
+                                                                                            .item
+                                                                                            .max_quantity
+                                                                                    ">
                                                                                         {{
                                                                                             formatedStockPresentation(
                                                                                                 data.item,
@@ -291,9 +180,7 @@
                                                                                             )
                                                                                         }}
                                                                                     </template>
-                                                                                    <template
-                                                                                        v-else
-                                                                                    >
+                                                                                    <template v-else>
                                                                                         {{
                                                                                             parseFloat(
                                                                                                 data
@@ -304,12 +191,9 @@
                                                                                     </template>
                                                                                 </span>
                                                                             </template>
-                                                                            <template
-                                                                                v-else
-                                                                            >
+                                                                            <template v-else>
                                                                                 <span
-                                                                                    class="badge rounded-pill bg-danger m-l-0"
-                                                                                >
+                                                                                    class="badge rounded-pill bg-danger m-l-0">
                                                                                     Agotado
                                                                                 </span>
                                                                             </template>
@@ -318,40 +202,23 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div
-                                                            @click="nthing"
-                                                            v-if="
-                                                                data.types
-                                                                    .length > 0
-                                                            "
-                                                            class="d-flex justify-content-end"
-                                                            style="padding-right: 10px; margin-top: 5px"
-                                                        >
-                                                            <el-dropdown
-                                                                @command="
-                                                                    clickCommand
-                                                                "
-                                                            >
-                                                                <span
-                                                                    class="el-dropdown-link"
-                                                                >
+                                                        <div @click="nthing" v-if="
+                                                            data.types
+                                                                .length > 0
+                                                        " class="d-flex justify-content-end"
+                                                            style="padding-right: 10px; margin-top: 5px">
+                                                            <el-dropdown @command="
+                                                                clickCommand
+                                                            ">
+                                                                <span class="el-dropdown-link">
                                                                     Precios<i
-                                                                        class="el-icon-arrow-down el-icon--right"
-                                                                    ></i>
+                                                                        class="el-icon-arrow-down el-icon--right"></i>
                                                                 </span>
-                                                                <el-dropdown-menu
-                                                                    slot="dropdown"
-                                                                >
-                                                                    <el-dropdown-item
-                                                                        v-for="(type,
-                                                                        idx) in data.types"
-                                                                        :key="
-                                                                            idx
-                                                                        "
-                                                                        :command="
-                                                                            type
-                                                                        "
-                                                                    >
+                                                                <el-dropdown-menu slot="dropdown">
+                                                                    <el-dropdown-item v-for="(type,
+                                                                        idx) in data.types" :key="idx
+                                                                            " :command="type
+                                                                                ">
                                                                         {{
                                                                             formatDescriptionType(
                                                                                 type
@@ -376,37 +243,29 @@
 
             <!-- fin de sidebar -->
             <div class="col-sm-6 col-md-7 col-lg-6 col-xl-4 p-1">
-                <current-orden
-                    :divided_items.sync="divided_items"
-                    :table="table"
-                    ref="ordenRef"
-                    :referencia.sync="currentRef"
-                    :tableId="table.id"
-                    :configuration.sync="configuration"
-                    :localOrden.sync="localOrden"
-                    :ordens.sync="ordensItems"
-                    :ordenSelectedId.sync="ordenSelectedId"
-                    :mozos.sync="mozos"
-                    @updateOrdens="updateOrdens"
-                    @deleteFood="deleteFood"
-                    @ordenDeleted="createOrden"
-                    @listtables="clearTables"
-                    @selectNewOrden="handleSelectOrden"
-                    :cashId="cash_id"
-                    :disableEnviarOrdenes.sync="disableEnviarOrdenes"
-                >
+                <current-orden :divided_items.sync="divided_items" :table="table" ref="ordenRef"
+                    :referencia.sync="currentRef" :tableId="table.id" :configuration.sync="configuration"
+                    :localOrden.sync="localOrden" :ordens.sync="ordensItems" :ordenSelectedId.sync="ordenSelectedId"
+                    :mozos.sync="mozos" @updateOrdens="updateOrdens" @deleteFood="deleteFood"
+                    @ordenDeleted="createOrden" @listtables="clearTables" @selectNewOrden="handleSelectOrden"
+                    :cashId="cash_id" :disableEnviarOrdenes.sync="disableEnviarOrdenes">
                 </current-orden>
             </div>
         </div>
+        <item-promotion :showDialog.sync="showDialogItemPromotion" :selectedFood="selectedFood && selectedFood.item"
+            :selectedItemId="selectedFood && selectedFood.item && selectedFood.item.id"
+            @addPromotionItems="onAddPromotionItems"></item-promotion>
     </div>
 </template>
 <script>
 import ListFood from "./list_food.vue";
 import CurrentOrden from "./current_orden.vue";
+import ItemPromotion from "./item_promotion.vue";
+
 import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";
 import "hooper/dist/hooper.css";
 export default {
-    components: { ListFood, CurrentOrden, Hooper, Slide, HooperNavigation },
+    components: { ListFood, CurrentOrden, Hooper, Slide, HooperNavigation, ItemPromotion },
     props: [
         "pagination",
         "table",
@@ -446,6 +305,8 @@ export default {
     },
     data() {
         return {
+            selectedFood: null,
+            showDialogItemPromotion: false,
             mozos: [],
             divided_items: false,
             allFalse: true,
@@ -570,14 +431,178 @@ export default {
                 this.addFood(idxFood, type);
             }
         },
-        nthing() {},
+        nthing() { },
         formatDescriptionType(type) {
             let price = this.getDefaultPrice(type);
             return `${type.description} (${Number(
                 type.quantity_unit
             )}) - S/ ${price}`;
         },
-        addFood(index = 0, type = null) {
+
+        async onAddPromotionItems(items) {
+            this.showDialogItemPromotion = false;
+
+            if (!Array.isArray(items) || items.length === 0) return;
+
+            const groups = items.reduce((acc, it) => {
+                const pid = it.promotion_id;
+                if (!acc[pid]) acc[pid] = [];
+                acc[pid].push(it);
+                return acc;
+            }, {});
+
+            for (const promotionId of Object.keys(groups)) {
+                // Prefer the current list view's listFoods (child component via ref). Fallback to this.foods.
+                const listFoodsSource = (this.$refs.list_foods && Array.isArray(this.$refs.list_foods.listFoods))
+                    ? this.$refs.list_foods.listFoods
+                    : (Array.isArray(this.foods) ? this.foods : []);
+                const group = groups[promotionId];
+
+                // Construir array detallado de items de la promoción
+                const promoItemsDetailed = [];
+
+                for (const promo of group) {
+                    const promoItemId = promo.promotion_item_id;
+                    const qty = Number(promo.quantity) || 1;
+                    const description = promo.description || promo.descripcion || null;
+
+                    // Buscar el item en listFoods (vista actual) o en foods (fallback)
+                    // Search in the listFoods view first, then fallback to the provided foods array
+                    let found = listFoodsSource.find(
+                        f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                    );
+                    if (!found && Array.isArray(this.foods)) {
+                        found = this.foods.find(
+                            f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                        );
+                    }
+
+                    if (!found) {
+                        console.warn(`onAddPromotionItems: item promocional no encontrado id=${promoItemId}`);
+                        continue;
+                    }
+
+                    // Realizar verificaciones similares a addFood si el item es set/promocion
+                    try {
+                        let foodFound = this.localOrden.filter(f => f.id == (found.item ? found.item.id : found.id));
+                        let existingQty = 0;
+                        if (foodFound.length != 0) {
+                            existingQty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                        }
+
+                        // Validaciones por unidad (si aplica)
+                        let pass = true;
+                        const quotation_stock = (localStorage.getItem("quotation_stock") || 0) == 1;
+
+                        if ((found.item && found.item.is_set == 1) || (found.item && found.item.promotions_items == 1)) {
+                            if (this.configuration.sales_stock == true && !quotation_stock && found.item.unit_type_id != "ZZ") {
+                                if (this.configuration.restaurant) {
+                                    pass = await this.setItemCheckStock(found.item.id, existingQty + qty);
+                                } else {
+                                    pass = await this.setItemPolicy(found.item.id, existingQty + qty);
+                                }
+                            }
+                            if (pass === false) {
+                                console.info(`Promoción: el check para el item ${found.item.id} falló, no se agregará.`);
+                                continue;
+                            }
+                        }
+
+                        // Añadir al detalle de la promoción (clonando para evitar mutaciones)
+                        const cloned = JSON.parse(JSON.stringify(found));
+                        cloned._promo_quantity = qty; // cantidad dentro de la promoción
+                        cloned._promo_description = description;
+                        cloned.promotion = { promotion_id: promotionId, promotion_item_id: promoItemId };
+                        // Asegurar que la estructura que espera el padre esté presente
+                        if (!cloned.item) cloned.item = {};
+                        promoItemsDetailed.push(cloned);
+                    } catch (err) {
+                        console.error("Error procesando item de promoción:", err);
+                        continue;
+                    }
+                }
+
+                if (promoItemsDetailed.length === 0) {
+                    console.warn(`onAddPromotionItems: ningun item valido para la promoción ${promotionId}`);
+                    continue;
+                }
+
+                // Intentar encontrar el item de promoción real (el padre) en foods/listFoods
+                // Find the parent promotion item in the current view or fallback to foods
+                let promotionItem = listFoodsSource.find(
+                    f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                );
+                if (!promotionItem && Array.isArray(this.foods)) {
+                    promotionItem = this.foods.find(
+                        f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                    );
+                }
+
+                let promotionFood;
+                if (promotionItem) {
+                    // Clonar el item real y anexar los promotion_items
+                    promotionFood = JSON.parse(JSON.stringify(promotionItem));
+                    promotionFood.promotion_items = promoItemsDetailed;
+                    // Aseguramos la marca de que es una promoción
+                    promotionFood.item = promotionFood.item || {};
+                    promotionFood.item.promotions_items = 1;
+                } else {
+                    // Si no existe el item de promoción como tal, crear un objeto genérico
+                    promotionFood = {
+                        id: `PROMO-${promotionId}`,
+                        description: `Promoción ${promotionId}`,
+                        price: 0,
+                        promotion_id: promotionId,
+                        promotion_items: promoItemsDetailed,
+                        item: {
+                            lots_group: [],
+                            currency_type_id: null,
+                            lots_enabled: 0,
+                            promotions_items: 1,
+                            unit_type_id: "ZZ",
+                            stock: 0,
+                            is_set: 0,
+                            has_color_size: false,
+                            has_series: false,
+                            item_unit_types: [],
+                            warehouses: [],
+                            lot_code: null,
+                            date_of_due: null,
+                            subject_to_detraction: 0
+                        },
+                        series: []
+                    };
+                }
+
+                const currentFood = {
+                    id: promotionFood.id,
+                    food: promotionFood,
+                    observation: null,
+                    price: promotionFood.price || 0,
+                    quantity: 1
+                };
+
+                // Agregar la promoción directamente a la orden local usando el método local
+                // (antes se emitía hacia el componente padre, lo que no añadía aquí a localOrden)
+                try {
+                    this.insertOrden(currentFood, currentFood.id, null);
+                } catch (e) {
+                    console.error('onAddPromotionItems: error al insertar la promoción localmente', e);
+                    // Fallback: emitir hacia el padre si el método local no existe
+                    this.$emit("insertOrden", currentFood, currentFood.id, null, false, null, []);
+                }
+
+                this.$notify({
+                    title: promotionFood.description || `Promoción ${promotionId}`,
+                    duration: 1000,
+                    iconClass: "el-icon-star-on",
+                    message: "Promoción agregada con sus items",
+                    position: "bottom-left"
+                });
+            }
+        },
+
+        async addFood(index = 0, type = null) {
             if (!Array.isArray(this.foods)) {
                 console.error("foods is not an array");
                 return;
@@ -606,11 +631,41 @@ export default {
                 ) {
                     // Allow unlimited quantity
                 } else if (this.configuration.sales_stock === true) {
-                    // Validate stock for other items
-                    let stock = Number(this.selectedFood.item.stock);
-                    if (qty > stock) {
-                        this.$toast.warning("Limite de stock alcanzado");
+
+
+                    if (this.selectedFood.item.promotions_items == 1) {
+                        if (this.configuration.sales_stock == true &&
+                            this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                this.$nextTick(() => {
+                                    this.showDialogItemPromotion = true;
+                                });
+                                return;
+                            }
+                        }
+                    } else if (this.selectedFood.item.is_set == 1) {
+                        if (this.configuration.sales_stock == true &&
+                            this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                pass = await this.setItemCheckStock(
+                                    this.selectedFood.item.id,
+                                    qty
+                                );
+                            } else {
+                                pass = await this.setItemPolicy(
+                                    this.selectedFood.item.id,
+                                    qty
+                                );
+                            }
+                            return;
+                        }
                         return;
+                    } else {
+                        let stock = Number(this.selectedFood.item.stock);
+                        if (qty > stock) {
+                            this.$toast.warning("Límite de stock alcanzado");
+                            return;
+                        }
                     }
                 }
             }
@@ -649,6 +704,47 @@ export default {
             });
             this.$emit("update:foods", f);
             this.allFalse = true;
+        },
+
+        async setItemCheckStock(id, quantity) {
+            let pass = true;
+            const response = await this.$http.get(
+                `/receta/check/${id}/${quantity}`
+            );
+            if (response.status == 200) {
+                const { success, message } = response.data;
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+            return pass;
+        },
+
+        async setItemPolicy(id, quantity) {
+            let pass = true;
+            const response = await this.$http.get(
+                `/item-sets/check/${id}/${quantity}`
+            );
+
+            if (response.status === 200) {
+                const { success, message, components } = response.data;
+
+                // ✅ Validar si components tiene algo
+                if (components && components.length > 0) {
+                    this.showDialogItemSet = true;
+                    this.itemSetComponents = components;
+                } else {
+                    this.showDialogItemSet = false;
+                }
+
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+
+            return pass;
         },
 
         searchOrden(item) {
@@ -817,11 +913,13 @@ export default {
     width: 5px;
     height: 5px;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: var(--primary);
     border-radius: 5px;
     cursor: move;
 }
+
 .custom-text-size {
     font-size: 0.8em;
 }

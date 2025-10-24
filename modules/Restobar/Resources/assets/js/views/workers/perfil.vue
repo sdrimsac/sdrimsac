@@ -57,7 +57,7 @@
                                 class="avatar-uploader"
                                 :data="{ type: 'workers' }"
                                 :headers="headers"
-                                :action="`/caja/${resource}/uploads`"
+                                :action="`/restobar/${resource}/uploads`"
                                 :show-file-list="false"
                                 :on-success="onSuccess"
                             >

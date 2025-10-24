@@ -266,6 +266,8 @@ export default {
                     }
                 } else if (response.data.waiter == true) {
                     route = "caja/worker/dashboard";
+                } else if (response.data.restaurant_waiter == true) {
+                    route = "restobar/worker/dashboard";
                 } else if (response.data.collector == true) {
                     route = "toll";
                 } else if (response.data.logistic == true) {

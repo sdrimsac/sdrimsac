@@ -107,7 +107,7 @@ export default {
                         let parameters = `input=${input}`;
                         this.loading_search_item = true;
                         const response = await this.$http.get(
-                            `/caja/estilista/get-individual-services?${parameters}`
+                            `/restobar/estilista/get-individual-services?${parameters}`
                         );
 
                         this.items = response.data.items;
@@ -122,7 +122,7 @@ export default {
         async getUserItems() {
             this.loading_user_items = true;
             const response = await this.$http.get(
-                `/caja/estilista/get-user-items/${this.userId}`
+                `/restobar/estilista/get-user-items/${this.userId}`
             );
             this.itemsSelected = response.data;
             console.log(this.itemsSelected, 'itemsSelected');

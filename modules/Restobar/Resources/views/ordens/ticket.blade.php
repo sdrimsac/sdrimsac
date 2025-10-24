@@ -535,7 +535,7 @@
                                 {{-- <td class="encabezado text-center header_title2"
                                     style="font-size: 24px !important; font-weight: bold;">
                                     @if ($show_unit_ticket && isset($row->qty_unit))
-                                        {{ $row->quantity, 2 }}
+                                        {{ number_format($row->quantity, 2) }}
                                     @else
                                         {{ $row->quantity }}
                                     @endif
@@ -567,11 +567,29 @@
                                             {{ e(trim($observation)) }}
                                             
                                         @endforeach
-                                    @else --}}
+                                        @else --}}
                                             Obs: {{ e($row->observations) }}
                                             {{-- @endif --}}
                                         </strong>
                                     @endif
+                                    contiene:
+                                    @php
+                                        // Soporta tanto string JSON como array/colección
+                                        $details = $row->order_item_details;
+                                        if (is_string($details)) {
+                                            $details = json_decode($details, true);
+                                        }
+                                    @endphp
+                                    @if (!empty($details))
+                                        <br>
+                                        <small>
+                                            @foreach ($details as $detail)
+                                                {{-- quantity y description pueden venir como array o como objeto --}}
+                                                - {{ data_get($detail, 'quantity') }} x {{ e(data_get($detail, 'description')) }}<br>
+                                            @endforeach
+                                        </small>
+                                    @endif
+                                    
 
                                 </td>
                                 <td class="celda_center description_preparacion">
@@ -638,6 +656,7 @@
                                                 <strong>
                                                     Obs: {{ e(trim($observation)) }}
                                                 </strong>
+                                                
                                             </td>
                                         </tr>
                                     @endforeach
@@ -669,6 +688,24 @@
                                                     @endif
                                                 </strong>
                                             @endif
+                                            <br>
+                                            contiene:
+                                    @php
+                                        // Soporta tanto string JSON como array/colección
+                                        $details = $row->order_item_details;
+                                        if (is_string($details)) {
+                                            $details = json_decode($details, true);
+                                        }
+                                    @endphp
+                                    @if (!empty($details))
+                                        <br>
+                                        <small>
+                                            @foreach ($details as $detail)
+                                                {{-- quantity y description pueden venir como array o como objeto --}}
+                                                - {{ data_get($detail, 'quantity') }} x {{ e(data_get($detail, 'description')) }}<br>
+                                            @endforeach
+                                        </small>
+                                    @endif
                                         </td>
                                     </tr>
                                 @endif
@@ -853,7 +890,7 @@
                             <td class="text-center header_title2"
                                 style="font-size: 22px !important; font-weight: bold;">
                                 @if ($show_unit_ticket && isset($row->qty_unit))
-                                    {{ $row->quantity, 2 }}
+                                    {{ number_format($row->quantity, 2) }}
                                 @else
                                     {{ $row->quantity }}
                                 @endif

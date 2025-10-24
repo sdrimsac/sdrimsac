@@ -10,49 +10,33 @@
             <template v-else>
                 <div class="d-flex flex-wrap">
                     <!-- copiar desde aqui -->
-                    <div
-                        class="col-12 col-lg-6  col-xl-6 col-xxl-4 p-1"
-                        v-for="(data, index) in listFoods"
-                        :key="index"
-                    >
+                    <div class="col-12 col-lg-6  col-xl-6 col-xxl-4 p-1" v-for="(data, index) in listFoods"
+                        :key="index">
                         <!--  -->
-                        <div
-                            id="card"
-                            class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white"
-                        >
+                        <div id="card"
+                            class="overflow-hidden coupon rounded  d-flex flex-column  justify-content-between p-1 bg-white">
                             <div @click="addFood(index)">
                                 <div>
                                     <span class="lead-font-weight-700 h5">
                                         {{ data.description.toUpperCase() }}
                                     </span>
                                 </div>
-                                <div
-                                    class="d-flex align-items-end justify-content-between"
-                                >
+                                <div class="d-flex align-items-end justify-content-between">
                                     <div class="p-1">
                                         <div class="icon-container ">
                                             <div class="icon-container_box">
-                                                <template
-                                                    v-if="
-                                                        data.image ==
-                                                            'imagen-no-disponible.jpg'
-                                                    "
-                                                >
-                                                    <img
-                                                        src="/images/imagen-no-disponible.jpg"
-                                                        alt="User Img"
-                                                        class="thumbail"
-                                                    />
+                                                <template v-if="
+                                                    data.image ==
+                                                    'imagen-no-disponible.jpg'
+                                                ">
+                                                    <img src="/images/imagen-no-disponible.jpg" alt="User Img"
+                                                        class="thumbail" />
                                                 </template>
                                                 <template v-else>
-                                                    <img
-                                                        :src="
-                                                            formatUrlImage(
-                                                                data.image
-                                                            )
-                                                        "
-                                                        class=" thumbail"
-                                                    />
+                                                    <img :src="formatUrlImage(
+                                                        data.image
+                                                    )
+                                                        " class=" thumbail" />
                                                 </template>
                                             </div>
                                         </div>
@@ -60,63 +44,42 @@
                                     <div>
                                         {{ data.code }}
                                     </div>
-                                    <div
-                                        class="d-flex flex-column align-items-end"
-                                    >
-                                        <div
-                                            class="text-uppercase font-weight-light h5"
-                                        >
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div class="text-uppercase font-weight-light h5">
                                             {{ data.category.name }}
                                         </div>
                                         <div class="block mb-2">
-                                            <span
-                                                class="time font-weight-light"
-                                            >
-                                                <span
-                                                    class="text-muted lead-font-weight-700"
-                                                >
+                                            <span class="time font-weight-light">
+                                                <span class="text-muted lead-font-weight-700">
                                                     {{ data.currency }}
-                                                    {{ data.price }}</span
-                                                >
+                                                    {{ data.price }}</span>
                                             </span>
                                         </div>
-                                        <div
-                                            v-if="
-                                                data.item.lots_enabled == 1 &&
-                                                    data.item.date_of_due
-                                            "
-                                        >
-                                            <el-tag
-                                                :type="
-                                                    `${
-                                                        isExpired(
-                                                            data.item
-                                                                .date_of_due
-                                                        )
-                                                            ? 'danger'
-                                                            : 'success'
-                                                    }`
-                                                "
-                                            >
+                                        <div v-if="
+                                            data.item.lots_enabled == 1 &&
+                                            data.item.date_of_due
+                                        ">
+                                            <el-tag :type="`${isExpired(
+                                                data.item
+                                                    .date_of_due
+                                            )
+                                                ? 'danger'
+                                                : 'success'
+                                                }`
+                                                ">
                                                 Fecha de vencimiento:
                                                 {{ data.item.date_of_due }}
                                             </el-tag>
                                         </div>
                                         <div>
-                                            <template
-                                                v-if="
-                                                    data.item.is_set == 0 &&
-                                                        data.item
-                                                            .unit_type_id !=
-                                                            'ZZ' && configuration.show_stock_cash == true
-                                                "
-                                            >
-                                                <template
-                                                    v-if="data.item.stock > 0"
-                                                >
-                                                    <span
-                                                        class="badge rounded-pill bg-primary m-l-0"
-                                                        >Stock
+                                            <template v-if="
+                                                data.item.is_set == 0 && data.item.promotions_items == 0 &&
+                                                data.item
+                                                    .unit_type_id !=
+                                                'ZZ' && configuration.show_stock_cash == true
+                                            ">
+                                                <template v-if="data.item.stock > 0">
+                                                    <span class="badge rounded-pill bg-primary m-l-0">Stock
                                                         {{
                                                             parseFloat(
                                                                 data.item.stock
@@ -125,9 +88,7 @@
                                                     </span>
                                                 </template>
                                                 <template v-else>
-                                                    <span
-                                                        class="badge rounded-pill bg-danger m-l-0"
-                                                    >
+                                                    <span class="badge rounded-pill bg-danger m-l-0">
                                                         Agotado
                                                     </span>
                                                 </template>
@@ -136,23 +97,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                v-if="data.types && data.types.length > 0"
-                                class="d-flex justify-content-end"
-                                style="padding-right:5px;margin-top:5px;"
-                            >
+                            <div v-if="data.types && data.types.length > 0" class="d-flex justify-content-end"
+                                style="padding-right:5px;margin-top:5px;">
                                 <el-dropdown @command="clickCommand">
                                     <span class="el-dropdown-link">
-                                        Precios<i
-                                            class="el-icon-arrow-down el-icon--right"
-                                        ></i>
+                                        Precios<i class="el-icon-arrow-down el-icon--right"></i>
                                     </span>
                                     <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item
-                                            v-for="(type, idx) in data.types"
-                                            :key="idx"
-                                            :command="type"
-                                        >
+                                        <el-dropdown-item v-for="(type, idx) in data.types" :key="idx" :command="type">
                                             {{ formatDescriptionType(type) }}
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
@@ -165,24 +117,21 @@
                 </div>
             </template>
         </div>
+        <item-promotion :showDialog.sync="showDialogItemPromotion" 
+        :selectedFood="selectedFood && selectedFood.item" :selectedItemId="selectedFood && selectedFood.item && selectedFood.item.id"
+        @addPromotionItems="onAddPromotionItems"
+        ></item-promotion>
 
-        <view-image
-            :image="currentImage"
-            :showDialog.sync="showImage"
-        ></view-image>
-        <el-pagination
-            @current-change="getRecords"
-            layout="total, prev, pager, next"
-            :total="pagination.total"
-            :current-page.sync="pagination.current_page"
-            :page-size="Number(pagination.per_page)"
-        >
+        <view-image :image="currentImage" :showDialog.sync="showImage"></view-image>
+        <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
+            :current-page.sync="pagination.current_page" :page-size="Number(pagination.per_page)">
         </el-pagination>
     </div>
 </template>
 
 <script>
 import ViewImage from "./image.vue";
+import ItemPromotion from "./item_promotion.vue";
 export default {
     props: [
         "table",
@@ -192,13 +141,15 @@ export default {
         "categories",
         "foods",
         "configuration",
-        "divided_items"  // Add this prop to receive divided_items setting
+        "divided_items" 
     ],
     components: {
-        ViewImage
+        ViewImage,
+        ItemPromotion
     },
     data() {
         return {
+            showDialogItemPromotion: false,
             input_item: "",
             category: null,
             screenWidth: 0,
@@ -310,21 +261,21 @@ export default {
         }
         this.listFoods = Array.isArray(this.foods)
             ? this.foods.map(f => ({
-                  ...f,
-                  price: f.price ? Number(f.price) : 0,
-                  select: false
-              }))
+                ...f,
+                price: f.price ? Number(f.price) : 0,
+                select: false
+            }))
             : [];
         this.title = `Mesa N°${this.table.number}`;
         this.$root.$on("productoRecibido", this.agregarProducto);
     },
     watch: {
         foods(newFoods, _) {
-            this.listFoods = Array.isArray(newFoods) 
+            this.listFoods = Array.isArray(newFoods)
                 ? newFoods.map(f => ({
                     ...f,
                     price: f.price ? Number(f.price) : 0
-                })) 
+                }))
                 : [];
         },
         listFoods(newVal) {
@@ -338,6 +289,157 @@ export default {
         window.addEventListener("resize", this.handleResize);
     },
     methods: {
+
+        async onAddPromotionItems(items) {
+            this.showDialogItemPromotion = false;
+
+            if (!Array.isArray(items) || items.length === 0) return;
+
+            const groups = items.reduce((acc, it) => {
+                const pid = it.promotion_id;
+                if (!acc[pid]) acc[pid] = [];
+                acc[pid].push(it);
+                return acc;
+            }, {});
+
+            for (const promotionId of Object.keys(groups)) {
+                const group = groups[promotionId];
+
+                // Construir array detallado de items de la promoción
+                const promoItemsDetailed = [];
+
+                for (const promo of group) {
+                    const promoItemId = promo.promotion_item_id;
+                    const qty = Number(promo.quantity) || 1;
+                    const description = promo.description || promo.descripcion || null;
+
+                    // Buscar el item en listFoods (vista actual) o en foods (fallback)
+                    let found = this.listFoods.find(
+                        f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                    );
+                    if (!found) {
+                        found = this.foods.find(
+                            f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
+                        );
+                    }
+
+                    if (!found) {
+                        console.warn(`onAddPromotionItems: item promocional no encontrado id=${promoItemId}`);
+                        continue;
+                    }
+
+                    // Realizar verificaciones similares a addFood si el item es set/promocion
+                    try {
+                        let foodFound = this.localOrden.filter(f => f.id == (found.item ? found.item.id : found.id));
+                        let existingQty = 0;
+                        if (foodFound.length != 0) {
+                            existingQty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                        }
+
+                        // Validaciones por unidad (si aplica)
+                        let pass = true;
+                        const quotation_stock = (localStorage.getItem("quotation_stock") || 0) == 1;
+
+                        if ((found.item && found.item.is_set == 1) || (found.item && found.item.promotions_items == 1)) {
+                            if (this.configuration.sales_stock == true && !quotation_stock && found.item.unit_type_id != "ZZ") {
+                                if (this.configuration.restaurant) {
+                                    pass = await this.setItemCheckStock(found.item.id, existingQty + qty);
+                                } else {
+                                    pass = await this.setItemPolicy(found.item.id, existingQty + qty);
+                                }
+                            }
+                            if (pass === false) {
+                                console.info(`Promoción: el check para el item ${found.item.id} falló, no se agregará.`);
+                                continue;
+                            }
+                        }
+
+                        // Añadir al detalle de la promoción (clonando para evitar mutaciones)
+                        const cloned = JSON.parse(JSON.stringify(found));
+                        cloned._promo_quantity = qty; // cantidad dentro de la promoción
+                        cloned._promo_description = description;
+                        cloned.promotion = { promotion_id: promotionId, promotion_item_id: promoItemId };
+                        // Asegurar que la estructura que espera el padre esté presente
+                        if (!cloned.item) cloned.item = {};
+                        promoItemsDetailed.push(cloned);
+                    } catch (err) {
+                        console.error("Error procesando item de promoción:", err);
+                        continue;
+                    }
+                }
+
+                if (promoItemsDetailed.length === 0) {
+                    console.warn(`onAddPromotionItems: ningun item valido para la promoción ${promotionId}`);
+                    continue;
+                }
+
+                // Intentar encontrar el item de promoción real (el padre) en foods/listFoods
+                let promotionItem = this.listFoods.find(
+                    f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                );
+                if (!promotionItem) {
+                    promotionItem = this.foods.find(
+                        f => (f.item && f.item.id == promotionId) || f.id == promotionId
+                    );
+                }
+
+                let promotionFood;
+                if (promotionItem) {
+                    // Clonar el item real y anexar los promotion_items
+                    promotionFood = JSON.parse(JSON.stringify(promotionItem));
+                    promotionFood.promotion_items = promoItemsDetailed;
+                    // Aseguramos la marca de que es una promoción
+                    promotionFood.item = promotionFood.item || {};
+                    promotionFood.item.promotions_items = 1;
+                } else {
+                    // Si no existe el item de promoción como tal, crear un objeto genérico
+                    promotionFood = {
+                        id: `PROMO-${promotionId}`,
+                        description: `Promoción ${promotionId}`,
+                        price: 0,
+                        promotion_id: promotionId,
+                        promotion_items: promoItemsDetailed,
+                        item: {
+                            lots_group: [],
+                            currency_type_id: null,
+                            lots_enabled: 0,
+                            promotions_items: 1,
+                            unit_type_id: "ZZ",
+                            stock: 0,
+                            is_set: 0,
+                            has_color_size: false,
+                            has_series: false,
+                            item_unit_types: [],
+                            warehouses: [],
+                            lot_code: null,
+                            date_of_due: null,
+                            subject_to_detraction: 0
+                        },
+                        series: []
+                    };
+                }
+
+                const currentFood = {
+                    id: promotionFood.id,
+                    food: promotionFood,
+                    observation: null,
+                    price: promotionFood.price || 0,
+                    quantity: 1
+                };
+
+                // Emitir la promoción con sus componentes. El padre debe interpretar 'food.promotion_items'
+                this.$emit("insertOrden", currentFood, currentFood.id, null, false, null, []);
+
+                this.$notify({
+                    title: promotionFood.description || `Promoción ${promotionId}`,
+                    duration: 1000,
+                    iconClass: "el-icon-star-on",
+                    message: "Promoción agregada con sus items",
+                    position: "bottom-left"
+                });
+            }
+        },
+
         isExpired(date) {
             let today = new Date();
             let dateOfDue = new Date(date);
@@ -404,7 +506,49 @@ export default {
                 });
             }
         },
-        addFood(index = 0, type = null) {
+
+        async setItemCheckStock(id, quantity) {
+            let pass = true;
+            const response = await this.$http.get(
+                `/receta/check/${id}/${quantity}`
+            );
+            if (response.status == 200) {
+                const { success, message } = response.data;
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+            return pass;
+        },
+
+        async setItemPolicy(id, quantity) {
+            let pass = true;
+            const response = await this.$http.get(
+                `/item-sets/check/${id}/${quantity}`
+            );
+
+            if (response.status === 200) {
+                const { success, message, components } = response.data;
+
+                // ✅ Validar si components tiene algo
+                if (components && components.length > 0) {
+                    this.showDialogItemSet = true;
+                    this.itemSetComponents = components;
+                } else {
+                    this.showDialogItemSet = false;
+                }
+
+                if (!success) {
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+
+            return pass;
+        },
+
+        async addFood(index = 0, type = null) {
             if (!Array.isArray(this.listFoods)) {
                 console.error("listFoods is not an array");
                 return;
@@ -433,22 +577,52 @@ export default {
                 internalId?.startsWith("PACK000") ||
                 internalId?.startsWith("PLAT000");
             let isService = unidadMedida === "ZZ";
+            let pass = true;
 
             // Skip stock validation if divided_items is true or it's a special product type
             if (!this.divided_items && !isService && !isPackOrRecipe) {
                 let foodFound = this.localOrden.filter(
                     f => f.id == this.selectedFood.id
                 );
-                let qty = foodFound.length 
-                    ? foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1 
+                let qty = foodFound.length
+                    ? foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1
                     : 1;
 
                 // Validate stock only for regular products
                 if (this.configuration.sales_stock === true) {
-                    let stock = Number(this.selectedFood.item.stock);
-                    if (qty > stock) {
-                        this.$toast.warning("Límite de stock alcanzado");
+                    if (this.selectedFood.item.promotions_items == 1) {
+                        if (this.configuration.sales_stock == true &&
+                            this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                this.$nextTick(() => {
+                                    this.showDialogItemPromotion = true;
+                                });
+                                return;
+                            }
+                        }
+                    } else if (this.selectedFood.item.is_set == 1) {
+                        if (this.configuration.sales_stock == true &&
+                            this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                pass = await this.setItemCheckStock(
+                                    this.selectedFood.item.id,
+                                    qty
+                                );
+                            } else {
+                                pass = await this.setItemPolicy(
+                                    this.selectedFood.item.id,
+                                    qty
+                                );
+                            }
+                            return;
+                        }
                         return;
+                    } else {
+                        let stock = Number(this.selectedFood.item.stock);
+                        if (qty > stock) {
+                            this.$toast.warning("Límite de stock alcanzado");
+                            return;
+                        }
                     }
                 }
             }
@@ -465,7 +639,7 @@ export default {
                 quantity: 1,
                 will_be_divided: this.divided_items
             };
-            
+
             this.orden.push(this.currentFood);
             this.$emit(
                 "insertOrden",
@@ -473,7 +647,7 @@ export default {
                 this.selectedFood.id,
                 type
             );
-            
+
             this.$notify({
                 title: this.selectedFood.description.toLowerCase(),
                 iconClass: "el-icon-food",
