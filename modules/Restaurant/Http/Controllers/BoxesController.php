@@ -3596,7 +3596,7 @@ class BoxesController extends Controller
                 }
             } */
 
-            if ($ringreso["sale_note_id"]) {
+            /* if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
                 $coins = $this->get_to_carry($sale_note);
 
@@ -3615,16 +3615,6 @@ class BoxesController extends Controller
                     }
                 } else {
                     // 💵 Venta registrada en caja (sin sale_note_payment_id)
-
-                    // 🔹 Verificar si es venta al contado o a crédito
-                    /* if ($sale_note->credit_cash == 0) {
-                        $box = Box::where('sale_note_id', $sale_note->id)
-                            ->where('cash_id', $cash_id)
-                            ->where('id', $ringreso["id"])
-                            ->first();
-                        $sales_cash_sum += $box ? $box->amount : 0;
-                        Log::info("Venta al contado detectada. Suma directa total: {$sales_cash_sum}");
-                    } */
                     if ($sale_note->credit_cash == 0) {
                         // 🔍 Buscar solo los pagos en efectivo de esta nota
                         $cash_boxes = Box::where('sale_note_id', $sale_note->id)
@@ -3642,20 +3632,34 @@ class BoxesController extends Controller
 
                         $to_sum = $ringreso["amount"];
 
-                        // Suma de otras cajas (solo caja actual)
+                        // Suma de otras cajas (excluyendo este registro) dentro de la misma caja (cash_id)
+                        // Esto evita doble conteo cuando el mismo Box aparece en la suma
                         $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
                             ->where('cash_id', $cash_id)
+                            ->where('id', '<>', $ringreso["id"]) // exclude current box
                             ->sum('amount');
 
-                        Log::info("Valor other_boxes_sum", [$other_boxes_sum]);
+                        // For safety cast sums to float (they can be strings like "10.00")
+                        $other_boxes_sum = floatval($other_boxes_sum);
 
-                        // Suma de pagos sobre crédito
-                        $paid_credit = SaleNotePayment::where('sale_note_id', $sale_note->id)
-                            ->where('extorned', 0)
-                            ->sum('payment');
+                        Log::info("Valor other_boxes_sum (excluyendo actual)", [$other_boxes_sum]);
+
+                        // Suma de pagos sobre crédito (pagos registrados como SaleNotePayment)
+                        $paid_credit_query  = SaleNotePayment::where('sale_note_id', $sale_note->id)
+                            ->where('extorned', 0);
+
+                        if ($ringreso["sale_note_payment_id"]) {
+                            $paid_credit_query->where('id', '<>', $ringreso["sale_note_payment_id"]);
+                        }
+                        $paid_credit = floatval($paid_credit_query->sum('payment'));
+
+                        Log::info("Valor paid_credit ver que dato pasa", [$paid_credit]);
 
                         // Lo que realmente queda por pagar en efectivo para este ringreso
-                        $remaining_to_pay = max(0, $sale_note->total - ($other_boxes_sum + $paid_credit));
+                        //$remaining_to_pay = max(0.0, floatval($sale_note->total) - ($other_boxes_sum + $paid_credit));
+
+                        $remaining_to_pay = max(0.0, floatval($sale_note->total) - ($other_boxes_sum + $paid_credit));
+                        $to_sum = min($to_sum, $remaining_to_pay);
 
                         // El to_sum real es lo mínimo entre el monto de este ringreso y lo que queda
                         $to_sum = min($to_sum, $remaining_to_pay);
@@ -3666,6 +3670,66 @@ class BoxesController extends Controller
                     }
                 }
 
+                if ($sale_note->total_discount) {
+                    $total_discount += $sale_note->total_discount;
+                }
+            } */
+
+            if ($ringreso["sale_note_id"]) {
+                $sale_note = SaleNote::find($ringreso["sale_note_id"]);
+                $coins = $this->get_to_carry($sale_note);
+
+                if ($coins) {
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
+
+                // 🔍 Detectar monto actual
+                $to_sum = floatval($ringreso["amount"]);
+
+                // 🔹 Calcular ventas al contado
+                if ($sale_note->credit_cash == 0) {
+                    $cash_boxes = Box::where('sale_note_id', $sale_note->id)
+                        ->where('cash_id', $cash_id)
+                        ->where('method', 'Efectivo')
+                        ->get();
+
+                    $sum_cash = floatval($cash_boxes->sum('amount'));
+                    $sales_cash_sum += $sum_cash;
+                    Log::info("Venta al contado detectada. Total efectivo sumado: {$sum_cash}");
+                } else {
+                    // 🟠 Venta a crédito o pago parcial sobre crédito
+                    $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
+                        ->where('cash_id', $cash_id)
+                        ->whereNull('sale_note_payment_id')
+                        ->where('id', '<>', $ringreso["id"])
+                        ->sum('amount');
+
+                    $other_boxes_sum = floatval($other_boxes_sum);
+                    Log::info("Valor other_boxes_sum (excluyendo actual)", [$other_boxes_sum]);
+
+                    /* $paid_credit_query = SaleNotePayment::where('sale_note_id', $sale_note->id)
+                        ->where('extorned', 0); */
+                    $paid_credit = SaleNotePayment::where('sale_note_id', $sale_note->id)
+                        ->where('extorned', 0)
+                        ->sum('payment');
+
+                    /* $paid_credit = floatval($paid_credit_query->sum('payment')); */
+                    Log::info("Valor paid_credit (excluyendo actual)", [$paid_credit]);
+
+                    // Calcular lo que queda por pagar
+                    $remaining_to_pay = max(0.0, floatval($sale_note->total) - ($other_boxes_sum + $paid_credit));
+                    Log::info("Valor remaining_to_pay antes de ajustar", [$remaining_to_pay]);
+
+                    // El valor real a sumar es lo menor entre el monto actual y lo que queda por pagar
+                    $to_sum = min($to_sum, $remaining_to_pay);
+                    Log::info("Venta a crédito/pago parcial. Valor ajustado to_sum final", [$to_sum]);
+
+                    $sales_cash_sum += $to_sum;
+                }
+
+                // Descuento si aplica
                 if ($sale_note->total_discount) {
                     $total_discount += $sale_note->total_discount;
                 }
@@ -4172,7 +4236,6 @@ class BoxesController extends Controller
             $detraction_payments = $this->get_detraction_payments($cash_id);
         }
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
-        Log::info('Documentos de crédito en notas de venta a crédito:', $all_credit_items);
         $bill_series = $this->format_bill_series($cash->bill_series);
         $is_usd = false;
 
