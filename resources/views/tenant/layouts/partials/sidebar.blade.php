@@ -773,6 +773,13 @@
                     </a>
                 </li>
             @endif
+            <li>
+                <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                    href="{{ route('tenant.staff.index') }}">
+                    <i class="icofont-users-social" style="font-size: 1.5em;  margin-right: 10px;"></i>
+                    <span class="label" style="font-size: 1em; ">Tratamiento Personal</span>
+                </a>
+            </li>
     </ul>
     </li>
     @endif
@@ -1016,7 +1023,7 @@
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                                 href="{{ route('tenant.credit_list.index') }}">
                                 <i class="icofont-list" style="font-size: 1.5em;  margin-right: 10px;"></i>
-                                <span class="label" style="font-size: 1em; ">Lista de crédito</span>
+                                <span class="label" style="font-size: 1em; ">Lista de crédito Acuenta</span>
                             </a>
                         </li>
                     @endif
@@ -1229,7 +1236,7 @@
     @endif
 
     {{-- Restaurant --}}
-    @if ($config->restaurant || $config->restobar_home && !$roleService->isAccountant($user->worker_type_id))
+    @if ($config->restaurant || ($config->restobar_home && !$roleService->isAccountant($user->worker_type_id)))
 
         <li>
             <a href="#restaurantUl" data-bs-toggle="collapse" data-role="button"
@@ -1241,7 +1248,7 @@
             </a>
 
             <ul id="restaurantUl" class="collapse">
-                @if ($config->restaurant || $config->restobar_home && !$roleService->isLogistic())
+                @if ($config->restaurant || ($config->restobar_home && !$roleService->isLogistic()))
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
                             href="{{ route('restaurant.tables') }}">
@@ -1285,7 +1292,7 @@
                         <span style="font-size: 1em; ">Promociones</span>
                     </a>
                 </li>
-                @if ($config->restaurant || $config->restobar_home && !$roleService->isLogistic())
+                @if ($config->restaurant || ($config->restobar_home && !$roleService->isLogistic()))
                     <li>
                         <a class="{{ $path[0] === 'mozo' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.mozo.index') }}">

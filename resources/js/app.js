@@ -1090,6 +1090,8 @@ const app = new Vue({
             import("./views/commercial_treatment/index.vue"),
         "tenant-credit-list-index": () =>
             import("./views/credit_list/index.vue"),
+        "tenant-staff-index": () =>
+            import("./views/staff/index.vue"),
         "worker-cleaner": () =>
             import(
                 "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue"

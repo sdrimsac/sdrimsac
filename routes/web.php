@@ -21,6 +21,7 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
 use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Http\Controllers\Tenant\SellerController;
+use App\Http\Controllers\Tenant\StaffController;
 use App\Http\Controllers\Tenant\WarrantyController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -186,6 +187,20 @@ if ($hostname) {
                     Route::post('/records_by_person_total', [CreditListController::class, 'recordByPersonTotal']);
                     Route::post('/records_by_person_to_pay', [CreditListController::class, 'recordByPersonToPay']);
                     Route::get('/get-ordens/{customer_id}', [CreditListController::class, 'get_ordens']);
+                });
+
+                Route::prefix('staff')->group(function () {
+                    Route::get('/', [StaffController::class, 'staff_report_index'])->name('tenant.staff.index');
+                    Route::get('/tables', [StaffController::class, 'tables']);
+                    Route::post('/send-credit', [StaffController::class, 'send_credit']);
+
+                    Route::get('/balance/{customer_id}', [StaffController::class, 'get_balance']);
+                    Route::get('/records', [StaffController::class, 'records']);
+                    Route::get('/records_by_person/download', [StaffController::class, 'download']);
+                    Route::post('/records_by_person', [StaffController::class, 'recordByPerson']);
+                    Route::post('/records_by_person_total', [StaffController::class, 'recordByPersonTotal']);
+                    Route::post('/records_by_person_to_pay', [StaffController::class, 'recordByPersonToPay']);
+                    Route::get('/get-ordens/{customer_id}', [StaffController::class, 'get_ordens']);
                 });
                 Route::prefix('/sellers')->group(function () {
                     //

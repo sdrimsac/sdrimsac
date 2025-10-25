@@ -3,7 +3,7 @@
     <div style="position: relative" v-loading.fullscreen="loading" element-loading-text="Espere...">
         <!-- Hora y Fecha del sistema -->
         <div class="row" style="margin-top: 10px;">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-4" v-if="limitAmount">
                     <div :class="[
                         `alert alert-${limitAmount.color}`,
@@ -19,7 +19,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div v-if="screenWidth > 678" class="d-flex flex-row justify-content-start card mb-2">
                 <div class="col-7 col-sm-5 col-lg-6 col-md-5 col-xl-7 col-xxl-7">
