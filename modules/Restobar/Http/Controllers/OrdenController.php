@@ -1414,31 +1414,12 @@ class OrdenController extends Controller
                 ];
             });
 
-            /* $promotion_items = collect($items)->filter(function ($item) use ($orden_items) {
-                return ¨[
-                    'food_id' => $item['food']['id'],
-                    'orden_item_id' => $orden_item->id,
-                    'description' => $item['food']['description'],
-                    'quantity' => $item['quantity'],
-                ];
-            }); */
-
-            // NOTE: $orden_items is a Collection built from the request items. Accessing
-            // $orden_items->promotions_items is invalid (property does not exist on Collection).
-            // Promotion details must be created for each created OrdenItem after we have
-            // the real OrdenItem IDs (after insert). The code that creates the promotion
-            // details will run after the DB insert/commit below.
-
-
-
-            // Inserción masiva y obtención de IDs
             DB::beginTransaction();
             try {
                 $food_ids = $orden_items->pluck('food_id')->toArray();
 
                 OrdenItem::insert($orden_items->toArray());
 
-                // Obtener solo los items recién creados usando los food_ids
                 $created_items = OrdenItem::where('orden_id', $orden->id)
                     ->whereIn('food_id', $food_ids)
                     ->select('id', 'food_id', 'area_id')
@@ -1452,10 +1433,8 @@ class OrdenController extends Controller
                     return ['orden_id' => $item->id, 'area_id' => $item->area_id];
                 })->toArray();
 
-                // Create OrderItemDetail records for promotion components
                 foreach ($created_items as $created) {
                     try {
-                        // Load the OrdenItem model including relation to food -> item
                         $ordenItemModel = OrdenItem::with(['food', 'food.item'])->find($created->id);
                         if (!$ordenItemModel) continue;
 
@@ -1464,23 +1443,79 @@ class OrdenController extends Controller
 
                         $mainItem = $food->item;
 
-                        // Find promotions for the underlying item
-                        $promotionComponents = ItemPromotion::where('item_id', $mainItem->id)->get();
-                        if ($promotionComponents->isEmpty()) continue;
+                        // Priorizar los componentes seleccionados que vienen desde el frontend
+                        // El frontend adjunta los componentes seleccionados en $request->items[*]['food']['promotion_items']
+                        $selectedPromotionItems = null;
 
-                        foreach ($promotionComponents as $promo) {
-                            $subItem = Item::find($promo->promotion_item_id);
-                            if (!$subItem) continue;
+                        try {
+                            // Buscar el item original enviado en la petición que corresponde a este orden_item
+                            // Match por food id, price y quantity para evitar colisiones
+                            $matchedKey = null;
+                            foreach ($items as $key => $inputItem) {
+                                $inputFoodId = isset($inputItem['food']['id']) ? $inputItem['food']['id'] : (isset($inputItem['food_id']) ? $inputItem['food_id'] : null);
+                                $inputPrice = isset($inputItem['price']) ? floatval($inputItem['price']) : null;
+                                $inputQty = isset($inputItem['quantity']) ? floatval($inputItem['quantity']) : null;
 
-                            // The quantity to create is the promotion quantity * orden item quantity
-                            $detailQuantity = (float)$promo->quantity * (float)$ordenItemModel->quantity;
+                                if ($inputFoodId === $ordenItemModel->food_id) {
+                                    // Si los precios y cantidades coinciden (cuando estén disponibles) lo consideramos match
+                                    $priceMatch = $inputPrice === null || $inputPrice == floatval($ordenItemModel->price);
+                                    $qtyMatch = $inputQty === null || $inputQty == floatval($ordenItemModel->quantity);
 
-                            OrderItemDetail::create([
-                                'orden_item_id' => $ordenItemModel->id,
-                                'item_id' => $subItem->id,
-                                'description' => $subItem->description,
-                                'quantity' => $detailQuantity,
-                            ]);
+                                    if ($priceMatch && $qtyMatch) {
+                                        $matchedKey = $key;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if ($matchedKey !== null && isset($items[$matchedKey]['food']['promotion_items']) && is_array($items[$matchedKey]['food']['promotion_items'])) {
+                                $selectedPromotionItems = $items[$matchedKey]['food']['promotion_items'];
+                                // evitar reutilizar la misma entrada para otro created_item
+                                unset($items[$matchedKey]);
+                            }
+                        } catch (\Exception $e) {
+                            // no crítico, seguimos con el fallback
+                            Log::warning('Error buscando promotion_items en request: ' . $e->getMessage());
+                        }
+
+                        if (!empty($selectedPromotionItems)) {
+                            // Insertar solo los componentes que el usuario seleccionó
+                            foreach ($selectedPromotionItems as $sel) {
+                                // El objeto enviado desde frontend puede variar; normalizamos
+                                $subItemId = isset($sel['id']) ? $sel['id'] : (isset($sel['item_id']) ? $sel['item_id'] : null);
+                                if (!$subItemId) continue;
+
+                                $subItem = Item::find($subItemId);
+                                if (!$subItem) continue;
+
+                                $promoQty = isset($sel['_promo_quantity']) ? floatval($sel['_promo_quantity']) : (isset($sel['quantity']) ? floatval($sel['quantity']) : 1);
+                                $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
+
+                                OrderItemDetail::create([
+                                    'orden_item_id' => $ordenItemModel->id,
+                                    'item_id' => $subItem->id,
+                                    'description' => $subItem->description,
+                                    'quantity' => $detailQuantity,
+                                ]);
+                            }
+                        } else {
+                            // Fallback: si no hay selección explícita, usamos la definición en BD (comportamiento anterior)
+                            $promotionComponents = ItemPromotion::where('item_id', $mainItem->id)->get();
+                            if ($promotionComponents->isEmpty()) continue;
+
+                            foreach ($promotionComponents as $promo) {
+                                $subItem = Item::find($promo->promotion_item_id);
+                                if (!$subItem) continue;
+
+                                $detailQuantity = (float)$promo->quantity * (float)$ordenItemModel->quantity;
+
+                                OrderItemDetail::create([
+                                    'orden_item_id' => $ordenItemModel->id,
+                                    'item_id' => $subItem->id,
+                                    'description' => $subItem->description,
+                                    'quantity' => $detailQuantity,
+                                ]);
+                            }
                         }
                     } catch (\Exception $e) {
                         // Log and continue — promotion details are auxiliary

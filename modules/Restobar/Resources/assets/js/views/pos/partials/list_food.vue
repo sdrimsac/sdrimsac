@@ -1159,6 +1159,27 @@ export default {
                         );
                     }
 
+                    // Si aún no se encuentra, solicitar al servidor (fallback)
+                    if (!found) {
+                        try {
+                            const resp = await this.$http.get(`/items/record/${promoItemId}`);
+                            // Algunos endpoints devuelven resource en resp.data.data o directamente en resp.data
+                            const responseItem = (resp && resp.data && (resp.data.data || resp.data)) || null;
+                            if (responseItem) {
+                                // Normalizar a la estructura que usa la vista: asegurar .item y propiedades básicas
+                                found = {
+                                    id: responseItem.id || promoItemId,
+                                    description: responseItem.description || responseItem.name || "",
+                                    price: Number(responseItem.sale_unit_price || responseItem.price || 0).toFixed(2),
+                                    item: responseItem,
+                                    series: responseItem.series || []
+                                };
+                            }
+                        } catch (err) {
+                            console.warn(`onAddPromotionItems: no se pudo obtener item ${promoItemId} del servidor`, err);
+                        }
+                    }
+
                     if (!found) {
                         console.warn(`onAddPromotionItems: item promocional no encontrado id=${promoItemId}`);
                         continue;
