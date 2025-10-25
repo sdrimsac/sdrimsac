@@ -1033,7 +1033,7 @@ export default {
                 id: this.ordenSelectedId,
                 caja: false,
                 to_carry: this.to_carry,
-                printing: this.configuration.print_commands,
+                printing: true,
                 commands_fisico: null,
                 ref: this.referencia,
                 mozo_id: this.selectedMozo,

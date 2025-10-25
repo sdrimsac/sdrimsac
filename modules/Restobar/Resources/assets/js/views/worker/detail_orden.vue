@@ -478,11 +478,30 @@ export default {
                     }
 
                     if (!found) {
+                        try {
+                            const resp = await this.$http.get(`/items/record/${promoItemId}`);
+                            // Algunos endpoints devuelven resource en resp.data.data o directamente en resp.data
+                            const responseItem = (resp && resp.data && (resp.data.data || resp.data)) || null;
+                            if (responseItem) {
+                                // Normalizar a la estructura que usa la vista: asegurar .item y propiedades básicas
+                                found = {
+                                    id: responseItem.id || promoItemId,
+                                    description: responseItem.description || responseItem.name || "",
+                                    price: Number(responseItem.sale_unit_price || responseItem.price || 0).toFixed(2),
+                                    item: responseItem,
+                                    series: responseItem.series || []
+                                };
+                            }
+                        } catch (err) {
+                            console.warn(`onAddPromotionItems: no se pudo obtener item ${promoItemId} del servidor`, err);
+                        }
+                    }
+
+                    if (!found) {
                         console.warn(`onAddPromotionItems: item promocional no encontrado id=${promoItemId}`);
                         continue;
                     }
 
-                    // Realizar verificaciones similares a addFood si el item es set/promocion
                     try {
                         let foodFound = this.localOrden.filter(f => f.id == (found.item ? found.item.id : found.id));
                         let existingQty = 0;
