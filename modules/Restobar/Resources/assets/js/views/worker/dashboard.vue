@@ -967,11 +967,24 @@ export default {
         async userorden() {
             try {
                 const response = await this.$http.get(`/restobar/tables/UserTable`);
-                if (response.status === 200 && response.data.success) {
-                    this.tableUsers = response.data.data;
-                    return response.data.data;
+                if (response.status === 200) {
+                    // Si backend indica success:false mostrar mensaje
+                    if (
+                        response.data &&
+                        Object.prototype.hasOwnProperty.call(response.data, "success") &&
+                        response.data.success === false
+                    ) {
+                        const message = response.data.message || "Error al obtener usuarios de mesas";
+                        if (this.$toast) this.$toast.error(message);
+                        return [];
+                    }
+
+                    if (response.data.success) {
+                        this.tableUsers = response.data.data;
+                        return response.data.data;
+                    }
                 }
-                throw new Error(response.data.error || "Error desconocido");
+                throw new Error(response.data && response.data.error ? response.data.error : "Error desconocido");
             } catch (error) {
                 this.$toast.error("Error al obtener usuarios de mesas");
                 return [];
@@ -1371,6 +1384,19 @@ export default {
                 ]);
 
                 if (tablesResponse.status == 200) {
+                    // Manejo cuando el backend responde con { success: false, message: '...' }
+                    if (
+                        tablesResponse.data &&
+                        Object.prototype.hasOwnProperty.call(tablesResponse.data, "success") &&
+                        tablesResponse.data.success === false
+                    ) {
+                        const message = tablesResponse.data.message || "No tiene acceso a las mesas";
+                        if (this.$toast) this.$toast.error(message);
+                        // Evitar procesar datos inválidos
+                        this.loading = false;
+                        return;
+                    }
+
                     const { data, zones } = tablesResponse.data;
                     /* console.log("Tables from API:", data);
                     console.log("Zones from API:", zones); */
@@ -1417,6 +1443,19 @@ export default {
                     `tables/recordsByAreaDelivery/${this.currentArea}`
                 );
                 if (tablesResponse.status == 200) {
+                    // Manejar respuesta con success:false
+                    if (
+                        tablesResponse.data &&
+                        Object.prototype.hasOwnProperty.call(tablesResponse.data, "success") &&
+                        tablesResponse.data.success === false
+                    ) {
+                        const message = tablesResponse.data.message || "No tiene acceso a la mesa delivery";
+                        if (this.$toast) this.$toast.error(message);
+                        this.deliveryTable = null;
+                        this.loading = false;
+                        return;
+                    }
+
                     const { data } = tablesResponse.data;
                     let deliveryTable = null;
                     if (data && data.length > 0) {
@@ -1446,6 +1485,18 @@ export default {
                     `/restobar/tables/orden/${this.deliveryTable.id}`
                 );
                 if (deliveryResp.status == 200) {
+                    if (
+                        deliveryResp.data &&
+                        Object.prototype.hasOwnProperty.call(deliveryResp.data, "success") &&
+                        deliveryResp.data.success === false
+                    ) {
+                        const message = deliveryResp.data.message || "No se pudo obtener órdenes";
+                        if (this.$toast) this.$toast.error(message);
+                        this.deliveryOrders = [];
+                        this.loading = false;
+                        return;
+                    }
+
                     this.deliveryOrders = deliveryResp.data.ordens;
                 } else {
                     this.deliveryOrders = [];

@@ -22,6 +22,7 @@ use Modules\Restaurant\Http\Requests\WorkerRequest;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Workers;
 
@@ -292,6 +293,7 @@ class WorkerController extends Controller
             })
             ->first();
         $commercial_treatment = CommercialTreatmentUserExcluded::where('user_id', $id)
+
             ->get()
             ->transform(function ($row) {
                 return [
@@ -303,16 +305,49 @@ class WorkerController extends Controller
         if ($user_serie) {
             $worker->series = $user_serie->serie_id;
         }
+        $cashier_waiters = DB::connection('tenant')->table('cashier_waiter')
+            ->where('cashier_id', $worker->id)
+            ->where('active', true)
+            ->get();
         $worker->commercial_treatment = $commercial_treatment;
         if ($worker->image) {
             $worker->image_url = url('') . '/storage/uploads/workers/' . $worker->image;
         } else {
             $worker->image_url = url('') . '/status_images/user.png';
         }
+        $user_wait = [];
+        if (isset($worker->area_id) && $worker->area_id == 2) {
+            $establishment_id = auth()->user() ? auth()->user()->establishment_id : null;
+
+            $mozos = User::query()
+                ->where('active', true)
+                ->whereHas('worker_type', function ($qw) {
+                    // worker_type descriptions are stored uppercase in this project (eg. 'ARCA', 'MOZO')
+                    $qw->whereRaw("UPPER(description) = 'MOZO'");
+                })
+                // limit to same establishment when available
+                ->when($establishment_id, function ($q) use ($establishment_id) {
+                    $q->where('establishment_id', $establishment_id);
+                })
+                ->get()
+                ->transform(function ($u) {
+                    return [
+                        'id' => $u->id,
+                        'name' => $u->name,
+                        'worker_type' => $u->worker_type ? $u->worker_type->description : null,
+                    ];
+                });
+
+            $user_wait = $mozos->values()->toArray();
+        }
+
+        $worker->user_wait = $user_wait;
+
         return [
             'success' => true,
             'data' => $worker,
             'has_series' => $user_serie ? true : false,
+            'cashier_waiters' => $cashier_waiters,
         ];
     }
     private function newPin()
@@ -407,8 +442,10 @@ class WorkerController extends Controller
                 $user_serie->save();
             }
         }
-
-
+        if ($request->input('waiter_assignments')) {
+            DB::connection('tenant')->table('cashier_waiter')->where('cashier_id', $user->id)->delete();
+            DB::connection('tenant')->table('cashier_waiter')->insert($request->input('waiter_assignments'));
+        }
 
         //actualización
         if ($id) {

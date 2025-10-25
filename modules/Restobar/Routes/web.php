@@ -98,8 +98,8 @@ Route::prefix('restobar')->group(function () {
     Route::get('report-boxes/reports', 'BoxesController@reports_results');
     Route::get('report-product-warehouse-w', [WorkerController::class, 'report_products_w']);
 
-    Route::get('login', 'RestaurantController@loginWorker');
-    Route::post('login', [RestaurantController::class, 'login']);
+    /* Route::get('login', 'RestaurantController@loginWorker');
+    Route::post('login', [RestaurantController::class, 'login']); */
 
     Route::middleware(['auth', 'locked.tenant'])->group(function () {
 

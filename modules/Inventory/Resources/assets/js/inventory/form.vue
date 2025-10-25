@@ -6,6 +6,7 @@
         @open="create"
         :close-on-click-modal="false"
         class="rounded-dialog"
+        append-to-body
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">

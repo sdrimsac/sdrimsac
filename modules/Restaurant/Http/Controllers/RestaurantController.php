@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Events\OrderEvent;
 use App\Events\ReceiveOrder;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\CashierWaiter;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
@@ -468,6 +469,7 @@ class RestaurantController extends Controller
                     ];
                 }
             }
+            
             if (!$user) {
                 return [
                     'success' => false,

@@ -107,7 +107,8 @@ class User extends Authenticatable
 
         ];
     }
-    public function getUserTypeArca(){
+    public function getUserTypeArca()
+    {
         return $this->arca_type;
     }
 
@@ -136,6 +137,20 @@ class User extends Authenticatable
         }
 
         return null;
+    }
+
+    public function waiters()
+    {
+        return $this->belongsToMany(User::class, 'cashier_waiter', 'cashier_id', 'waiter_id')
+            ->withPivot('establishment_id', 'active')
+            ->withTimestamps();
+    }
+
+    public function cashiers()
+    {
+        return $this->belongsToMany(User::class, 'cashier_waiter', 'waiter_id', 'cashier_id')
+            ->withPivot('establishment_id', 'active')
+            ->withTimestamps();
     }
 
     public function user_items()

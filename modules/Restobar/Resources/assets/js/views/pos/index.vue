@@ -1257,6 +1257,7 @@
             @addDataMozo="recibirItem"></Pos-form>
         <Pos-library :showDialog.sync="showDialogLibrary" :recordId.sync="recordId" :external="true"></Pos-library>
         <Stock-min :showDialog.sync="showDialogStockMin" :fromPos="true"></Stock-min>
+        <transfer-items :visible.sync="showDialogTransferItems"></transfer-items>
     </div>
 </template>
 
@@ -1426,6 +1427,7 @@ import PosForm from "../../../../../../../resources/js/views/items/form_pos.vue"
 import PosLibrary from "../../../../../../../resources/js/views/items/form_library.vue";
 import StockMin from "./partials/stock_min.vue";
 import Swal from "sweetalert2";
+import TransferItems from "./partials/transfer_items.vue";
 const ExpiredRoomModal = () => import("./partials/expired_room.vue");
 
 const options = {
@@ -1468,6 +1470,7 @@ export default {
         }
     },
     components: {
+        TransferItems,
         StockMin,
         PosLibrary,
         PosForm,
@@ -1507,6 +1510,7 @@ export default {
     data() {
         return {
             // Control local para alternar el texto del botón (Tabla/Card)
+            showDialogTransferItems: false,
             showDialogLibrary: false,
             showList: false,
             countdown: 0,
@@ -2575,6 +2579,14 @@ export default {
                         !this.isSeller &&
                         (!this.configuration.kitchen_mozo || !this.cashId)
                 },
+                {
+                    id: 77,
+                    title: ["Ingreso de Stock", ""],
+                    icon: "fas fa-history ",
+                    visible:
+                        !this.isSeller &&
+                        (!this.configuration.kitchen_mozo || !this.cashId)
+                },
 
                 {
                     id: 9,
@@ -3247,6 +3259,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 77:
+                    this.showDialogTransferItems = true;
+                    break;
                 case 256:
                     this.showDialogWarranty = true;
                     break;

@@ -1304,7 +1304,6 @@ class OrdenController extends Controller
                         ];
                     }
 
-                    // Verificar si tiene un order_start_id definido
                     $order_start_id = $cash_order_session->order_start_id;
 
                     if ($order_start_id !== null) {

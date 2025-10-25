@@ -135,7 +135,7 @@
                                 :value="data.id"></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-4" v-if="configuration.restaurant">
+                    <div class="col-md-4" v-if="configuration.restaurant || configuration.restobar_home">
                         <i class="fas fa-chair"></i>
                         <!-- Icono de mesa -->
                         <i class="fas fa-store-alt"></i>
@@ -242,6 +242,21 @@
                             </el-upload>
                         </div>
                     </div>
+                    <div class="col-md-4" v-if="configuration.restobar_home">
+                        <label>MOzos</label>
+                        <!-- Si se proporciona user_wait (lista de mozos), mostrar un grupo de checkboxes -->
+                        <div v-if="waitersList && waitersList.length > 0">
+                            <el-checkbox-group v-model="form.waiter_ids">
+                                <div v-for="(w, index) in waitersList" :key="w.id" style="margin-top:6px;">
+                                    <el-checkbox :label="w.id">{{ w.name }}</el-checkbox>
+                                </div>
+                            </el-checkbox-group>
+                        </div>
+                        <!-- Si no hay lista, mantener checkbox único para compatibilidad -->
+                        <div v-else>
+                            <el-checkbox v-model="form.is_waiter" id="is_waiter" label="Es mozo"></el-checkbox>
+                        </div>
+                    </div>
                 </div>
             </div>
             <user-items :showDialog.sync="showUserItems" :userId="recordId" @saveItems="saveItems"></user-items>
@@ -281,7 +296,7 @@ export default {
         "series",
         "commercial_treatment",
         "typeUser",
-        "user"
+        "user",
     ],
     data() {
         return {
@@ -297,8 +312,11 @@ export default {
                 telephone: null, // Teléfono
                 can_accept_credit_sale_note: false, // Créditos en notas de venta
                 is_arca: false, // Usuario Arca
+                is_waiter: false,
+                waiter_ids: [],
                 active: 1,
                 is_pharmacy: false,
+                user_waiter: [],
             },
             errors: {}, // Almacena errores
             loading_submit: false,
@@ -321,6 +339,10 @@ export default {
             );
             if (!workerType) return false;
             return workerType.description === "ESTILISTA";
+        },
+        waitersList() {
+            // Use waiters provided by the server (stored in form.user_waiter when editing)
+            return this.form.user_waiter || [];
         }
     },
     /* watch: {
@@ -424,8 +446,11 @@ export default {
                 telephone: null,
                 can_accept_credit_sale_note: false,
                 is_arca: false,
+                is_waiter: false,
+                waiter_ids: [],
                 is_pharmacy: false,
-                active: 1
+                active: 1,
+                /* user_waiter: [], */
             };
         },
 
@@ -494,8 +519,38 @@ export default {
 
             this.loading_submit = true;
 
+            // Construir payload customizado
+            const payload = Object.assign({}, this.form);
+
+            // Obtener ids seleccionados y normalizarlos a números
+            const selectedWaiterIds = (this.form.waiter_ids || []).map(id => {
+                if (id === null || typeof id === 'undefined') return null;
+                const n = Number(id);
+                return Number.isNaN(n) ? id : n;
+            }).filter(v => v !== null);
+
+            // No enviar 'waiter_ids' suelto (evita duplicados). En su lugar
+            // enviamos un array de objetos con cashier_id, waiter_id y establishment_id
+            // por cada selección — así el backend recibe la relación completa.
+            // Determinar cashier_id: preferimos el usuario logueado (`this.user.id`) —
+            // si no está disponible, usamos `this.recordId` (id del registro en edición).
+            // Usar siempre el id del usuario que se está editando (recordId)
+            const cashierId = this.recordId ? Number(this.recordId) : null;
+            const establishmentId = (this.form.establishment_id || this.form.establishment_id === 0) ? Number(this.form.establishment_id) : null;
+
+            payload.waiter_assignments = selectedWaiterIds.map(wid => ({
+                cashier_id: cashierId,
+                waiter_id: Number(wid),
+                establishment_id: establishmentId
+            }));
+
+            // Eliminar campos redundantes para evitar que se envíen dos veces
+            delete payload.waiter_ids;
+            delete payload.waiter_id;
+            delete payload.cashier_id;
+
             this.$http
-                .post(`${this.resource}`, this.form)
+                .post(`${this.resource}`, payload)
                 .then(response => {
                     if (response.data.success) {
                         Swal.fire({
@@ -553,13 +608,60 @@ export default {
                 this.$http
                     .get(`${this.resource}/record/${this.recordId}`)
                     .then(response => {
-                        this.form = response.data.data;
-                        this.form.is_arca = this.form.is_arca === 1;
-                        this.form.can_accept_credit_sale_note =
-                            this.form.can_accept_credit_sale_note === 1;
+                        const data = response.data.data || {};
+                        
+                        // Merge server data into existing form defaults to preserve fields like waiter_ids
+                        this.form = Object.assign({}, this.form, data);
+
+                        // Merge cashier_waiters into form
+                        this.form.cashier_waiters = data.cashier_waiters || [];
+
+                        // Normalize boolean/int flags
+                        if (typeof this.form.is_arca !== 'undefined') {
+                            this.form.is_arca = this.form.is_arca === 1 || this.form.is_arca === true;
+                        }
+                        if (typeof this.form.can_accept_credit_sale_note !== 'undefined') {
+                            this.form.can_accept_credit_sale_note = this.form.can_accept_credit_sale_note === 1 || this.form.can_accept_credit_sale_note === true;
+                        }
+                        if (typeof data.is_waiter !== 'undefined') {
+                            this.form.is_waiter = data.is_waiter === 1 || data.is_waiter === true;
+                        }
+
                         if (!this.form.identity_document_type_name) {
                             this.form.identity_document_type_name = "dni";
                         }
+
+                        const outerRelations = response.data.cashier_waiters || [];
+                        const relations = [].concat(
+                            data.cashier_waiters || data.cashier_wait || data.waiter_assignments || data.user_wait_relations || [],
+                            outerRelations
+                        ).filter(Boolean);
+
+                        const waiterListFromRelations = Array.isArray(relations) && relations.length > 0
+                            ? relations.map(r => {
+                                const wid = r.waiter_id || r.waiterId || r.waiter;
+                                const name = r.waiter_name || r.name || `MOZO ${wid}`;
+                                return { id: Number(wid), name };
+                            })
+                            : [];
+
+                        this.form.user_waiter = data.user_wait || data.user_waiter || (waiterListFromRelations.length ? waiterListFromRelations : []);
+
+                        let preselected = [];
+                        if (Array.isArray(data.waiter_ids) && data.waiter_ids.length > 0) {
+                            preselected = data.waiter_ids.map(id => Number(id));
+                        } else if (Array.isArray(relations) && relations.length > 0 && this.recordId) {
+                            preselected = relations
+                                .filter(r => {
+                                    const relCashier = r.cashier_id || r.cashierId || r.user_id || r.userId || r.cashier;
+                                    const relWaiter = r.waiter_id || r.waiterId || r.waiter;
+                                    return (relCashier || relCashier === 0) && Number(relCashier) === Number(this.recordId) && (relWaiter || relWaiter === 0);
+                                })
+                                .map(r => Number(r.waiter_id || r.waiterId || r.waiter));
+                        }
+
+                        // Fallback: keep existing form.waiter_ids if nothing came from server
+                        this.form.waiter_ids = (preselected && preselected.length > 0) ? preselected : (this.form.waiter_ids || []);
                     });
             } else {
                 this.initForm();

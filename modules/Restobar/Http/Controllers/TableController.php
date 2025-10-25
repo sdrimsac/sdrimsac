@@ -14,6 +14,7 @@ use Modules\Restobar\Http\Resources\TableCollection;
 use Modules\Restobar\Models\Orden;
 use Modules\Restobar\Models\OrdenItem;
 use App\Events\MessageEvent;
+use Illuminate\Support\Facades\DB;
 use Modules\Restobar\Models\TableType;
 use Modules\Restobar\Models\Zone;
 
@@ -126,6 +127,42 @@ class TableController extends Controller
     public function recordsByArea($id)
     {
         $user = auth()->user();
+        $configuration = Configuration::first();
+        if ($configuration->restobar_home) {
+            $relation = DB::connection('tenant')->table('cashier_waiter')
+                ->where('waiter_id', $user->id)
+                ->where('active', true)
+                ->first();
+
+            if (!$relation) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes un cajero asignado. Comunícate con el administrador.'
+                ], 200);
+            }
+
+            $cashier_id = $relation->cashier_id ?? $relation->cash_id ?? null;
+
+            /* if (!$cashier_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tu asignación con el cajero es incorrecta.'
+            ], 200);
+        } */
+
+            // 3️⃣ Verificar si el cajero tiene una caja abierta
+            $hasOpenCash = \App\Models\Tenant\Cash::where('user_id', $cashier_id)
+                ->where('state', 1)
+                ->exists();
+
+            if (!$hasOpenCash) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tu cajero no tiene una caja abierta. No puedes acceder a las mesas.'
+                ], 200);
+            }
+        }
+
         $establishment_table_id = $user->establishment_table_id;
         $establishment_id = $user->establishment_id;
         $query = Table::where('number', 'not like', '%caj%')
@@ -163,6 +200,8 @@ class TableController extends Controller
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
+
+        // verificar en la cashier_waiter si esta su id
 
         $query = Table::where('number', 'not like', '%caj%')
             ->where('is_delivery', 1);
