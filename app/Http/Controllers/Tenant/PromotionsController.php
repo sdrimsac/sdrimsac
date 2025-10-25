@@ -68,23 +68,23 @@ class PromotionsController extends Controller
     {
         return view('tenant.items.form');
     }
-    function create_internal_id()
+    public function create_internal_id()
     {
-        //buscar en items los que tengan la propiedad is_set en 1 y que su internal id empiece con pack#### osea pack seguido de 4 numeros
-        $item = Item::where('is_set', 1)
+        // buscar en items los que tengan la propiedad is_set en 1 y que su internal id empiece con PROM#### (PROM seguido de 4 numeros)
+        $item = Item::where('promotions_items', 1)
             ->where('internal_id', 'regexp', '^PROM[0-9]{4}')
             ->orderBy('id', 'desc')
-            ->first();;
-        if ($item == null) {
+            ->first();
+
+        if ($item === null) {
             return "PROM0001";
-        } else {
-            $internal_id = $item->internal_id;
-            $internal_id = substr($internal_id, 4);
-            $internal_id = intval($internal_id);
-            $internal_id++;
-            $internal_id = str_pad($internal_id, 4, "0", STR_PAD_LEFT);
-            return "PLAT" . $internal_id;
         }
+        $raw = $item->internal_id ?? '';
+        $number_part = substr($raw, 4);
+        $number = intval($number_part) + 1;
+        $padded = str_pad($number, 4, '0', STR_PAD_LEFT);
+
+        return "PROM{$padded}";
     }
     public function tables()
     {

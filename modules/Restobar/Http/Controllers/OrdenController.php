@@ -40,7 +40,7 @@ use Modules\Restobar\Http\Resources\OrdenCollection;
 use Modules\Restobar\Http\Resources\OrdenItemCollection;
 use Modules\Restobar\Models\Food;
 use Modules\Restobar\Models\Observation;
-use Modules\Restobar\Models\OrderitemDetail;
+use Modules\Restobar\Models\OrderItemDetail;
 use App\Events\MessageEvent;
 use App\Jobs\Print2OrderJob;
 use App\Jobs\PrintOrderJob;

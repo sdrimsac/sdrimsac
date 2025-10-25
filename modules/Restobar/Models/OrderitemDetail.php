@@ -7,7 +7,7 @@ use App\Traits\HelperTrait;
 use App\Traits\RegisterMovementTrait;
 use App\Models\Tenant\ModelTenant;
 
-class OrderitemDetail extends ModelTenant
+class OrderItemDetail extends ModelTenant
 {
     use HelperTrait, RegisterMovementTrait;
 
