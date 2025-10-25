@@ -10,7 +10,7 @@
                             <th style="text-align: left;">Código</th>
                             <th style="text-align: left;">Descripción</th>
                             <th style="text-align: right;">Req.</th>
-                            <th style="text-align: right;">Precio</th>
+                            <!-- <th style="text-align: right;">Precio</th> -->
                             <th style="text-align: right;">Stock</th>
                             <th style="text-align: right;">Falta</th>
                             <th style="text-align: center;">Disponible</th>
@@ -24,7 +24,7 @@
                             <td style="text-align: left;">{{ row.internal_id }}</td>
                             <td style="text-align: left;">{{ row.description }}</td>
                             <td style="text-align: right;">{{ row.quantity_required }}</td>
-                            <td style="text-align: right;">{{ row.sale_unit_price }}</td>
+                            <!-- <td style="text-align: right;">{{ row.sale_unit_price }}</td> -->
                             <td style="text-align: right;">{{ row.stock_available }}</td>
                             <td style="text-align: right;">{{ row.difference }}</td>
                             <td style="text-align: center;">
@@ -33,8 +33,8 @@
                             </td>
                             <td>
                                 <!-- <el-input v-model="row.quantity_to_add" placeholder="Cantidad a agregar"></el-input> -->
-                                <el-input-number v-model="row.quantity_to_add" controls-position="right" :min="1.00"
-                                    :max="999"></el-input-number>
+                                <el-input-number v-model="row.quantity_to_add" controls-position="right" :min="1"
+                                    :max="getMaxForRow(row)" :step="1"></el-input-number>
                             </td>
                         </tr>
                     </tbody>
@@ -93,6 +93,16 @@ export default {
 
             return pass;
         },
+        getMaxForRow(row) {
+            // Prefer per-row max_quantity, then promotion-level max_quantity, otherwise a high upper bound
+            const perRow = row && (row.max_quantity || row.maxQuantity);
+            const promoLevel = this.selectedFood && (this.selectedFood.max_quantity || this.selectedFood.maxQuantity);
+            const fallback = 999;
+            const val = perRow || promoLevel || fallback;
+            // ensure it's at least 1
+            return Math.max(1, Number(val));
+        },
+
         handleSave() {
             // Emit selected promotion items with promotion id, promotion item id and quantities to add
             // Expectation: each promotion item object may include a promotion_id and either an id or promotion_item_id
@@ -101,10 +111,25 @@ export default {
                 .map(item => ({
                     promotion_id: item.promotion_id || item.promotionId || null,
                     promotion_item_id: item.promotion_item_id || item.promotionItemId || item.id || null,
-                    quantity: item.quantity_to_add,
+                    quantity: Number(item.quantity_to_add),
                     // include the item description; fall back to selectedFood.description if missing
                     description: item.description || (this.selectedFood && this.selectedFood.description) || null,
                 }));
+
+            // Determine global max_quantity (promotion-level). Assumption: the promotion's max_quantity is provided
+            // either on the selectedFood prop or on each promotion item. We prefer the promotion-level value.
+            const promoMax = this.selectedFood && (this.selectedFood.max_quantity || this.selectedFood.maxQuantity);
+            const firstRowMax = (this.promotionItems && this.promotionItems.length && (this.promotionItems[0].max_quantity || this.promotionItems[0].maxQuantity)) || null;
+            const maxQuantity = promoMax || firstRowMax || null;
+
+            // If a maxQuantity exists, validate the total requested does not exceed it
+            if (maxQuantity) {
+                const totalRequested = itemsToAdd.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0);
+                if (totalRequested > Number(maxQuantity)) {
+                    this.$toast.error(`La promoción permite un máximo de ${maxQuantity} artículo(s). Seleccionaste ${totalRequested}.`);
+                    return;
+                }
+            }
 
             // If there's a single promotion id for the whole dialog (e.g. from selectedFood), prefer that
             // Only accept explicit promotion id fields from the selectedFood object.
