@@ -50,7 +50,7 @@
                         Gastos<br />Ingresos
                     </button>
 
-                    <button v-if="localOrden.length > 0 " class="btn btn-primary pos-btn mb-2" type="button"
+                    <button v-if="localOrden.length > 0" class="btn btn-primary pos-btn mb-2" type="button"
                         @click="openOrden" style="padding: 5px 5px;">
                         <i class="el-icon-view" style="margin-right: 2px;"></i>
                         Lista
@@ -108,77 +108,107 @@
             <div v-if="configuration.sale_note_credit_confirm ? isAnalist || user.can_accept_credit_sale_note : true"
                 class="bg-primary align-items-center rounded-top" style="padding-top: 8px">
 
-                <div class="row col-12" v-if="clientTableData.table">
-                    <div class="col-6" v-if="configuration.restaurant">
+                <div class="row col-" v-if="clientTableData.table">
+                    <div class="row h5 text-white col-6" style="padding-left: 25px" v-if="
+                        clientTableData.table &&
+                        configuration.restaurant ||
+                        configuration.hotels">
+                        <strong>
+                            {{ clientTableData.is_room ? "HABITACIÓN" : "MESA" }}
+                            <span
+                                style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#fff;color:#073f68;font-weight:700;font-size:1.25rem;margin:0 8px;">
+                                {{ clientTableData.table }}
+                            </span>
+                            :
+                            {{
+                                ` ${isCreatingOrden
+                                    ? "Creando Orden"
+                                    : clientTableData.correlative
+                                        ? `Orden N° ${clientTableData.correlative}`
+                                        : ""
+                                }`
+                            }}
+                            <!-- Ref. :
+                        {{ clientTableData.ref }}
+                        {{ clientTableData.customer_id }} -->
+                            <!-- {{ clientTableData.table_id }} -->
+                        </strong>
+                    </div>
+                    <!-- <div class="col-6" v-if="configuration.restaurant">
                         <h5 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
                                     ` ${isCreatingOrden
-                                        ? "CREANDO COMANDA"
+                                        ? "Creando Comanda"
                                         : clientTableData.correlative
-                                            ? `( COMANDA N° ${clientTableData.correlative} )`
+                                            ? `Comanda N° ${clientTableData.correlative}`
                                             : ""
                                     }`
                                 }}
                             </strong>
                         </h5>
-                    </div>
+                    </div> -->
                     <div class="h5 text-white col-6" style="padding-left: 25px" v-else>
                         <template v-if="quotationId">
-                            GENERANDO COMPROBANTE - COTIZACIÓN
+                            Generando CPE - COTIZACIÓN
                             {{ cotIdentifier }}
                         </template>
                     </div>
                     <div class="col-6">
-                        <div class="row">
-                            <h3 class="text-white" style="text-align: right">
-                                Total {{ currency_id == "USD" ? "$" : "S/" }}
-                                {{ (total + totalOrdenItems).toFixed(2) }}
-                            </h3>
-                        </div>
+
+                        <h3 class="text-white" style="text-align: right">
+                            Total : {{ currency_id == "USD" ? "$" : "S/" }}
+                            {{ (total + totalOrdenItems).toFixed(2) }}
+                        </h3>
+
                     </div>
                 </div>
 
-                <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
+                <!-- <div class="row h5 text-white col-12" style="padding-left: 25px" v-if="
                     clientTableData.table &&
                     configuration.restaurant ||
                     configuration.hotels">
                     <strong>
-                        {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
-                        {{ clientTableData.table }}- Ref:
+                        {{ clientTableData.is_room ? "HABITACIÓN" : "MESA" }}
+                        <span
+                            style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#fff;color:#073f68;font-weight:700;font-size:1.25rem;margin:0 8px;">
+                            {{ clientTableData.table }}
+                        </span>
+                        Ref. :
                         {{ clientTableData.ref }}
                         {{ clientTableData.customer_id }}
-                        <!-- {{ clientTableData.table_id }} -->
+                     
                     </strong>
-                </div>
+                </div> -->
 
-                <div class="row col-12">
-                    <div class="col-7">
-                        <div class="h6 text-white col-12" style="padding-left: 25px">
-                            <strong v-if="!clientTableData.table">
-                                <template v-if="!isConsignment">
-                                    {{
-                                        quotationId
-                                            ? `GENERANDO COMPROBANTE - COTIZACIÓN ${cotIdentifier}`
-                                            : "Venta Directa"
-                                    }}
-                                </template>
-                                <template v-else>LIQUIDACIÓN DE CONSIGNACIÓN</template>
-                            </strong>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="row">
-                            <h3 v-if="!clientTableData.table" class="text-white" style="text-align: right">
-                                Total {{ currency_id }}
-                                {{ (total + totalOrdenItems).toFixed(2) }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row col-12" style="padding-left: 20px;"
-                    v-if="configuration.other_currency_pos || configuration.edit_count_products">
+                <div class="row">
+
+
+                    <div class="col-7 h5 text-white" style="padding-left: 25px" v-if="!clientTableData.table">
+                        <strong>
+                            <template v-if="!isConsignment">
+                                {{
+                                    quotationId
+                                        ? `Generando CPE - COTIZACIÓN ${cotIdentifier}`
+                                        : "Venta Directa"
+                                }}
+                            </template>
+                            <template v-else>Liquidar Consignación</template>
+                        </strong>
+                    </div>
+
+                    <div class="col-5" v-if="!clientTableData.table">
+
+                        <h3 class="text-white" style="text-align: center">
+                            {{ currency_id }}
+                            {{ (total + totalOrdenItems).toFixed(2) }}
+                        </h3>
+
+                    </div>
+
+                </div>
+                <template v-if="configuration.other_currency_pos || configuration.edit_count_products">
                     <!-- Moneda -->
                     <div class="col-4" v-if="configuration.other_currency_pos">
                         <div class="row">
@@ -188,8 +218,8 @@
                                         <small>Moneda</small>
                                     </label>
                                     <el-radio-group v-model="currency_id" size="small" @change="changeCurrency">
-                                        <el-radio-button value="PEN" label="S/"></el-radio-button>
-                                        <el-radio-button value="USD" label="$"></el-radio-button>
+                                        <el-radio-button label="S/">S/</el-radio-button>
+                                        <el-radio-button label="USD">$</el-radio-button>
                                     </el-radio-group>
                                 </div>
                             </div>
@@ -227,9 +257,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </template>
             </div>
-            <div :class="`p-1 bg-primary`"
+            <div :class="`px-1 bg-primary`"
                 v-if="configuration.sale_note_credit_confirm ? isAnalist || user.can_accept_credit_sale_note : true">
                 <div class="row col-md-12 mx-1">
                     <div>
@@ -333,9 +363,10 @@
                             <span style="display: flex; justify-content: center;">Crédito</span>
                         </button>
 
-                        <button v-if="isCreatingOrden == false && configuration.credit_list && localOrden.length != 0 && !isSeller && isRestaurantWarehouse" 
-                                class="btn btn-light mt-2" type="button" @click="toCreditList"
-                                style="max-height: 45px ; max-width: 60px;">
+                        <button
+                            v-if="isCreatingOrden == false && configuration.credit_list && localOrden.length != 0 && !isSeller && isRestaurantWarehouse"
+                            class="btn btn-light mt-2" type="button" @click="toCreditList"
+                            style="max-height: 45px ; max-width: 60px;">
                             <i class="far fa-credit-card" style="color: var(--primary) !important"></i>
                             <br />
                             <span style="display: flex; justify-content: center;">
@@ -358,10 +389,7 @@
                         </button>
                         <el-tooltip
                             v-if="isCreatingOrden == false && clientTableData.table != undefined && ordens.length != 0"
-                            content="Imprimir Precuenta directa"
-                            placement="top"
-                            effect="dark"
-                        >
+                            content="Imprimir Precuenta directa" placement="top" effect="dark">
                             <button class="btn btn-light mt-2" type="button" @click="printOrden()"
                                 style="max-height: 45px ; max-width: 65px;">
                                 <i class="fas fa-print" style="color: var(--primary) !important"></i>
@@ -390,13 +418,21 @@
                             isCreatingOrden == false &&
                             clientTableData.table != undefined &&
                             ordens.length != 0
-                             " class="btn btn-light mt-2" type="button" style="max-height: 45px ;  max-width: 60px;" @click="
+                        " class="btn btn-danger mt-2" type="button" style="max-height: 45px; max-width: 60px;" @click="
                             cancelGeneralOrden(clientTableData.orden_id)
                             ">
-                            <i class="fas fa-window-close" style="color: var(--primary) !important"></i>
+                            <i class="fas fa-window-close" style="color: #fff !important"></i>
                             <br />
-                            <span style="display: flex; justify-content: center;">Cancelar</span>
+                            <span style="display: flex; justify-content: center; color: #fff;">Cancelar</span>
                         </button>
+
+                        <button v-if="clientTableData.table" @click="directSale" class="btn btn-warning mt-2"
+                            type="button" style="max-height: 45px ;">
+                            Venta
+                            <br />
+                            Directa
+                        </button>
+
                         <div class="dropdown-as-select d-inline-block mt-2" data-childselector="span">
                             <template v-if="!configuration.sale_note_credit_confirm">
                                 <div class="dropdown-menu dropdown-menu-start col-md-2 col-1" style="max-width: 154px;">
@@ -434,15 +470,15 @@
                                 </button>
                             </template>
                         </div>
-                        
+                        <!-- <div v-if="clientTableData.table" class="col-md-3">
+                            <button @click="directSale" class="btn btn-warning mt-2" type="button"
+                                style="max-height: 45px ;">
+                                Venta Directa
+                            </button>
+                        </div> -->
                     </div>
 
-                    <div v-if="clientTableData.table" class="col-md-3">
-                        <button @click="directSale" class="btn btn-warning mt-2" type="button"
-                            style="max-height: 45px ;">
-                            Venta Directa
-                        </button>
-                    </div>
+
                 </div>
 
                 <!-- Para llevar  y Variación -->
@@ -495,20 +531,23 @@
                             </el-select>
                         </template>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <template>
-                                        <div class="custom-flex">
-                                            <el-input v-if="
-                                                !configuration.college &&
-                                                configuration.restaurant
-                                            " type="text" class="black-placeholder" v-model="clientTableData.ref"
-                                                placeholder="Referencia:" maxlength="45" show-word-limit
-                                                style="margin-bottom: 10px;"></el-input>
-                                        </div>
-                                    </template>
+                            
+                                <div class="col-md-12" v-if="!configuration.college && configuration.restaurant && !configuration.hotels">
+                                    <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
+                                        placeholder="Referencia:" maxlength="45" show-word-limit
+                                        style="margin-bottom: 10px;">
+                                    </el-input>
                                 </div>
-                            </div>
+                            
+                            
+                                <div class="col-md-6" v-if="!configuration.college && configuration.restaurant && configuration.hotels">
+                                    <el-input type="text" class="black-placeholder" v-model="clientTableData.ref"
+                                        placeholder="Referencia:" maxlength="45" show-word-limit
+                                        style="margin-bottom: 10px;">
+                                    </el-input>
+
+                                </div>
+                            
                             <div class="col-md-6" v-if="configuration.hotels">
                                 <div class="row">
                                     <!-- Canjear Promoción Piscina y Desayuno -->
@@ -519,15 +558,7 @@
                                                 style="margin-bottom: 10px;"></el-input>
                                         </div>
                                     </template>
-                                    <!-- Canjear  por N° de orden -->
-                                    <!-- <el-input
-                                            @input="searchOrdenNumber"
-                                            type="text"
-                                            maxlength="10"
-                                            show-word-limit
-                                            v-model="ordenNumber"
-                                            placeholder="Cobrar por N° de orden"
-                                        ></el-input> -->
+
                                 </div>
                             </div>
                         </div>
@@ -687,7 +718,7 @@
                                                         {{ localOrden.length }}
                                                     </template>
                                                 </a>
-                                                
+
                                                 Por Solicitar
                                                 <template v-if="configuration.divided_items">
                                                     <el-checkbox v-model="localDividedItems" style="margin-left: 10px;"
@@ -752,7 +783,7 @@
                                                                                 <span
                                                                                     style="font-weight: bold; font-size: 1rem;">
                                                                                     {{
-                                                                                    order_pend.food.item.name_product_pdf.toUpperCase()
+                                                                                        order_pend.food.item.name_product_pdf.toUpperCase()
                                                                                     }}
                                                                                 </span>
                                                                             </template>
@@ -760,7 +791,7 @@
                                                                                 <span
                                                                                     style="font-weight: bold; font-size: 1rem;">
                                                                                     {{
-                                                                                    order_pend.food.description.toUpperCase()
+                                                                                        order_pend.food.description.toUpperCase()
                                                                                     }}
                                                                                 </span>
                                                                             </template>
@@ -783,7 +814,7 @@
                                                                                                     <strong
                                                                                                         style="color: #006400;">
                                                                                                         X - {{
-                                                                                                        order_pend.type_description.toUpperCase()
+                                                                                                            order_pend.type_description.toUpperCase()
                                                                                                         }}
                                                                                                     </strong>
                                                                                                 </el-button>
@@ -796,7 +827,7 @@
                                                                                                     :command="{ indexx, unit_type }">
                                                                                                     <strong>
                                                                                                         X - {{
-                                                                                                        unit_type.description.toUpperCase()
+                                                                                                            unit_type.description.toUpperCase()
                                                                                                         }}
                                                                                                     </strong>
                                                                                                 </el-dropdown-item>
@@ -806,7 +837,7 @@
                                                                                     <template v-else>
                                                                                         <strong>
                                                                                             X - {{
-                                                                                            order_pend.type_description
+                                                                                                order_pend.type_description
                                                                                             }}
                                                                                         </strong>
                                                                                     </template>
@@ -823,7 +854,8 @@
                                                                                         X
                                                                                         ${order_pend.categoriaMadera.selectedAncho}
                                                                                         X
-                                                                                        ${order_pend.categoriaMadera.selectedLargo}`}}
+                                                                                        ${order_pend.categoriaMadera.selectedLargo}`
+                                                                                        }}
                                                                                     </strong>
                                                                                 </small>
                                                                             </span>
@@ -873,8 +905,7 @@
                                                                                     )
                                                                                     "></el-button>
                                                                             <el-button v-if="
-                                                                                configuration.restaurant &&
-                                                                                !configuration.college
+                                                                                configuration.restaurant && !configuration.college && !configuration.hotels
                                                                             " class="text-white" type="info"
                                                                                 icon="el-icon-s-order" size="mini"
                                                                                 circle @click="
@@ -1861,6 +1892,7 @@ import { exchangeRate } from "@mixins/functions";
 import DeliveryForm from "../partials/delivery_from.vue";
 import { listcalculateTotal as calculateTotal } from "./listorden/calculateTotal.js";
 import { DiscountCalcItemAmounts } from "./listorden/discountCalcItemAmount.js";
+
 /* import { attachItemDiscounts } from "./listorden/enterattachItemDiscounts.js"; */
 export default {
     mixins: [exchangeRate],

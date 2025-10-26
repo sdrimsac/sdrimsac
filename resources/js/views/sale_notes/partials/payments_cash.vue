@@ -2,12 +2,12 @@
     <el-dialog :title="title" :visible="showDialog" @close="close" @open="getData" width="90%" append-to-body
         v-loading="loading">
         <div class="row mt-2">
-            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-start">
-                <h1 style="font-size: 2em;">
+            <div class="col-6 d-flex justify-content-start">
+                <h2 style="font-size: 1.2em;">
                     {{ document.customer_name }}
-                </h1>
+                </h2>
             </div>
-            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
+            <div class="col-4 d-flex justify-content-end">
                 <template v-if="
                     document.current_payment &&
                     document.current_payment.num &&
@@ -16,125 +16,83 @@
                     <h4>
                         <div>
                             Cuota N° {{ document.current_payment.num }} de
-                            {{Number(document.current_payment.amount).toFixed(2)}}
+                            {{ Number(document.current_payment.amount).toFixed(2) }}
                             <!-- Penalidad eliminada -->
                         </div>
                         <div>
                             Total a pagar:
-                            {{Number(document.current_payment.amount_withouth_penalty).toFixed(2)}}
+                            {{ Number(document.current_payment.amount_withouth_penalty).toFixed(2) }}
                             =
-                            {{Number(document.current_payment.amount).toFixed(2)}}
+                            {{ Number(document.current_payment.amount).toFixed(2) }}
                         </div>
                     </h4>
                 </template>
             </div>
+            <div class="col-2 d-flex justify-content-end align-items-center"
+                v-if="showAddButton && document.total_difference > 0">
+                <el-button class="btn_guardarsmall" type="primary" icon="el-icon-plus" @click="clickAddRow">
+                    Nuevo
+                </el-button>
+            </div>
         </div>
         <div class="form-body">
             <div class="row">
-                <div class="col-md-12 text-center pt-2" v-if="showAddButton && document.total_difference > 0">
-                    <el-button class="btn_guardarsmall" type="primary" icon="el-icon-plus" @click="clickAddRow">
-                        Nuevo
-                    </el-button>
-                </div>
-                <div class="col-md-12" v-if="records.length > 0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
-                            <tbody>
-                                <tr v-if="!document.paid">
-                                    <td class="text-end" :colspan="colspanValue">
-                                        TOTAL PAGADO
-                                    </td>
-                                    <td class="text-end">
-                                        {{ document.total_paid }}
-                                    </td>
-                                    <td class="text-end" :colspan="colspanValue">
-                                        TOTAL A PAGAR
-                                    </td>
-                                    <td class="text-end">
-                                        {{
-                                            roundUpToOneDecimal(
-                                                Number(document.total)
-                                            )
-                                        }}
-                                    </td>
-                                    <td v-if="cancelCredit" class="text-end">
-                                        DESCUENTO
-                                    </td>
-                                    <td v-if="cancelCredit" class="text-end">
-                                        <el-input-number @input="calculateDiscountCredit" v-model="creditDiscount">
-                                        </el-input-number>
-                                    </td>
-                                    <!-- Descuento penalidad eliminado -->
-                                </tr>
 
-                                <tr v-if="!cancelCredit">
-                                    <td :colspan="colspanValue" class="text-end">
-                                        PENDIENTE DE PAGO
-                                    </td>
-                                    <td class="text-end">
-                                        {{
-                                            Number(
-                                                document.total_difference
-                                            ).toFixed(2)
-                                        }}
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-md-12" v-if="records.length > 0">
+
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-condensed">
                             <thead style="background-color: #073f68; color: #fff;">
                                 <tr>
-                                    <th style="color: #fff;">#</th>
-                                    <th style="color: #fff;">Fecha de pago</th>
-                                    <th style="color: #fff;"></th>
-                                    <th style="color: #fff;">Usuario</th>
-                                    <th style="color: #fff;">Método de pago</th>
-                                    <th style="color: #fff;">Destino</th>
-                                    <th style="color: #fff;">Referencia</th>
-                                    <th style="color: #fff;">N° de Operacion</th>
-                                    <th style="color: #fff;" class="text-end">Monto</th>
+                                    <th style="color: #fff; width:40px;">#</th>
+                                    <th style="color: #fff; width:160px;">Fecha de pago</th>
+                                    <!-- <th style="color: #fff;">Método de pago</th> -->
+                                    <!-- <th style="color: #fff;">Usuario</th> -->
+                                    <th style="color: #fff; width:240px;">Método/Destino</th>
+                                    <!-- <th style="color: #fff;">Destino</th> -->
+                                    <!-- <th style="color: #fff;">Referencia</th> -->
+                                    <th style="color: #fff; width:160px;">N° de Operacion</th>
+                                    <th style="color: #fff; width:120px;" class="text-end">Monto</th>
+                                    <th style="color: #fff; width:120px;" class="text-center"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(row, index) in records" :key="index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                <tr v-for="(row, index) in records" :key="index"
+                                    :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                    <!-- Nuevo pago -->
                                     <template v-if="!row.id">
-                                                        <td>{{ customIndex(index) }}</td>
-                                        
+                                        <!-- <td>{{ customIndex(index) }}</td> -->
+
+                                        <td class="text-center">
+                                            <i class="fa fa-money fa-2x" aria-hidden="true" title="Billete"></i>
+                                        </td>
                                         <td>
                                             <div class="form-group mb-0" :class="{
                                                 'has-danger':
                                                     row.errors
                                                         .date_of_payment
-                                                 }">
+                                            }">
                                                 <el-date-picker v-model="row.date_of_payment
-                                                    " type="date"  :clearable="false" format="dd/MM/yyyy"
+                                                    " type="date" :clearable="false" format="dd/MM/yyyy"
                                                     value-format="yyyy-MM-dd"></el-date-picker>
                                                 <small class="form-control-feedback" v-if="
                                                     row.errors
                                                         .date_of_payment
                                                 " v-text="row.errors
-                                                            .date_of_payment[0]
-                                                        "></small>
+                                                    .date_of_payment[0]
+                                                    "></small>
                                             </div>
                                         </td>
                                         <!-- Celda vacía para alinear con cabecera vacía -->
-                                        <td></td>
+                                        <!-- <td></td> -->
                                         <!-- Usuario (no editable, mostrar usuario actual o vacío) -->
-                                        <!-- <td>
 
-                                        </td> -->
-                                        <td></td>
+                                        <!-- <td></td> -->
+
+                                        <!-- Metodo de Pago -->
                                         <td>
-                                            <div class="form-group mb-0" :class="{
-                                                'has-danger':
-                                                    row.errors
-                                                        .payment_method_type_id
-                                            }">
-                                                <el-select v-model="row.payment_method_type_id
-                                                    ">
+                                            <div class="form-group mb-0" :class="{'has-danger':row.errors.payment_method_type_id}">
+                                                <el-select v-model="row.payment_method_type_id">
                                                     <el-option v-for="(option, idx) in payment_method_types"
                                                         :key="option.id + '-' + idx" :value="option.id" :label="option.description
                                                             "></el-option>
@@ -143,16 +101,26 @@
                                                     row.errors
                                                         .payment_method_type_id
                                                 " v-text="row.errors
-                                                            .payment_method_type_id[0]
-                                                        "></small>
+                                                    .payment_method_type_id[0]
+                                                    "></small>
+                                                <br>
+                                                 <el-select v-model="row.payment_destination_id
+                                                    " filterable :disabled="row.payment_destination_disabled
+                                                        ">
+                                                    <el-option v-for="(option, idx) in payment_destinations"
+                                                        :key="option.id + '-' + idx" :value="option.id" :label="option.description
+                                                            "></el-option>
+                                                </el-select>
+                                                <small class="form-control-feedback"
+                                                    v-if="row.errors.payment_destination_id"
+                                                    v-text="row.errors.payment_destination_id[0]">
+
+                                                </small>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div style="min-width: 200px;" class="form-group mb-0" :class="{
-                                                'has-danger':
-                                                    row.errors
-                                                        .payment_destination_id
-                                            }">
+                                        <!-- <td>
+                                            <div style="min-width: 200px;" class="form-group mb-0"
+                                                :class="{ 'has-danger': row.errors.payment_destination_id }">
                                                 <el-select v-model="row.payment_destination_id
                                                     " filterable :disabled="row.payment_destination_disabled
                                                         ">
@@ -160,15 +128,19 @@
                                                         :key="option.id + '-' + idx" :value="option.id" :label="option.description
                                                             "></el-option>
                                                 </el-select>
-                                                <small class="form-control-feedback" v-if="
-                                                    row.errors
-                                                        .payment_destination_id
-                                                " v-text="row.errors
-                                                            .payment_destination_id[0]
-                                                        "></small>
+                                                <small class="form-control-feedback"
+                                                    v-if="row.errors.payment_destination_id"
+                                                    v-text="row.errors.payment_destination_id[0]">
+
+                                                </small>
+                                                <br>
+                                                <el-input v-model="row.number_method"
+                                                    :disabled="row.payment_method_type_id === '01' || getPaymentMethodDescription(row.payment_method_type_id) === 'Efectivo'">
+                                                    <i slot="prefix" class="el-icon-edit-outline"></i>
+                                                </el-input>
                                             </div>
-                                        </td>
-                                        <td>
+                                        </td> -->
+                                        <!-- <td>
                                             <div style="min-width: 200px;" class="form-group mb-0" :class="{
                                                 'has-danger':
                                                     row.errors.reference
@@ -178,7 +150,7 @@
                                                 <small class="form-control-feedback" v-if="row.errors.reference" v-text="row.errors.reference[0]
                                                     "></small>
                                             </div>
-                                        </td>
+                                        </td> -->
                                         <td>
                                             <el-input v-model="row.number_method"
                                                 :disabled="row.payment_method_type_id === '01' || getPaymentMethodDescription(row.payment_method_type_id) === 'Efectivo'">
@@ -204,7 +176,7 @@
                                                 @click.prevent="payLastPayment">
                                                 <i class="fa fa-check"></i>
                                             </button> -->
-                                            <button  :disabled="is_paying" type="button"
+                                            <button :disabled="is_paying" type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-info" @click.prevent="
                                                     clickSubmit(index)
                                                     ">
@@ -219,10 +191,9 @@
                                             </button>
                                         </td>
                                     </template>
+                                    <!-- Lista de pagos realizados -->
                                     <template v-else>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                        <td :class="{'text-danger': row.extorned}">
                                             <template v-if="row.extorned">
                                                 PAGO - {{ row.id }} <br>
                                                 Extornado por: <br>
@@ -235,40 +206,32 @@
                                         <!-- <td v-if="row.extorned" class="text-danger">
                                             PAGO-{{ row.id }}
                                         </td> -->
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                        <td :class="{ 'text-danger': row.extorned }">
+                                            {{ row.user_name }}
+                                            <br>
                                             {{ row.date_time_issue }}
                                         </td>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                        <!-- <td :class="{'text-danger': row.extorned}">
                                             {{ row.quote_date }}
-                                        </td>
-                                        <td :class="{
+                                        </td> -->
+                                        <!-- <td :class="{
                                             'text-danger': row.extorned
                                         }">
                                             {{ row.user_name }}
-                                        </td>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                        </td> -->
+                                        <td :class="{ 'text-danger': row.extorned }">
                                             {{ row.method }}
-                                        </td>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                            <br>
                                             {{ row.destination_description }}
                                         </td>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }">
+                                        <!-- <td :class="{'text-danger': row.extorned}">
+                                            {{ row.destination_description }}
+                                        </td> -->
+                                        <!-- <td :class="{'text-danger': row.extorned}">
                                             {{ row.reference }}
-                                        </td>
+                                        </td> -->
 
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }" class="text-center">
+                                        <td :class="{ 'text-danger': row.extorned }" class="text-center">
                                             <template v-if="row.number_method">
                                                 {{ row.number_method }}
                                             </template>
@@ -276,40 +239,107 @@
                                                 -
                                             </template>
                                         </td>
-                                        <td :class="{
-                                            'text-danger': row.extorned
-                                        }" class="text-end">
+                                        <td :class="{'text-danger': row.extorned}" class="text-end">
                                             {{ row.payment }}
                                         </td>
                                         <td class="series-table-actions text-end">
-                                            <button 
-                                            v-if="
-                                                row.can_extorned &&
-                                                    row.canCancel &&
-                                                        !row.extorned
-                                                "
-                                            type="button" class="btn waves-effect waves-light btn-sm btn-danger"
-                                                @click.prevent="
-                                                    returnPaymentNotes(row)
-                                                    ">
-                                                Extornar
-                                            </button>
+                                            <div class="d-flex justify-content-end align-items-center">
+                                                <button
+                                                    v-if="row.can_extorned && row.canCancel && !row.extorned"
+                                                    type="button"
+                                                    class="btn_cancelarsmall me-2"
+                                                    @click.prevent="returnPaymentNotes(row)"
+                                                >
+                                                    Extornar
+                                                </button>
 
-                                            <button v-if="
-                                                row.receipt_link &&
-                                                row.receipt_link != ''
-                                            " type="button" class="btn waves-effect waves-light btn-sm btn-primary"
-                                                @click.prevent="
-                                                    ClickPrint(row.receipt_link)
-                                                    ">
-                                                Imprimir
-                                            </button>
+                                                <button
+                                                    v-if="row.receipt_link && row.receipt_link != ''"
+                                                    type="button"
+                                                    class="btn_guardarsmall"
+                                                    @click.prevent="ClickPrint(row.receipt_link)"
+                                                >
+                                                    Recibo
+                                                </button>
+                                            </div>
                                         </td>
                                     </template>
                                 </tr>
                             </tbody>
+                            <!-- Pie de totales -->
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end">
+                                        Total Pagado
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total_paid).toFixed(2) }}
+
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-end">
+                                        Total a Pagar
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total).toFixed(2) }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-end">
+                                        Pendiente de Pago
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total_difference || 0).toFixed(2) }}
+                                    </td>
+                                    <td></td>
+
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
+                    <!-- Totales -->
+                    <!-- <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <tbody>
+                                <tr v-if="!document.paid">
+                                    <td class="text-end" :colspan="colspanValue">
+                                        Total Pagado
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total_paid).toFixed(2) }}
+                                    </td>
+                                    <td class="text-end" :colspan="colspanValue">
+                                        Total a Pagar
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total).toFixed(2) }}
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        Descuento
+                                    </td>
+                                    <td v-if="cancelCredit" class="text-end">
+                                        <el-input-number @input="calculateDiscountCredit" v-model="creditDiscount">
+                                        </el-input-number>
+                                    </td>
+                                    Descuento penalidad eliminado
+                                </tr>
+
+                                <tr v-if="!cancelCredit">
+                                    <td :colspan="colspanValue" class="text-end">
+                                        Pendiente por Pagar
+                                    </td>
+                                    <td class="text-end">
+                                        {{ Number(document.total_difference).toFixed(2) }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                            
+                        </table>
+                    </div> -->
                 </div>
             </div>
             <image-preview-modal :showDialog.sync="showImagePreviewModal" :image="imagePreview">
@@ -613,16 +643,16 @@ export default {
         },
         async clickSubmit(index) {
             /* if (this.configuration.sale_note_credit_cash) { */
-                if (
-                    this.records[index].payment > this.document.total_difference
-                ) {
-                    this.$showSAlert(
-                        "Error",
-                        "El monto ingresado no puede ser mayor al monto de la cuota.",
-                        "error"
-                    );
-                    return;
-                }
+            if (
+                this.records[index].payment > this.document.total_difference
+            ) {
+                this.$showSAlert(
+                    "Error",
+                    "El monto ingresado no puede ser mayor al monto de la cuota.",
+                    "error"
+                );
+                return;
+            }
             /* } */
             // Validación de penalidad eliminada
             let { num_schedule, amount_schedule } = this.document;

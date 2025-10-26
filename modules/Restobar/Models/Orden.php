@@ -46,7 +46,7 @@ class Orden extends ModelTenant
         static::created(function ($orden) {
             $request = Request::capture();
             $description = "Orden creado: Solicitado";
-            RegisterMovementTrait::registerCreate(
+            $orden->registerCreate(
                 $orden,
                 $request,
                 $description,
@@ -59,7 +59,7 @@ class Orden extends ModelTenant
             $original_orden = Orden::find($orden->id);
             $newStatus = $original_orden->status_orden->description;
             $description = "Orden: $newStatus";
-            RegisterMovementTrait::registerUpdate(
+            $orden->registerUpdate(
                 $orden,
                 $request,
                 $description,
@@ -77,7 +77,7 @@ class Orden extends ModelTenant
                 $data['document_id'] = $orden->document_id;
                 $data['sale_note_id'] = $orden->sale_note_id;
                 $data['to_carry'] = $orden->to_carry;
-                RegisterMovementTrait::registerDelete(
+                $orden->registerDelete(
                     $orden,
                     $request,
                     $description,

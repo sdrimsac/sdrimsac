@@ -66,7 +66,7 @@ class Box extends ModelTenant
             $original_model = Box::find($model->id);
             $description = "Registro de caja actualizado";
             $data = $original_model->toArray();
-            RegisterMovementTrait::registerUpdate(
+            $model->registerUpdate(
                 $model,
                 $request,
                 $description,
@@ -79,7 +79,7 @@ class Box extends ModelTenant
                 $request = Request::capture();
                 $description = "Registro de caja eliminado";
                 $data = $model->toArray();
-                RegisterMovementTrait::registerDelete(
+                $model->registerDelete(
                     $model,
                     $request,
                     $description,

@@ -56,7 +56,7 @@ class Cash extends ModelTenant
             $original_model = Cash::find($model->id);
             $original_model->set_or_create_code();
             $data = $model->toArray();
-            RegisterMovementTrait::registerCreate(
+            $model->registerCreate(
                 $model,
                 $request,
                 $description,
@@ -68,7 +68,7 @@ class Cash extends ModelTenant
             $original_model = Cash::find($model->id);
             $description = "Caja cerrada";
             $data = $original_model->toArray();
-            RegisterMovementTrait::registerUpdate(
+            $model->registerUpdate(
                 $model,
                 $request,
                 $description,
@@ -81,7 +81,7 @@ class Cash extends ModelTenant
                 $request = Request::capture();
                 $description = "Registro de caja eliminado";
                 $data = $model->toArray();
-                RegisterMovementTrait::registerDelete(
+                $model->registerDelete(
                     $model,
                     $request,
                     $description,

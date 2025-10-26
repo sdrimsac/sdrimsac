@@ -55,7 +55,7 @@ class Table extends ModelTenant
         static::created(function ($table) {
             $request = Request::capture();
             $description = "Mesa creada";
-            RegisterMovementTrait::registerCreate(
+            $table->registerCreate(
                 $table,
                 $request,
                 $description,
@@ -71,7 +71,7 @@ class Table extends ModelTenant
 
             $newStatus = $table_origin->status_table->description;
             $description = "Mesa: $newStatus";
-            RegisterMovementTrait::registerUpdate(
+            $table->registerUpdate(
                 $table,
                 $request,
                 $description,
@@ -85,7 +85,7 @@ class Table extends ModelTenant
                 $data = [];
                 $data['area_id'] = $table->area_id;
                 $data['number'] = $table->number;
-                RegisterMovementTrait::registerDelete(
+                $table->registerDelete(
                     $table,
                     $request,
                     $description,

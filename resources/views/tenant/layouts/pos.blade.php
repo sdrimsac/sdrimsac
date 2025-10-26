@@ -52,7 +52,58 @@
     <link rel="stylesheet" href="{{ asset('acorn/css/main.css') }}" />
     <script src="{{ asset('acorn/js/base/loader.js') }}"></script>
     @laravelPWA
+    
 </head>
+<style>
+    .fix-logo .logo,
+                    .fix-logo .logo.logo-3by2 {
+                        aspect-ratio: 3/2;
+                        width: 300px; /* preferred width */
+                        height: 200px; /* preferred height */
+                        max-width: 100%;
+                        max-height: 200px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    /* Image fills the container but preserves aspect ratio */
+                    .fix-logo .logo .img img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                        aspect-ratio: 3/2;
+                        display: block;
+                    }
+                    @media (max-width: 600px) {
+                        /* smaller screens: scale proportionally (3:2) */
+                        .fix-logo .logo,
+                        .fix-logo .logo.logo-3by2 {
+                            width: 180px;
+                            height: 120px;
+                        }
+                    }
+                    .fix-logo .logo {
+                        aspect-ratio: 180/75;
+                        width: 180px;
+                        max-width: 100vw;
+                        height: 75px;
+                        max-height: 100px;
+                    }
+                    .fix-logo .logo .img img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                        aspect-ratio: 180/75;
+                        display: block;
+                    }
+                    @media (max-width: 600px) {
+                        .fix-logo .logo {
+                            width: 120px;
+                            height: 50px;
+                        }
+                    }
+
+</style>
 
 <body>
     <div id="root">
@@ -82,39 +133,8 @@
                         </a>
                     </div>
                 </div>
-                <style>
-                    /* Logo container forced to 3:2 (300x200) but will scale down with max-width */
-                    .fix-logo .logo,
-                    .fix-logo .logo.logo-3by2 {
-                        aspect-ratio: 3/2;
-                        width: 300px; /* preferred width */
-                        height: 200px; /* preferred height */
-                        max-width: 100%;
-                        max-height: 200px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    /* Image fills the container but preserves aspect ratio */
-                    .fix-logo .logo .img img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: contain;
-                        aspect-ratio: 3/2;
-                        display: block;
-                    }
-                    @media (max-width: 600px) {
-                        /* smaller screens: scale proportionally (3:2) */
-                        .fix-logo .logo,
-                        .fix-logo .logo.logo-3by2 {
-                            width: 180px;
-                            height: 120px;
-                        }
-                    }
-                </style>
-                <!-- Logo End -->
                 <div>
-                    
+
                 </div>
                 <!-- User Menu Start -->
                 <div class="user-container d-flex flex-row align-items-center justify-content-between" style="width: 100%; max-width: {{ $userWidth ?? '350px' }}; max-height: 120px; gap: 10px;">
@@ -250,10 +270,7 @@
                                             <input type="number" placeholder="Ingrese el PIN de 4 dígitos"
                                                 class="form-control bg-white" id="pin" name="pin" required maxlength="4" pattern="\d{4}" inputmode="numeric" autocomplete="off"
                                                 oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);" min="0" max="9999" />
-                                            {{-- <button class="btn btn-outline-secondary" type="button"
-                                                id="showPasswordButton">
-                                                Mostrar
-                                            </button> --}}
+                            
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -267,34 +284,8 @@
                     </div>
                 @endauth
 
-
-
-                <!-- User Menu End -->
-
-                <!-- Icons Menu Start -->
-                {{-- <ul class="list-unstyled list-inline text-center menu-icons">
-                    <li class="list-inline-item">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
-                            <i data-cs-icon="search" data-cs-size="18"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#" id="pinButton" class="pin-button">
-                            <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
-                            <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#" id="colorButton">
-                            <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
-                            <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
-                        </a>
-                    </li>
-                </ul> --}}
-                <!-- Icons Menu End -->
-
                 <!-- Menu Start -->
-                @include('tenant.layouts.partials.sidebar_pos')
+               
                 <!-- Menu End -->
 
                 <!-- Mobile Buttons Start -->
@@ -310,37 +301,14 @@
                     <!-- Scrollspy Mobile Dropdown End -->
 
                     <!-- Menu Button Start -->
-                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        {{-- <a href="#" id="mobileMenuButton" class="menu-button" aria-haspopup="true" data-bs-toggle="dropdown"> --}}
-                        <i data-cs-icon="menu"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end user-menu wide">
-                        <div class="row  ms-0 me-0">
-                            <div class="col-12 pe-1 ps-1">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
-                                            <span class="align-middle">Cerrar Sesión</span>
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <!-- Menu Button End -->
                 </div>
                
                 <!-- Mobile Buttons End -->
             </div>
         </div>
-        <div></div>
+        
        
 
         <main>
@@ -348,294 +316,8 @@
                 @yield('content')
             </div>
         </main>
-
-        {{-- @if ($vc_user->type == 'superadmin')
-           
-            <div class="modal fade modal-right scroll-out-negative" id="settings" data-bs-backdrop="true"
-                tabindex="-1" role="dialog" aria-labelledby="settings" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable full" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Ajustes de tema</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="scroll-track-visible">
-                                <div class="mb-5" id="color">
-                                    <label class="mb-3 d-inline-block form-label">Color</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap mb-3">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="light-blue"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="blue-light"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">AZUL CLARO</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="dark-blue"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="blue-dark"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">AZUL OSCURO</span>
-                                            </div>
-                                        </a>
-                                    </div>
-
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap mb-3">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="light-red"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="red-light"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">LUZ ROJA</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="dark-red"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="red-dark"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">ROJO OSCURO</span>
-                                            </div>
-                                        </a>
-                                    </div>
-
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap mb-3">
-                                        <a href="#" class="flex-grow-1 w-50 option col"
-                                            data-value="light-green" data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="green-light"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">VERDE CLARO</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="dark-green"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="green-dark"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">VERDE OSCURO</span>
-                                            </div>
-                                        </a>
-                                    </div>
-
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap mb-3">
-                                        <a href="#" class="flex-grow-1 w-50 option col"
-                                            data-value="light-purple" data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="purple-light"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">MORADO CLARO</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col"
-                                            data-value="dark-purple" data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="purple-dark"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">MORADO OSCURO</span>
-                                            </div>
-                                        </a>
-                                    </div>
-
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap mb-3">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="light-pink"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="pink-light"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">ROSADO CLARO</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="dark-pink"
-                                            data-parent="color">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow color">
-                                                <div class="pink-dark"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">ROSADO OSCURO </span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5" id="navcolor">
-                                    <label class="mb-3 d-inline-block form-label">Anular paleta de navegación</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap">
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="default"
-                                            data-parent="navcolor">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">por defecto</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="light"
-                                            data-parent="navcolor">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-secondary figure-light top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Claro</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="dark"
-                                            data-parent="navcolor">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-muted figure-dark top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Oscuro</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5" id="placement">
-                                    <label class="mb-3 d-inline-block form-label">Ubicación de Menu</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="horizontal"
-                                            data-parent="placement">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Horizontal</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="vertical"
-                                            data-parent="placement">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary left"></div>
-                                                <div class="figure figure-secondary right"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Vertical</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5" id="behaviour">
-                                    <label class="mb-3 d-inline-block form-label">Comportamiento de Menu</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="pinned"
-                                            data-parent="behaviour">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary left large"></div>
-                                                <div class="figure figure-secondary right small"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Fijo</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="unpinned"
-                                            data-parent="behaviour">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary left"></div>
-                                                <div class="figure figure-secondary right"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">Sin Fijar</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5" id="layout">
-                                    <label class="mb-3 d-inline-block form-label">Radio</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap">
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="fluid"
-                                            data-parent="layout">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">FLUID</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-50 option col" data-value="boxed"
-                                            data-parent="layout">
-                                            <div class="card rounded-md p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom small"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">BOXED</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="mb-5" id="radius">
-                                    <label class="mb-3 d-inline-block form-label">Radius</label>
-                                    <div class="row d-flex g-3 justify-content-between flex-wrap">
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="rounded"
-                                            data-parent="radius">
-                                            <div class="card rounded-md radius-rounded p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">ROUNDED</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="standard"
-                                            data-parent="radius">
-                                            <div class="card rounded-md radius-regular p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">STANDARD</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="flex-grow-1 w-33 option col" data-value="flat"
-                                            data-parent="radius">
-                                            <div class="card rounded-md radius-flat p-3 mb-1 no-shadow">
-                                                <div class="figure figure-primary top"></div>
-                                                <div class="figure figure-secondary bottom"></div>
-                                            </div>
-                                            <div class="text-muted text-part">
-                                                <span class="text-extra-small align-middle">FLAT</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" class="btn settings-button btn-gradient-primary" data-bs-toggle="modal"
-                data-bs-target="#settings" id="settingsButton">
-                <i data-cs-icon="paint-roller" class="position-relative"></i>
-            </button>
-            
-        @endif --}}
        
         <footer style="margin-top: 0; margin-bottom: 0;">
-            
-
                    
                         <div class="col-2 d-flex align-items-center justify-content-center">
                             <img 
@@ -686,26 +368,6 @@
                             </p>
                         </div>
                     </div>
-
-                    {{-- <div class="container">
-                        <div class="row">
-                            <div style="color: rgb(9, 9, 57);">
-                                @php
-                            $commit = exec('git rev-parse HEAD');
-                            $commit = substr($commit, 0, 7);
-                            @endphp
-                            <p class="mb-0 text-medium" style="text-align: right; font-size: 1.2rem;">
-                            @if ($commit)
-                                <span style="margin-right: 35px;">Commit: {{ $commit }}</span>
-                            @endif
-                            <span>Todos los derechos reservados
-                                <span style="font-weight: bold;">Desarrollado por Sdrimsac Solutions {{ date('Y') }} <i
-                                class="far fa-copyright"></i></span>
-                            </p>
-                        </div>
-                    </div>
-                </div> --}}
-            
         </footer>
     </div>
 
@@ -756,13 +418,6 @@
                 min-height: 50px;
             }
         }
-
-        /* @media screen and (max-width: 800px) {
-            .date-time-container,
-            .user-image-container {
-                display: none !important;
-            }
-        } */
         .user-image-container {
             aspect-ratio: 1/1; /* Fuerza una relación de aspecto 1:1 (cuadrado) */
             width: 60px; /* Ancho fijo */
@@ -883,7 +538,7 @@
                         body: JSON.stringify({
                             pin: pin
                         })
-                    )
+            })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -900,6 +555,7 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
+                    
             });
         });
 
@@ -951,10 +607,6 @@
         
         
     </script>
-    <!-- Page Specific Scripts End -->
 </body>
-{{-- <div class="card" style="background-color: red; color: white; padding: 20px; margin: 20px; border-radius: 10px;">
-    <h3>Card Roja</h3>
-    <p>Este es un ejemplo de una tarjeta con fondo rojo.</p>
-</div> --}}
+
 </html>

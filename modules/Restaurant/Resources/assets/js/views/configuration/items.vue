@@ -1,4 +1,4 @@
-<!-- Listado de Mesas -->
+<!-- Listado de Mesas   Restaurant -->
 <!-- Listado de Habitaciones -->
 <template>
     <div>
@@ -11,13 +11,13 @@
                             <template v-if="resource == 'caja/tables'">
                                 <i class="icofont-dining-table text-white mr-2" style="font-size: 1.5rem; margin-right: 0.5rem;" title="Mesas" aria-hidden="true"></i>
                                 <h4 class="my-0 text-white d-flex align-items-center"
-                                    style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
+                                    style="font-size: 1rem; font-weight: bold;">Listado de {{ title }}</h4>
                             </template>
                             <template v-else-if="resource == 'caja/rooms'">
                                 <i class="fas fa-door-open text-white mr-2"
                                     style="font-size: 1rem; margin-right: 0.5rem;"></i>
                                 <h4 class="my-0 text-white d-flex align-items-center"
-                                    style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
+                                    style="font-size: 1rem; font-weight: bold;">Listado de {{ title }}</h4>
                             </template>
                             <template v-else>
                                 <div class="d-flex align-items-center">
@@ -25,7 +25,7 @@
                                         style="font-size: 1rem; margin-right: 0.5rem;"
                                         title="Área de impresión" aria-hidden="true"></i>
                                     <h4 class="my-0 text-white d-flex align-items-center"
-                                        style="font-size: 1rem; font-weight: bold;">{{ title }}</h4>
+                                        style="font-size: 1rem; font-weight: bold;">Listado de {{ title }}</h4>
                                 </div>
                             </template>
                         </div>

@@ -4,130 +4,134 @@
         <el-tabs type="border-card" v-model="activeTab" @tab-click="handleTabClick">
             <el-tab-pane label="Creditos CPE" name="cpe">
                 <div>
-                    <div class="row m-2">
-                        <el-pagination @current-change="getCpeRecords" layout="total, prev, pager, next"
-                            :total="paginationCpe.total" :current-page.sync="paginationCpe.current_page"
-                            :page-size="paginationCpe.per_page">
-                        </el-pagination>
-                    </div>
+                   
                     <div class="row mt-1">
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-input placeholder="Buscar" v-model="searchCpe" prefix-icon="el-icon-search" clearable
                                 @clear="getCpeRecords" @input="getCpeRecordsTimer"></el-input>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-date-picker v-model="date_start_cpe" type="date" placeholder="Fecha inicio"
                                 @change="getCpeRecords" value-format="yyyy-MM-dd" class="w-100"></el-date-picker>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-date-picker class="w-100" v-model="date_end_cpe" type="date" placeholder="Fecha fin"
                                 @change="getCpeRecords" value-format="yyyy-MM-dd"></el-date-picker>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-select v-model="establishment_id_cpe" @change="getCpeRecords"
                                 placeholder="Seleccione establecimiento" clearable filterable>
                                 <el-option v-for="establishment in establishments" :key="establishment.id"
                                     :label="establishment.description" :value="establishment.id"></el-option>
                             </el-select>
                         </div>
-                        <div class="col-6" v-if="recordsCpe.length">
-                            <el-button type="primary" @click="exportExcelCpe">Exportar Excel</el-button>
+                        <div class="col-3 offset-9 text-right" v-if="recordsCpe.length">
+                            <el-button class="btn_excelsmall" type="success" @click="exportExcelCpe">Exportar Excel</el-button>
                         </div>
                     </div>
                     <div class="row m-2 table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Cliente</th>
-                                    <th>Documento</th>
-                                    <th>Monto</th>
-                                    <th>Saldo</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="record in recordsCpe" :key="record.id">
-                                    <td>{{ record.date_of_issue }}</td>
-                                    <td>
-                                        {{ record.customer_name }}
-                                        <br />
-                                        <small>
-                                            {{ record.customer_number }}
-                                        </small>
-                                    </td>
-                                    <td>{{ record.number }}</td>
-                                    <td>{{ Number(record.total).toFixed(2) }}</td>
-                                    <td class="text-warning">
-                                        {{ Number(record.remain).toFixed(2) }}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary btn-sm"
-                                            @click="clickPayment(record.id)">
-                                            Pagar
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="row m-2 table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr style="background-color: #073f68; color: #ffffff;">
+                                        <th style="color:#ffffff; width:10%;">Fecha</th>
+                                        <th style="color:#ffffff; width:35%;">Cliente</th>
+                                        <th style="color:#ffffff; width:15%;">CPE</th>
+                                        <th style="color:#ffffff; width:15%;">Monto</th>
+                                        <th style="color:#ffffff; width:15%;">Saldo</th>
+                                        <th style="color:#ffffff; width:15%;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(record, index) in recordsCpe" :key="record.id"
+                                        :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                                        <td>{{ record.date_of_issue }}</td>
+                                        <td>
+                                            <div style="font-size:1.2rem; font-weight:500;">
+                                                {{ record.customer_number }}
+                                            </div>
+                                            <div style="font-size:1rem; font-weight:300;">
+                                                <strong>{{ record.customer_name }}</strong>
+                                            </div>
+                                        </td>
+                                        <td>{{ record.full_number || record.number }}</td>
+                                        <td>{{ Number(record.total).toFixed(2) }}</td>
+                                        <td class="text-warning">{{ Number(record.remain).toFixed(2) }}</td>
+                                        <td>
+                                            <button type="primary" class="btn_guardarsmall" @click="clickPayment(record.id)">
+                                                Pagar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <documents-payments @getRecords="getCpeRecords" :external="true"
                         :showDialog.sync="showDialogPayments" :documentId="recordId"></documents-payments>
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="Creditos nota de venta" name="salenote" v-if="isCreditCash">
-                <div>
-                    <div class="row m-2">
-                        <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
-                            :total="pagination.total" :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page">
+
+                         <div class="row m-2">
+                        <el-pagination @current-change="getCpeRecords" layout="total, prev, pager, next"
+                            :total="paginationCpe.total" :current-page.sync="paginationCpe.current_page"
+                            :page-size="paginationCpe.per_page">
                         </el-pagination>
                     </div>
+                </div>
+            </el-tab-pane>
+            <!-- Notas de Venta Créditos -->
+            <el-tab-pane label="Créditos Nota de Venta" name="salenote" v-if="isCreditCash">
+                <div>
+                   
                     <div class="row mt-1">
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-input placeholder="Buscar" v-model="search" prefix-icon="el-icon-search" clearable
                                 @clear="getRecords" @input="getRecordsTimer"></el-input>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-date-picker v-model="date_start" type="date" placeholder="Fecha inicio"
                                 @change="getRecords" value-format="yyyy-MM-dd" class="w-100"></el-date-picker>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-date-picker class="w-100" v-model="date_end" type="date" placeholder="Fecha fin"
                                 @change="getRecords" value-format="yyyy-MM-dd"></el-date-picker>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <el-select v-model="establishment_id" @change="getRecords"
-                                placeholder="Seleccione establecimiento" clearable filterable>
+                                placeholder="Establecimiento" clearable filterable>
                                 <el-option v-for="establishment in establishments" :key="establishment.id"
                                     :label="establishment.description" :value="establishment.id"></el-option>
                             </el-select>
                         </div>
-                        <div class="col-6" v-if="records.length">
-                            <el-button type="primary" @click="exportExcel">Exportar Excel</el-button>
+                        <div class="col-3 offset-9 text-right" v-if="records.length">
+                            <el-button class="btn_excelsmall" type="primary" @click="exportExcel">Exportar</el-button>
                         </div>
                     </div>
                     <div class="row m-2 table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Cliente</th>
-                                    <th>Documento</th>
-                                    <th>Monto</th>
-                                    <th>Saldo</th>
-                                    <th>Acciones</th>
+                                <tr style="background-color: #073f68; color: #ffffff;">
+                                    <th style="color:#ffffff; width:10%;">Fecha</th>
+                                    <th style="color:#ffffff; width:35%;">Cliente</th>
+                                    <th style="color:#ffffff; width:15%;">CPE</th>
+                                    <th style="color:#ffffff; width:15%;">Monto</th>
+                                    <th style="color:#ffffff; width:15%;">Saldo</th>
+                                    <th style="color:#ffffff; width:15%;">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="record in records" :key="record.id">
+                                <tr v-for="(record, index) in records" :key="record.id" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
                                     <td>{{ record.date_of_issue }}</td>
                                     <td>
-                                        {{ record.customer_name }}
-                                        <br />
-                                        <small>
+                                        <div style="font-size:1.2rem; font-weight:500;">
                                             {{ record.customer_number }}
-                                        </small>
+                                        </div>
+                                        <div style="font-size:1rem; font-weight:300;">
+                                       
+                                            <strong>{{ record.customer_name }}</strong>
+                                       
+                                       
+                                        </div>
+                                       
                                     </td>
                                     <td>{{ record.full_number }}</td>
                                     <td>{{ Number(record.total).toFixed(2) }}</td>
@@ -135,7 +139,7 @@
                                         {{ Number(record.remain).toFixed(2) }}
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-primary btn-sm" @click="pay(record.id)">
+                                        <button type="primary" class="btn_guardarsmall" @click="pay(record.id)">
                                             Pagar
                                         </button>
                                     </td>
@@ -145,6 +149,13 @@
                     </div>
                     <sale-note-payments :showDialog.sync="showDialogPaymentsSalenote" :documentId="recordId"
                         @reloadData="getRecords" :configuration="configuration"></sale-note-payments>
+
+                     <div class="row m-2">
+                        <el-pagination @current-change="getRecords" layout="total, prev, pager, next"
+                            :total="pagination.total" :current-page.sync="pagination.current_page"
+                            :page-size="pagination.per_page">
+                        </el-pagination>
+                    </div>
                 </div>
             </el-tab-pane>
         </el-tabs>

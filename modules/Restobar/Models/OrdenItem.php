@@ -41,7 +41,7 @@ class OrdenItem extends ModelTenant
         static::created(function ($orden_item) {
             $request = Request::capture();
             $description = "Orden item creado: Solicitado";
-            RegisterMovementTrait::registerCreate(
+            $orden_item->registerCreate(
                 $orden_item,
                 $request,
                 $description,
@@ -53,7 +53,7 @@ class OrdenItem extends ModelTenant
             $description = "Orden item en preparación";
             $newStatus = $orden_item->status_orden->description;
             $description = "Orden item actualizado: $newStatus";
-            RegisterMovementTrait::registerUpdate(
+            $orden_item->registerUpdate(
                 $orden_item,
                 $request,
                 $description,
@@ -73,7 +73,7 @@ class OrdenItem extends ModelTenant
                 $data['quantity'] = $orden_item->quantity;
                 $data['price'] = $orden_item->price;
                 $data['observations'] = $orden_item->observations;
-                RegisterMovementTrait::registerDelete(
+                $orden_item->registerDelete(
                     $orden_item,
                     $request,
                     $description,

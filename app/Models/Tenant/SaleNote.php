@@ -107,7 +107,7 @@ class SaleNote extends ModelTenant
             $request = Request::capture();
              $description = "Nota de venta creada";
              $data = $model->toArray();
-             RegisterMovementTrait::registerCreate(
+             $model->registerCreate(
                  $model,
                  $request,
                  $description,
@@ -120,7 +120,7 @@ class SaleNote extends ModelTenant
             $original_model = SaleNote::find($model->id);
             $description = "Nota de venta actualizado";
             $data = $original_model->toArray();
-            RegisterMovementTrait::registerUpdate(
+            $model->registerUpdate(
                 $model,
                 $request,
                 $description,
@@ -133,7 +133,7 @@ class SaleNote extends ModelTenant
                 $request = Request::capture();
                 $description = "Nota de venta eliminada";
                 $data = $model->toArray();
-                RegisterMovementTrait::registerDelete(
+                $model->registerDelete(
                     $model,
                     $request,
                     $description,

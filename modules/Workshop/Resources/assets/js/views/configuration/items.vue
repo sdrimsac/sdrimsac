@@ -67,7 +67,7 @@
               <template v-if="resource == 'caja/rooms'">
                 <i class="fas fa-door-open text-white mr-2"></i>
               </template>
-              <h4 class="my-0 text-white">{{ title }}</h4>
+              <h4 class="my-0 text-white">Listado de {{ title }}</h4>
             </div>
           </div>
         </template>

@@ -2826,12 +2826,10 @@
                                                                                         }">
                                                                                         <i
                                                                                             class="fas fa-tasks fa-lg"></i>
-                                                                                        Acciones
-                                                                                        en
-                                                                                        Caja
+                                                                                        Acciones en Comprobantes
                                                                                         <el-tooltip class="item"
                                                                                             effect="dark"
-                                                                                            content="Acciones en CAJA, como anulación de comprobantes, pagos, nota de crédito"
+                                                                                            content="Acciones en Comprobantes, como anulación de comprobantes, pagos, nota de crédito"
                                                                                             placement="top-start">
                                                                                             <i
                                                                                                 class="fa fa-info-circle"></i>
@@ -7140,9 +7138,8 @@
                                                                         }">
                                                                             <i ref="printDocumentCashIcon"
                                                                                 class="fas fa-print tab-icon fa-lg"></i>
-                                                                            Reimpresión
-                                                                            CPE
-                                                                            Caja
+                                                                            Reimpresión CPE Comprobantes
+                                                                            
                                                                         </label>
                                                                         <el-switch v-model="form.print_document_cash
                                                                             " active-text="Si" inactive-text="No"
@@ -10832,7 +10829,7 @@
                                                                         }">
                                                                             <i ref="variationIcon"
                                                                                 class="fas fa-file-alt tab-icon"></i>
-                                                                            OcultarCancelar pedidos en Mozo
+                                                                            Mostrar Cancelar pedidos en Mozo
                                                                             
                                                                             <el-tooltip class="item" effect="dark"
                                                                                 content="con esta opciopn se ocultara la opcion de cancelar pedidos parcial o completo"
