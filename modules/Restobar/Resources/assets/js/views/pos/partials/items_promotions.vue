@@ -1,36 +1,97 @@
+<!-- Productos de la promoción Nuevo restobar - CAJA -->
 <template>
-    <el-dialog :visible="showDialog" width="900px" :close-on-click-modal="false" :show-close="false" :title="'Productos de la Promoción' + (selectedFood ? ' - ' + selectedFood.description : '')"
-        custom-class="items-promotions-dialog" @update:visible="$emit('update:showDialog', $event)"
+    <el-dialog 
+        :visible="showDialog" 
+        width="60%" 
+        :close-on-click-modal="false" 
+        :show-close="false"
+        :title="'Productos de la Promoción ' + (selectedFood ? ' - ' + selectedFood.description : '')"
+        custom-class="items-promotions-dialog" 
+        @update:visible="$emit('update:showDialog', $event)"
         @close="closeDialog">
-        <div class="card">
+
+         <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <el-button class="btn_cancelarsmall" type="danger" @click="closeDialog">Cerrar</el-button>
+                <el-button class="btn_guardarsmall" type="primary" @click="handleSave">Agregar</el-button>
+            </div>
+
+            <!-- Buscador / filtro interactivo -->
+            <div class="mt-2" style="display:flex; gap:8px; align-items:center;">
+                <el-input v-model="searchTerm" placeholder="Buscar producto por nombre o código" clearable style="width:40%;">
+                    <template #prefix>
+                        <i class="el-icon-search"></i>
+                    </template>
+                </el-input>
+                <div style="flex:1"></div>
+            </div>
+
+            <!-- Lista de productos seleccionados (resumen) -->
+            <div v-if="selectedItems.length" class="mt-2" style="border:1px solid #eaeaea;padding:8px;border-radius:4px;background:#fafafa;">
+                <strong>Productos seleccionados</strong>
+                <table class="table table-sm" style="margin-top:8px;">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th style="text-align:right;">Cantidad</th>
+                            <th style="text-align:center;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(it, idx) in selectedItems" :key="'sel-'+idx">
+                            <td>
+                                <small style="color:#666">{{ it.internal_id }}</small><br />
+                                <strong>{{ it.description }}</strong>
+                            </td>
+                            <td style="text-align:right; width:160px;">
+                                <el-input-number v-model="it.quantity_to_add" :min="1" :max="getMaxForRow(it)" :step="1" controls-position="right"></el-input-number>
+                            </td>
+                            <td style="text-align:center; width:110px;">
+                                <el-button type="danger" size="mini" @click="removeSelected(it)">Quitar</el-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        <div class=" mt-2">
             <div>
                 <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th style="text-align: left;">Código</th>
-                            <th style="text-align: left;">Descripción</th>
-                            <th style="text-align: right;">Req.</th>
+                        <tr style="background-color: #073f68; color: #fff;">
+                            <th></th>
+                            <th style="text-align: left; color: #fff !important;">Producto</th>
+                            <!-- <th style="text-align: left; color: #fff !important;">Descripción</th> -->
+                            <th style="text-align: right; color: #fff !important;">Req.</th>
                             <!-- <th style="text-align: right;">Precio</th> -->
-                            <th style="text-align: right;">Stock</th>
-                            <th style="text-align: right;">Falta</th>
-                            <th style="text-align: center;">Disponible</th>
+                            <th style="text-align: right; color: #fff !important;">Stock</th>
+                            <th style="text-align: right; color: #fff !important;">Falta</th>
+                            <!-- <th style="text-align: center; color: #fff !important;">Disponible</th> -->
+                            <th style="text-align: center; color: #fff !important;"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="promotionItems.length === 0">
                             <td colspan="7" class="text-center">No hay productos en la promoción</td>
                         </tr>
-                        <tr v-for="(row, index) in promotionItems" :key="index">
-                            <td style="text-align: left;">{{ row.internal_id }}</td>
-                            <td style="text-align: left;">{{ row.description }}</td>
+                        <tr v-for="(row, index) in filteredItems" :key="index" :style="{ backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+                            <td style="text-align: center;">
+                                <el-tag v-if="row.has_stock" effect="dark" style="background-color:#1b5e20;color:#fff;border-color:#1b5e20;padding:4px 8px;">
+                                    <i class="el-icon-check" style="color:#fff;font-size:14px;"></i>
+                                </el-tag>
+                                <el-tag v-else effect="dark" style="background-color:#c62828;color:#fff;border-color:#c62828;padding:4px 8px;">
+                                    <i class="el-icon-close" style="color:#fff;font-size:14px;"></i>
+                                </el-tag>
+                            </td>
+                            <td style="text-align: left;">
+                                <small style="color: #666;">{{ row.internal_id }}</small><br />
+                                <strong style="font-size:1.1em;">{{ row.description }}</strong>
+                            </td>
+                            <!-- <td style="text-align: left;"></td> -->
                             <td style="text-align: right;">{{ row.quantity_required }}</td>
                             <!-- <td style="text-align: right;">{{ row.sale_unit_price }}</td> -->
                             <td style="text-align: right;">{{ row.stock_available }}</td>
                             <td style="text-align: right;">{{ row.difference }}</td>
-                            <td style="text-align: center;">
-                                <el-tag type="success" v-if="row.has_stock">Sí</el-tag>
-                                <el-tag type="danger" v-else>No</el-tag>
-                            </td>
+                            
                             <td>
                                 <!-- <el-input v-model="row.quantity_to_add" placeholder="Cantidad a agregar"></el-input> -->
                                 <el-input-number v-model="row.quantity_to_add" controls-position="right" :min="1"
@@ -40,10 +101,7 @@
                     </tbody>
                 </table>
             </div>
-            <div style="text-align: right; margin-top: 12px;">
-                <el-button type="primary" @click="closeDialog">Cerrar</el-button>
-                <el-button type="success" @click="handleSave" style="margin-left: 8px;">Agregar</el-button>
-            </div>
+           
         </div>
     </el-dialog>
 </template>
@@ -54,11 +112,18 @@ export default {
     data() {
         return {
             promotionItems: [],
+            // texto para filtrar en tiempo real
+            searchTerm: '',
         };
     },
     methods: {
         closeDialog() {
             this.$emit("update:showDialog", false);
+        },
+        removeSelected(item) {
+            // Quitar la selección: dejar la cantidad en 0/undefined para que no se incluya
+            if (!item) return;
+            this.$set(item, 'quantity_to_add', 0);
         },
         async setItemCheckPromotions(id) {
             let pass = true;
@@ -144,6 +209,22 @@ export default {
             this.$emit('addPromotionItems', itemsToAdd);
             this.closeDialog();
         },
+    },
+    computed: {
+        // items filtrados por searchTerm (nombre o internal_id)
+        filteredItems() {
+            const term = (this.searchTerm || '').toString().trim().toLowerCase();
+            if (!term) return this.promotionItems;
+            return this.promotionItems.filter(it => {
+                const desc = (it.description || '').toString().toLowerCase();
+                const code = (it.internal_id || '').toString().toLowerCase();
+                return desc.includes(term) || code.includes(term);
+            });
+        },
+        // lista de items con cantidad > 0 para el resumen
+        selectedItems() {
+            return (this.promotionItems || []).filter(it => Number(it.quantity_to_add) > 0);
+        }
     },
     watch: {
         // When the dialog is opened, check promotions for the selected food

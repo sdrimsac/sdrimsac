@@ -1,7 +1,15 @@
-<!-- Zona de Atención Caja -->
+<!-- Mesas de Nuevo Restobar - CAJA-->
 <template>
-    <el-dialog :visible="showTables" v-loading="loading" @open="open" @close="close" width="80%"
-        title="Zona de Atención" :close-on-click-modal="false" :class="{ top }">
+    <el-dialog
+        :visible="showTables" 
+        v-loading="loading" 
+        @open="open" 
+        @close="close" 
+        width="80%"
+        title="Zona de Atención" 
+        :close-on-click-modal="false" 
+        :class="{ top }">
+        
         <el-tabs v-model="activeTab" class="mb-3" @tab-click="handleTabClick">
             <el-tab-pane name="Mesas">
                 <template slot="label">
