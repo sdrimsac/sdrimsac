@@ -48,6 +48,7 @@ class Item extends ModelTenant
     }
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group', 'brand'];
     protected $fillable = [
+        'promo_max_quantity',
         'promotions_items',
         'calculate_price',
         'commission',

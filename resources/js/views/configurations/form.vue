@@ -10180,7 +10180,7 @@
                                                         </div>
 
                                                         <!-- No Cierra Caja con Mesa Ocupada -->
-                                                        <div class="col-md-3 mb-2">
+                                                        <!-- <div class="col-md-3 mb-2">
                                                             <div class="card h-100">
                                                                 <div class="card-body d-flex flex-column"
                                                                     style="padding: 7px;">
@@ -10204,15 +10204,51 @@
                                                                                 <i class="fa fa-info-circle fa-lg"></i>
                                                                             </el-tooltip>
                                                                         </label>
-                                                                        <!-- Mostrar siempre activo y deshabilitado -->
+                                                                      
                                                                         <el-switch
-                                                                            :value="true"
-                                                                            disabled
+                                                                            v-model="form.ordens_cash"
                                                                             active-text="Si"
                                                                             inactive-text="No"
                                                                             :active-color="'#28a745'"
                                                                             :inactive-color="'#6c757d'">
                                                                         </el-switch>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="card h-100">
+                                                                <div class="card-body d-flex flex-column"
+                                                                    style="padding: 7px;">
+                                                                    <div class="form-group text-left flex-grow-1">
+                                                                        <label class="control-label w-100" :style="{
+                                                                            color: form.ordens_cash
+                                                                                ? '#28a745'
+                                                                                : '#6c757d'
+                                                                        }">
+                                                                            <i ref="variationIcon"
+                                                                                class="fas fa-file-alt tab-icon"></i>
+                                                                            No Cerrar Caja con Mesas Ocupadas
+                                                                            
+                                                                            <el-tooltip class="item" effect="dark"
+                                                                                content="activar esta opcion para mostrar las categorías en scroll con un formato mas visible como chifa china"
+                                                                                placement="top-start">
+                                                                                <i class="fa fa-info-circle"></i>
+                                                                            </el-tooltip>
+                                                                        </label>
+                                                                        <el-switch v-model="form.ordens_cash
+                                                                            " active-text="Si" inactive-text="No"
+                                                                            :active-color="'#28a745'
+                                                                                " :inactive-color="'#6c757d'
+                                                                                    " @change="
+                                                                                        () =>
+                                                                                            submit(
+                                                                                                'activar la categoría en scroll',
+                                                                                                form.ordens_cash,
+                                                                                                'variationIcon'
+                                                                                            )
+                                                                                    "></el-switch>
                                                                     </div>
                                                                 </div>
                                                             </div>

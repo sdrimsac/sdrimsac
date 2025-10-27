@@ -78,13 +78,13 @@
                                 <i class="icofont-printer"></i>
                             </el-button>
                         </el-tooltip>
-                        <el-tooltip effect="dark" content="re-Imprimir comanda sus respectivas areas"
+                        <!-- <el-tooltip effect="dark" content="re-Imprimir comanda sus respectivas areas"
                             placement="top-start">
                             <el-button type="warning" class="btn btn-sm" @click="printTicketRePrint"
                                 v-if="ordens.length > 0">
                                 <i class="icofont-printer"></i>
                             </el-button>
-                        </el-tooltip>
+                        </el-tooltip> -->
                         <el-tooltip effect="dark" content="re-Imprimir comanda en caja" placement="top-start">
                             <el-button v-if="configuration.re_printer && ordens.length > 0" type="primary"
                                 class="btn btn-sm" @click="printTicket">

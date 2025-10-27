@@ -230,8 +230,15 @@
                                     <el-input v-model="form.delivery_cost"></el-input>
                                 </div>
                             </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 px-2">
+                                <div class="form-group">
+                                    <label class="control-label d-flex align-items-center">
 
-
+                                        maximos productos por venta
+                                    </label>
+                                    <el-input-number v-model="form.promo_max_quantity"></el-input-number>
+                                </div>
+                            </div>
                             <div class="col-md-3 mt-4 d-flex align-items-start justify-content-end">
                                 <el-button type="primary" icon="plus" @click.prevent="showDialogAddItem = true">
                                     <i class="fas fa-plus-circle fa-lg"></i>

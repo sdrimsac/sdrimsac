@@ -56,6 +56,7 @@ class ItemPromoResource extends JsonResource
         //array_merge
         $commercial_treatments =  array_merge($commercial_treatments->toArray(), $all_commercial_treatments->toArray());
         return [
+            'promo_max_quantity' => $this->promo_max_quantity,
             'codes_family' => (bool)$this->codes_family,
             'commission' => $this->commission,
             'init_report' => (bool)$this->init_report,

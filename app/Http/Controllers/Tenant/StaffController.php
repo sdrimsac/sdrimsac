@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
 use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonCollection;
+use App\Imports\PersonWorkerImport;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\CreditList;
@@ -17,9 +18,11 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\PersonAttendance;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
+use App\Models\Tenant\WorkerDailySummari;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +36,7 @@ use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
+use Maatwebsite\Excel\Excel;
 
 class StaffController extends Controller
 {
@@ -62,38 +66,6 @@ class StaffController extends Controller
         return $orden_items;
     } */
 
-    public function getData($request)
-    {
-        $establishment_id = $request->establishment_id;
-        $person_id = $request->person_id;
-        $date = $request->date;
-        $paid = $request->paid == "0" ? false : true;
-
-        $ordens = Orden::query()
-            ->whereHas('credit_list', function ($qq) use ($establishment_id, $person_id, $date, $paid) {
-                $qq->where('customer_id', $person_id);
-
-                if ($establishment_id) {
-                    $qq->where('establishment_id', $establishment_id);
-                }
-
-                if ($date) {
-                    $month = Carbon::parse($date)->format('m');
-                    $qq->whereMonth('created_at', $month);
-                }
-
-                if ($paid !== null) {
-                    $qq->where('paid', $paid);
-                }
-            })
-            ->with(['orden_items' => function ($q) {
-                $q->orderBy('date', 'asc');
-            }])
-            ->orderBy('date', 'asc');
-            
-        return $ordens;
-    }
-
     public function download(Request $request)
     {
         $company = Company::first();
@@ -104,6 +76,35 @@ class StaffController extends Controller
             ->person($person)
             ->company($company)
             ->download('Lista_de_credito_' . Carbon::now() . '.xlsx');
+    }
+
+    public function importPerson(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
+        if ($request->hasFile('file')) {
+            try {
+                $import = new PersonWorkerImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                $errors = $import->getErrors();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data,
+                    'errors' => $errors
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
     }
 
     public function receipt($id)
@@ -173,6 +174,78 @@ class StaffController extends Controller
                 'error' => $e->getMessage(),
             ];
         }
+    }
+
+    public function generarResumenAsistencias(Request $request)
+    {
+        // Puedes filtrar por mes si deseas
+        $month = $request->input('month', now()->format('m'));
+        $year = $request->input('year', now()->format('Y'));
+
+        // Obtener todos los empleados (personas con is_staff)
+        $empleados = Person::where('is_staff', true)->get();
+
+        foreach ($empleados as $empleado) {
+
+            $registros = PersonAttendance::where('person_id', $empleado->id)
+                ->whereYear('date_attendance', $year)
+                ->whereMonth('date_attendance', $month)
+                ->orderBy('date_time_attendance')
+                ->get()
+                ->groupBy('date_attendance');
+
+            foreach ($registros as $fecha => $marcas) {
+
+                $entrada = $marcas->first()->time ?? null;
+                $salida = $marcas->last()->time ?? null;
+
+                if ($entrada && $salida) {
+                    $horasTrabajadas = Carbon::parse($entrada)->diffInMinutes(Carbon::parse($salida)) / 60;
+                } else {
+                    $horasTrabajadas = 0;
+                }
+
+                $horasExtras = max(0, $horasTrabajadas - 8);
+
+                $horaBase = ($empleado->base_salary ?? 0) / 30 / 8; 
+                $montoExtra = 0;
+                if ($horasExtras > 0) {
+                    if ($horasExtras <= 2) {
+                        $montoExtra = $horasExtras * $horaBase * 1.25;
+                    } else {
+                        $montoExtra = (2 * $horaBase * 1.25) + (($horasExtras - 2) * $horaBase * 1.35);
+                    }
+                }
+
+                $falta = false;
+                if (!$entrada || !$salida) {
+                    $falta = true;
+                }
+
+                $entrance_val = $entrada ?? $fecha;
+                $exit_val = $salida ?? '00:00:00';
+
+                WorkerDailySummari::updateOrCreate(
+                    [
+                        'person_id' => $empleado->id,
+                        'date_daily' => $fecha
+                    ],
+                    [
+                        'entrance' => $entrance_val,
+                        'exit' => $exit_val,
+                        'horas_trabajadas' => round($horasTrabajadas, 2),
+                        'overtime' => round($horasExtras, 2),
+                        'amount_extra' => round($montoExtra, 2),
+                        'lack' => $falta,
+                    ]
+                );
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Resumen diario generado correctamente'
+        ]);
     }
     public function recordByPerson(Request $request)
     {

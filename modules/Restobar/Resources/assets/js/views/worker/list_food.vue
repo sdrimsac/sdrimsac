@@ -611,7 +611,7 @@ export default {
                 // Validate stock only for regular products
                 if (this.configuration.sales_stock === true) {
                     if (this.selectedFood.item.promotions_items == 1) {
-                        if (this.configuration.sales_stock == true &&
+                        if (this.configuration.sales_stock === true &&
                             this.selectedFood.item.unit_type_id != "ZZ") {
                             if (this.configuration.restobar_home) {
                                 this.$nextTick(() => {
@@ -621,7 +621,7 @@ export default {
                             }
                         }
                     } else if (this.selectedFood.item.is_set == 1) {
-                        if (this.configuration.sales_stock == true &&
+                        if (this.configuration.sales_stock === true &&
                             this.selectedFood.item.unit_type_id != "ZZ") {
                             if (this.configuration.restobar_home) {
                                 pass = await this.setItemCheckStock(

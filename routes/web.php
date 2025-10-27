@@ -193,14 +193,16 @@ if ($hostname) {
                     Route::get('/', [StaffController::class, 'staff_report_index'])->name('tenant.staff.index');
                     Route::get('/tables', [StaffController::class, 'tables']);
                     Route::post('/send-credit', [StaffController::class, 'send_credit']);
-
                     Route::get('/balance/{customer_id}', [StaffController::class, 'get_balance']);
                     Route::get('/records', [StaffController::class, 'records']);
                     Route::get('/records_by_person/download', [StaffController::class, 'download']);
                     Route::post('/records_by_person', [StaffController::class, 'recordByPerson']);
+                    Route::post('/import-person', [StaffController::class, 'importPerson']);
                     Route::post('/records_by_person_total', [StaffController::class, 'recordByPersonTotal']);
                     Route::post('/records_by_person_to_pay', [StaffController::class, 'recordByPersonToPay']);
                     Route::get('/get-ordens/{customer_id}', [StaffController::class, 'get_ordens']);
+                    Route::post('/generate-summary', [StaffController::class, 'generarResumenAsistencias']);
+
                 });
                 Route::prefix('/sellers')->group(function () {
                     //

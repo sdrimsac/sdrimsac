@@ -628,6 +628,7 @@ export default {
             }
 
             this.selectedFood = JSON.parse(JSON.stringify(this.foods[index]));
+            console.log("Selected Food sdfasdfasfa:", this.selectedFood);
 
             if (!this.selectedFood) return;
 
@@ -641,18 +642,43 @@ export default {
             if (!this.divided_items) {
                 let qty =
                     foodFound.reduce((a, b) => a + Number(b.quantity), 0) + 1;
-
-                // Skip stock validation for ZZ, PACK000, or PLAT000
                 if (
-                    unidadMedida === "ZZ" ||
-                    internalId.startsWith("PACK000") ||
-                    internalId.startsWith("PLAT000")
+                    unidadMedida === "ZZ"
                 ) {
-                    // Allow unlimited quantity
                 } else if (this.configuration.sales_stock === true) {
+                    let pass = true;
+                    if (this.selectedFood && this.selectedFood.item && Number(this.selectedFood.item.is_set) === 1) {
 
+                        if (this.configuration.sales_stock === true && this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                pass = await this.setItemCheckStock(this.selectedFood.item.id, qty);
+                            } else {
+                                pass = await this.setItemPolicy(this.selectedFood.item.id, qty);
+                            }
+                            if (pass === false) return;
+                        }
+                    } else if (this.selectedFood.item.promotions_items == 1) {
+                        if (this.configuration.sales_stock == true &&
+                            this.selectedFood.item.unit_type_id != "ZZ") {
+                            if (this.configuration.restobar_home) {
+                                this.$nextTick(() => {
+                                    this.showDialogItemPromotion = true;
+                                });
+                                return;
+                            } else {
+                                pass = await this.setItemPolicy(this.selectedFood.item.id, qty);
+                                if (pass === false) return;
+                            }
+                        }
+                    } else {
+                        let stock = Number(this.selectedFood.item.stock) || 0;
+                        if (qty > stock) {
+                            this.$toast.warning("Límite de stock alcanzado");
+                            return;
+                        }
+                    }
 
-                    if (this.selectedFood.item.promotions_items == 1) {
+                    /* if (this.selectedFood.item.promotions_items == 1) {
                         if (this.configuration.sales_stock == true &&
                             this.selectedFood.item.unit_type_id != "ZZ") {
                             if (this.configuration.restobar_home) {
@@ -662,7 +688,7 @@ export default {
                                 return;
                             }
                         }
-                    } else if (this.selectedFood.item.is_set == 1) {
+                    } if (this.selectedFood.item.is_set == 1) {
                         if (this.configuration.sales_stock == true &&
                             this.selectedFood.item.unit_type_id != "ZZ") {
                             if (this.configuration.restobar_home) {
@@ -685,7 +711,7 @@ export default {
                             this.$toast.warning("Límite de stock alcanzado");
                             return;
                         }
-                    }
+                    } */
                 }
             }
 
