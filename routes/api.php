@@ -288,6 +288,8 @@ if ($hostname) {
             Route::post('dispatches', 'Api\DispatchController@store');
             Route::get('dispatches/records', 'Api\DispatchController@records');
 
+            Route::get('promotions/item-promotion/{id}', [App\Http\Controllers\Tenant\PromotionsController::class, 'ItemPromotion']);
+
             //bancos y cuentas bancarias
             Route::get('bank_accounts/records', [App\Http\Controllers\Tenant\BankAccountController::class, 'records']);
             Route::get('bank_accounts/create', [App\Http\Controllers\Tenant\BankAccountController::class, 'create']);
