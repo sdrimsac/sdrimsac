@@ -15,17 +15,6 @@
             </div>
         </div>
 
-        <!-- Buscador / filtro interactivo -->
-        <div class="mt-2 search-wrapper" style="display:flex; gap:8px; align-items:center;">
-            <el-input v-model="searchTerm" placeholder="Buscar producto por nombre o código" clearable
-                class="responsive-input">
-                <template #prefix>
-                    <i class="el-icon-search"></i>
-                </template>
-            </el-input>
-            <div style="flex:1"></div>
-        </div>
-
         <!-- Lista de productos seleccionados (resumen) -->
         <div v-if="selectedItems.length" class="mt-2 selected-items-wrapper"
             style="border:1px solid #eaeaea;padding:8px;border-radius:4px;background:#fafafa;">
@@ -59,7 +48,31 @@
                 </table>
             </div>
         </div>
+        <!-- DEBUG: mobile-only floating test input to determine if keyboard/focus works on device -->
+        <div v-if="isMobile" class="mobile-debug-wrapper">
+            <input id="__mobile_debug_input" class="mobile-debug-input" type="text" placeholder="DEBUG: tocar para probar teclado" @focus="onSearchFocus" @blur="onSearchBlur" />
+        </div>
+        <div class="mt-2 search-wrapper" style="display:flex; gap:8px; align-items:center;">
+            <template v-if="!isMobile">
+                <el-input v-model="searchTerm" placeholder="Buscar producto por nombre o código" clearable
+                    class="responsive-input" @click.native.stop @touchstart.native.stop @focus.native.stop @mousedown.native.stop @touchend.native.stop
+                    @focus.native="onSearchFocus" @blur.native="onSearchBlur" @touchstart.native="onSearchTouch('start', $event)" @touchend.native="onSearchTouch('end', $event)">
+                    <template #prefix>
+                        <i class="el-icon-search"></i>
+                    </template>
+                </el-input>
+            </template>
+            <template v-else>
+                <div style="flex:1;">
+                    <div class="el-input">
+                        <span class="el-input__prefix"><i class="el-icon-search"></i></span>
+                            <input type="search" class="responsive-native-input el-input__inner" :placeholder="'Buscar producto por nombre o código'" :value="searchTerm" @input="onNativeSearchInput" @focus="onSearchFocus" @blur="onSearchBlur" @touchstart="onSearchTouch('start', $event)" @touchend="onSearchTouch('end', $event)" />
+                    </div>
+                </div>
+            </template>
 
+            <div style="flex:1"></div>
+        </div>
         <div class=" mt-2">
             <div>
                 <div class="table-responsive">
@@ -117,9 +130,22 @@ export default {
             promotionItems: [],
             // texto para filtrar en tiempo real
             searchTerm: '',
+            isMobile: false,
         };
     },
     methods: {
+        onNativeSearchInput(e) {
+            this.searchTerm = e.target.value;
+        },
+        onSearchFocus() {
+            // intentionally left blank - removed debug logging
+        },
+        onSearchBlur() {
+            // intentionally left blank - removed debug logging
+        },
+        onSearchTouch() {
+            // intentionally left blank - removed debug logging
+        },
         closeDialog() {
             this.$emit("update:showDialog", false);
         },
@@ -272,15 +298,13 @@ export default {
         async showDialog(newVal) {
             if (newVal) {
                 try {
-                    // Debug: log selectedFood so developer can see what arrives
-                    console.log('ItemsPromotions selectedFood (watch showDialog):', this.selectedFood);
+                    // (logs removed)
 
                     // Prefer explicit primitive id prop (less subject to reactivity race conditions)
                     let id = this.selectedItemId || (this.selectedFood && this.selectedFood.id);
                     if (!id) {
                         // wait a short time to allow the parent to propagate the prop/object
                         await new Promise(resolve => setTimeout(resolve, 100));
-                        console.log('Retrying selectedItemId/selectedFood after short delay:', { selectedItemId: this.selectedItemId, selectedFood: this.selectedFood });
                         id = this.selectedItemId || (this.selectedFood && this.selectedFood.id);
                     }
 
@@ -290,6 +314,18 @@ export default {
                     }
 
                     await this.setItemCheckPromotions(id);
+
+                    // Try to programmatically focus the search input after dialog opens
+                    this.$nextTick(() => {
+                        try {
+                            const native = this.$el && this.$el.querySelector('.responsive-native-input');
+                            const elInner = this.$el && this.$el.querySelector('.responsive-input .el-input__inner');
+                            const sel = (native && this.isMobile) ? native : elInner;
+                            if (sel && typeof sel.focus === 'function') {
+                                try { sel.focus(); } catch (err) { /* ignore focus errors */ }
+                            }
+                        } catch (err) { /* ignore */ }
+                    });
                 } catch (e) {
                     // optional: report error
                     console.error('Error checking item promotions', e);
@@ -298,8 +334,21 @@ export default {
         }
     },
     mounted() {
-        // Extra debug: log on mount in case prop is already set
-        console.log('ItemsPromotions mounted, selectedFood:', this.selectedFood);
+    // mounted
+        // detect mobile and update reactive flag; keep listener for resize
+        const detect = () => {
+            try {
+                this.isMobile = (window && (window.innerWidth <= 480 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)));
+            } catch (e) {
+                this.isMobile = false;
+            }
+        };
+        detect();
+        window.addEventListener('resize', detect);
+        this._detectMobileHandler = detect;
+    },
+    beforeDestroy() {
+        if (this._detectMobileHandler) window.removeEventListener('resize', this._detectMobileHandler);
     },
 };
 </script>
@@ -329,6 +378,7 @@ export default {
 }
 
 @media (max-width: 768px) {
+
     /* Make dialog nearly full width on small screens */
     .items-promotions-dialog {
         width: 95% !important;
@@ -372,6 +422,7 @@ export default {
 
 /* Convert tables into stacked cards on small devices for better aesthetics */
 @media (max-width: 480px) {
+
     .items-promotions-dialog .main-items-table,
     .items-promotions-dialog .selected-items-table {
         width: 100%;
@@ -393,7 +444,7 @@ export default {
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 6px;
-        box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
     }
 
     /* For the main items table, use a flex layout so the green icon and description share the same row */
@@ -419,7 +470,8 @@ export default {
     .items-promotions-dialog .main-items-table tbody tr td:nth-child(2) {
         /* description */
         flex: 1 1 auto;
-        min-width: 0; /* allow flex shrink */
+        min-width: 0;
+        /* allow flex shrink */
     }
 
     .items-promotions-dialog .main-items-table tbody tr .quantity-cell {
@@ -439,7 +491,8 @@ export default {
     /* move the delete/action button to the top-right of the selected item card */
     .items-promotions-dialog .selected-items-table tbody tr {
         position: relative;
-        padding-top: 10px; /* space for the absolute action button */
+        padding-top: 10px;
+        /* space for the absolute action button */
     }
 
     .items-promotions-dialog .selected-items-table .action-cell {
@@ -457,21 +510,56 @@ export default {
     /* ensure the search input stays on top and is clickable (avoid accidental overlays) */
     .items-promotions-dialog .search-wrapper {
         position: relative;
-        z-index: 10010;
-        pointer-events: auto;
+        z-index: 99999 !important;
+        pointer-events: auto !important;
     }
 
     .items-promotions-dialog .responsive-input,
     .items-promotions-dialog .responsive-input .el-input__inner {
-        position: relative;
-        z-index: 10020;
-        pointer-events: auto;
+        position: relative !important;
+        z-index: 100000 !important;
+        pointer-events: auto !important;
+    }
+
+    .responsive-native-input {
+        width: 100%;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    .mobile-debug-wrapper {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 200000 !important;
+    }
+    .mobile-debug-input {
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: #fff;
+        width: 180px;
     }
 
     /* keep table containers below the search input stacking-wise */
-    .items-promotions-dialog .table-responsive {
+    .items-promotions-dialog .table-responsive,
+    .items-promotions-dialog .selected-items-wrapper,
+    .items-promotions-dialog .main-items-table,
+    .items-promotions-dialog .selected-items-table {
         position: relative;
-        z-index: 1;
+        z-index: 1 !important;
+    }
+
+    /* Prevent cards from blocking the search input: only action button should receive pointer events */
+    .items-promotions-dialog .selected-items-table tbody tr {
+        pointer-events: none;
+    }
+
+    .items-promotions-dialog .selected-items-table tbody tr .action-cell,
+    .items-promotions-dialog .selected-items-table tbody tr .action-cell .el-button {
+        pointer-events: auto;
     }
 
     .items-promotions-dialog .main-items-table tbody tr .el-input-number,
