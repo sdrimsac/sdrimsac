@@ -331,7 +331,6 @@
                     </span>
                 </td>
             </tr>
-
         </table>
         <table style="margin-top: 10px;">
             <tr>
@@ -1603,6 +1602,7 @@
             @endphp
 
             <div style="text-align:center;">
+                @if(count($groups) > 0)
                 <table>
                     <thead>
                         <tr>
@@ -1614,6 +1614,7 @@
                         </tr>
                     </thead>
                 </table>
+                @endif
 
                 @foreach ($groups as $group)
                     @php

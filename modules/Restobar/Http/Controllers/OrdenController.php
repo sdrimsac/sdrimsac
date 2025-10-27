@@ -1441,23 +1441,16 @@ class OrdenController extends Controller
                         $food = $ordenItemModel->food;
                         if (!$food || !$food->item) continue;
 
-                        $mainItem = $food->item;
-
-                        // Priorizar los componentes seleccionados que vienen desde el frontend
-                        // El frontend adjunta los componentes seleccionados en $request->items[*]['food']['promotion_items']
                         $selectedPromotionItems = null;
 
                         try {
-                            // Buscar el item original enviado en la petición que corresponde a este orden_item
-                            // Match por food id, price y quantity para evitar colisiones
                             $matchedKey = null;
                             foreach ($items as $key => $inputItem) {
-                                $inputFoodId = isset($inputItem['food']['id']) ? $inputItem['food']['id'] : (isset($inputItem['food_id']) ? $inputItem['food_id'] : null);
+                                $inputFoodId = data_get($inputItem, 'food.id', $inputItem['food_id'] ?? null);
                                 $inputPrice = isset($inputItem['price']) ? floatval($inputItem['price']) : null;
                                 $inputQty = isset($inputItem['quantity']) ? floatval($inputItem['quantity']) : null;
 
                                 if ($inputFoodId === $ordenItemModel->food_id) {
-                                    // Si los precios y cantidades coinciden (cuando estén disponibles) lo consideramos match
                                     $priceMatch = $inputPrice === null || $inputPrice == floatval($ordenItemModel->price);
                                     $qtyMatch = $inputQty === null || $inputQty == floatval($ordenItemModel->quantity);
 
@@ -1473,7 +1466,7 @@ class OrdenController extends Controller
                                 // evitar reutilizar la misma entrada para otro created_item
                                 unset($items[$matchedKey]);
                             }
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // no crítico, seguimos con el fallback
                             Log::warning('Error buscando promotion_items en request: ' . $e->getMessage());
                         }
@@ -1482,7 +1475,7 @@ class OrdenController extends Controller
                             // Insertar solo los componentes que el usuario seleccionó
                             foreach ($selectedPromotionItems as $sel) {
                                 // El objeto enviado desde frontend puede variar; normalizamos
-                                $subItemId = isset($sel['id']) ? $sel['id'] : (isset($sel['item_id']) ? $sel['item_id'] : null);
+                                $subItemId = $sel['id'] ?? $sel['item_id'] ?? null;
                                 if (!$subItemId) continue;
 
                                 $subItem = Item::find($subItemId);
@@ -1498,28 +1491,10 @@ class OrdenController extends Controller
                                     'quantity' => $detailQuantity,
                                 ]);
                             }
-                        } else {
-                            // Fallback: si no hay selección explícita, usamos la definición en BD (comportamiento anterior)
-                            $promotionComponents = ItemPromotion::where('item_id', $mainItem->id)->get();
-                            if ($promotionComponents->isEmpty()) continue;
-
-                            foreach ($promotionComponents as $promo) {
-                                $subItem = Item::find($promo->promotion_item_id);
-                                if (!$subItem) continue;
-
-                                $detailQuantity = (float)$promo->quantity * (float)$ordenItemModel->quantity;
-
-                                OrderItemDetail::create([
-                                    'orden_item_id' => $ordenItemModel->id,
-                                    'item_id' => $subItem->id,
-                                    'description' => $subItem->description,
-                                    'quantity' => $detailQuantity,
-                                ]);
-                            }
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // Log and continue — promotion details are auxiliary
-                        Log::error('Error creating promotion details for orden item: ' . $created->id, ['error' => $e->getMessage()]);
+                        Log::error("Error creating promotion details for orden item: {$created->id}", ['error' => $e->getMessage()]);
                         continue;
                     }
                 }
@@ -1531,7 +1506,7 @@ class OrdenController extends Controller
                 }
 
                 DB::commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 DB::rollback();
                 throw $e;
             }

@@ -1,6 +1,6 @@
 <!-- Productos de la promoción Nuevo restobar - CAJA -->
 <template>
-    <el-dialog :visible="showDialog" width="60%" :close-on-click-modal="false" :show-close="false"
+    <el-dialog :visible="showDialog" width="50%" :close-on-click-modal="false" :show-close="false"
         :title="'Productos de la Promoción ' + (selectedFood ? ' - ' + selectedFood.description : '')"
         custom-class="items-promotions-dialog" @update:visible="$emit('update:showDialog', $event)"
         @close="closeDialog">
@@ -49,7 +49,9 @@
                                 controls-position="right"></el-input-number>
                         </td>
                         <td style="text-align:center; width:110px;">
-                            <el-button type="danger" size="mini" @click="removeSelected(it)">Quitar</el-button>
+                            <el-button type="danger" size="mini" @click="removeSelected(it)">
+                                <i class="el-icon-delete"></i>
+                            </el-button>
                         </td>
                     </tr>
                 </tbody>

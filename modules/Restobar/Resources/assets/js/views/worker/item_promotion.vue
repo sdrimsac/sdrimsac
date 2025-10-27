@@ -48,10 +48,6 @@
                 </table>
             </div>
         </div>
-        <!-- DEBUG: mobile-only floating test input to determine if keyboard/focus works on device -->
-        <div v-if="isMobile" class="mobile-debug-wrapper">
-            <input id="__mobile_debug_input" class="mobile-debug-input" type="text" placeholder="DEBUG: tocar para probar teclado" @focus="onSearchFocus" @blur="onSearchBlur" />
-        </div>
         <div class="mt-2 search-wrapper" style="display:flex; gap:8px; align-items:center;">
             <template v-if="!isMobile">
                 <el-input v-model="searchTerm" placeholder="Buscar producto por nombre o código" clearable
