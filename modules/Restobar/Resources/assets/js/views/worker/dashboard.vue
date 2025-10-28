@@ -1,129 +1,64 @@
 <template>
     <div v-loading="loading" class="container">
-        <!-- Title and Top Buttons Start -->
-        <div class="page-title-container mb-0">
+   
+    <!-- Título principal y botones superiores (visible en todas las pantallas) -->
+    <div class="page-title-container mb-0 module-header">
             <div class="row">
                 <div class="col-12 col-sm-5">
                     <h1 class="mb-1 pb-0 display-4 user_online">
                         <div class="btn-group">
-                            <div class="dropdown">
-                                <!-- <a
-                                    class="dropdown-toggle mb-1"
-                                    href="javascript:void(0)"
-                                    role="button"
-                                    id="dropdownMenuLink"
-                                    data-bs-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    <i class="icofont-waiter icofont-2x"></i>
-                                   
-                                </a> -->
+                            <div class="d-flex align-items-center">
                                 <el-button
-
                                     v-if="show != 'tables'"
                                     @click="returnToTablesView"
-                                    class="fw-bold bg-primary"
+                                    class="btn_guardarsmall me-2"
+                                    type="primary"
                                 >
-                                    <i class="icofont icofont-dining-table" style="color: #fff;"></i>
+                                    <i class="icofont icofont-dining-table icofont-2x" style="color: #fff;"></i>
                                 </el-button>
 
                                 <el-button
-                                    v-if="
-                                        configuration.chifa_china &&
-                                            show == 'create' &&
-                                            currentTable
-                                    "
-                                    icon="el-icon-plus"
+                                    v-if="configuration.chifa_china && show == 'create' && currentTable"
+                                    class="btn_guardarsmall me-2"
                                     type="success"
                                     @click="open"
                                 >
-                                    
+                                    <i class="icofont-food-cart icofont-2x"></i>
                                 </el-button>
+
                                 <el-button
                                     v-if="currentTable != null"
-                                    
+                                    class="btn_guardarsmall"
                                     type="primary"
-                                
                                 >
-                                    Mesa N°{{ currentTable.number }}
+                                    Mesa N° {{ currentTable.number }}
                                 </el-button>
                             </div>
                         </div>
                     </h1>
-                    <!-- <nav
-                        class="breadcrumb-container d-inline-block"
-                        aria-label="breadcrumb"
-                    >
-                        <ul class="breadcrumb pt-0">
-                            <template v-if="!currentTable">
-                                <li class="breadcrumb-item">
-                                    <a href="javascript:void(0)" class="fw-bold"
-                                        >SELECCIONE UNA MESA</a
-                                    >
-                                </li>
-                            </template>
-                            
-                        </ul>
-                    </nav> -->
-                   <!--  <template v-if="currentTable != null">
-                                <li class="breadcrumb-item">
-                                    <h1 class="fw-bold">
-                                        <a
-                                            href="javascript:void(0)"
-                                            class="text-danger font-weight-bold"
-                                            
-                                        >
-                                            
-                                        </a>
-                                    </h1>
-                                </li>
-                            </template> -->
+                   
                 </div>
-                <div
-                    class="col-12 col-sm-6 pt-2 pb-2"
-                    v-if="show == 'create' && screenWidth > 678"
-                >
-                    <div class="d-flex align-items-center">
+                <div class="col-12 col-sm-6 pt-2 pb-2" v-if="show == 'create' && screenWidth > 678">
+
+                     <div class="d-flex align-items-center">
                         <el-input
                             class="flex-grow-1 me-2"
                             v-model="item"
                             @focus="clearinput()"
                             @input="searchOrden()"
                             ref="item"
-                            placeholder="Buscar Producto"
-                        >
-                            <i
-                                slot="prefix"
-                                class="el-input__icon el-icon-search"
-                            ></i>
-                            <!-- <el-button
-                                :class="
-                                    optionsSelected == 0
-                                        ? 'bg-secondary text-white'
-                                        : ''
-                                "
-                                slot="append"
-                                icon="el-icon-tickets"
-                                @click="selectSearch(0)"
-                            ></el-button>
-                            <el-button
-                                :class="
-                                    optionsSelected == 1
-                                        ? 'bg-secondary text-white'
-                                        : ''
-                                "
-                                slot="append"
-                                icon="el-icon-s-order"
-                                @click="selectSearch(1)"
-                            ></el-button> -->
+                            placeholder="Buscar Producto">
+
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            
                         </el-input>
                     </div>
                 </div>
+
+                <!-- scrollbar para categorias -->
                 <div
                     class="col-12 pt-2 pb-2"
-                    v-if="show == 'create' && screenWidth > 678"
-                >
+                    v-if="show == 'create' && screenWidth > 678">
                     <template v-if="configuration.category_deslay">
                         <div class="categories-scroll">
                             <div class="categories-wrapper">
@@ -132,8 +67,7 @@
                                     :key="item.id"
                                     class="category-card"
                                     :class="{ active: category === item.id }"
-                                    @click="select_category(item.id)"
-                                >
+                                    @click="select_category(item.id)">
                                     <div class="category-circle">
                                         <img
                                             v-if="item.icono"
@@ -150,7 +84,7 @@
                                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; display: block; overflow: hidden;"
                                         />
 
-                                        <!-- <i class="fas fa-utensils"></i> -->
+                                 
                                     </div>
                                     <span class="category-name">{{
                                         item.name
@@ -162,12 +96,10 @@
                     <template v-else>
                         <div
                             class="col-12 col-sm-6 pt-2 pb-2"
-                            v-if="show == 'create' && screenWidth > 678"
-                        >
+                            v-if="show == 'create' && screenWidth > 678">
                             <template>
                                 <span slot="label">
-                                    <i class="fas fa-list"></i> Categoria de
-                                    Producto
+                                    <i class="fas fa-list"></i> Categoria de Producto
                                 </span>
                                 <el-select
                                     v-model="category"
@@ -187,10 +119,8 @@
                     </template>
                 </div>
             </div>
-            <div
-                class="d-flex justify-content-center p-2"
-                v-if="show == 'tables' && configuration.cambiar_mesa_mozo"
-            >
+
+            <div class="d-flex justify-content-center p-2" v-if="show == 'tables' && configuration.cambiar_mesa_mozo">
                 <button
                     type="button"
                     class="btn me-2"
@@ -218,6 +148,10 @@
                 </button>
             </div>
         </div>
+
+        <!-- Sección principal: Mesas / Delivery (visible cuando show == 'tables') -->
+        <div v-if="show == 'tables'" class="section-title ttitle mt-2 mb-2">Mesas y Delivery</div>
+
         <el-tabs
             v-model="activeTab"
             class=""
@@ -227,6 +161,9 @@
             <el-tab-pane label="Mesas" v-if="show == 'tables'" name="tables">
                 <div class="row p-2" v-show="show == 'tables'">
                     <!-- Add zones section here, only dependent on show === 'tables' -->
+                    <div class="col-12 mb-1">
+                        <div class="section-subtitle ttitle">Zonas</div>
+                    </div>
                     <div class="col-12 mb-3">
                         <div class="zones-scroll">
                             <div class="zones-wrapper">
@@ -247,6 +184,11 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Subtítulo para lista de mesas -->
+                    <div class="col-12 mb-2">
+                        <div class="section-subtitle ttitle">Mesas</div>
                     </div>
 
                     <div
@@ -349,10 +291,14 @@
             </el-tab-pane>
         </el-tabs>
 
-        <!-- v-show="show == 'ordens'" -->
+    <!-- v-show="show == 'ordens'" -->
         <!-- <ListOrden :configuration="configuration" v-if="selectOption == '2'">
     </ListOrden>-->
+
+    <!-- Producto en movil -->
         <template v-if="currentTable && show == 'create'">
+            <!-- Título para la sección de detalle de orden / productos -->
+            <div class="section-title ttitle mb-2">Detalle de la mesa - Mesa N° {{ currentTable.number }}</div>
             <!-- Ocultar Ordenes Realizadas si la mesa es de delivery -->
             <detail-orden
                 @changeOrdenEvent="changeOrdenEvent"
@@ -414,6 +360,22 @@
 .ttitle {
     font-size: 20px;
     font-weight: bold;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 8px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e6e6e6;
+    color: #1b4c43;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #2b5548;
 }
 
 .el-tag--small {

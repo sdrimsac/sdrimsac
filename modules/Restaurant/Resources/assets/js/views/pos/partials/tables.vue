@@ -1,198 +1,122 @@
-<!-- Mesas de Nuevo Restobar - CAJA-->
 <template>
     <el-dialog
-        :visible="showTables" 
-        v-loading="loading" 
-        @open="open" 
-        @close="close" 
+        :visible="showTables"
+        v-loading="loading"
+        @open="open"
+        @close="close"
         width="80%"
-        title="Zona de Atención" 
-        :close-on-click-modal="false" 
-        :class="{ top }">
-        
+        title="Zona de Atención"
+        :close-on-click-modal="false"
+        :class="{ top }"
+    >
         <el-tabs v-model="activeTab" class="mb-3" @tab-click="handleTabClick">
-            <el-tab-pane name="Mesas">
-                <template slot="label">
-                    <i class="icofont-dining-table" style="margin-right:8px;font-size:25px;vertical-align:middle"></i>
-                    Mesas
-                </template>
-                <div class="" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
+            <el-tab-pane label="Mesas" name="Mesas">
+                <div
+                    class="card"
+                    v-if="ordens.length == 0 || hasSelectedOrdenToChange"
+                >
                     <div class="d-flex justify-content-end p-2">
-                        <el-tooltip content="Deshabilitar mesa para unirlas" placement="top">
-                            <button type="button" style="margin-right:15px;" :class="` ${isDisabling ? 'btn_cancelarsmall' : 'btn_dehabilitarsmall'
-                                                        }`" @click="disablingTable">
-                                {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
-                            </button>
-                        </el-tooltip>
-                        <button v-if="hasTableOcuped && configuration.edit_mesa" type="button" :class="`btn ${changingOrden
-                                ? 'btn_limpiezasmall'
-                                : 'btn_guardarsmall'
-                            }`
-                            " @click="changeOrden">
+                        <button
+                            type="button"
+                            style="margin-left:15px;"
+                            :class="
+                                `btn ${
+                                    isDisabling ? 'btn-danger' : 'btn-warning'
+                                }`
+                            "
+                            @click="disablingTable"
+                        >
+                            {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
+                        </button>
+                        <button
+                            v-if="hasTableOcuped && configuration.edit_mesa"
+                            type="button"
+                            :class="
+                                `btn ${
+                                    changingOrden
+                                        ? 'btn-warning'
+                                        : 'btn-primary'
+                                }`
+                            "
+                            @click="changeOrden"
+                        >
                             {{
                                 changingOrden
                                     ? hasSelectedOrdenToChange
                                         ? "Seleccione a la mesa destino"
-                                        : "Seleccionar Mesa"
-                                    : "Cambiar Mesa"
+                                        : "Seleccionar mesa"
+                                    : "Cambiar orden"
                             }}
                         </button>
-                        <button type="button" style="margin-left:15px;" :class="`btn ${addingOrden ? 'btn_limpiezasmall' : 'btn_guardarsmall'
-                            }`
-                            " @click="addOrden">
-                            
-                            {{addingOrden ? "Seleccione Mesa" : "Nueva orden"}}
-                            <i class="icofont-dining-table" style="margin-right:8px;font-size:16px;opacity:0.95"></i>
+                        <button
+                            type="button"
+                            style="margin-left:15px;"
+                            :class="
+                                `btn ${
+                                    addingOrden ? 'btn-danger' : 'btn-primary'
+                                }`
+                            "
+                            @click="addOrden"
+                        >
+                            {{
+                                addingOrden ? "Seleccione mesa" : "Nueva orden"
+                            }}
                         </button>
-                        <button type="danger" style="margin-left:15px;" class="btn_cancelarsmall" @click="close">
-                            <i class="icofont-close" style="margin-right:8px;font-size:16px;" aria-hidden="true"></i>
+                        <button
+                            type="button"
+                            style="margin-left:15px;"
+                            class="btn btn-light"
+                            @click="close"
+                        >
                             Cerrar
                         </button>
                     </div>
-                    <div class="d-flex justify-content-center p-2" style="background: #616161;">
-                        <div style="font-size:20px;color:#ffffff;font-weight:700;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;letter-spacing:1px;margin-right:12px;">
-                            ZONAS:
-                        </div>
-                        <button v-for="(zone, idx) in zones" :key="idx" type="button" style="margin-left:15px;" :class="`btn ${zone_id == zone.id
-                                ? 'btn_whatsappsmall'
-                                : 'btn_guardarsmall'
-                            }`
-                            " @click="filterZones(zone.id)">
-                             {{ zone.name }}
+                    <div class="d-flex justify-content-center p-2">
+                        <button
+                            v-for="(zone, idx) in zones"
+                            :key="idx"
+                            type="button"
+                            style="margin-left:15px;"
+                            :class="
+                                `btn ${
+                                    zone_id == zone.id
+                                        ? 'btn-success text-white'
+                                        : 'btn-primary'
+                                }`
+                            "
+                            @click="filterZones(zone.id)"
+                        >
+                            ZONA {{ zone.name }}
                         </button>
                     </div>
-
-                    <!-- Diseño tipo tarjeta para mesas (reemplaza el listado simple) -->
-                    <div class="d-flex flex-wrap justify-content-center" v-if="tables.length > 0">
+                    <div
+                        v-if="tables.length > 0"
+                        class="d-flex flex-wrap justify-content-center"
+                    >
                         <div
                             v-for="(table, idx) in tables"
+                            :class="getTableClass(table)"
+                            class="col-2 btn m-1 d-flex flex-column justify-content-center align-items-center"
                             :key="idx"
                             @click="selectTable(table)"
-                            :style="{
-                                width: screenWidth === 500 ? '350px' : (screenWidth < 900 ? '200px' : '270px'),
-                               
-                                borderRadius: '8px',
-                                overflow: 'hidden',
-                                cursor: 'pointer',
-                                boxShadow: '0 6px 14px rgba(0,0,0,0.08)',
-                                margin: '10px',
-                                background: '#fff'
-                            }"
+                            style="max-height: 200px; max-width: 300px;"
                         >
-                            <!-- Header (zona + número circular) -->
-                            <div
-                                :style="{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '12px',
-                                    color: '#fff',
-                                    background:
-                                        table.enabled == false
-                                            ? '#6b7280'
-                                            : table.status_table_id == 1
-                                            ? '#0b63a6'
-                                            : table.status_table_id == 2
-                                            ? '#c53030'
-                                            : '#d97706'
-                                }"
-                             >
-                                <div style="display:flex;align-items:center;">
-                                    <i class="icofont-dining-table" style="font-size:35px;margin-right:10px;opacity:0.95"></i>
-                                    <div style="line-height:1;">
-                                        <div class="mb-1" style="font-size:11px;opacity:0.9">ZONA:</div>
-                                        <!-- aqui el table zone es un array de objetos { "id": 3, "name": "PRINCIPAL", "active": true, "created_at": null, "updated_at": null } -->
-                                        <div style="font-weight:700;font-size:16px">{{ (table.zone && table.zone.name) || table.zone_name || 'Sin zona' }}</div>
-                                        <!-- <div style="font-weight:700;font-size:16px">{{ table.zone_name || 'Sin zona' }}</div>  -->
-                                    </div>
-                                </div>
-
-                                <div
-                                    style="background:rgba(255,255,255,0.95);color:#0b2433;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:900"
-                                >
-                                    <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:25px;font-weight:800;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;line-height:1;">
-                                        {{ table.number }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <!-- Banda de estado (LIBRE / OCUPADO / OTRO) -->
-                            <div :style="{
-                                    padding: '8px',
-                                    textAlign: 'center',
-                                    fontWeight: 800,
-                                    letterSpacing: '1px',
-                                    background:
-                                        table.status_table_id == 1 ? '#e6eef8' : table.status_table_id == 2 ? '#f8d7da' : '#fff4e6',
-                                    color: table.status_table_id == 1 ? '#073f68' : table.status_table_id == 2 ? '#7b1113' : '#7a4a00'
-                                }">
-                                {{ table.status_table_id == 1 ? 'LIBRE' : table.status_table_id == 2 ? 'OCUPADO' : 'RESERVADA' }}
-                            </div>
-
-                            <!-- Footer: usuario / monto / icono -->
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.03)">
-                                
-                                <div style="min-width: 0;">
-                                    <template v-if="getUserByTable(table.id)">
-                                        <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-                                            
-                                            <div style="white-space:normal;">
-                                                <template v-if="(getUserByTable(table.id).usuario || '').includes(' - ')">
-                                                    <div style="display:flex;align-items:center;gap:8px;">
-                                                        <i class="icofont-waiter" style="font-size:30px;color:rgba(0,0,0,0.55)"></i>
-                                                        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;overflow:hidden;">
-                                                            <span style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">
-                                                                {{ getUserByTable(table.id).usuario.split(' - ')[0] }}
-                                                            </span>
-                                                            <span style="color:rgba(0,0,0,0.55);white-space:normal;overflow:hidden;text-overflow:ellipsis;display:block;">
-                                                                {{ getUserByTable(table.id).usuario.split(' - ').slice(1).join(' - ') }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </template>
-                                                <template v-else>
-                                                    <i class="icofont-waiter" style="font-size:30px;color:rgba(0,0,0,0.55);margin-top:6px"></i>
-                                                    {{ (getUserByTable(table.id).usuario || '').substring(0,25) }}
-                                                </template>
-                                            </div>
-                                        </div>
-                                        <div style="font-size:12px;color:#6b7280">
-                                            {{ getUserByTable(table.id).ref || '' }}
-                                        </div>
-                                    </template>
-
-                                </div>
-
-                                <div style="text-align:right;min-width:80px;">
-                                    <div v-if="getUserByTable(table.id) && getUserByTable(table.id).monto" style="font-weight:700">
-                                        S/. {{ parseFloat(getUserByTable(table.id).monto).toFixed(2) }}
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div v-else class="h-25 d-flex justify-content-center align-items-center">
-                        <span>Sin mesas</span>
-                    </div>
-
-                    <!-- <div v-if="tables.length > 0" class="d-flex flex-wrap justify-content-center">
-                        <div v-for="(table, idx) in tables" :class="getTableClass(table)"
-                            class="col-2 btn m-1 d-flex flex-column justify-content-center align-items-center"
-                            :key="idx" @click="selectTable(table)" style="max-height: 200px; max-width: 300px;">
-                            
+                            <!-- <strong class="h3 text-white"></strong> -->
                             <i class="icofont-dining-table icofont-4x"></i>
                             <span class="h2 text-white">{{
                                 table.number
-                                }}</span>
+                            }}</span>
                             <div class="user-info text-center">
                                 <template v-if="getUserByTable(table.id)">
-                                    <span class="h5 mb-0" :class="getUserByTable(table.id).usuario ===
+                                    <span
+                                        class="h5 mb-0"
+                                        :class="
+                                            getUserByTable(table.id).usuario ===
                                             'CAJA'
-                                            ? 'text-white'
-                                            : 'text-white'
-                                        ">
+                                                ? 'text-white'
+                                                : 'text-white'
+                                        "
+                                    >
                                         {{
                                             getUserByTable(
                                                 table.id
@@ -205,58 +129,96 @@
                                 </template>
                             </div>
                         </div>
-                    </div> -->
-                    <!-- <div v-else class="h-25 d-flex justify-content-center align-items-center">
+                    </div>
+                    <div
+                        v-else
+                        class="h-25 d-flex justify-content-center align-items-center"
+                    >
                         <span>Sin mesas</span>
-                    </div> -->
+                    </div>
                 </div>
-                <div class="card-body p-2" v-if="ordens.length > 0 && !hasSelectedOrdenToChange">
+                <div
+                    class="card-body p-2"
+                    v-if="ordens.length > 0 && !hasSelectedOrdenToChange"
+                >
                     <div class="row" v-if="hasSelectedTableToChange">
                         <h3>Seleccione la orden a cambiar</h3>
                     </div>
                     <div class="d-flex flex-wrap justify-content-left">
-                        <div class="col-3" v-for="(ord, idx) in ordens" :key="idx">
-                            <button @click="sendOrdens(ord)" type="button" class="btn btn-primary p-1 m-1 ">
-                                <span class="h3 text-white">#{{ ord.correlative }}</span><br />
+                        <div
+                            class="col-3"
+                            v-for="(ord, idx) in ordens"
+                            :key="idx"
+                        >
+                            <button
+                                @click="sendOrdens(ord)"
+                                type="button"
+                                class="btn btn-primary p-1 m-1 "
+                            >
+                                <span class="h3 text-white"
+                                    >#{{ ord.correlative }}</span
+                                ><br />
                                 <span class="h4 text-white">{{
                                     ord.ref ? ord.ref : "Sin referencia"
-                                    }}</span>
+                                }}</span>
                             </button>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-light" @click="closeOrden">
+                        <button
+                            type="button"
+                            class="btn btn-light"
+                            @click="closeOrden"
+                        >
                             Regresar
                         </button>
                     </div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="Delivery" name="Delivery" v-if="configuration.restaurant_delivery">
+            <el-tab-pane
+                label="Delivery"
+                name="Delivery"
+                v-if="configuration.restaurant_delivery"
+            >
                 <div class="card">
                     <div class="card-body">
                         <div v-if="deliveryOrders.length > 0">
-                            <div class="d-grid gap-3"
-                                style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-                                <div class="card shadow text-white bg-danger text-center"
-                                    style="aspect-ratio: 1 / 1; cursor: pointer;" v-for="(ord, idx) in deliveryOrders"
-                                    :key="idx" @click="sendOrdens(ord)">
-                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                            <div
+                                class="d-grid gap-3"
+                                style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"
+                            >
+                                <div
+                                    class="card shadow text-white bg-danger text-center"
+                                    style="aspect-ratio: 1 / 1; cursor: pointer;"
+                                    v-for="(ord, idx) in deliveryOrders"
+                                    :key="idx"
+                                    @click="sendOrdens(ord)"
+                                >
+                                    <div
+                                        class="card-body d-flex flex-column justify-content-center align-items-center"
+                                    >
                                         <h2 class="fw-bold">
                                             #{{
                                                 ord.order_number ||
-                                                ord.correlative ||
-                                                ord.id
+                                                    ord.correlative ||
+                                                    ord.id
                                             }}
                                         </h2>
                                         <p>{{ ord.ref || "Sin referencia" }}</p>
                                     </div>
-                                    <el-button class="btn btn-light" @click.stop="DeliveryTicket(ord)">Ticket
-                                        Delivery</el-button>
+                                    <el-button
+                                        class="btn btn-light"
+                                        @click.stop="DeliveryTicket(ord)"
+                                        >Ticket Delivery</el-button
+                                    >
                                 </div>
                             </div>
                         </div>
 
-                        <div v-else class="h-25 d-flex justify-content-center align-items-center">
+                        <div
+                            v-else
+                            class="h-25 d-flex justify-content-center align-items-center"
+                        >
                             <span>Sin órdenes de delivery</span>
                         </div>
                     </div>
@@ -403,10 +365,10 @@ export default {
             return table.enabled == false
                 ? "btn-light"
                 : table.status_table_id == 1
-                    ? "btn-primary"
-                    : table.status_table_id == 2
-                        ? "btn-danger"
-                        : "btn-warning";
+                ? "btn-primary"
+                : table.status_table_id == 2
+                ? "btn-danger"
+                : "btn-warning";
         },
         async disabledTable(id) {
             try {
@@ -766,15 +728,12 @@ export default {
     border-radius: 4px;
     margin-top: 5px;
 }
-
 .text-warning {
     color: #ffc107 !important;
 }
-
 .text-info {
     color: #17a2b8 !important;
 }
-
 .text-white-50 {
     color: rgba(255, 255, 255, 0.5) !important;
 }

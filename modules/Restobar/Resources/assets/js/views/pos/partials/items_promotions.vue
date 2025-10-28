@@ -17,8 +17,8 @@
 
         <!-- Buscador / filtro interactivo -->
         <div class="mt-2" style="display:flex; gap:8px; align-items:center;">
-            <el-input v-model="searchTerm" placeholder="Buscar producto por nombre o código" clearable
-                style="width:40%;">
+            <el-input v-model="searchTerm" placeholder="Buscar producto" clearable
+                style="width:60%;">
                 <template #prefix>
                     <i class="el-icon-search"></i>
                 </template>
@@ -119,9 +119,21 @@ export default {
             this.$emit("update:showDialog", false);
         },
         removeSelected(item) {
-            // Quitar la selección: dejar la cantidad en 0/undefined para que no se incluya
+            // Quitar la selección: dejar la cantidad en 0 para que no se incluya
+            // Mejor hacer el $set sobre el objeto almacenado en promotionItems (índice)
+            // y agregar un log breve para facilitar depuración en consola.
+            console.log('removeSelected called with item:', item);
             if (!item) return;
-            this.$set(item, 'quantity_to_add', 0);
+
+            const idx = (this.promotionItems || []).indexOf(item);
+            if (idx !== -1) {
+                // Eliminar completamente del array de promotionItems para que desaparezca del resumen
+                // Esto evita problemas de reactividad y hace la UX más clara.
+                this.promotionItems.splice(idx, 1);
+            } else {
+                // Fallback: si por alguna razón la referencia no coincide, set sobre el objeto recibido
+                this.$set(item, 'quantity_to_add', 0);
+            }
         },
         async setItemCheckPromotions(id) {
             let pass = true;
