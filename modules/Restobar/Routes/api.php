@@ -104,7 +104,7 @@ Route::prefix('restobar')->group(function () {
     /* Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']); */
 
-    Route::middleware(['auth', 'locked.tenant'])->group(function () {
+    Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
         Route::get('logoutget', 'RestaurantController@logout');
 
@@ -250,8 +250,7 @@ Route::prefix('restobar')->group(function () {
         Route::get('search_customer_by_id/{id}', [RestaurantController::class, 'search_customer_by_id']);
     });
 
-    Route::middleware(['auth', 'locked.tenant'])->group(function () {
-        //**** MESAS */
+    Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
         Route::prefix('worker')->group(function () {
 
             Route::get('cash_available/{cash_id}', [CashController::class, 'cash_avaible']);
