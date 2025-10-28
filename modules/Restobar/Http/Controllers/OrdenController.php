@@ -988,7 +988,6 @@ class OrdenController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Iniciando creación de orden con datos:', ['request' => $request->all()]);
         try {
             $user = auth()->user();
             $ref = $request->ref;

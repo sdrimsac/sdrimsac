@@ -13,7 +13,7 @@ class WorkerDailyTablesTrabajadores extends Migration
         Schema::create('worker_daily_summaries', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('person_id');
-            $table->date('entrance');
+            $table->time('entrance');
             $table->time('exit');
             $table->decimal('horas_trabajadas', 5, 2);
             $table->decimal('overtime', 5, 2);

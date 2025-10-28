@@ -40,32 +40,6 @@ use Maatwebsite\Excel\Excel;
 
 class StaffController extends Controller
 {
-    /* public function getData($request)
-    {
-        $establishment_id = $request->establishment_id;
-        $person_id = $request->person_id;
-        $date = $request->date;
-        $paid = $request->paid == "0" ? false : true;
-        $orden_items = OrdenItem::query();
-        $orden_items->whereHas('orden', function ($q) use ($establishment_id, $person_id, $date, $paid) {
-            $q->whereHas('credit_list', function ($qq) use ($establishment_id, $person_id, $date, $paid) {
-                $qq->where('customer_id', $person_id);
-                if ($establishment_id) {
-                    $qq->where('establishment_id', $establishment_id);
-                }
-                if ($date) {
-                    $date = Carbon::parse($date)->format('m');
-                    $qq->whereMonth('created_at', $date);
-                }
-                if ($paid !== null) {
-                    $qq->where('paid', $paid);
-                }
-            });
-        });
-        $orden_items->orderBy('date', 'asc');
-        return $orden_items;
-    } */
-
     public function download(Request $request)
     {
         $company = Company::first();
@@ -196,13 +170,50 @@ class StaffController extends Controller
 
             foreach ($registros as $fecha => $marcas) {
 
-                $entrada = $marcas->first()->time ?? null;
-                $salida = $marcas->last()->time ?? null;
+                // Construir array de horas (HH:MM:SS) por cada marca del día.
+                $times = $marcas->map(function ($r) {
+                    if (!empty($r->time_attendance)) return $r->time_attendance;
+                    if (!empty($r->date_time_attendance)) return Carbon::parse($r->date_time_attendance)->format('H:i:s');
+                    return null;
+                })->filter()->values();
 
-                if ($entrada && $salida) {
-                    $horasTrabajadas = Carbon::parse($entrada)->diffInMinutes(Carbon::parse($salida)) / 60;
+                $horasTrabajadas = 0;
+                $workedMinutes = 0;
+                $hasUnpaired = false;
+                $lastPairedEnd = null;
+
+                // Emparejar marcas: 0-1, 2-3, ... sumar solo intervalos emparejados
+                for ($i = 0; $i < $times->count(); $i += 2) {
+                    $startStr = $times->get($i);
+                    if ($startStr === null) continue;
+                    if ($times->has($i + 1)) {
+                        $endStr = $times->get($i + 1);
+                        if ($endStr === null) {
+                            $hasUnpaired = true;
+                            continue;
+                        }
+                        $start = Carbon::parse($fecha . ' ' . $startStr);
+                        $end = Carbon::parse($fecha . ' ' . $endStr);
+                        if ($end->lt($start)) {
+                            $end->addDay();
+                        }
+                        $workedMinutes += $start->diffInMinutes($end);
+                        $lastPairedEnd = Carbon::parse($endStr)->format('H:i:s');
+                    } else {
+                        // marca sin pareja (entrada sin salida)
+                        $hasUnpaired = true;
+                    }
+                }
+
+                $horasTrabajadas = $workedMinutes / 60;
+
+                // Entrada: primera marca del día (si existe). Salida: última salida pareada si existe,
+                // si no existe usar la última marca (posiblemente una entrada sin salida) o 00:00:00
+                $entrance_val = $times->count() ? $times->first() : '00:00:00';
+                if ($lastPairedEnd) {
+                    $exit_val = $lastPairedEnd;
                 } else {
-                    $horasTrabajadas = 0;
+                    $exit_val = $times->count() ? $times->last() : '00:00:00';
                 }
 
                 $horasExtras = max(0, $horasTrabajadas - 8);
@@ -217,13 +228,8 @@ class StaffController extends Controller
                     }
                 }
 
-                $falta = false;
-                if (!$entrada || !$salida) {
-                    $falta = true;
-                }
-
-                $entrance_val = $entrada ?? $fecha;
-                $exit_val = $salida ?? '00:00:00';
+                // Marcar falta si no hay marcas o existe alguna marca sin pareja (entrada sin salida)
+                $falta = ($times->count() == 0) || $hasUnpaired;
 
                 WorkerDailySummari::updateOrCreate(
                     [
@@ -247,6 +253,7 @@ class StaffController extends Controller
             'message' => 'Resumen diario generado correctamente'
         ]);
     }
+
     public function recordByPerson(Request $request)
     {
 

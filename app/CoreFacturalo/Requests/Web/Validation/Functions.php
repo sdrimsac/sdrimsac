@@ -44,8 +44,26 @@ class Functions
     {
         if (isset($inputs['id'])) return Person::find($inputs['id'])->id;
         
-        $service = ServiceData::service('ruc', $inputs['number']);
-        // Log::info("L45 service response: " . json_encode($service));
+        // Determine whether to call the external service for RUC or DNI.
+        // Prefer explicit identity_document_type_id when available, otherwise infer from number length.
+        $rawNumber = $inputs['number'] ?? '';
+        $cleanNumber = preg_replace('/\D+/', '', (string)$rawNumber);
+        $typeToUse = null;
+        if (isset($inputs['identity_document_type_id'])) {
+            $idType = (string)$inputs['identity_document_type_id'];
+            if ($idType === '6') {
+                $typeToUse = 'ruc';
+            } elseif ($idType === '1') {
+                $typeToUse = 'dni';
+            }
+        }
+        if (is_null($typeToUse)) {
+            $typeToUse = (strlen($cleanNumber) === 8) ? 'dni' : 'ruc';
+        }
+
+        // Call service with the determined type and the cleaned number
+        Log::info('Calling ServiceData::service', ['type' => $typeToUse, 'number' => $cleanNumber]);
+        $service = ServiceData::service($typeToUse, $cleanNumber);
         // Validar que exista la estructura de datos y tenga el formato correcto
         if (isset($service['data']) && is_array($service['data'])) {
             // Solo actualizar los valores si los datos del servicio son válidos

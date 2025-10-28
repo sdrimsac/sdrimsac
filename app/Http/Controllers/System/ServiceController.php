@@ -30,12 +30,27 @@ class ServiceController extends Controller
 			}
 		} else {
 			try {
-				$data     = ServiceData::service('ruc', $number);
+				// Determine type by number length: 8 => dni, 11 => ruc
+				$cleanNumber = preg_replace('/\D+/', '', (string)$number);
+				$typeToUse = (strlen($cleanNumber) === 8) ? 'dni' : 'ruc';
+
+				$data = ServiceData::service($typeToUse, $cleanNumber);
+
+				// Normalize different possible response shapes coming from the API wrappers
+				$name = null;
+				if (isset($data['data']['nombre_o_razon_social'])) {
+					$name = $data['data']['nombre_o_razon_social'];
+				} elseif (isset($data['data']['name'])) {
+					$name = $data['data']['name'];
+				} elseif (isset($data['data']['nombre_completo'])) {
+					$name = $data['data']['nombre_completo'];
+				}
+
 				$response = [
 					'success' => true,
 					'data'    => [
-						'name'       => $data['data']['nombre_o_razon_social'],
-						'trade_name' => $data['data']['nombre_o_razon_social'],
+						'name'       => $name ?? $number,
+						'trade_name' => $name ?? $number,
 					]
 				];
 

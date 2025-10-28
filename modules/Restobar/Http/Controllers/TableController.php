@@ -14,6 +14,7 @@ use Modules\Restobar\Http\Resources\TableCollection;
 use Modules\Restobar\Models\Orden;
 use Modules\Restobar\Models\OrdenItem;
 use App\Events\MessageEvent;
+use App\Models\Tenant\Cash;
 use Illuminate\Support\Facades\DB;
 use Modules\Restobar\Models\TableType;
 use Modules\Restobar\Models\Zone;
@@ -143,15 +144,7 @@ class TableController extends Controller
 
             $cashier_id = $relation->cashier_id ?? $relation->cash_id ?? null;
 
-            /* if (!$cashier_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tu asignación con el cajero es incorrecta.'
-            ], 200);
-        } */
-
-            // 3️⃣ Verificar si el cajero tiene una caja abierta
-            $hasOpenCash = \App\Models\Tenant\Cash::where('user_id', $cashier_id)
+            $hasOpenCash = Cash::where('user_id', $cashier_id)
                 ->where('state', 1)
                 ->exists();
 
@@ -166,7 +159,7 @@ class TableController extends Controller
         $establishment_table_id = $user->establishment_table_id;
         $establishment_id = $user->establishment_id;
         $query = Table::where('number', 'not like', '%caj%')
-            ->where('is_delivery', '!=', 1); // Omitir mesas de delivery
+            ->where('is_delivery', '!=', 1);
 
         if ($establishment_table_id) {
             $query->where('establishment_id', $establishment_table_id)

@@ -3704,7 +3704,6 @@ class BoxesController extends Controller
                     $sum_cash = min($sum_cash, floatval($sale_note->total));
 
                     $sales_cash_sum += $sum_cash;
-                    Log::info("Venta al contado detectada. Total efectivo sumado: {$sum_cash}");
                 } else {
                     // 🟠 Venta a crédito o pago parcial sobre crédito
                     $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
@@ -3714,7 +3713,6 @@ class BoxesController extends Controller
                         ->sum('amount');
 
                     $other_boxes_sum = floatval($other_boxes_sum);
-                    Log::info("Valor other_boxes_sum (excluyendo actual)", [$other_boxes_sum]);
 
                     /* $paid_credit_query = SaleNotePayment::where('sale_note_id', $sale_note->id)
                         ->where('extorned', 0); */
@@ -3722,16 +3720,11 @@ class BoxesController extends Controller
                         ->where('extorned', 0)
                         ->sum('payment');
 
-                    /* $paid_credit = floatval($paid_credit_query->sum('payment')); */
-                    Log::info("Valor paid_credit (excluyendo actual)", [$paid_credit]);
-
                     // Calcular lo que queda por pagar
                     $remaining_to_pay = max(0.0, floatval($sale_note->total) - ($other_boxes_sum + $paid_credit));
-                    Log::info("Valor remaining_to_pay antes de ajustar", [$remaining_to_pay]);
 
                     // El valor real a sumar es lo menor entre el monto actual y lo que queda por pagar
                     $to_sum = min($to_sum, $remaining_to_pay);
-                    Log::info("Venta a crédito/pago parcial. Valor ajustado to_sum final", [$to_sum]);
 
                     $sales_cash_sum += $to_sum;
                 }

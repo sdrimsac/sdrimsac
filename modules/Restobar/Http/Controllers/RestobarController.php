@@ -164,7 +164,7 @@ class RestobarController extends Controller
         $configuration = Configuration::first();
         $color_size_enabled = $configuration->color_size_enabled;
         $customer_unit_type_id = $request->customer_unit_type_id;
-        $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
+        $category_ins =  CategoryItem::whereIn('name', ['INSUMOS', 'PROMO'])->first();
         $category_ins_id = null;
         if ($category_ins) {
             $category_ins_id = $category_ins->id;

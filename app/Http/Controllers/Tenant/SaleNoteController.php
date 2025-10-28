@@ -1510,7 +1510,6 @@ class SaleNoteController extends Controller
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
                 if ($request->orden_id) {
-                    Log::info('ver data que llega al realiza un venta pedido ', ['orden_id' => $request->orden_id]);
 
                     Orden::where('id', $request->orden_id)
                         ->update([

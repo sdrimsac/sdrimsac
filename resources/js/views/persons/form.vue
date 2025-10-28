@@ -305,6 +305,9 @@
                                     v-text="errors.district_id[0]"></small>
                             </div>
                         </div>
+                        <div class="col-12 mt-2">
+                            <el-checkbox v-model="form.is_staff">¿ES personal de la empresa?</el-checkbox>
+                        </div>
 
 
                     </div>
@@ -849,6 +852,7 @@ export default {
             this.form = {
                 varios: false,
                 has_credit_line: false,
+                is_staff: false,
                 credit_line: 0.0,
                 id: null,
                 type: this.type,

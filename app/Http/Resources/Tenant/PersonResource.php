@@ -15,6 +15,7 @@ class PersonResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'is_staff' => (bool) $this->is_staff,
             'parient_id' => $this->parient_id,
             'occupation' => $this->occupation,
             'ref_origin' => $this->ref_origin,
