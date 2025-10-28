@@ -601,9 +601,9 @@
                                                     'has-danger': errors.soap_send_id
                                                 }">
                                                     <label class="control-label">SOAP Envio</label>
-                                                    <el-select v-model="form.soap_send_id" disabled>
+                                                    <el-select v-model="form.soap_send_id" >
                                                         <el-option v-for="(option, index) in soap_sends" :key="index"
-                                                            v-if="option === 'Sunat'" :value="index" :label="option">
+                                                             :value="index" :label="option">
                                                         </el-option>
                                                     </el-select>
                                                     <small class="text-danger" v-if="errors.soap_send_id"
@@ -619,7 +619,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <template v-if="form.soap_send_id == '02'">
+                                            <template v-if="form.soap_send_id == '02'">
                                                 <div class="col-md-3">
                                                     <label for="soap_ose_user">Usuario OSE</label>
                                                     <el-input v-model="form.ose_user"></el-input>
@@ -628,7 +628,7 @@
                                                     <label for="soap_ose_password">Contraseña OSE</label>
                                                     <el-input v-model="form.ose_password"></el-input>
                                                 </div>
-                                            </template> -->
+                                            </template>
                                         </div>
                                         <template v-if="form.soap_type_id == '02' || toggle == true">
                                             <div class="row">
