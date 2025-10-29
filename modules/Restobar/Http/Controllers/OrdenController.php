@@ -259,6 +259,21 @@ class OrdenController extends Controller
         // Obtener los ítems originales (sin agrupar) para poder recuperar los detalles asociados
         $raw_orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get();
 
+        // Debug: log raw orden_items (ids + rows) to ensure we're grouping the expected items
+        // (debug logs removed) - raw orden_items fetched above
+        try {
+            // Additional check: search any order_item_details linked to this orden (orden_id) via JOIN
+            $detailsByOrder = DB::connection('tenant')
+                ->table('order_item_details')
+                ->join('orden_item', 'order_item_details.orden_item_id', '=', 'orden_item.id')
+                ->where('orden_item.orden_id', $orden)
+                ->select('order_item_details.*', 'orden_item.id as orden_item_id', 'orden_item.orden_id')
+                ->get();
+            // no logging
+        } catch (\Exception $e) {
+            // no logging
+        }
+
         $orden_items = $raw_orden_items->groupBy(function ($elemento) use (&$diff_ordens) {
             $diff_ordens[] = $elemento->orden_id;
             return $elemento->food_id . '-' . $elemento->price . '-' . $elemento->observations;
@@ -271,7 +286,36 @@ class OrdenController extends Controller
             // Adjuntar los detalles asociados a los orden_items de este grupo (si existen)
             try {
                 $orden_item_ids = $grupo->pluck('id')->toArray();
-                $details = OrderitemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
+                $details = OrderItemDetail::whereIn('orden_item_id', $orden_item_ids)->get();
+                // Log for debugging: which orden_item_ids and how many details found
+                // lookup performed; no debug logging
+
+                // Additional raw DB check (bypass Eloquent/ModelTenant) to help determine if rows exist
+                try {
+                    $rawDetails = DB::connection('tenant')->table('order_item_details')
+                        ->whereIn('orden_item_id', $orden_item_ids)
+                        ->get();
+                    // raw lookup performed; no debug logging
+                } catch (\Exception $e) {
+                    // ignore raw lookup errors silently
+                }
+                if ($details->isEmpty()) {
+                    try {
+                        $representative = $item; // $item is the representative OrdenItem model
+                        $fallback = OrderItemDetail::whereHas('orden_item', function ($q) use ($representative) {
+                            $q->where('orden_id', $representative->orden_id)
+                                ->where('food_id', $representative->food_id);
+                        })->get();
+
+                        // fallback lookup performed; no debug logging
+
+                        if ($fallback->count() > 0) {
+                            $details = $fallback;
+                        }
+                    } catch (\Exception $e) {
+                            // ignore fallback errors silently
+                    }
+                }
                 // Adjuntamos la colección de detalles al objeto para que esté disponible en la vista
                 $item->order_item_details = $details;
             } catch (\Exception $e) {
@@ -282,8 +326,6 @@ class OrdenController extends Controller
 
             return $item;
         });
-
-        Log::info("ver darta orden_items", ['orden_items' => $orden_items]);
         // eliminar los elementos repetidos de $diff_ordens
         $diff_ordens = array_unique($diff_ordens);
         $two_or_more = count($diff_ordens) > 1;
@@ -1478,12 +1520,13 @@ class OrdenController extends Controller
 
                                 $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
 
-                                OrderItemDetail::create([
+                                $createdDetail = OrderItemDetail::create([
                                     'orden_item_id' => $ordenItemModel->id,
                                     'item_id' => $subItem->id,
                                     'description' => $subItem->description,
                                     'quantity' => $detailQuantity,
                                 ]);
+                                // detail created (no debug log)
                             }
                         }
 
@@ -1500,12 +1543,13 @@ class OrdenController extends Controller
                                 $promoQty = isset($sel['_promo_quantity']) ? floatval($sel['_promo_quantity']) : (isset($sel['quantity']) ? floatval($sel['quantity']) : 1);
                                 $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
 
-                                OrderItemDetail::create([
+                                $createdDetail = OrderItemDetail::create([
                                     'orden_item_id' => $ordenItemModel->id,
                                     'item_id' => $subItem->id,
                                     'description' => $subItem->description,
                                     'quantity' => $detailQuantity,
                                 ]);
+                                // detail created (no debug log)
                             }
                         } */
                     } catch (Exception $e) {
