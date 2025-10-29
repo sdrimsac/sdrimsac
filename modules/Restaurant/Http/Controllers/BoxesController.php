@@ -3695,17 +3695,12 @@ class BoxesController extends Controller
                         ->where('method', 'Efectivo')
                         ->get();
 
-                    /* $sum_cash = floatval($cash_boxes->sum('amount'));
-                    $sales_cash_sum += $sum_cash; */
-
                     $sum_cash = floatval($cash_boxes->sum('amount'));
 
-                    // Si el monto cobrado excede el total, solo toma el total
                     $sum_cash = min($sum_cash, floatval($sale_note->total));
 
                     $sales_cash_sum += $sum_cash;
                 } else {
-                    // 🟠 Venta a crédito o pago parcial sobre crédito
                     $other_boxes_sum = Box::where('sale_note_id', $sale_note->id)
                         ->where('cash_id', $cash_id)
                         ->whereNull('sale_note_payment_id')
@@ -3714,22 +3709,17 @@ class BoxesController extends Controller
 
                     $other_boxes_sum = floatval($other_boxes_sum);
 
-                    /* $paid_credit_query = SaleNotePayment::where('sale_note_id', $sale_note->id)
-                        ->where('extorned', 0); */
                     $paid_credit = SaleNotePayment::where('sale_note_id', $sale_note->id)
                         ->where('extorned', 0)
                         ->sum('payment');
 
-                    // Calcular lo que queda por pagar
                     $remaining_to_pay = max(0.0, floatval($sale_note->total) - ($other_boxes_sum + $paid_credit));
 
-                    // El valor real a sumar es lo menor entre el monto actual y lo que queda por pagar
                     $to_sum = min($to_sum, $remaining_to_pay);
 
                     $sales_cash_sum += $to_sum;
                 }
 
-                // Descuento si aplica
                 if ($sale_note->total_discount) {
                     $total_discount += $sale_note->total_discount;
                 }
@@ -3847,8 +3837,7 @@ class BoxesController extends Controller
         $expenses_cash_quantity = $expenses_cash->count();
 
         $incomes = Box::where('currency_type_id', 'PEN')->where('type', '1')->where('incomes', 1)->where('state', 0)->where('cash_id', $cash_id)->where('method', 'Efectivo')->OrderBy('date', 'asc');
-        // Para considerar todos los métodos de pago, no filtres solo por 'Efectivo'
-        $incomes_cash = $incomes; // incluye todos los métodos
+        $incomes_cash = $incomes;
         $incomes_cash_sum = $incomes_cash->sum('amount');
 
         $incomes_cash_quantity = $incomes_cash->count();
@@ -3861,8 +3850,6 @@ class BoxesController extends Controller
             ];
         });
 
-        // ingreso y salida en digital
-        // Obtener los egresos digitales (todos los métodos menos 'Efectivo')
         $expensesdigital = Box::where('currency_type_id', 'PEN')
             ->where('type', '2')
             ->where('expenses', 1)
@@ -3870,8 +3857,7 @@ class BoxesController extends Controller
             ->where('cash_id', $cash_id)
             ->where('method', '!=', 'Efectivo')
             ->orderBy('date', 'asc');
-        // Considerar todos los métodos de pago, no solo 'Efectivo'
-        $expenses_digital = $expensesdigital; // incluye todos los métodos
+        $expenses_digital = $expensesdigital;
         $expenses_records_digital = $expenses_digital->get()->transform(function ($row) {
             $id = $row->id;
             $items = BoxesDetail::where('boxes_id', $id)->count();

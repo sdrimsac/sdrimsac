@@ -23,6 +23,7 @@ use App\Mail\SaleNoteEmail;
 use Illuminate\Support\Str;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\SaleNoteItem;
+use App\Models\Tenant\SaleNoteItemPromotion;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
 // use App\Models\Tenant\Warehouse;
@@ -104,6 +105,7 @@ use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
 use App\Http\Resources\Tenant\SaleNoteMobileCollection;
 use App\Jobs\PrintOrderJob;
+use App\Jobs\ProcessSaleNoteItemPromotionStock;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
 use App\Traits\CheckTotalTrait;
@@ -1527,6 +1529,43 @@ class SaleNoteController extends Controller
                         $orden_item->restoreRestaurant();
                         event(new OrdenReadyEvent($orden_item->id));
                     }
+
+                    // Recolectar detalles de order_item_details para guardarlos
+                    // luego como promociones vinculadas a los sale_note_items correspondientes.
+                    $promotion_details = [];
+                    foreach ($orden_items as $orden_item) {
+                        $details = DB::connection('tenant')
+                            ->table('order_item_details')
+                            ->where('orden_item_id', $orden_item->id)
+                            ->get();
+
+                        // intentar obtener el item padre/promo asociado al orden_item (food->item_id)
+                        $promo_item_id = null;
+                        try {
+                            $promo_item_id = optional($orden_item->food)->item_id ?? null;
+                        } catch (\Exception $e) {
+                            $promo_item_id = null;
+                        }
+
+                        foreach ($details as $detail) {
+                            $promotion_details[] = [
+                                'promo_item_id' => $promo_item_id,
+                                'item_id' => $detail->item_id,
+                                'quantity' => $detail->quantity,
+                                'sale_note_item_id' => null, 
+                                'document_item_id' => null
+                            ];
+                        }
+                    }
+
+                    // inserart la orden promocion al sale note en la tabla sale_note_orden_promotion
+                    /* $orden_promotion = OrdenPromotion::where('orden_id', $request->orden_id
+                    )->first(); */
+                    /* if ($orden_promotion) {
+                        $this->sale_note->ordenPromotions()->create([
+                            'orden_promotion_id' => $orden_promotion->id,
+                        ]);
+                    } */
                 }
                 // if ($request->orden_id) {
                 //     $Orden = Orden::findOrFail($request->orden_id);
@@ -1749,6 +1788,78 @@ class SaleNoteController extends Controller
                             $row['item_id'],
                             $row['item']['warehouse_id']
                         );
+                    }
+                }
+                // Si hay promociones recolectadas de las ordenes, vincularlas a los sale_note_items
+                if (isset($promotion_details) && count($promotion_details) > 0) {
+                    foreach ($promotion_details as $pd) {
+                        $promo_item_id = $pd['promo_item_id'] ?? null;
+                        $detail_item_id = $pd['item_id'] ?? null;
+                        $quantity = $pd['quantity'] ?? null;
+
+                        if (!$detail_item_id) continue;
+
+                        $sale_note_item = null;
+
+                        // 1) Buscar por item_id directo (promo parent)
+                        if ($promo_item_id) {
+                            $sale_note_item = SaleNoteItem::where('sale_note_id', $this->sale_note->id)
+                                ->where('item_id', $promo_item_id)
+                                ->first();
+                        }
+
+                        // 2) Si no se encontró, intentar buscar dentro del JSON `item`
+                        if (!$sale_note_item && $promo_item_id) {
+                            try {
+                                $sale_note_item = SaleNoteItem::where('sale_note_id', $this->sale_note->id)
+                                    ->where('item', 'like', '%"id":' . $promo_item_id . '%')
+                                    ->first();
+                            } catch (\Exception $e) {
+                                // evitar que una excepción por driver detenga el proceso
+                               
+                            }
+                        }
+
+                        // 3) Si sigue sin encontrar, intentar buscar por name_product_pdf que contenga el nombre del item detalle
+                        if (!$sale_note_item) {
+                            try {
+                                $detailItem = Item::find($detail_item_id);
+                                if ($detailItem && $detailItem->description) {
+                                    $sale_note_item = SaleNoteItem::where('sale_note_id', $this->sale_note->id)
+                                        ->where('name_product_pdf', 'like', '%' . substr($detailItem->description, 0, 80) . '%')
+                                        ->first();
+                                }
+                            } catch (\Exception $e) {
+                                // continue
+                            }
+                        }
+
+                        // 4) Fallback: si solo hay un sale_note_item en la nota, usar ese
+                        if (!$sale_note_item) {
+                            $single = SaleNoteItem::where('sale_note_id', $this->sale_note->id)->count();
+                            if ($single == 1) {
+                                $sale_note_item = SaleNoteItem::where('sale_note_id', $this->sale_note->id)->first();
+                            }
+                        }
+
+                        if ($sale_note_item) {
+                            // Crear registro en sale_note_item_promotions
+                            try {
+                                SaleNoteItemPromotion::create([
+                                    'sale_note_item_id' => $sale_note_item->id,
+                                    'item_id' => $detail_item_id,
+                                    'quantity' => $quantity,
+                                ]);
+
+                                ProcessSaleNoteItemPromotionStock::dispatch($sale_note_item->id, $sale_note_item->warehouse_id);
+
+                            } catch (\Exception $e) {
+                               // Log::warning('No se pudo crear sale_note_item_promotion: ' . $e->getMessage(), ['pd' => $pd, 'sale_note_item_id' => $sale_note_item->id]);
+                            }
+                        } else {
+                            // Si no se encontró el sale_note_item, registrar advertencia para revisión
+                            //Log::warning('SaleNoteItem (promo) no encontrado para vincular promoción', ['sale_note_id' => $this->sale_note->id, 'promo_item_id' => $promo_item_id, 'detail' => $pd]);
+                        }
                     }
                 }
                 // foreach ($data['items'] as $row) {

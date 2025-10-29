@@ -125,6 +125,7 @@ use Modules\Workshop\Models\Historial;
 use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Jobs\PrintOrderJob;
+use App\Jobs\ProcessDocumentItemPromotionStock;
 use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
@@ -1723,7 +1724,8 @@ class DocumentController extends Controller
             // Diagnostic log: record whether the request included receive_promotion (as boolean)
             try {
                 Log::info('DocumentController: receive_promotion check', ['receive_promotion' => $request->receive_promotion]);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
 
             if ($request->receive_promotion) {
                 $this->updatePromotion($document);
@@ -1941,6 +1943,88 @@ class DocumentController extends Controller
                         $orden_item->save();
                         event(new OrdenReadyEvent($orden_item->id));
                     }
+                }
+
+                $promotion_details = [];
+                foreach ($orden_items as $orden_item) {
+                    $details = DB::connection('tenant')
+                        ->table('order_item_details')
+                        ->where('orden_item_id', $orden_item->id)
+                        ->get();
+
+                    Log::info('Detalles de order_item_details para orden_item_id ' . $orden_item->id, (array) $details);
+
+                    // intentar obtener el item padre/promo asociado al orden_item (food->item_id)
+                    $promo_item_id = null;
+                    try {
+                        $promo_item_id = optional($orden_item->food)->item_id ?? null;
+                    } catch (\Exception $e) {
+                        $promo_item_id = null;
+                    }
+
+                    foreach ($details as $detail) {
+                        $promotion_details[] = [
+                            'promo_item_id' => $promo_item_id,
+                            'item_id' => $detail->item_id,
+                            'quantity' => $detail->quantity,
+                            'sale_note_item_id' => null,
+                            'document_item_id' => null
+                        ];
+                    }
+                }
+                // Guardar las promociones en la tabla sale_note_item_promotions
+                try {
+                    foreach ($promotion_details as $pd) {
+                        // intentar localizar el document_item que representa al item promo en este documento
+                        $document_item_id = null;
+
+                        if (!empty($pd['promo_item_id'])) {
+                            $docItem = DB::connection('tenant')
+                                ->table('document_items')
+                                ->where('document_id', $document->id)
+                                ->where('item_id', $pd['promo_item_id'])
+                                ->first();
+
+                            if ($docItem) {
+                                $document_item_id = $docItem->id;
+                            }
+                        }
+
+                        // fallback: si no encontramos el document_item por el promo_item_id,
+                        // intentamos buscar por el item hijo (detalle) dentro del documento
+                        if (is_null($document_item_id)) {
+                            $docItem = DB::connection('tenant')
+                                ->table('document_items')
+                                ->where('document_id', $document->id)
+                                ->where('item_id', $pd['item_id'])
+                                ->first();
+
+                            if ($docItem) {
+                                $document_item_id = $docItem->id;
+                            }
+                        }
+
+                        $insert = [
+                            'sale_note_item_id' => $pd['sale_note_item_id'],
+                            'document_item_id' => $document_item_id,
+                            'item_id' => $pd['item_id'],
+                            'quantity' => $pd['quantity'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+
+                        try {
+                            DB::connection('tenant')->table('sale_note_item_promotions')->insert($insert);
+
+                            ProcessDocumentItemPromotionStock::dispatch($document_item_id, $document->warehouse_id);
+
+                        } catch (\Exception $e) {
+                            // registrar advertencia pero no interrumpir el flujo de facturación
+                            Log::warning('No se pudo crear sale_note_item_promotion (document): ' . $e->getMessage(), ['pd' => $pd, 'insert' => $insert]);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Error guardando promociones para orden/es: ' . $e->getMessage());
                 }
             }
             if ($request->orden_ids) {
