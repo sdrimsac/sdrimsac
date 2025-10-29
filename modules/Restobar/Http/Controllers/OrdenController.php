@@ -148,10 +148,13 @@ class OrdenController extends Controller
     {
         ini_set('max_execution_time', 300);
         ini_set('memory_limit', '1024M');
-        $configuration = Configuration::first();
-        $precuenta = $request->precuenta ?? false;
-        $is_restaurant = $configuration->restaurant;
-        $show_unit_ticket = $configuration->show_unit_types_ticket;
+    $configuration = Configuration::first();
+    $precuenta = $request->precuenta ?? false;
+    // Ensure we detect restaurant mode even if config uses the alternative flag
+    // (some parts of the codebase use `restobar_home` instead of `restaurant`).
+    // Fall back to `restobar_home` when `restaurant` is falsy.
+    $is_restaurant = $configuration->restaurant ?: ($configuration->restobar_home ?? false);
+    $show_unit_ticket = $configuration->show_unit_types_ticket;
         $company = Company::first();
         $orden = $request->id;
         $ordens_items_extern = explode("_", $request->ids);

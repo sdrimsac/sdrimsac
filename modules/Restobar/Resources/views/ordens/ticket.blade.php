@@ -572,7 +572,7 @@
                                             {{-- @endif --}}
                                         </strong>
                                     @endif
-                                    contiene:
+                                    
                                     @php
                                         // Soporta tanto string JSON como array/colección
                                         $details = $row->order_item_details;
@@ -581,6 +581,7 @@
                                         }
                                     @endphp
                                     @if (!empty($details))
+                                        <strong>contiene:</strong>
                                         <br>
                                         <small>
                                             @foreach ($details as $detail)
@@ -689,7 +690,7 @@
                                                 </strong>
                                             @endif
                                             <br>
-                                            contiene:
+                                            
                                     @php
                                         // Soporta tanto string JSON como array/colección
                                         $details = $row->order_item_details;
@@ -698,6 +699,8 @@
                                         }
                                     @endphp
                                     @if (!empty($details))
+                                        
+                                        <strong>contiene:</strong>
                                         <br>
                                         <small>
                                             @foreach ($details as $detail)
@@ -730,9 +733,24 @@
                                             <strong>Obs: {{ $row_carry->observations }}</strong>
                                         @endif
 
-
+                                        @php
+                                        // Soporta tanto string JSON como array/colección
+                                        $details = $row_carry->order_item_details;
+                                        if (is_string($details)) {
+                                            $details = json_decode($details, true);
+                                        }
+                                    @endphp
+                                    @if (!empty($details))
+                                        <strong>contiene:</strong>
+                                        <br>
+                                        <small>
+                                            @foreach ($details as $detail)
+                                                {{-- quantity y description pueden venir como array o como objeto --}}
+                                                - {{ data_get($detail, 'quantity') }} x {{ e(data_get($detail, 'description')) }}<br>
+                                            @endforeach
+                                        </small>
+                                    @endif
                                     </td>
-
                                 </tr>
                             @endforeach
                         @endif
@@ -843,7 +861,7 @@
                 {{-- @if ($is_restaurant) --}}
                     <tr>
                         <td colspan="4" class="header_title1 text-center" valign="top">
-                            USUARIO: {{ join(', ', $users) }}
+                            USUARIO: {{ join(', ', $users ) }}
                         </td>
                     </tr>
                 {{-- @endif --}}
