@@ -211,9 +211,13 @@ class OrdenController extends Controller
             $orden_items_obj = OrdenItem::whereIn('id', $requested_items)->get();
 
             $all_items_cancelled = $orden_items_obj->count() > 0 &&
-                $orden_items_obj->every(function($item) { return $item->status_orden_id == 5; });
+                $orden_items_obj->every(function ($item) {
+                    return $item->status_orden_id == 5;
+                });
 
-            $some_items_cancelled = $orden_items_obj->contains(function($item) { return $item->status_orden_id == 5; });
+            $some_items_cancelled = $orden_items_obj->contains(function ($item) {
+                return $item->status_orden_id == 5;
+            });
 
             // Verifica si la orden completa fue anulada
             $orden_cancelled = $ordenes->status_orden_id == 5;
@@ -1432,7 +1436,14 @@ class OrdenController extends Controller
                     return ['orden_id' => $item->id, 'area_id' => $item->area_id];
                 })->toArray();
 
-                foreach ($created_items as $created) {
+                // Asegurarnos que los items creados estén en el mismo orden en que los envió el cliente.
+                // Obtenemos los últimos N creados (ya lo hicimos) pero los invertimos para que queden en orden ascendente
+                // y correspondan índice a índice con el array de entrada `$items`.
+                $created_items = $created_items->reverse()->values();
+
+                $inputItems = array_values($items);
+
+                foreach ($created_items as $index => $created) {
                     try {
                         $ordenItemModel = OrdenItem::with(['food', 'food.item'])->find($created->id);
                         if (!$ordenItemModel) continue;
@@ -1442,35 +1453,41 @@ class OrdenController extends Controller
 
                         $selectedPromotionItems = null;
 
+                        // Map promotion items by input index: after bulk insert we reversed
+                        // the created_items so their order corresponds to the input items.
                         try {
-                            $matchedKey = null;
-                            foreach ($items as $key => $inputItem) {
-                                $inputFoodId = data_get($inputItem, 'food.id', $inputItem['food_id'] ?? null);
-                                $inputPrice = isset($inputItem['price']) ? floatval($inputItem['price']) : null;
-                                $inputQty = isset($inputItem['quantity']) ? floatval($inputItem['quantity']) : null;
-
-                                if ($inputFoodId === $ordenItemModel->food_id) {
-                                    $priceMatch = $inputPrice === null || $inputPrice == floatval($ordenItemModel->price);
-                                    $qtyMatch = $inputQty === null || $inputQty == floatval($ordenItemModel->quantity);
-
-                                    if ($priceMatch && $qtyMatch) {
-                                        $matchedKey = $key;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if ($matchedKey !== null && isset($items[$matchedKey]['food']['promotion_items']) && is_array($items[$matchedKey]['food']['promotion_items'])) {
-                                $selectedPromotionItems = $items[$matchedKey]['food']['promotion_items'];
-                                // evitar reutilizar la misma entrada para otro created_item
-                                unset($items[$matchedKey]);
-                            }
+                            $inputItem = $inputItems[$index] ?? null;
+                            $selectedPromotionItems = $inputItem ? data_get($inputItem, 'food.promotion_items', null) : null;
                         } catch (Exception $e) {
-                            // no crítico, seguimos con el fallback
-                            Log::warning('Error buscando promotion_items en request: ' . $e->getMessage());
+                            Log::warning('Error obteniendo promotion_items desde input: ' . $e->getMessage());
                         }
 
                         if (!empty($selectedPromotionItems)) {
+                            foreach ($selectedPromotionItems as $sel) {
+
+                                // Prioriza el item_id real, no el id del food
+                                $subItemId = $sel['item_id'] ?? ($sel['item']['id'] ?? null);
+                                if (!$subItemId) continue;
+
+                                $subItem = Item::find($subItemId);
+                                if (!$subItem) continue;
+
+                                $promoQty = isset($sel['_promo_quantity'])
+                                    ? floatval($sel['_promo_quantity'])
+                                    : (isset($sel['quantity']) ? floatval($sel['quantity']) : 1);
+
+                                $detailQuantity = $promoQty * (float)$ordenItemModel->quantity;
+
+                                OrderItemDetail::create([
+                                    'orden_item_id' => $ordenItemModel->id,
+                                    'item_id' => $subItem->id,
+                                    'description' => $subItem->description,
+                                    'quantity' => $detailQuantity,
+                                ]);
+                            }
+                        }
+
+                        /* if (!empty($selectedPromotionItems)) {
                             // Insertar solo los componentes que el usuario seleccionó
                             foreach ($selectedPromotionItems as $sel) {
                                 // El objeto enviado desde frontend puede variar; normalizamos
@@ -1490,7 +1507,7 @@ class OrdenController extends Controller
                                     'quantity' => $detailQuantity,
                                 ]);
                             }
-                        }
+                        } */
                     } catch (Exception $e) {
                         // Log and continue — promotion details are auxiliary
                         Log::error("Error creating promotion details for orden item: {$created->id}", ['error' => $e->getMessage()]);
