@@ -226,8 +226,8 @@ class OrdenController extends Controller
             $orden_cancelled = $ordenes->status_orden_id == 5;
 
             if ($orden_cancelled || $all_items_cancelled) {
-                $es_anulacion = true;         // se muestra sello de anulado para toda la orden
-                $es_anulacion_item = false;   // no se necesita mostrarlo por ítem
+                $es_anulacion = true;
+                $es_anulacion_item = false;
             } else {
                 $es_anulacion = false;
                 $es_anulacion_item = $some_items_cancelled; // si al menos uno está anulado, mostrarlo por ítem
@@ -262,8 +262,6 @@ class OrdenController extends Controller
         // Obtener los ítems originales (sin agrupar) para poder recuperar los detalles asociados
         $raw_orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get();
 
-        // Debug: log raw orden_items (ids + rows) to ensure we're grouping the expected items
-        // (debug logs removed) - raw orden_items fetched above
         try {
             // Additional check: search any order_item_details linked to this orden (orden_id) via JOIN
             $detailsByOrder = DB::connection('tenant')
@@ -361,7 +359,7 @@ class OrdenController extends Controller
                 $to_carry[] = $ord_itm;
             }
             $user_name = $ord_itm->user->name;
-            Log::info('Usuario en ítem de orden para ticket', ['user_name' => $user_name]);
+           /*  Log::info('Usuario en ítem de orden para ticket', ['user_name' => $user_name]); */
             if (!in_array($user_name, $users)) {
                 $users[] = $user_name;
             }
@@ -1038,6 +1036,82 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
+            // Si la petición corresponde a una orden ya creada y los items
+            // incluidos en la request ya son items existentes (traen `id`),
+            // entonces NO debemos modificar la orden: sólo disparar impresiones.
+            // Esto cubre el caso de "cobrar/imprimir" que vuelve a llamar a `store`.
+            $printOnlyExistingOrder = false;
+            if (!empty($request->id) && !empty($request->items) && is_array($request->items)) {
+                $allItemsHaveId = collect($request->items)->every(function ($it) {
+                    return isset($it['id']) && $it['id'] !== null && $it['id'] !== '';
+                });
+                if ($allItemsHaveId) {
+                    $printOnlyExistingOrder = true;
+                }
+            }
+            
+
+            if ($printOnlyExistingOrder) {
+                // Preparar datos mínimos para la impresión sin tocar la base
+                $orden = Orden::find($request->id);
+                if (!$orden) {
+                    return [
+                        'success' => false,
+                        'message' => 'Orden no encontrada para impresión'
+                    ];
+                }
+
+                $configuration = Configuration::first();
+
+                // Construir arrays que usan las rutinas de impresión más abajo
+                $orden_items_ids = collect($request->items)->pluck('id')->toArray();
+                $orden_items_ids_for_kitchen = collect($request->items)->map(function ($it) {
+                    return [
+                        'orden_id' => $it['id'],
+                        'area_id' => $it['area_id'] ?? null,
+                    ];
+                })->toArray();
+
+                $print_box = $configuration->print_commands;
+                $print_kitchen = $configuration->print_kitchen;
+                $conopy_kitchen = $configuration->conopy_kitchen;
+                $printing = filter_var($request->get('printing', false), FILTER_VALIDATE_BOOLEAN);
+
+            
+                    if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
+                        $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                        $user_id = auth()->id();
+                        foreach ($ids_areas as $area_id) {
+                            $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                                return $area_id == $a['area_id'];
+                            }), "orden_id");
+                            $area_found = Area::find($area_id);
+                            if ($area_found) {
+                                $copies = $area_found->copies ?? 0;
+                                $total_copies = $copies + 1;
+
+                                if ($area_found->printer || $area_found->search_print == 1) {
+                                    for ($i = 0; $i < $total_copies; $i++) {
+                                        dispatch(new Print2OrderJob($orden->id, "0", true, $area_id, $filtered, null, null, null, $user_id, url('')));
+                                        sleep(1);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                
+                
+                    // Si sólo se pidió imprimir items existentes, terminamos aquí
+                    // para NO modificar la orden en la base de datos.
+                    return [
+                        'id' => $orden->id,
+                        'success' => true,
+                        'message' => 'Impresión encolada para orden existente',
+                        'printed' => true
+                    ];
+                }
+
+            Log::info('Iniciando validación de stock para la orden ver si modifica', ['request' => $request->all()]);
             $user = auth()->user();
             $ref = $request->ref;
             $mozo_id = $request->mozo_id ?? null;
@@ -1226,7 +1300,11 @@ class OrdenController extends Controller
                 ];
             }
 
-            $user_id = $user->id;
+            // Use the authenticated mozo (waiter) as the creator of the orden items.
+            // Previously $user could have been overwritten with a CAJ (cash) user
+            // for internal logic, causing printed tickets to show the cashier's name.
+            // Ensure order items are assigned to the actual mozo who placed the order.
+            $user_id = $mozo_user->id;
             $message = 'Pedido realizado.';
             $establishment_id = auth()->user()->establishment_id;
 
@@ -1639,7 +1717,7 @@ class OrdenController extends Controller
             } else {
                 // Only dispatch kitchen print jobs when configuration allows it AND
                 // the incoming request is NOT asking to skip printing ($printing == false).
-                if ($print_kitchen && !$printing) {
+                if ($print_kitchen && (!$printing || $printOnlyExistingOrder)) {
                     $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
                     $user_id = auth()->id();
                     foreach ($ids_areas as $area_id) {
