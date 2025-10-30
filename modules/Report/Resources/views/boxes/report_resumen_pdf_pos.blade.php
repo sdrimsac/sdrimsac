@@ -2086,8 +2086,8 @@
                 </div>
             @endif
         @endif
-        @if (count($stock_init_report['product']) > 0)
-            {{-- @dd($stock_init_report['product']) --}}
+
+        @if (count($stock_init_report) > 0)
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
                     STOCK DE PRODUCTOS VENDIDOS DURANTE EL DIA
@@ -2123,25 +2123,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($stock_init_report['product'] as $product)
+                        @foreach ($stock_init_report as $product)
                             <tr>
                                 <td class="f19 center">
-                                    {{ $product['item_id'] ?? 'N/A' }}
+                                    {{ $product['codigo'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19">
-                                    {{ $product['name'] ?? 'N/A' }}
+                                    {{ $product['producto'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
                                     {{ $product['initial_stock'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['compras_estimadas'] ?? 'N/A' }}
+                                    {{ $product['purchases'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right" style="color: red;">
-                                    {{ $product['difference'] ?? 'N/A' }}
+                                    {{ $product['sold_quantity'] ?? 'N/A' }}
                                 </td>
                                 <td class="f19 right">
-                                    {{ $product['actual_stock'] ?? 'N/A' }}
+                                    {{ $product['current_stock'] ?? 'N/A' }}
                                 </td>
                             </tr>
                         @endforeach

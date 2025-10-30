@@ -236,23 +236,18 @@ export default {
             // If a maxQuantity exists, enforce that the number of selected DISTINCT products equals maxQuantity
             // (Esto cubre el caso: "si son tres debe escoger tres"). Si faltan o sobran, mostramos alerta.
             if (maxQuantity) {
-                const selectedCount = itemsToAdd.length;
                 const target = Number(maxQuantity);
 
-                if (selectedCount !== target) {
-                    if (selectedCount < target) {
-                        const missing = target - selectedCount;
-                        this.$toast.error(`Debe seleccionar ${missing} producto(s) faltante(s) para completar la promoción.`);
-                    } else {
-                        this.$toast.error(`Ha seleccionado ${selectedCount} producto(s). Debe seleccionar exactamente ${target} producto(s).`);
-                    }
-                    return;
-                }
-
-                // Además validamos que la suma de cantidades no exceda el máximo (por si el usuario puso cantidades >1)
+                // Sumar TODAS las cantidades seleccionadas (no sólo la cantidad de productos distintos)
                 const totalRequested = itemsToAdd.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0);
-                if (totalRequested > target) {
-                    this.$toast.error(`La promoción permite un máximo de ${target} artículo(s). Seleccionaste ${totalRequested}.`);
+
+                if (totalRequested !== target) {
+                    if (totalRequested < target) {
+                        const missing = target - totalRequested;
+                        this.$toast.error(`Debe agregar ${missing} artículo(s) más para completar la promoción.`);
+                    } else {
+                        this.$toast.error(`Ha agregado ${totalRequested} artículo(s). El máximo permitido por la promoción es ${target}.`);
+                    }
                     return;
                 }
             }

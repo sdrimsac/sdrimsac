@@ -1150,18 +1150,46 @@ export default {
                     const description = promo.description || promo.descripcion || null;
 
                     // Buscar el item en listFoods (vista actual) o en foods (fallback)
-                    let found = this.listFoods.find(
-                        f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
-                    );
+                    // Normalizar id a number cuando sea posible para evitar coincidencias erróneas
+                    const normalizedPromoItemId = (() => {
+                        if (promoItemId === null || typeof promoItemId === 'undefined') return promoItemId;
+                        const n = Number(promoItemId);
+                        return isNaN(n) ? promoItemId : n;
+                    })();
+
+                    let found = this.listFoods.find(f => {
+                        try {
+                            if (f && f.item && typeof f.item.id !== 'undefined') {
+                                return Number(f.item.id) === Number(normalizedPromoItemId);
+                            }
+                            if (typeof f.id !== 'undefined') {
+                                return Number(f.id) === Number(normalizedPromoItemId);
+                            }
+                        } catch (e) {
+                            return false;
+                        }
+                        return false;
+                    });
                     if (!found) {
-                        found = this.foods.find(
-                            f => (f.item && f.item.id == promoItemId) || f.id == promoItemId
-                        );
+                        found = this.foods.find(f => {
+                            try {
+                                if (f && f.item && typeof f.item.id !== 'undefined') {
+                                    return Number(f.item.id) === Number(normalizedPromoItemId);
+                                }
+                                if (typeof f.id !== 'undefined') {
+                                    return Number(f.id) === Number(normalizedPromoItemId);
+                                }
+                            } catch (e) {
+                                return false;
+                            }
+                            return false;
+                        });
                     }
 
                     // Si aún no se encuentra, solicitar al servidor (fallback)
                     if (!found) {
                         try {
+                            // Intentar obtener el item por id desde el servidor como último recurso
                             const resp = await this.$http.get(`/items/record/${promoItemId}`);
                             // Algunos endpoints devuelven resource en resp.data.data o directamente en resp.data
                             const responseItem = (resp && resp.data && (resp.data.data || resp.data)) || null;
@@ -1177,6 +1205,16 @@ export default {
                             }
                         } catch (err) {
                             console.warn(`onAddPromotionItems: no se pudo obtener item ${promoItemId} del servidor`, err);
+                        }
+                    }
+
+                    // Si aún no se encontró, intentar usar otras propiedades comunes del objeto promo
+                    if (!found && promo && (promo.item_id || promo.item || promo.product_id)) {
+                        const fallbackId = promo.item_id || (promo.item && promo.item.id) || promo.product_id;
+                        if (fallbackId) {
+                            const nFallback = Number(fallbackId);
+                            found = this.listFoods.find(f => (f.item && Number(f.item.id) === nFallback) || Number(f.id) === nFallback) ||
+                                this.foods.find(f => (f.item && Number(f.item.id) === nFallback) || Number(f.id) === nFallback);
                         }
                     }
 
@@ -1284,8 +1322,13 @@ export default {
                     quantity: 1
                 };
 
+                // Preferir pasar el id del item subyacente cuando esté disponible
+                const emitId = (promotionFood && promotionFood.item && promotionFood.item.id) ? promotionFood.item.id : currentFood.id;
+                // Debug: trazas para ayudar a identificar mapeos erróneos
+                console.debug('onAddPromotionItems: emitiendo insertOrden', { currentFoodId: currentFood.id, emitId, promotionId: promotionId, promoItemsCount: promoItemsDetailed.length });
+
                 // Emitir la promoción con sus componentes. El padre debe interpretar 'food.promotion_items'
-                this.$emit("insertOrden", currentFood, currentFood.id, null, false, null, []);
+                this.$emit("insertOrden", currentFood, emitId, null, false, null, []);
 
                 this.$notify({
                     title: promotionFood.description || `Promoción ${promotionId}`,

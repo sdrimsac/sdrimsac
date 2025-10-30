@@ -120,19 +120,36 @@ export default {
         },
         removeSelected(item) {
             // Quitar la selección: dejar la cantidad en 0 para que no se incluya
-            // Mejor hacer el $set sobre el objeto almacenado en promotionItems (índice)
-            // y agregar un log breve para facilitar depuración en consola.
-            console.log('removeSelected called with item:', item);
+            // en la lista de "Productos seleccionados", pero NO eliminar el
+            // elemento de promotionItems (debe permanecer en la tabla de productos).
             if (!item) return;
 
+            // Intenta encontrar por referencia primero
             const idx = (this.promotionItems || []).indexOf(item);
             if (idx !== -1) {
-                // Eliminar completamente del array de promotionItems para que desaparezca del resumen
-                // Esto evita problemas de reactividad y hace la UX más clara.
-                this.promotionItems.splice(idx, 1);
-            } else {
-                // Fallback: si por alguna razón la referencia no coincide, set sobre el objeto recibido
+                // Asegurar reactividad al cambiar la propiedad
+                this.$set(this.promotionItems[idx], 'quantity_to_add', 0);
+                return;
+            }
+
+            // Fallback: buscar por identificadores comunes (id, promotion_item_id o internal_id)
+            const found = (this.promotionItems || []).find(it =>
+                (it.id && item.id && it.id === item.id) ||
+                (it.promotion_item_id && item.promotion_item_id && it.promotion_item_id === item.promotion_item_id) ||
+                (it.internal_id && item.internal_id && it.internal_id === item.internal_id)
+            );
+
+            if (found) {
+                this.$set(found, 'quantity_to_add', 0);
+                return;
+            }
+
+            // Último recurso: set sobre el objeto pasado (puede ser una copia)
+            try {
                 this.$set(item, 'quantity_to_add', 0);
+            } catch (e) {
+                // Si no es reactivo o falla, asignar directamente
+                item.quantity_to_add = 0;
             }
         },
         async setItemCheckPromotions(id) {

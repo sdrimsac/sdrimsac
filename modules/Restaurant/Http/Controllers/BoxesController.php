@@ -1845,37 +1845,43 @@ class BoxesController extends Controller
         ];
     }
 
-    /* public function get_stock_report_restobar($cash_id)
-    {
-        $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
-        $item = null;
-        foreach ($stock_movements as $movement) {
-            if ($item === null || $item->id !== $movement->item_id) {
-                $item = Item::find($movement->item_id);
-            }
-            $movement->item_description = $item ? $item->description : 'N/A';
-        }
-
-        return $stock_movements;
-        
-    } */
-
     public function get_stock_report_restobar($cash_id)
     {
+        // Obtener todos los movimientos de stock de la caja
         $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
 
-        // Obtener todos los IDs de items involucrados
-        $item_ids = $stock_movements->pluck('item_id')->unique();
-
-        // Cargar todos los items en una sola consulta
-        $items = Item::whereIn('id', $item_ids)->get()->keyBy('id');
-
-        // Asignar descripciones
-        foreach ($stock_movements as $movement) {
-            $movement->item_description = $items[$movement->item_id]->description ?? 'N/A';
+        if ($stock_movements->isEmpty()) {
+            return [];
         }
 
-        return $stock_movements;
+        // Obtener los items involucrados
+        $item_ids = $stock_movements->pluck('item_id')->unique();
+        $items = Item::whereIn('id', $item_ids)->get()->keyBy('id');
+
+        // Mapear resultados en el formato del reporte
+        $report = $stock_movements->map(function ($movement) use ($items) {
+            $item = $items[$movement->item_id] ?? null;
+
+            return [
+                'codigo' => $movement->item_id,
+                'producto' => $item ? $item->description : 'N/A',
+                'initial_stock' => number_format($movement->initial_stock ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                /* 'purchases' => number_format($movement->purchases ?? 0, 3, '.', ','), */
+                'purchases' => number_format($movement->purchases ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                'sold_quantity' => number_format($movement->sold_quantity ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                /* 'current_stock' => number_format($movement->current_stock ?? 0, 3, '.', ','), */
+                'current_stock' => number_format($movement->current_stock ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+            ];
+        });
+
+        // Log para depurar
+        /* Log::info('Reporte de stock restobar generado', [
+            'cash_id' => $cash_id,
+            'total_items' => $report->count(),
+            'sample' => $report->take(100)->toArray(),
+        ]); */
+
+        return $report;
     }
 
     function formatInitial($stock)
@@ -2865,7 +2871,8 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);
-        $stock_init_report = $this->get_stock_report($cash_id);
+        /* $stock_init_report = $this->get_stock_report($cash_id); */
+        $stock_init_report = $this->get_stock_report_restobar($cash_id);
         /* $order_anulate_comand = $this->get_ordens_anulate($cash_id); */
         $order_anulate_items = $this->get_orden_item_anulate($cash_id);
         $credit_notes = $this->get_credit_notes($cash_id);
@@ -3537,7 +3544,10 @@ class BoxesController extends Controller
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);
         $sale_credit = $this->get_sale_note_credit($cash_id);
-        $stock_init_report = $this->get_stock_report($cash_id);
+        /*  $stock_init_report = $this->get_stock_report($cash_id); */
+        $stock_init_report = $this->get_stock_report_restobar($cash_id);
+
+        /* Log::info('Stock Init Report', $stock_init_report); */
         $totem_detail = null;
         if ($configuration->tap) {
             $totem_detail = $this->get_totem_detail();
