@@ -1111,7 +1111,6 @@ class OrdenController extends Controller
                     ];
                 }
 
-            Log::info('Iniciando validación de stock para la orden ver si modifica', ['request' => $request->all()]);
             $user = auth()->user();
             $ref = $request->ref;
             $mozo_id = $request->mozo_id ?? null;

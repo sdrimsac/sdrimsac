@@ -126,6 +126,11 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     return;
                 } */
 
+                if (isset($document_item->item) && $document_item->item->promotions_items == 1) {
+                    /* Log::info('Item promocional detectado, se omite el descuento de stock: ' . $document_item->item->description); */
+                    return;
+                }
+
                 $quantity = $document_item->quantity;
 
                 if (isset($document_item->item->has_unit_type)) {
@@ -332,76 +337,10 @@ class InventoryKardexServiceProvider extends ServiceProvider
 
                 if (!$sale_note_item->item->is_set) {
 
-                    // 🧩 Caso especial: si es una promoción
-                    /* if ($sale_note_item->item->promotions_items) {
-
-                        // Obtener los items de la promoción
-                        $promotion_item = ItemPromotion::where('item_id', $sale_note_item->item_id)->get();
-                        Log::info('Ver Item Promotion para el item_id dasdasdas' . $promotion_item);
-                        // igualar promotion selcccionados con el
-                        //$promotion_item = SaleNoteItemPromotion::where('sale_note_item_id', $sale_note_item->id)->get();
-
-                        Log::info("Procesando promoción para SaleNoteItem ID: {$sale_note_item->id}",);
-
-
-                        foreach ($promotion_item as $promo) {
-
-                            // Obtener el item hijo
-                            $child_item = Item::find($promo->promotion_item_id);
-
-                            if (!$child_item) {
-                                Log::warning("Item promocional no encontrado. Promotion ID: {$promo->id}, promotion_item_id: {$promo->promotion_item_id}");
-                                continue;
-                            }
-
-                            // Cantidad total a descontar considerando la cantidad vendida
-                            $promo_quantity = $sale_note_item->quantity * $promo->quantity;
-
-                            // Si el item es receta (is_set = 1)
-                            if ($child_item->is_set) {
-                                $recipe_items = ItemSet::where('item_id', $child_item->id)->get();
-
-                                //Log::info("ver si ingresa aqui", $recipe_items);
-
-                                foreach ($recipe_items as $ingredient) {
-                                    $ingredient_item = Item::find($ingredient->individual_item_id);
-
-                                    if (!$ingredient_item) {
-                                        Log::warning("Ingrediente no encontrado. ItemSet ID: {$ingredient->id}, individual_item_id: {$ingredient->individual_item_id}");
-                                        continue;
-                                    }
-
-                                    $ingredient_quantity = $promo_quantity * $ingredient->quantity;
-
-                                    // Registrar en kardex
-                                    $this->createInventoryKardexSaleNote(
-                                        $sale_note_item->sale_note,
-                                        $ingredient_item->id,
-                                        -$ingredient_quantity,
-                                        $warehouse->id,
-                                        $sale_note_item->id
-                                    );
-
-                                    // Descontar stock
-                                    $this->updateStock($ingredient_item->id, -$ingredient_quantity, $warehouse->id);
-                                }
-                            } else {
-                                // Item normal
-                                $this->createInventoryKardexSaleNote(
-                                    $sale_note_item->sale_note,
-                                    $child_item->id,
-                                    -$promo_quantity,
-                                    $warehouse->id,
-                                    $sale_note_item->id
-                                );
-
-                                $this->updateStock($child_item->id, -$promo_quantity, $warehouse->id);
-                            }
-                        }
-
-                        // Terminó de procesar la promoción
+                    if (isset($sale_note_item->item) && $sale_note_item->item->promotions_items == 1) {
+                        Log::info('Item promocional detectado, se omite el descuento de stock: ' . $sale_note_item->item->description);
                         return;
-                    } */
+                    }
 
                     $quantity = $sale_note_item->quantity;
 

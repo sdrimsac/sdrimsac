@@ -134,26 +134,26 @@ class TableController extends Controller
             $relation = DB::connection('tenant')->table('cashier_waiter')
                 ->where('waiter_id', $user->id)
                 ->where('establishment_id', $user->establishment_id)
-                /* ->where('active', true) */
-                ->first();
+                ->get();
 
-            if (!$relation) {
+            if ($relation->isEmpty()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No tienes un cajero asignado. Comunícate con el administrador.'
                 ], 200);
             }
 
-            $cashier_id = $relation->cashier_id ?? $relation->cash_id ?? null;
+            $cashier_ids = $relation->pluck('cashier_id')->filter()->unique()->toArray();
 
-            $hasOpenCash = Cash::where('user_id', $cashier_id)
+            // Buscar si alguno de esos cajeros tiene una caja abierta
+            $hasOpenCash = Cash::whereIn('user_id', $cashier_ids)
                 ->where('state', 1)
                 ->exists();
 
             if (!$hasOpenCash) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tu cajero no tiene una caja abierta. No puedes acceder a las mesas.'
+                    'message' => 'Ninguno de tus cajeros tiene una caja abierta. No puedes acceder a las mesas.'
                 ], 200);
             }
         }
