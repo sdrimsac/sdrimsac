@@ -128,11 +128,13 @@ class TableController extends Controller
     public function recordsByArea($id)
     {
         $user = auth()->user();
+        $establishment_id = $user->establishment_id;
         $configuration = Configuration::first();
         if ($configuration->restobar_home) {
             $relation = DB::connection('tenant')->table('cashier_waiter')
                 ->where('waiter_id', $user->id)
-                ->where('active', true)
+                ->where('establishment_id', $user->establishment_id)
+                /* ->where('active', true) */
                 ->first();
 
             if (!$relation) {
