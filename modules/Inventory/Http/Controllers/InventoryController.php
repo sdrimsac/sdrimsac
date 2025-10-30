@@ -31,6 +31,8 @@ use App\Services\ItemCodeService;
 use Maatwebsite\Excel\Excel;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 use Illuminate\Support\Facades\Log;
+use Modules\Restaurant\Models\CashStockMovement;
+use App\Models\Tenant\Cash;
 
 class InventoryController extends Controller
 {
@@ -516,6 +518,59 @@ class InventoryController extends Controller
                 if ((bool) $item->codes_family) {
                     Log::info('Generando códigos para item_id ' . $item_id . ' en almacén ' . $warehouse_id);
                     ItemCodeService::generateCodesForItemWarehouse($item_id, $warehouse_id);
+                }
+                // Resolver flag init_report desde varias fuentes (request.item, request.init_report o campo del modelo)
+                $init_report = null;
+                if ($request->has('init_report')) {
+                    $init_report = $request->input('init_report');
+                } elseif ($request->has('item') && is_array($request->input('item')) && array_key_exists('init_report', $request->input('item'))) {
+                    $init_report = $request->input('item')['init_report'];
+                } elseif (isset($item->init_report)) {
+                    $init_report = $item->init_report;
+                }
+
+                Log::info('Inventory CashStockMovement check', [
+                    'type' => $type,
+                    'request_init_report' => $request->input('init_report'),
+                    'item_init_report' => $item->init_report ?? null,
+                    'resolved_init_report' => $init_report,
+                    'item_id' => $item_id,
+                    'quantity' => $quantity,
+                ]);
+
+                // Si el item está marcado para reporte inicial (init_report), registrar movimiento en CashStockMovement
+                if ($type == 'input' && (int)$init_report === 1) {
+                    // Determinar caja a usar: preferir la caja del usuario abierta, si no la última caja abierta
+                    $cashToUse = Cash::where('user_id', auth()->id())->where('state', 1)->latest()->first();
+                    if (!$cashToUse) {
+                        $cashToUse = Cash::where('state', 1)->latest()->first();
+                    }
+
+                    if (!$cashToUse) {
+                        Log::warning('No se encontró caja abierta para registrar CashStockMovement', ['item_id' => $item_id]);
+                    } else {
+                        $cash_id = $cashToUse->id;
+                        $movement = CashStockMovement::where('cash_id', $cash_id)
+                            ->where('item_id', $item_id)
+                            ->first();
+
+                        if ($movement) {
+                            $movement->purchases = ($movement->purchases ?? 0) + $quantity;
+                            $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
+                            $movement->save();
+                        } else {
+                            CashStockMovement::create([
+                                'cash_id' => $cash_id,
+                                'warehouse_id' => $warehouse_id ?? null,
+                                'item_id' => $item_id,
+                                'initial_stock' => 0,
+                                'purchases' => $quantity,
+                                'sold_quantity' => 0,
+                                'current_stock' => $quantity,
+                                'movement_type' => 'purchase',
+                            ]);
+                        }
+                    }
                 }
             } else {
                 foreach ($color_size as $row) {

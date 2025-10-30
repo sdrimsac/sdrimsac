@@ -80,6 +80,7 @@ use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Models\CashOpeningBalance;
 use Modules\Restaurant\Models\CashOpeningBalances as ModelsCashOpeningBalances;
 use Modules\Restaurant\Models\CashOrderSession;
+use Modules\Restaurant\Models\CashStockMovement;
 use Modules\Restaurant\Models\Orden;
 use Mpdf\Mpdf;
 use NumberFormatter;
@@ -2979,6 +2980,14 @@ class CashController extends Controller
                 'warehouse_id' => $establishment_id,
                 'created_at' => now(),
                 'updated_at' => now()
+            ]);
+
+            CashStockMovement::create([
+                'cash_id' => $cash->id,
+                'item_id' => $product->id,
+                'warehouse_id' => $establishment_id,
+                'initial_stock' => $current_stock,
+                'current_stock' => $current_stock,
             ]);
         }
     }

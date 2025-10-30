@@ -219,36 +219,45 @@ export default {
 
         handleSave() {
             // Emit selected promotion items with promotion id, promotion item id and quantities to add
-            // Expectation: each promotion item object may include a promotion_id and either an id or promotion_item_id
             const itemsToAdd = this.promotionItems
                 .filter(item => item.quantity_to_add && item.quantity_to_add > 0)
                 .map(item => ({
                     promotion_id: item.promotion_id || item.promotionId || null,
                     promotion_item_id: item.promotion_item_id || item.promotionItemId || item.id || null,
                     quantity: Number(item.quantity_to_add),
-                    // include the item description; fall back to selectedFood.description if missing
                     description: item.description || (this.selectedFood && this.selectedFood.description) || null,
                 }));
 
-            // Determine global max_quantity (promotion-level). Assumption: the promotion's max_quantity is provided
-            // either on the selectedFood prop or on each promotion item. We prefer the promotion-level value.
-            // Normalize promotion-level max (accept different property names and misspelling)
+            // Determine global max_quantity (promotion-level). Normalize property names and misspellings
             const promoMax = this.promoMaxQuantity;
             const firstRowMax = (this.promotionItems && this.promotionItems.length && (this.promotionItems[0].promo_max_quantity || this.promotionItems[0].promo_max_quantiy || this.promotionItems[0].max_quantity || this.promotionItems[0].maxQuantity)) || null;
             const maxQuantity = promoMax || firstRowMax || null;
 
-            // If a maxQuantity exists, validate the total requested does not exceed it
+            // If a maxQuantity exists, enforce that the number of selected DISTINCT products equals maxQuantity
+            // (Esto cubre el caso: "si son tres debe escoger tres"). Si faltan o sobran, mostramos alerta.
             if (maxQuantity) {
+                const selectedCount = itemsToAdd.length;
+                const target = Number(maxQuantity);
+
+                if (selectedCount !== target) {
+                    if (selectedCount < target) {
+                        const missing = target - selectedCount;
+                        this.$toast.error(`Debe seleccionar ${missing} producto(s) faltante(s) para completar la promoción.`);
+                    } else {
+                        this.$toast.error(`Ha seleccionado ${selectedCount} producto(s). Debe seleccionar exactamente ${target} producto(s).`);
+                    }
+                    return;
+                }
+
+                // Además validamos que la suma de cantidades no exceda el máximo (por si el usuario puso cantidades >1)
                 const totalRequested = itemsToAdd.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0);
-                if (totalRequested > Number(maxQuantity)) {
-                    this.$toast.error(`La promoción permite un máximo de ${maxQuantity} artículo(s). Seleccionaste ${totalRequested}.`);
+                if (totalRequested > target) {
+                    this.$toast.error(`La promoción permite un máximo de ${target} artículo(s). Seleccionaste ${totalRequested}.`);
                     return;
                 }
             }
 
             // If there's a single promotion id for the whole dialog (e.g. from selectedFood), prefer that
-            // Only accept explicit promotion id fields from the selectedFood object.
-            // Do NOT use selectedFood.id — that's the item's id, not the promotion id.
             const promotionIdFromParent = this.selectedFood && (this.selectedFood.promotion_id || this.selectedFood.promotionId || null);
             if (promotionIdFromParent) {
                 itemsToAdd.forEach(it => {

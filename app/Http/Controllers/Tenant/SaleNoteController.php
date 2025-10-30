@@ -43,6 +43,7 @@ use Modules\Restaurant\Models\Area;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\CashStockMovement;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Http\Requests\Tenant\SaleNoteRequest;
@@ -105,6 +106,7 @@ use Mpdf\Mpdf;
 use App\Exports\SaleNoteCreditCashExport;
 use App\Http\Resources\Tenant\SaleNoteMobileCollection;
 use App\Jobs\PrintOrderJob;
+use App\Jobs\ProcesarCashStockMovement;
 use App\Jobs\ProcessSaleNoteItemPromotionStock;
 use App\Models\Tenant\HotelRentPenalty;
 use App\Models\Tenant\HotelRentPayment;
@@ -1781,7 +1783,6 @@ class SaleNoteController extends Controller
                     $sale_note_item->fill($row);
                     $sale_note_item->save();
 
-                    // Restaurar stock si es necesario
                     if (!empty($row['toWarehouse']) && $row['toWarehouse'] > 0) {
                         $this->restoreStock(
                             $row['toWarehouse'],
@@ -1789,6 +1790,9 @@ class SaleNoteController extends Controller
                             $row['item']['warehouse_id']
                         );
                     }
+
+                    ProcesarCashStockMovement::dispatch($row, $sale_note_item, $cash);
+
                 }
                 // Si hay promociones recolectadas de las ordenes, vincularlas a los sale_note_items
                 if (isset($promotion_details) && count($promotion_details) > 0) {

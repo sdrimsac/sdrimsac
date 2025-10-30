@@ -58,6 +58,7 @@ use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\Table;
 use Hyn\Tenancy\Environment;
 use Modules\Grifo\Models\ItemTotemPrices;
+use Modules\Restaurant\Models\CashStockMovement;
 
 class BoxesController extends Controller
 {
@@ -1842,6 +1843,39 @@ class BoxesController extends Controller
             'cash_id' => $cash_id,
             'product' => $report_init
         ];
+    }
+
+    /* public function get_stock_report_restobar($cash_id)
+    {
+        $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
+        $item = null;
+        foreach ($stock_movements as $movement) {
+            if ($item === null || $item->id !== $movement->item_id) {
+                $item = Item::find($movement->item_id);
+            }
+            $movement->item_description = $item ? $item->description : 'N/A';
+        }
+
+        return $stock_movements;
+        
+    } */
+
+    public function get_stock_report_restobar($cash_id)
+    {
+        $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
+
+        // Obtener todos los IDs de items involucrados
+        $item_ids = $stock_movements->pluck('item_id')->unique();
+
+        // Cargar todos los items en una sola consulta
+        $items = Item::whereIn('id', $item_ids)->get()->keyBy('id');
+
+        // Asignar descripciones
+        foreach ($stock_movements as $movement) {
+            $movement->item_description = $items[$movement->item_id]->description ?? 'N/A';
+        }
+
+        return $stock_movements;
     }
 
     function formatInitial($stock)

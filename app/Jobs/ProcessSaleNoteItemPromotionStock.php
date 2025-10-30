@@ -50,6 +50,7 @@ class ProcessSaleNoteItemPromotionStock implements ShouldQueue
             Log::warning("❌ SaleNoteItem no encontrado. ID: {$this->sale_note_item_id}");
             return;
         }
+        Log::info("PASO POR AQUI EL JOB");
 
         // Log básico del item y su estado (convertir con seguridad si viene como stdClass)
         $item_info = null;
@@ -68,7 +69,7 @@ class ProcessSaleNoteItemPromotionStock implements ShouldQueue
         }
 
         if (!$sale_note_item->item || !$sale_note_item->item->promotions_items) {
-            //Log::info("No hay promociones configuradas para el ítem asociado.", ['item_id' => $sale_note_item->item_id]);
+            Log::info("No hay promociones configuradas para el ítem asociado.", ['item_id' => $sale_note_item->item_id]);
             return; // No hay promociones
         }
 
@@ -109,7 +110,7 @@ class ProcessSaleNoteItemPromotionStock implements ShouldQueue
 
             $child_item = Item::find($selected->item_id);
             if (!$child_item) {
-                //Log::warning("Item promocional seleccionado no encontrado. SaleNoteItemPromotion ID: {$selected->id}");
+                Log::warning("Item promocional seleccionado no encontrado. SaleNoteItemPromotion ID: {$selected->id}");
                 continue;
             }
 

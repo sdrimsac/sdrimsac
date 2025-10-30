@@ -126,6 +126,7 @@ use App\Models\Tenant\RegisterMovement;
 use App\Http\Resources\Tenant\RegisterMovementCollection;
 use App\Jobs\PrintOrderJob;
 use App\Jobs\ProcessDocumentItemPromotionStock;
+use App\Jobs\ProcesarCashDocumentStockMovement;
 use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\HotelRentInfraction;
 use App\Models\Tenant\HotelRentPayment;
@@ -2017,7 +2018,6 @@ class DocumentController extends Controller
                             DB::connection('tenant')->table('sale_note_item_promotions')->insert($insert);
 
                             ProcessDocumentItemPromotionStock::dispatch($document_item_id, $document->warehouse_id);
-
                         } catch (\Exception $e) {
                             // registrar advertencia pero no interrumpir el flujo de facturación
                             Log::warning('No se pudo crear sale_note_item_promotion (document): ' . $e->getMessage(), ['pd' => $pd, 'insert' => $insert]);
@@ -2180,6 +2180,40 @@ class DocumentController extends Controller
 
             // Call saveItemWarranty to check and save item warranties
             $this->saveItemWarranty($document, $request->items);
+
+
+            // Determinar la caja (Cash) a usar para los movimientos de inventario / caja
+            $cash = null;
+
+            // Preferir el cash_id enviado en la request
+            if ($request->has('cash_id') && $request->cash_id) {
+                $cash = Cash::find($request->cash_id);
+            }
+
+            // Si no viene en la request, intentar obtenerlo desde el documento (si existe)
+            if (is_null($cash) && isset($document->cash_id) && $document->cash_id) {
+                $cash = Cash::find($document->cash_id);
+            }
+
+            // Fallback: caja abierta del usuario autenticado
+            if (is_null($cash)) {
+                $user_id = auth()->user()->id;
+                $cash = Cash::where('user_id', $user_id)
+                    ->where('state', true)
+                    ->first();
+            }
+
+            foreach ($request->items as $row) {
+                // buscar el DocumentItem guardado que corresponde al item del documento
+                $document_item = DocumentItem::where('document_id', $document->id)
+                    ->where('item_id', $row['item_id'])
+                    ->first();
+
+                // Pasar la instancia (o null si no se encontró) al job
+                ProcesarCashDocumentStockMovement::dispatch($row, $document_item, $cash);
+            }
+
+
             // --- Acumulador de ventas por ítem ---
 
             if (isset($request->items) && is_array($request->items)) {

@@ -784,9 +784,7 @@
                                         </div>
                                         <div class="col-12 col-lg-4 col-xl-3">
                                             <div v-if="
-                                                form.unit_type_id != 'ZZ' &&
-                                                typeUser ===
-                                                'superadmin'
+                                                form.unit_type_id != 'ZZ'
                                             " class="col-md-4 center-el-checkbox">
                                                 <div class="form-group">
                                                     <el-checkbox v-model="form.init_report

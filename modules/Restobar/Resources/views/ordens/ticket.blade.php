@@ -574,13 +574,19 @@
                                     @endif
                                     
                                     @php
-                                        // Soporta tanto string JSON como array/colección
+                                        // Normaliza order_item_details en un array para una comprobación fiable
                                         $details = $row->order_item_details;
                                         if (is_string($details)) {
-                                            $details = json_decode($details, true);
+                                            $details = json_decode($details, true) ?: [];
+                                        } elseif ($details instanceof \Illuminate\Support\Collection) {
+                                            $details = $details->toArray();
+                                        } elseif (is_object($details)) {
+                                            $details = (array) $details;
+                                        } elseif (!is_array($details)) {
+                                            $details = [];
                                         }
                                     @endphp
-                                    @if (!empty($details))
+                                    @if (!empty($details) && count($details) > 0)
                                         <strong>contiene:</strong>
                                         <br>
                                         <small>
@@ -692,13 +698,19 @@
                                             <br>
                                             
                                     @php
-                                        // Soporta tanto string JSON como array/colección
+                                        // Normaliza order_item_details en un array para una comprobación fiable
                                         $details = $row->order_item_details;
                                         if (is_string($details)) {
-                                            $details = json_decode($details, true);
+                                            $details = json_decode($details, true) ?: [];
+                                        } elseif ($details instanceof \Illuminate\Support\Collection) {
+                                            $details = $details->toArray();
+                                        } elseif (is_object($details)) {
+                                            $details = (array) $details;
+                                        } elseif (!is_array($details)) {
+                                            $details = [];
                                         }
                                     @endphp
-                                    @if (!empty($details))
+                                    @if (!empty($details) && count($details) > 0)
                                         
                                         <strong>contiene:</strong>
                                         <br>
@@ -734,13 +746,19 @@
                                         @endif
 
                                         @php
-                                        // Soporta tanto string JSON como array/colección
-                                        $details = $row_carry->order_item_details;
-                                        if (is_string($details)) {
-                                            $details = json_decode($details, true);
-                                        }
-                                    @endphp
-                                    @if (!empty($details))
+                                            // Normaliza order_item_details en un array para una comprobación fiable
+                                            $details = $row_carry->order_item_details;
+                                            if (is_string($details)) {
+                                                $details = json_decode($details, true) ?: [];
+                                            } elseif ($details instanceof \Illuminate\Support\Collection) {
+                                                $details = $details->toArray();
+                                            } elseif (is_object($details)) {
+                                                $details = (array) $details;
+                                            } elseif (!is_array($details)) {
+                                                $details = [];
+                                            }
+                                        @endphp
+                                        @if (!empty($details) && count($details) > 0)
                                         <strong>contiene:</strong>
                                         <br>
                                         <small>

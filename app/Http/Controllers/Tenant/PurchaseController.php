@@ -60,6 +60,7 @@ use Hyn\Tenancy\Models\Hostname;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Restaurant\Http\Controllers\CashTransferController;
+use Modules\Restaurant\Models\CashStockMovement;
 use Modules\Restaurant\Models\Food;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -732,45 +733,6 @@ class PurchaseController extends Controller
                         if ($totalEnviado != $totalCompra) {
                             throw new Exception("El total de los pagos enviados (S/{$totalEnviado}) no coincide con el total de la compra (S/{$totalCompra}).");
                         }
-                        /* foreach ($data['payments'] as $payment) {
-
-                            $payment_method = PaymentMethodType::find($payment['payment_method_type_id']);
-
-                            $boxData = $data['boxes'][$index] ?? null;
-
-                            // Determinar nombre del método de pago de forma defensiva
-                            if (is_array($boxData) && !empty($boxData['method'])) {
-                                $methodName = $boxData['method'];
-                            } elseif (is_object($boxData) && property_exists($boxData, 'method') && !empty($boxData->method)) {
-                                $methodName = $boxData->method;
-                            } else {
-                                $methodName = $payment_method ? $payment_method->description : 'Método no encontrado';
-                            }
-
-                            if (!$payment_method) {
-                                // Método de pago no encontrado: informar y detener
-                                throw new Exception("Método de pago con id {$payment['payment_method_type_id']} no encontrado al validar saldo disponible.");
-                            }
-
-                            // saldo real disponible en ese método
-                            $saldoDisponible = Box::where('cash_id', $arcaCash->id)
-                                ->where('method', $payment_method->description)
-                                ->selectRaw("
-                                    SUM(
-                                        CASE 
-                                            WHEN type = 1 THEN amount 
-                                            WHEN type = 2 THEN -amount 
-                                            ELSE 0 
-                                        END
-                                    ) as saldo
-                                ")
-                                ->value('saldo') ?? 0;
-
-                            if ($saldoDisponible < $payment['payment']) {
-                                $faltante = $payment['payment'] - $saldoDisponible;
-                                throw new Exception("Saldo insuficiente en {$payment_method->description}. Faltan S/{$faltante} puede agregar un método de pago con fondos para completar el monto y poder finalizar la compra");
-                            }
-                        } */
 
                         foreach ($data['payments'] as $index => $payment) {
 
@@ -853,6 +815,61 @@ class PurchaseController extends Controller
                     }
                 }
 
+                /* para mostrar compra en reporte de caja de las recetas */
+
+                /* if ($items = $data['items'] ?? false) { */
+                    foreach ($data['items'] as $row) {
+                        $init_report = null;
+                        // Determinar flag init_report (puede venir en row['item'] o en row directamente)
+                        if (isset($row['item']) && is_array($row['item']) && array_key_exists('init_report', $row['item'])) {
+                            $init_report = $row['item']['init_report'];
+                        } elseif (array_key_exists('init_report', $row)) {
+                            $init_report = $row['init_report'];
+                        }
+
+                        if ($init_report == 1) {
+                            // Determinar caja a usar: preferir arcaCash si existe, si no la caja del usuario, si no cualquier caja abierta
+                            $cashToUse = (isset($arcaCash) && $arcaCash) ? $arcaCash : Cash::where('user_id', auth()->id())->where('state', 1)->latest()->first();
+                            if (!$cashToUse) {
+                                $cashToUse = Cash::where('state', 1)->latest()->first();
+                            }
+
+                            $item_id = $row['item_id'];
+                            $quantity = $row['quantity'];
+
+                            if (!$cashToUse) {
+                                Log::warning('No se encontró caja abierta para registrar CashStockMovement', ['item_id' => $item_id]);
+                                continue; // saltar este item
+                            }
+
+                            $cash_id = $cashToUse->id;
+
+                            $movement = CashStockMovement::where('cash_id', $cash_id)
+                                ->where('item_id', $item_id)
+                                ->first();
+
+                            if ($movement) {
+                                $movement->purchases = ($movement->purchases ?? 0) + $quantity;
+                                $movement->current_stock = ($movement->current_stock ?? 0) + $quantity;
+                                $movement->save();
+                            } else {
+                                // Crear registro inicial si no existe
+                                CashStockMovement::create([
+                                    'cash_id' => $cash_id,
+                                    'warehouse_id' => $row['warehouse_id'] ?? null,
+                                    'item_id' => $item_id,
+                                    'initial_stock' => 0,
+                                    'purchases' => $quantity,
+                                    'sold_quantity' => 0,
+                                    'current_stock' => $quantity,
+                                    'movement_type' => 'purchase',
+                                ]);
+                            }
+                        }
+                    }
+                /* } */
+
+
                 foreach ($data['payments'] as $index => $payment) {
                     $payment['payment_method_type_id'] = $payment['payment_method_type_id'] ?? '01';
                     $record_payment = $doc->purchase_payments()->create($payment);
@@ -924,6 +941,7 @@ class PurchaseController extends Controller
                         WhatsappSendMessageProccess::dispatch($website->id, $message, null, null, $doc->establishment_id);
                     }
                 }
+                
 
                 // Generar PDF
                 if (!$doc->filename) {
