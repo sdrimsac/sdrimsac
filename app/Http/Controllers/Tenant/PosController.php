@@ -529,6 +529,7 @@ class PosController extends Controller
                 });
             })
             ->where('name', '<>', 'INSUMOS')
+            ->where('name', '<>', 'PROMO')
             ->get();
         //  dd($row,$documents);
         $item_default = null;

@@ -164,11 +164,8 @@ class RestobarController extends Controller
         $configuration = Configuration::first();
         $color_size_enabled = $configuration->color_size_enabled;
         $customer_unit_type_id = $request->customer_unit_type_id;
-        $category_ins =  CategoryItem::whereIn('name', ['INSUMOS', 'PROMO'])->first();
-        $category_ins_id = null;
-        if ($category_ins) {
-            $category_ins_id = $category_ins->id;
-        }
+        // Obtener los ids de las categorías a excluir (puede haber más de una)
+        $category_ins_ids = CategoryItem::whereIn('name', ['INSUMOS', 'PROMO'])->pluck('id')->toArray();
         $search_by_second_name = $configuration->search_by_second_name;
         $datafoods = $request->all();
         $search_by_series = $request->search_by_series == "true" ? true : false;
@@ -313,8 +310,9 @@ class RestobarController extends Controller
             }
         }
 
-        if ($category_ins_id) {
-            $foods = $foods->where('category_food_id', '<>', $category_ins_id);
+        // Si existen categorías insumos/promo, excluirlas usando whereNotIn
+        if (!empty($category_ins_ids)) {
+            $foods = $foods->whereNotIn('category_food_id', $category_ins_ids);
         }
        /*  $configuration = Configuration::first(); */
         $hotels = $configuration->hotels;
