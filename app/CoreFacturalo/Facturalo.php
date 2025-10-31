@@ -959,8 +959,8 @@ class Facturalo
 
         if ($this->isOse) {
             $this->endpoint = $this->company->soap_url;
-            $this->soapUsername = $this->company->ose_user;
-            $this->soapPassword = $this->company->ose_password;
+            /* $this->soapUsername = $this->company->ose_user;
+            $this->soapPassword = $this->company->ose_password; */
 
             //            dd($this->soapPassword);
         } else {
