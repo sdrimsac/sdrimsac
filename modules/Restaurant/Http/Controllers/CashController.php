@@ -1701,20 +1701,16 @@ class CashController extends Controller
 
         switch ($type_document) {
             case 'guides':
-                // Dispatch puede tener 'orden' y 'boxes' (si aplica)
-                $loads = array_merge($boxesRelation, ['orden']);
                 break;
             case 'documents':
                 // Document tiene estas relaciones
                 $loads = array_merge($boxesRelation, ['orden', 'sale_note_related', 'document_affected_note']);
                 break;
             case 'saleNotes':
-                // SaleNote normalmente tiene 'boxes' y 'sale_note_related' (ajustar según modelo)
-                $loads = array_merge($boxesRelation, ['sale_note_related']);
+                // SaleNote normalmente tiene 'boxes' y 'sale_note_related' (ajustar según modelo
                 break;
             default:
-                // Quotation u otros: cargar solo boxes si existe
-                $loads = $boxesRelation;
+               
                 break;
         }
 
