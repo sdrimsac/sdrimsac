@@ -148,7 +148,7 @@ class Facturalo
         $item_warehouse->save();
     }
 
-    
+
     public function save($inputs)
     {
         if (key_exists('id', $inputs) && $inputs['id'] != null) {
@@ -172,7 +172,7 @@ class Facturalo
                 break;
             case 'invoice':
                 try {
-                    if ($inputs ['vehiculo_id']){
+                    if ($inputs['vehiculo_id']) {
                         (new VehiculoController)->restoreItems($inputs['vehiculo_id']);
                     }
                     $document = Document::create($inputs);
@@ -731,9 +731,9 @@ class Facturalo
             ];
             return;
         }
-        try{
+        try {
             $this->onlySenderXmlSignedBill();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->response = [
                 'sent' => false,
                 // 'message' => $e->getMessage()
@@ -942,12 +942,12 @@ class Facturalo
     private function setSoapCredentials()
     {
         if ($this->isDemo) {
-            if($this->isOse){
+            if ($this->isOse) {
                 $this->soapUsername = $this->company->soap_username;
                 $this->soapPassword = $this->company->soap_password;
-            }else{
+            } else {
                 $this->soapUsername = $this->company->number . 'MODDATOS';
-            $this->soapPassword = 'moddatos';
+                $this->soapPassword = 'moddatos';
             }
         } else {
             $this->soapUsername = $this->company->soap_username;
@@ -959,6 +959,9 @@ class Facturalo
 
         if ($this->isOse) {
             $this->endpoint = $this->company->soap_url;
+            $this->soapUsername = $this->company->ose_user;
+            $this->soapPassword = $this->company->ose_password;
+
             //            dd($this->soapPassword);
         } else {
             switch ($this->type) {
