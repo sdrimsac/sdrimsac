@@ -277,12 +277,41 @@ export default {
       this.$http
         .get(`/sale-notes/list-by-client`, { params })
         .then((response) => {
-          /* this.sum_total = response.data.sum_total; */
-          this.notes = response.data.data.map((d) => {
+          let records = response.data.data;
+          let data = [];
+          let meta = {};
+
+          if (Array.isArray(records)) {
+            data = records;
+          } else if (records && Array.isArray(records.data)) {
+            data = records.data;
+            meta = records;
+          } else {
+            data = [];
+            meta = response.data.meta || {};
+          }
+
+          if (response.data.sum_total !== undefined) {
+            this.sum_total = response.data.sum_total;
+          }
+
+          if (meta) {
+            this.pagination = this.pagination || { total: 0, current_page: 1, per_page: 20 };
+            this.pagination.total = meta.total || this.pagination.total;
+            this.pagination.current_page = meta.current_page || this.pagination.current_page;
+            this.pagination.per_page = parseInt(meta.per_page) || this.pagination.per_page;
+          }
+
+          if (data.length === 0) {
+            this.notes = [];
+            return;
+          }
+
+          this.notes = data.map((d) => {
 
             d.selected = false;
             d.date_of_issue = moment(d.date_of_issue).format("YYYY-MM-DD");
-            d.items = d.items.map((item)=>{
+            d.items = (d.items || []).map((item)=>{
               return {
                 id: item.id,
                 item_id: item.item_id,

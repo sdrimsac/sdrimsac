@@ -11,8 +11,7 @@
           </h3>
         </div>
         <div class="data-table-visible-columns">
-          <el-button type="button" class="btn_buscar" style="margin-right: 5px;"
-            @click.prevent="clickDownloadExcel">
+          <el-button type="button" class="btn_buscar" style="margin-right: 5px;" @click.prevent="clickDownloadExcel">
             Import Excel del personal
           </el-button>
           <!-- <button type="button" class="btn btn-success" @click="clickDownloadExcel">
@@ -24,79 +23,53 @@
           <data-table :resource="resource">
             <tr slot="heading" class="bg-primary">
               <th class="text-white" style="width: 40px;">#</th>
-              <th class="text-white" style="width: 180px;">Vendedor</th>
+              <th class="text-white" style="width: 180px;">Personal</th>
               <!-- <th class="text-white">Documento</th> -->
-              <th class="text-white" style="width: 120px;">Creador</th>
+              <th class="text-white" style="width: 120px;">Fecha</th>
               <!-- <th class="text-white">Fecha</th> -->
-              <th class="text-white" style="width: 150px;">Establecimiento</th>
-              <th class="text-white" style="width: 100px;">Ventas CPE</th>
-              <th class="text-white" style="width: 100px;">Ventas NV</th>
-              <th class="text-white" style="width: 120px;">Total Ventas</th>
-              <th class="text-white" style="width: 120px;">% de Comisión</th>
-              <th class="text-white" style="width: 140px;">Total S/ Comisión</th>
-              <th class="text-white" style="width: 70px;">Productos</th>
+              <th class="text-white" style="width: 150px;">Hora de entrada</th>
+              <th class="text-white" style="width: 100px;">Hora de salida</th>
+              <th class="text-white" style="width: 100px;">Horas Trabajadas</th>
+              <th class="text-white" style="width: 120px;">Total Horas Extras</th>
+              <th class="text-white" style="width: 120px;">Saldo Extra</th>
               <th class="text-white text-center" style="width: 100px;">Acciones</th>
             </tr>
 
 
             <tr slot-scope="{ index, row }">
               <td>{{ index + 1 }}</td>
-              <td>{{ row.document }}
-                <br />
-                {{ row.name }}
-              </td>
-              <!-- <td></td> -->
-              <td>{{ row.user_name }}
-                <br />
-                {{ row.created_at }}
-              </td>
-
-              <td>{{ row.establishment_description }}</td>
-              <td>{{ Number(row.documents_total).toFixed(2) }}</td>
-              <td>{{ Number(row.sale_notes_total).toFixed(2) }}</td>
-              <td>{{ Number(row.total_sales).toFixed(2) }}</td>
-              <td>{{ Number(row.commission_percentage).toFixed(2) }} %</td>
-              <td>{{ Number(row.commission_earned).toFixed(2) }}</td>
-              <td>
+              <td>{{ row.person_name }}</td>
+              <td>{{ row.date_daily }}</td>
+              <td>{{ row.entrance }} </td>
+              <td>{{ row.exit }}</td>
+              <td>{{ row.horas_trabajadas }}</td>
+              <td>{{ Number(row.overtime).toFixed(2) }}</td>
+              <td>{{ Number(row.amount_extra).toFixed(2) }}</td>
+              <!-- <td>
                 <el-tooltip content="Visualizar producto vendidos" placement="bottom">
                   <vs-button gradient success animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
                     @click.prevent="getProd(row.id)">
                     <i class="fas fa-eye" style="color: #fff;"></i>
                   </vs-button>
                 </el-tooltip>
-              </td>
+              </td> -->
               <td class="text-center">
-                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                  <vs-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                    @click.prevent="clickCreate(row.id)">
-                    <i class="fa fa-edit"></i>
-                  </vs-button>
+                <!-- <div style="display: flex; gap: 5px; flex-wrap: wrap;"> -->
+                <vs-button gradient primary animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
+                  @click.prevent="clickCreate(row.id)">
+                  <i class="fa fa-edit"></i>
+                </vs-button>
 
-                  <!-- <vs-button
-                    gradient
-                    danger
-                    animation-type="scale"
-                    style="min-width: 32px; height: 32px; padding: 0;"
-                    @click.prevent="clickDelete(row.id)"
-                    >
-                    <i class="fa fa-trash"></i>
-                    </vs-button> -->
-
-                  <vs-button gradient warn animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                    @click.prevent="clickDisable(row.id)" v-if="row.active">
-                    <i class="fa fa-ban"></i>
-                  </vs-button>
-                  <vs-button gradient success animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
-                    @click.prevent="clickEnable(row.id)" v-else>
-                    <i class="fa fa-check"></i>
-                  </vs-button>
-                </div>
-
-
+                <vs-button gradient warn animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
+                  @click.prevent="clickDisable(row.id)" v-if="row.active">
+                  <i class="fa fa-ban"></i>
+                </vs-button>
+                <vs-button gradient success animation-type="scale" style="min-width: 32px; height: 32px; padding: 0;"
+                  @click.prevent="clickEnable(row.id)" v-else>
+                  <i class="fa fa-check"></i>
+                </vs-button>
               </td>
             </tr>
-
-
             <template v-slot:footer>
               <tr style="background: #f5f5f5; font-weight: bold;">
                 <td colspan="4" class="text-right" style="font-weight: bold; font-size: 1.1rem;">Totales:</td>
@@ -132,10 +105,10 @@ export default {
       showDialogImportExcel: false,
       showDialog: false,
       showDialogProd: false,
-      resource: "sellers",
+      resource: "staff",
       recordId: null,
       records: [],
-      sellers: [],
+      staff: [],
       title: null,
       establishments: [],
       document_types: [],
@@ -170,7 +143,7 @@ export default {
       this.showDialogImportExcel = true;
     },
 
-    
+
     getProd(id) {
       this.ListProdId = id;
       console.log("Ver el id del vendedor:", id);

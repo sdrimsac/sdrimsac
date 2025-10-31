@@ -1669,11 +1669,15 @@ class DocumentController extends Controller
 
             $affect_cash = $request->affect_cash;
 
+            Log::info('DocumentController: affect_cash check', ['affect_cash' => $affect_cash]);
+
             if ($affect_cash) {
                 $note = Note::where('document_id', $document->id)->first();
 
                 if ($note && $note->affected_document_id) {
                     $affected_document_id = $note->affected_document_id;
+
+                    Log::info('DocumentController: affect_cash delete boxes', ['affected_document_id' => $affected_document_id]);
                     Box::where('document_id', $affected_document_id)->delete();
                 } else {
                 }

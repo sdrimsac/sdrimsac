@@ -1676,20 +1676,65 @@ class CashController extends Controller
                 ->where('total_canceled', 0);
         }
 
-        $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
+        /* if ($export) {
+
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
+        } else {
+
+            $records = $records->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc')->paginate(10);
+            $records->load(['boxes' => function ($query) {
+                $query->select('id', 'amount', 'document_id')->without('document');
+            }, 'orden', 'sale_note_related', 'document_affected_note']);
+        } */
+
+        // ordenar antes de paginar
+        $documents->orderBy('date_of_issue', 'desc')->orderBy('time_of_issue', 'desc');
+
+        // paginar una sola vez
+        $paginated = $documents->paginate(10);
+
+        // definir relaciones a eager-load según el tipo de documento
+        $loads = [];
+        $boxesRelation = ['boxes' => function ($query) {
+            $query->select('id', 'amount', 'document_id')->without('document');
+        }];
+
+        switch ($type_document) {
+            case 'guides':
+                // Dispatch puede tener 'orden' y 'boxes' (si aplica)
+                $loads = array_merge($boxesRelation, ['orden']);
+                break;
+            case 'documents':
+                // Document tiene estas relaciones
+                $loads = array_merge($boxesRelation, ['orden', 'sale_note_related', 'document_affected_note']);
+                break;
+            case 'saleNotes':
+                // SaleNote normalmente tiene 'boxes' y 'sale_note_related' (ajustar según modelo)
+                $loads = array_merge($boxesRelation, ['sale_note_related']);
+                break;
+            default:
+                // Quotation u otros: cargar solo boxes si existe
+                $loads = $boxesRelation;
+                break;
+        }
+
+        // Eager-load de las relaciones sobre la colección devuelta por el paginador
+        $paginated->getCollection()->load($loads);
+
+        // construir la colección de recursos con el paginador
         $result = null;
         switch ($type_document) {
             case 'guides':
-                $result = new DispatchCollection($documents->paginate(10));
+                $result = new DispatchCollection($paginated);
                 break;
             case 'documents':
-                $result = new DocumentCajaCollection($documents->paginate(10));
+                $result = new DocumentCajaCollection($paginated);
                 break;
             case 'saleNotes':
-                $result = new SaleNoteCajaCollection($documents->paginate(10));
+                $result = new SaleNoteCajaCollection($paginated);
                 break;
             default:
-                $result = new QuotationCollection($documents->paginate(10));
+                $result = new QuotationCollection($paginated);
                 break;
         }
         // if ($is_note_sale) {

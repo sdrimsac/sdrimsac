@@ -2,7 +2,8 @@
 <template>
     <div v-loading="loading" class="">
         <div class="table-responsive col-md-12">
-            <table class="table table-hover table-striped table-bordered table-responsive" style="width: 100%; white-space: nowrap; font-size: 14px;">
+            <table class="table table-hover table-striped table-bordered table-responsive"
+                style="width: 100%; white-space: nowrap; font-size: 14px;">
                 <thead class="thead-dark">
                     <!-- Encabezado principal  de Comprobantes -->
                     <tr class="bg-primary text-center">
@@ -15,7 +16,8 @@
                         <th class="text-white" v-if="type == 'quotations' || type == 'guides'" style="width: 100px;">
                             Acciones
                         </th>
-                        <th v-if="configuration.restaurant && (type == 'documents' || type == 'saleNotes')" class="text-white" style="width: 100px;">
+                        <th v-if="configuration.restaurant && (type == 'documents' || type == 'saleNotes')"
+                            class="text-white" style="width: 100px;">
                             Zona
                         </th>
                         <th class="text-white" style="width: 120px;">CPE Nº</th>
@@ -44,12 +46,15 @@
                 </thead>
                 <tbody>
                     <tr v-for="(data, idx) in records" :key="idx" :class="{
-                        'row-danger-border':data.state_type_id == '11' || data.state_type_id == '13'}" 
-                        class="text-center align-middle" :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
-                       
-                         <!-- Si el CPE esta anulado  muestra esto -->
+                        'row-danger-border': data.state_type_id == '11' || data.state_type_id == '13'
+                    }"
+                        class="text-center align-middle"
+                        :style="{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f0f0f0' }">
+
+                        <!-- Si el CPE esta anulado  muestra esto -->
                         <td v-if="type == 'documents' && type !== 'saleNotes'" :class="{
-                            'text-white':data.state_type_id != '11' && data.state_type_id != '13'}">
+                            'text-white': data.state_type_id != '11' && data.state_type_id != '13'
+                        }">
                             <el-tooltip content="Envio y descarga por WhatsApp CPE" placement="top">
                                 <el-button v-if="data.state_type_id == '11'" size="mini" type="info" circle class="me-1"
                                     @click="clickDocuments(data.id)">
@@ -59,13 +64,15 @@
                             <el-tooltip content="Previsualiza pdf" placement="top">
                                 <el-button v-if="data.state_type_id == '11'" size="mini" type="danger" circle
                                     style="border: 2px solid white;" @click="
-                                        previsualitation(data.external_id,data.document_type_id)">
+                                        previsualitation(data.external_id, data.document_type_id)">
                                     <i class="far fa-file-pdf"></i>
                                 </el-button>
                             </el-tooltip>
                             <!-- CPE Facturad y Boletas -->
                             <el-dropdown>
-                                <el-button type="primary" v-if="data.state_type_id != '11' && data.state_type_id != '13'" style="border-radius: 8px;">
+                                <el-button type="primary"
+                                    v-if="data.state_type_id != '11' && data.state_type_id != '13'"
+                                    style="border-radius: 8px;">
                                     Acciones<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
@@ -92,7 +99,8 @@
                                     </el-button>
                                     <el-button class="dropdown-item d-flex align-items-center"
                                         style="background-color: #17a2b8; color: white; width: 95%; padding: 12px 10px; margin: 10px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                        v-if="data.state_type_id == '05'" type="text" @click="clickNote(data.id)">
+                                        v-if="data.state_type_id == '05' && ((data.btn_note && !data.document_affected_notes) || (data.document_affected_notes && data.document_affected_notes.length === 0))"
+                                        type="text" @click="clickNote(data.id)">
                                         <i class="el-icon-document me-2" style="color: white; margin-right: 10px;"></i>
                                         <span>Nota de Crédito</span>
                                     </el-button>
@@ -164,11 +172,11 @@
                                                 '13' &&
                                                 configuration.print_document_cash
                                             " size="mini" type="primary" class="me-1" circle @click="
-                                                    print(
-                                                        data.external_id,
-                                                        data.document_type_id
-                                                    )
-                                                    ">
+                                                print(
+                                                    data.external_id,
+                                                    data.document_type_id
+                                                )
+                                                ">
                                                 <i class="fas fa-print"></i>
                                             </el-button>
                                         </el-tooltip>
@@ -189,8 +197,8 @@
                         </td>
 
                         <!-- Notas de Venta -->
-                        <td v-if="type == 'saleNotes' && type != 'documents' && type != 'quotations'" 
-                            :class="{'text-white': data.state_type_id == '11' || data.state_type_id == '13'}">
+                        <td v-if="type == 'saleNotes' && type != 'documents' && type != 'quotations'"
+                            :class="{ 'text-white': data.state_type_id == '11' || data.state_type_id == '13' }">
                             <template v-if="data.state_type_description === 'Anulado'">
                                 <el-tooltip content="Opciones" placement="top">
                                     <el-button type="success" size="mini" circle @click="clickOptions(data.id)">
@@ -207,11 +215,9 @@
                             </template>
                             <!-- Menu de Acciones Nota de venta -->
                             <el-dropdown>
-                                <el-button
-                                    type="primary"
+                                <el-button type="primary"
                                     v-if="data.state_type_id != '11' && data.state_type_id != '13'"
-                                    style="border-radius: 8px;"
-                                >
+                                    style="border-radius: 8px;">
                                     Acciones<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
@@ -271,11 +277,11 @@
                                                 '13' &&
                                                 configuration.print_document_cash
                                             " size="mini" type="primary" class="me-1" circle @click="
-                                                    print(
-                                                        data.external_id,
-                                                        data.document_type_id
-                                                    )
-                                                    ">
+                                                print(
+                                                    data.external_id,
+                                                    data.document_type_id
+                                                )
+                                                ">
                                                 <i class="fas fa-print"></i>
                                             </el-button>
                                         </el-tooltip>
@@ -294,7 +300,7 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
 
-                           
+
                         </td>
 
                         <!-- Menu Cotizaciones -->
@@ -304,12 +310,13 @@
                                     <!-- Si esta Anulado  muestra este boton de Previsualizar -->
                                     <el-button v-if="data.state_type_id === '11'" type="text"
                                         style="border: 2px solid white; color: black; padding: 5px; margin: 5px auto; border-radius: 5px; transition: all 0.3s ease;"
-                                        @click="previsualitation(data.external_id,data.document_type_id)">
+                                        @click="previsualitation(data.external_id, data.document_type_id)">
                                         <i class="el-icon-view" style="color: white;"></i>
                                     </el-button>
 
                                     <el-dropdown>
-                                        <el-button type="primary" v-if="data.state_type_id != '11'" style="border-radius: 8px;">
+                                        <el-button type="primary" v-if="data.state_type_id != '11'"
+                                            style="border-radius: 8px;">
                                             Acciones<i class="el-icon-arrow-down el-icon--right"></i>
                                         </el-button>
                                         <el-dropdown-menu slot="dropdown">
@@ -370,11 +377,11 @@
                                                     <el-button v-if="
                                                         configuration.print_document_cash
                                                     " size="mini" type="primary" class="me-1" circle @click="
-                                                            print(
-                                                                data.external_id,
-                                                                data.document_type_id
-                                                            )
-                                                            ">
+                                                        print(
+                                                            data.external_id,
+                                                            data.document_type_id
+                                                        )
+                                                        ">
                                                         <i class="fas fa-print"></i>
                                                     </el-button>
                                                 </el-tooltip>
@@ -397,12 +404,14 @@
                             </template>
                         </td>
                         <!-- para las guias -->
-                        <td v-if="type === 'guides' && type !== 'saleNotes' && type !== 'documents' && type !== 'quotations'">
+                        <td
+                            v-if="type === 'guides' && type !== 'saleNotes' && type !== 'documents' && type !== 'quotations'">
                             <template v-if="type == 'guides'">
                                 <div class="dropdown-as-select d-inline-block">
                                     <!-- Si esta Anulado  muestra este boton de Previsualizar -->
                                     <el-dropdown>
-                                        <el-button type="primary" v-if="data.state_type_id != '11'" style="border-radius: 8px;">
+                                        <el-button type="primary" v-if="data.state_type_id != '11'"
+                                            style="border-radius: 8px;">
                                             Acciones<i class="el-icon-arrow-down el-icon--right"></i>
                                         </el-button>
                                         <el-dropdown-menu slot="dropdown">
@@ -429,7 +438,8 @@
                         </td>
 
                         <!-- Mesa y Ordenes (comandas) -->
-                        <td v-if="configuration.restaurant && (type == 'documents' || type == 'saleNotes')" class="text-start">
+                        <td v-if="configuration.restaurant && (type == 'documents' || type == 'saleNotes')"
+                            class="text-start">
                             {{ data.table_number }}
                             <br />
                             <small class="">
@@ -439,24 +449,25 @@
 
                         <!-- Serie y numero de CPE -->
                         <td class="text-start">
-                            {{ type == "saleNotes" ? data.full_number : type == "documents" ? data.number : type == "guides"
-                                            ? data.number
-                                            : data.identifier
+                            {{ type == "saleNotes" ? data.full_number : type == "documents" ? data.number : type ==
+                                "guides"
+                                ? data.number
+                                : data.identifier
                             }}
                             <br />
                             {{ data.date_of_issue }}
                             <br />
-                            <small class="">{{data.time_of_issue}}</small>
+                            <small class="">{{ data.time_of_issue }}</small>
                         </td>
 
-                       
+
 
                         <!-- Cliente -->
                         <td class="text-start">
                             <span style="font-size: 15px; color: #000;">{{ data.customer_number }}</span>
                             <br />
                             <span style="font-size: 18px; ">{{ data.customer_name }}</span>
-                            
+
                         </td>
 
                         <!-- Vendedor  solo en cotizaciones-->
@@ -474,12 +485,12 @@
                         </td>
 
                         <td v-if="type == 'quotations'">
-                            <template v-if="data.documents.length > 0">{{
+                            <template v-if="data.documents && data.documents.length > 0">{{
                                 data.documents[0].number_full
-                                }}</template>
-                            <template v-if="data.sale_notes.length > 0">{{
+                            }}</template>
+                            <template v-if="data.sale_notes && data.sale_notes.length > 0">{{
                                 data.sale_notes[0].identifier
-                                }}</template>
+                            }}</template>
                         </td>
 
                         <td v-if="type == 'documents'">
@@ -491,7 +502,7 @@
                             <div v-for="(row, index) in data.documents" :key="index">
                                 <small class="d-block">{{
                                     row.number_full
-                                    }}</small>
+                                }}</small>
                             </div>
                             <span class="text-primary" v-if="data.variation">
                                 {{ data.variation.series }}-{{

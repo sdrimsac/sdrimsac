@@ -36,7 +36,6 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
             $row = $this->row;
             $document_item = $this->document_item;
 
-            Log::info('Iniciando ProcesarCashDocumentStockMovement para item_id: paso por aqui ');
             $cash = $this->cash;
 
             // Nota: el init_report debe evaluarse por el ítem afectado. Para recetas
@@ -44,15 +43,9 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
             // el/los ítems de la promoción o sus componentes si son sets.
 
             $cash_id = $cash->id ?? null;
-            Log::info('ProcesarCashStockMovement debug inicio', [
-                'cash_id' => $cash_id,
-                'row_item_id' => $row['item_id'] ?? null,
-                'document_item_item_id' => $document_item->item_id ?? null,
-                'row' => is_array($row) ? array_intersect_key($row, array_flip(['item_id','quantity','warehouse_id'])) : null,
-            ]);
 
             if (!$cash_id) {
-                Log::warning('No se encontró caja abierta para registrar CashStockMovement (sale_note)', ['item_id' => $row['item_id'] ?? null]);
+                // Log::warning('No se encontró caja abierta para registrar CashStockMovement (sale_note)', ['item_id' => $row['item_id'] ?? null]);
                 return;
             }
 
@@ -72,7 +65,7 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
                     if ($compInit === 1) {
                         $this->registrarMovimiento($cash_id, $componente->individual_item_id, $componente->quantity * $quantity, $row, 'receta');
                     } else {
-                        Log::info('Saltando componente sin init_report', ['component_item_id' => $componente->individual_item_id, 'init_report' => $compInit]);
+                        //Log::info('Saltando componente sin init_report', ['component_item_id' => $componente->individual_item_id, 'init_report' => $compInit]);
                     }
                 }
             }
@@ -94,7 +87,7 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
                                 // multiplicar por la cantidad de la promo y la cantidad vendida
                                 $this->registrarMovimiento($cash_id, $pc->individual_item_id, $pc->quantity * ($promo->quantity * $quantity), $row, 'promocion_receta');
                             } else {
-                                Log::info('Saltando componente de promocion sin init_report', ['component_item_id' => $pc->individual_item_id, 'init_report' => $pcInit]);
+                                //Log::info('Saltando componente de promocion sin init_report', ['component_item_id' => $pc->individual_item_id, 'init_report' => $pcInit]);
                             }
                         }
                     } else {
@@ -103,7 +96,7 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
                         if ($promoInit === 1) {
                             $this->registrarMovimiento($cash_id, $promo->promotion_item_id, $promo->quantity * $quantity, $row, 'promocion');
                         } else {
-                            Log::info('Saltando item promocionado sin init_report', ['promotion_item_id' => $promo->promotion_item_id, 'init_report' => $promoInit]);
+                           // Log::info('Saltando item promocionado sin init_report', ['promotion_item_id' => $promo->promotion_item_id, 'init_report' => $promoInit]);
                         }
                     }
                 }
@@ -114,12 +107,12 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
                 if ($itemInit === 1) {
                     $this->registrarMovimiento($cash_id, $item_id, $quantity, $row, 'venta');
                 } else {
-                    Log::info('Saltando item normal sin init_report', ['item_id' => $item_id, 'init_report' => $itemInit]);
+                   // Log::info('Saltando item normal sin init_report', ['item_id' => $item_id, 'init_report' => $itemInit]);
                 }
             }
             
         } catch (\Exception $e) {
-            Log::warning('Error en Job ProcesarCashStockMovement: ' . $e->getMessage(), ['row' => $this->row]);
+           // Log::warning('Error en Job ProcesarCashStockMovement: ' . $e->getMessage(), ['row' => $this->row]);
         }
     }
 
@@ -142,15 +135,5 @@ class ProcesarCashDocumentStockMovement implements ShouldQueue
         $movement->movement_type = $tipo;
 
         $movement->save();
-
-        Log::info('CashStockMovement guardado/actualizado', [
-            'id' => $movement->id ?? null,
-            'cash_id' => $cash_id,
-            'item_id' => $item_id,
-            'sold_quantity' => $movement->sold_quantity,
-            'current_stock' => $movement->current_stock,
-            'warehouse_id' => $movement->warehouse_id,
-            'movement_type' => $movement->movement_type,
-        ]);
     }
 }

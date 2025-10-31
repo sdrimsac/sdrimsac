@@ -320,7 +320,8 @@
                                                             content="Generar Nota de Crédito de un CPE" placement="top">
                                                             <a type="button" :href="`/${resource}/note/${row.id}`"
                                                                 class="btn btn-light text-dark rounded w-100 d-flex align-items-center"
-                                                                style="height: 40px; background-color: #d2b48c;" v-if="
+                                                                style="height: 40px; background-color: #d2b48c;"
+                                                                 v-if="
                                                                     (row.btn_note &&
                                                                         !isAccountant &&
                                                                         !row.document_affected_notes) ||

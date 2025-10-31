@@ -112,13 +112,13 @@ export default {
         // console.log(this.resource);
         // let column_resource = _.split(this.resource, "/");
 
-        await this.$http
+        /* await this.$http
             // .get(`/${_.head(column_resource)}/columns`)
             .get(`/${this.resource}/columns`)
             .then(response => {
                 this.columns = response.data;
                 this.search.column = _.head(Object.keys(this.columns));
-            });
+            }); */
 
         await this.$http
             // .get(`/${_.head(column_resource)}/columns`)
@@ -286,10 +286,13 @@ export default {
             }
         }, */
         getQueryParameters() {
+            // Exclude `column` from the query parameters because it's not used by the server
+            const { column, ...searchWithoutColumn } = this.search || {};
+
             return queryString.stringify({
                 page: this.pagination.current_page,
                 limit: this.limit,
-                ...this.search
+                ...searchWithoutColumn
             });
         },
         changeClearInput() {

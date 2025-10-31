@@ -227,7 +227,35 @@ class DocumentCajaCollection extends ResourceCollection
                 'user_email' => ($row->user) ? $row->user->email : '',
                 'external_id' => $row->external_id,
                 'observation' => $row->observation,
-                'balance' => $balance
+                'balance' => $balance,
+
+                'document_affected_notes' =>
+                $row->document_type_id == '07'
+                    ? (
+                        $row->note && $row->note->affected_document_id
+                        ? [[
+                            'document_id' => $row->id,
+                            'affected_document_id' => $row->note->affected_document_id,
+                            'series' => $row->series,
+                            'number' => $row->number,
+                            'affected_series' => optional(Document::find($row->note->affected_document_id))->series,
+                            'affected_number' => optional(Document::find($row->note->affected_document_id))->number,
+                        ]]
+                        : []
+                    )
+                    // Si no, usar la relación normal
+                    : (
+                        $row->relationLoaded('document_affected_note') && $row->document_affected_note
+                        ? [[
+                            'document_id' => $row->document_affected_note->document_id,
+                            'affected_document_id' => $row->document_affected_note->affected_document_id,
+                            'series' => optional($row->document_affected_note->document)->series,
+                            'number' => optional($row->document_affected_note->document)->number,
+                            'affected_series' => optional(Document::find($row->document_affected_note->affected_document_id))->series,
+                            'affected_number' => optional(Document::find($row->document_affected_note->affected_document_id))->number,
+                        ]]
+                        : []
+                    ),
 
             ];
         });

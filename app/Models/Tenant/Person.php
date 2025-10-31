@@ -254,6 +254,13 @@ class Person extends ModelTenant
         return $this->hasMany(Document::class, 'customer_id');
     }
 
+    // App/Models/Tenant/Person.php
+    public function worker_daily_summaries()
+    {
+        return $this->hasMany(WorkerDailySummari::class, 'person_id');
+    }
+
+
     public function country()
     {
         return $this->belongsTo(Country::class);

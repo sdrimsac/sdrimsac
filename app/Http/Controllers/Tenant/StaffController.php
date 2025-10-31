@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
 use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Http\Resources\Tenant\StaffPersonCollection;
+use App\Http\Resources\Tenant\StaffPersonWorkerCollection;
 use App\Imports\PersonWorkerImport;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
@@ -218,7 +219,7 @@ class StaffController extends Controller
 
                 $horasExtras = max(0, $horasTrabajadas - 8);
 
-                $horaBase = ($empleado->base_salary ?? 0) / 30 / 8; 
+                $horaBase = ($empleado->base_salary ?? 0) / 30 / 8;
                 $montoExtra = 0;
                 if ($horasExtras > 0) {
                     if ($horasExtras <= 2) {
@@ -253,6 +254,80 @@ class StaffController extends Controller
             'message' => 'Resumen diario generado correctamente'
         ]);
     }
+
+    /* public function getRecords(Request $request)
+    {
+        // obtener los persons  donde is_staff = true y tambien obtner la realcionn de dias de la tabla worker_daily_summaries
+        $query = Person::query()->where('is_staff', true);
+        $query->with('worker_daily_summaries');
+        $query->orderBy('name')->paginate(20);
+        return $query;
+    } */
+    /* public function recordsWorker(Request $request)
+    {
+        $records = $this->getRecords($request);
+
+        return StaffPersonWorkerCollection::collection($records)->paginate(20);
+    } */
+
+    /* public function recordsWorker(Request $request)
+    {
+        $records = $this->getRecords($request)->paginate(20);
+
+        return StaffPersonWorkerCollection::collection($records);
+    } */
+
+    public function recordsWorker(Request $request)
+    {
+        $query = WorkerDailySummari::with('person')
+            ->whereHas('person', function ($q) {
+                $q->where('is_staff', true);
+            });
+
+        if ($request->filled('date')) {
+            $query->where('date_daily', $request->date);
+        }
+
+        if ($request->filled('person_id')) {
+            $query->where('person_id', $request->person_id);
+        }
+
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('date_daily', [$request->from_date, $request->to_date]);
+        }
+
+        $records = $query->orderBy('date_daily', 'desc')->paginate(20);
+
+        //return StaffPersonWorkerCollection::collection($records);
+        return new StaffPersonWorkerCollection($records);
+    }
+
+
+    /* public function getRecords(Request $request)
+    {
+        $records = Person::where('is_staff', true)
+            ->with('worker_daily_summaries')
+            ->orderBy('name');
+
+        // Filtro por nombre
+        if ($request->has('name') && $request->name != '') {
+            $records->where('name', 'like', "%{$request->name}%");
+        }
+
+        // Filtro por fecha en la relación worker_daily_summaries
+        if ($request->has('date') && $request->date != '') {
+            $records->whereHas('worker_daily_summaries', function ($q) use ($request) {
+                $q->where('date_daily', $request->date);
+            });
+        }
+
+        // Filtro por cliente u otra cosa
+        if ($request->has('client_id') && $request->client_id != '') {
+            $records->where('client_id', $request->client_id);
+        }
+
+        return $records;
+    } */
 
     public function recordByPerson(Request $request)
     {

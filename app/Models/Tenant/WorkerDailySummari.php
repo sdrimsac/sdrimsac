@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models\Tenant;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class WorkerDailySummari extends Authenticatable
+use Illuminate\Database\Eloquent\Model;
+
+class WorkerDailySummari extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -27,6 +28,6 @@ class WorkerDailySummari extends Authenticatable
 
     public function person()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Person::class, 'person_id');
     }
 }

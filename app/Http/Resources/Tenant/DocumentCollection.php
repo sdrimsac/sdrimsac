@@ -233,7 +233,6 @@ class DocumentCollection extends ResourceCollection
                 'observation' => $row->observation,
                 'balance' => $balance,
                 'document_affected_notes' =>
-                // Si es nota de crédito, buscar el documento afectado manualmente
                 $row->document_type_id == '07'
                     ? (
                         $row->note && $row->note->affected_document_id

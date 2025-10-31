@@ -588,7 +588,7 @@ class SaleNoteController extends Controller
             $records = $records->whereBetween('date_of_issue', [$dateOfIssue, $dateOfDue]);
         }
         $sum_total = 0;
-        $records = $records->take(20)
+        $records = $records->take(100)
             ->get();
         $sum_total = number_format($records->sum('total'), 2);
         return response()->json([
@@ -1554,7 +1554,7 @@ class SaleNoteController extends Controller
                                 'promo_item_id' => $promo_item_id,
                                 'item_id' => $detail->item_id,
                                 'quantity' => $detail->quantity,
-                                'sale_note_item_id' => null, 
+                                'sale_note_item_id' => null,
                                 'document_item_id' => null
                             ];
                         }
@@ -1792,7 +1792,6 @@ class SaleNoteController extends Controller
                     }
 
                     ProcesarCashStockMovement::dispatch($row, $sale_note_item, $cash);
-
                 }
                 // Si hay promociones recolectadas de las ordenes, vincularlas a los sale_note_items
                 if (isset($promotion_details) && count($promotion_details) > 0) {
@@ -1820,7 +1819,7 @@ class SaleNoteController extends Controller
                                     ->first();
                             } catch (\Exception $e) {
                                 // evitar que una excepción por driver detenga el proceso
-                               
+
                             }
                         }
 
@@ -1856,9 +1855,8 @@ class SaleNoteController extends Controller
                                 ]);
 
                                 ProcessSaleNoteItemPromotionStock::dispatch($sale_note_item->id, $sale_note_item->warehouse_id);
-
                             } catch (\Exception $e) {
-                               // Log::warning('No se pudo crear sale_note_item_promotion: ' . $e->getMessage(), ['pd' => $pd, 'sale_note_item_id' => $sale_note_item->id]);
+                                // Log::warning('No se pudo crear sale_note_item_promotion: ' . $e->getMessage(), ['pd' => $pd, 'sale_note_item_id' => $sale_note_item->id]);
                             }
                         } else {
                             // Si no se encontró el sale_note_item, registrar advertencia para revisión
