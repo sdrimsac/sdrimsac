@@ -3583,24 +3583,6 @@ export default {
                     stock = Number(current_orden[0].food.item.stock);
                 }
 
-                // Validate quantity against stock
-                /* if (qty > stock) {
-                    this.$toast.warning(
-                        `La cantidad excede el stock disponible (${stock})`
-                    );
-                    // Reset to maximum available stock
-                    this.localOrden[idx].quantity = stock;
-
-                    // Update lots if single lot
-                    if (current_orden.length == 1) {
-                        let [orden] = current_orden;
-                        if (orden.lotes.length == 1) {
-                            orden.lotes[0].quantitySelected = stock;
-                        }
-                    }
-                    return;
-                } */
-
                 // Update lot quantity if single lot
                 if (current_orden.length == 1) {
                     let [orden] = current_orden;
@@ -4010,49 +3992,10 @@ export default {
         //aqui modificamos el precio
         update_price(index, sale_unit_price) {
             let localOrden_update = this.localOrden;
-            /* if (this.configuration.is_grifo) {
-                localOrden_update[index].food.quantity =
-                    sale_unit_price / localOrden_update[index].food.price;
-                console.log(
-                    "ver el precio modificado",
-                    localOrden_update[index].food.quantity
-                );
-            } else { */
             localOrden_update[index].food.sale_unit_price = sale_unit_price;
-            // Limpiar total_discount si existe food.item
-            /* if (localOrden_update[index].food && localOrden_update[index].food.item) {
-                localOrden_update[index].food.item.total_discount = 0;
-            } */
-            /* } */
             this.$emit("update:localOrden", localOrden_update);
             this.calculateTotal();
         },
-
-        /* update_price(index, sale_unit_price) {
-            // Clonar para mantener reactividad
-            const items = [...this.localOrden];
-            const item = { ...items[index] };
-
-            if (this.configuration.is_grifo) {
-                const unit = Number(item.food.price) || 0;
-                const total =
-                    sale_unit_price != null
-                        ? Number(sale_unit_price)
-                        : Number(item.price) || 0;
-                const newQty = unit > 0 ? Number((total / unit).toFixed(3)) : 0;
-                item.quantity = newQty;
-            } else {
-                const newPrice = Number(sale_unit_price);
-                if (!isNaN(newPrice)) {
-                    item.price = newPrice; 
-                    if (item.food) item.food.sale_unit_price = newPrice;
-                }
-            }
-
-            items[index] = item;
-            this.$emit("update:localOrden", items);
-            this.calculateTotal();
-        }, */
 
         getPriceRange(orden) {
             if (this.configuration.quantity_prices) {
@@ -4377,6 +4320,15 @@ export default {
                     )}-${obj.observation}`;
                     if (resultado[key]) {
                         resultado[key].quantity += Number(obj.quantity);
+                        // Recalcular totales para que reflejen la nueva cantidad
+                        const qty = Number(resultado[key].quantity) || 0;
+                        const unitPrice = Number(
+                            resultado[key].price ?? resultado[key].sale_unit_price ?? (resultado[key].food && resultado[key].food.item && resultado[key].food.item.sale_unit_price) ?? 0
+                        );
+                        const newTotal = Number((unitPrice * qty).toFixed(2));
+                        resultado[key].total = newTotal;
+                        resultado[key]._total_line = newTotal;
+                        resultado[key].total_value = newTotal;
                     } else {
                         resultado[key] = {
                             ...obj,
@@ -4391,6 +4343,15 @@ export default {
                     )}`;
                     if (resultado[key]) {
                         resultado[key].quantity += Number(obj.quantity);
+                        // Recalcular totales para que reflejen la nueva cantidad
+                        const qty = Number(resultado[key].quantity) || 0;
+                        const unitPrice = Number(
+                            resultado[key].price ?? resultado[key].sale_unit_price ?? (resultado[key].food && resultado[key].food.item && resultado[key].food.item.sale_unit_price) ?? 0
+                        );
+                        const newTotal = Number((unitPrice * qty).toFixed(2));
+                        resultado[key].total = newTotal;
+                        resultado[key]._total_line = newTotal;
+                        resultado[key].total_value = newTotal;
                     } else {
                         resultado[key] = {
                             ...obj,
