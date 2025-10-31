@@ -1845,7 +1845,7 @@ class BoxesController extends Controller
         ];
     }
 
-    public function get_stock_report_restobar($cash_id)
+    /* public function get_stock_report_restobar($cash_id)
     {
         // Obtener todos los movimientos de stock de la caja
         $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
@@ -1866,23 +1866,205 @@ class BoxesController extends Controller
                 'codigo' => $movement->item_id,
                 'producto' => $item ? $item->description : 'N/A',
                 'initial_stock' => number_format($movement->initial_stock ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
-                /* 'purchases' => number_format($movement->purchases ?? 0, 3, '.', ','), */
                 'purchases' => number_format($movement->purchases ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
                 'sold_quantity' => number_format($movement->sold_quantity ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
-                /* 'current_stock' => number_format($movement->current_stock ?? 0, 3, '.', ','), */
                 'current_stock' => number_format($movement->current_stock ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
             ];
         });
 
-        // Log para depurar
-        /* Log::info('Reporte de stock restobar generado', [
-            'cash_id' => $cash_id,
-            'total_items' => $report->count(),
-            'sample' => $report->take(100)->toArray(),
-        ]); */
+        return $report;
+    } */
+
+    /* public function get_stock_report_restobar($cash_id)
+    {
+        $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
+
+        if ($stock_movements->isEmpty()) {
+            return [];
+        }
+
+        $item_ids = $stock_movements->pluck('item_id')->unique();
+        $items = Item::whereIn('id', $item_ids)->get()->keyBy('id');
+
+        $report = $stock_movements->map(function ($movement) use ($items) {
+            $item = $items[$movement->item_id] ?? null;
+
+            $sold_quantity = (float)($movement->sold_quantity ?? 0);
+            $current_stock = (float)($movement->current_stock ?? 0);
+
+            $detalle_vendido = number_format($sold_quantity, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : '');
+            $detalle_stock = number_format($current_stock, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : '');
+
+            if ($item && stripos($item->description, 'POLLO') !== false) {
+                if (stripos($item->description, 'POLLO INSUMO') !== false) {
+                    // POLLO INSUMO -> gramos
+                    $detalle_vendido = ($sold_quantity * 1000) . ' gr';
+                    $detalle_stock = ($current_stock * 1000) . ' gr';
+                } else {
+                    // POLLO normal -> fracciones
+                    // Sold
+                    if ($sold_quantity == 1) {
+                        $detalle_vendido = '1 Pollo (1000 gr)';
+                    } elseif ($sold_quantity == 0.5) {
+                        $detalle_vendido = '1/2 Pollo (500 gr)';
+                    } elseif ($sold_quantity == 0.25) {
+                        $detalle_vendido = '1/4 Pollo (250 gr)';
+                    } elseif ($sold_quantity == 0.125) {
+                        $detalle_vendido = '1/8 Pollo (125 gr)';
+                    } else {
+                        $detalle_vendido = ($sold_quantity * 1000) . ' gr (' . $sold_quantity . ' Pollo(s))';
+                    }
+
+                    // Stock actual
+                    if ($current_stock == 1) {
+                        $detalle_stock = '1 Pollo (1000 gr)';
+                    } elseif ($current_stock == 0.5) {
+                        $detalle_stock = '1/2 Pollo (500 gr)';
+                    } elseif ($current_stock == 0.25) {
+                        $detalle_stock = '1/4 Pollo (250 gr)';
+                    } elseif ($current_stock == 0.125) {
+                        $detalle_stock = '1/8 Pollo (125 gr)';
+                    } else {
+                        $detalle_stock = ($current_stock * 1000) . ' gr (' . $current_stock . ' Pollo(s))';
+                    }
+                }
+            }
+
+            return [
+                'codigo' => $movement->item_id,
+                'producto' => $item ? $item->description : 'N/A',
+                'initial_stock' => number_format($movement->initial_stock ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                'purchases' => number_format($movement->purchases ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                'sold_quantity' => $detalle_vendido,
+                'current_stock' => $detalle_stock,
+            ];
+        });
+
+        return $report;
+    } */
+
+    public function get_stock_report_restobar($cash_id)
+    {
+        $stock_movements = CashStockMovement::where('cash_id', $cash_id)->get();
+
+        if ($stock_movements->isEmpty()) {
+            return [];
+        }
+
+        $item_ids = $stock_movements->pluck('item_id')->unique();
+        $items = Item::whereIn('id', $item_ids)->get()->keyBy('id');
+
+        $report = $stock_movements->map(function ($movement) use ($items) {
+            $item = $items[$movement->item_id] ?? null;
+
+            $sold_quantity = (float)($movement->sold_quantity ?? 0);
+            $current_stock = (float)($movement->current_stock ?? 0);
+            $initial_stock = (float)($movement->initial_stock ?? 0);
+
+            // Por defecto
+            $detalle_vendido = number_format($sold_quantity, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : '');
+            $detalle_stock = number_format($current_stock, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : '');
+            $detalle_inicial = number_format($initial_stock, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : '');
+
+            if ($item && stripos($item->description, 'POLLO') !== false) {
+                if (stripos($item->description, 'POLLO INSUMO') !== false) {
+                    // POLLO INSUMO -> gramos
+                    $detalle_vendido = ($sold_quantity * 1000) . ' gr';
+                    $detalle_stock = ($current_stock * 1000) . ' gr';
+                    $detalle_inicial = ($initial_stock * 1000) . ' gr';
+                } else {
+                    // POLLO normal -> mostrar en fracciones
+                    $detalle_vendido = $this->formatPollo($sold_quantity);
+                    $detalle_stock = $this->formatPollo($current_stock);
+                    $detalle_inicial = $this->formatPollo($initial_stock);
+                }
+            }
+
+            return [
+                'codigo' => $movement->item_id,
+                'producto' => $item ? $item->description : 'N/A',
+                'initial_stock' => $detalle_inicial,
+                'purchases' => number_format($movement->purchases ?? 0, 3, '.', ',') . ' ' . ($item ? $item->unit_type_id : ''),
+                'sold_quantity' => $detalle_vendido,
+                'current_stock' => $detalle_stock,
+            ];
+        });
 
         return $report;
     }
+
+    private function formatPollo($cantidad)
+    {
+        if ($cantidad == 0) {
+            return '0';
+        }
+
+        $entero = floor($cantidad);
+        $decimal = round($cantidad - $entero, 3);
+
+        $partes = [];
+
+        // Asignamos fracciones compuestas
+        if ($decimal >= 0.875) {
+            $partes[] = '1/2';
+            $partes[] = '1/4';
+            $partes[] = '1/8';
+        } elseif ($decimal >= 0.625 && $decimal < 0.875) {
+            $partes[] = '1/2';
+            $partes[] = '1/8';
+        } elseif ($decimal >= 0.500 && $decimal < 0.625) {
+            $partes[] = '1/2';
+        } elseif ($decimal >= 0.375 && $decimal < 0.500) {
+            $partes[] = '1/4';
+            $partes[] = '1/8';
+        } elseif ($decimal >= 0.250 && $decimal < 0.375) {
+            $partes[] = '1/4';
+        } elseif ($decimal >= 0.125 && $decimal < 0.250) {
+            $partes[] = '1/8';
+        }
+
+        $texto_fracciones = implode(' | ', $partes);
+
+        if ($entero > 0 && $texto_fracciones) {
+            return "{$entero} | {$texto_fracciones}";
+        } elseif ($entero > 0) {
+            return (string) $entero;
+        } elseif ($texto_fracciones) {
+            return $texto_fracciones;
+        } else {
+            return (string) $cantidad;
+        }
+    }
+
+    /* private function formatPollo($cantidad)
+    {
+        if ($cantidad == 0) {
+            return '0 Pollo';
+        }
+
+        $entero = floor($cantidad);
+        $decimal = round($cantidad - $entero, 3);
+
+        $fraccion = '';
+        if ($decimal == 0.500) {
+            $fraccion = '1/2';
+        } elseif ($decimal == 0.250) {
+            $fraccion = '1/4';
+        } elseif ($decimal == 0.125) {
+            $fraccion = '1/8';
+        }
+
+        if ($entero > 0 && $fraccion) {
+            return "{$entero} {$fraccion} Pollo";
+        } elseif ($entero > 0) {
+            return "{$entero} Pollo";
+        } elseif ($fraccion) {
+            return "{$fraccion} Pollo";
+        } else {
+            return "{$cantidad} Pollo";
+        }
+    } */
+
 
     function formatInitial($stock)
     {
